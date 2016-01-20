@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -26,5 +28,17 @@ namespace NextPlayerUWP
         {
             this.InitializeComponent();
         }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MediaImport m = new MediaImport();
+            Progress<int> progress = new Progress<int>(
+            percent=>
+            {
+                procent.Text = percent.ToString()+ " %";
+            });
+            await Task.Run(() => m.UpdateDatabase(progress));
+        }
+
     }
 }

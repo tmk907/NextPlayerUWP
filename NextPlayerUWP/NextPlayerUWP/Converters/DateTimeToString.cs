@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
-namespace NextPlayer.Converters
+namespace NextPlayerUWP.Converters
 {
-    public class DateTimeToStringConverter : IValueConverter
+    public class DateTimeToString : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

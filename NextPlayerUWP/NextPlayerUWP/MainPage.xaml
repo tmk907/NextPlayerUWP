@@ -5,10 +5,20 @@
     xmlns:local="using:NextPlayerUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
+    DataContext="{Binding Source={StaticResource Locator}, Path=MainPageVM}"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel>
+            <Button Content="skanuj" Click="Button_Click"/>
+            <TextBlock x:Name="procent" Text=""/>
+            <Button Content="genres" Command="{Binding Goto}"/>
+            <Button Content="songs" Command="{Binding Songs}"/>
+            <Button Content="albums" Command="{Binding Albums}"/>
+            <Button Content="artists" Command="{Binding Arists}"/>
+            <Button Content="folders" Command="{Binding Folders}"/>
 
+        </StackPanel>
+        
     </Grid>
 </Page>

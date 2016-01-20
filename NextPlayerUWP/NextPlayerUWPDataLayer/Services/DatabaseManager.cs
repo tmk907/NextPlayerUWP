@@ -10,6 +10,7 @@ using NextPlayerUWPDataLayer.Constants;
 using Windows.Storage;
 using NextPlayerUWPDataLayer.Tables;
 using NextPlayerUWPDataLayer.Model;
+using System.Collections.ObjectModel;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -115,6 +116,9 @@ namespace NextPlayerUWPDataLayer.Services
 
         private static SongsTable CreateSongsTable(SongData song)
         {
+            string dir = Path.GetDirectoryName(song.Path);
+            string name = Path.GetFileName(dir);
+            if (name == "") name = dir;
             return new SongsTable()
             {
                 Album = song.Tag.Album,
@@ -125,6 +129,7 @@ namespace NextPlayerUWPDataLayer.Services
                 Composers = song.Tag.Composers,
                 Conductor = song.Tag.Conductor,
                 DateAdded = song.DateAdded,
+                DirectoryName = dir,
                 Duration = song.Duration,
                 Disc = song.Tag.Disc,
                 DiscCount = song.Tag.DiscCount,
@@ -132,6 +137,7 @@ namespace NextPlayerUWPDataLayer.Services
                 FileSize = (long)song.FileSize,
                 FirstArtist = song.Tag.FirstArtist,
                 FirstComposer = song.Tag.FirstComposer,
+                FolderName = name,
                 Genre = song.Tag.Genre,
                 IsAvailable = song.IsAvailable,
                 LastPlayed = song.LastPlayed,
@@ -156,6 +162,87 @@ namespace NextPlayerUWPDataLayer.Services
             s.SongId = npSong.SongId;
             s.Title = npSong.Title;
             return s;
+        }
+
+        #region Genres
+
+        public async Task<ObservableCollection<GenreItem>> GetGenreItemsAsync()
+        {
+            ObservableCollection<GenreItem> collection = new ObservableCollection<GenreItem>();
+            var query = await songsConnectionAsync.OrderBy(g => g.Genre).ToListAsync();
+            var result = query.GroupBy(x => x.Genre);
+            foreach (var item in result)
+            {
+                TimeSpan duration = TimeSpan.Zero;
+                int songs = item.Count();//0;
+                //foreach (var song in item)
+                //{
+                //    duration += song.Duration;
+                //    songs++;
+                //}
+                collection.Add(new GenreItem(duration, item.FirstOrDefault().Genre, songs));
+            }
+            return collection;
+        }
+
+
+
+        #endregion
+
+        #region Songs
+
+        public async Task<ObservableCollection<SongItem>> GetSongItemsAsync()
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+
+            var result = await songsConnectionAsync.OrderBy(s => s.Title).ToListAsync();
+            foreach (var item in result)
+            {
+                songs.Add(CreateSongItem(item));
+            }
+            return songs;
+        }
+
+        #endregion
+
+        public async Task<ObservableCollection<AlbumItem>> GetAlbumItemsAsync()
+        {
+            ObservableCollection<AlbumItem> albums = new ObservableCollection<AlbumItem>();
+
+            return albums;
+        }
+        public async Task<ObservableCollection<ArtistItem>> GetArtistItemsAsync()
+        {
+            ObservableCollection<ArtistItem> artists = new ObservableCollection<ArtistItem>();
+
+            return artists;
+        }
+        public async Task<ObservableCollection<FolderItem>> GetFolderItemsAsync()
+        {
+            ObservableCollection<FolderItem> folders = new ObservableCollection<FolderItem>();
+            var query = await songsConnectionAsync.OrderBy(s => s.DirectoryName).ToListAsync();
+            var grouped = query.GroupBy(s => s.DirectoryName);
+            int songs = 0;
+            foreach (var item in grouped)
+            {
+                songs = item.Count();
+                folders.Add(new FolderItem(item.FirstOrDefault().FolderName,item.FirstOrDefault().DirectoryName,songs));
+            }
+            return folders;
+        }
+        public async Task<ObservableCollection<PlaylistItem>> GetPlaylistItemsAsync()
+        {
+            ObservableCollection<PlaylistItem> playlists = new ObservableCollection<PlaylistItem>();
+
+            return playlists;
+        }
+        
+
+
+
+        private static SongItem CreateSongItem(SongsTable q)
+        {
+            return new SongItem(q.Album, q.Artists, q.Composers, q.Duration, q.Path, (int)q.Rating, q.SongId, q.Title, (int)q.Track, q.Year);
         }
     }
 }

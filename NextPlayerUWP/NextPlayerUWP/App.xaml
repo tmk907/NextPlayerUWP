@@ -3,12 +3,24 @@
         xmlns:common="using:Template10.Common"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="using:NextPlayerUWP.Converters"
         >
-
-
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:NextPlayerUWP.ViewModels" />
+
+
+            <!--<converters:GetListView x:Key="GetListView"/>-->
+            <!--<converters:BoolToInvertedVisibility x:Key="BoolToInvertedVisibilityConverter"/>
+            <converters:BoolToVisibility x:Key="BoolToVisibilityConverter"/>
+            <converters:DateTimeToString x:Key="DateTimeToStringConverter"/>
+            <converters:IntToBitrate x:Key="IntToBitrateConverter"/>
+            <converters:SizeToString x:Key="SizeToStringConverter"/>
+            <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>-->
+            
+            
+            
+            
         </ResourceDictionary>
     </Application.Resources>
     

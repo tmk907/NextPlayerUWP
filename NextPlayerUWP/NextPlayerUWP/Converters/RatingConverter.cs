@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
-namespace NextPlayer.Converters
+namespace NextPlayerUWP.Converters
 {
     public class RatingConverter : IValueConverter
     {

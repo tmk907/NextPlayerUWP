@@ -14,9 +14,27 @@ namespace NextPlayerUWP.ViewModels
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            //SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<MainPageViewModel>();
+            SimpleIoc.Default.Register<AlbumsViewModel>();
+            SimpleIoc.Default.Register<AlbumViewModel>();
+            SimpleIoc.Default.Register<ArtistsViewModel>();
+            SimpleIoc.Default.Register<FoldersViewModel>();
+            SimpleIoc.Default.Register<GenresViewModel>();
+            SimpleIoc.Default.Register<PlaylistsViewModel>();
+            SimpleIoc.Default.Register<PlaylistViewModel>();
+            SimpleIoc.Default.Register<SongsViewModel>();
         }
 
-        //public MainViewModel MainViewModel => ServiceLocator.Current.GetInstance<MainViewModel>();
+        public MainPageViewModel MainPageVM => ServiceLocator.Current.GetInstance<MainPageViewModel>();
+        public AlbumViewModel AlbumVM => ServiceLocator.Current.GetInstance<AlbumViewModel>();
+        public AlbumsViewModel AlbumsVM => ServiceLocator.Current.GetInstance<AlbumsViewModel>();
+        public ArtistsViewModel ArtistsVM => ServiceLocator.Current.GetInstance<ArtistsViewModel>();
+        public FoldersViewModel FoldersVM => ServiceLocator.Current.GetInstance<FoldersViewModel>();
+        public GenresViewModel GenresVM => ServiceLocator.Current.GetInstance<GenresViewModel>();
+        public PlaylistViewModel PlaylistVM => ServiceLocator.Current.GetInstance<PlaylistViewModel>();
+        public PlaylistsViewModel PlaylistsVM => ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
+        public SongsViewModel SongsVM => ServiceLocator.Current.GetInstance<SongsViewModel>();
+
+        //public ViewModel VM => ServiceLocator.Current.GetInstance<MainPageViewModel>();
     }
 }

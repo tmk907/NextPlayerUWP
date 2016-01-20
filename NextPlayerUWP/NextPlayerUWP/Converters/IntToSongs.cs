@@ -5,18 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
-namespace NextPlayer.Converters
+namespace NextPlayerUWP.Converters
 {
-    public class IntToBitrateConverter : IValueConverter
+    public class IntToSongs : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return value.ToString() + " kbps";
+            int number = (int) value;
+            return number + " songs";
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException();
+            string strValue = value as string;
+            strValue.Replace(" songs", "");
+            return Int32.Parse(strValue);
+            throw new Exception("Unable to convert string to date time");
         }
     }
 }
