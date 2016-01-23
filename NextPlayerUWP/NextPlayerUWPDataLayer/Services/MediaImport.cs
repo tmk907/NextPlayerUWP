@@ -30,8 +30,8 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         private Dictionary<string, Tuple<int, int>> dbFiles;
-        private List<int> toAvailable;
-        private int allCount;
+        private int songsAdded;
+        private IProgress<int> progress;
 
         private async Task AddFilesFromFolder(StorageFolder folder)
         {
@@ -76,6 +76,8 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
             DatabaseManager.Current.UpdateFolder(newSongs, available, folder.Path);//.InsertSongsAsync(newSongs);
+            songsAdded += newSongs.Count;
+            progress.Report(songsAdded);
             var folders = await folder.GetFoldersAsync();
             foreach (var f in folders)
             {
@@ -83,35 +85,19 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task UpdateDatabase(IProgress<int> progress)
+        public async Task UpdateDatabase(IProgress<int> p)
         {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
-
-            //IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-
             dbFiles = DatabaseManager.Current.GetFilePaths();
-            //toAvailable = new List<int>();
-            //Tuple<int, int> t;
-            //foreach (var file in list)
-            //{
-            //    if (dbFiles.TryGetValue(file.Path, out t))
-            //    {
-            //        toAvailable.Add(t.Item2);
-            //    }
-            //}
-            //DatabaseManager.SetAllNotAvailable();
-            //DatabaseManager.SetToAvailable(toAvailable);
-
-            //allCount = list.Count;
-            //toAvailable = new List<int>();
-
+            songsAdded = 0;
+            progress = p;
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
             foreach (var folder in library.Folders)
             {
                 await AddFilesFromFolder(folder);
             }
 
-            //DatabaseManager.SetToAvailable(toAvailable);
+            await DatabaseManager.Current.UpdateTables();
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             OnMediaImported("Update");
             SendToast();
@@ -273,7 +259,7 @@ namespace NextPlayerUWPDataLayer.Services
             return song;
         }
 
-        private static void SendToast()
+        private void SendToast()
         {
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             ToastTemplateType toastTemplate = ToastTemplateType.ToastText01;
@@ -281,7 +267,20 @@ namespace NextPlayerUWPDataLayer.Services
             XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
             toastTextElements[0].AppendChild(toastXml.CreateTextNode(loader.GetString("LibraryUpdated")));
             ToastNotification toast = new ToastNotification(toastXml);
-            ToastNotificationManager.CreateToastNotifier().Show(toast);
+            try
+            {
+                ToastNotificationManager.CreateToastNotifier().Show(toast);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public static async Task UpdateCacheTables()
+        {
+            await DatabaseManager.Current.UpdateTables();
+
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NextPlayerUWPDataLayer.Tables
 {
     [Table("SongsTable")]
-    class SongsTable
+    public class SongsTable
     {
         [PrimaryKey, AutoIncrement]
         public int SongId { get; set; }

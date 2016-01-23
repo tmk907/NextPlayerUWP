@@ -162,7 +162,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public override string GetParameter()
         {
-            return "song" + separator + songId.ToString();
+            return MusicItemTypes.song + separator + songId.ToString();
         }
     }
 }

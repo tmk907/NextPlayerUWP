@@ -1,5 +1,4 @@
-﻿using NextPlayerUWP.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,12 +20,11 @@ namespace NextPlayerUWP.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class PlaylistView : Page
+    public sealed partial class ArtistView : Page
     {
-        public PlaylistView()
+        public ArtistView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((PlaylistViewModel)DataContext).OnLoaded(PlaylistListView); };
         }
     }
 }

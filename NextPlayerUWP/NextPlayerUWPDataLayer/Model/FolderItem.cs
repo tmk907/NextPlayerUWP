@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Tables;
+using System;
 using System.ComponentModel;
 
 namespace NextPlayerUWPDataLayer.Model
@@ -38,6 +39,13 @@ namespace NextPlayerUWPDataLayer.Model
             this.songsNumber = songsnumber;
         }
 
+        public FolderItem(FoldersTable table)
+        {
+            songsNumber = table.SongsNumber;
+            folder = table.Folder;
+            directory = table.Directory;
+        }
+
         public override string ToString()
         {
             return "folder|" + directory;
@@ -55,7 +63,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public override string GetParameter()
         {
-            return "folder" + separator + directory;
+            return MusicItemTypes.folder + separator + directory;
         }
     }
 }

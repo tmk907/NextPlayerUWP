@@ -15,9 +15,9 @@
             <Button Content="genres" Command="{Binding Goto}"/>
             <Button Content="songs" Command="{Binding Songs}"/>
             <Button Content="albums" Command="{Binding Albums}"/>
-            <Button Content="artists" Command="{Binding Arists}"/>
+            <Button Content="artists" Command="{Binding Artists}"/>
             <Button Content="folders" Command="{Binding Folders}"/>
-
+<Button Content="test" Click="Button_Click_1"/>
         </StackPanel>
         
     </Grid>

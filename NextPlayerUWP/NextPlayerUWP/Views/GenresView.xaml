@@ -5,6 +5,7 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:NextPlayerUWP.Helpers"
     DataContext="{Binding Source={StaticResource Locator}, Path=GenresVM}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -20,12 +21,18 @@
             ItemsSource="{Binding Genres}"
             SelectedItem="{Binding SelectedItem}"
             ItemTemplate="{StaticResource GenreItemTemplate}"
+                  
+                  SelectionMode="None"
+                  IsItemClickEnabled="True"
+            helpers:ItemClickCommand.Command="{Binding ItemClicked}"
             >
+            
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel Orientation="Vertical"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
+
         </ListView>
     </Grid>
 </Page>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Tables;
+using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Resources;
 
@@ -104,6 +105,24 @@ namespace NextPlayerUWPDataLayer.Model
             this.songsNumber = songsnumber;
         }
 
+        public AlbumItem(AlbumsTable table)
+        {
+            duration = table.Duration;
+            songsNumber = table.SongsNumber;
+            albumParam = table.Album;
+            if (albumParam == "")
+            {
+                ResourceLoader loader = new ResourceLoader();
+                album = loader.GetString("UnknownAlbum");
+            }
+            else
+            {
+                album = albumParam;
+            }
+            albumArtist = table.AlbumArtist;
+            artistParam = null;
+        }
+
         public override string ToString()
         {
             return "album|" + album;
@@ -121,7 +140,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public override string GetParameter()
         {
-            return "album" + separator + albumParam + separator + artistParam;
+            return MusicItemTypes.album + separator + albumParam + separator + artistParam;
         }
     }
 }

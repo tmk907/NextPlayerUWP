@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Model;
+﻿using GalaSoft.MvvmLight.Command;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,20 @@ namespace NextPlayerUWP.ViewModels
             if (Folders.Count == 0)
             {
                 Folders = await DatabaseManager.Current.GetFolderItemsAsync();
+            }
+        }
+
+        private RelayCommand<FolderItem> itemClicked;
+        public RelayCommand<FolderItem> ItemClicked
+        {
+            get
+            {
+                return itemClicked
+                    ?? (itemClicked = new RelayCommand<FolderItem>(
+                    item =>
+                    {
+                        NavigationService.Navigate(App.Pages.Folders, item.GetParameter());
+                    }));
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Model;
+﻿using GalaSoft.MvvmLight.Command;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,20 @@ namespace NextPlayerUWP.ViewModels
             if (Artists.Count == 0)
             {
                 Artists = await DatabaseManager.Current.GetArtistItemsAsync();
+            }
+        }
+
+        private RelayCommand<ArtistItem> itemClicked;
+        public RelayCommand<ArtistItem> ItemClicked
+        {
+            get
+            {
+                return itemClicked
+                    ?? (itemClicked = new RelayCommand<ArtistItem>(
+                    item =>
+                    {
+                        NavigationService.Navigate(App.Pages.Artist, item.GetParameter());
+                    }));
             }
         }
     }

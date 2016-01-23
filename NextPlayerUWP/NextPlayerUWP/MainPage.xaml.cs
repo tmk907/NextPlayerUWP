@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -35,10 +36,29 @@ namespace NextPlayerUWP
             Progress<int> progress = new Progress<int>(
             percent=>
             {
-                procent.Text = percent.ToString()+ " %";
+                procent.Text = "nowe utwory: "+percent.ToString();
             });
             await Task.Run(() => m.UpdateDatabase(progress));
         }
 
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            //int id = DatabaseManager.Current.PrepPlain();
+            //List<int> list = new List<int>();
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    list.Add(i);
+            //}
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+
+            //DatabaseManager.Current.InsertPlainPlaylistEntry(id, list);
+            //sw.Stop();
+            //long l1 = sw.ElapsedMilliseconds;
+            //sw.Restart();
+            //await DatabaseManager.Current.InsertPlainPlaylistEntryAsync(id, list);
+            //sw.Stop();
+            //long l2 = sw.ElapsedMilliseconds;
+        }
     }
 }

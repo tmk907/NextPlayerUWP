@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Tables;
+using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Resources;
 
@@ -53,6 +54,22 @@ namespace NextPlayerUWPDataLayer.Model
             this.songsNumber = songsnumber;
         }
 
+        public GenreItem(GenresTable item)
+        {
+            duration = item.Duration;
+            songsNumber = item.SongsSumber;
+            genre = item.Genre;
+            if (genre == "")
+            {
+                ResourceLoader loader = new ResourceLoader();
+                genreParam = loader.GetString("UnknownGenre");
+            }
+            else
+            {
+                genreParam = genre;
+            }
+        }
+
         public override string ToString()
         {
             return "genre|" + genre;
@@ -70,7 +87,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public override string GetParameter()
         {
-            return "genre" + separator + genre;
+            return MusicItemTypes.genre + separator + genre;
         }
     }
 }

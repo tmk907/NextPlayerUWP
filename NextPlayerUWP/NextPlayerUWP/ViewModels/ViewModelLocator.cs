@@ -18,6 +18,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<AlbumsViewModel>();
             SimpleIoc.Default.Register<AlbumViewModel>();
             SimpleIoc.Default.Register<ArtistsViewModel>();
+            SimpleIoc.Default.Register<ArtistViewModel>();
             SimpleIoc.Default.Register<FoldersViewModel>();
             SimpleIoc.Default.Register<GenresViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
@@ -29,6 +30,7 @@ namespace NextPlayerUWP.ViewModels
         public AlbumViewModel AlbumVM => ServiceLocator.Current.GetInstance<AlbumViewModel>();
         public AlbumsViewModel AlbumsVM => ServiceLocator.Current.GetInstance<AlbumsViewModel>();
         public ArtistsViewModel ArtistsVM => ServiceLocator.Current.GetInstance<ArtistsViewModel>();
+        public ArtistViewModel ArtistVM => ServiceLocator.Current.GetInstance<ArtistViewModel>();
         public FoldersViewModel FoldersVM => ServiceLocator.Current.GetInstance<FoldersViewModel>();
         public GenresViewModel GenresVM => ServiceLocator.Current.GetInstance<GenresViewModel>();
         public PlaylistViewModel PlaylistVM => ServiceLocator.Current.GetInstance<PlaylistViewModel>();

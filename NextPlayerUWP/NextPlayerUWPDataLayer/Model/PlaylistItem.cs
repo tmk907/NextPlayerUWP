@@ -61,7 +61,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public override string GetParameter()
         {
-            return "playlist" + separator + ((isSmart)?"smart":"plain") + separator + id;
+            return ((isSmart)? MusicItemTypes .smartplaylist: MusicItemTypes.plainplaylist) + separator + id;
         }
     }
 }

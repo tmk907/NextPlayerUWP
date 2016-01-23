@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Model;
+﻿using GalaSoft.MvvmLight.Command;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,20 @@ namespace NextPlayerUWP.ViewModels
                 Genres = await DatabaseManager.Current.GetGenreItemsAsync();
             }
         }
+
+        private RelayCommand<GenreItem> itemClicked;
+        public RelayCommand<GenreItem> ItemClicked
+        {
+            get
+            {
+                return itemClicked
+                    ?? (itemClicked = new RelayCommand<GenreItem>(
+                    itemClicked =>
+                    {
+                        NavigationService.Navigate(App.Pages.Playlist, itemClicked.GetParameter());
+                    }));
+            }
+        }
+
     }
 }

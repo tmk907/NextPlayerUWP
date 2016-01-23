@@ -38,6 +38,7 @@ namespace NextPlayerUWP
             Albums,
             Album,
             Artists,
+            Artist,
             Genres,
             Folders,
             Playlists,
@@ -54,6 +55,7 @@ namespace NextPlayerUWP
             keys.Add(Pages.Albums, typeof(AlbumsView));
             keys.Add(Pages.Album, typeof(AlbumView));
             keys.Add(Pages.Artists, typeof(ArtistsView));
+            keys.Add(Pages.Artist, typeof(ArtistView));
             keys.Add(Pages.Genres, typeof(GenresView));
             keys.Add(Pages.Folders, typeof(FoldersView));
             keys.Add(Pages.Playlists, typeof(PlaylistsView));
@@ -65,7 +67,7 @@ namespace NextPlayerUWP
             {
                 DatabaseManager.Current.CreateDatabase();
             }
-
+            //check if import was finished
             return base.OnInitializeAsync(args);
         }
 
