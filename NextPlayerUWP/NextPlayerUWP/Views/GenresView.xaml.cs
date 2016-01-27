@@ -23,12 +23,22 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class GenresView : Page
     {
+        public GenresViewModel ViewModel;
         public GenresView()
         {
             this.InitializeComponent();
             this.Loaded += delegate {
                 ((GenresViewModel)DataContext).OnLoaded(GenresListView);
             };
+            ViewModel = (GenresViewModel)DataContext;
+        }
+
+        private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenu"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using NextPlayerUWPDataLayer.Model;
-using System.Collections.ObjectModel;
-using GalaSoft.MvvmLight.Command;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
+using NextPlayerUWP.Common;
+using Windows.Foundation;
+using NextPlayerUWPDataLayer.Services;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -15,6 +16,7 @@ namespace NextPlayerUWP.ViewModels
     {
         protected ListView listView;
         protected int firstVisibleItemIndex;
+        protected string positionKey;
         protected int selectedItemIndex;
         protected bool isBack;
 
@@ -26,84 +28,65 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref selectedItem, value); }
         }
 
+        protected string pageTitle;
+        public string PageTitle
+        {
+            get { return pageTitle; }
+            set { Set(ref pageTitle, value); }
+        }
+
         #region Commands
-        protected RelayCommand<MusicItem> addToNowPlaying;
-        public RelayCommand<MusicItem> AddToNowPlaying
+        public async void PlayNow(object sender, RoutedEventArgs e)
         {
-            get
-            {
-                return addToNowPlaying
-                    ?? (addToNowPlaying = new RelayCommand<MusicItem>(
-                    item =>
-                    {
-                        SelectedItem = item;
-                        //Library.Current.AddToNowPlaying(item); TODO
-                    }));
-            }
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await NowPlayingPlaylistManager.Current.New(item);
         }
 
-        protected RelayCommand<MusicItem> addToPlaylist;
-        public RelayCommand<MusicItem> AddToPlaylist
+        public async void PlayNext(object sender, RoutedEventArgs e)
         {
-            get
-            {
-                return addToPlaylist
-                    ?? (addToPlaylist = new RelayCommand<MusicItem>(
-                    item =>
-                    {
-                        SelectedItem = item;
-                        //NavigationService.Navigate(App.Pages.AddToPlaylistPage, item.GetParameter()); TODO
-                    }));
-            }
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await NowPlayingPlaylistManager.Current.AddNext(item);
         }
 
-        protected RelayCommand<MusicItem> share;
-        public RelayCommand<MusicItem> Share
+        public async void AddToNowPlaying(object sender, RoutedEventArgs e)
         {
-            get
-            {
-                return share
-                    ?? (share = new RelayCommand<MusicItem>(
-                    item =>
-                    {
-                        SelectedItem = item;
-                        //NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
-                    }));
-            }
+            //SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await NowPlayingPlaylistManager.Current.Add(item);
         }
 
+        public void AddToPlaylist(object sender, RoutedEventArgs e)
+        {
+            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            //NavigationService.Navigate(App.Pages.AddToPlaylist, SelectedItem.GetParameter()); 
+        }
+
+        public void Share(object sender, RoutedEventArgs e)
+        {
+            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            //NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
+        }
+
+        public async void Pin(object sender, RoutedEventArgs e)
+        {
+            await TileManager.CreateTile((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+        }
+
+        
         #endregion
 
         ////?
-        //protected RelayCommand<MusicItem> editTags;
-        //public RelayCommand<MusicItem> EditTags
+        //public void EditTags(object sender, RoutedEventArgs e)
         //{
-        //    get
-        //    {
-        //        return editTags
-        //            ?? (editTags = new RelayCommand<MusicItem>(
-        //            item =>
-        //            {
-        //                SelectedItem = item;
-        //                NavigationService.Navigate(App.Pages.TagsEditorPage, item.SongId);
-        //            }));
-        //    }
+        //    SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+        //    NavigationService.Navigate(App.Pages.TagsEditorPage, item.SongId);
         //}
 
         ////?
-        //protected RelayCommand<MusicItem> showDetails;
-        //public RelayCommand<MusicItem> ShowDetails
+        //public void ShowDetails(object sender, RoutedEventArgs e)
         //{
-        //    get
-        //    {
-        //        return showDetails
-        //            ?? (showDetails = new RelayCommand<MusicItem>(
-        //            item =>
-        //            {
-        //                SelectedItem = item;
-        //                NavigationService.Navigate(App.Pages.FileInfoPage, );
-        //            }));
-        //    }
+        //    SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+        //    NavigationService.Navigate(App.Pages.FileInfoPage, );
         //}
 
         public override void OnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -111,53 +94,57 @@ namespace NextPlayerUWP.ViewModels
             isBack = false;
             firstVisibleItemIndex = 0;
             selectedItemIndex = 0;
-
+            positionKey = null;
             if (state.Any())
             {
-                if (state.ContainsKey("selectedItemIndex"))
+                if (state.ContainsKey(nameof(positionKey)))
                 {
-                    selectedItemIndex = (int)state["selectedItemIndex"];
+                    positionKey = state[nameof(positionKey)] as string;
                 }
-                if (state.ContainsKey("firstVisibleItemIndex"))
+                if (state.ContainsKey(nameof(firstVisibleItemIndex)))
                 {
-                    firstVisibleItemIndex = (int)state["firstVisibleItemIndex"];
+                    firstVisibleItemIndex = (int)state[nameof(firstVisibleItemIndex)];
                 }
                 state.Clear();
             }
             if (mode == NavigationMode.Back)
             {
                 isBack = true;
+
+                var navState = StateManager.Current.Read(this.GetType().ToString());
+                if (navState != null && navState.Any())
+                {
+                    if (navState.ContainsKey(nameof(firstVisibleItemIndex)))
+                    {
+                        firstVisibleItemIndex = (int)navState[nameof(firstVisibleItemIndex)];
+                    }
+                    if (navState.ContainsKey(nameof(positionKey)))
+                    {
+                        positionKey = navState[nameof(positionKey)] as string;
+                    }
+                    StateManager.Current.Clear(this.GetType().ToString());//is it necessary?
+                }
             }
             
         }
-
+       
         public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
-            selectedItemIndex = listView.SelectedIndex;
-            //var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-            //firstVisibleItemIndex = isp.FirstVisibleIndex;
-            firstVisibleItemIndex = 0;
+            positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
+            var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
+            firstVisibleItemIndex = isp.FirstVisibleIndex;
+
+            Dictionary<string, object> navState = new Dictionary<string, object>();
+            navState.Add(nameof(firstVisibleItemIndex), firstVisibleItemIndex);
+            navState.Add(nameof(positionKey), positionKey);
+            StateManager.Current.Save(this.GetType().ToString(), navState);
+
             if (suspending)
             {
-                state["selectedItemIndex"] = selectedItemIndex;
-                state["firstVisibleItemIndex"] = firstVisibleItemIndex;
+                state[nameof(firstVisibleItemIndex)] = firstVisibleItemIndex;
+                state[nameof(positionKey)] = positionKey;
             }
             return base.OnNavigatedFromAsync(state, suspending);
-        }
-
-        protected RelayCommand<object> onLoad;
-        public RelayCommand<object> OnLoad
-        {
-            get
-            {
-                return onLoad
-                    ?? (onLoad = new RelayCommand<object>(
-                    p =>
-                    {
-                        listView = (ListView)p;
-                        LoadAndScroll();
-                    }));
-            }
         }
 
         public void OnLoaded(ListView p)
@@ -169,21 +156,52 @@ namespace NextPlayerUWP.ViewModels
         protected async Task LoadAndScroll()
         {
             await LoadData();
-            SetScrollPosition();
+            await SetScrollPosition();
         }
 
         protected virtual async Task LoadData() { }
 
-        protected void SetScrollPosition()
+        protected async Task SetScrollPosition()
         {
-            SemanticZoomLocation loc = new SemanticZoomLocation();
-            listView.SelectedIndex = selectedItemIndex;
-            loc.Item = listView.SelectedIndex;
-            listView.UpdateLayout();
-            listView.MakeVisible(loc);
+            //SemanticZoomLocation loc = new SemanticZoomLocation();
+            ////listView.SelectedIndex = selectedItemIndex;
+            ////loc.Item = listView.SelectedIndex;
+            //listView.UpdateLayout();
+            //listView.MakeVisible(loc);
             listView.ScrollIntoView(listView.Items[firstVisibleItemIndex], ScrollIntoViewAlignment.Leading);
+            if (positionKey != null)
+            {
+                await ListViewPersistenceHelper.SetRelativeScrollPositionAsync(listView, positionKey, KeyToItemHandler);
+            }
         }
 
-        
+        private string ItemToKeyHandler(object item)
+        {
+            if (item == null) return null;
+            return ((MusicItem)item).GetParameter();
+        }
+
+        private IAsyncOperation<object> KeyToItemHandler(string key)
+        {
+            return Task.Run(() =>
+            {
+                if (listView.Items.Count <= 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    if (((MusicItem)listView.Items[firstVisibleItemIndex]).GetParameter() == key)
+                    {
+                        return listView.Items[firstVisibleItemIndex];
+                    }
+                    foreach (var item in listView.Items)
+                    {
+                        if (((MusicItem)item).GetParameter() == key) return item;
+                    }
+                    return null;
+                }
+            }).AsAsyncOperation();
+        }
     }
 }

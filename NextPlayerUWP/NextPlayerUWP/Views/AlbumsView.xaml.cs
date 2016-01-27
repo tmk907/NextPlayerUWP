@@ -23,10 +23,20 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class AlbumsView : Page
     {
+        public AlbumsViewModel ViewModel;
         public AlbumsView()
         {
             this.InitializeComponent();
             this.Loaded += delegate { ((AlbumsViewModel)DataContext).OnLoaded(AlbumsListView); };
+            ViewModel = (AlbumsViewModel)DataContext;
+        }
+
+        private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenu"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
         }
     }
 }

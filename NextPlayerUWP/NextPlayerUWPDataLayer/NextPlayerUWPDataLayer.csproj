@@ -114,6 +114,9 @@
     <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Diagnostic\Logger.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
+    <Compile Include="Helpers\EnumHelper.cs" />
+    <Compile Include="Helpers\Repeat.cs" />
+    <Compile Include="Helpers\Shuffle.cs" />
     <Compile Include="Helpers\SmartPlaylistHelper.cs" />
     <Compile Include="Model\AlbumItem.cs" />
     <Compile Include="Model\ArtistItem.cs" />
@@ -127,6 +130,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
+    <Compile Include="Services\NowPlayingManager.cs" />
+    <Compile Include="Services\NowPlayingPlaylistManager.cs" />
     <Compile Include="Tables\AlbumsTable.cs" />
     <Compile Include="Tables\ArtistsTable.cs" />
     <Compile Include="Tables\CachedScrobble.cs" />
@@ -142,11 +147,10 @@
     <Content Include="Properties\NextPlayerUWPDataLayer.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="SQLite.UAP.2015, Version=3.10.1">
-      <Name>SQLite for Universal App Platform</Name>
+    <SDKReference Include="SQLite.UAP.2015, Version=3.10.2">
+      <Name>SQLite for Universal App Platform %28SQLite.UAP.2015, Version=3.10.2%29</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

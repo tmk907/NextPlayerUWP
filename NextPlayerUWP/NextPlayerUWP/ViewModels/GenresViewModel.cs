@@ -7,6 +7,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -27,19 +30,18 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private RelayCommand<GenreItem> itemClicked;
-        public RelayCommand<GenreItem> ItemClicked
+        public override void OnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            get
+            base.OnNavigatedTo(parameter, mode, state);
+            if (!isBack)
             {
-                return itemClicked
-                    ?? (itemClicked = new RelayCommand<GenreItem>(
-                    itemClicked =>
-                    {
-                        NavigationService.Navigate(App.Pages.Playlist, itemClicked.GetParameter());
-                    }));
+                Genres = new ObservableCollection<GenreItem>();
             }
         }
-
+        public void ItemClicked(object sender, ItemClickEventArgs e)
+        {
+            NavigationService.Navigate(App.Pages.Playlist, ((GenreItem)e.ClickedItem).GetParameter());
+        }
+        
     }
 }

@@ -6,7 +6,21 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <!--<MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
+                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+        </MenuFlyout>-->
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     </Grid>

@@ -75,7 +75,10 @@ namespace NextPlayerUWPDataLayer.Services
                     catch (Exception ex) { }
                 }
             }
-            DatabaseManager.Current.UpdateFolder(newSongs, available, folder.Path);//.InsertSongsAsync(newSongs);
+            if (newSongs.Count != 0 || available.Count != 0)
+            {
+                DatabaseManager.Current.UpdateFolder(newSongs, available, folder.Path);//.InsertSongsAsync(newSongs);
+            }
             songsAdded += newSongs.Count;
             progress.Report(songsAdded);
             var folders = await folder.GetFoldersAsync();
@@ -173,7 +176,7 @@ namespace NextPlayerUWPDataLayer.Services
                             song.Tag.DiscCount = (int)tags.DiscCount;
                             song.Tag.FirstArtist = tags.FirstPerformer ?? "";
                             song.Tag.FirstComposer = tags.FirstComposer ?? "";
-                            song.Tag.Genre = tags.FirstGenre ?? "";
+                            song.Tag.Genres = tags.JoinedGenres ?? "";
                             song.Tag.Lyrics = tags.Lyrics ?? "";
                             song.Tag.Title = tags.Title ?? file.DisplayName;
                             song.Tag.Track = (int)tags.Track;
@@ -192,7 +195,7 @@ namespace NextPlayerUWPDataLayer.Services
                             song.Tag.DiscCount = 0;
                             song.Tag.FirstArtist = "";
                             song.Tag.FirstComposer = "";
-                            song.Tag.Genre = "";
+                            song.Tag.Genres = "";
                             song.Tag.Lyrics = "";
                             song.Tag.Title = file.DisplayName;
                             song.Tag.Track = 0;
@@ -213,7 +216,7 @@ namespace NextPlayerUWPDataLayer.Services
                         song.Tag.DiscCount = 0;
                         song.Tag.FirstArtist = "";
                         song.Tag.FirstComposer = "";
-                        song.Tag.Genre = "";
+                        song.Tag.Genres = "";
                         song.Tag.Lyrics = "";
                         song.Tag.Title = file.DisplayName;
                         song.Tag.Track = 0;
@@ -241,7 +244,7 @@ namespace NextPlayerUWPDataLayer.Services
                 song.Tag.DiscCount = 0;
                 song.Tag.FirstArtist = "";
                 song.Tag.FirstComposer = "";
-                song.Tag.Genre = "";
+                song.Tag.Genres = "";
                 song.Tag.Lyrics = "";
                 song.Tag.Title = file.DisplayName;
                 song.Tag.Track = 0;

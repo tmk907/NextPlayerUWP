@@ -101,6 +101,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\ImagesManager.cs" />
+    <Compile Include="Common\StateManager.cs" />
+    <Compile Include="Common\TileManager.cs" />
     <Compile Include="Converters\BoolToInvertedVisibility.cs" />
     <Compile Include="Converters\BoolToVisibility.cs" />
     <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="Converters\NumberToPercent.cs" />
     <Compile Include="Converters\RatingConverter.cs" />
     <Compile Include="Converters\SizeToString.cs" />
+    <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -124,6 +128,8 @@
     <Compile Include="ViewModels\GenresViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MusicViewModelBase.cs" />
+    <Compile Include="ViewModels\NowPlayingPlaylistViewModel.cs" />
+    <Compile Include="ViewModels\NowPlayingViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SongsViewModel.cs" />
@@ -163,6 +169,36 @@
     <None Include="NextPlayerUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-100.png" />
+    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-140.png" />
+    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-240.png" />
+    <Content Include="Assets\AppImages\Logo\Logo.scale-100.png" />
+    <Content Include="Assets\AppImages\Logo\Logo.scale-140.png" />
+    <Content Include="Assets\AppImages\Logo\Logo.scale-240.png" />
+    <Content Include="Assets\AppImages\Logo\LogoTr.scale-100.png" />
+    <Content Include="Assets\AppImages\Logo\LogoTr.scale-140.png" />
+    <Content Include="Assets\AppImages\Logo\LogoTr.scale-240.png" />
+    <Content Include="Assets\AppImages\Splash\SplashScreen.scale-100.png" />
+    <Content Include="Assets\AppImages\Splash\SplashScreen.scale-140.png" />
+    <Content Include="Assets\AppImages\Splash\SplashScreen.scale-240.png" />
+    <Content Include="Assets\AppImages\Square44x44Logo\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\AppImages\Square44x44Logo\Square44x44Logo.scale-140.png" />
+    <Content Include="Assets\AppImages\Square44x44Logo\Square44x44Logo.scale-240.png" />
+    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71Logo.scale-100.png" />
+    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71Logo.scale-140.png" />
+    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71Logo.scale-240.png" />
+    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71LogoTr.scale-100.png" />
+    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71LogoTr.scale-140.png" />
+    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71LogoTr.scale-240.png" />
+    <Content Include="Assets\AppImages\StoreLogo\StoreLogo.scale-100.png" />
+    <Content Include="Assets\AppImages\StoreLogo\StoreLogo.scale-140.png" />
+    <Content Include="Assets\AppImages\StoreLogo\StoreLogo.scale-240.png" />
+    <Content Include="Assets\AppImages\WideLogo\WideLogo.scale-100.png" />
+    <Content Include="Assets\AppImages\WideLogo\WideLogo.scale-140.png" />
+    <Content Include="Assets\AppImages\WideLogo\WideLogo.scale-240.png" />
+    <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-100.png" />
+    <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-140.png" />
+    <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-240.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -228,9 +264,7 @@
       <Name>NextPlayerUWPDataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
       <Name>Behaviors SDK %28XAML%29</Name>

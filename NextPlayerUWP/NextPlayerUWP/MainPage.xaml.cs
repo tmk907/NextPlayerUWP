@@ -43,6 +43,7 @@ namespace NextPlayerUWP
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            await DatabaseManager.Current.UpdateTables();
             //int id = DatabaseManager.Current.PrepPlain();
             //List<int> list = new List<int>();
             //for (int i = 0; i < 100; i++)

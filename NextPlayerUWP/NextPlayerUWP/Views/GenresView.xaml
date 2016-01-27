@@ -9,24 +9,47 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=GenresVM}"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="GenreItemTemplate">
+        <DataTemplate x:Key="GenreItemTemplate" >
             <StackPanel>
                 <TextBlock Text="{Binding Genre}"/>
                 <TextBlock Text="{Binding SongsNumber}"/>
             </StackPanel>
         </DataTemplate>
+        <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
+                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ListView x:Name="GenresListView"
             ItemsSource="{Binding Genres}"
             SelectedItem="{Binding SelectedItem}"
-            ItemTemplate="{StaticResource GenreItemTemplate}"
                   
-                  SelectionMode="None"
-                  IsItemClickEnabled="True"
-            helpers:ItemClickCommand.Command="{Binding ItemClicked}"
-            >
+            SelectionMode="None"
+            IsItemClickEnabled="True"
+            ItemClick="{x:Bind ViewModel.ItemClicked }"
             
+            >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel RightTapped="ListViewItem_RightTapped">
+                        <TextBlock Text="{Binding Genre}"/>
+                        <TextBlock Text="{Binding SongsNumber}"/>
+                        <TextBlock Text="{Binding Duration}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel Orientation="Vertical"/>

@@ -14,7 +14,7 @@ namespace NextPlayerUWPDataLayer.Model
         public int DiscCount { get; set; }
         public string FirstArtist { get; set; } //FirstPerformer
         public string FirstComposer { get; set; }
-        public string Genre { get; set; }
+        public string Genres { get; set; }
         public string Lyrics { get; set; }
         public uint Rating { get; set; }
         public string Title { get; set; }

@@ -23,10 +23,20 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class FoldersView : Page
     {
+        public FoldersViewModel ViewModel;
         public FoldersView()
         {
             this.InitializeComponent();
             this.Loaded += delegate { ((FoldersViewModel)DataContext).OnLoaded(FoldersListView); };
+            ViewModel = (FoldersViewModel)DataContext;
+        }
+
+        private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenu"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
         }
     }
 }

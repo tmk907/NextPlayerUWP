@@ -1,6 +1,8 @@
-﻿using NextPlayerUWP.Views;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,8 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,16 +39,21 @@ namespace NextPlayerUWP
         public enum Pages
         {
             MainPage,
+            AddToPlaylist,
             Albums,
             Album,
             Artists,
             Artist,
             Genres,
+            FileInfo,
             Folders,
+            Lyrics,
+            NowPlaying,
             Playlists,
             Playlist,
+            Settings,
             Songs,
-            Settings
+            TagsEditor
         }
 
         public override Task OnInitializeAsync(IActivatedEventArgs args)
@@ -67,6 +76,7 @@ namespace NextPlayerUWP
             {
                 DatabaseManager.Current.CreateDatabase();
             }
+            TileManager.ManageSecondaryTileImages();
             //check if import was finished
             return base.OnInitializeAsync(args);
         }
@@ -74,17 +84,57 @@ namespace NextPlayerUWP
         public override Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             AdditionalKinds cause = DetermineStartCause(args);
-            //if (cause == AdditionalKinds.SecondaryTile)
-            //{
-            //    LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
-            //    NavigationService.Navigate(typeof(DetailPage), eventArgs.Arguments);
-            //}
-            //else
-            //{
-            //    NavigationService.Navigate(typeof(MainPage));
-            //}
-            NavigationService.Navigate(Pages.MainPage);
+            if (cause == AdditionalKinds.SecondaryTile)
+            {
+                LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
+                if (!eventArgs.TileId.Contains(AppConstants.TileId))
+                {
+
+                }
+                Pages page = Pages.MainPage;
+                string parameter = eventArgs.Arguments;
+                // dodac wybor w ustawieniach, czy przejsc do widoku, czy zaczac odtwarzanie i przejsc do teraz odtwarzane
+                switch (MusicItem.ParseType(parameter))
+                {
+                    case MusicItemTypes.album:
+                        page = Pages.Album;
+                        break;
+                    case MusicItemTypes.artist:
+                        page = Pages.Artist;
+                        break;
+                    case MusicItemTypes.folder:
+                        page = Pages.Playlist;
+                        break;
+                    case MusicItemTypes.genre:
+                        page = Pages.Playlist;
+                        break;
+                    case MusicItemTypes.plainplaylist:
+                        page = Pages.Playlist;
+                        break;
+                    case MusicItemTypes.smartplaylist:
+                        page = Pages.Playlist;
+                        break;
+                    case MusicItemTypes.song:
+                        //page = Pages.NowPlaying; ?
+                        break;
+                }
+                NavigationService.Navigate(page, parameter);
+            }
+            else
+            {
+                NavigationService.Navigate(Pages.MainPage);
+            }
             return Task.FromResult<object>(null);
+        }
+
+        public override Task OnSuspendingAsync(object s, SuspendingEventArgs e)
+        {
+            if (OnNewTilePinned != null)
+            {
+                OnNewTilePinned();
+                OnNewTilePinned = null;
+            }
+            return base.OnSuspendingAsync(s, e);
         }
 
         private bool FirstRun()
@@ -100,5 +150,9 @@ namespace NextPlayerUWP
                 return false;
             }
         }
+
+        public static Action OnNewTilePinned { get; set; }
+
+        
     }
 }

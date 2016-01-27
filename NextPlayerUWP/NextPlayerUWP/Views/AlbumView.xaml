@@ -5,9 +5,30 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DataContext="{Binding Source={StaticResource Locator}, Path=AlbumVM}"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <TextBlock Text="{Binding Album.Album}"/>
+        <ListView x:Name="AlbumSongsListView"
+                  ItemsSource="{Binding Songs}"
+                  SelectedItem="{Binding SelectedItem}"
+                  >
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding TrackNumber}"/>
+                        <TextBlock Text="{Binding Title}"/>
+                        <TextBlock Text="{Binding Artist}"/>
+                        <TextBlock Text="{Binding Album}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>

@@ -7,11 +7,30 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumsVM}"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
+                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ListView x:Name="AlbumsListView"
             ItemsSource="{Binding Albums}"
             SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                  SelectionMode="None"
+            IsItemClickEnabled="True"
+            ItemClick="{x:Bind ViewModel.ItemClicked }"
                   >
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -20,9 +39,11 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
+                    <StackPanel Orientation="Horizontal" RightTapped="ListViewItem_RightTapped">
                         <TextBlock Text="{Binding Album}"/>
-                        <TextBlock Text="{Binding Artist}"/>
+                        <TextBlock Text="{Binding ArtistParam}"/>
+                        <TextBlock Text="{Binding Duration}"/>
+                        <TextBlock Text="{Binding SongsNumber}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

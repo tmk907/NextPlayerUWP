@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
@@ -24,7 +26,7 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            if (Playlist.Count == 0)
+            if (!isBack || Playlist.Count == 0)
             {
                 switch (type)
                 {
@@ -47,11 +49,32 @@ namespace NextPlayerUWP.ViewModels
         public override void OnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             base.OnNavigatedTo(parameter, mode, state);
+            if (!isBack)
+            {
+                Playlist = new ObservableCollection<SongItem>();
+            }
             if (parameter != null)
             {
                 type = MusicItem.ParseType(parameter as string);
                 firstParam = MusicItem.ParseParameter(parameter as string)[1];
             }
+        }
+
+        public void ItemClicked(object sender, ItemClickEventArgs e)
+        {
+            //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+        }
+
+        public void EditTags(object sender, RoutedEventArgs e)
+        {
+            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.TagsEditor, ((SongItem)SelectedItem).SongId);
+        }
+
+        public void ShowDetails(object sender, RoutedEventArgs e)
+        {
+            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
         }
     }
 }

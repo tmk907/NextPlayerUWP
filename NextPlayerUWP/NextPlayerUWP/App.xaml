@@ -11,12 +11,12 @@
 
 
             <!--<converters:GetListView x:Key="GetListView"/>-->
-            <!--<converters:BoolToInvertedVisibility x:Key="BoolToInvertedVisibilityConverter"/>
+            <converters:BoolToInvertedVisibility x:Key="BoolToInvertedVisibilityConverter"/>
             <converters:BoolToVisibility x:Key="BoolToVisibilityConverter"/>
             <converters:DateTimeToString x:Key="DateTimeToStringConverter"/>
             <converters:IntToBitrate x:Key="IntToBitrateConverter"/>
             <converters:SizeToString x:Key="SizeToStringConverter"/>
-            <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>-->
+            <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>
             
             
             

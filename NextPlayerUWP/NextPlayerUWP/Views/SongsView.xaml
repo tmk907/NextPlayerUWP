@@ -9,12 +9,29 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        
+        <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ListView x:Name="SongsListView"
             ItemsSource="{Binding Songs}"
             SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+            SelectionMode="None"
+            IsItemClickEnabled="True"
+            ItemClick="{x:Bind ViewModel.ItemClicked }"
             >
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -23,7 +40,7 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
+                    <StackPanel RightTapped="ListViewItem_RightTapped">
                         <TextBlock Text="{Binding Title}"/>
                         <TextBlock Text="{Binding Artist}"/>
                         <TextBlock Text="{Binding Rating}"/>

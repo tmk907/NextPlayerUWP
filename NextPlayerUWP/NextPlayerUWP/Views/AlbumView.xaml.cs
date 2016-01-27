@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWP.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,21 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class AlbumView : Page
     {
+        public AlbumViewModel ViewModel;
         public AlbumView()
         {
             this.InitializeComponent();
+            this.Loaded += delegate { ((AlbumViewModel)DataContext).OnLoaded(AlbumSongsListView); };
+
+            ViewModel = (AlbumViewModel)DataContext;
+        }
+
+        private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenu"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
         }
     }
 }

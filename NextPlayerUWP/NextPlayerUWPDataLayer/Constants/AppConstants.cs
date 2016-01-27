@@ -3,7 +3,8 @@
     public sealed class AppConstants
     {
         //App
-        public const string AppId = "7a609088-e51a-458e-a8ca-5f13fc9ea5a8";
+        public const string AppName = "Next Player UWP";
+        public const string AppId = "5709a693-517f-4619-9942-4d8a3e15c758";
         public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";
         public const string DBVersion = "DBVersion";

@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using NextPlayerUWP.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -22,9 +23,20 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class ArtistView : Page
     {
+        public ArtistViewModel ViewModel;
         public ArtistView()
         {
             this.InitializeComponent();
+            this.Loaded += delegate { ((ArtistViewModel)DataContext).OnLoaded(ArtistSongsListView); };
+            ViewModel = (ArtistViewModel)DataContext;
+        }
+
+        private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenu"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
         }
     }
 }

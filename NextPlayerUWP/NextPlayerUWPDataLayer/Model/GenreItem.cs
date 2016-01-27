@@ -58,15 +58,15 @@ namespace NextPlayerUWPDataLayer.Model
         {
             duration = item.Duration;
             songsNumber = item.SongsSumber;
-            genre = item.Genre;
+            genreParam = item.Genre;
             if (genre == "")
             {
                 ResourceLoader loader = new ResourceLoader();
-                genreParam = loader.GetString("UnknownGenre");
+                genre = loader.GetString("UnknownGenre");
             }
             else
             {
-                genreParam = genre;
+                genre = genreParam;
             }
         }
 
@@ -87,7 +87,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public override string GetParameter()
         {
-            return MusicItemTypes.genre + separator + genre;
+            return MusicItemTypes.genre + separator + genreParam;
         }
     }
 }

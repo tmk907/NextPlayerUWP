@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -24,6 +26,20 @@ namespace NextPlayerUWP.ViewModels
             {
                 Playlists = await DatabaseManager.Current.GetPlaylistItemsAsync();
             }
+        }
+
+        public override void OnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            base.OnNavigatedTo(parameter, mode, state);
+            if (!isBack)
+            {
+                Playlists = new ObservableCollection<PlaylistItem>();
+            }
+        }
+
+        public void ItemClicked(object sender, ItemClickEventArgs e)
+        {
+            NavigationService.Navigate(App.Pages.Playlist, ((PlaylistItem)e.ClickedItem).GetParameter());
         }
     }
 }
