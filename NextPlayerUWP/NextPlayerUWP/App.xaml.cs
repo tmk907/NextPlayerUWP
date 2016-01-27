@@ -78,12 +78,17 @@ namespace NextPlayerUWP
             }
             TileManager.ManageSecondaryTileImages();
             //check if import was finished
+
+            var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+            Window.Current.Content = new Views.Shell(nav);
+
             return base.OnInitializeAsync(args);
         }
 
         public override Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             AdditionalKinds cause = DetermineStartCause(args);
+            
             if (cause == AdditionalKinds.SecondaryTile)
             {
                 LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;

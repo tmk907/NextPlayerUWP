@@ -135,7 +135,7 @@ namespace NextPlayerUWPDataLayer.Services
             paused = true;
             songPlayed = DateTime.Now - songsStart;
         }
-        bool test = false;
+
         public async Task Next(bool userchoice = true)
         {
             StopSongEvent();

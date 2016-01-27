@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -15,21 +16,6 @@ using Windows.System.Threading;
 
 namespace NextPlayerUWPBackgroundAudioPlayer
 {
-    public enum AppState
-    {
-        Unknown,
-        Active,
-        Suspended
-    }
-
-    public enum BackgroundTaskState
-    {
-        Unknown,
-        Started,
-        Running,
-        Canceled
-    }
-
     public sealed class BackgroundAudioTask : IBackgroundTask
     {
         private SystemMediaTransportControls smtc;

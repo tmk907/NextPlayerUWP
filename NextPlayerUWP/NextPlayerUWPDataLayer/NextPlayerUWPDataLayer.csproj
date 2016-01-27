@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Diagnostic\Logger.cs" />
+    <Compile Include="Enums\Enums.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\Repeat.cs" />
