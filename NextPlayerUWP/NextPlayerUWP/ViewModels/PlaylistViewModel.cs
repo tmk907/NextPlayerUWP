@@ -1,4 +1,6 @@
-﻿using NextPlayerUWPDataLayer.Model;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -46,9 +48,8 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public override void OnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            base.OnNavigatedTo(parameter, mode, state);
             if (!isBack)
             {
                 Playlist = new ObservableCollection<SongItem>();
@@ -60,8 +61,17 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public void ItemClicked(object sender, ItemClickEventArgs e)
+        public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
+            int index = 0;
+            foreach (var s in playlist)
+            {
+                if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
+                index++;
+            }
+            await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
+            ApplicationSettingsHelper.SaveSongIndex(index);
+            PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 

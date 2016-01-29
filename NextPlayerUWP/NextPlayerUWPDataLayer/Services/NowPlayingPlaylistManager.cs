@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -148,7 +149,7 @@ namespace NextPlayerUWPDataLayer.Services
             await NotifyChange();
         }
 
-        public async Task New(MusicItem item)
+        public async Task NewPlaylist(MusicItem item)
         {
             switch (MusicItem.ParseType(item.GetParameter()))
             {
@@ -179,9 +180,32 @@ namespace NextPlayerUWPDataLayer.Services
             //Play
         }
 
+        public async Task NewPlaylist(IEnumerable<SongItem> playlist)
+        {
+            songs.Clear();
+            foreach (var song in playlist)
+            {
+                songs.Add(song);
+            }
+            await NotifyChange();
+        }
+
         private async Task SaveNowPlayingInDB()
         {
             await DatabaseManager.Current.InsertNewNowPlayingPlaylistAsync(songs);
+        }
+
+        public SongItem GetSongItem(int index)
+        {
+            if (index < 0 || index > songs.Count - 1) return new SongItem();
+            return songs[index];
+        }
+
+        public SongItem GetCurrentPlaying()
+        {
+            int index = ApplicationSettingsHelper.ReadSongIndex();
+            if (index < 0 || index > songs.Count - 1) return new SongItem();
+            return songs[index];
         }
 
         private async Task NotifyChange()
@@ -202,8 +226,9 @@ namespace NextPlayerUWPDataLayer.Services
                 }
                 else
                 {
-                    bool a = ((String)value).Equals(AppConstants.BackgroundTaskRunning);
-                    return a;
+                    var state = EnumHelper.Parse<BackgroundTaskState>(value as string);
+                    bool isRunning = state == BackgroundTaskState.Running;
+                    return isRunning;
                 }
             }
         }

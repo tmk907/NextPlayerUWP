@@ -23,11 +23,10 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class Shell : Page
     {
-        public Shell(NavigationService navigationService)
+        public Shell(INavigationService  navigationService)
         {
             this.InitializeComponent();
             Menu.NavigationService = navigationService;
-            Menu.PaneBorderBrush 
         }
     }
 }

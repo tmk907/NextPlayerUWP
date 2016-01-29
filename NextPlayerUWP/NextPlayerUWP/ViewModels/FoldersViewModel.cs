@@ -29,9 +29,8 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public override void OnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            base.OnNavigatedTo(parameter, mode, state);
             if (!isBack)
             {
                 Folders = new ObservableCollection<FolderItem>();

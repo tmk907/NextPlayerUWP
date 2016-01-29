@@ -15,8 +15,40 @@ using Windows.Media.Playback;
 
 namespace NextPlayerUWP.Common
 {
+    public delegate void MediaPlayerStateChangeHandler(MediaPlayerState state);
+    public delegate void MediaPlayerTrackChangeHandler(int index);
     public class PlaybackManager
     {
+        private static readonly PlaybackManager current = new PlaybackManager();
+        public static PlaybackManager Current
+        {
+            get
+            {
+                return current;
+            }
+        }
+        static PlaybackManager() { }
+        public PlaybackManager()
+        {
+            backgroundAudioTaskStarted = new AutoResetEvent(false);
+        }
+
+        public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;
+        public void OnMediaPlayerStateChanged(MediaPlayerState state)
+        {
+            if (MediaPlayerStateChanged!=null){
+                MediaPlayerStateChanged(state);
+            }
+        }
+        public static event MediaPlayerTrackChangeHandler MediaPlayerTrackChanged;
+        public void OnMediaPlayerTrackChanged(int index)
+        {
+            if (MediaPlayerTrackChanged != null)
+            {
+                MediaPlayerTrackChanged(index);
+            }
+        }
+
         private AutoResetEvent backgroundAudioTaskStarted;
         const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA
         private int CurrentSongIndex
@@ -50,6 +82,14 @@ namespace NextPlayerUWP.Common
                 }
             }
         }
+        public MediaPlayerState PlayerState
+        {
+            get
+            {
+                if (!IsMyBackgroundTaskRunning) return MediaPlayerState.Stopped;
+                else return CurrentPlayer.CurrentState;
+            }
+        } 
 
         private MediaPlayer CurrentPlayer
         {
@@ -204,15 +244,16 @@ namespace NextPlayerUWP.Common
 
         private void UpdateTransportControls(MediaPlayerState state)
         {
-            switch (state)
-            {
-                case MediaPlayerState.Playing:
-                    //PlayButtonContent = "\uE17e\uE103";// Change to pause button
-                    break;
-                case MediaPlayerState.Paused:
-                    //PlayButtonContent = "\uE17e\uE102";     // Change to play button
-                    break;
-            }
+            OnMediaPlayerStateChanged(state);
+            //switch (state)
+            //{
+            //    case MediaPlayerState.Playing:
+            //        //PlayButtonContent = "\uE17e\uE103";// Change to pause button
+            //        break;
+            //    case MediaPlayerState.Paused:
+            //        //PlayButtonContent = "\uE17e\uE102";     // Change to play button
+            //        break;
+            //}
         }
 
         private void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
@@ -234,7 +275,9 @@ namespace NextPlayerUWP.Common
                     case AppConstants.SongIndex:
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
-
+                            int index = Int32.Parse(e.Data[key].ToString());
+                            CurrentSongIndex = index;
+                            OnMediaPlayerTrackChanged(index);
                         });
                         break;
                     case AppConstants.MediaOpened:
@@ -273,6 +316,7 @@ namespace NextPlayerUWP.Common
                 StartBackgroundAudioTask(AppConstants.SkipPrevious, "");
             }
         }
+
         public void Play()
         {
             if (IsMyBackgroundTaskRunning)
@@ -295,6 +339,19 @@ namespace NextPlayerUWP.Common
                 StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
             }
         }
+
+        public void PlayNew()
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                SendMessage(AppConstants.StartPlayback, CurrentSongIndex);
+            }
+            else
+            {
+                StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+            }
+        }
+
         public void Next()
         {
             if (IsMyBackgroundTaskRunning)

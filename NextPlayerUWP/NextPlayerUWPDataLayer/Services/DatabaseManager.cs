@@ -359,7 +359,7 @@ namespace NextPlayerUWPDataLayer.Services
             try
             {
                 //List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists LIKE '%?%'", artist);
-                List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists = ? OR Artists LIKE '?%' OR Artists LIKE '%?' OR Artists LIKE '%?%'", artist, artist + "; %", "%; " + artist, "%; " + artist + "; %");
+                List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists = ? OR Artists LIKE ? OR Artists LIKE ? OR Artists LIKE ?", artist, artist + "; %", "%; " + artist, "%; " + artist + "; %");
                 //List<SongsTable> list1 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists = ? ", artist);
                 //List<SongsTable> list2 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists LIKE ?%", artist + ";");
                 //List<SongsTable> list3 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists LIKE %?", ";" + artist);

@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Common;
+﻿using GalaSoft.MvvmLight.Threading;
+using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
@@ -34,6 +35,31 @@ namespace NextPlayerUWP
         public App()
         {
             InitializeComponent();
+            App.Current.UnhandledException += App_UnhandledException;
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveFromSettingsToFile();
+            //insights
+            var keys = PageKeys<Pages>();
+            keys.Add(Pages.MainPage, typeof(MainPage));
+            keys.Add(Pages.Albums, typeof(AlbumsView));
+            keys.Add(Pages.Album, typeof(AlbumView));
+            keys.Add(Pages.Artists, typeof(ArtistsView));
+            keys.Add(Pages.Artist, typeof(ArtistView));
+            keys.Add(Pages.Genres, typeof(GenresView));
+            keys.Add(Pages.Folders, typeof(FoldersView));
+            keys.Add(Pages.Playlists, typeof(PlaylistsView));
+            keys.Add(Pages.Playlist, typeof(PlaylistView));
+            keys.Add(Pages.Songs, typeof(SongsView));
+            //keys.Add(Pages, typeof());
+
+            if (FirstRun())
+            {
+                DatabaseManager.Current.CreateDatabase();
+            }
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveInSettings(e.Message+Environment.NewLine+e.Exception);
         }
 
         public enum Pages
@@ -55,34 +81,17 @@ namespace NextPlayerUWP
             Songs,
             TagsEditor
         }
-
+        
         public override Task OnInitializeAsync(IActivatedEventArgs args)
         {
-            //insights
-            var keys = PageKeys<Pages>();
-            keys.Add(Pages.MainPage, typeof(MainPage));
-            keys.Add(Pages.Albums, typeof(AlbumsView));
-            keys.Add(Pages.Album, typeof(AlbumView));
-            keys.Add(Pages.Artists, typeof(ArtistsView));
-            keys.Add(Pages.Artist, typeof(ArtistView));
-            keys.Add(Pages.Genres, typeof(GenresView));
-            keys.Add(Pages.Folders, typeof(FoldersView));
-            keys.Add(Pages.Playlists, typeof(PlaylistsView));
-            keys.Add(Pages.Playlist, typeof(PlaylistView));
-            keys.Add(Pages.Songs, typeof(SongsView));
-            //keys.Add(Pages, typeof());
-
-            if (FirstRun())
-            {
-                DatabaseManager.Current.CreateDatabase();
-            }
+            
             TileManager.ManageSecondaryTileImages();
             //check if import was finished
 
             var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
             Window.Current.Content = new Views.Shell(nav);
-
-            return base.OnInitializeAsync(args);
+            DispatcherHelper.Initialize();
+            return Task.CompletedTask;
         }
 
         public override Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
@@ -131,15 +140,15 @@ namespace NextPlayerUWP
             }
             return Task.FromResult<object>(null);
         }
-
-        public override Task OnSuspendingAsync(object s, SuspendingEventArgs e)
+        
+        public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
         {
             if (OnNewTilePinned != null)
             {
                 OnNewTilePinned();
                 OnNewTilePinned = null;
             }
-            return base.OnSuspendingAsync(s, e);
+            return base.OnSuspendingAsync(s, e, prelaunch);
         }
 
         private bool FirstRun()

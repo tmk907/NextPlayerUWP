@@ -8,66 +8,177 @@
     xmlns:views="using:NextPlayerUWP.Views"
     xmlns:controls="using:Template10.Controls"
     mc:Ignorable="d">
-    <controls:HamburgerMenu x:Name="Menu" Grid.Row="0" border>
-        <controls:HamburgerMenu.PrimaryButtons>
-            <controls:HamburgerButtonInfo PageType="views:AlbumsView">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <SymbolIcon Symbol="Audio" Width="48" Height="48" />
-                    <TextBlock Text="Albums" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                </StackPanel>
-            </controls:HamburgerButtonInfo>
-            <controls:HamburgerButtonInfo PageType="views:ArtistsView" >
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <SymbolIcon Symbol="People" Width="48" Height="48" />
-                    <TextBlock Text="Artists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                </StackPanel>
-            </controls:HamburgerButtonInfo>
-            <controls:HamburgerButtonInfo PageType="views:FoldersView" >
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <SymbolIcon Symbol="People" Width="48" Height="48" />
-                    <TextBlock Text="Folders" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                </StackPanel>
-            </controls:HamburgerButtonInfo>
-            <controls:HamburgerButtonInfo PageType="views:GenresView" >
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <SymbolIcon Symbol="People" Width="48" Height="48" />
-                    <TextBlock Text="Genres" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                </StackPanel>
-            </controls:HamburgerButtonInfo>
-            <controls:HamburgerButtonInfo PageType="views:PlaylistsView" >
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <SymbolIcon Symbol="People" Width="48" Height="48" />
-                    <TextBlock Text="Playlists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                </StackPanel>
-            </controls:HamburgerButtonInfo>
-            <controls:HamburgerButtonInfo PageType="views:SongsView" >
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <SymbolIcon Symbol="People" Width="48" Height="48" />
-                    <TextBlock Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                </StackPanel>
-            </controls:HamburgerButtonInfo>
-        </controls:HamburgerMenu.PrimaryButtons>
-
-        <!--<controls:HamburgerMenu.SecondaryButtons>
-            <controls:HamburgerButtonInfo PageType="views:DetailPage">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <SymbolIcon Symbol="Setting"  Width="48" Height="48"  />
-                    <TextBlock Text="Settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
-                </StackPanel>
-            </controls:HamburgerButtonInfo>
-        </controls:HamburgerMenu.SecondaryButtons>-->
-
-    </controls:HamburgerMenu>
-    <!--<Grid>
+    <Page.Resources>
+        <Style x:Key="BottomPlayerButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="8,4,8,4"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
-        
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Background="LightBlue">
-            <TextBlock Text="test" Width="100"/>
-            <Button Content="button" Width="100"/>
-        </StackPanel>
-    </Grid>-->
-    
+        <controls:HamburgerMenu x:Name="Menu" Grid.Row="0" PaneBorderThickness="0">
+            <controls:HamburgerMenu.PrimaryButtons>
+                <controls:HamburgerButtonInfo PageType="views:AlbumsView" ClearHistory="True">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Contact2" Width="48" Height="48" />
+                        <TextBlock Text="Albums" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
+                <controls:HamburgerButtonInfo PageType="views:ArtistsView"  ClearHistory="True">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="People" Width="48" Height="48" />
+                        <TextBlock Text="Artists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
+                <controls:HamburgerButtonInfo PageType="views:FoldersView"  ClearHistory="True">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Library" Width="48" Height="48" />
+                        <TextBlock Text="Folders" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
+                <controls:HamburgerButtonInfo PageType="views:GenresView"  ClearHistory="True">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Globe" Width="48" Height="48" />
+                        <TextBlock Text="Genres" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
+                <controls:HamburgerButtonInfo PageType="views:PlaylistsView"  ClearHistory="True">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="MusicInfo" Width="48" Height="48" />
+                        <TextBlock Text="Playlists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
+                <controls:HamburgerButtonInfo PageType="views:SongsView"  ClearHistory="True">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Audio" Width="48" Height="48" />
+                        <TextBlock Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
+            </controls:HamburgerMenu.PrimaryButtons>
+
+            <controls:HamburgerMenu.SecondaryButtons>
+                <controls:HamburgerButtonInfo >
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Setting"  Width="48" Height="48"  />
+                        <TextBlock Text="Settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
+            </controls:HamburgerMenu.SecondaryButtons>
+
+        </controls:HamburgerMenu>
+        <Grid Grid.Row="1" x:Name="BottomPlayerGrid" 
+              DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+
+            </Grid.ColumnDefinitions>
+            <Image Grid.RowSpan="2" Grid.Column="0"/>
+            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Song.Title, Mode=OneWay}"/>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Song.Artist}"/>
+            <Button Grid.Column="2" Grid.RowSpan="2"
+                    Command="{Binding Previous}" 
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <SymbolIcon Symbol="Previous"/>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button Grid.Column="3" Grid.RowSpan="2"
+                    Command="{Binding Play}"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <SymbolIcon Symbol="{Binding PlayButtonContent}"/>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button Grid.Column="4" Grid.RowSpan="2"
+                    Command="{Binding Next}"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <SymbolIcon Symbol="Next"/>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </Grid>
+    </Grid>
+
 </Page>

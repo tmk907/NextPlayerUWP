@@ -181,16 +181,16 @@ namespace NextPlayerUWPDataLayer.Services
 
         private void StopSongEvent()
         {
-            UpdateSongStatistics();
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "" && BackgroundMediaPlayer.Current.NaturalDuration != TimeSpan.Zero)
-            {
-                System.Diagnostics.Debug.WriteLine("scrobble");
-                ScrobbleTrack();
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("no scrobble");
-            }
+            //UpdateSongStatistics();
+            //if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "" && BackgroundMediaPlayer.Current.NaturalDuration != TimeSpan.Zero)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("scrobble");
+            //    ScrobbleTrack();
+            //}
+            //else
+            //{
+            //    System.Diagnostics.Debug.WriteLine("no scrobble");
+            //}
         }
 
         private void SendIndex()
@@ -266,12 +266,12 @@ namespace NextPlayerUWPDataLayer.Services
 
         private void ScrobbleNowPlaying()
         {
-            if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSendNP))
-            {
-                string artist = playlist.GetCurrentSong().Artist;
-                string track = playlist.GetCurrentSong().Title;
-                SendNowPlayingScrobble(artist, track);
-            }
+            //if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSendNP))
+            //{
+            //    string artist = playlist.GetCurrentSong().Artist;
+            //    string track = playlist.GetCurrentSong().Title;
+            //    SendNowPlayingScrobble(artist, track);
+            //}
         }
 
         private async Task SendNowPlayingScrobble(string artist, string track)

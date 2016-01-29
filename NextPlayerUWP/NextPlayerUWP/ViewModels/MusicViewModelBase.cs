@@ -9,6 +9,7 @@ using Windows.UI.Xaml;
 using NextPlayerUWP.Common;
 using Windows.Foundation;
 using NextPlayerUWPDataLayer.Services;
+using NextPlayerUWPDataLayer.Helpers;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -19,6 +20,8 @@ namespace NextPlayerUWP.ViewModels
         protected string positionKey;
         protected int selectedItemIndex;
         protected bool isBack;
+        protected bool onNavigatedCompleted = false;
+        protected bool onLoadedCompleted = false;
 
 
         protected MusicItem selectedItem;
@@ -39,7 +42,9 @@ namespace NextPlayerUWP.ViewModels
         public async void PlayNow(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            await NowPlayingPlaylistManager.Current.New(item);
+            await NowPlayingPlaylistManager.Current.NewPlaylist(item);
+            ApplicationSettingsHelper.SaveSongIndex(0);
+            PlaybackManager.Current.PlayNew();
         }
 
         public async void PlayNext(object sender, RoutedEventArgs e)
@@ -72,7 +77,7 @@ namespace NextPlayerUWP.ViewModels
             await TileManager.CreateTile((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
         }
 
-        
+
         #endregion
 
         ////?
@@ -88,8 +93,8 @@ namespace NextPlayerUWP.ViewModels
         //    SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
         //    NavigationService.Navigate(App.Pages.FileInfoPage, );
         //}
-
-        public override void OnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             isBack = false;
             firstVisibleItemIndex = 0;
@@ -125,9 +130,19 @@ namespace NextPlayerUWP.ViewModels
                     StateManager.Current.Clear(this.GetType().ToString());//is it necessary?
                 }
             }
-            
+
+            ChildOnNavigatedTo(parameter, mode, state);
+
+            onNavigatedCompleted = true;
+            if (onLoadedCompleted)
+            {
+                LoadAndScroll();
+            }
+            return Task.CompletedTask;
         }
-       
+
+        virtual public void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state) { }
+
         public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
             positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
@@ -144,19 +159,23 @@ namespace NextPlayerUWP.ViewModels
                 state[nameof(firstVisibleItemIndex)] = firstVisibleItemIndex;
                 state[nameof(positionKey)] = positionKey;
             }
-            return base.OnNavigatedFromAsync(state, suspending);
+            return Task.CompletedTask;
         }
 
         public void OnLoaded(ListView p)
         {
             listView = (ListView)p;
-            LoadAndScroll();
+            if (onNavigatedCompleted) LoadAndScroll();
+            else onLoadedCompleted = true;//zanim zostanie zmieniona wartosc, w OnNavigatedToAsync moze przeskoczyc do if(onloadedcomplete) ?
         }
 
         protected async Task LoadAndScroll()
         {
             await LoadData();
             await SetScrollPosition();
+
+            onNavigatedCompleted = false;
+            onLoadedCompleted = false;
         }
 
         protected virtual async Task LoadData() { }
