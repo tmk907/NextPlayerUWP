@@ -14,7 +14,8 @@ namespace NextPlayerUWPDataLayer.Model
         genre,
         plainplaylist,
         smartplaylist,
-        song
+        song,
+        unknown
     }
     public abstract class MusicItem
     {
@@ -23,7 +24,16 @@ namespace NextPlayerUWPDataLayer.Model
         public static MusicItemTypes ParseType(string param)
         {
             string[] s = param.Split(new string[] { separator },StringSplitOptions.None);
-            return (MusicItemTypes)Enum.Parse(typeof(MusicItemTypes), s[0]);
+            try
+            {
+                return (MusicItemTypes)Enum.Parse(typeof(MusicItemTypes), s[0]);
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.Logger.Save("MusicItem ParseType " + Environment.NewLine + ex.Message);
+                Diagnostics.Logger.SaveToFile();
+                return MusicItemTypes.unknown;
+            }
         }
         public static string[] ParseParameter(string param)
         {

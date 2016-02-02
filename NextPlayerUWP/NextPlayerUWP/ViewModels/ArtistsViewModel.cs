@@ -21,11 +21,35 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref artists, value); }
         }
 
+        private ObservableCollection<GroupList> groupedArtists = new ObservableCollection<GroupList>();
+        public ObservableCollection<GroupList> GroupedArtists
+        {
+            get { return groupedArtists; }
+            set { Set(ref groupedArtists, value); }
+        }
+
         protected override async Task LoadData()
         {
             if (Artists.Count == 0)
             {
                 Artists = await DatabaseManager.Current.GetArtistItemsAsync();
+            }
+            if (GroupedArtists.Count == 0)
+            {
+                var query = from item in artists
+                            group item by item.Artist[0] into g
+                            orderby g.Key
+                            select new { GroupName = g.Key, Items = g };
+                foreach (var g in query)
+                {
+                    GroupList group = new GroupList();
+                    group.Key = g.GroupName;
+                    foreach (var item in g.Items)
+                    {
+                        group.Add(item);
+                    }
+                    GroupedArtists.Add(group);
+                }
             }
         }
 

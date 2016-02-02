@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
@@ -20,6 +21,7 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            ChangeCover();
             if (PlaybackManager.Current.PlayerState == MediaPlayerState.Playing)
             {
                 PlayButtonContent = Symbol.Pause;
@@ -47,6 +49,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return playButtonContent; }
             set { Set(ref playButtonContent, value); }
+        }
+
+        private BitmapImage cover = new BitmapImage();
+        public BitmapImage Cover
+        {
+            get { return cover; }
+            set { Set(ref cover, value); }
         }
         #endregion
 
@@ -109,6 +118,12 @@ namespace NextPlayerUWP.ViewModels
         private void ChangeSong(int index)
         {
             Song = NowPlayingPlaylistManager.Current.GetSongItem(index);
+            ChangeCover();
+        }
+
+        private async Task ChangeCover()
+        {
+            Cover = await ImagesManager.GetCover(song.Path, false);
         }
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -116,6 +131,7 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            ChangeCover();
             //cover
             if (PlaybackManager.Current.PlayerState == MediaPlayerState.Playing)
             {

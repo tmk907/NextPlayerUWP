@@ -5,9 +5,12 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=ArtistsVM}"
     mc:Ignorable="d">
     <Page.Resources>
+        <CollectionViewSource x:Name="ArtistsCVS" Source="{Binding GroupedArtists}" IsSourceGrouped="True"/>
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
                             Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
@@ -23,29 +26,57 @@
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <DataTemplate x:Key="ArtistItemTemplate" x:DataType="data:ArtistItem"> 
+            <StackPanel RightTapped="ListViewItem_RightTapped">
+                <TextBlock Text="{x:Bind Artist}"/>
+                <TextBlock Text="{x:Bind Duration}"/>
+                <TextBlock Text="{x:Bind SongsNumber}"/>
+            </StackPanel>
+        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="ArtistsListView"
-            ItemsSource="{Binding Artists}"
-            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                  SelectionMode="None"
-            IsItemClickEnabled="True"
-            ItemClick="{x:Bind ViewModel.ItemClicked }">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel Orientation="Vertical"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel RightTapped="ListViewItem_RightTapped">
-                        <TextBlock Text="{Binding Artist}"/>
-                        <TextBlock Text="{Binding Duration}"/>
-                        <TextBlock Text="{Binding SongsNumber}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            
-        </ListView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <controls:PageHeader Grid.Row="0"
+                BackButtonVisibility="Collapsed" 
+                Frame="{x:Bind Frame, Mode=OneWay}"
+                x:Uid="PageHeaderArtists"
+                Content="Artists" 
+                VisualStateNarrowMinWidth="-1" />
+        <Grid Grid.Row="1">
+            <ListView x:Name="ArtistsListView"
+                ItemsSource="{Binding Source={StaticResource ArtistsCVS}}"
+                ItemTemplate="{StaticResource ArtistItemTemplate}"
+                IsItemClickEnabled="True"
+                ItemClick="{x:Bind ViewModel.ItemClicked }"
+                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                SelectionMode="None">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.GroupStyle>
+                    <GroupStyle >
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate x:DataType="data:GroupList">
+                                <TextBlock Text="{x:Bind Key}" 
+                                       FontWeight="SemiBold"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

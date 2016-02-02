@@ -13,8 +13,8 @@
             <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
             <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}"/>
-            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
-            <Setter Property="Padding" Value="8,4,8,4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
@@ -148,7 +148,7 @@
                 <ColumnDefinition Width="60"/>
 
             </Grid.ColumnDefinitions>
-            <Image Grid.RowSpan="2" Grid.Column="0"/>
+            <Image Grid.RowSpan="2" Grid.Column="0" Source="{Binding Cover}"/>
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Song.Title, Mode=OneWay}"/>
             <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Song.Artist}"/>
             <Button Grid.Column="2" Grid.RowSpan="2"

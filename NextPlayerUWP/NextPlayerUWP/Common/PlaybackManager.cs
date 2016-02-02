@@ -342,6 +342,7 @@ namespace NextPlayerUWP.Common
 
         public void PlayNew()
         {
+            OnMediaPlayerTrackChanged(CurrentSongIndex);
             if (IsMyBackgroundTaskRunning)
             {
                 SendMessage(AppConstants.StartPlayback, CurrentSongIndex);

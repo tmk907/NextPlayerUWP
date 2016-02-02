@@ -5,6 +5,8 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=PlaylistVM}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -17,35 +19,54 @@
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
-                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{x:Bind}" />
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <DataTemplate x:Key="SongItemTemplate" x:DataType="data:SongItem">
+            <StackPanel RightTapped="ListViewItem_RightTapped">
+                <TextBlock Text="{x:Bind Title}"/>
+                <TextBlock Text="{x:Bind Artist}"/>
+                <TextBlock Text="{x:Bind Album}"/>
+                <TextBlock Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"/>
+            </StackPanel>
+        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="PlaylistListView"
-            ItemsSource="{Binding Playlist}"
-            SelectedItem="{Binding SelectedItem}"
-                  SelectionMode="None"
-            IsItemClickEnabled="True"
-            ItemClick="{x:Bind ViewModel.ItemClicked }">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel Orientation="Vertical"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel RightTapped="ListViewItem_RightTapped">
-                        <TextBlock Text="{Binding Title}"/>
-                        <TextBlock Text="{Binding Artist}"/>
-                        <TextBlock Text="{Binding Album}"/>
-                        <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToStringConverter}}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <controls:PageHeader Grid.Row="0"
+                BackButtonVisibility="Collapsed" 
+                Frame="{x:Bind Frame, Mode=OneWay}"
+                x:Uid="PageHeaderPlaylist"
+                Content="{Binding PageTitle}" 
+                VisualStateNarrowMinWidth="-1" />
+        <Grid Grid.Row="1">
+            <ListView x:Name="PlaylistListView"
+                ItemsSource="{Binding Playlist}"
+                ItemTemplate="{StaticResource SongItemTemplate}"
+                IsItemClickEnabled="True"
+                ItemClick="{x:Bind ViewModel.ItemClicked }"
+                SelectedItem="{Binding SelectedItem}"
+                SelectionMode="None">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

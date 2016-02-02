@@ -101,7 +101,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\ImagesManager.cs" />
     <Compile Include="Common\PlaybackManager.cs" />
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="Common\TileManager.cs" />
@@ -203,14 +202,15 @@
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-100.png" />
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-140.png" />
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-240.png" />
-    <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\SongCover.png" />
+    <Content Include="Assets\SongCover192.scale-100.png" />
+    <Content Include="Assets\SongCover192.scale-140.png" />
+    <Content Include="Assets\SongCover192.scale-240.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-100.png" />
+    <Content Include="Assets\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
+    <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

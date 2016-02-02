@@ -2,11 +2,13 @@
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -36,20 +38,9 @@ namespace NextPlayerUWP
         {
             InitializeComponent();
             App.Current.UnhandledException += App_UnhandledException;
-            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveFromSettingsToFile();
+            Logger.SaveFromSettingsToFile();
             //insights
-            var keys = PageKeys<Pages>();
-            keys.Add(Pages.MainPage, typeof(MainPage));
-            keys.Add(Pages.Albums, typeof(AlbumsView));
-            keys.Add(Pages.Album, typeof(AlbumView));
-            keys.Add(Pages.Artists, typeof(ArtistsView));
-            keys.Add(Pages.Artist, typeof(ArtistView));
-            keys.Add(Pages.Genres, typeof(GenresView));
-            keys.Add(Pages.Folders, typeof(FoldersView));
-            keys.Add(Pages.Playlists, typeof(PlaylistsView));
-            keys.Add(Pages.Playlist, typeof(PlaylistView));
-            keys.Add(Pages.Songs, typeof(SongsView));
-            //keys.Add(Pages, typeof());
+            
 
             if (FirstRun())
             {
@@ -59,7 +50,7 @@ namespace NextPlayerUWP
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveInSettings(e.Message+Environment.NewLine+e.Exception);
+            Logger.SaveInSettings(e.Message+Environment.NewLine+e.Exception);
         }
 
         public enum Pages
@@ -84,13 +75,43 @@ namespace NextPlayerUWP
         
         public override Task OnInitializeAsync(IActivatedEventArgs args)
         {
-            
+            Stopwatch s = new Stopwatch();
+            s.Start();
             TileManager.ManageSecondaryTileImages();
-            //check if import was finished
-
-            var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-            Window.Current.Content = new Views.Shell(nav);
+            
+            try
+            {
+                var keys = PageKeys<Pages>();
+                keys.Add(Pages.MainPage, typeof(MainPage));
+                keys.Add(Pages.Albums, typeof(AlbumsView));
+                keys.Add(Pages.Album, typeof(AlbumView));
+                keys.Add(Pages.Artists, typeof(ArtistsView));
+                keys.Add(Pages.Artist, typeof(ArtistView));
+                keys.Add(Pages.Genres, typeof(GenresView));
+                keys.Add(Pages.Folders, typeof(FoldersView));
+                keys.Add(Pages.Playlists, typeof(PlaylistsView));
+                keys.Add(Pages.Playlist, typeof(PlaylistView));
+                keys.Add(Pages.Songs, typeof(SongsView));
+                //keys.Add(Pages, typeof());
+                //check if import was finished
+                
+                var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+                //s.Stop();
+                //Debug.WriteLine("initialize 2 " + s.ElapsedMilliseconds);
+                //s.Start();
+                Window.Current.Content = new Views.Shell(nav);
+                //s.Stop();
+                //Debug.WriteLine("initialize 3 " + s.ElapsedMilliseconds);
+                //s.Start();
+            }
+            catch (Exception ex)
+            {
+                Logger.Save("OnInitializeAsync" + Environment.NewLine+ex);
+                Logger.SaveToFile();
+            }
             DispatcherHelper.Initialize();
+            s.Stop();
+            Debug.WriteLine("initialize end" + s.ElapsedMilliseconds);
             return Task.CompletedTask;
         }
 
@@ -103,12 +124,14 @@ namespace NextPlayerUWP
                 LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
                 if (!eventArgs.TileId.Contains(AppConstants.TileId))
                 {
-
+                    Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
+                    Logger.SaveToFile();
                 }
                 Pages page = Pages.MainPage;
                 string parameter = eventArgs.Arguments;
+                MusicItemTypes type = MusicItem.ParseType(parameter);
                 // dodac wybor w ustawieniach, czy przejsc do widoku, czy zaczac odtwarzanie i przejsc do teraz odtwarzane
-                switch (MusicItem.ParseType(parameter))
+                switch (type)
                 {
                     case MusicItemTypes.album:
                         page = Pages.Album;

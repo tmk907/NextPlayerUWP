@@ -10,6 +10,7 @@ using NextPlayerUWP.Common;
 using Windows.Foundation;
 using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Helpers;
+using GalaSoft.MvvmLight.Threading;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -77,7 +78,17 @@ namespace NextPlayerUWP.ViewModels
             await TileManager.CreateTile((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
         }
 
+        public void EditTags(object sender, RoutedEventArgs e)
+        {
+            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.TagsEditor, ((SongItem)SelectedItem).SongId);
+        }
 
+        public void ShowDetails(object sender, RoutedEventArgs e)
+        {
+            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
+        }
         #endregion
 
         ////?
@@ -93,7 +104,7 @@ namespace NextPlayerUWP.ViewModels
         //    SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
         //    NavigationService.Navigate(App.Pages.FileInfoPage, );
         //}
-        
+
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             isBack = false;
@@ -197,12 +208,22 @@ namespace NextPlayerUWP.ViewModels
         private string ItemToKeyHandler(object item)
         {
             if (item == null) return null;
-            return ((MusicItem)item).GetParameter();
+            MusicItem mi;
+            
+            if (item.GetType() == typeof(GroupList))
+            {
+                mi = (MusicItem)(((GroupList)item)[0]);
+            }
+            else
+            {
+                mi = (MusicItem)item;
+            }
+            return mi.GetParameter();
         }
 
         private IAsyncOperation<object> KeyToItemHandler(string key)
         {
-            return Task.Run(() =>
+            return Dispatcher.DispatchAsync<object>(() =>
             {
                 if (listView.Items.Count <= 0)
                 {
@@ -210,7 +231,8 @@ namespace NextPlayerUWP.ViewModels
                 }
                 else
                 {
-                    if (((MusicItem)listView.Items[firstVisibleItemIndex]).GetParameter() == key)
+                    var i = listView.Items[firstVisibleItemIndex];
+                    if (((MusicItem)i).GetParameter() == key)
                     {
                         return listView.Items[firstVisibleItemIndex];
                     }
@@ -221,6 +243,26 @@ namespace NextPlayerUWP.ViewModels
                     return null;
                 }
             }).AsAsyncOperation();
+            //return Task.Run(() =>
+            //{
+            //    if (listView.Items.Count <= 0)
+            //    {
+            //        return null;
+            //    }
+            //    else
+            //    {
+            //        var i = listView.Items[firstVisibleItemIndex];
+            //        if (((MusicItem)i).GetParameter() == key)
+            //        {
+            //            return listView.Items[firstVisibleItemIndex];
+            //        }
+            //        foreach (var item in listView.Items)
+            //        {
+            //            if (((MusicItem)item).GetParameter() == key) return item;
+            //        }
+            //        return null;
+            //    }
+            //}).AsAsyncOperation();
         }
     }
 }

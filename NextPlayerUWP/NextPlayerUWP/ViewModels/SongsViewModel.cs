@@ -19,8 +19,37 @@ namespace NextPlayerUWP.ViewModels
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
         public ObservableCollection<SongItem> Songs
         {
-            get { return songs; }
+            get
+            {
+                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                {
+                    for(int i = 0; i < 10; i++)
+                    {
+                        Songs.Add(new SongItem());
+                    }
+                }
+                return songs; }
             set { Set(ref songs, value); }
+        }
+
+        private ObservableCollection<GroupList> groupedSongs = new ObservableCollection<GroupList>();
+        public ObservableCollection<GroupList> GroupedSongs
+        {
+            get
+            {
+                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                {
+                    string[] t = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "K" };
+                    for (int i = 0; i < 10; i++)
+                    {
+                        GroupList group = new GroupList();
+                        group.Key = t[i];
+                        groupedSongs.Add(group);
+                    }
+                }
+                return groupedSongs;
+            }
+            set { Set(ref groupedSongs, value); }
         }
 
         protected override async Task LoadData()
@@ -28,6 +57,23 @@ namespace NextPlayerUWP.ViewModels
             if (Songs.Count == 0)
             {
                 Songs = await DatabaseManager.Current.GetSongItemsAsync();
+            }
+            if (groupedSongs.Count == 0)
+            {
+                var query = from item in songs
+                            group item by item.Title[0] into g
+                            orderby g.Key
+                            select new { GroupName = g.Key, Items = g };
+                foreach(var g in query)
+                {
+                    GroupList group = new GroupList();
+                    group.Key = g.GroupName;
+                    foreach (var item in g.Items)
+                    {
+                        group.Add(item);
+                    }
+                    GroupedSongs.Add(group);
+                }
             }
         }
 
@@ -51,18 +97,6 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
-        }
-
-        public void EditTags(object sender, RoutedEventArgs e)
-        {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.TagsEditor, ((SongItem)SelectedItem).SongId);
-        }
-
-        public void ShowDetails(object sender, RoutedEventArgs e)
-        {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
         }
     }
 }

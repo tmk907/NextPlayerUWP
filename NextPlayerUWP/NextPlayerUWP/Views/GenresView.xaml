@@ -6,15 +6,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:NextPlayerUWP.Helpers"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=GenresVM}"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="GenreItemTemplate" >
-            <StackPanel>
-                <TextBlock Text="{Binding Genre}"/>
-                <TextBlock Text="{Binding SongsNumber}"/>
-            </StackPanel>
-        </DataTemplate>
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
                             Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
@@ -30,32 +26,47 @@
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <DataTemplate x:Key="GenreItemTemplate" x:DataType="data:GenreItem">
+            <StackPanel RightTapped="ListViewItem_RightTapped">
+                <TextBlock Text="{x:Bind Genre}"/>
+                <TextBlock Text="{x:Bind SongsNumber}"/>
+                <TextBlock Text="{x:Bind Duration}"/>
+            </StackPanel>
+        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="GenresListView"
-            ItemsSource="{Binding Genres}"
-            SelectedItem="{Binding SelectedItem}"
-                  
-            SelectionMode="None"
-            IsItemClickEnabled="True"
-            ItemClick="{x:Bind ViewModel.ItemClicked }"
-            
-            >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel RightTapped="ListViewItem_RightTapped">
-                        <TextBlock Text="{Binding Genre}"/>
-                        <TextBlock Text="{Binding SongsNumber}"/>
-                        <TextBlock Text="{Binding Duration}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel Orientation="Vertical"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-
-        </ListView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <controls:PageHeader Grid.Row="0"
+                BackButtonVisibility="Collapsed" 
+                Frame="{x:Bind Frame, Mode=OneWay}"
+                x:Uid="PageHeaderGenres"
+                Content="Genres" 
+                VisualStateNarrowMinWidth="-1" />
+        <Grid Grid.Row="1">
+            <ListView x:Name="GenresListView"
+                    ItemsSource="{Binding Genres}"
+                    ItemTemplate="{StaticResource GenreItemTemplate}"
+                    SelectedItem="{Binding SelectedItem}"
+                    IsItemClickEnabled="True"
+                    ItemClick="{x:Bind ViewModel.ItemClicked }"
+                    SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

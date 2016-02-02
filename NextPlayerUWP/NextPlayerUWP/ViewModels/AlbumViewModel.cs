@@ -33,7 +33,8 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            Songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(albumParam);
+            songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(albumParam);
+            Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.TrackNumber));
             Album = await DatabaseManager.Current.GetAlbumItemAsync(albumParam);
         }
 

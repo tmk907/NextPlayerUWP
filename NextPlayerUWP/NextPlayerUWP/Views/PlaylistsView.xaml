@@ -5,6 +5,8 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:controls="using:Template10.Controls"
     mc:Ignorable="d">
     <Page.Resources>
         <!--<MenuFlyout x:Key="ContextMenu">

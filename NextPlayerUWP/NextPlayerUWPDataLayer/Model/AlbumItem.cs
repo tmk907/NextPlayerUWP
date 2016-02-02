@@ -61,6 +61,32 @@ namespace NextPlayerUWPDataLayer.Model
         }
         private TimeSpan duration;
         public TimeSpan Duration { get { return duration; } }
+        private string imagePath;
+        public string ImagePath
+        {
+            get { return imagePath; }
+            set
+            {
+                if (value != imagePath)
+                {
+                    imagePath = value;
+                    onPropertyChanged(this, "ImagePath");
+                }
+            }
+        }
+        private int year;
+        public int Year
+        {
+            get { return year; }
+            set
+            {
+                if (value != year)
+                {
+                    year = value;
+                    onPropertyChanged(this, "Year");
+                }
+            }
+        }
 
         public AlbumItem()
         {
@@ -70,9 +96,11 @@ namespace NextPlayerUWPDataLayer.Model
             albumArtist = "Unknown Album artist";
             songsNumber = 0;
             duration = TimeSpan.Zero;
+            year = 2020;
+            imagePath = "";
         }
 
-        public AlbumItem(string albumParam, string artistParam, string albumArtist, TimeSpan duration, int songsnumber)
+        public AlbumItem(string albumParam, string artistParam, string albumArtist, TimeSpan duration, int songsnumber, int year, string imagePath)
         {
             this.albumParam = albumParam;
             this.artistParam = artistParam;
@@ -103,6 +131,8 @@ namespace NextPlayerUWPDataLayer.Model
             }
             this.duration = duration;
             this.songsNumber = songsnumber;
+            this.year = year;
+            this.imagePath = imagePath;
         }
 
         public AlbumItem(AlbumsTable table)
@@ -121,6 +151,8 @@ namespace NextPlayerUWPDataLayer.Model
             }
             albumArtist = table.AlbumArtist;
             artistParam = null;
+            year = table.Year;
+            imagePath = table.ImagePath;
         }
 
         public override string ToString()

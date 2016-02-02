@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,14 @@ namespace NextPlayerUWP.Common
 {
     public class TileManager
     {
+        /// <summary>
+        /// Deletes unused tile images from App folder
+        /// </summary>
+        /// <returns></returns>
         public static async Task ManageSecondaryTileImages()
         {
             var tiles = await SecondaryTile.FindAllAsync();
-            StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             var files = await localFolder.GetFilesAsync();
             bool exist;
             foreach (var file in files)
@@ -56,18 +61,19 @@ namespace NextPlayerUWP.Common
                                                 displayName,
                                                 tileActivationArguments,
                                                 square150x150Logo,
-                                                TileSize.Wide310x150);
+                                                TileSize.Square150x150);
             secondaryTile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/AppImages/WideLogo/WideLogo.png");
             secondaryTile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/AppImages/Square71x71Logo/Square71x71LogoTr.png");
 
             ResourceLoader loader = new ResourceLoader();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileId, tileId);
             string hasImage = "no";
+            string name = "";
+            string type = "";
             switch (MusicItem.ParseType(parameter))
             {
                 case MusicItemTypes.album:
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ((AlbumItem)item).Album);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Album"));
+                    name = ((AlbumItem)item).Album;
+                    type = loader.GetString("Album");
                     string imageName = await ImagesManager.SaveAlbumCover(((AlbumItem)item).AlbumParam, tileId);
                     if (imageName.Contains(tileId))
                     {
@@ -75,32 +81,37 @@ namespace NextPlayerUWP.Common
                     }
                     break;
                 case MusicItemTypes.artist:
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ((ArtistItem)item).Artist);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Artist"));
+                    name = ((ArtistItem)item).Artist;
+                    type = loader.GetString("Artist");
                     break;
                 case MusicItemTypes.folder:
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ((FolderItem)item).Folder);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Folder"));
+                    name = ((FolderItem)item).Folder;
+                    type = loader.GetString("Folder");
                     break;
                 case MusicItemTypes.genre:
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ((GenreItem)item).Genre);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Genre"));
+                    name = ((GenreItem)item).Genre;
+                    type = loader.GetString("Genre");
                     break;
                 case MusicItemTypes.plainplaylist:
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ((PlaylistItem)item).Name);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Playlist"));
+                    name = ((PlaylistItem)item).Name;
+                    type = loader.GetString("Playlist");
                     break;
                 case MusicItemTypes.smartplaylist:
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ((PlaylistItem)item).Name);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Playlist"));
+                    name = ((PlaylistItem)item).Name;
+                    type = loader.GetString("Playlist");
                     break;
                 case MusicItemTypes.song:
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ((SongItem)item).Artist + " - " + ((SongItem)item).Title);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Song"));
+                    name = ((SongItem)item).Artist + " - " + ((SongItem)item).Title;
+                    type = loader.GetString("Song");
                     break;
             }
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileImage, hasImage);
+            ApplicationSettingsHelper.SaveTileData(new TileData() {
+                Id = tileId,
+                Name = name,
+                Type = type,
+                HasImage = hasImage }
+            );
 
             App.OnNewTilePinned = UpdateNewSecondaryTile;
 
@@ -109,39 +120,43 @@ namespace NextPlayerUWP.Common
 
         public static void UpdateNewSecondaryTile()
         {
-            string name = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileName) as string;
-            string id = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileId) as string;
-            string type = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileType) as string;
-            string hasImage = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileImage) as string;
-
-            XmlDocument tileXml;
-            XmlDocument wideTile;
-
-            if (hasImage == "yes")
+            List<TileData> list = ApplicationSettingsHelper.ReadTileData();
+            foreach(var tileData in list)
             {
-                tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150PeekImageAndText02);
-                var tileImageAttributes = tileXml.GetElementsByTagName("image");
-                tileImageAttributes[0].Attributes.GetNamedItem("src").NodeValue = "ms-appdata:///local/" + id + ".jpg";
+                string name = tileData.Name;
+                string id = tileData.Id;
+                string type = tileData.Type;
+                string hasImage = tileData.HasImage;
+
+                XmlDocument tileXml;
+                XmlDocument wideTile;
+
+                if (hasImage == "yes")
+                {
+                    tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150PeekImageAndText02);
+                    var tileImageAttributes = tileXml.GetElementsByTagName("image");
+                    tileImageAttributes[0].Attributes.GetNamedItem("src").NodeValue = "ms-appdata:///local/" + id + ".jpg";
+                }
+                else
+                {
+                    tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Text02);
+                }
+
+                XmlNodeList tileTextAttributes = tileXml.GetElementsByTagName("text");
+                tileTextAttributes[0].InnerText = type;
+                tileTextAttributes[1].InnerText = name;
+
+                wideTile = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Text09);
+                XmlNodeList textAttr = wideTile.GetElementsByTagName("text");
+                textAttr[0].InnerText = type;
+                textAttr[1].InnerText = name;
+
+                IXmlNode node = tileXml.ImportNode(wideTile.GetElementsByTagName("binding").Item(0), true);
+                tileXml.GetElementsByTagName("visual").Item(0).AppendChild(node);
+
+                TileNotification tileNotification = new TileNotification(tileXml);
+                TileUpdateManager.CreateTileUpdaterForSecondaryTile(id).Update(tileNotification);
             }
-            else
-            {
-                tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Text02);
-            }
-
-            XmlNodeList tileTextAttributes = tileXml.GetElementsByTagName("text");
-            tileTextAttributes[0].InnerText = type;
-            tileTextAttributes[1].InnerText = name;
-
-            wideTile = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Text09);
-            XmlNodeList textAttr = wideTile.GetElementsByTagName("text");
-            textAttr[0].InnerText = type;
-            textAttr[1].InnerText = name;
-
-            IXmlNode node = tileXml.ImportNode(wideTile.GetElementsByTagName("binding").Item(0), true);
-            tileXml.GetElementsByTagName("visual").Item(0).AppendChild(node);
-
-            TileNotification tileNotification = new TileNotification(tileXml);
-            TileUpdateManager.CreateTileUpdaterForSecondaryTile(id).Update(tileNotification);
         }
 
     }

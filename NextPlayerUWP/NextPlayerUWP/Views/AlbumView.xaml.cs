@@ -28,7 +28,6 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
             this.Loaded += delegate { ((AlbumViewModel)DataContext).OnLoaded(AlbumSongsListView); };
-
             ViewModel = (AlbumViewModel)DataContext;
         }
 

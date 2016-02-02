@@ -5,29 +5,93 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=ArtistVM}"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{x:Bind}" />-->
+            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
+        <DataTemplate x:Key="SongItemTemplate" x:DataType="data:SongItem">
+            <Grid RightTapped="ListViewItem_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                    Text="{x:Bind TrackNumber}"
+                    Style="{StaticResource ArtistSongItemStyle}"/>
+                <TextBlock Grid.Column="1"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource ArtistSongItemStyle}"/>
+                <TextBlock Grid.Column="2"
+                    Text="{x:Bind Album}"
+                    Style="{StaticResource ArtistSongItemStyle}"/>
+                <TextBlock Grid.Column="3"
+                    Text="{x:Bind Duration}"
+                    Style="{StaticResource ArtistSongItemStyle}"/>
+            </Grid>
+        </DataTemplate>
+        <Style x:Key="ArtistSongItemStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+        </Style>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-<TextBlock Text="{Binding Artist.Artist}"/>
-        <ListView x:Name="ArtistSongsListView"
-                  ItemsSource="{Binding Songs}"
-                  SelectedItem="{Binding SelectedItem}"
-        
-                  >
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel Orientation="Vertical"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Title}"/>
-                        <TextBlock Text="{Binding Artist}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <controls:PageHeader Grid.Row="0"
+                BackButtonVisibility="Collapsed" 
+                Frame="{x:Bind Frame, Mode=OneWay}"
+                x:Uid="PageHeaderArtist"
+                Content="Artist" 
+                VisualStateNarrowMinWidth="-1" />
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                Text="{Binding Artist.Artist}"/>
+            <ListView x:Name="ArtistSongsListView"
+                      Grid.Row="1"
+                    ItemsSource="{Binding Songs}"
+                    ItemTemplate="{StaticResource SongItemTemplate}"
+                    IsItemClickEnabled="True"
+                    ItemClick="{x:Bind ViewModel.ItemClicked }"
+                    SelectedItem="{Binding SelectedItem}"
+                    SelectionMode="None">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                    
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

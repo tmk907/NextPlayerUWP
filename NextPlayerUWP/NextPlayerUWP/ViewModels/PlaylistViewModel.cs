@@ -34,15 +34,19 @@ namespace NextPlayerUWP.ViewModels
                 {
                     case MusicItemTypes.folder:
                         Playlist = await DatabaseManager.Current.GetSongItemsFromFolderAsync(firstParam);
+                        PageTitle = "Folder";
                         break;
                     case MusicItemTypes.genre:
                         Playlist = await DatabaseManager.Current.GetSongItemsFromGenreAsync(firstParam);
+                        PageTitle = "Genre";
                         break;
                     case MusicItemTypes.plainplaylist:
                         Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
+                        PageTitle = "Playlist";
                         break;
                     case MusicItemTypes.smartplaylist:
                         //Playlist = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(Int32.Parse(firstParam));
+                        PageTitle = "Playlist";
                         break;
                 }
             }
@@ -73,18 +77,6 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
-        }
-
-        public void EditTags(object sender, RoutedEventArgs e)
-        {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.TagsEditor, ((SongItem)SelectedItem).SongId);
-        }
-
-        public void ShowDetails(object sender, RoutedEventArgs e)
-        {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
         }
     }
 }
