@@ -24,6 +24,51 @@
         </MenuFlyout>-->
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Tekst długi"
+                       FontSize="16"
+                       FontWeight="SemiLight"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="16"
+                       FontWeight="Normal"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="16"
+                       FontWeight="SemiBold"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="20"
+                       FontWeight="SemiLight"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="20"
+                       FontWeight="Normal"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="20"
+                       FontWeight="SemiBold"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="24"
+                       FontWeight="SemiLight"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="24"
+                       FontWeight="Normal"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="24"
+                       FontWeight="SemiBold"/>
 
+            <TextBlock Text="Tekst długi"
+                       FontSize="24"
+                       FontWeight="Normal"
+                       Foreground="Black"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="24"
+                       FontWeight="Normal"
+                       Foreground="LightGray"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="24"
+                       FontWeight="Normal"
+                       Foreground="Gray"/>
+            <TextBlock Text="Tekst długi"
+                       FontSize="24"
+                       FontWeight="Normal"
+                       Foreground="DarkGray"/>
+        </StackPanel>
     </Grid>
 </Page>

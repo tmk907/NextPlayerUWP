@@ -37,9 +37,11 @@ namespace NextPlayerUWP.ViewModels
             if (groupedAlbums.Count == 0)
             {
                 var query = from item in albums
-                            group item by item.Album[0] into g
+                            orderby item.Album.ToLower()
+                            group item by item.Album[0].ToString().ToLower() into g
                             orderby g.Key
-                            select new { GroupName = g.Key, Items = g };
+                            select new { GroupName = g.Key.ToUpper(), Items = g };
+                ObservableCollection<GroupList> gr = new ObservableCollection<GroupList>();
                 foreach (var g in query)
                 {
                     GroupList group = new GroupList();
@@ -48,17 +50,32 @@ namespace NextPlayerUWP.ViewModels
                     {
                         group.Add(item);
                     }
-                    GroupedAlbums.Add(group);
+                    gr.Add(group);
+                }
+                GroupedAlbums = gr;
+            }
+            foreach(var album in Albums)
+            {
+                if (album.ImagePath == "")
+                {
+                    string path = await ImagesManager.GetAlbumCoverPath(album);
+                    album.ImagePath = path;
+                    await DatabaseManager.Current.UpdateAlbumItem(album);
                 }
             }
-        }
-
-        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        {
-            if (!isBack)
-            {
-                Albums = new ObservableCollection<AlbumItem>();
-            }
+            //foreach(var group in GroupedAlbums)
+            //{
+            //    foreach(var a in group)
+            //    {
+            //        AlbumItem album = (AlbumItem)a;
+            //        if (album.ImagePath == "")
+            //        {
+            //            string path = await ImagesManager.GetAlbumCoverPath(album);
+            //            album.ImagePath = path;
+            //            await DatabaseManager.Current.UpdateAlbumItem(album);
+            //        }
+            //    }
+            //}
         }
 
         public void ItemClicked(object sender, ItemClickEventArgs e)

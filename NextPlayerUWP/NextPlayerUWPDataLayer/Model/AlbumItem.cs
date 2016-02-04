@@ -87,9 +87,12 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        private int albumId;
+        public int AlbumId { get { return albumId; } }
 
         public AlbumItem()
         {
+            albumId = -1;
             albumParam = "";
             album = "Unknown Album";
             artistParam = "Unknown Artist";
@@ -97,7 +100,7 @@ namespace NextPlayerUWPDataLayer.Model
             songsNumber = 0;
             duration = TimeSpan.Zero;
             year = 2020;
-            imagePath = "";
+            imagePath = "ms-appx:///Albums/DefaultAlbumCover.png";
         }
 
         public AlbumItem(string albumParam, string artistParam, string albumArtist, TimeSpan duration, int songsnumber, int year, string imagePath)
@@ -137,6 +140,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public AlbumItem(AlbumsTable table)
         {
+            albumId = table.AlbumId;
             duration = table.Duration;
             songsNumber = table.SongsNumber;
             albumParam = table.Album;

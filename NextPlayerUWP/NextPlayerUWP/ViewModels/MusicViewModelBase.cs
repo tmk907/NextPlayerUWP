@@ -223,7 +223,7 @@ namespace NextPlayerUWP.ViewModels
 
         private IAsyncOperation<object> KeyToItemHandler(string key)
         {
-            return Dispatcher.DispatchAsync<object>(() =>
+            return Dispatcher.DispatchAsync(() =>
             {
                 if (listView.Items.Count <= 0)
                 {
@@ -234,7 +234,7 @@ namespace NextPlayerUWP.ViewModels
                     var i = listView.Items[firstVisibleItemIndex];
                     if (((MusicItem)i).GetParameter() == key)
                     {
-                        return listView.Items[firstVisibleItemIndex];
+                        return i;
                     }
                     foreach (var item in listView.Items)
                     {

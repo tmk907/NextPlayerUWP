@@ -27,12 +27,35 @@
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <DataTemplate x:Key="ArtistItemTemplate" x:DataType="data:ArtistItem"> 
-            <StackPanel RightTapped="ListViewItem_RightTapped">
-                <TextBlock Text="{x:Bind Artist}"/>
-                <TextBlock Text="{x:Bind Duration}"/>
-                <TextBlock Text="{x:Bind SongsNumber}"/>
-            </StackPanel>
+            <Grid RightTapped="ListViewItem_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="11*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource ArtistItemStyle1}"/>
+                <TextBlock Grid.Column="1"
+                    Text="{x:Bind Duration}"
+                    Style="{StaticResource ArtistItemStyle2}"/>
+                <TextBlock Grid.Column="2"
+                    Text="{x:Bind SongsNumber}"
+                    Style="{StaticResource ArtistItemStyle2}"/>
+            </Grid>
         </DataTemplate>
+        <Style x:Key="ArtistItemStyle1" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="ArtistItemStyle2" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="DarkGray"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -46,37 +69,68 @@
                 Content="Artists" 
                 VisualStateNarrowMinWidth="-1" />
         <Grid Grid.Row="1">
-            <ListView x:Name="ArtistsListView"
-                ItemsSource="{Binding Source={StaticResource ArtistsCVS}}"
-                ItemTemplate="{StaticResource ArtistItemTemplate}"
-                IsItemClickEnabled="True"
-                ItemClick="{x:Bind ViewModel.ItemClicked }"
-                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                SelectionMode="None">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsStackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.GroupStyle>
-                    <GroupStyle >
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate x:DataType="data:GroupList">
-                                <TextBlock Text="{x:Bind Key}" 
-                                       FontWeight="SemiBold"/>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListView.GroupStyle>
-            </ListView>
+            <SemanticZoom>
+                <SemanticZoom.ZoomedInView>
+                    <ListView x:Name="ArtistsListView"
+                            ItemsSource="{Binding Source={StaticResource ArtistsCVS}}"
+                            ItemTemplate="{StaticResource ArtistItemTemplate}"
+                            IsItemClickEnabled="True"
+                            ItemClick="{x:Bind ViewModel.ItemClicked }"
+                            
+                            SelectionMode="None"
+                              Margin="8,8,8,4">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.GroupStyle>
+                            <GroupStyle >
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate x:DataType="data:GroupList">
+                                        <TextBlock Text="{x:Bind Key}" 
+                                            Style="{StaticResource GroupHeaderTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                    </ListView>
+                </SemanticZoom.ZoomedInView>
+                <SemanticZoom.ZoomedOutView>
+                    <ListView
+                        ItemsSource="{Binding Source={StaticResource ArtistsCVS}, Path=CollectionGroups}"
+                        ItemTemplate="{StaticResource ZoomedOutItemsTemplate}">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Horizontal"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Height" Value="84" />
+                                <Setter Property="Width" Value="84" />
+                                <Setter Property="Margin" Value="4"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </SemanticZoom.ZoomedOutView>
+            </SemanticZoom>
+            
         </Grid>
     </Grid>
 </Page>

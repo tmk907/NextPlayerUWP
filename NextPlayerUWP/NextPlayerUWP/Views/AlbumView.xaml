@@ -81,8 +81,12 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Grid.Row="0"
-                   Width="260" Height="260"/>
+                <Image x:Name="myImage">
+                    <Image.Source>
+                        <BitmapImage UriSource="{Binding Album, Converter={StaticResource AlbumImagePathConverter}}"
+                                     DecodePixelHeight="200" DecodePixelWidth="200"/>
+                    </Image.Source>
+                </Image>
                 <Grid Grid.Column="1" Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition/>

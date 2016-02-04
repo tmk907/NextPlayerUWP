@@ -23,17 +23,9 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            if (Folders.Count == 0)
+            if (folders.Count == 0)
             {
                 Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-            }
-        }
-
-        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        {
-            if (!isBack)
-            {
-                Folders = new ObservableCollection<FolderItem>();
             }
         }
 

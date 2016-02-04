@@ -191,6 +191,7 @@ namespace NextPlayerUWPDataLayer.Services
             foreach(var item in groupedAlbums)
             {
                 string albumArtist = "";
+                int year = 0;
                 foreach(var song in item)
                 {
                     if (song.AlbumArtist != "")
@@ -199,12 +200,22 @@ namespace NextPlayerUWPDataLayer.Services
                         break;
                     }
                 }
+                foreach(var song in item)
+                {
+                    if (song.Year != 0)
+                    {
+                        year = song.Year;
+                        break;
+                    }
+                }
                 albumsTable.Add(new AlbumsTable()
                 {
                     Album = item.FirstOrDefault().Album,
                     AlbumArtist = albumArtist,
                     Duration = TimeSpan.Zero,
+                    ImagePath = "",
                     SongsNumber = item.Count(),
+                    Year = year
                 });
             }
             await connectionAsync.InsertAllAsync(albumsTable);
@@ -345,6 +356,7 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task<ObservableCollection<SongItem>> GetSongItemsFromAlbumAsync(string album)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+
             var result = await songsConnectionAsync.Where(a=>a.Album.Equals(album)).OrderBy(s => s.Title).ToListAsync();
             foreach (var item in result)
             {
@@ -358,12 +370,7 @@ namespace NextPlayerUWPDataLayer.Services
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
             try
             {
-                //List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists LIKE '%?%'", artist);
                 List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists = ? OR Artists LIKE ? OR Artists LIKE ? OR Artists LIKE ?", artist, artist + "; %", "%; " + artist, "%; " + artist + "; %");
-                //List<SongsTable> list1 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists = ? ", artist);
-                //List<SongsTable> list2 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists LIKE ?%", artist + ";");
-                //List<SongsTable> list3 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists LIKE %?", ";" + artist);
-                //List<SongsTable> list4 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists LIKE %?%", ";" + artist + ";");
 
                 foreach (var item in list)
                 {
@@ -393,18 +400,11 @@ namespace NextPlayerUWPDataLayer.Services
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
             try
             {
-                //List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Genres LIKE '%?%'", genre);
                 List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Genres = ? OR Genres LIKE ? OR Genres LIKE ? OR Genres LIKE ?", genre, genre + "; %", "%; " + genre, "%; " + genre + "; %");
-                //List<SongsTable> list1 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Genres = ? ", genre);
-                //List<SongsTable> list2 = await connectionAsync.QueryAsync<SongsTable>(@"SELECT * FROM SongsTable WHERE Genres LIKE ?%", genre + ";");
-                //List<SongsTable> list3 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Genres LIKE %?", ";" + genre);
-                //List<SongsTable> list4 = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Genres LIKE %?%", ";" + genre + ";");
-
                 foreach (var item in list)
                 {
                     songs.Add(CreateSongItem(item));
                 }
-
             }
             catch (Exception ex)
             {
@@ -585,6 +585,22 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         #endregion
+
+        public async Task UpdateAlbumItem(AlbumItem album)
+        {
+            await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET ImagePath = ? WHERE AlbumId = ?", album.ImagePath, album.AlbumId);
+        }
+
+        public async Task UpdateArtistItem(ArtistItem artist)
+        {
+            await connectionAsync.UpdateAsync(artist);
+        }
+
+        public async Task UpdateGenreItem(GenreItem genre)
+        {
+            await connectionAsync.UpdateAsync(genre);
+        }
+
 
         private static SongItem CreateSongItem(SongsTable q)
         {

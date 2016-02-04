@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Template10.Services.NavigationService;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -33,10 +34,6 @@ namespace NextPlayerUWP.ViewModels
 
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            if (!isBack)
-            {
-                Songs = new ObservableCollection<SongItem>();
-            }
             if (parameter != null)
             {
                 try
@@ -50,8 +47,21 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            Artist = await DatabaseManager.Current.GetArtistItemAsync(artistParam);
-            Songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(artistParam);
+            if (songs.Count == 0)
+            {
+                Artist = await DatabaseManager.Current.GetArtistItemAsync(artistParam);
+                Songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(artistParam);
+            }
+        }
+
+        public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
+        {
+            if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
+            {
+                songs = new ObservableCollection<SongItem>();
+                artist = new ArtistItem();
+            }
+            return base.OnNavigatingFromAsync(args);
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)

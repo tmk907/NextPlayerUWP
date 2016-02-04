@@ -17,10 +17,66 @@
             <converters:IntToBitrate x:Key="IntToBitrateConverter"/>
             <converters:SizeToString x:Key="SizeToStringConverter"/>
             <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>
+            <converters:BackgroundConverter x:Key="BackgroundConverter"/>
+            <converters:AlbumImagePath x:Key="AlbumImagePathConverter"/>
             
+            <DataTemplate x:Key="ZoomedOutItemsTemplate">
+                <Border  BorderThickness="1" 
+                     BorderBrush="LightGray" 
+                     Background="Transparent"
+                     Padding="24,0,0,16">
+                    <TextBlock Text="{Binding Group.Key}"
+                           FontSize="32"
+                           FontWeight="Normal"
+                           Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Bottom"/>
+                </Border>
+            </DataTemplate>
             
-            
-            
+            <Style x:Key="GroupHeaderTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="Margin" Value="0,24,0,0"/>
+                <Setter Property="Foreground" Value="{StaticResource SystemControlBackgroundAccentBrush}"/>
+            </Style>
+
+            <Style x:Key="SongsListViewItemStyle" TargetType="ListViewItem">
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListViewItem">
+                            <ListViewItemPresenter
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                SelectionCheckMarkVisualEnabled="True"
+                                CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+                                DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+                                FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
+                                FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+                                PointerOverBackground="{StaticResource SystemControlBackgroundAccentBrush}"
+                                PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
+                                SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
+                                PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
+                                SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
+                                DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                ContentMargin="{TemplateBinding Padding}"
+                                CheckMode="Inline"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
     

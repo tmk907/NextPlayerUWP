@@ -30,16 +30,17 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            if (Artists.Count == 0)
+            if (artists.Count == 0)
             {
                 Artists = await DatabaseManager.Current.GetArtistItemsAsync();
             }
-            if (GroupedArtists.Count == 0)
+            if (groupedArtists.Count == 0)
             {
                 var query = from item in artists
-                            group item by item.Artist[0] into g
+                            orderby item.Artist.ToLower()
+                            group item by item.Artist[0].ToString().ToLower() into g
                             orderby g.Key
-                            select new { GroupName = g.Key, Items = g };
+                            select new { GroupName = g.Key.ToUpper(), Items = g };
                 foreach (var g in query)
                 {
                     GroupList group = new GroupList();
@@ -50,14 +51,6 @@ namespace NextPlayerUWP.ViewModels
                     }
                     GroupedArtists.Add(group);
                 }
-            }
-        }
-
-        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        {
-            if (!isBack)
-            {
-                Artists = new ObservableCollection<ArtistItem>();
             }
         }
 

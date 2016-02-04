@@ -1,13 +1,16 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TagLib;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -100,13 +103,9 @@ namespace NextPlayerUWPDataLayer.Services
         /// Return cover saved in file tags or .jpg from folder.
         /// If cover doesn't exist width and height are 0px.
         /// </summary>
-        public static async Task<BitmapImage> GetOriginalCover(string path, bool small)
+        public static async Task<BitmapImage> GetOriginalCover(string path)
         {
             BitmapImage bitmap = new BitmapImage();
-            if (small)
-            {
-                bitmap.DecodePixelHeight = 192;
-            }
             int a = 0;
             try
             {
@@ -120,7 +119,7 @@ namespace NextPlayerUWPDataLayer.Services
                     IPicture pic = tagFile.Tag.Pictures[0];
                     using (MemoryStream stream = new MemoryStream(pic.Data.Data))
                     {
-                        using (Windows.Storage.Streams.IRandomAccessStream istream = stream.AsRandomAccessStream())
+                        using (IRandomAccessStream istream = stream.AsRandomAccessStream())
                         {
                             await bitmap.SetSourceAsync(istream);
                         }
@@ -138,7 +137,7 @@ namespace NextPlayerUWPDataLayer.Services
                             {
                                 if (x.Path.EndsWith("jpg"))
                                 {
-                                    using (IRandomAccessStream stream = await x.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                                    using (IRandomAccessStream stream = await x.OpenAsync(FileAccessMode.Read))
                                     {
                                         await bitmap.SetSourceAsync(stream);
                                     }
@@ -162,24 +161,24 @@ namespace NextPlayerUWPDataLayer.Services
         /// <summary>
         /// Return default cover.
         /// </summary>
-        public static async Task<BitmapImage> GetDefaultCover(bool small)
+        public static async Task<BitmapImage> GetDefaultCover()
         {
             BitmapImage bitmap = new BitmapImage();
             Uri uri;
-            if (small)
-            {
-                //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                //{
-                //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-light192.png");
-                //}
-                //else
-                //{
-                //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-dark192.png");
-                //}
-                uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
-            }
-            else
-            {
+            //if (small)
+            //{
+            //    //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+            //    //{
+            //    //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-light192.png");
+            //    //}
+            //    //else
+            //    //{
+            //    //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-dark192.png");
+            //    //}
+            //    uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
+            //}
+            //else
+            //{
                 //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
                 //{
                 //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-light.png");
@@ -189,9 +188,9 @@ namespace NextPlayerUWPDataLayer.Services
                 //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-dark.png");
                 //}
                 uri = new System.Uri("ms-appx:///Assets/SongCover.png");
-            }
-            var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
-            using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            //}
+            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
+            using (IRandomAccessStream stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
             {
                 await bitmap.SetSourceAsync(stream);
             }
@@ -201,26 +200,149 @@ namespace NextPlayerUWPDataLayer.Services
         /// <summary>
         /// Return cover saved in file tags or .jpg from folder or default cover.
         /// </summary>
-        public static async Task<BitmapImage> GetCover(string path, bool small)
+        public static async Task<BitmapImage> GetCover(string path)
         {
             BitmapImage bitmap = new BitmapImage();
 
-            bitmap = await GetOriginalCover(path, small);
+            bitmap = await GetOriginalCover(path);
 
             if (bitmap.PixelHeight == 0)
             {
-                bitmap = await GetDefaultCover(small);
+                bitmap = await GetDefaultCover();
             }
 
             return bitmap;
         }
 
-        public static async Task<BitmapImage> GetCurrentCover(int index)
+        //public static async Task<BitmapImage> GetCurrentCover(int index)
+        //{
+        //    return await GetCover(NowPlayingPlaylistManager.Current.GetSongItem(index).Path);
+        //}
+
+        public static async Task<string> SaveCover(string fileName, string folderName, WriteableBitmap image)
         {
-            return await GetCover(NowPlayingPlaylistManager.Current.GetSongItem(index).Path, false);
+            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+            StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
+
+            using (var stream = await file.OpenStreamForWriteAsync())
+            {
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream.AsRandomAccessStream());
+                var pixelStream = image.PixelBuffer.AsStream();
+                byte[] pixels = new byte[image.PixelBuffer.Length];
+
+                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)image.PixelWidth, (uint)image.PixelHeight, 96, 96, pixels);
+
+                await encoder.FlushAsync();
+            }
+            return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
+        }
+
+        private static async Task<BitmapImage> GetCachedCover(string path)
+        {
+            BitmapImage image = new BitmapImage();
+            if (path == "") return image;//!
+            Uri uri = new Uri(path);
+
+            var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                await image.SetSourceAsync(stream);
+            }
+
+            return image;
+        }
+
+        public static async Task<string> GetAlbumCoverPath(AlbumItem album)
+        {
+            string imagePath;
+            if (album.ImagePath == "")
+            {
+                WriteableBitmap cover;
+                var songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam);
+                string songPath = songs.FirstOrDefault().Path;
+                cover = await CreateBitmap(songPath);
+                
+                if (cover.PixelHeight == 1)
+                {
+                    imagePath = "ms-appx:///Assets/Albums/DefaultAlbumCover.png";
+                }
+                else
+                {
+                    string p = await SaveCover(album.AlbumId.ToString(), "Albums", cover);
+                    imagePath = p;
+                }               
+            }
+            else
+            {
+                imagePath = album.ImagePath;
+            }
+
+            return imagePath;
         }
 
 
+        private static async Task<WriteableBitmap> CreateBitmap(string path)
+        {
+            WriteableBitmap bitmap = new WriteableBitmap(1, 1);
+            int picturesCount = 0;
+            try
+            {
+                StorageFile songFile = await StorageFile.GetFileFromPathAsync(path);
+                Stream fileStream = await songFile.OpenStreamForReadAsync();
+                TagLib.File tagFile = TagLib.File.Create(new StreamFileAbstraction(songFile.Name, fileStream, fileStream));
+                picturesCount = tagFile.Tag.Pictures.Length;
+                fileStream.Dispose();
+                if (picturesCount > 0)
+                {
+                    IPicture pic = tagFile.Tag.Pictures[0];
+                    using (MemoryStream stream = new MemoryStream(pic.Data.Data))
+                    {
+                        using (IRandomAccessStream istream = stream.AsRandomAccessStream())
+                        {
+                            bitmap = await WriteableBitmapExtensions.FromStream(new WriteableBitmap(1, 1), istream);
+                            //BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                            //bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+                            //istream.Seek(0);
+                            //bitmap.SetSource(istream);
+                        }
+                    }
+                }
+                else
+                {
+                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
+                    try
+                    {
+                        IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
+                        if (files.Count > 0)
+                        {
+                            foreach (var file in files)
+                            {
+                                if (file.Path.EndsWith("jpg"))
+                                {
+                                    using (IRandomAccessStream istream = await file.OpenAsync(FileAccessMode.Read))
+                                    {
+                                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                                        bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+                                        istream.Seek(0);
+                                        bitmap.SetSource(istream);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
 
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return bitmap;
+        }
     }
 }

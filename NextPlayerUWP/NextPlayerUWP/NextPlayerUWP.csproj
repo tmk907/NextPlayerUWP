@@ -104,6 +104,8 @@
     <Compile Include="Common\PlaybackManager.cs" />
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="Common\TileManager.cs" />
+    <Compile Include="Converters\AlbumImagePath.cs" />
+    <Compile Include="Converters\BackgroundConverter.cs" />
     <Compile Include="Converters\BoolToInvertedVisibility.cs" />
     <Compile Include="Converters\BoolToVisibility.cs" />
     <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="Converters\SizeToString.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
+    <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -172,6 +175,7 @@
     <None Include="NextPlayerUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Albums\DefaultAlbumCover.png" />
     <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-100.png" />
     <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-140.png" />
     <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-240.png" />

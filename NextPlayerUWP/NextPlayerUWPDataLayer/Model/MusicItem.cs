@@ -19,6 +19,7 @@ namespace NextPlayerUWPDataLayer.Model
     }
     public abstract class MusicItem
     {
+        public int Index;
         public abstract string GetParameter();
         public const string separator = "!@#$%";
         public static MusicItemTypes ParseType(string param)

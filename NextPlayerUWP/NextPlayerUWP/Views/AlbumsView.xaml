@@ -28,6 +28,12 @@
         </MenuFlyout>
         <DataTemplate x:Key="AlbumItemTemplate" x:DataType="data:AlbumItem">
             <StackPanel Orientation="Horizontal" RightTapped="ListViewItem_RightTapped">
+                <Image>
+                    <Image.Source>
+                        <BitmapImage UriSource="{x:Bind ImagePath, Converter={StaticResource AlbumImagePathConverter}}"
+                                     DecodePixelHeight="100" DecodePixelWidth="100"/>
+                    </Image.Source>
+                </Image>
                 <TextBlock Text="{x:Bind Album}"/>
                 <TextBlock Text="{x:Bind ArtistParam}"/>
                 <TextBlock Text="{x:Bind Duration}"/>
@@ -47,13 +53,73 @@
                 Content="Albums" 
                 VisualStateNarrowMinWidth="-1" />
         <Grid Grid.Row="1">
+            <!--<SemanticZoom>
+                <SemanticZoom.ZoomedInView>
+                    <ListView x:Name="AlbumsListView"
+                            ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
+                            ItemTemplate="{StaticResource AlbumItemTemplate}"
+                            IsItemClickEnabled="True"
+                            ItemClick="{x:Bind ViewModel.ItemClicked }"
+                            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                            SelectionMode="None">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.GroupStyle>
+                            <GroupStyle >
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate x:DataType="data:GroupList">
+                                        <TextBlock Text="{x:Bind Key}" 
+                                            Style="{StaticResource GroupHeaderTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                    </ListView>
+                </SemanticZoom.ZoomedInView>
+                <SemanticZoom.ZoomedOutView>
+                    <ListView
+                        ItemsSource="{Binding Source={StaticResource AlbumsCVS}, Path=CollectionGroups}"
+                        ItemTemplate="{StaticResource ZoomedOutItemsTemplate}">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Height" Value="84" />
+                                <Setter Property="Width" Value="84" />
+                                <Setter Property="Margin" Value="4"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </SemanticZoom.ZoomedOutView>
+            </SemanticZoom>-->
             <ListView x:Name="AlbumsListView"
-                ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
-                ItemTemplate="{StaticResource AlbumItemTemplate}"
-                IsItemClickEnabled="True"
-                ItemClick="{x:Bind ViewModel.ItemClicked }"
-                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                SelectionMode="None">
+                            ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
+                            ItemTemplate="{StaticResource AlbumItemTemplate}"
+                            IsItemClickEnabled="True"
+                            ItemClick="{x:Bind ViewModel.ItemClicked }"
+                            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                            SelectionMode="None">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Vertical"/>
@@ -67,6 +133,16 @@
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListView.ItemContainerStyle>
+                <!--<ListView.GroupStyle>
+                    <GroupStyle >
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate x:DataType="data:GroupList">
+                                <TextBlock Text="{x:Bind Key}" 
+                                            Style="{StaticResource GroupHeaderTextBlockStyle}"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>-->
             </ListView>
         </Grid>
     </Grid>

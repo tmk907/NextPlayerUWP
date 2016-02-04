@@ -51,7 +51,7 @@
                 ItemTemplate="{StaticResource SongItemTemplate}"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked }"
-                SelectedItem="{Binding SelectedItem}"
+                
                 SelectionMode="None">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>

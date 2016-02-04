@@ -123,7 +123,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ChangeCover()
         {
-            Cover = await ImagesManager.GetCover(song.Path, false);
+            Cover = await ImagesManager.GetCover(song.Path);
         }
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)

@@ -50,7 +50,7 @@
                 ItemTemplate="{StaticResource FolderItemTemplate}"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked }"
-                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                
                 SelectionMode="None">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>

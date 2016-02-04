@@ -49,7 +49,7 @@
             <ListView x:Name="GenresListView"
                     ItemsSource="{Binding Genres}"
                     ItemTemplate="{StaticResource GenreItemTemplate}"
-                    SelectedItem="{Binding SelectedItem}"
+                    
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     SelectionMode="None">

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Template10.Services.NavigationService;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -33,17 +34,22 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(albumParam);
-            Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.TrackNumber));
-            Album = await DatabaseManager.Current.GetAlbumItemAsync(albumParam);
+            if (songs.Count == 0)
+            {
+                songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(albumParam);
+                Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.TrackNumber));
+                Album = await DatabaseManager.Current.GetAlbumItemAsync(albumParam);
+                if (album.ImagePath == "")
+                {
+                    string path = await ImagesManager.GetAlbumCoverPath(album);
+                    Album.ImagePath = path;
+                    await DatabaseManager.Current.UpdateAlbumItem(album);
+                }
+            }
         }
 
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            if (!isBack)
-            {
-                Songs = new ObservableCollection<SongItem>();
-            }
             if (parameter != null)
             {
                 try
@@ -52,6 +58,20 @@ namespace NextPlayerUWP.ViewModels
                 }
                 catch (Exception ex) { }
             }
+        }
+
+        public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
+        {
+            if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
+            {
+                songs = new ObservableCollection<SongItem>();
+                album = new AlbumItem();
+            }
+            if (args.NavigationMode == NavigationMode.Refresh)
+            {
+                System.Diagnostics.Debug.WriteLine("navvigation mode refresh");
+            }
+            return base.OnNavigatingFromAsync(args);
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)

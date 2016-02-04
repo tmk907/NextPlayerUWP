@@ -54,34 +54,31 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            if (Songs.Count == 0)
+            if (songs.Count == 0)
             {
                 Songs = await DatabaseManager.Current.GetSongItemsAsync();
             }
             if (groupedSongs.Count == 0)
             {
                 var query = from item in songs
-                            group item by item.Title[0] into g
+                            orderby item.Title.ToLower()
+                            group item by item.Title[0].ToString().ToLower() into g
                             orderby g.Key
-                            select new { GroupName = g.Key, Items = g };
-                foreach(var g in query)
+                            select new { GroupName = g.Key.ToUpper(), Items = g };
+                int i = 0;
+                foreach (var g in query)
                 {
+                    i = 0;
                     GroupList group = new GroupList();
                     group.Key = g.GroupName;
                     foreach (var item in g.Items)
                     {
+                        item.Index = i;
+                        i++;
                         group.Add(item);
                     }
                     GroupedSongs.Add(group);
                 }
-            }
-        }
-
-        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        {
-            if (!isBack)
-            {
-                Songs = new ObservableCollection<SongItem>();
             }
         }
 
