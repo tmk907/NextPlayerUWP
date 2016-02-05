@@ -54,15 +54,15 @@ namespace NextPlayerUWP.ViewModels
                 }
                 GroupedAlbums = gr;
             }
-            foreach(var album in Albums)
-            {
-                if (album.ImagePath == "")
-                {
-                    string path = await ImagesManager.GetAlbumCoverPath(album);
-                    album.ImagePath = path;
-                    await DatabaseManager.Current.UpdateAlbumItem(album);
-                }
-            }
+            //foreach(var album in Albums)
+            //{
+            //    if (album.ImagePath == "")
+            //    {
+            //        string path = await ImagesManager.GetAlbumCoverPath(album);
+            //        album.ImagePath = path;
+            //        await DatabaseManager.Current.UpdateAlbumItem(album);
+            //    }
+            //}
             //foreach(var group in GroupedAlbums)
             //{
             //    foreach(var a in group)

@@ -59,6 +59,7 @@
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <x:Int32 x:Key="int200">200</x:Int32>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid>
@@ -81,9 +82,10 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Image x:Name="myImage">
+                <!--<Image Source="{Binding Album.ImagePath, Converter={StaticResource AlbumImagePathConverter}, ConverterParameter={StaticResource int200} }"/>-->
+                <Image>
                     <Image.Source>
-                        <BitmapImage UriSource="{Binding Album, Converter={StaticResource AlbumImagePathConverter}}"
+                        <BitmapImage UriSource="{Binding Album.ImagePath, Converter={StaticResource AlbumImagePathConverter}}"
                                      DecodePixelHeight="200" DecodePixelWidth="200"/>
                     </Image.Source>
                 </Image>

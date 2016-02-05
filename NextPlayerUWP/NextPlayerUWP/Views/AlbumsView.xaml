@@ -26,18 +26,20 @@
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <x:Int32 x:Key="int120">120</x:Int32>
         <DataTemplate x:Key="AlbumItemTemplate" x:DataType="data:AlbumItem">
-            <StackPanel Orientation="Horizontal" RightTapped="ListViewItem_RightTapped">
-                <Image>
+            <StackPanel Orientation="Vertical" RightTapped="ListViewItem_RightTapped">
+                <Image Width="100" Height="100">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind ImagePath, Converter={StaticResource AlbumImagePathConverter}}"
                                      DecodePixelHeight="100" DecodePixelWidth="100"/>
                     </Image.Source>
                 </Image>
-                <TextBlock Text="{x:Bind Album}"/>
-                <TextBlock Text="{x:Bind ArtistParam}"/>
-                <TextBlock Text="{x:Bind Duration}"/>
-                <TextBlock Text="{x:Bind SongsNumber}"/>
+                <!--<Image x:Phase="1" Width="120" Height="120" Source="{x:Bind ImagePath, Converter={StaticResource AlbumImagePathConverter}, ConverterParameter={StaticResource int120}}"/>-->
+                <TextBlock Text="{x:Bind Album}" x:Phase="0"/>
+                <TextBlock Text="{x:Bind ArtistParam}" x:Phase="0"/>
+                <TextBlock Text="{x:Bind Duration}" x:Phase="0"/>
+                <TextBlock Text="{x:Bind SongsNumber}" x:Phase="0"/>
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
@@ -53,7 +55,7 @@
                 Content="Albums" 
                 VisualStateNarrowMinWidth="-1" />
         <Grid Grid.Row="1">
-            <!--<SemanticZoom>
+            <SemanticZoom>
                 <SemanticZoom.ZoomedInView>
                     <ListView x:Name="AlbumsListView"
                             ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
@@ -61,10 +63,11 @@
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
                             SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                            SelectionMode="None">
+                            SelectionMode="None"
+                              ShowsScrollingPlaceholders="False">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Vertical"/>
+                                <ItemsWrapGrid Orientation="Horizontal"/>
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemContainerStyle>
@@ -112,8 +115,8 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                 </SemanticZoom.ZoomedOutView>
-            </SemanticZoom>-->
-            <ListView x:Name="AlbumsListView"
+            </SemanticZoom>
+            <!--<ListView x:Name="AlbumsListView"
                             ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
                             ItemTemplate="{StaticResource AlbumItemTemplate}"
                             IsItemClickEnabled="True"
@@ -133,7 +136,7 @@
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListView.ItemContainerStyle>
-                <!--<ListView.GroupStyle>
+                --><!--<ListView.GroupStyle>
                     <GroupStyle >
                         <GroupStyle.HeaderTemplate>
                             <DataTemplate x:DataType="data:GroupList">
@@ -142,8 +145,8 @@
                             </DataTemplate>
                         </GroupStyle.HeaderTemplate>
                     </GroupStyle>
-                </ListView.GroupStyle>-->
-            </ListView>
+                </ListView.GroupStyle>--><!--
+            </ListView>-->
         </Grid>
     </Grid>
 </Page>

@@ -76,7 +76,7 @@
                             ItemTemplate="{StaticResource ArtistItemTemplate}"
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
-                            
+                            ShowsScrollingPlaceholders="False"
                             SelectionMode="None"
                               Margin="8,8,8,4">
                         <ListView.ItemsPanel>

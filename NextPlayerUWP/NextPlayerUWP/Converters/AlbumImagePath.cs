@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace NextPlayerUWP.Converters
 {
@@ -13,6 +14,10 @@ namespace NextPlayerUWP.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            //int dim = (int)parameter;
+            //BitmapImage b = new BitmapImage();
+            //b.DecodePixelHeight = dim;
+            //b.DecodePixelWidth = dim;
             //AlbumItem album = (AlbumItem)value;
             string path = value as string;
             if (path == null || path == "") path = "ms-appx:///Albums/DefaultAlbumCover.png";
@@ -23,6 +28,7 @@ namespace NextPlayerUWP.Converters
             //    DatabaseManager.Current.UpdateAlbumItem(album).RunSynchronously();
             //}
             Uri uri = new Uri(path);
+            //b.UriSource = uri;
             return uri;
         }
 
