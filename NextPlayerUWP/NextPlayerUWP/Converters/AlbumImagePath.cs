@@ -14,7 +14,7 @@ namespace NextPlayerUWP.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            //int dim = (int)parameter;
+            //int dim = 120;
             //BitmapImage b = new BitmapImage();
             //b.DecodePixelHeight = dim;
             //b.DecodePixelWidth = dim;
@@ -29,6 +29,7 @@ namespace NextPlayerUWP.Converters
             //}
             Uri uri = new Uri(path);
             //b.UriSource = uri;
+            //return b;
             return uri;
         }
 

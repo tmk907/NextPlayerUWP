@@ -39,13 +39,23 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <controls:PageHeader Grid.Row="0"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="180"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderPlaylist"
                 Content="{Binding PageTitle}" 
                 VisualStateNarrowMinWidth="-1" />
-        <Grid Grid.Row="1">
+        <!--<test:Test1 Grid.Column="1" Grid.Row="1" DataContext="{StaticResource }">
+         
+        </test:Test1>-->
+        <local:MyUserControl1 Grid.Column="1" Grid.Row="1"/>
+
+
+        <Grid Grid.Row="1" Grid.Column="0">
             <ListView x:Name="PlaylistListView"
                 ItemsSource="{Binding Playlist}"
                 ItemTemplate="{StaticResource SongItemTemplate}"

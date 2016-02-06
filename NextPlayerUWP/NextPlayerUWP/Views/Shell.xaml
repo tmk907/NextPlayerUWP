@@ -84,7 +84,11 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
-        <controls:HamburgerMenu x:Name="Menu" Grid.Row="0" PaneBorderThickness="0">
+        <controls:HamburgerMenu x:Name="Menu" Grid.Row="0" PaneBorderThickness="0"
+                                VisualStateNarrowMinWidth="0"
+                                VisualStateNormalMinWidth="720"
+                                
+                                Grid.Column="0">
             <controls:HamburgerMenu.PrimaryButtons>
                 <controls:HamburgerButtonInfo PageType="views:AlbumsView" ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -135,6 +139,8 @@
 
         </controls:HamburgerMenu>
         <Grid Grid.Row="1" x:Name="BottomPlayerGrid" 
+              Grid.ColumnSpan="3"
+              Background="LightSteelBlue"
               DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -143,10 +149,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
+                
                 <ColumnDefinition Width="60"/>
                 <ColumnDefinition Width="60"/>
                 <ColumnDefinition Width="60"/>
-
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Image Grid.RowSpan="2" Grid.Column="0" Source="{Binding Cover}"/>
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Song.Title, Mode=OneWay}"/>

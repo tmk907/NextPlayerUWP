@@ -159,7 +159,7 @@ namespace NextPlayerUWP
             }
             else
             {
-                NavigationService.Navigate(Pages.MainPage);
+                NavigationService.Navigate(Pages.Albums);
             }
             return Task.FromResult<object>(null);
         }

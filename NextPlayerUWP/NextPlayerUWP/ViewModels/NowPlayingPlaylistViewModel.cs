@@ -11,8 +11,13 @@ using Windows.UI.Xaml.Controls;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public class NowPlayingPlaylistViewModel : MusicViewModelBase
+    public class NowPlayingPlaylistViewModel : Template10.Mvvm.ViewModelBase// : MusicViewModelBase
     {
+        public NowPlayingPlaylistViewModel()
+        {
+            Songs = NowPlayingPlaylistManager.Current.songs;
+        }
+
         private ObservableCollection<SongItem> songs;
         public ObservableCollection<SongItem> Songs
         {
@@ -20,7 +25,7 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref songs, value); }
         }
 
-        protected override async Task LoadData()
+        protected  async Task LoadData()
         {
             if (Songs.Count == 0)
             {
@@ -33,16 +38,16 @@ namespace NextPlayerUWP.ViewModels
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
-        public void EditTags(object sender, RoutedEventArgs e)
-        {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.TagsEditor, ((SongItem)SelectedItem).SongId);
-        }
+        //public void EditTags(object sender, RoutedEventArgs e)
+        //{
+        //    SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+        //    NavigationService.Navigate(App.Pages.TagsEditor, ((SongItem)SelectedItem).SongId);
+        //}
 
-        public void ShowDetails(object sender, RoutedEventArgs e)
-        {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
-        }
+        //public void ShowDetails(object sender, RoutedEventArgs e)
+        //{
+        //    SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+        //    NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
+        //}
     }
 }
