@@ -37,13 +37,31 @@ namespace NextPlayerUWP.ViewModels
         public SongItem Song
         {
             get {
+                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                {
+                    song = new SongItem();
+                }
                 return song;
             }
             set {
                 Set(ref song, value);
             }
         }
-       
+
+        private double sliderMaxValue = 0.0;
+        public double SliderMaxValue
+        {
+            get { return sliderMaxValue; }
+            set { Set(ref sliderMaxValue, value); }
+        }
+
+        private double sliderValue = 0.0;
+        public double SliderValue
+        {
+            get { return sliderValue; }
+            set { Set(ref sliderValue, value); }
+        }
+
         private Symbol playButtonContent = Symbol.Play;
         public Symbol PlayButtonContent
         {

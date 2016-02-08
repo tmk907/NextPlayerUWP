@@ -67,9 +67,10 @@
         <controls:PageHeader Grid.Row="0"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
+                Content="Songs"
                 x:Uid="PageHeaderSongs"
-                Content="Songs" 
-                VisualStateNarrowMinWidth="-1" />
+                VisualStateNarrowMinWidth="0"
+                VisualStateNormalMinWidth="720"/>
         <Grid Grid.Row="1">
         
         <SemanticZoom>

@@ -1,0 +1,63 @@
+﻿<UserControl
+    x:Class="NextPlayerUWP.Views.RightPanelControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerUWP.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingPlaylistVM}"
+    d:DesignHeight="400"
+    d:DesignWidth="200">
+    <UserControl.Resources>
+        <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
+                            Click="{x:Bind ViewModel.Delete}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
+                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
+        <DataTemplate x:Key="SongTemplate" >
+            <Grid RightTapped="ListViewItem_RightTapped"> 
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" 
+                           Text="{Binding Title}"
+                           FontSize="16"
+                           TextTrimming="Clip"
+                           />
+                <TextBlock Grid.Row="1" 
+                           Text="{Binding Artist}"
+                           FontSize="14"
+                           TextTrimming="CharacterEllipsis"
+                           
+                           />
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <ListView x:Name="NowPlayingPlaylistListView"
+            ItemsSource="{Binding Songs}"
+            ItemTemplate="{StaticResource SongTemplate}"
+            IsItemClickEnabled="True"
+            ItemClick="{x:Bind ViewModel.ItemClicked }"
+            SelectionMode="None">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>    
+        </ListView>
+        
+    </Grid>
+</UserControl>

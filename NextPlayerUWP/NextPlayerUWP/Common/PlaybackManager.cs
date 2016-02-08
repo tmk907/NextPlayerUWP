@@ -174,7 +174,7 @@ namespace NextPlayerUWP.Common
                 }
                 else
                 {
-                    //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, AppConstants.BackgroundTaskCancelled);
+                    //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, BackgroundTaskState.Canceled.ToString());
 
                     throw new Exception("Background Audio Task didn't start in expected time");
                 }

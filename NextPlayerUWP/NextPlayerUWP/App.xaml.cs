@@ -40,7 +40,6 @@ namespace NextPlayerUWP
             App.Current.UnhandledException += App_UnhandledException;
             Logger.SaveFromSettingsToFile();
             //insights
-            
 
             if (FirstRun())
             {

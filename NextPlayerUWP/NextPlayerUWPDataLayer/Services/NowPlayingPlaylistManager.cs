@@ -111,23 +111,27 @@ namespace NextPlayerUWPDataLayer.Services
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
-            ObservableCollection<SongItem> newsongs = new ObservableCollection<SongItem>(songs.Take(index + 1));
-            foreach(var s in list)
+            //ObservableCollection<SongItem> newsongs = new ObservableCollection<SongItem>(songs.Take(index + 1));
+            //foreach(var s in list)
+            //{
+            //    newsongs.Add(s);
+            //}
+            //foreach(var s in songs.Skip(index+1))
+            //{
+            //    newsongs.Add(s);
+            //}
+            //songs.Insert = newsongs;
+            foreach(var n in list)
             {
-                newsongs.Add(s);
+                index++;
+                songs.Insert(index, n);
             }
-            foreach(var s in songs.Skip(index+1))
-            {
-                newsongs.Add(s);
-            }
-            songs = newsongs;
-
             await NotifyChange();
         }
 
         public async Task AddNext(IEnumerable<SongItem> songs)
         {
-            await SaveNowPlayingInDB();
+            //await SaveNowPlayingInDB();
 
         }
 
