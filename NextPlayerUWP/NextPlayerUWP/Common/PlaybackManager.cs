@@ -17,6 +17,9 @@ namespace NextPlayerUWP.Common
 {
     public delegate void MediaPlayerStateChangeHandler(MediaPlayerState state);
     public delegate void MediaPlayerTrackChangeHandler(int index);
+    public delegate void MediaPlayerPositionChangeHandler(TimeSpan position, TimeSpan duration);
+    public delegate void MediaPlayerMediaOpenHandler(TimeSpan duration);
+
     public class PlaybackManager
     {
         private static readonly PlaybackManager current = new PlaybackManager();
@@ -46,6 +49,22 @@ namespace NextPlayerUWP.Common
             if (MediaPlayerTrackChanged != null)
             {
                 MediaPlayerTrackChanged(index);
+            }
+        }
+        public static event MediaPlayerPositionChangeHandler MediaPlayerPositionChanged;
+        public void OnMediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)
+        {
+            if (MediaPlayerPositionChanged != null)
+            {
+                MediaPlayerPositionChanged(position, duration);
+            }
+        }
+        public static event MediaPlayerMediaOpenHandler MediaPlayerMediaOpened;
+        public void OnMediaPlayerMediaOpened(TimeSpan duration)
+        {
+            if (MediaPlayerMediaOpened != null)
+            {
+                MediaPlayerMediaOpened(duration);
             }
         }
 
@@ -283,13 +302,23 @@ namespace NextPlayerUWP.Common
                     case AppConstants.MediaOpened:
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
-
+                            OnMediaPlayerMediaOpened(BackgroundMediaPlayer.Current.NaturalDuration);
+                            //TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
+                            //double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+                            //ProgressBarMaxValue = absvalue;
+                            //ProgressBarValue = 0.0;
+                            //CurrentTime = TimeSpan.Zero;
+                            //EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                            //PlaybackRate = BackgroundMediaPlayer.Current.PlaybackRate * 100.0;
+                            //SaveCached();
                         });
                         break;
                     case AppConstants.Position:
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
-
+                            TimeSpan result = TimeSpan.Zero;
+                            TimeSpan.TryParse(e.Data[key].ToString(), out result);
+                            OnMediaPlayerPositionChanged(result, BackgroundMediaPlayer.Current.NaturalDuration);
                         });
                         break;
                     case AppConstants.PlayerClosed:

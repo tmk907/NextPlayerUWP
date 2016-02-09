@@ -116,6 +116,7 @@
     <Compile Include="Converters\NumberToPercent.cs" />
     <Compile Include="Converters\RatingConverter.cs" />
     <Compile Include="Converters\SizeToString.cs" />
+    <Compile Include="Converters\ThumbToolTipValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SongsViewModel.cs" />
+    <Compile Include="ViewModels\TestViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\AlbumsView.xaml.cs">
       <DependentUpon>AlbumsView.xaml</DependentUpon>
@@ -169,6 +171,9 @@
     </Compile>
     <Compile Include="Views\SongsView.xaml.cs">
       <DependentUpon>SongsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestPage.xaml.cs">
+      <DependentUpon>TestPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -272,7 +277,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Test1.xaml">
+    <Page Include="Views\TestPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

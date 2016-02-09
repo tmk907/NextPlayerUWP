@@ -45,23 +45,25 @@ namespace NextPlayerUWP.Views
         void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             NowPlayingViewModel viewModel = (NowPlayingViewModel)BottomPlayerGrid.DataContext;
-            //viewModel.sliderpressed = true;
+            viewModel.sliderpressed = true;
         }
 
         void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
             NowPlayingViewModel viewModel = (NowPlayingViewModel)BottomPlayerGrid.DataContext;
-            //viewModel.sliderpressed = false;
+            viewModel.sliderpressed = false;
+            Common.PlaybackManager.Current.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
             //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
         }
 
         void progressbar_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
             NowPlayingViewModel viewModel = (NowPlayingViewModel)BottomPlayerGrid.DataContext;
-            //if (!viewModel.sliderpressed)
-            //{
-            //    viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
-            //}
+            if (!viewModel.sliderpressed)
+            {
+                Common.PlaybackManager.Current.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
+                //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
+            }
         }
         #endregion
     }

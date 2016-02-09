@@ -19,7 +19,8 @@
             <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>
             <converters:BackgroundConverter x:Key="BackgroundConverter"/>
             <converters:AlbumImagePath x:Key="AlbumImagePathConverter"/>
-            
+            <converters:ThumbToolTipValue x:Key="ThumbToolTipValueConverter"/>
+
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  BorderThickness="1" 
                      BorderBrush="LightGray" 
