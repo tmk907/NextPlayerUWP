@@ -20,6 +20,9 @@
             <converters:BackgroundConverter x:Key="BackgroundConverter"/>
             <converters:AlbumImagePath x:Key="AlbumImagePathConverter"/>
             <converters:ThumbToolTipValue x:Key="ThumbToolTipValueConverter"/>
+            <converters:ShuffleForeground x:Key="ShuffleForegroundConverter"/>
+            <converters:RepeatForeground x:Key="RepeatForegroundConverter"/>
+            <converters:RepeatContent x:Key="RepeatContentConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  BorderThickness="1" 

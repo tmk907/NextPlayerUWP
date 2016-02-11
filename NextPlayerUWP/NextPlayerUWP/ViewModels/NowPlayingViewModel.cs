@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -89,6 +90,20 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return playButtonContent; }
             set { Set(ref playButtonContent, value); }
+        }
+
+        private bool shuffleMode = false;
+        public bool ShuffleMode
+        {
+            get { return shuffleMode; }
+            set { Set(ref shuffleMode, value); }
+        }
+
+        private RepeatEnum repeatMode = RepeatEnum.NoRepeat;
+        public RepeatEnum RepeatMode
+        {
+            get { return repeatMode; }
+            set { Set(ref repeatMode, value); }
         }
 
         private BitmapImage cover = new BitmapImage();

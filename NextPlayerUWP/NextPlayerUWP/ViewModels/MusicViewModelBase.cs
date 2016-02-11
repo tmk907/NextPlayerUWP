@@ -11,6 +11,7 @@ using Windows.Foundation;
 using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Helpers;
 using GalaSoft.MvvmLight.Threading;
+using System.Collections.ObjectModel;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -37,6 +38,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return pageTitle; }
             set { Set(ref pageTitle, value); }
+        }
+
+        protected ObservableCollection<ComboBoxItemValues> comboboxValues = new ObservableCollection<ComboBoxItemValues>();
+        public ObservableCollection<ComboBoxItemValues> ComboBoxItemValues
+        {
+            get { return comboboxValues; }
+            set { Set(ref comboboxValues, value); }
         }
 
         #region Commands

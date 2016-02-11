@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWPDataLayer.Helpers
@@ -22,7 +23,7 @@ namespace NextPlayerUWPDataLayer.Helpers
         public static readonly string RepeatOnce = "\uE1cc";
         public static readonly string RepeatPlaylist = "\uE1cd";
 
-        public static RepeatEnum Next(RepeatEnum e)
+        private static RepeatEnum Next(RepeatEnum e)
         {
             switch (e)
             {
@@ -59,9 +60,9 @@ namespace NextPlayerUWPDataLayer.Helpers
             return repeat;
         }
 
-        public static SolidColorBrush CurrentStateColor()
+        public static SolidColorBrush GetColor(RepeatEnum repeat)
         {
-            switch (CurrentState())
+            switch (repeat)
             {
                 case RepeatEnum.NoRepeat:
                     return new SolidColorBrush(Windows.UI.Colors.Gray);
@@ -82,18 +83,18 @@ namespace NextPlayerUWPDataLayer.Helpers
             }
         }
 
-        public static string CurrentStateContent()
+        public static Symbol GetContent(RepeatEnum repeat)
         {
-            switch (CurrentState())
+            switch (repeat)
             {
                 case RepeatEnum.NoRepeat:
-                    return NoRepeat;
+                    return Symbol.RepeatAll;
                 case RepeatEnum.RepeatOnce:
-                    return RepeatOnce;
+                    return Symbol.RepeatOne;
                 case RepeatEnum.RepeatPlaylist:
-                    return RepeatPlaylist;
+                    return Symbol.RepeatAll;
                 default:
-                    return NoRepeat;
+                    return Symbol.RepeatAll;
             }
         }
     }

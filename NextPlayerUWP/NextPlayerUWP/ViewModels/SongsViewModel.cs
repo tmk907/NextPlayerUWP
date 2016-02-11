@@ -79,6 +79,17 @@ namespace NextPlayerUWP.ViewModels
                     }
                     GroupedSongs.Add(group);
                 }
+
+                //var characterGroupings = new Windows.Globalization.Collation.CharacterGroupings();
+                //foreach (var c in characterGroupings)
+                //{
+                //    GroupedSongs.Add(new GroupList(c.Label));
+                //}
+                //foreach (var item in songs)
+                //{
+                //    string a = characterGroupings.Lookup(item.Title);
+                //    GroupedSongs.FirstOrDefault(e => e.Key.Equals(a)).Add(item);
+                //}
             }
         }
 
@@ -94,6 +105,59 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+        }
+
+        public void SortItems(object sender, SelectionChangedEventArgs e)
+        {
+            //string option = e.AddedItems.FirstOrDefault() as string;
+            Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower());
+            //var a1 = e.AddedItems.FirstOrDefault();
+            //SortEnums sortby = SortEnums.Title;
+            //if (a1.ToString() == "Album") sortby = SortEnums.Album;
+            //if (a1.ToString() == "Artist") sortby = SortEnums.Artist;
+
+            //switch (sortby)
+            //{
+            //    case SortEnums.Album:
+            //        Sort(s => s.Album, t => (t.Album=="")?"":t.Album[0].ToString().ToLower());
+            //        break;
+            //    case SortEnums.Artist:
+            //        Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower());
+            //        break;
+            //    case SortEnums.Title:
+            //        Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower());
+            //        break;
+            //    default:
+            //        Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower());
+            //        break;
+            //}
+        }
+
+        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem,string> groupSelector)
+        {
+            var query = songs.OrderBy(orderSelector).ThenBy(s => s.Title).GroupBy(groupSelector).OrderBy(g => g.Key).Select(group => new { GroupName = group.Key.ToUpper(), Items = group });
+            //var query = from item in songs
+            //             orderby orderSelector
+            //             group item by groupSelector into g
+            //             orderby g.Key
+            //             select new { GroupName = g.Key, Items = g };
+            int i = 0;
+            GroupedSongs.Clear();
+            foreach (var g in query)
+            {
+                i = 0;
+                string s = "";
+                GroupList group = new GroupList();
+                group.Key = g.GroupName;
+                foreach (var item in g.Items)
+                {
+                    if (group.Count != 0 && item.Album != s) i++;
+                    item.Index = i;
+                    s = item.Album;
+                    group.Add(item);
+                }
+                GroupedSongs.Add(group);
+            }
         }
     }
 }

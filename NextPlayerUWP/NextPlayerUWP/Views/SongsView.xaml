@@ -35,6 +35,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*"/>
                     <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="6*"/>
+
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" 
@@ -44,6 +46,9 @@
                     Text="{x:Bind Artist}"
                     Style="{StaticResource SongItemStyle2}"/>
                 <TextBlock Grid.Column="2" 
+                    Text="{x:Bind Album}"
+                    Style="{StaticResource SongItemStyle2}"/>
+                <TextBlock Grid.Column="3" 
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyle2}"/>
             </Grid>
@@ -72,8 +77,16 @@
                 VisualStateNarrowMinWidth="0"
                 VisualStateNormalMinWidth="720"/>
         <Grid Grid.Row="1">
-        
-        <SemanticZoom>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ComboBox Grid.Row="0" SelectionChanged="{x:Bind ViewModel.SortItems}">
+                <x:String>Title</x:String>
+                <x:String>Album</x:String>
+                <x:String>Artist</x:String>
+            </ComboBox>
+            <SemanticZoom Grid.Row="1">
             <SemanticZoom.ZoomedInView>
                 <ListView x:Name="SongsListView"
                         ItemsSource="{Binding Source={StaticResource SongsCVS}}"

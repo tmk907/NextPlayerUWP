@@ -35,20 +35,9 @@ namespace NextPlayerUWPDataLayer.Helpers
             return b;
         }
 
-        public static string CurrentStateString()
+        public static SolidColorBrush GetColor(bool shuffle)
         {
-            if (CurrentState())
-            {
-                return "ShuffleOn";
-            }
-            else
-            {
-                return "ShuffleOff";
-            }
-        }
-        public static SolidColorBrush CurrentStateColor()
-        {
-            if (CurrentState())
+            if (shuffle)
             {
                 if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
                 {

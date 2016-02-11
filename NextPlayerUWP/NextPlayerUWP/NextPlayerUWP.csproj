@@ -102,6 +102,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\PlaybackManager.cs" />
+    <Compile Include="Common\SortEnums.cs" />
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="Common\TileManager.cs" />
     <Compile Include="Converters\AlbumImagePath.cs" />
@@ -115,6 +116,9 @@
     <Compile Include="Converters\IntToSongs.cs" />
     <Compile Include="Converters\NumberToPercent.cs" />
     <Compile Include="Converters\RatingConverter.cs" />
+    <Compile Include="Converters\RepeatContent.cs" />
+    <Compile Include="Converters\RepeatForeground.cs" />
+    <Compile Include="Converters\ShuffleForeground.cs" />
     <Compile Include="Converters\SizeToString.cs" />
     <Compile Include="Converters\ThumbToolTipValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
@@ -214,6 +218,13 @@
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-100.png" />
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-140.png" />
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-240.png" />
+    <Content Include="Assets\Buttons\next.png" />
+    <Content Include="Assets\Buttons\pause.png" />
+    <Content Include="Assets\Buttons\play.png" />
+    <Content Include="Assets\Buttons\prev.png" />
+    <Content Include="Assets\Buttons\repeat.png" />
+    <Content Include="Assets\Buttons\repeatall.png" />
+    <Content Include="Assets\Buttons\shuffle.png" />
     <Content Include="Assets\SongCover.png" />
     <Content Include="Assets\SongCover192.scale-100.png" />
     <Content Include="Assets\SongCover192.scale-140.png" />

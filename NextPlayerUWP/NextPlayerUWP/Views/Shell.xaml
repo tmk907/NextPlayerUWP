@@ -185,7 +185,10 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <SymbolIcon Symbol="Shuffle"/>
+                            <Viewbox Height="22">
+                                <SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
+                            </Viewbox>
+                            <!--<Image Source="/Assets/Buttons/shuffle.png" Height="32"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
@@ -195,8 +198,10 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <SymbolIcon Symbol="Previous"
-                                        Width="50" Height="50"/>
+                            <Viewbox Height="32">
+                                <SymbolIcon Symbol="Previous"/>
+                            </Viewbox>
+                            <!--<Image Source="/Assets/Buttons/prev.png" Height="40"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
@@ -206,7 +211,10 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <SymbolIcon Symbol="{Binding PlayButtonContent}"/>
+                            <Viewbox Height="44">
+                                <SymbolIcon Symbol="{Binding PlayButtonContent}"/>
+                            </Viewbox>
+                            <!--<Image Source="/Assets/Buttons/play.png" Height="52" Width="52"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
@@ -216,18 +224,24 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <SymbolIcon Symbol="Next"/>
+                            <Viewbox Height="32">
+                                <SymbolIcon Symbol="Next"/>
+                            </Viewbox>
+                            <!--<Image Source="/Assets/Buttons/next.png" Height="40"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Column="4"
-                    Command="{Binding Next}"
+                    Command="{Binding RepeatCommand}"
                     Width="60" Height="60"
                     
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <SymbolIcon Symbol="RepeatOne"/>
+                            <Viewbox Height="22">
+                                <SymbolIcon Symbol="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"/>
+                            </Viewbox>
+                            <!--<Image Source="/Assets/Buttons/repeat.png" Height="32"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>

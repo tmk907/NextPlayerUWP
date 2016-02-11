@@ -13,9 +13,10 @@ namespace NextPlayerUWP.ViewModels
         public TestViewModel()
         {
             songs = new ObservableCollection<SongItem>();
-            for (int i = 1; i < 20; i++)
+            for (int i = 1; i < 10; i++)
             {
-                Songs.Add(new SongItem());
+                SongItem s = new SongItem();
+                Songs.Add(s);
             }
         }
 
