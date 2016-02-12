@@ -17,6 +17,12 @@ namespace NextPlayerUWP.ViewModels
 {
     public class PlaylistViewModel : MusicViewModelBase
     {
+        public PlaylistViewModel()
+        {
+            SortNames si = new SortNames(MusicItemTypes.song);
+            ComboBoxItemValues = si.GetSortNames();
+        }
+
         private MusicItemTypes type;
         string firstParam;
 

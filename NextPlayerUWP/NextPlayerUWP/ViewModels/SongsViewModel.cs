@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -16,6 +17,12 @@ namespace NextPlayerUWP.ViewModels
 {
     public class SongsViewModel : MusicViewModelBase
     {
+        public SongsViewModel()
+        {
+            SortNames si = new SortNames(MusicItemTypes.song);
+            ComboBoxItemValues = si.GetSortNames();
+        }
+
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
         public ObservableCollection<SongItem> Songs
         {
@@ -53,7 +60,7 @@ namespace NextPlayerUWP.ViewModels
         }
 
         protected override async Task LoadData()
-        {
+        {               
             if (songs.Count == 0)
             {
                 Songs = await DatabaseManager.Current.GetSongItemsAsync();
@@ -109,51 +116,60 @@ namespace NextPlayerUWP.ViewModels
 
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
-            //string option = e.AddedItems.FirstOrDefault() as string;
-            Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower());
-            //var a1 = e.AddedItems.FirstOrDefault();
-            //SortEnums sortby = SortEnums.Title;
-            //if (a1.ToString() == "Album") sortby = SortEnums.Album;
-            //if (a1.ToString() == "Artist") sortby = SortEnums.Artist;
-
-            //switch (sortby)
-            //{
-            //    case SortEnums.Album:
-            //        Sort(s => s.Album, t => (t.Album=="")?"":t.Album[0].ToString().ToLower());
-            //        break;
-            //    case SortEnums.Artist:
-            //        Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower());
-            //        break;
-            //    case SortEnums.Title:
-            //        Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower());
-            //        break;
-            //    default:
-            //        Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower());
-            //        break;
-            //}
+            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            switch (value.Option)
+            {
+                case SortNames.Title:
+                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
+                    break;
+                case SortNames.Album:
+                    Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
+                    break;
+                case SortNames.Artist:
+                    Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
+                    break;
+                //case SortNames.AlbumArtist:
+                //    Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
+                //    break;
+                case SortNames.Year:
+                    Sort(s => s.Year, t => t.Year, "SongId");
+                    break;
+                case SortNames.Duration:
+                    Sort(s => s.Duration, t => t.Duration, "SongId");
+                    break;
+                case SortNames.Rating:
+                    Sort(s => s.Rating, t => t.Rating, "SongId");
+                    break;
+                case SortNames.Composer:
+                    Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
+                    break;
+                default:
+                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
+                    break;
+            }
         }
 
-        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem,string> groupSelector)
+        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem,object> groupSelector, string propertyName)
         {
-            var query = songs.OrderBy(orderSelector).ThenBy(s => s.Title).GroupBy(groupSelector).OrderBy(g => g.Key).Select(group => new { GroupName = group.Key.ToUpper(), Items = group });
-            //var query = from item in songs
-            //             orderby orderSelector
-            //             group item by groupSelector into g
-            //             orderby g.Key
-            //             select new { GroupName = g.Key, Items = g };
+            var query = songs.OrderBy(orderSelector).ThenBy(a => a.Title).
+                GroupBy(groupSelector).
+                OrderBy(g => g.Key).
+                Select(group => new { GroupName = group.Key.ToString().ToUpper(), Items = group });
             int i = 0;
+            string s;
             GroupedSongs.Clear();
             foreach (var g in query)
             {
                 i = 0;
-                string s = "";
+                s = "";
                 GroupList group = new GroupList();
                 group.Key = g.GroupName;
                 foreach (var item in g.Items)
                 {
-                    if (group.Count != 0 && item.Album != s) i++;
+                    string prop = item.GetType().GetProperty(propertyName).GetValue(item, null).ToString();
+                    if (group.Count != 0 && prop != s) i++;
                     item.Index = i;
-                    s = item.Album;
+                    s = prop;
                     group.Add(item);
                 }
                 GroupedSongs.Add(group);

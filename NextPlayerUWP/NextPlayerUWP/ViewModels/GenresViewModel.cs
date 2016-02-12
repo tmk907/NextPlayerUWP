@@ -12,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
+using NextPlayerUWP.Common;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -19,7 +20,8 @@ namespace NextPlayerUWP.ViewModels
     {
         public GenresViewModel()
         {
-            Debug.WriteLine("genresvm constructor");
+            SortNames si = new SortNames(MusicItemTypes.genre);
+            ComboBoxItemValues = si.GetSortNames();
         }
 
         private ObservableCollection<GenreItem> genres = new ObservableCollection<GenreItem>();

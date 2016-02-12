@@ -4,11 +4,11 @@ using Windows.ApplicationModel.Resources;
 
 namespace NextPlayerUWP.Common
 {
-    public class ComboBoxItemValues
+    public class ComboBoxItemValue
     {
         public string Option { get; set; }
         public string Label { get; set; }
-        public ComboBoxItemValues(string option, string label)
+        public ComboBoxItemValue(string option, string label)
         {
             Option = option;
             Label = label;
@@ -30,60 +30,64 @@ namespace NextPlayerUWP.Common
         public const string Rating = "Rating";
         public const string FolderName = "Folder Name";
         public const string Name = "Name";
+        public const string Composer = "Composer";
 
         private MusicItemTypes type;
         public MusicItemTypes Type { get { return type; } }
 
-        public SortNames(MusicItem item)
+        public SortNames(MusicItemTypes itemType)
         {
-            type = MusicItem.ParseType(item.GetParameter());
+            type = itemType;
         }
 
-        public ObservableCollection<ComboBoxItemValues> GetSortNames()
+        public ObservableCollection<ComboBoxItemValue> GetSortNames()
         {
-            ObservableCollection<ComboBoxItemValues> comboboxItems = new ObservableCollection<ComboBoxItemValues>();
+            ObservableCollection<ComboBoxItemValue> comboboxItems = new ObservableCollection<ComboBoxItemValue>();
             ResourceLoader loader = new ResourceLoader();
             switch (type)
             {
                 case MusicItemTypes.album:
-                    comboboxItems.Add(new ComboBoxItemValues(Album, loader.GetString(Album)));
-                    comboboxItems.Add(new ComboBoxItemValues(Artist, loader.GetString(Artist)));
-                    comboboxItems.Add(new ComboBoxItemValues(AlbumArtist, loader.GetString(AlbumArtist)));
-                    comboboxItems.Add(new ComboBoxItemValues(Year, loader.GetString(Year)));
-                    comboboxItems.Add(new ComboBoxItemValues(SongCount, loader.GetString(SongCount)));
-                    comboboxItems.Add(new ComboBoxItemValues(Duration, loader.GetString(Duration)));
-                    comboboxItems.Add(new ComboBoxItemValues(LastAdded, loader.GetString(LastAdded)));
+                    comboboxItems.Add(new ComboBoxItemValue(Album, loader.GetString(Album)));
+                    comboboxItems.Add(new ComboBoxItemValue(Artist, loader.GetString(Artist)));
+                    comboboxItems.Add(new ComboBoxItemValue(AlbumArtist, loader.GetString(AlbumArtist)));
+                    comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
+                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
+                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.artist:
-                    comboboxItems.Add(new ComboBoxItemValues(Artist, loader.GetString(Artist)));
-                    comboboxItems.Add(new ComboBoxItemValues(SongCount, loader.GetString(SongCount)));
-                    comboboxItems.Add(new ComboBoxItemValues(Duration, loader.GetString(Duration)));
-                    comboboxItems.Add(new ComboBoxItemValues(LastAdded, loader.GetString(LastAdded)));
+                    comboboxItems.Add(new ComboBoxItemValue(Artist, loader.GetString(Artist)));
+                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
+                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.folder:
-                    comboboxItems.Add(new ComboBoxItemValues(FolderName, loader.GetString(FolderName)));
-                    comboboxItems.Add(new ComboBoxItemValues(SongCount, loader.GetString(SongCount)));
-                    comboboxItems.Add(new ComboBoxItemValues(Duration, loader.GetString(Duration)));
-                    comboboxItems.Add(new ComboBoxItemValues(LastAdded, loader.GetString(LastAdded)));
+                    comboboxItems.Add(new ComboBoxItemValue(FolderName, loader.GetString(FolderName)));
+                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
+                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.genre:
-                    comboboxItems.Add(new ComboBoxItemValues(Genre, loader.GetString(Genre)));
-                    comboboxItems.Add(new ComboBoxItemValues(SongCount, loader.GetString(SongCount)));
-                    comboboxItems.Add(new ComboBoxItemValues(Duration, loader.GetString(Duration)));
-                    comboboxItems.Add(new ComboBoxItemValues(LastAdded, loader.GetString(LastAdded)));
+                    comboboxItems.Add(new ComboBoxItemValue(Genre, loader.GetString(Genre)));
+                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
+                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.song:
-                    comboboxItems.Add(new ComboBoxItemValues(Title, loader.GetString(Title)));
-                    comboboxItems.Add(new ComboBoxItemValues(Album, loader.GetString(Album)));
-                    comboboxItems.Add(new ComboBoxItemValues(Artist, loader.GetString(Artist)));
-                    comboboxItems.Add(new ComboBoxItemValues(AlbumArtist, loader.GetString(AlbumArtist)));
-                    comboboxItems.Add(new ComboBoxItemValues(Year, loader.GetString(Year)));
-                    comboboxItems.Add(new ComboBoxItemValues(Duration, loader.GetString(Duration)));
-                    comboboxItems.Add(new ComboBoxItemValues(Rating, loader.GetString(Rating)));
-                    comboboxItems.Add(new ComboBoxItemValues(LastAdded, loader.GetString(LastAdded)));
+                    comboboxItems.Add(new ComboBoxItemValue(Title, loader.GetString(Title)));
+                    comboboxItems.Add(new ComboBoxItemValue(Album, loader.GetString(Album)));
+                    comboboxItems.Add(new ComboBoxItemValue(Artist, loader.GetString(Artist)));
+                    comboboxItems.Add(new ComboBoxItemValue(AlbumArtist, loader.GetString(AlbumArtist)));
+                    comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
+                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    comboboxItems.Add(new ComboBoxItemValue(Rating, loader.GetString(Rating)));
+                    comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
+                    comboboxItems.Add(new ComboBoxItemValue(Composer, loader.GetString(Composer)));
                     break;
             }
             return comboboxItems;
         }
+
+        
     }
 }

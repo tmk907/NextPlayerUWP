@@ -81,10 +81,11 @@
                 <RowDefinition Height="44"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <ComboBox Grid.Row="0" SelectionChanged="{x:Bind ViewModel.SortItems}">
-                <x:String>Title</x:String>
-                <x:String>Album</x:String>
-                <x:String>Artist</x:String>
+            <ComboBox Grid.Row="0" SelectionChanged="{x:Bind ViewModel.SortItems}"
+                      
+                      DisplayMemberPath="Label"
+                      ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}">
+                
             </ComboBox>
             <SemanticZoom Grid.Row="1">
             <SemanticZoom.ZoomedInView>
@@ -150,8 +151,8 @@
                             <Setter Property="VerticalAlignment" Value="Stretch"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                            <Setter Property="Height" Value="84" />
-                            <Setter Property="Width" Value="84" />
+                            <Setter Property="Height" Value="92" />
+                            <Setter Property="Width" Value="92" />
                             <Setter Property="Margin" Value="4"/>
                             <Setter Property="Padding" Value="0"/>
                         </Style>

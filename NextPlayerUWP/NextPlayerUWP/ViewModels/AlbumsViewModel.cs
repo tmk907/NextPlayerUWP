@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -14,6 +15,11 @@ namespace NextPlayerUWP.ViewModels
 {
     public class AlbumsViewModel : MusicViewModelBase
     {
+        public AlbumsViewModel()
+        {
+            SortNames si = new SortNames(MusicItemTypes.artist);
+            ComboBoxItemValues = si.GetSortNames();
+        }
         private ObservableCollection<AlbumItem> albums = new ObservableCollection<AlbumItem>();
         public ObservableCollection<AlbumItem> Albums
         {

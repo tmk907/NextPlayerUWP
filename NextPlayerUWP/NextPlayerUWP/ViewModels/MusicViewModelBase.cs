@@ -40,11 +40,18 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref pageTitle, value); }
         }
 
-        protected ObservableCollection<ComboBoxItemValues> comboboxValues = new ObservableCollection<ComboBoxItemValues>();
-        public ObservableCollection<ComboBoxItemValues> ComboBoxItemValues
+        protected ObservableCollection<ComboBoxItemValue> comboboxValues = new ObservableCollection<ComboBoxItemValue>();
+        public ObservableCollection<ComboBoxItemValue> ComboBoxItemValues
         {
             get { return comboboxValues; }
             set { Set(ref comboboxValues, value); }
+        }
+
+        protected ComboBoxItemValue selectedComboBoxItem;
+        public ComboBoxItemValue SelectedComboBoxItem
+        {
+            get { return selectedComboBoxItem; }
+            set { Set(ref selectedComboBoxItem, value); }
         }
 
         #region Commands
