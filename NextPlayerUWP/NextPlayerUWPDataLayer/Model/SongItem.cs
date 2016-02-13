@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Tables;
+using System;
 using System.ComponentModel;
 
 namespace NextPlayerUWPDataLayer.Model
@@ -122,32 +123,97 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        private DateTime dateAdded;
+        public DateTime DateAdded { get { return dateAdded; } }
+        private DateTime lastPlayed;
+        public DateTime LastPlayed
+        {
+            get { return lastPlayed; }
+            set
+            {
+                if (value != lastPlayed)
+                {
+                    lastPlayed = value;
+                    onPropertyChanged(this, "LastPlayed");
+                }
+            }
+        }
+        private int playCount;
+        public int PlayCount
+        {
+            get { return playCount; }
+            set
+            {
+                if(value != playCount)
+                {
+                    playCount = value;
+                    onPropertyChanged(this, "PlayCount");
+                }
+            }
+        }
+        private string genres;
+        public string Genres
+        {
+            get { return genres; }
+            set
+            {
+                if (value != genres)
+                {
+                    genres = value;
+                    onPropertyChanged(this, "Genres");
+                }
+            }
+        }
+        private string albumArtist;
+        public string AlbumArtist
+        {
+            get { return albumArtist; }
+            set
+            {
+                if (value != albumArtist)
+                {
+                    albumArtist = value;
+                    onPropertyChanged(this, "AlbumArtist");
+                }
+            }
+        }
 
         public SongItem()
         {
             title = "Unknown Title";
             artist = "Unknown Artist";
             album = "Unknown Album";
+            albumArtist = "Unknown Album Artist";
             duration = TimeSpan.Zero;
-            this.path = "";
+            path = "";
             rating = 0;
             songId = -1;
             composer = "";
+            trackNumber = 0;
             year = 0;
+            dateAdded = new DateTime();
+            genres = "Unknown Genres";
+            lastPlayed = new DateTime();
+            playCount = 0;
         }
 
-        public SongItem(string album, string artist, string composer, TimeSpan duration, string path, int rating, int songid, string title, int trackumber, int year)
+        public SongItem(SongsTable table)
         {
-            this.album = album;
-            this.artist = artist;
-            this.composer = composer;
-            this.duration = duration;
-            this.path = path;
-            this.rating = rating;
-            this.songId = songid;
-            this.title = title;
-            this.trackNumber = trackumber;
-            this.year = year;
+            album = table.Album;
+            albumArtist = table.AlbumArtist;
+            artist = table.Artists;
+            composer = table.Composers;
+            duration = table.Duration;
+            path = table.Path;
+            rating = (int)table.Rating;
+            title = table.Title;
+            trackNumber = table.Track;
+            year = table.Year;
+            songId = table.SongId;
+            dateAdded = table.DateAdded;
+            genres = table.Genres;
+            lastPlayed = table.LastPlayed;
+            playCount = (int)table.PlayCount;            
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

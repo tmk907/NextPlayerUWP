@@ -39,10 +39,11 @@ namespace NextPlayerUWP.ViewModels
                 songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(albumParam);
                 Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.TrackNumber));
                 Album = await DatabaseManager.Current.GetAlbumItemAsync(albumParam);
-                if (album.ImagePath == "")
+                if (!album.IsImageSet)
                 {
                     string path = await ImagesManager.GetAlbumCoverPath(album);
                     Album.ImagePath = path;
+                    Album.ImageUri = new Uri(path);
                     await DatabaseManager.Current.UpdateAlbumItem(album);
                 }
             }

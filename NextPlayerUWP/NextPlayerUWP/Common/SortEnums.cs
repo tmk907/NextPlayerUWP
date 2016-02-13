@@ -1,5 +1,8 @@
 ﻿using NextPlayerUWPDataLayer.Model;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Windows.ApplicationModel.Resources;
 
 namespace NextPlayerUWP.Common
@@ -27,6 +30,7 @@ namespace NextPlayerUWP.Common
         public const string PlayCount = "Play Count";
         public const string SongCount = "Song Count";
         public const string LastAdded = "Last Added";
+        public const string LastPlayed = "Last Played";
         public const string Rating = "Rating";
         public const string FolderName = "Folder Name";
         public const string Name = "Name";
@@ -48,12 +52,11 @@ namespace NextPlayerUWP.Common
             {
                 case MusicItemTypes.album:
                     comboboxItems.Add(new ComboBoxItemValue(Album, loader.GetString(Album)));
-                    comboboxItems.Add(new ComboBoxItemValue(Artist, loader.GetString(Artist)));
                     comboboxItems.Add(new ComboBoxItemValue(AlbumArtist, loader.GetString(AlbumArtist)));
                     comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
                     comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
                     comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
-                    comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
+                    //comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.artist:
                     comboboxItems.Add(new ComboBoxItemValue(Artist, loader.GetString(Artist)));
@@ -83,11 +86,11 @@ namespace NextPlayerUWP.Common
                     comboboxItems.Add(new ComboBoxItemValue(Rating, loader.GetString(Rating)));
                     comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     comboboxItems.Add(new ComboBoxItemValue(Composer, loader.GetString(Composer)));
+                    comboboxItems.Add(new ComboBoxItemValue(LastPlayed, loader.GetString(LastPlayed)));
+                    comboboxItems.Add(new ComboBoxItemValue(PlayCount, loader.GetString(PlayCount)));
                     break;
             }
             return comboboxItems;
         }
-
-        
     }
 }

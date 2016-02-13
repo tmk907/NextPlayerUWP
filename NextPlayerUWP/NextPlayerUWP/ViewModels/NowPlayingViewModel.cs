@@ -20,6 +20,14 @@ namespace NextPlayerUWP.ViewModels
     {
         public NowPlayingViewModel()
         {
+            if (PlaybackManager.Current.PlayerState == MediaPlayerState.Playing)
+            {
+                PlayButtonContent = Symbol.Pause;
+            }
+            else
+            {
+                PlayButtonContent = Symbol.Play;
+            }
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
@@ -29,14 +37,7 @@ namespace NextPlayerUWP.ViewModels
             StartTimer();
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             ChangeCover();
-            if (PlaybackManager.Current.PlayerState == MediaPlayerState.Playing)
-            {
-                PlayButtonContent = Symbol.Pause;
-            }
-            else
-            {
-                PlayButtonContent = Symbol.Play;
-            }
+            
         }
 
         

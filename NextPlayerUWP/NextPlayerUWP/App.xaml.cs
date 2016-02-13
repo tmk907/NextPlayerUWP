@@ -45,6 +45,7 @@ namespace NextPlayerUWP
             {
                 DatabaseManager.Current.CreateDatabase();
             }
+            //DatabaseManager.Current.ClearCoverPaths();
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -158,7 +159,7 @@ namespace NextPlayerUWP
             }
             else
             {
-                NavigationService.Navigate(Pages.Albums);
+                NavigationService.Navigate(Pages.Playlists);
             }
             return Task.FromResult<object>(null);
         }

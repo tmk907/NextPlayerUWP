@@ -336,7 +336,7 @@ namespace NextPlayerUWPDataLayer.Services
                 var query2 = songsConnection.Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
                 if (query2 != null)
                 {
-                    list.Add(CreateSongItem(query2));
+                    list.Add(new SongItem(query2));
                 }
             }
             return list;
@@ -348,7 +348,7 @@ namespace NextPlayerUWPDataLayer.Services
             var result = await songsConnectionAsync.OrderBy(s => s.Title).ToListAsync();
             foreach (var item in result)
             {
-                songs.Add(CreateSongItem(item));
+                songs.Add(new SongItem(item));
             }
             return songs;
         }
@@ -360,7 +360,7 @@ namespace NextPlayerUWPDataLayer.Services
             var result = await songsConnectionAsync.Where(a=>a.Album.Equals(album)).OrderBy(s => s.Title).ToListAsync();
             foreach (var item in result)
             {
-                songs.Add(CreateSongItem(item));
+                songs.Add(new SongItem(item));
             }
             return songs;
         }
@@ -374,7 +374,7 @@ namespace NextPlayerUWPDataLayer.Services
 
                 foreach (var item in list)
                 {
-                    songs.Add(CreateSongItem(item));
+                    songs.Add(new SongItem(item));
                 }
             }
             catch (Exception ex)
@@ -390,7 +390,7 @@ namespace NextPlayerUWPDataLayer.Services
             var result = await songsConnectionAsync.Where(f=>f.DirectoryName.Equals(directory)).OrderBy(s => s.Title).ToListAsync();
             foreach (var item in result)
             {
-                songs.Add(CreateSongItem(item));
+                songs.Add(new SongItem(item));
             }
             return songs;
         }
@@ -403,7 +403,7 @@ namespace NextPlayerUWPDataLayer.Services
                 List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Genres = ? OR Genres LIKE ? OR Genres LIKE ? OR Genres LIKE ?", genre, genre + "; %", "%; " + genre, "%; " + genre + "; %");
                 foreach (var item in list)
                 {
-                    songs.Add(CreateSongItem(item));
+                    songs.Add(new SongItem(item));
                 }
             }
             catch (Exception ex)
@@ -432,7 +432,7 @@ namespace NextPlayerUWPDataLayer.Services
             var result = query.ToList();
             foreach (var item in result)
             {
-                songs.Add(CreateSongItem(item));
+                songs.Add(new SongItem(item));
             }
             
             return songs;
@@ -602,11 +602,6 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
 
-        private static SongItem CreateSongItem(SongsTable q)
-        {
-            return new SongItem(q.Album, q.Artists, q.Composers, q.Duration, q.Path, (int)q.Rating, q.SongId, q.Title, (int)q.Track, q.Year);
-        }
-
         private static SongsTable CreateCopy(SongsTable s)
         {
             return new SongsTable()
@@ -641,6 +636,11 @@ namespace NextPlayerUWPDataLayer.Services
                 TrackCount = s.TrackCount,
                 Year = s.Year,
             };
+        }
+
+        public void ClearCoverPaths()
+        {
+            connection.Execute("UPDATE AlbumsTable SET ImagePath = ''");
         }
     }
 }

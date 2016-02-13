@@ -85,7 +85,7 @@
                 <!--<Image Source="{Binding Album.ImagePath, Converter={StaticResource AlbumImagePathConverter}, ConverterParameter={StaticResource int200} }"/>-->
                 <Image>
                     <Image.Source>
-                        <BitmapImage UriSource="{Binding Album.ImagePath, Converter={StaticResource AlbumImagePathConverter}}"
+                        <BitmapImage UriSource="{Binding Album.ImageUri, Mode=OneWay}"
                                      DecodePixelHeight="200" DecodePixelWidth="200"/>
                     </Image.Source>
                 </Image>

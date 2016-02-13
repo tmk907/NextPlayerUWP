@@ -128,9 +128,9 @@ namespace NextPlayerUWP.ViewModels
                 case SortNames.Artist:
                     Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
                     break;
-                //case SortNames.AlbumArtist:
-                //    Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
-                //    break;
+                case SortNames.AlbumArtist:
+                    Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
+                    break;
                 case SortNames.Year:
                     Sort(s => s.Year, t => t.Year, "SongId");
                     break;
@@ -142,6 +142,15 @@ namespace NextPlayerUWP.ViewModels
                     break;
                 case SortNames.Composer:
                     Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
+                    break;
+                case SortNames.LastAdded:
+                    Sort(s => s.DateAdded, t => t.DateAdded, "SongId");
+                    break;
+                case SortNames.LastPlayed:
+                    Sort(s => s.LastPlayed, t => t.LastPlayed, "SongId");
+                    break;
+                case SortNames.PlayCount:
+                    Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
                     break;
                 default:
                     Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");

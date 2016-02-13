@@ -103,5 +103,8 @@
         public const string LfmLove = "lfmlove";
         public const string LfmSendNP = "lfmsendnp";
 
+
+        //assets
+        public const string AssetDefaultAlbumCover = "ms-appx:///Assets/Albums/DefaultAlbumCover.png";
     }
 }

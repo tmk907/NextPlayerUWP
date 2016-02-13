@@ -266,27 +266,8 @@ namespace NextPlayerUWP.ViewModels
                     }
                     return null;
                 }
-            }).AsAsyncOperation();
-            //return Task.Run(() =>
-            //{
-            //    if (listView.Items.Count <= 0)
-            //    {
-            //        return null;
-            //    }
-            //    else
-            //    {
-            //        var i = listView.Items[firstVisibleItemIndex];
-            //        if (((MusicItem)i).GetParameter() == key)
-            //        {
-            //            return listView.Items[firstVisibleItemIndex];
-            //        }
-            //        foreach (var item in listView.Items)
-            //        {
-            //            if (((MusicItem)item).GetParameter() == key) return item;
-            //        }
-            //        return null;
-            //    }
-            //}).AsAsyncOperation();
+            }).AsAsyncOperation();           
         }
+
     }
 }

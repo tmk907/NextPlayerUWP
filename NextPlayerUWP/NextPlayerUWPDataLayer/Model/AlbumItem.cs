@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Tables;
+﻿using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Tables;
 using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Resources;
@@ -74,6 +75,32 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        private Uri imageUri;
+        public Uri ImageUri
+        {
+            get { return imageUri; }
+            set
+            {
+                if (value != imageUri)
+                {
+                    imageUri = value;
+                    onPropertyChanged(this, "ImageUri");
+                }
+            }
+        }
+        private bool isImageSet;
+        public bool IsImageSet
+        {
+            get { return isImageSet; }
+            set
+            {
+                if (value != isImageSet)
+                {
+                    isImageSet = value;
+                    onPropertyChanged(this, "IsImageSet");
+                }
+            }
+        }
         private int year;
         public int Year
         {
@@ -100,42 +127,9 @@ namespace NextPlayerUWPDataLayer.Model
             songsNumber = 0;
             duration = TimeSpan.Zero;
             year = 2020;
-            imagePath = "ms-appx:///Albums/DefaultAlbumCover.png";
-        }
-
-        public AlbumItem(string albumParam, string artistParam, string albumArtist, TimeSpan duration, int songsnumber, int year, string imagePath)
-        {
-            this.albumParam = albumParam;
-            this.artistParam = artistParam;
-            if (albumParam == "")
-            {
-                ResourceLoader loader = new ResourceLoader();
-                this.album = loader.GetString("UnknownAlbum");
-            }
-            else
-            {
-                this.album = albumParam;
-            }
-            if (albumArtist == "")
-            {
-                if (artistParam == null || artistParam == "")
-                {
-                    ResourceLoader loader = new ResourceLoader();
-                    this.albumArtist = loader.GetString("UnknownArtist");
-                }
-                else
-                {
-                    this.albumArtist = artistParam;
-                }
-            }
-            else
-            {
-                this.albumArtist = albumArtist;
-            }
-            this.duration = duration;
-            this.songsNumber = songsnumber;
-            this.year = year;
-            this.imagePath = imagePath;
+            imagePath = AppConstants.AssetDefaultAlbumCover;
+            IsImageSet = true;
+            imageUri = new Uri(imagePath);
         }
 
         public AlbumItem(AlbumsTable table)
@@ -156,7 +150,17 @@ namespace NextPlayerUWPDataLayer.Model
             albumArtist = table.AlbumArtist;
             artistParam = null;
             year = table.Year;
-            imagePath = table.ImagePath;
+            if (table.ImagePath == "")
+            {
+                IsImageSet = false;
+                imagePath = AppConstants.AssetDefaultAlbumCover;
+            }
+            else
+            {
+                IsImageSet = true;
+                imagePath = table.ImagePath;
+            }
+            imageUri = new Uri(imagePath);
         }
 
         public override string ToString()

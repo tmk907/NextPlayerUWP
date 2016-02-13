@@ -31,7 +31,7 @@
             <StackPanel Orientation="Vertical" RightTapped="ListViewItem_RightTapped">
                 <Image Width="100" Height="100">
                     <Image.Source>
-                        <BitmapImage UriSource="{x:Bind ImagePath, Converter={StaticResource AlbumImagePathConverter}}"
+                        <BitmapImage UriSource="{x:Bind ImageUri}"
                                      DecodePixelHeight="100" DecodePixelWidth="100"/>
                     </Image.Source>
                 </Image>
