@@ -307,7 +307,9 @@ namespace NextPlayerUWPDataLayer.Services
         {
             NowPlayingSong s = new NowPlayingSong();
             s.Artist = npSong.Artist;
+            s.Album = npSong.Album;
             s.Path = npSong.Path;
+            s.ImagePath = npSong.ImagePath;
             s.Position = npSong.Position;
             s.SongId = npSong.SongId;
             s.Title = npSong.Title;
@@ -315,6 +317,20 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         #region Get
+
+        public string GetLyrics(int id)
+        {
+            var list = connection.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToList();
+            if (list.Count == 0) return "";
+            else return list.FirstOrDefault().Lyrics;
+        }
+
+        public SongData GetSongData(int songId)
+        {
+            var q = connection.Table<SongsTable>().Where(e => e.SongId.Equals(songId)).FirstOrDefault();
+            SongData s = CreateSongData(q);
+            return s;
+        }
 
         public List<NowPlayingSong> GetNowPlayingSongs()
         {
@@ -325,6 +341,16 @@ namespace NextPlayerUWPDataLayer.Services
                 songs.Add(CreateNowPlayingSong(e));
             }
             return songs;
+        }
+
+        public NowPlayingSong GetNowPlayingSong(int songId)
+        {
+            var list = connection.Table<NowPlayingTable>().Where(s => s.SongId.Equals(songId)).ToList();
+            if (list.Count > 0)
+            {
+                return CreateNowPlayingSong(list.FirstOrDefault());
+            }
+            return null;
         }
 
         public ObservableCollection<SongItem> GetSongItemsFromNowPlaying()
@@ -574,7 +600,9 @@ namespace NextPlayerUWPDataLayer.Services
                 list.Add(new NowPlayingTable()
                 {
                     Artist = item.Artist,
+                    Album = item.Album,
                     Path = item.Path,
+                    ImagePath = "",
                     Position = i,
                     SongId = item.SongId,
                     Title = item.Title,
@@ -601,6 +629,27 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.UpdateAsync(genre);
         }
 
+        public async Task UpdateSongData(SongData songData)
+        {
+            var song = CreateSongsTable(songData);
+            await connectionAsync.UpdateAsync(song);
+        }
+
+        public async Task UpdateNowPlayingSong(SongData song)
+        {
+            await connectionAsync.ExecuteAsync("Update NowPlayingTable SET Title = ?, Artist = ?, Album = ? WHERE SongId = ?", song.Tag.Title, song.Tag.Artists, song.Tag.Album, song.SongId);
+        }
+
+        public string GetAlbumArt(string album)
+        {
+            var q = connection.Table<AlbumsTable>().Where(a => a.Album.Equals(album)).ToList();
+            string imagepath = AppConstants.AssetDefaultAlbumCover;
+            if (q.Count > 0)
+            {
+                imagepath = q.FirstOrDefault().ImagePath;
+            }
+            return imagepath;
+        }
 
         private static SongsTable CreateCopy(SongsTable s)
         {
@@ -638,9 +687,54 @@ namespace NextPlayerUWPDataLayer.Services
             };
         }
 
+        private static SongData CreateSongData(SongsTable q)
+        {
+            Tags tag = new Tags()
+            {
+                Album = q.Album,
+                AlbumArtist = q.AlbumArtist,
+                Artists = q.Artists,
+                Comment = q.Comment,
+                Composers = q.Composers,
+                Conductor = q.Conductor,
+                Disc = q.Disc,
+                DiscCount = q.DiscCount,
+                FirstArtist = q.FirstArtist,
+                FirstComposer = q.FirstComposer,
+                Genres = q.Genres,
+                Lyrics = q.Lyrics,
+                Rating = q.Rating,
+                Title = q.Title,
+                Track = q.Track,
+                TrackCount = q.TrackCount,
+                Year = q.Year
+            };
+            SongData s = new SongData()
+            {
+                Bitrate = q.Bitrate,
+                DateAdded = q.DateAdded,
+                Duration = q.Duration,
+                Filename = q.Filename,
+                FileSize = (ulong)q.FileSize,
+                IsAvailable = q.IsAvailable,
+                LastPlayed = q.LastPlayed,
+                Path = q.Path,
+                PlayCount = q.PlayCount,
+                SongId = q.SongId,
+                Tag = tag
+            };
+            return s;
+        }
+
         public void ClearCoverPaths()
         {
             connection.Execute("UPDATE AlbumsTable SET ImagePath = ''");
+        }
+
+        public void ResetNowPlaying()
+        {
+            connection.DropTable<NowPlayingTable>();
+            connection.CreateTable<NowPlayingTable>();
         }
     }
 }

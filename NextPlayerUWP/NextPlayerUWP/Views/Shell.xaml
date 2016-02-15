@@ -183,14 +183,14 @@
                     Command="{Binding ShuffleCommand}" 
                     Width="60" Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
+                    <!--<Button.ContentTemplate>
                         <DataTemplate>
                             <Viewbox Height="22">
                                 <SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
                             </Viewbox>
-                            <!--<Image Source="/Assets/Buttons/shuffle.png" Height="32"/>-->
+                            --><!--<Image Source="/Assets/Buttons/shuffle.png" Height="32"/>--><!--
                         </DataTemplate>
-                    </Button.ContentTemplate>
+                    </Button.ContentTemplate>-->
                 </Button>
                 <Button Grid.Column="1"
                     Command="{Binding Previous}"
@@ -212,7 +212,7 @@
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Viewbox Height="44">
-                                <SymbolIcon Symbol="{Binding PlayButtonContent}"/>
+                                <SymbolIcon Symbol="{Binding PlayButtonContent, Mode=OneWay}"/>
                             </Viewbox>
                             <!--<Image Source="/Assets/Buttons/play.png" Height="52" Width="52"/>-->
                         </DataTemplate>
@@ -236,14 +236,14 @@
                     Width="60" Height="60"
                     
                     Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
+                    <!--<Button.ContentTemplate>
                         <DataTemplate>
                             <Viewbox Height="22">
                                 <SymbolIcon Symbol="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"/>
                             </Viewbox>
-                            <!--<Image Source="/Assets/Buttons/repeat.png" Height="32"/>-->
+                            --><!--<Image Source="/Assets/Buttons/repeat.png" Height="32"/>--><!--
                         </DataTemplate>
-                    </Button.ContentTemplate>
+                    </Button.ContentTemplate>-->
                 </Button>
             </Grid>
             <Grid Grid.Column="3" Grid.RowSpan="2">

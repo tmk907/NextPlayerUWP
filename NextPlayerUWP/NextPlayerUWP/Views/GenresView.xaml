@@ -41,7 +41,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="250"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
@@ -49,29 +49,71 @@
                 x:Uid="PageHeaderGenres"
                 Content="Genres" 
                 VisualStateNarrowMinWidth="-1" />
-        <local:RightPanelControl Grid.Column="1" Grid.Row="1"/>
-        <Grid Grid.Row="1" Grid.Column="0">
-            <ListView x:Name="GenresListView"
+        <UserControl Grid.Column="1" Grid.Row="1">
+            <local:RightPanelControl/>
+        </UserControl>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <AutoSuggestBox  Grid.Column="2" 
+                    PlaceholderText="search" 
+                    QueryIcon="Find" 
+                    Margin="4,0,4,0" 
+                    HorizontalAlignment="Right" 
+                    Width="200" 
+                    VerticalAlignment="Center"
+                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
+                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}"/>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
+                    <ComboBox Margin="4,0,8,0" 
+                            BorderThickness="0" 
+                            Width="Auto" 
+                            VerticalAlignment="Center"
+                            SelectionChanged="{x:Bind ViewModel.SortItems}"
+                            DisplayMemberPath="Label"
+                            ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
+                            />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="0">
+                <ListView x:Name="GenresListView"
                     ItemsSource="{Binding Genres}"
                     ItemTemplate="{StaticResource GenreItemTemplate}"
                     
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     SelectionMode="None">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsStackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-            </ListView>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

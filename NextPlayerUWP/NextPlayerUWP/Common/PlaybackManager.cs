@@ -19,6 +19,7 @@ namespace NextPlayerUWP.Common
     public delegate void MediaPlayerTrackChangeHandler(int index);
     public delegate void MediaPlayerPositionChangeHandler(TimeSpan position, TimeSpan duration);
     public delegate void MediaPlayerMediaOpenHandler(TimeSpan duration);
+    public delegate void MediaPlayerCloseHandler();
 
     public class PlaybackManager
     {
@@ -65,6 +66,14 @@ namespace NextPlayerUWP.Common
             if (MediaPlayerMediaOpened != null)
             {
                 MediaPlayerMediaOpened(duration);
+            }
+        }
+        public static event MediaPlayerCloseHandler MediaPlayerMediaClosed;
+        public void OnMediaPlayerMediaClosed()
+        {
+            if (MediaPlayerMediaClosed!=null)
+            {
+                MediaPlayerMediaClosed();
             }
         }
 
@@ -285,7 +294,7 @@ namespace NextPlayerUWP.Common
             });
             }
 
-        private async void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
+        private void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             foreach (string key in e.Data.Keys)
             {
@@ -302,7 +311,7 @@ namespace NextPlayerUWP.Common
                     case AppConstants.MediaOpened:
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
-                            OnMediaPlayerMediaOpened(BackgroundMediaPlayer.Current.NaturalDuration);
+                            OnMediaPlayerMediaOpened(CurrentPlayer.NaturalDuration);
                             //TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
                             //double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
                             //ProgressBarMaxValue = absvalue;
@@ -318,13 +327,13 @@ namespace NextPlayerUWP.Common
                         {
                             TimeSpan result = TimeSpan.Zero;
                             TimeSpan.TryParse(e.Data[key].ToString(), out result);
-                            OnMediaPlayerPositionChanged(result, BackgroundMediaPlayer.Current.NaturalDuration);
+                            OnMediaPlayerPositionChanged(result, CurrentPlayer.NaturalDuration);
                         });
                         break;
                     case AppConstants.PlayerClosed:
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
-
+                            OnMediaPlayerMediaClosed();
                         });
                         break;
                     case AppConstants.BackgroundTaskStarted:
@@ -350,15 +359,15 @@ namespace NextPlayerUWP.Common
         {
             if (IsMyBackgroundTaskRunning)
             {
-                if (MediaPlayerState.Playing == BackgroundMediaPlayer.Current.CurrentState)
+                if (MediaPlayerState.Playing == CurrentPlayer.CurrentState)
                 {
                     SendMessage(AppConstants.Pause);
                 }
-                else if (MediaPlayerState.Paused == BackgroundMediaPlayer.Current.CurrentState)
+                else if (MediaPlayerState.Paused == CurrentPlayer.CurrentState)
                 {
                     SendMessage(AppConstants.Play);
                 }
-                else if (MediaPlayerState.Closed == BackgroundMediaPlayer.Current.CurrentState)
+                else if (MediaPlayerState.Closed == CurrentPlayer.CurrentState)
                 {
                     StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
                 }

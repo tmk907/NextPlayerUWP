@@ -102,10 +102,15 @@ namespace NextPlayerUWP.ViewModels
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
+            await SongClicked(((SongItem)e.ClickedItem).SongId);
+        }
+
+        private async Task SongClicked(int songid)
+        {
             int index = 0;
-            foreach(var s in songs)
+            foreach (var s in songs)
             {
-                if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
+                if (s.SongId == songid) break;
                 index++;
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
@@ -183,6 +188,38 @@ namespace NextPlayerUWP.ViewModels
                 }
                 GroupedSongs.Add(group);
             }
+        }
+
+        public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var matchingSongs = songs.Where(s => s.Title.ToLower().Contains(sender.Text)).OrderBy(s => s.Title);
+                sender.ItemsSource = matchingSongs.ToList();
+            }
+        }
+
+        public async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion != null)
+            {
+                await SongClicked(((SongItem)args.ChosenSuggestion).SongId);
+            }
+            else
+            {
+                var list = songs.Where(s => s.Title.ToLower().Contains(args.QueryText)).OrderBy(s => s.Title).ToList();
+                //if (list.Count > 0)
+                //{
+                //    await SongClicked(list.FirstOrDefault().SongId);
+                //}
+                sender.ItemsSource = list;
+            }
+        }
+
+        public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var song = args.SelectedItem as SongItem;
+            sender.Text = song.Title;
         }
     }
 }

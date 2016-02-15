@@ -31,16 +31,13 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
             PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
-            _timer = new DispatcherTimer();
-            SetupTimer();
-            StartTimer();
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             ChangeCover();
-            
+            _timer = new DispatcherTimer();
+            SetupTimer();
         }
-
-        
 
         #region Properties
         private SongItem song = new SongItem();
@@ -186,10 +183,19 @@ namespace NextPlayerUWP.ViewModels
 
         private void PlaybackManager_MediaPlayerMediaOpened(TimeSpan duration)
         {
+            if (!_timer.IsEnabled)
+            {
+                StartTimer();
+            }
             CurrentTime = TimeSpan.Zero;
             TimeEnd = duration;
             SliderValue = 0.0;
             SliderMaxValue = (int)Math.Round(duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+        }
+
+        private void PlaybackManager_MediaPlayerMediaClosed()
+        {
+            StopTimer();
         }
 
         private async Task ChangeCover()

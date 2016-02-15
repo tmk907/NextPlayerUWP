@@ -174,11 +174,6 @@ namespace NextPlayerUWPDataLayer.Services
             playlist.LoadSongsFromDB();
         }
 
-        public void UpdateSong(int songId, string title, string artist)
-        {
-            playlist.UpdateSong(songId, title, artist);
-        }
-
         private void StopSongEvent()
         {
             //UpdateSongStatistics();
@@ -348,6 +343,23 @@ namespace NextPlayerUWPDataLayer.Services
         public string GetTitle()
         {
             return playlist.GetCurrentSong().Title;
+        }
+
+        public string GetAlbumArt()
+        {
+            var song = playlist.GetCurrentSong();
+            if (song.ImagePath == "")
+            {
+                song.ImagePath = DatabaseManager.Current.GetAlbumArt(playlist.GetCurrentSong().Album);
+            }
+            return song.ImagePath;
+        }
+
+        public void UpdateSong(int songId)
+        {
+            NowPlayingSong updatedSong = DatabaseManager.Current.GetNowPlayingSong(songId);
+            if (updatedSong == null) return;
+            playlist.UpdateSong(updatedSong);
         }
 
         public void ChangeRate(int percent)
@@ -630,14 +642,15 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public void UpdateSong(int songId, string title, string artist)
+        public void UpdateSong(NowPlayingSong updatedSong)
         {
             foreach (var song in playlist)
             {
-                if (song.SongId == songId)
+                if (song.SongId == updatedSong.SongId)
                 {
-                    song.Title = title;
-                    song.Artist = artist;
+                    song.Title = updatedSong.Title;
+                    song.Artist = updatedSong.Artist;
+                    song.Album = updatedSong.Album;
                 }
             }
         }

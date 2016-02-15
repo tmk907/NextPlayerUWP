@@ -59,7 +59,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 UpdatePlaylist();
             }
-            if (scroll && songs.Count > 0)
+            if (scroll && songs.Count > 0 && firstVisibleIndex < songs.Count)
             {
                 await SetScrollPosition();
             }

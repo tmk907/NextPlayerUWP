@@ -285,5 +285,18 @@ namespace NextPlayerUWPDataLayer.Services
             await DatabaseManager.Current.UpdateTables();
 
         }
+
+        public static async Task UpdateRating(int songId, int rating)
+        {
+
+        }
+        public static async Task UpdateLyrics(int songId, string lyrics)
+        {
+
+        }
+        public static async Task UpdateFileTags(SongData songData)
+        {
+
+        }
     }
 }

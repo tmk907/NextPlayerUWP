@@ -117,6 +117,7 @@
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\Repeat.cs" />
+    <Compile Include="Helpers\SaveLater.cs" />
     <Compile Include="Helpers\Shuffle.cs" />
     <Compile Include="Helpers\SmartPlaylistHelper.cs" />
     <Compile Include="Helpers\TileData.cs" />

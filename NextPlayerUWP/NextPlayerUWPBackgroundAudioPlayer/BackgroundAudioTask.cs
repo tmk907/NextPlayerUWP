@@ -13,6 +13,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Media.Playback;
+using Windows.Storage.Streams;
 using Windows.System.Threading;
 
 namespace NextPlayerUWPBackgroundAudioPlayer
@@ -191,9 +192,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                         string p = "";
                         try
                         {
-                            p = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
-                            string[] s = p.Split(new string[] { "!@#$" }, StringSplitOptions.None);//s[2](artist) can equal ""
-                            nowPlayingManager.UpdateSong(Int32.Parse(s[0]), s[1], s[2]);
+                            nowPlayingManager.UpdateSong(Int32.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString()));
                             UpdateUVCOnNewTrack();
                         }
                         catch (Exception ex)
@@ -224,6 +223,15 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             smtc.DisplayUpdater.MusicProperties.Title = nowPlayingManager.GetTitle();
             smtc.DisplayUpdater.MusicProperties.Artist = nowPlayingManager.GetArtist();
 
+            string path = nowPlayingManager.GetAlbumArt();
+            if (path != AppConstants.AssetDefaultAlbumCover)
+            {
+                smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(path));
+            }
+            else
+            {
+                smtc.DisplayUpdater.Thumbnail = null;
+            }
             //var albumArtUri = item.Source.CustomProperties[AlbumArtKey] as Uri;
             //if (albumArtUri != null)
             //    smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(albumArtUri);

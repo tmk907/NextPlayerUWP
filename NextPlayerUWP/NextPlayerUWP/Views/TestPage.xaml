@@ -307,17 +307,14 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
-                              
-                              BorderThickness="0" SelectedIndex="1" Width="Auto" VerticalAlignment="Center">
+                              BorderThickness="0" 
+                              SelectedIndex="0" 
+                              Width="Auto" 
+                              VerticalAlignment="Center">
                         <x:String>Title</x:String>
                         <x:String>Play count</x:String>
                     </ComboBox>
                 </StackPanel>
-                <!--<TextBlock Grid.Column="1" Text="Sort" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="2" Width="120">
-                    <x:String>title</x:String>
-                    <x:String>title</x:String>
-                </ComboBox>-->
             </Grid>
             <ListView Grid.Row="1"
                 ItemsSource="{Binding Songs}"
@@ -337,42 +334,8 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <Grid Grid.Column="1" Grid.Row="1" BorderThickness="1,0,0,0" BorderBrush="Gray">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="44"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Pivot Grid.RowSpan="2" Style="{StaticResource RightPanelPivotStyle}" >
-
-                <PivotItem>
-                    <PivotItem.Header>
-                        <TextBlock Text="now playing" FontSize="22"/>
-                    </PivotItem.Header>
-                    <ListView Margin="0,8,0,0"
-                        ItemsSource="{Binding Songs}"
-                        ItemTemplate="{StaticResource Item2Template}">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                    </ListView>
-                </PivotItem>
-                <PivotItem>
-                    <PivotItem.Header>
-                        <TextBlock Text="lyrics" FontSize="22"/>
-                    </PivotItem.Header>
-                </PivotItem>
-            </Pivot>
-
-        </Grid>
+        <UserControl Grid.Column="1" Grid.Row="1">
+            <local:RightPanelControl/>
+        </UserControl>
     </Grid>
 </Page>

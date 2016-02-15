@@ -67,99 +67,134 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition />
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <controls:PageHeader Grid.Row="0"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 Content="Songs"
                 x:Uid="PageHeaderSongs"
                 VisualStateNarrowMinWidth="0"
                 VisualStateNormalMinWidth="720"/>
-        <Grid Grid.Row="1">
+        <UserControl Grid.Column="1" Grid.Row="1">
+            <local:RightPanelControl/>
+        </UserControl>
+        <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="44"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <ComboBox Grid.Row="0" SelectionChanged="{x:Bind ViewModel.SortItems}"
-                      
-                      DisplayMemberPath="Label"
-                      ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}">
-                
-            </ComboBox>
+            <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <AutoSuggestBox  Grid.Column="2" 
+                    PlaceholderText="search" 
+                    QueryIcon="Find" 
+                    Margin="4,0,4,0" 
+                    HorizontalAlignment="Right" 
+                    Width="200" 
+                    VerticalAlignment="Center"
+                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
+                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}"/>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
+                    <ComboBox Margin="4,0,8,0" 
+                            BorderThickness="0" 
+                            Width="Auto" 
+                            VerticalAlignment="Center"
+                            SelectionChanged="{x:Bind ViewModel.SortItems}"
+                            DisplayMemberPath="Label"
+                            ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
+                            />
+                </StackPanel>
+            </Grid>
             <SemanticZoom Grid.Row="1">
-            <SemanticZoom.ZoomedInView>
-                <ListView x:Name="SongsListView"
-                        ItemsSource="{Binding Source={StaticResource SongsCVS}}"
-                        ItemTemplate="{StaticResource SongsListViewItemTemplate}"
-                        SelectionMode="None"
-                        IsItemClickEnabled="True"
-                        Margin="8,8,8,4"
-                        ItemClick="{x:Bind ViewModel.ItemClicked }"
-                        >
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsStackPanel Orientation="Vertical" />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                <SemanticZoom.ZoomedInView>
+                    <ListView x:Name="SongsListView"
+                            ItemsSource="{Binding Source={StaticResource SongsCVS}}"
+                            ItemTemplate="{StaticResource SongsListViewItemTemplate}"
+                            SelectionMode="None"
+                            IsItemClickEnabled="True"
+                            Margin="8,8,8,4"
+                            ItemClick="{x:Bind ViewModel.ItemClicked }"
+                            >
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                 
-                                <!--<Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListViewItem">
-                                        <ListViewItemPresenter
-                                            PointerOverBackground="#ffdbdbdb"
-                                        />
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>-->
+                                    <!--<Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <ListViewItemPresenter
+                                                PointerOverBackground="#ffdbdbdb"
+                                            />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>-->
                             
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.GroupStyle>
-                        <GroupStyle >
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate x:DataType="data:GroupList">
-                                    <TextBlock Text="{x:Bind Key}" 
-                                        Style="{StaticResource GroupHeaderTextBlockStyle}"/>
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </ListView.GroupStyle>
-                </ListView>
-            </SemanticZoom.ZoomedInView>
-            <SemanticZoom.ZoomedOutView>
-                <ListView
-                        ItemsSource="{Binding Source={StaticResource SongsCVS}, Path=CollectionGroups}"
-                        ItemTemplate="{StaticResource ZoomedOutItemsTemplate}"
-                    >
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsWrapGrid Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"/>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalAlignment" Value="Stretch"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                            <Setter Property="Height" Value="92" />
-                            <Setter Property="Width" Value="92" />
-                            <Setter Property="Margin" Value="4"/>
-                            <Setter Property="Padding" Value="0"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-            </SemanticZoom.ZoomedOutView>
-        </SemanticZoom>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.GroupStyle>
+                            <GroupStyle >
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate x:DataType="data:GroupList">
+                                        <TextBlock Text="{x:Bind Key}" 
+                                            Style="{StaticResource GroupHeaderTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                    </ListView>
+                </SemanticZoom.ZoomedInView>
+                <SemanticZoom.ZoomedOutView>
+                    <ListView
+                            ItemsSource="{Binding Source={StaticResource SongsCVS}, Path=CollectionGroups}"
+                            ItemTemplate="{StaticResource ZoomedOutItemsTemplate}"
+                        >
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Height" Value="92" />
+                                <Setter Property="Width" Value="92" />
+                                <Setter Property="Margin" Value="4"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </SemanticZoom.ZoomedOutView>
+            </SemanticZoom>
         </Grid>
     </Grid>
 </Page>

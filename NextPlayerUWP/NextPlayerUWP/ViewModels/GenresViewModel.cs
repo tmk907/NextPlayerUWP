@@ -43,6 +43,63 @@ namespace NextPlayerUWP.ViewModels
         {
             NavigationService.Navigate(App.Pages.Playlist, ((GenreItem)e.ClickedItem).GetParameter());
         }
-        
+
+        public void SortItems(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            switch (value.Option)
+            {
+                case SortNames.Genre:
+                    Sort(s => s.Genre, t => (t.Genre == "") ? "" : t.Genre[0].ToString().ToLower(), "Genre");
+                    break;
+                //case SortNames.Duration:
+                //    Sort(s => s.Duration, t => t.Duration, "AlbumId");
+                //    break;
+                case SortNames.SongCount:
+                    Sort(s => s.SongsNumber, t => t.SongsNumber, "Genre");
+                    break;
+                default:
+                    Sort(s => s.Genre, t => (t.Genre == "") ? "" : t.Genre[0].ToString().ToLower(), "Genre");
+                    break;
+            }
+        }
+
+        private void Sort(Func<GenreItem, object> orderSelector, Func<GenreItem, object> groupSelector, string propertyName)
+        {
+            var query = genres.OrderBy(orderSelector);
+            Genres = new ObservableCollection<GenreItem>(query);
+        }
+
+        public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var query = genres.Where(s => s.Genre.ToLower().Contains(sender.Text)).OrderBy(s => s.Genre);
+                sender.ItemsSource = query.ToList();
+            }
+        }
+
+        public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion != null)
+            {
+                NavigationService.Navigate(App.Pages.Album, ((GenreItem)args.ChosenSuggestion).GetParameter());
+            }
+            else
+            {
+                var list = genres.Where(s => s.Genre.ToLower().Contains(sender.Text)).OrderBy(s => s.Genre).ToList();
+                //if (list.Count > 0)
+                //{
+                //    await SongClicked(list.FirstOrDefault().SongId);
+                //}
+                sender.ItemsSource = list;
+            }
+        }
+
+        public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var item = args.SelectedItem as GenreItem;
+            sender.Text = item.Genre;
+        }
     }
 }

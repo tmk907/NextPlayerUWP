@@ -39,5 +39,63 @@ namespace NextPlayerUWP.ViewModels
         {
             NavigationService.Navigate(App.Pages.Playlist, ((FolderItem)e.ClickedItem).GetParameter());
         }
+
+        public void SortItems(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            switch (value.Option)
+            {
+                case SortNames.FolderName:
+                    Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
+                    break;
+                //case SortNames.Duration:
+                //    Sort(s => s.Duration, t => t.Duration, "AlbumId");
+                //    break;
+                case SortNames.SongCount:
+                    Sort(s => s.SongsNumber, t => t.SongsNumber, "Folder");
+                    break;
+                default:
+                    Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
+                    break;
+            }
+        }
+
+        private void Sort(Func<FolderItem, object> orderSelector, Func<FolderItem, object> groupSelector, string propertyName)
+        {
+            var query = folders.OrderBy(orderSelector);
+            Folders = new ObservableCollection<FolderItem>(query);
+        }
+
+        public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var matchingAlbums = folders.Where(s => s.Folder.ToLower().Contains(sender.Text)).OrderBy(s => s.Folder);
+                sender.ItemsSource = matchingAlbums.ToList();
+            }
+        }
+
+        public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion != null)
+            {
+                NavigationService.Navigate(App.Pages.Album, ((FolderItem)args.ChosenSuggestion).GetParameter());
+            }
+            else
+            {
+                var list = folders.Where(s => s.Folder.ToLower().Contains(sender.Text)).OrderBy(s => s.Folder).ToList();
+                //if (list.Count > 0)
+                //{
+                //    await SongClicked(list.FirstOrDefault().SongId);
+                //}
+                sender.ItemsSource = list;
+            }
+        }
+
+        public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var item = args.SelectedItem as FolderItem;
+            sender.Text = item.Folder;
+        }
     }
 }

@@ -67,13 +67,17 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <controls:PageHeader Grid.Row="0"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="250"/>
+            </Grid.ColumnDefinitions>
+            <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderAlbum"
                 Content="Album" 
                 VisualStateNarrowMinWidth="-1" />
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
@@ -128,6 +132,9 @@
                     </ListView.ItemContainerStyle>
                 </ListView>
             </Grid>
+            <UserControl Grid.Row="1" Grid.Column="1">
+                <local:RightPanelControl/>
+            </UserControl>
         </Grid>
     </Grid>
 </Page>

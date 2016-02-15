@@ -5,8 +5,6 @@ using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
@@ -155,33 +153,60 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task NewPlaylist(MusicItem item)
         {
+            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
             switch (MusicItem.ParseType(item.GetParameter()))
             {
                 case MusicItemTypes.album:
-                    songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam);
+                    list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam);
                     break;
                 case MusicItemTypes.artist:
-                    songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
+                    list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
                     break;
                 case MusicItemTypes.folder:
-                    songs = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);
+                    list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);
                     break;
                 case MusicItemTypes.genre:
-                    songs = await DatabaseManager.Current.GetSongItemsFromGenreAsync(((GenreItem)item).Genre);
+                    list = await DatabaseManager.Current.GetSongItemsFromGenreAsync(((GenreItem)item).Genre);
                     break;
                 case MusicItemTypes.plainplaylist:
-                    songs = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(((PlaylistItem)item).Id);
+                    list = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(((PlaylistItem)item).Id);
                     break;
                 case MusicItemTypes.smartplaylist:
-                    songs = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(((PlaylistItem)item).Id);
+                    list = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(((PlaylistItem)item).Id);
                     break;
                 case MusicItemTypes.song:
-                    songs.Clear();
-                    songs.Add((SongItem)item);
+                    list.Add((SongItem)item);
                     break;
             }
+            songs.Clear();
+            foreach(var song in list)
+            {
+                songs.Add(song);
+            }
             await NotifyChange();
-            //Play
+        }
+
+        public async Task UpdateSong(SongData updatedSong)
+        {
+            foreach(var song in songs)
+            {
+                if (song.SongId == updatedSong.SongId)
+                {
+                    song.Album = updatedSong.Tag.Album;
+                    song.AlbumArtist = updatedSong.Tag.AlbumArtist;
+                    song.Artist = updatedSong.Tag.Artists;
+                    song.Composer = updatedSong.Tag.Composers;
+                    song.Rating = (int)updatedSong.Tag.Rating;
+                    song.Title = updatedSong.Tag.Title;
+                    song.TrackNumber = updatedSong.Tag.Track;
+                    song.Year = updatedSong.Tag.Year;
+                    song.Genres = updatedSong.Tag.Genres;
+
+                    await DatabaseManager.Current.UpdateNowPlayingSong(updatedSong);
+                    SendMessage(AppConstants.NowPlayingListRefresh);
+                    break;
+                }
+            }
         }
 
         public async Task NewPlaylist(IEnumerable<SongItem> playlist)

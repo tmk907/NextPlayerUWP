@@ -137,86 +137,56 @@ namespace NextPlayerUWP.ViewModels
 
         public async Task CheckCovers(CancellationToken ct)
         {
-            //foreach(var group in GroupedAlbums)
-            //{
-                foreach(AlbumItem album in albums)
+            foreach(AlbumItem album in albums)
+            {
+                if (ct.IsCancellationRequested)
                 {
-                    if (ct.IsCancellationRequested)
-                    {
-                        break;
-                    }
-                    if (!album.IsImageSet)
-                    {
-                        await Dispatcher.DispatchAsync(async() => {
-
-                            string path = await ImagesManager.GetAlbumCoverPath(album);
-                            album.ImagePath = path;
-                            album.ImageUri = new Uri(path);
-                            album.IsImageSet = true;
-                        });
-                        await DatabaseManager.Current.UpdateAlbumItem(album);
-                    }
+                    break;
                 }
-                
-            //}
-            //foreach (AlbumItem album in albums)
-            //{
-            //    if (ct.IsCancellationRequested)
-            //    {
-            //        break;
-            //    }
-            //    if (album.ImagePath == "")
-            //    {
-            //        string path = await Dispatcher.DispatchAsync(() => ImagesManager.GetAlbumCoverPath(album)).Result;
-            //        //string path = await ImagesManager.GetAlbumCoverPath(album);
-            //        //Dispatcher.Dispatch(() => {
-            //            album.ImagePath = path;
-            //        //});
-            //        await DatabaseManager.Current.UpdateAlbumItem(album);
-            //    }
-            //}
+                if (!album.IsImageSet)
+                {
+                    await Dispatcher.DispatchAsync(async() => {
+
+                        string path = await ImagesManager.GetAlbumCoverPath(album);
+                        album.ImagePath = path;
+                        album.ImageUri = new Uri(path);
+                        album.IsImageSet = true;
+                    });
+                    await DatabaseManager.Current.UpdateAlbumItem(album);
+                }
+            }
         }
 
-        //public void CheckCovers()
-        //{
-        //    //var albums = DatabaseManager.Current.GetAlbumItemsAsync().RunSynchronously();
-        //    IAsyncAction asyncAction = Windows.System.Threading.ThreadPool.RunAsync(
-        //    async (workItem) =>
-        //    {
-        //        foreach (AlbumItem album in albums)
-        //        {
-        //            if (workItem.Status == AsyncStatus.Canceled)
-        //            {
-        //                break;
-        //            }
-        //            if (album.ImagePath == "")
-        //            {
-        //                string path = await ImagesManager.GetAlbumCoverPath(album);
-        //                Dispatcher.Dispatch(() => {
-        //                    album.ImagePath = path;
-        //                });
-        //                await DatabaseManager.Current.UpdateAlbumItem(album);
-        //            }
-        //        }
+        public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var matchingAlbums = albums.Where(s => s.Album.ToLower().Contains(sender.Text)).OrderBy(s => s.Album);
+                sender.ItemsSource = matchingAlbums.ToList();
+            }
+        }
 
-        //    });
+        public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion != null)
+            {
+                NavigationService.Navigate(App.Pages.Album, ((AlbumItem)args.ChosenSuggestion).GetParameter());
+            }
+            else
+            {
+                var list = albums.Where(s => s.Album.ToLower().Contains(sender.Text)).OrderBy(s => s.Album).ToList();
+                //if (list.Count > 0)
+                //{
+                //    await SongClicked(list.FirstOrDefault().SongId);
+                //}
+                sender.ItemsSource = list;
+            }
+        }
 
-        //    m_workItem = asyncAction;
-        //    asyncAction.Completed = new AsyncActionCompletedHandler(
-        //        (IAsyncAction asyncInfo, AsyncStatus asyncStatus) =>
-        //        {
-        //            if (asyncStatus == AsyncStatus.Canceled)
-        //            {
-        //                return;
-        //            }
-
-        //            // Update the UI thread with the CoreDispatcher. 
-        //            Dispatcher.DispatchAsync(() =>
-        //            {
-
-        //            });
-        //        }
-        //    );
-        //}
+        public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var item = args.SelectedItem as AlbumItem;
+            sender.Text = item.Album;
+        }
     }
 }

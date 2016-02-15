@@ -32,8 +32,26 @@ namespace NextPlayerUWP
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
+
+    public delegate void SongUpdatedHandler(int id);
+
     sealed partial class App : Template10.Common.BootStrapper
     {
+        public static event SongUpdatedHandler SongUpdated;
+        public static void OnSongUpdated(int id)
+        {
+            if (SongUpdated != null)
+            {
+                SongUpdated(id);
+            }
+        }
+
+#if DEBUG
+        private bool dev = true;
+#else
+        private bool dev = false;
+#endif
+
         public App()
         {
             InitializeComponent();
@@ -55,7 +73,6 @@ namespace NextPlayerUWP
 
         public enum Pages
         {
-            MainPage,
             AddToPlaylist,
             Albums,
             Album,
@@ -77,12 +94,11 @@ namespace NextPlayerUWP
         {
             Stopwatch s = new Stopwatch();
             s.Start();
-            TileManager.ManageSecondaryTileImages();
+            //TileManager.ManageSecondaryTileImages();
             
             try
             {
                 var keys = PageKeys<Pages>();
-                keys.Add(Pages.MainPage, typeof(MainPage));
                 keys.Add(Pages.Albums, typeof(AlbumsView));
                 keys.Add(Pages.Album, typeof(AlbumView));
                 keys.Add(Pages.Artists, typeof(ArtistsView));
@@ -127,7 +143,7 @@ namespace NextPlayerUWP
                     Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
                     Logger.SaveToFile();
                 }
-                Pages page = Pages.MainPage;
+                Pages page = Pages.Playlists;
                 string parameter = eventArgs.Arguments;
                 MusicItemTypes type = MusicItem.ParseType(parameter);
                 // dodac wybor w ustawieniach, czy przejsc do widoku, czy zaczac odtwarzanie i przejsc do teraz odtwarzane
