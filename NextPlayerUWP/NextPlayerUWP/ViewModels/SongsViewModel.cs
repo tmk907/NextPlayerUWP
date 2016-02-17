@@ -21,7 +21,16 @@ namespace NextPlayerUWP.ViewModels
         {
             SortNames si = new SortNames(MusicItemTypes.song);
             ComboBoxItemValues = si.GetSortNames();
+            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            App.SongUpdated += App_SongUpdated;
         }
+
+        private async void App_SongUpdated(int id)
+        {
+            await Dispatcher.DispatchAsync(() => ReloadData());
+        }
+
+        
 
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
         public ObservableCollection<SongItem> Songs
@@ -119,9 +128,34 @@ namespace NextPlayerUWP.ViewModels
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
+        private async Task ReloadData()
+        {
+            Songs = await DatabaseManager.Current.GetSongItemsAsync();
+            var query = from item in songs
+                        orderby item.Title.ToLower()
+                        group item by item.Title[0].ToString().ToLower() into g
+                        orderby g.Key
+                        select new { GroupName = g.Key.ToUpper(), Items = g };
+            int i = 0;
+            foreach (var g in query)
+            {
+                i = 0;
+                GroupList group = new GroupList();
+                group.Key = g.GroupName;
+                foreach (var item in g.Items)
+                {
+                    item.Index = i;
+                    i++;
+                    group.Add(item);
+                }
+                GroupedSongs.Add(group);
+            }
+            SortItems(null, null);
+        }
+
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            ComboBoxItemValue value = SelectedComboBoxItem;
             switch (value.Option)
             {
                 case SortNames.Title:
@@ -140,7 +174,7 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.Year, t => t.Year, "SongId");
                     break;
                 case SortNames.Duration:
-                    Sort(s => s.Duration, t => t.Duration, "SongId");
+                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "SongId");
                     break;
                 case SortNames.Rating:
                     Sort(s => s.Rating, t => t.Rating, "SongId");
@@ -149,10 +183,10 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
                     break;
                 case SortNames.LastAdded:
-                    Sort(s => s.DateAdded, t => t.DateAdded, "SongId");
+                    Sort(s => s.DateAdded, t => String.Format("{0:d}", t.DateAdded), "SongId");
                     break;
                 case SortNames.LastPlayed:
-                    Sort(s => s.LastPlayed, t => t.LastPlayed, "SongId");
+                    Sort(s => s.LastPlayed, t => String.Format("{0:d}", t.DateAdded), "SongId");
                     break;
                 case SortNames.PlayCount:
                     Sort(s => s.PlayCount, t => t.PlayCount, "SongId");

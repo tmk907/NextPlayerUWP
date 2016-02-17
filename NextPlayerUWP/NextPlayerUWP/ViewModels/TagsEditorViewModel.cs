@@ -1,10 +1,8 @@
-﻿using NextPlayerUWPDataLayer.Helpers;
+﻿using NextPlayerUWP.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
@@ -15,11 +13,15 @@ namespace NextPlayerUWP.ViewModels
     {
         int songId;
         SongData songData;
+        string genres;
+        string artists;
+        string album;
 
         private Tags tagsData = new Tags();
         public Tags TagsData
         {
-            get { return tagsData; }
+            get { if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) tagsData = new Tags();
+                return tagsData; }
             set { Set(ref tagsData, value); }
         }
 
@@ -32,16 +34,18 @@ namespace NextPlayerUWP.ViewModels
 
         public async void SaveTags(object sender, RoutedEventArgs e)
         {
-            //await systemTray.ProgressIndicator.ShowAsync();
             ShowProgressBar = true;
             TagsData.FirstArtist = GetFirst(tagsData.Artists);
             TagsData.FirstComposer = GetFirst(tagsData.Composers);
             songData.Tag = TagsData;
             await DatabaseManager.Current.UpdateSongData(songData);
+            if (album != tagsData.Album || artists != tagsData.Artists || genres != tagsData.Genres)
+            {
+                await DatabaseManager.Current.UpdateTables();
+            }
             await NowPlayingPlaylistManager.Current.UpdateSong(songData);
             SaveLater.Current.SaveTagsLater(songData);
             App.OnSongUpdated(songData.SongId);
-            //await systemTray.ProgressIndicator.HideAsync();
             ShowProgressBar = false;
             NavigationService.GoBack();
         }
@@ -70,7 +74,9 @@ namespace NextPlayerUWP.ViewModels
                 songData = DatabaseManager.Current.GetSongData(songId);
             }
             TagsData = songData.Tag;
-
+            album = tagsData.Album;
+            artists = tagsData.Artists;
+            genres = tagsData.Genres;
             return Task.CompletedTask;
         }
     }

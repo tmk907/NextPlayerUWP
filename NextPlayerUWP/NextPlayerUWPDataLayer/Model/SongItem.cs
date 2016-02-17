@@ -177,6 +177,19 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        private bool isPlaying;
+        public bool IsPlaying
+        {
+            get { return IsPlaying; }
+            set
+            {
+                if (value != isPlaying)
+                {
+                    isPlaying = value;
+                    onPropertyChanged(this, "IsPlaying");
+                }
+            }
+        }
 
         public SongItem()
         {
@@ -195,6 +208,7 @@ namespace NextPlayerUWPDataLayer.Model
             genres = "Unknown Genres";
             lastPlayed = new DateTime();
             playCount = 0;
+            isPlaying = false;
         }
 
         public SongItem(SongsTable table)
@@ -213,7 +227,8 @@ namespace NextPlayerUWPDataLayer.Model
             dateAdded = table.DateAdded;
             genres = table.Genres;
             lastPlayed = table.LastPlayed;
-            playCount = (int)table.PlayCount;            
+            playCount = (int)table.PlayCount;
+            isPlaying = false; 
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

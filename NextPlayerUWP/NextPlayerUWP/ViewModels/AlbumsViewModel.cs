@@ -24,6 +24,8 @@ namespace NextPlayerUWP.ViewModels
         {
             SortNames si = new SortNames(MusicItemTypes.artist);
             ComboBoxItemValues = si.GetSortNames();
+            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            App.SongUpdated += App_SongUpdated;
         }
         private ObservableCollection<AlbumItem> albums = new ObservableCollection<AlbumItem>();
         public ObservableCollection<AlbumItem> Albums
@@ -77,14 +79,42 @@ namespace NextPlayerUWP.ViewModels
             return base.OnNavigatedFromAsync(state, suspending);
         }
 
+        private async void App_SongUpdated(int id)
+        {
+            await Dispatcher.DispatchAsync(() => ReloadData());
+        }
+
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
             NavigationService.Navigate(App.Pages.Album, ((AlbumItem)e.ClickedItem).GetParameter());
         }
 
+        private async Task ReloadData()
+        {
+            Albums = await DatabaseManager.Current.GetAlbumItemsAsync();
+            var query = from item in albums
+                        orderby item.Album.ToLower()
+                        group item by item.Album[0].ToString().ToLower() into g
+                        orderby g.Key
+                        select new { GroupName = g.Key.ToUpper(), Items = g };
+            ObservableCollection<GroupList> gr = new ObservableCollection<GroupList>();
+            foreach (var g in query)
+            {
+                GroupList group = new GroupList();
+                group.Key = g.GroupName;
+                foreach (var item in g.Items)
+                {
+                    group.Add(item);
+                }
+                gr.Add(group);
+            }
+            GroupedAlbums = gr;
+            SortItems(null, null);
+        }
+
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            ComboBoxItemValue value = SelectedComboBoxItem;
             switch (value.Option)
             {
                 case SortNames.Album:
@@ -97,10 +127,10 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.Year, t => t.Year, "AlbumId");
                     break;
                 case SortNames.Duration:
-                    Sort(s => s.Duration, t => t.Duration, "AlbumId");
+                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId");
                     break;
                 case SortNames.SongCount:
-                    Sort(s => s.Duration, t => t.Duration, "AlbumId");
+                    Sort(s => s.SongsNumber, t => t.SongsNumber, "AlbumId");
                     break;
                 default:
                     Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");

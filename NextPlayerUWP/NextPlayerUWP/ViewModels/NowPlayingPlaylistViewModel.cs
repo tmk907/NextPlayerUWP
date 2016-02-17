@@ -1,7 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
-using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +10,6 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -24,7 +22,7 @@ namespace NextPlayerUWP.ViewModels
         public NowPlayingPlaylistViewModel()
         {
             UpdatePlaylist();
-            NowPlayingPlaylistManager.NPListChanged += NPListChanged;
+            //NowPlayingPlaylistManager.NPListChanged += NPListChanged;
         }
 
         private void NPListChanged()
@@ -135,7 +133,7 @@ namespace NextPlayerUWP.ViewModels
         public void Share(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            //NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
+            // App.Current.NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
         }
 
         public async void Pin(object sender, RoutedEventArgs e)
@@ -146,19 +144,19 @@ namespace NextPlayerUWP.ViewModels
         public void EditTags(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            //NavigationService.Navigate(App.Pages.TagsEditor, ((SongItem)SelectedItem).SongId);
+            App.Current.NavigationService.Navigate(App.Pages.TagsEditor, item.GetParameter());
         }
 
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            //NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
+            // App.Current.NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
         }
 
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            //NavigationService.Navigate(App.Pages.AddToPlaylist, SelectedItem.GetParameter()); 
+            // App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, SelectedItem.GetParameter()); 
         }
 
         #endregion

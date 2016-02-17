@@ -81,13 +81,13 @@ namespace NextPlayerUWP.Common
                     comboboxItems.Add(new ComboBoxItemValue(Album, loader.GetString(Album)));
                     comboboxItems.Add(new ComboBoxItemValue(Artist, loader.GetString(Artist)));
                     comboboxItems.Add(new ComboBoxItemValue(AlbumArtist, loader.GetString(AlbumArtist)));
-                    comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
-                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
-                    comboboxItems.Add(new ComboBoxItemValue(Rating, loader.GetString(Rating)));
-                    comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     comboboxItems.Add(new ComboBoxItemValue(Composer, loader.GetString(Composer)));
+                    comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     comboboxItems.Add(new ComboBoxItemValue(LastPlayed, loader.GetString(LastPlayed)));
                     comboboxItems.Add(new ComboBoxItemValue(PlayCount, loader.GetString(PlayCount)));
+                    comboboxItems.Add(new ComboBoxItemValue(Rating, loader.GetString(Rating)));
+                    comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
+                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
                     break;
             }
             return comboboxItems;

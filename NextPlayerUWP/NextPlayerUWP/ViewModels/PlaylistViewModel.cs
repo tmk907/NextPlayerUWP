@@ -21,6 +21,7 @@ namespace NextPlayerUWP.ViewModels
         {
             SortNames si = new SortNames(MusicItemTypes.song);
             ComboBoxItemValues = si.GetSortNames();
+            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
         }
 
         private MusicItemTypes type;
@@ -99,7 +100,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            ComboBoxItemValue value = SelectedComboBoxItem;
             switch (value.Option)
             {
                 case SortNames.Title:
@@ -118,7 +119,7 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.Year, t => t.Year, "SongId");
                     break;
                 case SortNames.Duration:
-                    Sort(s => s.Duration, t => t.Duration, "SongId");
+                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "SongId");
                     break;
                 case SortNames.Rating:
                     Sort(s => s.Rating, t => t.Rating, "SongId");
@@ -127,10 +128,10 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
                     break;
                 case SortNames.LastAdded:
-                    Sort(s => s.DateAdded, t => t.DateAdded, "SongId");
+                    Sort(s => s.DateAdded, t => String.Format("{0:d}", t.DateAdded), "SongId");
                     break;
                 case SortNames.LastPlayed:
-                    Sort(s => s.LastPlayed, t => t.LastPlayed, "SongId");
+                    Sort(s => s.LastPlayed, t => String.Format("{0:d}", t.DateAdded), "SongId");
                     break;
                 case SortNames.PlayCount:
                     Sort(s => s.PlayCount, t => t.PlayCount, "SongId");

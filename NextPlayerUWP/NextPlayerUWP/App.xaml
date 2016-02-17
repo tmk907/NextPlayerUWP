@@ -23,6 +23,8 @@
             <converters:ShuffleForeground x:Key="ShuffleForegroundConverter"/>
             <converters:RepeatForeground x:Key="RepeatForegroundConverter"/>
             <converters:RepeatContent x:Key="RepeatContentConverter"/>
+            <converters:ComboBoxItemValueConverter x:Key="ComboBoxItemValueConverter"/>
+            <converters:BoolToBackground x:Key="BoolToBackgroundConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  BorderThickness="1" 

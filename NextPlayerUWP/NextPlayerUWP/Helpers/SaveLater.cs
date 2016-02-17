@@ -1,10 +1,12 @@
-﻿using NextPlayerUWPDataLayer.Model;
+﻿using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
+using NextPlayerUWPDataLayer.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NextPlayerUWPDataLayer.Helpers
+namespace NextPlayerUWP.Helpers
 {
     public class SaveLater
     {
@@ -24,8 +26,8 @@ namespace NextPlayerUWPDataLayer.Helpers
                 string[] a = r.ToString().Split(new char[]{ '|' }, StringSplitOptions.RemoveEmptyEntries);
                 if (a.Length % 2 != 0)
                 {
-                    Diagnostics.Logger.Save("SaveLater blad modulo");
-                    Diagnostics.Logger.SaveToFile();
+                    Logger.Save("SaveLater blad modulo");
+                    Logger.SaveToFile();
                 }
                 else
                 {

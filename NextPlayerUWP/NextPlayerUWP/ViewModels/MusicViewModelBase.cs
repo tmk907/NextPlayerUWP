@@ -96,7 +96,7 @@ namespace NextPlayerUWP.ViewModels
         public void EditTags(object sender, RoutedEventArgs e)
         {
             SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.TagsEditor, ((SongItem)SelectedItem).SongId);
+            NavigationService.Navigate(App.Pages.TagsEditor, SelectedItem.GetParameter());
         }
 
         public void ShowDetails(object sender, RoutedEventArgs e)
@@ -105,20 +105,6 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
         }
         #endregion
-
-        ////?
-        //public void EditTags(object sender, RoutedEventArgs e)
-        //{
-        //    SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-        //    NavigationService.Navigate(App.Pages.TagsEditorPage, item.SongId);
-        //}
-
-        ////?
-        //public void ShowDetails(object sender, RoutedEventArgs e)
-        //{
-        //    SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-        //    NavigationService.Navigate(App.Pages.FileInfoPage, );
-        //}
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {

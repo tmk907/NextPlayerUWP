@@ -117,7 +117,6 @@
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\Repeat.cs" />
-    <Compile Include="Helpers\SaveLater.cs" />
     <Compile Include="Helpers\Shuffle.cs" />
     <Compile Include="Helpers\SmartPlaylistHelper.cs" />
     <Compile Include="Helpers\TileData.cs" />
@@ -137,7 +136,6 @@
     <Compile Include="Services\ImagesManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\NowPlayingManager.cs" />
-    <Compile Include="Services\NowPlayingPlaylistManager.cs" />
     <Compile Include="Tables\AlbumsTable.cs" />
     <Compile Include="Tables\ArtistsTable.cs" />
     <Compile Include="Tables\CachedScrobble.cs" />

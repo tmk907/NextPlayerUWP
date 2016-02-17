@@ -2,6 +2,7 @@
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 
-namespace NextPlayerUWPDataLayer.Services
+namespace NextPlayerUWP.Common
 {
     public delegate void NPListChangedHandler();
     public class NowPlayingPlaylistManager
@@ -23,6 +24,21 @@ namespace NextPlayerUWPDataLayer.Services
         public NowPlayingPlaylistManager()
         {
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
+            prevIndex = 0;
+            PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
+        }
+
+        private void PlaybackManager_MediaPlayerTrackChanged(int index)
+        {
+            if (prevIndex >= 0 && prevIndex < songs.Count - 1)
+            {
+                songs[prevIndex].IsPlaying = false;
+            }
+            if (index >= 0 && index < songs.Count - 1)
+            {
+                songs[index].IsPlaying = false;
+            }
+            prevIndex = index;
         }
 
         public static event NPListChangedHandler NPListChanged;
@@ -35,6 +51,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
+        private int prevIndex;
         public ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
         public async Task Add(MusicItem item)

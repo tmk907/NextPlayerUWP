@@ -28,8 +28,7 @@
         </MenuFlyout>
         <DataTemplate x:Key="SongTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped"
-                  BorderBrush="Gray" 
-                  BorderThickness="0,0,0,0">
+                  Background="{x:Bind IsPlaying, Converter={StaticResource BoolToBackgroundConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="44"/>

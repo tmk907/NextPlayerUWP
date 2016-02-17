@@ -10,22 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
-using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP
 {
@@ -108,6 +96,7 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
                 keys.Add(Pages.Playlist, typeof(PlaylistView));
                 keys.Add(Pages.Songs, typeof(SongsView));
+                keys.Add(Pages.TagsEditor, typeof(TagsEditor));
                 //keys.Add(Pages, typeof());
                 //check if import was finished
                 

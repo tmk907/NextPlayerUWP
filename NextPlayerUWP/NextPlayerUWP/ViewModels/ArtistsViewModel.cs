@@ -20,7 +20,10 @@ namespace NextPlayerUWP.ViewModels
         {
             SortNames si = new SortNames(MusicItemTypes.artist);
             ComboBoxItemValues = si.GetSortNames();
+            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            App.SongUpdated += App_SongUpdated;
         }
+
         private ObservableCollection<ArtistItem> artists = new ObservableCollection<ArtistItem>();
         public ObservableCollection<ArtistItem> Artists
         {
@@ -66,19 +69,45 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.Artist, ((ArtistItem)e.ClickedItem).GetParameter());
         }
 
+        private async void App_SongUpdated(int id)
+        {
+            await Dispatcher.DispatchAsync(() => ReloadData());
+        }
+
+        private async Task ReloadData()
+        {
+            Artists = await DatabaseManager.Current.GetArtistItemsAsync();
+            var query = from item in artists
+                        orderby item.Artist.ToLower()
+                        group item by item.Artist[0].ToString().ToLower() into g
+                        orderby g.Key
+                        select new { GroupName = g.Key.ToUpper(), Items = g };
+            foreach (var g in query)
+            {
+                GroupList group = new GroupList();
+                group.Key = g.GroupName;
+                foreach (var item in g.Items)
+                {
+                    group.Add(item);
+                }
+                GroupedArtists.Add(group);
+            }
+            SortItems(null, null);
+        }
+
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            ComboBoxItemValue value = SelectedComboBoxItem;
             switch (value.Option)
             {
                 case SortNames.Artist:
                     Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
                     break;
                 case SortNames.Duration:
-                    Sort(s => s.Duration, t => t.Duration, "Artist");
+                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "Artist");
                     break;
                 case SortNames.SongCount:
-                    Sort(s => s.Duration, t => t.Duration, "Artist");
+                    Sort(s => s.SongsNumber, t => t.SongsNumber, "Artist");
                     break;
                 default:
                     Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");

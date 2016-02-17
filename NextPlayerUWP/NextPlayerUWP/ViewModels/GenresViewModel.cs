@@ -22,6 +22,8 @@ namespace NextPlayerUWP.ViewModels
         {
             SortNames si = new SortNames(MusicItemTypes.genre);
             ComboBoxItemValues = si.GetSortNames();
+            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            App.SongUpdated += App_SongUpdated;
         }
 
         private ObservableCollection<GenreItem> genres = new ObservableCollection<GenreItem>();
@@ -44,16 +46,27 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.Playlist, ((GenreItem)e.ClickedItem).GetParameter());
         }
 
+        private async void App_SongUpdated(int id)
+        {
+            await Dispatcher.DispatchAsync(() => ReloadData());
+        }
+
+        private async Task ReloadData()
+        {
+            Genres = await DatabaseManager.Current.GetGenreItemsAsync();
+            SortItems(null, null);
+        }
+
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            ComboBoxItemValue value = SelectedComboBoxItem;
             switch (value.Option)
             {
                 case SortNames.Genre:
                     Sort(s => s.Genre, t => (t.Genre == "") ? "" : t.Genre[0].ToString().ToLower(), "Genre");
                     break;
                 //case SortNames.Duration:
-                //    Sort(s => s.Duration, t => t.Duration, "AlbumId");
+                //    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId");
                 //    break;
                 case SortNames.SongCount:
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "Genre");

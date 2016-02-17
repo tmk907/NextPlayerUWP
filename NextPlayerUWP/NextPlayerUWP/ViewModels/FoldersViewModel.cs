@@ -19,6 +19,7 @@ namespace NextPlayerUWP.ViewModels
         {
             SortNames si = new SortNames(MusicItemTypes.folder);
             ComboBoxItemValues = si.GetSortNames();
+            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
         }
         private ObservableCollection<FolderItem> folders = new ObservableCollection<FolderItem>();
         public ObservableCollection<FolderItem> Folders
@@ -42,14 +43,14 @@ namespace NextPlayerUWP.ViewModels
 
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItemValue value = (ComboBoxItemValue)e.AddedItems.FirstOrDefault();
+            ComboBoxItemValue value = SelectedComboBoxItem;
             switch (value.Option)
             {
                 case SortNames.FolderName:
                     Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
                     break;
                 //case SortNames.Duration:
-                //    Sort(s => s.Duration, t => t.Duration, "AlbumId");
+                //    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId");
                 //    break;
                 case SortNames.SongCount:
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "Folder");
