@@ -22,9 +22,9 @@ namespace NextPlayerUWP.ViewModels
         public NowPlayingPlaylistViewModel()
         {
             UpdatePlaylist();
-            //NowPlayingPlaylistManager.NPListChanged += NPListChanged;
+            NowPlayingPlaylistManager.NPListChanged += NPListChanged;
         }
-
+        
         private void NPListChanged()
         {
             UpdatePlaylist();

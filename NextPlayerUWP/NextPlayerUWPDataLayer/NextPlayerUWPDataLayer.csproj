@@ -126,6 +126,7 @@
     <Compile Include="Model\GenreItem.cs" />
     <Compile Include="Model\GroupList.cs" />
     <Compile Include="Model\MusicItem.cs" />
+    <Compile Include="Model\NowPlayingListItem.cs" />
     <Compile Include="Model\NowPlayingSong.cs" />
     <Compile Include="Model\ObservableRangeCollection.cs" />
     <Compile Include="Model\PlaylistItem.cs" />

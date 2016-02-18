@@ -131,25 +131,6 @@ namespace NextPlayerUWP.ViewModels
         private async Task ReloadData()
         {
             Songs = await DatabaseManager.Current.GetSongItemsAsync();
-            var query = from item in songs
-                        orderby item.Title.ToLower()
-                        group item by item.Title[0].ToString().ToLower() into g
-                        orderby g.Key
-                        select new { GroupName = g.Key.ToUpper(), Items = g };
-            int i = 0;
-            foreach (var g in query)
-            {
-                i = 0;
-                GroupList group = new GroupList();
-                group.Key = g.GroupName;
-                foreach (var item in g.Items)
-                {
-                    item.Index = i;
-                    i++;
-                    group.Add(item);
-                }
-                GroupedSongs.Add(group);
-            }
             SortItems(null, null);
         }
 

@@ -13,7 +13,7 @@ using Windows.Media.Playback;
 namespace NextPlayerUWP.Common
 {
     public delegate void NPListChangedHandler();
-    public class NowPlayingPlaylistManager
+    public sealed class NowPlayingPlaylistManager
     {
         private static readonly NowPlayingPlaylistManager current = new NowPlayingPlaylistManager();
         public static NowPlayingPlaylistManager Current
@@ -21,24 +21,24 @@ namespace NextPlayerUWP.Common
             get { return current; }
         }
         static NowPlayingPlaylistManager() { }
-        public NowPlayingPlaylistManager()
+        private NowPlayingPlaylistManager()
         {
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
-            prevIndex = 0;
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
         }
 
         private void PlaybackManager_MediaPlayerTrackChanged(int index)
         {
-            if (prevIndex >= 0 && prevIndex < songs.Count - 1)
+            int i = 0;
+            foreach(var song in songs)
             {
-                songs[prevIndex].IsPlaying = false;
+                if (i == index) song.IsPlaying = true;
+                else
+                {
+                    song.IsPlaying = false;
+                }
+                i++;
             }
-            if (index >= 0 && index < songs.Count - 1)
-            {
-                songs[index].IsPlaying = false;
-            }
-            prevIndex = index;
         }
 
         public static event NPListChangedHandler NPListChanged;
@@ -51,7 +51,6 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        private int prevIndex;
         public ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
         public async Task Add(MusicItem item)

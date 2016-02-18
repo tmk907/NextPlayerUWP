@@ -92,23 +92,6 @@ namespace NextPlayerUWP.ViewModels
         private async Task ReloadData()
         {
             Albums = await DatabaseManager.Current.GetAlbumItemsAsync();
-            var query = from item in albums
-                        orderby item.Album.ToLower()
-                        group item by item.Album[0].ToString().ToLower() into g
-                        orderby g.Key
-                        select new { GroupName = g.Key.ToUpper(), Items = g };
-            ObservableCollection<GroupList> gr = new ObservableCollection<GroupList>();
-            foreach (var g in query)
-            {
-                GroupList group = new GroupList();
-                group.Key = g.GroupName;
-                foreach (var item in g.Items)
-                {
-                    group.Add(item);
-                }
-                gr.Add(group);
-            }
-            GroupedAlbums = gr;
             SortItems(null, null);
         }
 
@@ -131,6 +114,9 @@ namespace NextPlayerUWP.ViewModels
                     break;
                 case SortNames.SongCount:
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "AlbumId");
+                    break;
+                case SortNames.LastAdded:
+                    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Album");
                     break;
                 default:
                     Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");

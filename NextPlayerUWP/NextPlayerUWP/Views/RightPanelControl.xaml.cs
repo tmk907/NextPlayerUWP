@@ -9,12 +9,13 @@ namespace NextPlayerUWP.Views
 {
     public sealed partial class RightPanelControl : UserControl
     {
-        NowPlayingPlaylistViewModel ViewModel;
+        RightPanelViewModel ViewModel;
+
         public RightPanelControl()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((NowPlayingPlaylistViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView); };
-            ViewModel = (NowPlayingPlaylistViewModel)DataContext;
+            this.Loaded += delegate { ((RightPanelViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView, lyricsWebview); };
+            ViewModel = (RightPanelViewModel)DataContext;
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

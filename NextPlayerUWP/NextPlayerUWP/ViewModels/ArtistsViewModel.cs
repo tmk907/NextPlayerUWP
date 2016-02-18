@@ -77,21 +77,6 @@ namespace NextPlayerUWP.ViewModels
         private async Task ReloadData()
         {
             Artists = await DatabaseManager.Current.GetArtistItemsAsync();
-            var query = from item in artists
-                        orderby item.Artist.ToLower()
-                        group item by item.Artist[0].ToString().ToLower() into g
-                        orderby g.Key
-                        select new { GroupName = g.Key.ToUpper(), Items = g };
-            foreach (var g in query)
-            {
-                GroupList group = new GroupList();
-                group.Key = g.GroupName;
-                foreach (var item in g.Items)
-                {
-                    group.Add(item);
-                }
-                GroupedArtists.Add(group);
-            }
             SortItems(null, null);
         }
 
@@ -108,6 +93,9 @@ namespace NextPlayerUWP.ViewModels
                     break;
                 case SortNames.SongCount:
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "Artist");
+                    break;
+                case SortNames.LastAdded:
+                    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Artist");
                     break;
                 default:
                     Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");

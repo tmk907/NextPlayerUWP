@@ -87,6 +87,7 @@ namespace NextPlayerUWP
             try
             {
                 var keys = PageKeys<Pages>();
+                keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
                 keys.Add(Pages.Albums, typeof(AlbumsView));
                 keys.Add(Pages.Album, typeof(AlbumView));
                 keys.Add(Pages.Artists, typeof(ArtistsView));

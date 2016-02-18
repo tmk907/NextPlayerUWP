@@ -5,6 +5,7 @@ using NextPlayerUWPDataLayer.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NextPlayerUWP.Common;
 
 namespace NextPlayerUWP.Helpers
 {

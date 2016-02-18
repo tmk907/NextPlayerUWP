@@ -16,6 +16,6 @@ namespace NextPlayerUWPDataLayer.Tables
         public TimeSpan Duration { get; set; }
         public int SongsNumber { get; set; }
         public int AlbumsNumber { get; set; }
-
+        public DateTime LastAdded { get; set; }
     }
 }

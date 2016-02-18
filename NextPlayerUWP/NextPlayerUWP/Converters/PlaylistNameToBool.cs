@@ -1,21 +1,18 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP.Converters
 {
-    public class BoolToBackground : IValueConverter
+    public class PlaylistNameToBool : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if ((bool)value)
+            string name = value as string;
+            if (name==null || name == "")
             {
-                return new SolidColorBrush(Windows.UI.Colors.LightBlue);
+                return false;
             }
-            else
-            {
-                return new SolidColorBrush(Windows.UI.Colors.White);
-            }
+            return true;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

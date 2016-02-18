@@ -1,10 +1,15 @@
-﻿using System;
+﻿using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,11 +27,12 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class PlaylistsView : Page
     {
-        public PlaylistsView ViewModel;
+        public PlaylistsViewModel ViewModel;
         public PlaylistsView()
         {
             this.InitializeComponent();
-            ViewModel = (PlaylistsView)DataContext;
+            this.Loaded += delegate { ((PlaylistsViewModel)DataContext).OnLoaded(PlaylistsListView); };
+            ViewModel = (PlaylistsViewModel)DataContext;
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -35,6 +41,37 @@ namespace NextPlayerUWP.Views
             var menu = this.Resources["ContextMenu"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private async void newPlainPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogNewPlaylist.ShowAsync();
+        }
+
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            ResourceLoader locator = new ResourceLoader();
+            string content = locator.GetString("DeletePlaylistConfirmation");
+            MessageDialog dialog = new MessageDialog(content);
+            dialog.Commands.Add(new UICommand(locator.GetString("Delete"), (command) =>
+            {
+                ViewModel.ConfirmDelete(((MenuFlyoutItem)sender).CommandParameter);
+            }));
+            dialog.Commands.Add(new UICommand(locator.GetString("Cancel"), (command) => 
+            {
+
+            }));
+            dialog.DefaultCommandIndex = 0;
+            dialog.CancelCommandIndex = 1;
+            await dialog.ShowAsync();
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MediaImport mi = new MediaImport();
+            await Task.Run(async ()=> {
+                await mi.UpdateDatabase();
+            });
         }
     }
 }

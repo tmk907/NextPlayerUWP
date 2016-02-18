@@ -5,9 +5,87 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    DataContext="{Binding Source={StaticResource Locator}, Path=AddToPlaylistVM}"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <DataTemplate x:Key="PlaylistItemTemplate" x:DataType="data:PlaylistItem">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TextBlock 
+                    Text="{x:Bind Name}" 
+                    FontSize="20"
+                    />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+			BackButtonVisibility="Collapsed" 
+			Frame="{x:Bind Frame, Mode=OneWay}"
+			Content="Add to playlist"
+			x:Uid="PageHeaderAddToPlaylist"
+			VisualStateNarrowMinWidth="0"
+			VisualStateNormalMinWidth="720">
+            <AppBarButton 
+                Icon="Add"
+                x:Uid="AppBarButtonAddPlaylist"
+                Label="Add playlist"
+                Click="newPlainPlaylist_Click"/>
+        </controls:PageHeader>
+        <UserControl Grid.Column="1" Grid.Row="1">
+            <local:RightPanelControl/>
+        </UserControl>
+        <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
+            <ContentDialog x:Name="ContentDialogNewPlaylist"
+                x:Uid="ContentDialogNewPlaylist"
+                VerticalAlignment="Center"
+                Title="New playlist"
+                PrimaryButtonText="Save"
+                IsPrimaryButtonEnabled="{Binding Text, ElementName=playlistNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
+                PrimaryButtonClick="{x:Bind ViewModel.Save}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Uid="TBPlaylistName"
+                            Margin="0,4,4,4"
+                            Text="Playlist name:"/>
+                        <TextBox x:Name="playlistNameTB"
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.Name, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ContentDialog.Content>
+            </ContentDialog>
+            <ListView 
+                ItemsSource="{x:Bind ViewModel.Playlists}"
+                ItemTemplate="{StaticResource PlaylistItemTemplate}"
+                SelectionMode="None"
+                IsItemClickEnabled="True"
+                ItemClick="{x:Bind ViewModel.ItemClicked}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

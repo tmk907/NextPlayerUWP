@@ -26,17 +26,26 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
-        public FolderItem()
+        private DateTime lastAdded;
+        public DateTime LastAdded
         {
-            this.folder = "Unknown Folder";
-            this.songsNumber = 0;
+            get { return lastAdded; }
+            set
+            {
+                if (value != lastAdded)
+                {
+                    lastAdded = value;
+                    onPropertyChanged(this, "LastAdded");
+                }
+            }
         }
 
-        public FolderItem(string folder, string directory, int songsnumber)
+        public FolderItem()
         {
-            this.folder = folder;
-            this.directory = directory;
-            this.songsNumber = songsnumber;
+            folder = "Unknown Folder";
+            directory = "";
+            songsNumber = 0;
+            lastAdded = DateTime.MinValue;
         }
 
         public FolderItem(FoldersTable table)
@@ -44,6 +53,7 @@ namespace NextPlayerUWPDataLayer.Model
             songsNumber = table.SongsNumber;
             folder = table.Folder;
             directory = table.Directory;
+            lastAdded = table.LastAdded;
         }
 
         public override string ToString()

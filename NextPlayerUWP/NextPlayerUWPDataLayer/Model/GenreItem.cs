@@ -29,29 +29,27 @@ namespace NextPlayerUWPDataLayer.Model
         }
         private TimeSpan duration;
         public TimeSpan Duration { get { return duration; } }
+        private DateTime lastAdded;
+        public DateTime LastAdded
+        {
+            get { return lastAdded; }
+            set
+            {
+                if (value != lastAdded)
+                {
+                    lastAdded = value;
+                    onPropertyChanged(this, "LastAdded");
+                }
+            }
+        }
 
         public GenreItem()
         {
-            this.duration = TimeSpan.Zero;
-            this.genre = "Unknown Genre";
-            this.genreParam = "";
-            this.songsNumber = 0;
-        }
-
-        public GenreItem(TimeSpan duration, string genreParam, int songsnumber)
-        {
-            this.duration = duration;
-            this.genreParam = genreParam;
-            if (genreParam == "")
-            {
-                ResourceLoader loader = new ResourceLoader();
-                this.genre = loader.GetString("UnknownGenre");
-            }
-            else
-            {
-                this.genre = genreParam;
-            }
-            this.songsNumber = songsnumber;
+            duration = TimeSpan.Zero;
+            genre = "Unknown Genre";
+            genreParam = "";
+            songsNumber = 0;
+            lastAdded = DateTime.MinValue;
         }
 
         public GenreItem(GenresTable item)
@@ -68,6 +66,7 @@ namespace NextPlayerUWPDataLayer.Model
             {
                 genre = genreParam;
             }
+            lastAdded = item.LastAdded;
         }
 
         public override string ToString()

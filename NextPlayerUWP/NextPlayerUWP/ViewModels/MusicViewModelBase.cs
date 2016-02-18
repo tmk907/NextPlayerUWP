@@ -78,13 +78,13 @@ namespace NextPlayerUWP.ViewModels
 
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            //NavigationService.Navigate(App.Pages.AddToPlaylist, SelectedItem.GetParameter()); 
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter()); 
         }
 
         public void Share(object sender, RoutedEventArgs e)
         {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             //NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
         }
 
@@ -95,14 +95,14 @@ namespace NextPlayerUWP.ViewModels
 
         public void EditTags(object sender, RoutedEventArgs e)
         {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.TagsEditor, SelectedItem.GetParameter());
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.TagsEditor, item.GetParameter());
         }
 
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
-            SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)item).SongId);
         }
         #endregion
 
@@ -168,7 +168,6 @@ namespace NextPlayerUWP.ViewModels
                 var isp = (ItemsWrapGrid)listView.ItemsPanelRoot;
                 firstVisibleItemIndex = isp.FirstVisibleIndex;
             }
-            
             
             Dictionary<string, object> navState = new Dictionary<string, object>();
             navState.Add(nameof(firstVisibleItemIndex), firstVisibleItemIndex);

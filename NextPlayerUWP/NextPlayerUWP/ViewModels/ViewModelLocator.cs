@@ -14,7 +14,7 @@ namespace NextPlayerUWP.ViewModels
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            SimpleIoc.Default.Register<MainPageViewModel>();
+            SimpleIoc.Default.Register<AddToPlaylistViewModel>();
             SimpleIoc.Default.Register<AlbumsViewModel>();
             SimpleIoc.Default.Register<AlbumViewModel>();
             SimpleIoc.Default.Register<ArtistsViewModel>();
@@ -25,12 +25,13 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<NowPlayingPlaylistViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
             SimpleIoc.Default.Register<PlaylistViewModel>();
+            SimpleIoc.Default.Register<RightPanelViewModel>();
             SimpleIoc.Default.Register<SongsViewModel>();
             SimpleIoc.Default.Register<TagsEditorViewModel>();
             SimpleIoc.Default.Register<TestViewModel>();
         }
 
-        public MainPageViewModel MainPageVM => ServiceLocator.Current.GetInstance<MainPageViewModel>();
+        public AddToPlaylistViewModel AddToPlaylistVM => ServiceLocator.Current.GetInstance<AddToPlaylistViewModel>();
         public AlbumViewModel AlbumVM => ServiceLocator.Current.GetInstance<AlbumViewModel>();
         public AlbumsViewModel AlbumsVM => ServiceLocator.Current.GetInstance<AlbumsViewModel>();
         public ArtistsViewModel ArtistsVM => ServiceLocator.Current.GetInstance<ArtistsViewModel>();
@@ -41,6 +42,7 @@ namespace NextPlayerUWP.ViewModels
         public NowPlayingPlaylistViewModel NowPlayingPlaylistVM => ServiceLocator.Current.GetInstance<NowPlayingPlaylistViewModel>();
         public PlaylistViewModel PlaylistVM => ServiceLocator.Current.GetInstance<PlaylistViewModel>();
         public PlaylistsViewModel PlaylistsVM => ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
+        public RightPanelViewModel RightPanelVM => ServiceLocator.Current.GetInstance<RightPanelViewModel>();
         public SongsViewModel SongsVM => ServiceLocator.Current.GetInstance<SongsViewModel>();
         public TagsEditorViewModel TagsEditorVM => ServiceLocator.Current.GetInstance<TagsEditorViewModel>();
         public TestViewModel TestVM => ServiceLocator.Current.GetInstance<TestViewModel>();

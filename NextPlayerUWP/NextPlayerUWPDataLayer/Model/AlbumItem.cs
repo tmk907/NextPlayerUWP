@@ -116,6 +116,19 @@ namespace NextPlayerUWPDataLayer.Model
         }
         private int albumId;
         public int AlbumId { get { return albumId; } }
+        private DateTime lastAdded;
+        public DateTime LastAdded
+        {
+            get { return lastAdded; }
+            set
+            {
+                if (value != lastAdded)
+                {
+                    lastAdded = value;
+                    onPropertyChanged(this, "LastAdded");
+                }
+            }
+        }
 
         public AlbumItem()
         {
@@ -130,6 +143,7 @@ namespace NextPlayerUWPDataLayer.Model
             imagePath = AppConstants.AssetDefaultAlbumCover;
             IsImageSet = true;
             imageUri = new Uri(imagePath);
+            lastAdded = DateTime.MinValue;
         }
 
         public AlbumItem(AlbumsTable table)
@@ -161,6 +175,7 @@ namespace NextPlayerUWPDataLayer.Model
                 imagePath = table.ImagePath;
             }
             imageUri = new Uri(imagePath);
+            lastAdded = table.LastAdded;
         }
 
         public override string ToString()

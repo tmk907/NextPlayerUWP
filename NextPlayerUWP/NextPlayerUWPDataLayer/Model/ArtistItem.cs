@@ -59,6 +59,19 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        private DateTime lastAdded;
+        public DateTime LastAdded
+        {
+            get { return lastAdded; }
+            set
+            {
+                if (value != lastAdded)
+                {
+                    lastAdded = value;
+                    onPropertyChanged(this, "LastAdded");
+                }
+            }
+        }
 
         public ArtistItem()
         {
@@ -67,23 +80,7 @@ namespace NextPlayerUWPDataLayer.Model
             duration = TimeSpan.Zero;
             songsNumber = 0;
             albumsNumber = 0;
-        }
-
-        public ArtistItem(int albumsnumber, string artistParam, TimeSpan duration, int songsnumber)
-        {
-            this.albumsNumber = albumsnumber;
-            this.artistParam = artistParam;
-            if (artistParam == "")
-            {
-                ResourceLoader loader = new ResourceLoader();
-                this.artist = loader.GetString("UnknownArtist");
-            }
-            else
-            {
-                this.artist = artistParam;
-            }
-            this.duration = duration;
-            this.songsNumber = songsnumber;
+            lastAdded = DateTime.MinValue;
         }
 
         public ArtistItem(ArtistsTable table)
@@ -101,6 +98,7 @@ namespace NextPlayerUWPDataLayer.Model
             {
                 artist = artistParam;
             }
+            lastAdded = table.LastAdded;
         }
 
         public override string ToString()

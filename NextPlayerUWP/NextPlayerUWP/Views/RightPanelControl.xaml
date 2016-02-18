@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
-    DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingPlaylistVM}"
+    DataContext="{Binding Source={StaticResource Locator}, Path=RightPanelVM}"
     mc:Ignorable="d"
     d:DesignHeight="600"
     d:DesignWidth="250">
@@ -28,7 +28,9 @@
         </MenuFlyout>
         <DataTemplate x:Key="SongTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped"
-                  Background="{x:Bind IsPlaying, Converter={StaticResource BoolToBackgroundConverter}}">
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundConverter}, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="44"/>
@@ -273,7 +275,7 @@
             <RowDefinition Height="44"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Pivot Grid.RowSpan="2" Style="{StaticResource RightPanelPivotStyle}" >
+        <Pivot Grid.RowSpan="2" Style="{StaticResource RightPanelPivotStyle}" SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
             <PivotItem>
                 <PivotItem.Header>
                     <TextBlock Text="now playing" FontSize="22"/>
@@ -304,6 +306,55 @@
                 <PivotItem.Header>
                     <TextBlock Text="lyrics" FontSize="22"/>
                 </PivotItem.Header>
+                <Grid>
+                    <Grid Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" MinHeight="40"/>
+                            <RowDefinition Height="Auto" MinHeight="40"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" 
+                           x:Name="titleTB"
+                           Text="{x:Bind ViewModel.Title, Mode=OneWay}"
+                           FontSize="19"
+                           FontWeight="Medium"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           TextWrapping="WrapWholeWords"
+                           TextAlignment="Center"
+                           />
+                        <TextBlock Grid.Row="1" 
+                           x:Name="artistTB"
+                           Text="{x:Bind ViewModel.Artist, Mode=OneWay}"
+                           FontSize="17"
+                           FontWeight="Medium"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           TextWrapping="WrapWholeWords"
+                           TextAlignment="Center"
+                           />
+                        <ScrollViewer Grid.Row="2" 
+                                      Margin="4,0,4,4">
+                            <TextBlock x:Name="lyricsTB"
+                                Text="{x:Bind ViewModel.Lyrics, Mode=OneWay}"
+                                TextWrapping="WrapWholeWords"
+                                HorizontalAlignment="Stretch"
+                                FontSize="15"
+                                FontWeight="SemiLight"
+                                TextAlignment="Center"
+                            />
+                        </ScrollViewer>
+                    </Grid>
+                    <Grid x:Name="WebGrid" Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                        <TextBlock x:Name="statusTextBlock" 
+                           Text="Connecting..." 
+                           FontSize="30" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Center"
+                           Visibility="Collapsed"/>
+                        <WebView x:Name="lyricsWebview" Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                </Grid>
+                </Grid>
             </PivotItem>
         </Pivot>
 

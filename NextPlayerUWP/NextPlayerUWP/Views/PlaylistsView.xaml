@@ -7,68 +7,113 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
+    DataContext="{Binding Source={StaticResource Locator}, Path=PlaylistsVM}"
     mc:Ignorable="d">
     <Page.Resources>
-        <!--<MenuFlyout x:Key="ContextMenu">
+        <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
                             Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
                             Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
-        </MenuFlyout>-->
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
+                            Click="MenuFlyoutItem_Click" CommandParameter="{Binding}"/>
+        </MenuFlyout>
+        <DataTemplate x:Key="PlaylistItemTemplate" x:DataType="data:PlaylistItem">
+            <Grid RightTapped="ListViewItem_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="{x:Bind Name}"
+                           />
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Orientation="Vertical">
-            <TextBlock Text="Tekst długi"
-                       FontSize="16"
-                       FontWeight="SemiLight"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="16"
-                       FontWeight="Normal"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="16"
-                       FontWeight="SemiBold"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="20"
-                       FontWeight="SemiLight"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="20"
-                       FontWeight="Normal"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="20"
-                       FontWeight="SemiBold"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="24"
-                       FontWeight="SemiLight"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="24"
-                       FontWeight="Normal"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="24"
-                       FontWeight="SemiBold"/>
-
-            <TextBlock Text="Tekst długi"
-                       FontSize="24"
-                       FontWeight="Normal"
-                       Foreground="Black"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="24"
-                       FontWeight="Normal"
-                       Foreground="LightGray"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="24"
-                       FontWeight="Normal"
-                       Foreground="Gray"/>
-            <TextBlock Text="Tekst długi"
-                       FontSize="24"
-                       FontWeight="Normal"
-                       Foreground="DarkGray"/>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+			BackButtonVisibility="Collapsed" 
+			Frame="{x:Bind Frame, Mode=OneWay}"
+			Content="Playlists"
+			x:Uid="PageHeaderPlaylists"
+			VisualStateNarrowMinWidth="0"
+			VisualStateNormalMinWidth="720">
+            <AppBarButton 
+                Icon="Add"
+                x:Uid="AppBarButtonAddPlaylist"
+                Label="Add playlist"
+                Click="newPlainPlaylist_Click"/>
+        </controls:PageHeader>
+        <UserControl Grid.Column="1" Grid.Row="1">
+            <local:RightPanelControl/>
+        </UserControl>
+        <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Button Content="update" Click="Button_Click"/>
+            </StackPanel>
+            <ContentDialog x:Name="ContentDialogNewPlaylist"
+                Grid.Row="1"
+                x:Uid="ContentDialogNewPlaylist"
+                VerticalAlignment="Center"
+                Title="New playlist"
+                PrimaryButtonText="Save"
+                IsPrimaryButtonEnabled="{Binding Text, ElementName=playlistNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
+                PrimaryButtonClick="{x:Bind ViewModel.Save}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Uid="TBPlaylistName"
+                            Margin="0,4,4,4"
+                            Text="Playlist name:"/>
+                        <TextBox x:Name="playlistNameTB"
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.Name, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ContentDialog.Content>
+            </ContentDialog>
+            <ListView x:Name="PlaylistsListView"
+                      Grid.Row="1"
+                ItemsSource="{x:Bind ViewModel.Playlists, Mode=OneWay}"
+                ItemTemplate="{StaticResource PlaylistItemTemplate}"
+                SelectionMode="None"
+                IsItemClickEnabled="True"
+                ItemClick="{x:Bind ViewModel.ItemClicked}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWP.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,16 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class AddToPlaylistView : Page
     {
+        AddToPlaylistViewModel ViewModel;
         public AddToPlaylistView()
         {
             this.InitializeComponent();
+            ViewModel = (AddToPlaylistViewModel)DataContext;
+        }
+
+        private async void newPlainPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogNewPlaylist.ShowAsync();
         }
     }
 }

@@ -25,6 +25,7 @@
             <converters:RepeatContent x:Key="RepeatContentConverter"/>
             <converters:ComboBoxItemValueConverter x:Key="ComboBoxItemValueConverter"/>
             <converters:BoolToBackground x:Key="BoolToBackgroundConverter"/>
+            <converters:PlaylistNameToBool x:Key="PlaylistNameToBoolConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  BorderThickness="1" 

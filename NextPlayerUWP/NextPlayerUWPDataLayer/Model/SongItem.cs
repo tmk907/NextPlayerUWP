@@ -180,7 +180,7 @@ namespace NextPlayerUWPDataLayer.Model
         private bool isPlaying;
         public bool IsPlaying
         {
-            get { return IsPlaying; }
+            get { return isPlaying; }
             set
             {
                 if (value != isPlaying)

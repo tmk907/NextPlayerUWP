@@ -118,6 +118,7 @@
     <Compile Include="Converters\IntToBitrate.cs" />
     <Compile Include="Converters\IntToSongs.cs" />
     <Compile Include="Converters\NumberToPercent.cs" />
+    <Compile Include="Converters\PlaylistNameToBool.cs" />
     <Compile Include="Converters\RatingConverter.cs" />
     <Compile Include="Converters\RepeatContent.cs" />
     <Compile Include="Converters\RepeatForeground.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
+    <Compile Include="ViewModels\RightPanelViewModel.cs" />
     <Compile Include="ViewModels\SongsViewModel.cs" />
     <Compile Include="ViewModels\TagsEditorViewModel.cs" />
     <Compile Include="ViewModels\TestViewModel.cs" />

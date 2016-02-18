@@ -15,7 +15,7 @@ using System.Diagnostics;
 
 namespace NextPlayerUWPDataLayer.Services
 {
-    public class DatabaseManager
+    public sealed class DatabaseManager
     {
         private static readonly DatabaseManager current = new DatabaseManager();
 
@@ -142,10 +142,10 @@ namespace NextPlayerUWPDataLayer.Services
         //Albums, Artists, Genres
         public async Task UpdateTables()
         {
-            var query = songsConnection.ToList();
-
+            var songsList = songsConnection.ToList();
+            #region artists
             List<SongsTable> asongs = new List<SongsTable>();
-            foreach(var song in query)
+            foreach(var song in songsList)
             {
                 if (song.Artists.Contains("; "))
                 {
@@ -162,66 +162,85 @@ namespace NextPlayerUWPDataLayer.Services
                     asongs.Add(song);
                 }
             }
+            List<ArtistsTable> newArtists = new List<ArtistsTable>();
             var groupedArtists = asongs.GroupBy(a => a.Artists);
-            connection.DeleteAll<ArtistsTable>();
-            List<ArtistsTable> artistsTable = new List<ArtistsTable>();
-            foreach(var item in groupedArtists)
+            var arList = await connectionAsync.Table<ArtistsTable>().ToListAsync();
+            var oldArtists = arList.ToDictionary(l => l.Artist);
+            foreach(var group in groupedArtists)
             {
-                int albumsNumber = item.GroupBy(a => a.Album).Count();
+                int albumsNumber = group.GroupBy(a => a.Album).Count();
                 TimeSpan duration = TimeSpan.Zero;
                 int songsNumber = 0;
-                foreach(var song in item)
+                foreach(var song in group)
                 {
                     duration += song.Duration;
                     songsNumber++;
                 }
-                artistsTable.Add(new ArtistsTable()
+                ArtistsTable oldArtist;
+                if (oldArtists.TryGetValue(group.FirstOrDefault().Artists,out oldArtist))
                 {
-                    AlbumsNumber = albumsNumber,
-                    Artist = item.FirstOrDefault().Artists,
-                    Duration = TimeSpan.Zero,
-                    SongsNumber = songsNumber,
-                });
+                    await connectionAsync.ExecuteAsync("UPDATE ArtistsTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE ArtistId = ?", duration, songsNumber, group.FirstOrDefault().DateAdded, oldArtist.ArtistId);
+                }
+                else
+                {
+                    newArtists.Add(new ArtistsTable()
+                    {
+                        AlbumsNumber = albumsNumber,
+                        Artist = group.FirstOrDefault().Artists,
+                        Duration = duration,
+                        SongsNumber = songsNumber,
+                    });
+                }
             }
-            await connectionAsync.InsertAllAsync(artistsTable);
-
-            var groupedAlbums = query.GroupBy(a => a.Album);
-            connection.DeleteAll<AlbumsTable>();
-            List<AlbumsTable> albumsTable = new List<AlbumsTable>();
-            foreach(var item in groupedAlbums)
+            await connectionAsync.InsertAllAsync(newArtists);
+            #endregion
+            #region albums
+            List<AlbumsTable> newAlbums = new List<AlbumsTable>();
+            var groupedAlbums = songsList.GroupBy(a => a.Album);
+            var aList = await connectionAsync.Table<AlbumsTable>().ToListAsync();
+            var oldAlbums = aList.ToDictionary(l => l.Album);
+            foreach (var group in groupedAlbums)
             {
+                TimeSpan duration = TimeSpan.Zero;
                 string albumArtist = "";
                 int year = 0;
-                foreach(var song in item)
+                int count = 0;
+                foreach (var song in group)
                 {
-                    if (song.AlbumArtist != "")
-                    {
-                        albumArtist = song.AlbumArtist;
-                        break;
-                    }
-                }
-                foreach(var song in item)
-                {
+                    duration += song.Duration;
+                    count++;
                     if (song.Year != 0)
                     {
                         year = song.Year;
-                        break;
+                    }
+                    if (song.AlbumArtist != "")
+                    {
+                        albumArtist = song.AlbumArtist;
                     }
                 }
-                albumsTable.Add(new AlbumsTable()
+                AlbumsTable oldAlbum;
+                if (oldAlbums.TryGetValue(group.FirstOrDefault().Album, out oldAlbum))
                 {
-                    Album = item.FirstOrDefault().Album,
-                    AlbumArtist = albumArtist,
-                    Duration = TimeSpan.Zero,
-                    ImagePath = "",
-                    SongsNumber = item.Count(),
-                    Year = year
-                });
+                    await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE AlbumId = ?", duration, count, group.FirstOrDefault().DateAdded, oldAlbum.AlbumId);
+                }
+                else
+                {
+                    newAlbums.Add(new AlbumsTable()
+                    {
+                        Album = group.FirstOrDefault().Album,
+                        AlbumArtist = albumArtist,
+                        Duration = TimeSpan.Zero,
+                        ImagePath = "",
+                        SongsNumber = count,
+                        Year = year
+                    });
+                }
             }
-            await connectionAsync.InsertAllAsync(albumsTable);
-
+            await connectionAsync.InsertAllAsync(newAlbums);
+            #endregion
+            #region genres
             List<SongsTable> gsongs = new List<SongsTable>();
-            foreach (var song in query)
+            foreach (var song in songsList)
             {
                 if (song.Genres.Contains("; "))
                 {
@@ -238,19 +257,36 @@ namespace NextPlayerUWPDataLayer.Services
                     gsongs.Add(song);
                 }
             }
+            List<GenresTable> newGenres = new List<GenresTable>();
             var groupedGenres = gsongs.GroupBy(g => g.Genres);
-            List<GenresTable> genresTable = new List<GenresTable>();
-            connection.DeleteAll<GenresTable>();
-            foreach (var item in groupedGenres)
+            var gList = await connectionAsync.Table<GenresTable>().ToListAsync();
+            var oldGenres = gList.ToDictionary(l => l.Genre);
+            foreach (var group in groupedGenres)
             {
-                genresTable.Add(new GenresTable()
+                TimeSpan duration = TimeSpan.Zero;
+                int count = 0;
+                foreach(var song in group)
                 {
-                    Duration = TimeSpan.Zero,
-                    Genre = item.FirstOrDefault().Genres,
-                    SongsSumber = item.Count(),
-                });
+                    duration += song.Duration;
+                    count++;
+                }
+                GenresTable oldGenre;
+                if (oldGenres.TryGetValue(group.FirstOrDefault().Album, out oldGenre))
+                {
+                    await connectionAsync.ExecuteAsync("UPDATE GenresTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE AlbumId = ?", duration, count, group.FirstOrDefault().DateAdded, oldGenre.GenreId);
+                }
+                else
+                {
+                    newGenres.Add(new GenresTable()
+                    {
+                        Duration = duration,
+                        Genre = group.FirstOrDefault().Genres,
+                        SongsSumber = count,
+                    });
+                }
             }
-            await connectionAsync.InsertAllAsync(genresTable);
+            await connectionAsync.InsertAllAsync(newGenres);
+            #endregion
         }
 
         public Dictionary<string, Tuple<int, int>> GetFilePaths()
@@ -400,7 +436,10 @@ namespace NextPlayerUWPDataLayer.Services
 
                 foreach (var item in list)
                 {
-                    songs.Add(new SongItem(item));
+                    if (item.IsAvailable == 1)
+                    {
+                        songs.Add(new SongItem(item));
+                    }
                 }
             }
             catch (Exception ex)
@@ -429,7 +468,10 @@ namespace NextPlayerUWPDataLayer.Services
                 List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Genres = ? OR Genres LIKE ? OR Genres LIKE ? OR Genres LIKE ?", genre, genre + "; %", "%; " + genre, "%; " + genre + "; %");
                 foreach (var item in list)
                 {
-                    songs.Add(new SongItem(item));
+                    if (item.IsAvailable == 1)
+                    {
+                        songs.Add(new SongItem(item));
+                    }
                 }
             }
             catch (Exception ex)
@@ -546,9 +588,70 @@ namespace NextPlayerUWPDataLayer.Services
         {
             ObservableCollection<PlaylistItem> playlists = new ObservableCollection<PlaylistItem>();
 
+            var query = await connectionAsync.Table<PlainPlaylistsTable>().OrderBy(p => p.Name).ToListAsync();
+            foreach (var item in query)
+            {
+                playlists.Add(new PlaylistItem(item.PlainPlaylistId, false, item.Name));
+            }
+
             return playlists;
         }
+
+        public async Task<ObservableCollection<PlaylistItem>> GetPlainPlaylistsAsync()
+        {
+            var query = await connectionAsync.Table<PlainPlaylistsTable>().OrderBy(p => p.Name).ToListAsync();
+            ObservableCollection<PlaylistItem> list = new ObservableCollection<PlaylistItem>();
+            foreach (var item in query)
+            {
+                list.Add(new PlaylistItem(item.PlainPlaylistId, false, item.Name));
+            }
+            return list;
+        }
+
+
+
         #endregion
+
+        public async Task AddToPlaylist(int playlistId, System.Linq.Expressions.Expression<Func<SongsTable, bool>> condition, Func<SongsTable,object> sort)
+        {
+            var query = await songsConnectionAsync.Where(condition).ToListAsync();
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            var l = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToListAsync();
+            int lastPosition = l.Count;
+            var sorted = query.OrderBy(sort);
+            foreach (var item in sorted)
+            {
+                lastPosition++;
+                var newEntry = new PlainPlaylistEntryTable()
+                {
+                    PlaylistId = playlistId,
+                    SongId = item.SongId,
+                    Place = lastPosition,
+                };
+                list.Add(newEntry);
+            }
+            await connectionAsync.InsertAllAsync(list);
+        }
+
+        public async Task AddNowPlayingToPlaylist(int playlistId)
+        {
+            var songs = await connectionAsync.Table<NowPlayingTable>().ToListAsync();
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            var l = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToListAsync();
+            int lastPosition = l.Count;
+            foreach (var item in songs)
+            {
+                lastPosition++;
+                var newEntry = new PlainPlaylistEntryTable()
+                {
+                    PlaylistId = playlistId,
+                    SongId = item.SongId,
+                    Place = lastPosition,
+                };
+                list.Add(newEntry);
+            }
+            await connectionAsync.InsertAllAsync(list);
+        }
 
         #region Insert
 
@@ -614,6 +717,46 @@ namespace NextPlayerUWPDataLayer.Services
 
         #endregion
 
+        #region Delete
+
+        public void DeleteSmartPlaylistEntry(int primaryId)//! async?
+        {
+            connection.Delete<SmartPlaylistEntryTable>(primaryId);
+        }
+
+        public async Task DeleteSmartPlaylistAsync(int id)
+        {
+            var items = await connectionAsync.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToListAsync();
+            foreach (var item in items)
+            {
+                DeleteSmartPlaylistEntry(item.Id);
+            }
+            var list =  await connectionAsync.Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).ToListAsync();
+            var playlist = list.FirstOrDefault();
+            await connectionAsync.DeleteAsync(playlist);
+        }
+
+        public void DeletePlainPlaylistEntry(int primaryId)
+        {
+            connection.Delete<PlainPlaylistEntryTable>(primaryId);
+
+        }
+        public async Task DeletePlainPlaylistAsync(int playlistId)
+        {
+            var items = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(playlistId)).ToListAsync();
+            foreach (var item in items)
+            {
+                DeletePlainPlaylistEntry(item.Id);
+            }
+            var list = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId.Equals(playlistId)).ToListAsync();
+            var playlist = list.FirstOrDefault();
+            await connectionAsync.DeleteAsync(playlist);
+        }
+
+        
+
+        #endregion
+
         public async Task UpdateAlbumItem(AlbumItem album)
         {
             await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET ImagePath = ? WHERE AlbumId = ?", album.ImagePath, album.AlbumId);
@@ -638,6 +781,11 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task UpdateNowPlayingSong(SongData song)
         {
             await connectionAsync.ExecuteAsync("Update NowPlayingTable SET Title = ?, Artist = ?, Album = ? WHERE SongId = ?", song.Tag.Title, song.Tag.Artists, song.Tag.Album, song.SongId);
+        }
+
+        public async Task UpdateLyricsAsync(int id, string lyrics)
+        {
+            await connectionAsync.ExecuteAsync("UPDATE SongsTable SET Lyrics = ? WHERE SongId = ?", lyrics, id);
         }
 
         public string GetAlbumArt(string album)

@@ -36,13 +36,24 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            sortAfterOnNavigated = true;
+        }
+
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
             NavigationService.Navigate(App.Pages.Playlist, ((FolderItem)e.ClickedItem).GetParameter());
         }
 
+        private bool sortAfterOnNavigated = false;
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
+            if (sortAfterOnNavigated)
+            {
+                sortAfterOnNavigated = false;
+                return;
+            }
             ComboBoxItemValue value = SelectedComboBoxItem;
             switch (value.Option)
             {
@@ -55,6 +66,9 @@ namespace NextPlayerUWP.ViewModels
                 case SortNames.SongCount:
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "Folder");
                     break;
+                //case SortNames.LastAdded:
+                //    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Folder");
+                //    break;
                 default:
                     Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
                     break;

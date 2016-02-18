@@ -21,7 +21,7 @@ namespace NextPlayerUWP.Common
     public delegate void MediaPlayerMediaOpenHandler(TimeSpan duration);
     public delegate void MediaPlayerCloseHandler();
 
-    public class PlaybackManager
+    public sealed class PlaybackManager
     {
         private static readonly PlaybackManager current = new PlaybackManager();
         public static PlaybackManager Current
@@ -32,7 +32,7 @@ namespace NextPlayerUWP.Common
             }
         }
         static PlaybackManager() { }
-        public PlaybackManager()
+        private PlaybackManager()
         {
             backgroundAudioTaskStarted = new AutoResetEvent(false);
         }
@@ -369,11 +369,13 @@ namespace NextPlayerUWP.Common
                 }
                 else if (MediaPlayerState.Closed == CurrentPlayer.CurrentState)
                 {
+                    OnMediaPlayerTrackChanged(CurrentSongIndex);
                     StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
                 }
             }
             else
             {
+                OnMediaPlayerTrackChanged(CurrentSongIndex);
                 StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
             }
         }
