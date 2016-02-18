@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="NextPlayerUWP.Views.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerUWP.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    DataContext="{Binding Source={StaticResource Locator}, Path=SettingsVM}"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+			BackButtonVisibility="Collapsed" 
+			Frame="{x:Bind Frame, Mode=OneWay}"
+			Content="Settings"
+			x:Uid="PageHeaderSettings"
+			VisualStateNarrowMinWidth="0"
+			VisualStateNormalMinWidth="720"/>
+        <UserControl Grid.Column="1" Grid.Row="1">
+            <local:RightPanelControl/>
+        </UserControl>
+        <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
+            <StackPanel Orientation="Vertical">
+                <Button Content="update" Click="{x:Bind ViewModel.UpdateLibrary}"/>
+                <TextBlock Text="{x:Bind ViewModel.UpdateProgress, Mode=OneWay}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

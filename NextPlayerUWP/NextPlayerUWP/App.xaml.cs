@@ -96,6 +96,7 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Folders, typeof(FoldersView));
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
                 keys.Add(Pages.Playlist, typeof(PlaylistView));
+                keys.Add(Pages.Settings, typeof(SettingsView));
                 keys.Add(Pages.Songs, typeof(SongsView));
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
                 //keys.Add(Pages, typeof());

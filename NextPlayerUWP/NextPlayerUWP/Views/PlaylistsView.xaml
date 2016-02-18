@@ -68,9 +68,6 @@
                 <RowDefinition Height="44"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0">
-                <Button Content="update" Click="Button_Click"/>
-            </StackPanel>
             <ContentDialog x:Name="ContentDialogNewPlaylist"
                 Grid.Row="1"
                 x:Uid="ContentDialogNewPlaylist"

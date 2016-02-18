@@ -1,10 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -26,6 +21,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<PlaylistsViewModel>();
             SimpleIoc.Default.Register<PlaylistViewModel>();
             SimpleIoc.Default.Register<RightPanelViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<SongsViewModel>();
             SimpleIoc.Default.Register<TagsEditorViewModel>();
             SimpleIoc.Default.Register<TestViewModel>();
@@ -43,6 +39,7 @@ namespace NextPlayerUWP.ViewModels
         public PlaylistViewModel PlaylistVM => ServiceLocator.Current.GetInstance<PlaylistViewModel>();
         public PlaylistsViewModel PlaylistsVM => ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
         public RightPanelViewModel RightPanelVM => ServiceLocator.Current.GetInstance<RightPanelViewModel>();
+        public SettingsViewModel SettingsVM => ServiceLocator.Current.GetInstance<SettingsViewModel>();
         public SongsViewModel SongsVM => ServiceLocator.Current.GetInstance<SongsViewModel>();
         public TagsEditorViewModel TagsEditorVM => ServiceLocator.Current.GetInstance<TagsEditorViewModel>();
         public TestViewModel TestVM => ServiceLocator.Current.GetInstance<TestViewModel>();

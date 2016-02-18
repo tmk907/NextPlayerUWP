@@ -65,13 +65,5 @@ namespace NextPlayerUWP.Views
             dialog.CancelCommandIndex = 1;
             await dialog.ShowAsync();
         }
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MediaImport mi = new MediaImport();
-            await Task.Run(async ()=> {
-                await mi.UpdateDatabase();
-            });
-        }
     }
 }
