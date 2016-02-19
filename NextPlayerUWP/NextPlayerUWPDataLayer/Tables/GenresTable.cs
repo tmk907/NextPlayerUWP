@@ -13,7 +13,7 @@ namespace NextPlayerUWPDataLayer.Tables
         [PrimaryKey, AutoIncrement]
         public int GenreId { get; set; }
         public string Genre { get; set; }
-        public int SongsSumber { get; set; }
+        public int SongsNumber { get; set; }
         public TimeSpan Duration { get; set; }
         public DateTime LastAdded { get; set; }
     }

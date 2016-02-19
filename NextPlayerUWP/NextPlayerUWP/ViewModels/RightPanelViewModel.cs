@@ -181,6 +181,21 @@ namespace NextPlayerUWP.ViewModels
             App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter()); 
         }
 
+        public void GoToArtist(object sender, RoutedEventArgs e)
+        {
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            ArtistItem temp = new ArtistItem();
+            //temp.ArtistParam = item.Artist;
+            App.Current.NavigationService.Navigate(App.Pages.Artist, item.GetParameter());
+        }
+
+        public void GoToAlbum(object sender, RoutedEventArgs e)
+        {
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+
+            App.Current.NavigationService.Navigate(App.Pages.Album, item.GetParameter());
+        }
+
         #endregion
 
         #region Lyrics
@@ -232,6 +247,7 @@ namespace NextPlayerUWP.ViewModels
         private bool original = true;
         private Windows.ApplicationModel.Resources.ResourceLoader loader;
 
+        //TODO sprawdzac z ustawien
         private bool autoLoadFromWeb = true;
 
         private async void ChangeLyrics(int index)
@@ -245,18 +261,17 @@ namespace NextPlayerUWP.ViewModels
             Artist = song.Artist;
             Lyrics = "";
             string dbLyrics = DatabaseManager.Current.GetLyrics(song.SongId);
+            WebVisibility = false;
             if (string.IsNullOrEmpty(dbLyrics))
             {
                 if (autoLoadFromWeb)
                 {
-                    WebVisibility = true;
                     LoadLyricsFromWebsite();
                 }
             }
             else
             {
                 original = false;
-                WebVisibility = false;
                 Lyrics = dbLyrics;
             }
         }

@@ -209,26 +209,39 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingSongs = songs.Where(s => s.Title.ToLower().Contains(sender.Text)).OrderBy(s => s.Title);
+                var matchingSongs = songs.Where(s => s.Title.ToLower().StartsWith(sender.Text));
                 sender.ItemsSource = matchingSongs.ToList();
             }
         }
 
-        public async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            int id;
             if (args.ChosenSuggestion != null)
             {
-                await SongClicked(((SongItem)args.ChosenSuggestion).SongId);
+                id = ((SongItem)args.ChosenSuggestion).SongId;               
             }
             else
             {
-                var list = songs.Where(s => s.Title.ToLower().Contains(args.QueryText)).OrderBy(s => s.Title).ToList();
-                //if (list.Count > 0)
-                //{
-                //    await SongClicked(list.FirstOrDefault().SongId);
-                //}
-                sender.ItemsSource = list;
+                var list = songs.Where(s => s.Title.ToLower().StartsWith(args.QueryText)).OrderBy(s => s.Title).ToList();
+                id = list.FirstOrDefault().SongId;
             }
+            int index = 0;
+            bool find = false;
+            foreach (var group in groupedSongs)
+            {
+                foreach (SongItem item in group)
+                {
+                    if (item.SongId == id)
+                    {
+                        find = true;
+                        break;
+                    }
+                    index++;
+                }
+                if (find) break;
+            }
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

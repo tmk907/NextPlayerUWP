@@ -101,26 +101,38 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var query = genres.Where(s => s.Genre.ToLower().Contains(sender.Text)).OrderBy(s => s.Genre);
+                var query = genres.Where(s => s.Genre.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Genre);
                 sender.ItemsSource = query.ToList();
             }
         }
 
         public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            int index;
             if (args.ChosenSuggestion != null)
             {
-                NavigationService.Navigate(App.Pages.Album, ((GenreItem)args.ChosenSuggestion).GetParameter());
+                index = genres.IndexOf((GenreItem)args.ChosenSuggestion);
+                //NavigationService.Navigate(App.Pages.Album, ((GenreItem)args.ChosenSuggestion).GetParameter());
             }
             else
             {
-                var list = genres.Where(s => s.Genre.ToLower().Contains(sender.Text)).OrderBy(s => s.Genre).ToList();
-                //if (list.Count > 0)
-                //{
-                //    await SongClicked(list.FirstOrDefault().SongId);
-                //}
-                sender.ItemsSource = list;
+                var list = genres.Where(s => s.Genre.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Genre).ToList();
+                if (list.Count == 0) return;
+                index = 0;
+                bool find = false;
+                foreach(var g in genres)
+                {
+                    if (g.Genre.Equals(list.FirstOrDefault().Genre))
+                    {
+                        find = true;
+                        break;
+                    }
+                    index++;
+                }
+                if (!find) return;
             }
+            
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

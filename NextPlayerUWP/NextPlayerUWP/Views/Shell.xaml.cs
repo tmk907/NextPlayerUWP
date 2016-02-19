@@ -6,8 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Template10.Services.NavigationService;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -66,5 +68,42 @@ namespace NextPlayerUWP.Views
             }
         }
         #endregion
+
+        private async void ReviewReminder()
+        {
+            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+            if (!settings.Values.ContainsKey(AppConstants.IsReviewed))
+            {
+                settings.Values.Add(AppConstants.IsReviewed, 0);
+                settings.Values.Add(AppConstants.LastReviewRemind, DateTime.Today.Ticks);
+            }
+            else
+            {
+                int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
+                long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
+                TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
+                if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(5) <= elapsed)//!!!!!!!!! <=
+                {
+                    settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
+                    settings.Values[AppConstants.IsReviewed] = isReviewed++;
+                    ResourceLoader loader = new ResourceLoader();
+
+                    MessageDialog dialog = new MessageDialog(loader.GetString("RateAppMsg"));
+                    dialog.Title = loader.GetString("RateAppTitle");
+                    dialog.Commands.Add(new UICommand(loader.GetString("Yes")) { Id = 0 });
+                    dialog.Commands.Add(new UICommand(loader.GetString("Later")) { Id = 1 });
+                    dialog.DefaultCommandIndex = 0;
+                    dialog.CancelCommandIndex = 1;
+
+                    await dialog.ShowAsync();
+                }
+            }
+
+            //if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
+            //{
+            //    // Adding a 3rd command will crash the app when running on Mobile !!!
+            //}
+        }
     }
 }

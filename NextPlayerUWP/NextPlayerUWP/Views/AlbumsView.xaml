@@ -84,7 +84,7 @@
                     SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
                     <AutoSuggestBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Title}"/>
+                            <TextBlock Text="{Binding Album}"/>
                         </DataTemplate>
                     </AutoSuggestBox.ItemTemplate>
                 </AutoSuggestBox>

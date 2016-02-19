@@ -85,26 +85,38 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingAlbums = folders.Where(s => s.Folder.ToLower().Contains(sender.Text)).OrderBy(s => s.Folder);
-                sender.ItemsSource = matchingAlbums.ToList();
+                var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text)).OrderBy(f => f.Folder);
+                sender.ItemsSource = matchingFolders.ToList();
             }
         }
 
         public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            int index;
             if (args.ChosenSuggestion != null)
             {
-                NavigationService.Navigate(App.Pages.Album, ((FolderItem)args.ChosenSuggestion).GetParameter());
+                index = folders.IndexOf((FolderItem)args.ChosenSuggestion);
+                //NavigationService.Navigate(App.Pages.Album, ((FolderItem)args.ChosenSuggestion).GetParameter());
             }
             else
             {
-                var list = folders.Where(s => s.Folder.ToLower().Contains(sender.Text)).OrderBy(s => s.Folder).ToList();
-                //if (list.Count > 0)
-                //{
-                //    await SongClicked(list.FirstOrDefault().SongId);
-                //}
+                var list = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Folder).ToList();
+                if (list.Count == 0) return;
+                index = 0;
+                bool find = false;
+                foreach (var g in folders)
+                {
+                    if (g.Folder.Equals(list.FirstOrDefault().Folder))
+                    {
+                        find = true;
+                        break;
+                    }
+                    index++;
+                }
+                if (!find) return;
                 sender.ItemsSource = list;
             }
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

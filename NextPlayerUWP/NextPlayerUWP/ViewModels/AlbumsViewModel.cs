@@ -177,26 +177,39 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingAlbums = albums.Where(s => s.Album.ToLower().Contains(sender.Text)).OrderBy(s => s.Album);
+                var matchingAlbums = albums.Where(s => s.Album.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Album);
                 sender.ItemsSource = matchingAlbums.ToList();
             }
         }
 
         public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            string album;
             if (args.ChosenSuggestion != null)
             {
-                NavigationService.Navigate(App.Pages.Album, ((AlbumItem)args.ChosenSuggestion).GetParameter());
+                album = ((AlbumItem)args.ChosenSuggestion).Album;
             }
             else
             {
-                var list = albums.Where(s => s.Album.ToLower().Contains(sender.Text)).OrderBy(s => s.Album).ToList();
-                //if (list.Count > 0)
-                //{
-                //    await SongClicked(list.FirstOrDefault().SongId);
-                //}
-                sender.ItemsSource = list;
+                var list = albums.Where(s => s.Album.ToLower().StartsWith(args.QueryText)).OrderBy(s => s.Album).ToList();
+                album = list.FirstOrDefault().Album;
             }
+            int index = 0;
+            bool find = false;
+            foreach (var group in groupedAlbums)
+            {
+                foreach (AlbumItem item in group)
+                {
+                    if (item.Album == album)
+                    {
+                        find = true;
+                        break;
+                    }
+                    index++;
+                }
+                if (find) break;
+            }
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

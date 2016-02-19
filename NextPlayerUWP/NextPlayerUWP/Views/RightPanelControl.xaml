@@ -12,11 +12,17 @@
     d:DesignWidth="250">
     <UserControl.Resources>
         <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
                             Click="{x:Bind ViewModel.Delete}" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
-                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
+                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
+                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 

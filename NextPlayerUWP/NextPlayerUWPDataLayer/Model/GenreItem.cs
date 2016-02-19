@@ -55,7 +55,7 @@ namespace NextPlayerUWPDataLayer.Model
         public GenreItem(GenresTable item)
         {
             duration = item.Duration;
-            songsNumber = item.SongsSumber;
+            songsNumber = item.SongsNumber;
             genreParam = item.Genre;
             if (genre == "")
             {

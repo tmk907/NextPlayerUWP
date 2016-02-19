@@ -134,26 +134,39 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingAlbums = artists.Where(s => s.Artist.ToLower().Contains(sender.Text)).OrderBy(s => s.Artist);
-                sender.ItemsSource = matchingAlbums.ToList();
+                var matchingArtists = artists.Where(s => s.Artist.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Artist);
+                sender.ItemsSource = matchingArtists.ToList();
             }
         }
 
         public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            string artist;
             if (args.ChosenSuggestion != null)
             {
-                NavigationService.Navigate(App.Pages.Album, ((ArtistItem)args.ChosenSuggestion).GetParameter());
+                artist = ((ArtistItem)args.ChosenSuggestion).Artist;
             }
             else
             {
-                var list = artists.Where(s => s.Artist.ToLower().Contains(sender.Text)).OrderBy(s => s.Artist).ToList();
-                //if (list.Count > 0)
-                //{
-                //    await SongClicked(list.FirstOrDefault().SongId);
-                //}
-                sender.ItemsSource = list;
+                var list = artists.Where(s => s.Artist.ToLower().StartsWith(args.QueryText)).OrderBy(s => s.Artist).ToList();
+                artist = list.FirstOrDefault().Artist;
             }
+            int index = 0;
+            bool find = false;
+            foreach (var group in groupedArtists)
+            {
+                foreach (ArtistItem item in group)
+                {
+                    if (item.Artist == artist)
+                    {
+                        find = true;
+                        break;
+                    }
+                    index++;
+                }
+                if (find) break;
+            }
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

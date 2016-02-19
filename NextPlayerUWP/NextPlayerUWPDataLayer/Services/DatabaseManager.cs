@@ -111,8 +111,10 @@ namespace NextPlayerUWPDataLayer.Services
                 removedDuration += item.Duration;
             }
             TimeSpan newDuration = TimeSpan.Zero;
+            DateTime lastAdded = DateTime.MinValue;
             foreach (var item in newSongs)
             {
+                if (lastAdded.Ticks < item.DateAdded.Ticks) lastAdded = item.DateAdded;
                 newDuration += item.Duration;
             }
 
@@ -128,6 +130,7 @@ namespace NextPlayerUWPDataLayer.Services
                     Directory = directoryName,
                     Duration = newDuration,
                     Folder = Path.GetFileName(directoryName),
+                    LastAdded = lastAdded,
                     SongsNumber = newSongs.Count,
                 });
             }
@@ -144,8 +147,13 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task UpdateTables()
         {
             var songsList = songsConnection.ToList();
+
+            await connectionAsync.ExecuteAsync("UPDATE ArtistsTable SET SongsNumber = 0");
+            await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET SongsNumber = 0");
+            await connectionAsync.ExecuteAsync("UPDATE GenresTable SET SongsNumber = 0");
+
             #region artists
-            List<SongsTable> asongs = new List<SongsTable>();
+            List <SongsTable> asongs = new List<SongsTable>();
             foreach(var song in songsList)
             {
                 if (song.Artists.Contains("; "))
@@ -164,6 +172,7 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
             List<ArtistsTable> newArtists = new List<ArtistsTable>();
+            List<ArtistsTable> updatedArtists = new List<ArtistsTable>();
             var groupedArtists = asongs.GroupBy(a => a.Artists);
             var arList = await connectionAsync.Table<ArtistsTable>().ToListAsync();
             var oldArtists = arList.ToDictionary(l => l.Artist);
@@ -172,15 +181,22 @@ namespace NextPlayerUWPDataLayer.Services
                 int albumsNumber = group.GroupBy(a => a.Album).Count();
                 TimeSpan duration = TimeSpan.Zero;
                 int songsNumber = 0;
+                DateTime lastAdded = DateTime.MinValue;
                 foreach(var song in group)
                 {
+                    if (lastAdded.Ticks < song.DateAdded.Ticks) lastAdded = song.DateAdded;
                     duration += song.Duration;
                     songsNumber++;
                 }
                 ArtistsTable oldArtist;
                 if (oldArtists.TryGetValue(group.FirstOrDefault().Artists,out oldArtist))
                 {
-                    await connectionAsync.ExecuteAsync("UPDATE ArtistsTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE ArtistId = ?", duration, songsNumber, group.FirstOrDefault().DateAdded, oldArtist.ArtistId);
+                    oldArtist.Duration = duration;
+                    oldArtist.SongsNumber = songsNumber;
+                    oldArtist.LastAdded = lastAdded;
+                    updatedArtists.Add(oldArtist);
+                    //await connectionAsync.ExecuteAsync("UPDATE ArtistsTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE ArtistId = ?", 
+                    //    duration, songsNumber, lastAdded.Ticks, oldArtist.ArtistId);
                 }
                 else
                 {
@@ -189,14 +205,17 @@ namespace NextPlayerUWPDataLayer.Services
                         AlbumsNumber = albumsNumber,
                         Artist = group.FirstOrDefault().Artists,
                         Duration = duration,
+                        LastAdded = lastAdded,
                         SongsNumber = songsNumber,
                     });
                 }
             }
             await connectionAsync.InsertAllAsync(newArtists);
+            await connectionAsync.UpdateAllAsync(updatedArtists);
             #endregion
             #region albums
             List<AlbumsTable> newAlbums = new List<AlbumsTable>();
+            List<AlbumsTable> updatedAlbums = new List<AlbumsTable>();
             var groupedAlbums = songsList.GroupBy(a => a.Album);
             var aList = await connectionAsync.Table<AlbumsTable>().ToListAsync();
             var oldAlbums = aList.ToDictionary(l => l.Album);
@@ -206,8 +225,10 @@ namespace NextPlayerUWPDataLayer.Services
                 string albumArtist = "";
                 int year = 0;
                 int count = 0;
+                DateTime lastAdded = DateTime.MinValue;
                 foreach (var song in group)
                 {
+                    if (lastAdded.Ticks < song.DateAdded.Ticks) lastAdded = song.DateAdded;
                     duration += song.Duration;
                     count++;
                     if (song.Year != 0)
@@ -222,7 +243,12 @@ namespace NextPlayerUWPDataLayer.Services
                 AlbumsTable oldAlbum;
                 if (oldAlbums.TryGetValue(group.FirstOrDefault().Album, out oldAlbum))
                 {
-                    await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE AlbumId = ?", duration, count, group.FirstOrDefault().DateAdded, oldAlbum.AlbumId);
+                    oldAlbum.Duration = duration;
+                    oldAlbum.SongsNumber = count;
+                    oldAlbum.LastAdded = lastAdded;
+                    updatedAlbums.Add(oldAlbum);
+                    //await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE AlbumId = ?", 
+                    //    duration, count, lastAdded.Ticks, oldAlbum.AlbumId);
                 }
                 else
                 {
@@ -230,14 +256,16 @@ namespace NextPlayerUWPDataLayer.Services
                     {
                         Album = group.FirstOrDefault().Album,
                         AlbumArtist = albumArtist,
-                        Duration = TimeSpan.Zero,
+                        Duration = duration,
                         ImagePath = "",
+                        LastAdded = lastAdded,
                         SongsNumber = count,
                         Year = year
                     });
                 }
             }
             await connectionAsync.InsertAllAsync(newAlbums);
+            await connectionAsync.UpdateAllAsync(updatedAlbums);
             #endregion
             #region genres
             List<SongsTable> gsongs = new List<SongsTable>();
@@ -259,6 +287,7 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
             List<GenresTable> newGenres = new List<GenresTable>();
+            List<GenresTable> updatedGenres = new List<GenresTable>();
             var groupedGenres = gsongs.GroupBy(g => g.Genres);
             var gList = await connectionAsync.Table<GenresTable>().ToListAsync();
             var oldGenres = gList.ToDictionary(l => l.Genre);
@@ -266,15 +295,22 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 TimeSpan duration = TimeSpan.Zero;
                 int count = 0;
+                DateTime lastAdded = DateTime.MinValue;
                 foreach(var song in group)
                 {
+                    if (lastAdded.Ticks < song.DateAdded.Ticks) lastAdded = song.DateAdded;
                     duration += song.Duration;
                     count++;
                 }
                 GenresTable oldGenre;
-                if (oldGenres.TryGetValue(group.FirstOrDefault().Album, out oldGenre))
+                if (oldGenres.TryGetValue(group.FirstOrDefault().Genres, out oldGenre))
                 {
-                    await connectionAsync.ExecuteAsync("UPDATE GenresTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE AlbumId = ?", duration, count, group.FirstOrDefault().DateAdded, oldGenre.GenreId);
+                    oldGenre.Duration = duration;
+                    oldGenre.SongsNumber = count;
+                    oldGenre.LastAdded = lastAdded;
+                    updatedGenres.Add(oldGenre);
+                    //await connectionAsync.ExecuteAsync("UPDATE GenresTable SET Duration = ?, SongsNumber = ?, LastAdded = ? WHERE AlbumId = ?", 
+                    //    duration, count, lastAdded.Ticks, oldGenre.GenreId);
                 }
                 else
                 {
@@ -282,12 +318,38 @@ namespace NextPlayerUWPDataLayer.Services
                     {
                         Duration = duration,
                         Genre = group.FirstOrDefault().Genres,
-                        SongsSumber = count,
+                        LastAdded = lastAdded,
+                        SongsNumber = count,
                     });
                 }
             }
             await connectionAsync.InsertAllAsync(newGenres);
+            await connectionAsync.UpdateAllAsync(updatedGenres);
             #endregion
+            await ClearEntryWithNoSongs();
+        }
+
+        private async Task ClearEntryWithNoSongs()
+        {
+            //przed update tables ustawic songscount na 0 w tabelach album, artist, genre
+            //nowe wiersze beda mialy songcount>0, updatowane tez
+            //wiersze stare nie updatowane beda mialy songscount == 0
+            //przeszukac album, artist, genre z songscount==0 i usunac
+            var albums = await connectionAsync.Table<AlbumsTable>().Where(a => a.SongsNumber.Equals(0)).ToListAsync();
+            var artists = await connectionAsync.Table<ArtistsTable>().Where(a => a.SongsNumber.Equals(0)).ToListAsync();
+            var genres = await connectionAsync.Table<GenresTable>().Where(g => g.SongsNumber.Equals(0)).ToListAsync();
+            foreach (var album in albums)
+            {
+                await connectionAsync.DeleteAsync(album);
+            }
+            foreach(var artist in artists)
+            {
+                await connectionAsync.DeleteAsync(artist);
+            }
+            foreach(var genre in genres)
+            {
+                await connectionAsync.DeleteAsync(genre);
+            }
         }
 
         public Dictionary<string, Tuple<int, int>> GetFilePaths()
