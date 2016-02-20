@@ -12,6 +12,7 @@ using NextPlayerUWPDataLayer.Tables;
 using NextPlayerUWPDataLayer.Model;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using NextPlayerUWPDataLayer.Enums;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -572,6 +573,107 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task <ObservableCollection<SongItem>> GetSongItemsFromSmartPlaylistAsync(int id)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+       
+            List<int> list = new List<int>();
+            var q2 = await connectionAsync.Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).ToListAsync();
+            var smartPlaylist = q2.FirstOrDefault();
+            string name = smartPlaylist.Name;
+            int maxNumber = smartPlaylist.SongsNumber;
+            string sorting = SPUtility.SPsorting[smartPlaylist.SortBy];
+
+            string less = null;
+            string greater = null;
+            bool ORcondition;
+
+            var rules = await connectionAsync.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToListAsync();
+            if (rules.Count != 0)
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.Append("SELECT * FROM SongsTable WHERE IsAvailable > 0 AND ");
+                int i = 1;
+                foreach (var rule in rules) //x = condition
+                {
+                    ORcondition = false;
+                    string boolOperator = rule.Operator;
+                    string comparison = SPUtility.SPConditionComparison[rule.Comparison];
+                    string item = SPUtility.SPConditionItem[rule.Item];
+                    string value = rule.Value;
+
+                    if (rule.Comparison.Equals(SPUtility.Comparison.Contains))
+                    {
+                        value = "'%" + value + "%'";
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.DoesNotContain))
+                    {
+                        value = "'%" + value + "%'";
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.StartsWith))
+                    {
+                        value = "'%" + value + "'";
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.EndsWith))
+                    {
+                        value = "'" + value + "%'";
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.Is))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.IsNot))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.IsGreater))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.IsLess))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.ComparisonEx.IsGreaterOR))
+                    {
+                        greater = "'" + value + "'";
+                        ORcondition = true;
+                    }
+                    else if (rule.Comparison.Equals(SPUtility.ComparisonEx.IsLessOR))
+                    {
+                        less = "'" + value + "'";
+                        ORcondition = true;
+                    }
+
+                    if (greater != null && less != null)
+                    {
+                        builder.Append("(").Append(item).Append(" < ").Append(less).Append(" OR ").Append(item).Append(" > ").Append(greater).Append(") ");
+                        greater = null;
+                        less = null;
+                        if (i < rules.Count)
+                        {
+                            builder.Append(boolOperator).Append(" ");
+                        }
+                    }
+                    if (!ORcondition)
+                    {
+                        builder.Append("(").Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(") ");
+                        if (i < rules.Count)
+                        {
+                            builder.Append(boolOperator).Append(" ");
+                        }
+                    }
+                    
+                    i++;
+                }
+                
+                builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
+
+                List<SongsTable> q = await connectionAsync.QueryAsync<SongsTable>(builder.ToString());
+
+                foreach (var song in q)
+                {
+                    songs.Add(new SongItem(song));
+                }
+            }
+
             return songs;
         }
 
@@ -646,10 +748,38 @@ namespace NextPlayerUWPDataLayer.Services
             return genres;
         }
 
-        //todo
         public async Task<ObservableCollection<PlaylistItem>> GetPlaylistItemsAsync()
         {
             ObservableCollection<PlaylistItem> playlists = new ObservableCollection<PlaylistItem>();
+
+            var query1 = await connectionAsync.Table<SmartPlaylistsTable>().OrderBy(p => p.SmartPlaylistId).ToListAsync();
+            Dictionary<int, string> ids = Helpers.ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
+            string name;
+            foreach (var item in query1)
+            {
+                if (ids.TryGetValue(item.SmartPlaylistId, out name))
+                {
+                    playlists.Add(new PlaylistItem(item.SmartPlaylistId, true, name));
+                }
+                else
+                {
+                    //collection.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
+                }
+
+            }
+            var query2 = query1.OrderBy(p => p.Name);
+            foreach (var item in query2)
+            {
+                if (ids.TryGetValue(item.SmartPlaylistId, out name))
+                {
+                    //playlists.Add(new PlaylistItem(item.SmartPlaylistId, true, loader.GetString(name)));
+                }
+                else
+                {
+                    playlists.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
+                }
+
+            }
 
             var query = await connectionAsync.Table<PlainPlaylistsTable>().OrderBy(p => p.Name).ToListAsync();
             foreach (var item in query)
@@ -672,6 +802,20 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
 
+
+        public async Task<PlaylistItem> GetPlainPlaylistAsync(int id)
+        {
+            var list = await connectionAsync.Table<PlainPlaylistsTable>().Where(s => s.PlainPlaylistId.Equals(id)).ToListAsync();
+            var p = list.FirstOrDefault();
+            return new PlaylistItem(id, false, p.Name);
+        }
+
+        public async Task<PlaylistItem> GetSmartPlaylistAsync(int id)
+        {
+            var list = await connectionAsync.Table<SmartPlaylistsTable>().Where(s => s.SmartPlaylistId.Equals(id)).ToListAsync();
+            var p = list.FirstOrDefault();
+            return new PlaylistItem(id, true, p.Name);
+        }
 
         #endregion
 
@@ -776,6 +920,33 @@ namespace NextPlayerUWPDataLayer.Services
                 i++;
             }
             await connectionAsync.InsertAllAsync(list);
+        }
+
+        public int InsertSmartPlaylist(string name, int songsNumber, string sorting)
+        {
+            var newplaylist = new SmartPlaylistsTable
+            {
+                Name = name,
+                SongsNumber = songsNumber,
+                SortBy = sorting,
+            };
+
+            connection.Insert(newplaylist);
+            return newplaylist.SmartPlaylistId;
+        }
+
+        public async Task InsertSmartPlaylistEntry(int _playlistId, string _item, string _comparison, string _value, string _operator)
+        {
+            var newEntry = new SmartPlaylistEntryTable
+            {
+                PlaylistId = _playlistId,
+                Item = _item,
+                Comparison = _comparison,
+                Operator = _operator,
+                Value = _value,
+            };
+
+            await connectionAsync.InsertAsync(newEntry);
         }
 
         #endregion
@@ -946,6 +1117,13 @@ namespace NextPlayerUWPDataLayer.Services
         {
             connection.DropTable<NowPlayingTable>();
             connection.CreateTable<NowPlayingTable>();
+        }
+        public void update1()
+        {
+            connection.DropTable<SmartPlaylistEntryTable>();
+            connection.DropTable<SmartPlaylistsTable>();
+            connection.CreateTable<SmartPlaylistsTable>();
+            connection.CreateTable<SmartPlaylistEntryTable>();
         }
     }
 }

@@ -76,7 +76,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <Grid/>
+                        <Grid />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
@@ -274,6 +274,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
+    <!--Background="Black"-->
     <Grid BorderThickness="1,0,0,0" 
           
           BorderBrush="Gray">

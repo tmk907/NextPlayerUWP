@@ -3,6 +3,7 @@ using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
+using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -47,10 +48,7 @@ namespace NextPlayerUWP
             Logger.SaveFromSettingsToFile();
             //insights
 
-            if (FirstRun())
-            {
-                DatabaseManager.Current.CreateDatabase();
-            }
+            
             //DatabaseManager.Current.ClearCoverPaths();
         }
 
@@ -78,12 +76,13 @@ namespace NextPlayerUWP
             TagsEditor
         }
         
-        public override Task OnInitializeAsync(IActivatedEventArgs args)
+        public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
-            Stopwatch s = new Stopwatch();
-            s.Start();
-            //TileManager.ManageSecondaryTileImages();
-            
+            if (IsFirstRun())
+            {
+                await FirstRunSetup();
+            }
+            await TileManager.ManageSecondaryTileImages();
             try
             {
                 var keys = PageKeys<Pages>();
@@ -101,15 +100,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
                 //keys.Add(Pages, typeof());
                 //check if import was finished
-                
                 var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-                //s.Stop();
-                //Debug.WriteLine("initialize 2 " + s.ElapsedMilliseconds);
-                //s.Start();
                 Window.Current.Content = new Views.Shell(nav);
-                //s.Stop();
-                //Debug.WriteLine("initialize 3 " + s.ElapsedMilliseconds);
-                //s.Start();
             }
             catch (Exception ex)
             {
@@ -117,9 +109,7 @@ namespace NextPlayerUWP
                 Logger.SaveToFile();
             }
             DispatcherHelper.Initialize();
-            s.Stop();
-            Debug.WriteLine("initialize end" + s.ElapsedMilliseconds);
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
 
         public override Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
@@ -181,7 +171,7 @@ namespace NextPlayerUWP
             return base.OnSuspendingAsync(s, e, prelaunch);
         }
 
-        private bool FirstRun()
+        private bool IsFirstRun()
         {
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (o == null)
@@ -197,6 +187,34 @@ namespace NextPlayerUWP
 
         public static Action OnNewTilePinned { get; set; }
 
-        
+        private async Task FirstRunSetup()
+        {
+            DatabaseManager.Current.CreateDatabase();
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 1);
+            await CreateDefaultSmartPlaylists();
+        }
+
+        private async Task CreateDefaultSmartPlaylists()
+        {
+            int i;
+            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio dodane", 50, SPUtility.SortBy.MostRecentlyAdded);
+            await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString(), SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioDodane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio odtwarzane", 50, SPUtility.SortBy.MostRecentlyPlayed);
+            await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.LastPlayed, SPUtility.Comparison.IsGreater, DateTime.MinValue.Ticks.ToString(), SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioOdtwarzane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najczęściej odtwarzane", 50, SPUtility.SortBy.MostOftenPlayed);
+            await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "0", SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajczesciejOdtwarzane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najlepiej oceniane", 50, SPUtility.SortBy.HighestRating);
+            await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsGreater, "3", SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajlepiejOceniane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najrzadziej odtwarzane", 50, SPUtility.SortBy.LeastOftenPlayed);
+            await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "-1", SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajrzadziejOdtwarzane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najgorzej oceniane", 50, SPUtility.SortBy.LowestRating);
+            await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4", SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
+        }
     }
 }

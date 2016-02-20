@@ -95,37 +95,37 @@
                 <controls:HamburgerButtonInfo PageType="views:AlbumsView" ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Contact2" Width="48" Height="48" />
-                        <TextBlock Text="Albums" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TBAlbums" Text="Albums" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:ArtistsView"  ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="People" Width="48" Height="48" />
-                        <TextBlock Text="Artists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TBArtists" Text="Artists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:FoldersView"  ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Library" Width="48" Height="48" />
-                        <TextBlock Text="Folders" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TBFolders" Text="Folders" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:GenresView"  ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Globe" Width="48" Height="48" />
-                        <TextBlock Text="Genres" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TBGenres" Text="Genres" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:PlaylistsView"  ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="MusicInfo" Width="48" Height="48" />
-                        <TextBlock Text="Playlists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TBPlaylists" Text="Playlists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:SongsView"  ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Audio" Width="48" Height="48" />
-                        <TextBlock Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TBSongs" Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
             </controls:HamburgerMenu.PrimaryButtons>
@@ -134,7 +134,7 @@
                 <controls:HamburgerButtonInfo PageType="views:SettingsView">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Setting"  Width="48" Height="48"  />
-                        <TextBlock Text="Settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
+                        <TextBlock x:Uid="TBSettings" Text="Settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
             </controls:HamburgerMenu.SecondaryButtons>

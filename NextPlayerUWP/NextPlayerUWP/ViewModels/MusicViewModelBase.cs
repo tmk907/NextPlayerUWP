@@ -104,6 +104,23 @@ namespace NextPlayerUWP.ViewModels
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)item).SongId);
         }
+
+        public void GoToArtist(object sender, RoutedEventArgs e)
+        {
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            ArtistItem temp = new ArtistItem();
+            temp.SetParameter(item.Artist);
+            App.Current.NavigationService.Navigate(App.Pages.Artist, temp.GetParameter());
+        }
+
+        public void GoToAlbum(object sender, RoutedEventArgs e)
+        {
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            AlbumItem temp = new AlbumItem();
+            temp.SetParameter(item.Album);
+            App.Current.NavigationService.Navigate(App.Pages.Album, temp.GetParameter());
+        }
+
         #endregion
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)

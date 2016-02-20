@@ -48,16 +48,16 @@ namespace NextPlayerUWP.Views
             await ContentDialogNewPlaylist.ShowAsync();
         }
 
-        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private async void MenuFlyoutItemDelete_Click(object sender, RoutedEventArgs e)
         {
-            ResourceLoader locator = new ResourceLoader();
-            string content = locator.GetString("DeletePlaylistConfirmation");
+            ResourceLoader loader = new ResourceLoader();
+            string content = loader.GetString("DeletePlaylistConfirmation");
             MessageDialog dialog = new MessageDialog(content);
-            dialog.Commands.Add(new UICommand(locator.GetString("Delete"), (command) =>
+            dialog.Commands.Add(new UICommand(loader.GetString("Delete"), (command) =>
             {
                 ViewModel.ConfirmDelete(((MenuFlyoutItem)sender).CommandParameter);
             }));
-            dialog.Commands.Add(new UICommand(locator.GetString("Cancel"), (command) => 
+            dialog.Commands.Add(new UICommand(loader.GetString("Cancel"), (command) => 
             {
 
             }));
@@ -65,5 +65,11 @@ namespace NextPlayerUWP.Views
             dialog.CancelCommandIndex = 1;
             await dialog.ShowAsync();
         }
+
+        private async void MenuFlyoutItemEditName_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogEditName.ShowAsync();
+        }
+
     }
 }

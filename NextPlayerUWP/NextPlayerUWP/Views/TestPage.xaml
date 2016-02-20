@@ -67,7 +67,7 @@
                 </Grid.ColumnDefinitions>
                 <AutoSuggestBox  Grid.Column="2" PlaceholderText="search" QueryIcon="Find" Margin="4,0,4,0" HorizontalAlignment="Right" Width="200" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
+                    <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
                               BorderThickness="0" 
                               SelectedIndex="0" 

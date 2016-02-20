@@ -124,6 +124,7 @@
     <Compile Include="Converters\RepeatForeground.cs" />
     <Compile Include="Converters\ShuffleForeground.cs" />
     <Compile Include="Converters\SizeToString.cs" />
+    <Compile Include="Converters\SongItemConverter.cs" />
     <Compile Include="Converters\ThumbToolTipValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />

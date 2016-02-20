@@ -12,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
+using System.IO;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -38,23 +39,26 @@ namespace NextPlayerUWP.ViewModels
         {
             if (Playlist.Count == 0)
             {
+                PlaylistItem p = new PlaylistItem(-1, false, "Playlist");
                 switch (type)
                 {
                     case MusicItemTypes.folder:
                         Playlist = await DatabaseManager.Current.GetSongItemsFromFolderAsync(firstParam);
-                        PageTitle = "Folder";
+                        PageTitle = Path.GetFileName(firstParam);
                         break;
                     case MusicItemTypes.genre:
                         Playlist = await DatabaseManager.Current.GetSongItemsFromGenreAsync(firstParam);
-                        PageTitle = "Genre";
+                        PageTitle = firstParam;
                         break;
                     case MusicItemTypes.plainplaylist:
+                        p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
                         Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
-                        PageTitle = "Playlist";
+                        PageTitle = p.Name;
                         break;
                     case MusicItemTypes.smartplaylist:
-                        //Playlist = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(Int32.Parse(firstParam));
-                        PageTitle = "Playlist";
+                        p = await DatabaseManager.Current.GetSmartPlaylistAsync(Int32.Parse(firstParam));
+                        Playlist = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(Int32.Parse(firstParam));
+                        PageTitle = p.Name;
                         break;
                 }
             }

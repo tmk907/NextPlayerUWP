@@ -193,9 +193,14 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
+        public void SetParameter(string param)
+        {
+            albumParam = param;
+        }
+
         public override string GetParameter()
         {
-            return MusicItemTypes.album + separator + albumParam + separator + artistParam;
+            return MusicItemTypes.album + separator + albumParam;// + separator + artistParam;
         }
     }
 }

@@ -18,6 +18,10 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
+                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
+                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
@@ -46,7 +50,6 @@
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderPlaylist"
                 Content="{Binding PageTitle}" 
                 VisualStateNarrowMinWidth="-1" />
         <UserControl Grid.Column="1" Grid.Row="1">
@@ -80,7 +83,7 @@
                     </AutoSuggestBox.ItemTemplate>
                 </AutoSuggestBox>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
+                    <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
                             BorderThickness="0" 
                             Width="Auto" 
@@ -97,8 +100,7 @@
                 ItemsSource="{Binding Playlist}"
                 ItemTemplate="{StaticResource SongItemTemplate}"
                 IsItemClickEnabled="True"
-                ItemClick="{x:Bind ViewModel.ItemClicked }"
-                
+                ItemClick="{x:Bind ViewModel.ItemClicked }"               
                 SelectionMode="None">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>

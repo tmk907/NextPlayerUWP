@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace NextPlayerUWPDataLayer.Model
@@ -28,18 +29,25 @@ namespace NextPlayerUWPDataLayer.Model
         private bool isNotDefault;
         public bool IsNotDefault { get { return isNotDefault; } }
 
-        public PlaylistItem(int id, bool issmart, string name)
+        public PlaylistItem(int id, bool issmart, string _name)
         {
             this.id = id;
-            this.isSmart = issmart;
-            this.name = name;
+            isSmart = issmart;
             if (issmart)
             {
-                this.isNotDefault = !Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);
+                isNotDefault = !Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);
+
+                Dictionary<int, string> ids = Helpers.ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
+                if (ids.TryGetValue(id, out _name))
+                {
+                    var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                    name = loader.GetString(_name);
+                }
             }
             else
             {
-                this.isNotDefault = true;
+                name = _name;
+                isNotDefault = true;
             }
         }
 

@@ -22,7 +22,7 @@ namespace NextPlayerUWP.ViewModels
 
         public AlbumsViewModel()
         {
-            SortNames si = new SortNames(MusicItemTypes.artist);
+            SortNames si = new SortNames(MusicItemTypes.album);
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             App.SongUpdated += App_SongUpdated;

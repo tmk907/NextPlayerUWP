@@ -18,6 +18,8 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
+                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
             <!--<MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{x:Bind}" />-->
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
@@ -48,7 +50,7 @@
             </Grid>
         </DataTemplate>
         <Style x:Key="ArtistSongItemStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontSize" Value="20"/>
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

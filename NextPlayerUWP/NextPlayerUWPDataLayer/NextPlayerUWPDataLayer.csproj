@@ -118,6 +118,7 @@
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\Repeat.cs" />
     <Compile Include="Helpers\Shuffle.cs" />
+    <Compile Include="Helpers\SPUtility.cs" />
     <Compile Include="Helpers\SmartPlaylistHelper.cs" />
     <Compile Include="Helpers\TileData.cs" />
     <Compile Include="Model\AlbumItem.cs" />

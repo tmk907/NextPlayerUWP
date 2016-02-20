@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Template10.Services.NavigationService;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -35,10 +36,19 @@ namespace NextPlayerUWP.ViewModels
             values = MusicItem.ParseParameter((string)parameter);
         }
 
+        public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
+        {
+            if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
+            {
+                playlists = new ObservableCollection<PlaylistItem>();
+            }
+            return base.OnNavigatingFromAsync(args);
+        }
+
         public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
             PlaylistItem p = (PlaylistItem)e.ClickedItem;
-            string value = values[0];
+            string value = values[1];
             switch (type)
             {
                 case MusicItemTypes.album:

@@ -18,13 +18,20 @@
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
                             Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIEditSmart" Text="Edit"
+                            Visibility="{Binding IsSmart, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Click="{x:Bind ViewModel.EditSmartPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIEditPlainName" Text="Edit name"
+                            Visibility="{Binding IsSmart, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
+                            Click="MenuFlyoutItemEditName_Click" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
+                            Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Click="MenuFlyoutItemDelete_Click" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
-                            Click="MenuFlyoutItem_Click" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <DataTemplate x:Key="PlaylistItemTemplate" x:DataType="data:PlaylistItem">
             <Grid RightTapped="ListViewItem_RightTapped">
@@ -87,6 +94,28 @@
                         <TextBox x:Name="playlistNameTB"
                             Margin="0,4,4,0"
                             Text="{x:Bind ViewModel.Name, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ContentDialog.Content>
+            </ContentDialog>
+            <ContentDialog x:Name="ContentDialogEditName"
+                Grid.Row="1"
+                x:Uid="ContentDialogEditName"
+                VerticalAlignment="Center"
+                Title="Edit name"
+                PrimaryButtonText="Save"
+                IsPrimaryButtonEnabled="{Binding Text, ElementName=playlistNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
+                PrimaryButtonClick="{x:Bind ViewModel.SaveEdit}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Uid="TBPlaylistNewName"
+                            Margin="0,4,4,4"
+                            Text="New name:"/>
+                        <TextBox x:Name="editplaylistNameTB"
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.EditName, Mode=TwoWay}"/>
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>

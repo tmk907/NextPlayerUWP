@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Template10.Services.NavigationService;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -28,17 +29,25 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref name, value); }
         }
 
+        private string editName = "";
+        public string EditName
+        {
+            get { return editName; }
+            set { Set(ref editName, value); }
+        }
+
         protected override async Task LoadData()
         {
             Playlists = await DatabaseManager.Current.GetPlaylistItemsAsync();
         }
 
-        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
-            if (!isBack)
+            if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
             {
-                //Playlists = new ObservableCollection<PlaylistItem>();
+                playlists = new ObservableCollection<PlaylistItem>();
             }
+            return base.OnNavigatingFromAsync(args);
         }
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
@@ -73,6 +82,21 @@ namespace NextPlayerUWP.ViewModels
                 Playlists.Remove(p);
                 await DatabaseManager.Current.DeletePlainPlaylistAsync(p.Id);
             }
+        }
+
+        public void EditPlainPlaylistName(object sender, ItemClickEventArgs e)
+        {
+
+        }
+
+        public void EditSmartPlaylist(object sender, ItemClickEventArgs e)
+        {
+
+        }
+
+        public void SaveEdit()
+        {
+            
         }
     }
 }

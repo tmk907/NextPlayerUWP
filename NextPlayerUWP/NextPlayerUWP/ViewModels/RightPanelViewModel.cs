@@ -27,7 +27,7 @@ namespace NextPlayerUWP.ViewModels
         {
             UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-            PlaybackManager.MediaPlayerTrackChanged += ChangeLyrics;
+            PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         }
 
@@ -36,6 +36,12 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return selectedPivotIndex; }
             set { Set(ref selectedPivotIndex, value); }
+        }
+
+        private void TrackChanged(int index)
+        {
+            ScrollAfterTrackChanged(index);
+            ChangeLyrics(index);
         }
 
         #region NowPlaying
@@ -88,6 +94,22 @@ namespace NextPlayerUWP.ViewModels
             positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
             firstVisibleIndex = isp.FirstVisibleIndex;
+        }
+
+        private void ScrollAfterTrackChanged(int index)
+        {
+            var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
+            int firstVisibleIndex = isp.FirstVisibleIndex;
+            int lastVisibleIndex = isp.LastVisibleIndex;
+            if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;
+            if (index < firstVisibleIndex)
+            {
+                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            }
+            if (index > lastVisibleIndex)
+            {
+                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
+            }
         }
 
         private async Task SetScrollPosition()
@@ -185,15 +207,16 @@ namespace NextPlayerUWP.ViewModels
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             ArtistItem temp = new ArtistItem();
-            //temp.ArtistParam = item.Artist;
-            App.Current.NavigationService.Navigate(App.Pages.Artist, item.GetParameter());
+            temp.SetParameter(item.Artist);
+            App.Current.NavigationService.Navigate(App.Pages.Artist, temp.GetParameter());
         }
 
         public void GoToAlbum(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-
-            App.Current.NavigationService.Navigate(App.Pages.Album, item.GetParameter());
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            AlbumItem temp = new AlbumItem();
+            temp.SetParameter(item.Album);
+            App.Current.NavigationService.Navigate(App.Pages.Album, temp.GetParameter());
         }
 
         #endregion

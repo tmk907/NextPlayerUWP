@@ -12,5 +12,6 @@ namespace NextPlayerUWPDataLayer.Tables
         public string Comparison { get; set; }
         public string Item { get; set; }
         public string Value { get; set; }
+        public string Operator { get; set; }
     }
 }
