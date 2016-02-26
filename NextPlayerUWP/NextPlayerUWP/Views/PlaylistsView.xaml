@@ -40,7 +40,7 @@
                     <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                           Text="{x:Bind Name}"
+                           Text="{x:Bind Name, Mode=OneWay}"
                            />
             </Grid>
         </DataTemplate>
@@ -103,8 +103,8 @@
                 VerticalAlignment="Center"
                 Title="Edit name"
                 PrimaryButtonText="Save"
-                IsPrimaryButtonEnabled="{Binding Text, ElementName=playlistNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
-                PrimaryButtonClick="{x:Bind ViewModel.SaveEdit}"
+                IsPrimaryButtonEnabled="{Binding Text, ElementName=editplaylistNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
+                PrimaryButtonClick="{x:Bind ViewModel.SaveEditedName}"
                 SecondaryButtonText="Cancel"
                 VerticalContentAlignment="Stretch"
                 MaxWidth="300">
@@ -115,13 +115,13 @@
                             Text="New name:"/>
                         <TextBox x:Name="editplaylistNameTB"
                             Margin="0,4,4,0"
-                            Text="{x:Bind ViewModel.EditName, Mode=TwoWay}"/>
+                            Text="{x:Bind ViewModel.EditPlaylist.Name, Mode=TwoWay}"/>
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
             <ListView x:Name="PlaylistsListView"
                       Grid.Row="1"
-                ItemsSource="{x:Bind ViewModel.Playlists, Mode=OneWay}"
+                ItemsSource="{Binding Playlists, Mode=OneWay}"
                 ItemTemplate="{StaticResource PlaylistItemTemplate}"
                 SelectionMode="None"
                 IsItemClickEnabled="True"

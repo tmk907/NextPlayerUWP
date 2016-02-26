@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,11 +29,6 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
             ViewModel = (SettingsViewModel)DataContext;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        }        
     }
 }

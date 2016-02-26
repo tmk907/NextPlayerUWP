@@ -1022,6 +1022,11 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.ExecuteAsync("UPDATE SongsTable SET Lyrics = ? WHERE SongId = ?", lyrics, id);
         }
 
+        public async Task UpdatePlaylistName(int id, string name)
+        {
+            await connectionAsync.ExecuteAsync("UPDATE PlainPlaylistsTable SET Name = ? WHERE PlainPlaylistId = ?", name, id);
+        }
+
         public string GetAlbumArt(string album)
         {
             var q = connection.Table<AlbumsTable>().Where(a => a.Album.Equals(album)).ToList();

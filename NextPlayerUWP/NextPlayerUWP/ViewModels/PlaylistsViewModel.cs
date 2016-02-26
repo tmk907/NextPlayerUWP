@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
+using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -29,11 +30,11 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref name, value); }
         }
 
-        private string editName = "";
-        public string EditName
+        private PlaylistItem editPlaylist = new PlaylistItem(-1,false,"");
+        public PlaylistItem EditPlaylist
         {
-            get { return editName; }
-            set { Set(ref editName, value); }
+            get { return editPlaylist; }
+            set { Set(ref editPlaylist, value); }
         }
 
         protected override async Task LoadData()
@@ -67,11 +68,7 @@ namespace NextPlayerUWP.ViewModels
             PlaylistItem p = (PlaylistItem)e;
             if (p.IsSmart)
             {
-                if (ApplicationSettingsHelper.PredefinedSmartPlaylistsId().ContainsKey(p.Id))
-                {
-
-                }
-                else
+                if (p.IsNotDefault)
                 {
                     Playlists.Remove(p);
                     await DatabaseManager.Current.DeleteSmartPlaylistAsync(p.Id);
@@ -84,19 +81,23 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public void EditPlainPlaylistName(object sender, ItemClickEventArgs e)
+        public void EditSmartPlaylist(object sender, RoutedEventArgs e)
         {
 
         }
 
-        public void EditSmartPlaylist(object sender, ItemClickEventArgs e)
+        public async void SaveEditedName()
         {
-
-        }
-
-        public void SaveEdit()
-        {
-            
+            foreach(var p in Playlists)
+            {
+                if (p.Id == editPlaylist.Id && !p.IsSmart)
+                {
+                    p.Name = editPlaylist.Name;
+                    break;
+                }
+            }
+            await DatabaseManager.Current.UpdatePlaylistName(editPlaylist.Id, editPlaylist.Name);
+            //await LoadData();
         }
     }
 }

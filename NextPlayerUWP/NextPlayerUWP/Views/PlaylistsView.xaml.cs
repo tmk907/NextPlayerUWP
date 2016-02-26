@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,8 @@ namespace NextPlayerUWP.Views
 
         private async void MenuFlyoutItemEditName_Click(object sender, RoutedEventArgs e)
         {
+            PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
+            ViewModel.EditPlaylist = new PlaylistItem(selected.Id, false, selected.Name);
             await ContentDialogEditName.ShowAsync();
         }
 

@@ -54,7 +54,7 @@ namespace NextPlayerUWPDataLayer.Services
                 string type = file.FileType.ToLower();
                 if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
                     type == ".wav" || type == ".aac" || type == ".asf" ||
-                    type == ".adt" || type == ".adts" || type == ".amr")
+                    type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4")
                 {
                     if (dbFiles.TryGetValue(file.Path, out tuple))
                     {

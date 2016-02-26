@@ -135,6 +135,9 @@
   <data name="ButtonSave.Content" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="Composer" xml:space="preserve">
     <value>Composer</value>
   </data>

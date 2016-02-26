@@ -32,7 +32,9 @@
         <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
             <StackPanel Orientation="Vertical">
                 <Button Content="update" Click="{x:Bind ViewModel.UpdateLibrary}"/>
-                <TextBlock Text="{x:Bind ViewModel.UpdateProgress, Mode=OneWay}"/>
+                <TextBlock Text="{x:Bind ViewModel.UpdateProgressText, Mode=OneWay}"/>
+                <Button Content="Add folder" Click="{x:Bind ViewModel.AddFolder}"/>
+                <Button Content="Remove folder" Click="{x:Bind ViewModel.RemoveFolder}"/>
             </StackPanel>
         </Grid>
     </Grid>
