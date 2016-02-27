@@ -1,0 +1,294 @@
+﻿<Page
+    x:Class="NextPlayerUWP.Views.FileInfoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerUWP.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    DataContext="{Binding Source={StaticResource Locator}, Path=FileInfoVM}"
+    mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
+    <Page.Resources>
+        <Style x:Key="DescriptionStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+        <Style x:Key="ValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="Margin" Value="4,0,0,4"/>
+        </Style>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+                BackButtonVisibility="Collapsed" 
+                Frame="{x:Bind Frame, Mode=OneWay}"
+                x:Uid="PageHeaderFileInfo"
+                Content="File Info" 
+                VisualStateNarrowMinWidth="-1" />
+        <!--<UserControl Grid.Column="1" Grid.Row="1">
+            <local:RightPanelControl/>
+        </UserControl>-->
+        <ScrollViewer Grid.Row="1" Grid.Column="0"
+                      Margin="8,4,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                                Grid.Row="0" Grid.Column="0"
+                                x:Uid="TBFilePath"
+                                Text="File path"
+                                Style="{StaticResource DescriptionStyle}"
+                                />
+                    <TextBlock
+                                Grid.Row="0" Grid.Column="1"
+                                Text="{Binding FileInfo.Path}"
+                                Style="{StaticResource ValueStyle}"
+                                />
+                    <TextBlock
+                                Grid.Row="1" Grid.Column="0"
+                                Text="Bitrate"
+                                x:Uid="TBBitrate"
+                                Style="{StaticResource DescriptionStyle}"
+                                />
+                    <TextBlock
+                                Grid.Row="1" Grid.Column="1"
+                                Text="{Binding FileInfo.Bitrate, Converter={StaticResource IntToBitrateConverter}}"
+                                Style="{StaticResource ValueStyle}"
+                             />
+                    <TextBlock
+                                Grid.Row="2" Grid.Column="0"
+                                Text="File size"
+                                x:Uid="TBFileSize"
+                                Style="{StaticResource DescriptionStyle}"
+                                />
+                    <TextBlock
+                                Grid.Row="2" Grid.Column="1"
+                                Text="{Binding FileInfo.FileSize, Converter={StaticResource SizeToStringConverter}}"
+                                Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                                Grid.Row="3" Grid.Column="0"
+                                Text="Duration"
+                                x:Uid="TBDuration"
+                                Style="{StaticResource DescriptionStyle}"
+                                />
+                    <TextBlock
+                                Grid.Row="3" Grid.Column="1"
+                                Text="{Binding FileInfo.Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                                Style="{StaticResource ValueStyle}"
+                            />
+
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                            Grid.Row="0" Grid.Column="0"
+                            x:Uid="TBTitle"
+                            Text="Title"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="0" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Title}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="1" Grid.Column="0"
+                            Text="Album"
+                            x:Uid="TBAlbum"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="1" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Album}"
+                           Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="2" Grid.Column="0"
+                            Text="Artist"
+                            x:Uid="TBArtist"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="2" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Artists}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock 
+                            Grid.Row="3" Grid.Column="0"
+                            Text="Album artist"
+                            x:Uid="TBAlbumArtist"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="3" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.AlbumArtist}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="4" Grid.Column="0"
+                            Text="Composer"
+                            x:Uid="TBComposer"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="4" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Composers}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="5" Grid.Column="0"
+                            Text="Conductor"
+                            x:Uid="TBConductor"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="5" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Conductor}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="6" Grid.Column="0"
+                            Text="Genre"
+                            x:Uid="TBGenre"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="6" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Genres}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="7" Grid.Column="0"
+                            Text="Track"
+                            x:Uid="TBTrackNumber"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="7" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Track}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="8" Grid.Column="0"
+                            Text="Year"
+                            x:Uid="TBYear"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="8" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Year}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                            Grid.Row="0" Grid.Column="0"
+                            Text="Rating"
+                            x:Uid="TBRating"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="0" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Rating}"
+                           Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="1" Grid.Column="0"
+                            Text="Play count"
+                            x:Uid="TBPlayCount"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="1" Grid.Column="1"
+                            Text="{Binding FileInfo.PlayCount}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="2" Grid.Column="0"
+                            Text="Last time played"
+                            x:Uid="TBLastTimePlayed"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="2" Grid.Column="1"
+                            Text="{Binding FileInfo.LastPlayed, Converter={StaticResource DateTimeToStringConverter}}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="3" Grid.Column="0"
+                            Text="Date added"
+                            x:Uid="TBDateAdded"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="3" Grid.Column="1"
+                            Text="{Binding FileInfo.DateAdded, Converter={StaticResource DateTimeToStringConverter}}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

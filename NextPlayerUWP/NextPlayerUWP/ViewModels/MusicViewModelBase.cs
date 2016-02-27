@@ -102,7 +102,7 @@ namespace NextPlayerUWP.ViewModels
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)item).SongId);
+            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)item).GetParameter());
         }
 
         public void GoToArtist(object sender, RoutedEventArgs e)

@@ -10,6 +10,13 @@
     xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=GenresVM}"
     mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Page.Resources>
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
@@ -41,7 +48,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
@@ -49,9 +56,9 @@
                 x:Uid="PageHeaderGenres"
                 Content="Genres" 
                 VisualStateNarrowMinWidth="-1" />
-        <UserControl Grid.Column="1" Grid.Row="1">
+        <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
-        </UserControl>
+        </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="44"/>

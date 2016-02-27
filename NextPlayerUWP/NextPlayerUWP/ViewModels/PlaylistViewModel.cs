@@ -43,22 +43,22 @@ namespace NextPlayerUWP.ViewModels
                 switch (type)
                 {
                     case MusicItemTypes.folder:
-                        Playlist = await DatabaseManager.Current.GetSongItemsFromFolderAsync(firstParam);
                         PageTitle = Path.GetFileName(firstParam);
+                        Playlist = await DatabaseManager.Current.GetSongItemsFromFolderAsync(firstParam);
                         break;
                     case MusicItemTypes.genre:
-                        Playlist = await DatabaseManager.Current.GetSongItemsFromGenreAsync(firstParam);
                         PageTitle = firstParam;
+                        Playlist = await DatabaseManager.Current.GetSongItemsFromGenreAsync(firstParam);
                         break;
                     case MusicItemTypes.plainplaylist:
                         p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
-                        Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
                         PageTitle = p.Name;
+                        Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
                         break;
                     case MusicItemTypes.smartplaylist:
                         p = await DatabaseManager.Current.GetSmartPlaylistAsync(Int32.Parse(firstParam));
-                        Playlist = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(Int32.Parse(firstParam));
                         PageTitle = p.Name;
+                        Playlist = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(Int32.Parse(firstParam));
                         break;
                 }
             }

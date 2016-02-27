@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -152,6 +153,36 @@ namespace NextPlayerUWP.ViewModels
                     {
                         PlaybackManager.Current.Next();
                     }));
+            }
+        }
+
+        private RelayCommand shuffleCommand;
+        public RelayCommand ShuffleCommand
+        {
+            get
+            {
+                return shuffleCommand
+                    ?? (shuffleCommand = new RelayCommand(
+                        () =>
+                        {
+                            ShuffleMode = !ShuffleMode;
+                            PlaybackManager.Current.SendMessage(AppConstants.Shuffle, "");
+                        }));
+            }
+        }
+
+        private RelayCommand repeatCommand;
+        public RelayCommand RepeatCommand
+        {
+            get
+            {
+                return repeatCommand
+                    ?? (repeatCommand = new RelayCommand(
+                        () =>
+                        {
+                            RepeatMode = Repeat.Change();
+                            PlaybackManager.Current.SendMessage(AppConstants.Repeat, "");
+                        }));
             }
         }
         #endregion

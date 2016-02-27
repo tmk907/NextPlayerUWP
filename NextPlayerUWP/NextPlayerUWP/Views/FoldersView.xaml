@@ -9,6 +9,13 @@
     xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=FoldersVM}"
     mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Page.Resources>
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
@@ -33,24 +40,25 @@
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <!--{ThemeResource ApplicationPageBackgroundThemeBrush}-->
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderFolders"
                 Content="Folders" 
-                VisualStateNarrowMinWidth="-1" />
-        <UserControl Grid.Column="1" Grid.Row="1">
+                VisualStateNarrowMinWidth="-1"/>
+        <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
-        </UserControl>
+        </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="44"/>

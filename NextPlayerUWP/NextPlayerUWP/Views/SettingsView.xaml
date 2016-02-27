@@ -9,7 +9,13 @@
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     DataContext="{Binding Source={StaticResource Locator}, Path=SettingsVM}"
     mc:Ignorable="d">
-
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -17,7 +23,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
 			BackButtonVisibility="Collapsed" 
@@ -25,10 +31,11 @@
 			Content="Settings"
 			x:Uid="PageHeaderSettings"
 			VisualStateNarrowMinWidth="0"
-			VisualStateNormalMinWidth="720"/>
-        <UserControl Grid.Column="1" Grid.Row="1">
+			VisualStateNormalMinWidth="720">
+        </controls:PageHeader>
+        <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
-        </UserControl>
+        </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
             <StackPanel Orientation="Vertical">
                 <Button Content="update" Click="{x:Bind ViewModel.UpdateLibrary}"/>

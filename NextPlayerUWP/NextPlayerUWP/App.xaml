@@ -10,9 +10,9 @@
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:NextPlayerUWP.ViewModels" />
 
             <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
-            
-            
-            
+
+
+            <SolidColorBrush x:Key="TopAppBarBrush" Color="LightGray"/>
 
             <!--<converters:GetListView x:Key="GetListView"/>-->
             <converters:BoolToInvertedVisibility x:Key="BoolToInvertedVisibilityConverter"/>

@@ -9,6 +9,13 @@
     xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=ArtistVM}"
     mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Page.Resources>
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
@@ -60,7 +67,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
@@ -99,8 +106,8 @@
                     
             </ListView>
         </Grid>
-        <UserControl Grid.Row="1" Grid.Column="1">
+        <!--<UserControl Grid.Row="1" Grid.Column="1">
             <local:RightPanelControl/>
-        </UserControl>
+        </UserControl>-->
     </Grid>
 </Page>

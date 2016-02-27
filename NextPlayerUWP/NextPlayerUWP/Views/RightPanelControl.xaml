@@ -10,6 +10,13 @@
     mc:Ignorable="d"
     d:DesignHeight="600"
     d:DesignWidth="250">
+    <UserControl.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </UserControl.Transitions>
     <UserControl.Resources>
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
@@ -27,10 +34,10 @@
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
+            <!--<MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
         <DataTemplate x:Key="SongTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped"
@@ -83,7 +90,12 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Pivot">
-                        <Grid x:Name="RootElement" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                        <Grid x:Name="RootElement" 
+                              BorderBrush="Gray"
+                              BorderThickness="1,0,0,0"
+                              Background="{TemplateBinding Background}" 
+                              HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalAlignment}">
                             <Grid.Resources>
                                 <Style x:Key="BaseContentControlStyle" TargetType="ContentControl">
                                     <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
@@ -275,14 +287,17 @@
         </Style>
     </UserControl.Resources>
     <!--Background="Black"-->
-    <Grid BorderThickness="1,0,0,0" 
-          
-          BorderBrush="Gray">
+    <Grid Width="250">
         <Grid.RowDefinitions>
-            <RowDefinition Height="44"/>
+            <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Pivot Grid.RowSpan="2" Style="{StaticResource RightPanelPivotStyle}" SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
+        <Rectangle Grid.Row="0" Fill="{StaticResource TopAppBarBrush}"/>
+        <Pivot Grid.Row="1" 
+               
+               Style="{StaticResource RightPanelPivotStyle}" 
+               SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
+            
             <PivotItem>
                 <PivotItem.Header>
                     <TextBlock Text="now playing" FontSize="22"/>

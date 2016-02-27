@@ -86,15 +86,24 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
-        <controls:HamburgerMenu x:Name="Menu" Grid.Row="0" PaneBorderThickness="0"
-                                VisualStateNarrowMinWidth="0"
-                                VisualStateNormalMinWidth="720"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <controls:HamburgerMenu x:Name="Menu" 
+                                Grid.Row="0" Grid.Column="0"
                                 
-                                Grid.Column="0">
+                                PaneBorderThickness="0"
+                                VisualStateNarrowMinWidth="0"
+                                VisualStateNormalMinWidth="720">
             <controls:HamburgerMenu.PrimaryButtons>
                 <controls:HamburgerButtonInfo PageType="views:AlbumsView" ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Contact2" Width="48" Height="48" />
+                        <Grid Width="48" Height="48">
+                            <Viewbox Height="20">
+                                <TextBlock Text="&#xE958;" FontFamily="Segoe MDL2 Assets"/>
+                            </Viewbox>
+                        </Grid>
                         <TextBlock x:Uid="TBAlbums" Text="Albums" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
@@ -106,13 +115,17 @@
                 </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:FoldersView"  ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Library" Width="48" Height="48" />
+                        <Grid Width="48" Height="48">
+                            <Viewbox Height="20">
+                                <TextBlock Text="&#xE16F;" FontFamily="Segoe MDL2 Assets"/>
+                            </Viewbox>
+                        </Grid>
                         <TextBlock x:Uid="TBFolders" Text="Folders" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:GenresView"  ClearHistory="True">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Globe" Width="48" Height="48" />
+                        <SymbolIcon Symbol="World" Width="48" Height="48" />
                         <TextBlock x:Uid="TBGenres" Text="Genres" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
@@ -133,7 +146,7 @@
             <controls:HamburgerMenu.SecondaryButtons>
                 <controls:HamburgerButtonInfo PageType="views:SettingsView">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Setting"  Width="48" Height="48"  />
+                        <SymbolIcon Symbol="Setting" Width="48" Height="48" />
                         <TextBlock x:Uid="TBSettings" Text="Settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
@@ -142,7 +155,7 @@
         </controls:HamburgerMenu>
         <Grid Grid.Row="1" x:Name="BottomPlayerGrid" 
               Grid.ColumnSpan="3"
-              Background="LightSteelBlue"
+              Background="LightBlue"
               DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -181,16 +194,18 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
                     Command="{Binding ShuffleCommand}" 
-                    Width="60" Height="60"
+                    Width="48" Height="48"
                     Style="{StaticResource BottomPlayerButtonStyle}">
-                    <!--<Button.ContentTemplate>
+                    <Button.ContentTemplate>
                         <DataTemplate>
-                            <Viewbox Height="22">
+                            <Viewbox Height="20">
                                 <SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
+                                <!--<TextBlock Text="&#xE14B;" FontFamily="Segoe MDL2 Assets"/>
+                                <SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>-->
                             </Viewbox>
-                            --><!--<Image Source="/Assets/Buttons/shuffle.png" Height="32"/>--><!--
+                            <!--<Image Source="/Assets/Buttons/shuffle.png" Height="32"/>-->
                         </DataTemplate>
-                    </Button.ContentTemplate>-->
+                    </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Column="1"
                     Command="{Binding Previous}"
@@ -236,14 +251,14 @@
                     Width="60" Height="60"
                     
                     Style="{StaticResource BottomPlayerButtonStyle}">
-                    <!--<Button.ContentTemplate>
+                    <Button.ContentTemplate>
                         <DataTemplate>
                             <Viewbox Height="22">
                                 <SymbolIcon Symbol="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"/>
                             </Viewbox>
-                            --><!--<Image Source="/Assets/Buttons/repeat.png" Height="32"/>--><!--
+                            <!--<Image Source="/Assets/Buttons/repeat.png" Height="32"/>-->
                         </DataTemplate>
-                    </Button.ContentTemplate>-->
+                    </Button.ContentTemplate>
                 </Button>
             </Grid>
             <Grid Grid.Column="3" Grid.RowSpan="2">
@@ -275,6 +290,9 @@
                            Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
             </Grid>
         </Grid>
+        <UserControl Grid.Row="0" Grid.Column="1">
+            <local:RightPanelControl/>
+        </UserControl>
     </Grid>
 
 </Page>

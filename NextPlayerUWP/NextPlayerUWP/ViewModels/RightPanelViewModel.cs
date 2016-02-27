@@ -194,7 +194,7 @@ namespace NextPlayerUWP.ViewModels
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            // App.Current.NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
+            App.Current.NavigationService.Navigate(App.Pages.FileInfo, item.GetParameter());
         }
 
         public void AddToPlaylist(object sender, RoutedEventArgs e)

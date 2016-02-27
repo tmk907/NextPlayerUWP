@@ -8,6 +8,13 @@
     xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=TagsEditorVM}"
     mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Page.Resources>
         <Style x:Key="DescriptionStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
@@ -27,7 +34,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
 			BackButtonVisibility="Collapsed" 
@@ -36,9 +43,9 @@
 			x:Uid="PageHeaderTagsEditor"
 			VisualStateNarrowMinWidth="0"
 			VisualStateNormalMinWidth="720"/>
-        <UserControl Grid.Column="1" Grid.Row="1">
+        <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
-        </UserControl>
+        </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="8"/>

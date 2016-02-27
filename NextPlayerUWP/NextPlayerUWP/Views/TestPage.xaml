@@ -48,7 +48,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.ColumnSpan="2"
                 Height="50" Background="DarkGray">
@@ -96,8 +96,8 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <UserControl Grid.Column="1" Grid.Row="1">
+        <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
-        </UserControl>
+        </UserControl>-->
     </Grid>
 </Page>

@@ -60,7 +60,10 @@ namespace NextPlayerUWP.ViewModels
         {
             var musicLibrary = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Music);
             Windows.Storage.StorageFolder newFolder = await musicLibrary.RequestAddFolderAsync();
-            MusicLibraryFolders.Add(new MusicFolder() { Name = newFolder.DisplayName, Path = newFolder.Path });
+            if (newFolder != null)
+            {
+                MusicLibraryFolders.Add(new MusicFolder() { Name = newFolder.DisplayName, Path = newFolder.Path });
+            }
         }
 
         public async void RemoveFolder()

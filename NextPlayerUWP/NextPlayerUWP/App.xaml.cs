@@ -91,8 +91,9 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Album, typeof(AlbumView));
                 keys.Add(Pages.Artists, typeof(ArtistsView));
                 keys.Add(Pages.Artist, typeof(ArtistView));
-                keys.Add(Pages.Genres, typeof(GenresView));
+                keys.Add(Pages.FileInfo, typeof(FileInfoView));
                 keys.Add(Pages.Folders, typeof(FoldersView));
+                keys.Add(Pages.Genres, typeof(GenresView));
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
                 keys.Add(Pages.Playlist, typeof(PlaylistView));
                 keys.Add(Pages.Settings, typeof(SettingsView));

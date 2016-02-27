@@ -136,6 +136,7 @@
     <Compile Include="ViewModels\AlbumViewModel.cs" />
     <Compile Include="ViewModels\ArtistsViewModel.cs" />
     <Compile Include="ViewModels\ArtistViewModel.cs" />
+    <Compile Include="ViewModels\FileInfoViewModel.cs" />
     <Compile Include="ViewModels\FoldersViewModel.cs" />
     <Compile Include="ViewModels\GenresViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
@@ -165,6 +166,9 @@
     </Compile>
     <Compile Include="Views\ArtistView.xaml.cs">
       <DependentUpon>ArtistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FileInfoView.xaml.cs">
+      <DependentUpon>FileInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FoldersView.xaml.cs">
       <DependentUpon>FoldersView.xaml</DependentUpon>
@@ -277,6 +281,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ArtistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FileInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

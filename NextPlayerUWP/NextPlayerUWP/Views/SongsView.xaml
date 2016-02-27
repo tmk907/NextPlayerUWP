@@ -9,7 +9,13 @@
     xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=SongsVM}"
     mc:Ignorable="d">
-
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Page.Resources>
         <CollectionViewSource x:Name="SongsCVS" Source="{Binding GroupedSongs}" IsSourceGrouped="True"/>
         <MenuFlyout x:Key="ContextMenu">
@@ -75,7 +81,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
@@ -84,9 +90,9 @@
                 x:Uid="PageHeaderSongs"
                 VisualStateNarrowMinWidth="0"
                 VisualStateNormalMinWidth="720"/>
-        <UserControl Grid.Column="1" Grid.Row="1">
+        <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
-        </UserControl>
+        </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="44"/>

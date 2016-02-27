@@ -252,6 +252,9 @@
   <data name="PageHeaderArtists.Content" xml:space="preserve">
     <value>Artists</value>
   </data>
+  <data name="PageHeaderFileInfo.Content" xml:space="preserve">
+    <value>File info</value>
+  </data>
   <data name="PageHeaderFolders.Content" xml:space="preserve">
     <value>Folders</value>
   </data>
