@@ -69,7 +69,7 @@
                     <TextBlock Grid.Column="1" Grid.RowSpan="2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
-                           FontSize="14"
+                           FontSize="13"
                            TextTrimming="Clip"
                            Text="{x:Bind Duration,Converter={StaticResource TimeSpanToStringConverter}}"
                            />
@@ -285,6 +285,30 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="PivotItemStyle" TargetType="PivotItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PivotItem">
+                        <Grid Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Pivot">
+                                    <VisualState x:Name="Right" />
+                                    <VisualState x:Name="Left" />
+                                    <VisualState x:Name="Center" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <!--Background="Black"-->
     <Grid Width="250">
@@ -297,8 +321,8 @@
                
                Style="{StaticResource RightPanelPivotStyle}" 
                SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
-            
-            <PivotItem>
+
+            <PivotItem Style="{StaticResource PivotItemStyle}">
                 <PivotItem.Header>
                     <TextBlock Text="now playing" FontSize="22"/>
                 </PivotItem.Header>
@@ -320,11 +344,12 @@
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="VerticalAlignment" Value="Stretch"/>
                             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Margin" Value="0,0,8,0"/>
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
             </PivotItem>
-            <PivotItem>
+            <PivotItem Style="{StaticResource PivotItemStyle}">
                 <PivotItem.Header>
                     <TextBlock Text="lyrics" FontSize="22"/>
                 </PivotItem.Header>

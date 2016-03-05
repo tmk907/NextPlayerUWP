@@ -33,36 +33,35 @@
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
-        <DataTemplate x:Key="ArtistItemTemplate" x:DataType="data:ArtistItem"> 
-            <Grid RightTapped="ListViewItem_RightTapped">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="11*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource ArtistItemStyle1}"/>
-                <TextBlock Grid.Column="1"
-                    Text="{x:Bind Duration}"
-                    Style="{StaticResource ArtistItemStyle2}"/>
-                <TextBlock Grid.Column="2"
-                    Text="{x:Bind SongsNumber}"
-                    Style="{StaticResource ArtistItemStyle2}"/>
-            </Grid>
-        </DataTemplate>
-        <Style x:Key="ArtistItemStyle1" TargetType="TextBlock">
+        <Style x:Key="ArtistItemStyleLeft" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <Style x:Key="ArtistItemStyle2" TargetType="TextBlock">
+        <Style x:Key="ArtistItemStyleRight" TargetType="TextBlock">
             <Setter Property="Foreground" Value="DarkGray"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        
+        <DataTemplate x:Key="ArtistItemTemplate" x:DataType="data:ArtistItem">
+            <Grid RightTapped="ListViewItem_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource ArtistItemStyleLeft}"/>
+                <TextBlock Grid.Column="1"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource ArtistItemStyleRight}"/>
+                <TextBlock Grid.Column="2"
+                    Text="{x:Bind SongsNumber}"
+                    Style="{StaticResource ArtistItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -132,20 +131,21 @@
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
                             ShowsScrollingPlaceholders="False"
                             SelectionMode="None"
-                              Margin="8,8,8,4">
+                            Margin="8,4,0,0"
+                            ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsStackPanel Orientation="Vertical"/>
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
-                            <ListView.ItemContainerStyle>
+                            <!--<ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                 </Style>
-                            </ListView.ItemContainerStyle>
+                            </ListView.ItemContainerStyle>-->
                             <ListView.GroupStyle>
                                 <GroupStyle >
                                     <GroupStyle.HeaderTemplate>

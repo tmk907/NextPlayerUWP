@@ -37,9 +37,19 @@
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <Style x:Key="SongItemStyle1" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="SongItemStyle2" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
         <DataTemplate x:Key="SongsListViewItemTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped"
-                  Background="{x:Bind Index, Converter={StaticResource BackgroundConverter}}"
+                  
                   >
                 <!--Background="{x:Bind Index, Converter={StaticResource BackgroundConverter}}"-->
                 <Grid.ColumnDefinitions>
@@ -63,16 +73,6 @@
                     Style="{StaticResource SongItemStyle2}"/>
             </Grid>
         </DataTemplate>
-        <Style x:Key="SongItemStyle1" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="SongItemStyle2" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -140,22 +140,23 @@
                             ItemTemplate="{StaticResource SongsListViewItemTemplate}"
                             SelectionMode="None"
                             IsItemClickEnabled="True"
-                            Margin="8,8,8,4"
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
+                            Margin="8,4,0,0"
+                            ItemContainerStyle="{StaticResource ListViewItemContainerStyle}"
                             >
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
-                        <ListView.ItemContainerStyle>
+                        <!--<ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 <Setter Property="VerticalAlignment" Value="Stretch"/>
                                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                 
-                                    <!--<Setter Property="Template">
+                                    --><!--<Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="ListViewItem">
                                             <ListViewItemPresenter
@@ -163,10 +164,10 @@
                                             />
                                         </ControlTemplate>
                                     </Setter.Value>
-                                </Setter>-->
+                                </Setter>--><!--
                             
                             </Style>
-                        </ListView.ItemContainerStyle>
+                        </ListView.ItemContainerStyle>-->
                         <ListView.GroupStyle>
                             <GroupStyle >
                                 <GroupStyle.HeaderTemplate>

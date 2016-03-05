@@ -34,6 +34,24 @@
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="ItemStyleCenter" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="ItemStyleRight" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
         <DataTemplate x:Key="SongItemTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped">
                 <Grid.ColumnDefinitions>
@@ -44,21 +62,19 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                     Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource ArtistSongItemStyle}"/>
+                    Style="{StaticResource ItemStyleLeft}"/>
                 <TextBlock Grid.Column="1"
                     Text="{x:Bind Title}"
-                    Style="{StaticResource ArtistSongItemStyle}"/>
+                    Style="{StaticResource ItemStyleCenter}"/>
                 <TextBlock Grid.Column="2"
                     Text="{x:Bind Album}"
-                    Style="{StaticResource ArtistSongItemStyle}"/>
+                    Style="{StaticResource ItemStyleCenter}"/>
                 <TextBlock Grid.Column="3"
-                    Text="{x:Bind Duration}"
-                    Style="{StaticResource ArtistSongItemStyle}"/>
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource ItemStyleRight}"/>
             </Grid>
         </DataTemplate>
-        <Style x:Key="ArtistSongItemStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="20"/>
-        </Style>
+        
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -89,20 +105,22 @@
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     SelectedItem="{Binding SelectedItem}"
-                    SelectionMode="None">
+                    SelectionMode="None"
+                    Margin="8,4,0,0"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
-                <ListView.ItemContainerStyle>
+                <!--<ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalAlignment" Value="Stretch"/>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="VerticalAlignment" Value="Stretch"/>
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     </Style>
-                </ListView.ItemContainerStyle>
+                </ListView.ItemContainerStyle>-->
                     
             </ListView>
         </Grid>

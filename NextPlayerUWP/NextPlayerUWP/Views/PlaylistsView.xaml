@@ -132,20 +132,22 @@
                 ItemTemplate="{StaticResource PlaylistItemTemplate}"
                 SelectionMode="None"
                 IsItemClickEnabled="True"
-                ItemClick="{x:Bind ViewModel.ItemClicked}">
+                ItemClick="{x:Bind ViewModel.ItemClicked}"
+                Margin="8,4,0,0"
+                ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
-                <ListView.ItemContainerStyle>
+                <!--<ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalAlignment" Value="Stretch"/>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="VerticalAlignment" Value="Stretch"/>
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     </Style>
-                </ListView.ItemContainerStyle>
+                </ListView.ItemContainerStyle>-->
             </ListView>
         </Grid>
     </Grid>

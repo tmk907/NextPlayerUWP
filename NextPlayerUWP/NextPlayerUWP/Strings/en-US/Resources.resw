@@ -159,13 +159,16 @@
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
     <value>Are you sure you want to delete this playlist?</value>
   </data>
+  <data name="Directory" xml:space="preserve">
+    <value>Directory</value>
+  </data>
   <data name="Duration" xml:space="preserve">
     <value>Duration</value>
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
   </data>
-  <data name="FolderName" xml:space="preserve">
+  <data name="Folder Name" xml:space="preserve">
     <value>Folder name</value>
   </data>
   <data name="Genre" xml:space="preserve">

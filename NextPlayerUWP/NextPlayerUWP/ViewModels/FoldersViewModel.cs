@@ -60,15 +60,18 @@ namespace NextPlayerUWP.ViewModels
                 case SortNames.FolderName:
                     Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
                     break;
+                case SortNames.Directory:
+                    Sort(s => s.Directory, t => (t.Directory == "") ? "" : t.Directory[0].ToString().ToLower(), "Folder");
+                    break;
                 //case SortNames.Duration:
                 //    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId");
                 //    break;
                 case SortNames.SongCount:
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "Folder");
                     break;
-                //case SortNames.LastAdded:
-                //    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Folder");
-                //    break;
+                case SortNames.LastAdded:
+                    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Folder");
+                    break;
                 default:
                     Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
                     break;

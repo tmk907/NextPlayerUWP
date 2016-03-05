@@ -33,12 +33,36 @@
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="ItemStyleRight" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="DarkGray"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
         <DataTemplate x:Key="GenreItemTemplate" x:DataType="data:GenreItem">
-            <StackPanel RightTapped="ListViewItem_RightTapped">
-                <TextBlock Text="{x:Bind Genre}"/>
-                <TextBlock Text="{x:Bind SongsNumber}"/>
-                <TextBlock Text="{x:Bind Duration}"/>
-            </StackPanel>
+            <Grid RightTapped="ListViewItem_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*" MinWidth="80"/>
+                    <ColumnDefinition Width="*"  MinWidth="40"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                    Text="{x:Bind Genre}"
+                    Style="{StaticResource ItemStyleLeft}"/>
+                <TextBlock Grid.Column="1"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource ItemStyleRight}"/>
+                <TextBlock Grid.Column="2"
+                    Text="{x:Bind SongsNumber}"
+                    Style="{StaticResource ItemStyleRight}"/>
+            </Grid>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -103,18 +127,20 @@
                 <ListView x:Name="GenresListView"
                     ItemsSource="{Binding Genres}"
                     ItemTemplate="{StaticResource GenreItemTemplate}"
-                    
+                    Margin="8,4,0,0"
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
-                    SelectionMode="None">
-                    <ListView.ItemContainerStyle>
+                    SelectionMode="None"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
+                    <!--<ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalAlignment" Value="Stretch"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="VerticalAlignment" Value="Stretch"/>
                             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Margin" Value="0,0,8,0"/>
                         </Style>
-                    </ListView.ItemContainerStyle>
+                    </ListView.ItemContainerStyle>-->
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>

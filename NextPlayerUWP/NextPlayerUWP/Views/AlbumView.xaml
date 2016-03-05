@@ -34,6 +34,33 @@
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <Style x:Key="AlbumDescription1TBStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+        <Style x:Key="AlbumDescription2TBStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+        
+        <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="ItemStyleCenter" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="ItemStyleRight" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
         <DataTemplate x:Key="AlbumSongItemTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped">
                 <Grid.ColumnDefinitions>
@@ -44,30 +71,19 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                     Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource AlbumSongItemStyle}"/>
+                    Style="{StaticResource ItemStyleLeft}"/>
                 <TextBlock Grid.Column="1"
                     Text="{x:Bind Title}"
-                    Style="{StaticResource AlbumSongItemStyle}"/>
+                    Style="{StaticResource ItemStyleCenter}"/>
                 <TextBlock Grid.Column="2"
                     Text="{x:Bind Artist}"
-                    Style="{StaticResource AlbumSongItemStyle}"/>
+                    Style="{StaticResource ItemStyleCenter}"/>
                 <TextBlock Grid.Column="3"
-                    Text="{x:Bind Duration}"
-                    Style="{StaticResource AlbumSongItemStyle}"/>
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource ItemStyleRight}"/>
             </Grid>
         </DataTemplate>
-        <Style x:Key="AlbumDescription1TBStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="28"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        </Style>
-        <Style x:Key="AlbumDescription2TBStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        </Style>
-        <Style x:Key="AlbumSongItemStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
+        
         <x:Int32 x:Key="int200">200</x:Int32>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -96,13 +112,13 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <!--<Image Source="{Binding Album.ImagePath, Converter={StaticResource AlbumImagePathConverter}, ConverterParameter={StaticResource int200} }"/>-->
-                <Image>
+                <Image Margin="8">
                     <Image.Source>
                         <BitmapImage UriSource="{Binding Album.ImageUri, Mode=OneWay}"
                                      DecodePixelHeight="200" DecodePixelWidth="200"/>
                     </Image.Source>
                 </Image>
-                <Grid Grid.Column="1" Grid.Row="0">
+                <Grid Grid.Column="1" Grid.Row="0" Margin="0,8,8,8">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -125,20 +141,22 @@
                         IsItemClickEnabled="True"
                         ItemClick="{x:Bind ViewModel.ItemClicked }"
                         SelectedItem="{Binding SelectedItem}"
+                        Margin="8,4,0,0"
+                        ItemContainerStyle="{StaticResource ListViewItemContainerStyle}"
                         SelectionMode="None">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
-                    <ListView.ItemContainerStyle>
+                    <!--<ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalAlignment" Value="Stretch"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="VerticalAlignment" Value="Stretch"/>
                             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                         </Style>
-                    </ListView.ItemContainerStyle>
+                    </ListView.ItemContainerStyle>-->
                 </ListView>
             </Grid>
             <!--<UserControl Grid.Row="1" Grid.Column="1">

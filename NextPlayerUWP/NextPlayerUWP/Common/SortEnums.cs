@@ -33,6 +33,7 @@ namespace NextPlayerUWP.Common
         public const string LastPlayed = "Last Played";
         public const string Rating = "Rating";
         public const string FolderName = "Folder Name";
+        public const string Directory = "Directory";
         public const string Name = "Name";
         public const string Composer = "Composer";
 
@@ -66,6 +67,7 @@ namespace NextPlayerUWP.Common
                     break;
                 case MusicItemTypes.folder:
                     comboboxItems.Add(new ComboBoxItemValue(FolderName, loader.GetString(FolderName)));
+                    comboboxItems.Add(new ComboBoxItemValue(Directory, loader.GetString(Directory)));
                     comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
                     comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
                     comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
