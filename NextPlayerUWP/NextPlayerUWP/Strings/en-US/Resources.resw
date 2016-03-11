@@ -177,6 +177,9 @@
   <data name="Last Added" xml:space="preserve">
     <value>Last added</value>
   </data>
+  <data name="Last Played" xml:space="preserve">
+    <value>Last played</value>
+  </data>
   <data name="Later" xml:space="preserve">
     <value>Later</value>
   </data>

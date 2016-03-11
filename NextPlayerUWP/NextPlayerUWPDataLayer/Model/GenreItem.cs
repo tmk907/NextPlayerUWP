@@ -57,7 +57,7 @@ namespace NextPlayerUWPDataLayer.Model
             duration = item.Duration;
             songsNumber = item.SongsNumber;
             genreParam = item.Genre;
-            if (genre == "")
+            if (genreParam == "")
             {
                 ResourceLoader loader = new ResourceLoader();
                 genre = loader.GetString("UnknownGenre");

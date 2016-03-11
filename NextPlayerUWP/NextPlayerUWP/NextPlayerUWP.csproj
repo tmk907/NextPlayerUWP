@@ -127,6 +127,7 @@
     <Compile Include="Converters\SongItemConverter.cs" />
     <Compile Include="Converters\ThumbToolTipValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
+    <Compile Include="Converters\YearConverter.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
     <Compile Include="Helpers\SaveLater.cs" />

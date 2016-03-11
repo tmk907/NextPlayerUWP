@@ -33,27 +33,28 @@
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="ItemStyleCenter" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="DarkGray"/>
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="ItemStyleRight" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="DarkGray"/>
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
         <DataTemplate x:Key="FolderItemTemplate" x:DataType="data:FolderItem">
-            <Grid RightTapped="ListViewItem_RightTapped">
+            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*" MinWidth="250"/>
                     <ColumnDefinition Width="5*"/>
@@ -132,26 +133,26 @@
             </Grid>
             <Grid Grid.Row="1">
                 <ListView x:Name="FoldersListView"
-                ItemsSource="{Binding Folders}"
-                ItemTemplate="{StaticResource FolderItemTemplate}"
-                IsItemClickEnabled="True"
-                ItemClick="{x:Bind ViewModel.ItemClicked }"
-                Margin="8,4,0,0"
-                ItemContainerStyle="{StaticResource ListViewItemContainerStyle}"
-                SelectionMode="None">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsStackPanel Orientation="Vertical"/>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <!--<ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>-->
+                    ItemsSource="{Binding Folders}"
+                    ItemTemplate="{StaticResource FolderItemTemplate}"
+                    IsItemClickEnabled="True"
+                    ItemClick="{x:Bind ViewModel.ItemClicked }"
+                    Margin="12,4,0,0"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle}"
+                    SelectionMode="None">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <!--<ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>-->
                 </ListView>
             </Grid>
         </Grid>

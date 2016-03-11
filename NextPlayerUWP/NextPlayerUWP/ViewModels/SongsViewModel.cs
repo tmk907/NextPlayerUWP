@@ -117,12 +117,18 @@ namespace NextPlayerUWP.ViewModels
         private async Task SongClicked(int songid)
         {
             int index = 0;
-            foreach (var s in songs)
+            int i = 0;
+            var list = new List<SongItem>();
+            foreach(var group in groupedSongs)
             {
-                if (s.SongId == songid) break;
-                index++;
+                foreach(SongItem song in group)
+                {
+                    list.Add(song);
+                    if (song.SongId == songid) index = i;
+                    i++;
+                }
             }
-            await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
+            await NowPlayingPlaylistManager.Current.NewPlaylist(list);
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());

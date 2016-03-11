@@ -23,6 +23,17 @@ namespace NextPlayerUWP.ViewModels
             SortNames si = new SortNames(MusicItemTypes.song);
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            {
+                playlist = new ObservableCollection<SongItem>();
+                playlist.Add(new SongItem());
+                playlist.Add(new SongItem());
+                playlist.Add(new SongItem());
+                playlist.Add(new SongItem());
+                playlist.Add(new SongItem());
+                playlist.Add(new SongItem());
+                playlist.Add(new SongItem());
+            }
         }
 
         private MusicItemTypes type;
@@ -35,29 +46,41 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref playlist, value); }
         }
 
+        private string pageSubTitle = "";
+        public string PageSubTitle
+        {
+            get { return pageSubTitle; }
+            set { Set(ref pageSubTitle, value); }
+        }
+
         protected override async Task LoadData()
         {
             if (Playlist.Count == 0)
             {
                 PlaylistItem p = new PlaylistItem(-1, false, "Playlist");
+                var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
                 switch (type)
                 {
                     case MusicItemTypes.folder:
-                        PageTitle = Path.GetFileName(firstParam);
+                        PageTitle = loader.GetString("Folder");
+                        PageSubTitle = Path.GetFileName(firstParam);
                         Playlist = await DatabaseManager.Current.GetSongItemsFromFolderAsync(firstParam);
                         break;
                     case MusicItemTypes.genre:
-                        PageTitle = firstParam;
+                        PageTitle = loader.GetString("Genre");
+                        PageSubTitle = firstParam;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromGenreAsync(firstParam);
                         break;
                     case MusicItemTypes.plainplaylist:
+                        PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
-                        PageTitle = p.Name;
+                        PageSubTitle = p.Name;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
                         break;
                     case MusicItemTypes.smartplaylist:
+                        PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetSmartPlaylistAsync(Int32.Parse(firstParam));
-                        PageTitle = p.Name;
+                        PageSubTitle = p.Name;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(Int32.Parse(firstParam));
                         break;
                 }

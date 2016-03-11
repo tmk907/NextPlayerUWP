@@ -36,27 +36,46 @@
         <Style x:Key="AlbumNameStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="TextWrapping" Value="WrapWholeWords"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="4,0,4,0"/>
+            <Setter Property="MaxHeight" Value="44"/>
+        </Style>
+        <Style x:Key="AlbumArtistStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextWrapping" Value="WrapWholeWords"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="4,0,4,4"/>
         </Style>
         <DataTemplate x:Key="AlbumItemTemplate" x:DataType="data:AlbumItem">
-            <StackPanel Orientation="Vertical" RightTapped="ListViewItem_RightTapped">
-                <Image Width="120" Height="120">
+            <Grid RightTapped="ListViewItem_RightTapped" Width="136" Height="212">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="136"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Image Grid.Row="0" Width="128" Height="128" Margin="4">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind ImageUri}"
-                                     DecodePixelHeight="120" DecodePixelWidth="120"/>
+                                     DecodePixelHeight="128" DecodePixelWidth="128"/>
                     </Image.Source>
                 </Image>
-                
-                <TextBlock Text="{x:Bind Album}"
-                           Style="{StaticResource AlbumNameStyle}"
-                           x:Phase="0"/>
-                <TextBlock Text="{x:Bind ArtistParam}" 
-                           x:Phase="0"/>
-                <TextBlock Text="{x:Bind Duration}"
-                           x:Phase="0"/>
-                <TextBlock Text="{x:Bind SongsNumber}"
-                           x:Phase="0"/>
-            </StackPanel>
+                <TextBlock Grid.Row="1"
+                    Text="{x:Bind Album}"
+                    Style="{StaticResource AlbumNameStyle}"
+                    />
+                <TextBlock Grid.Row="2"
+                    Text="{x:Bind AlbumArtist}"
+                    Style="{StaticResource AlbumArtistStyle}"
+                    />
+                <!--<TextBlock 
+                        Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                        x:Phase="0"/>-->
+                <!--<TextBlock Grid.Row="3"
+                    Text="{x:Bind SongsNumber}"
+                    x:Phase="0"/>-->
+            </Grid>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -129,21 +148,21 @@
                             SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                             SelectionMode="None"
                             ShowsScrollingPlaceholders="True"
-                            Margin="8,4,0,0"
-                            ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
+                            Margin="12,4,0,0">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsWrapGrid Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
-                            <!--<ListView.ItemContainerStyle>
+                            <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="12,8,12,8"/>
                                 </Style>
-                            </ListView.ItemContainerStyle>-->
+                            </ListView.ItemContainerStyle>
                             <ListView.GroupStyle>
                                 <GroupStyle >
                                     <GroupStyle.HeaderTemplate>

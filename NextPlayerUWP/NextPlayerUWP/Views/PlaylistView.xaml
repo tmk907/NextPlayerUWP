@@ -37,28 +37,31 @@
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="ItemStyleCenter" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="ItemStyleRight" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
         <DataTemplate x:Key="SongItemTemplate" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped">
+            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <!--Background="{x:Bind Index, Converter={StaticResource BackgroundConverter}}"-->
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="8*"/>
                     <ColumnDefinition Width="6*"/>
                     <ColumnDefinition Width="6*"/>
                     <ColumnDefinition Width="2*"/>
@@ -106,6 +109,13 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock 
+                        Text="{Binding PageSubTitle}" 
+                        Margin="16"
+                        FontSize="18" 
+                        TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
                 <AutoSuggestBox  Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
@@ -141,7 +151,7 @@
                 ItemTemplate="{StaticResource SongItemTemplate}"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked }"  
-                Margin="8,4,0,0"
+                Margin="12,4,0,0"
                 ItemContainerStyle="{StaticResource ListViewItemContainerStyle}"
                 SelectionMode="None">
                     <ListView.ItemsPanel>

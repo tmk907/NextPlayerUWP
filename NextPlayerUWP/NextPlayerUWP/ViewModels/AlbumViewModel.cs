@@ -18,6 +18,18 @@ namespace NextPlayerUWP.ViewModels
     {
         private string albumParam;
 
+        public AlbumViewModel()
+        {
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            {
+                songs = new ObservableCollection<SongItem>();
+                songs.Add(new SongItem());
+                songs.Add(new SongItem() { TrackNumber = 882 });
+                songs.Add(new SongItem());
+                songs.Add(new SongItem());
+            }
+        }
+
         private AlbumItem album = new AlbumItem();
         public AlbumItem Album
         {

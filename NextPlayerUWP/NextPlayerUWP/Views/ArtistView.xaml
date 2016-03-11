@@ -53,7 +53,7 @@
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
         <DataTemplate x:Key="SongItemTemplate" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped">
+            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="24"/>
                     <ColumnDefinition/>

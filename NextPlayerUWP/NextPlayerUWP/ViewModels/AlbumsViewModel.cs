@@ -26,6 +26,19 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             App.SongUpdated += App_SongUpdated;
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            {
+                albums = new ObservableCollection<AlbumItem>();
+                albums.Add(new AlbumItem());
+                albums.Add(new AlbumItem() { Album = "Very long album name, very long"});
+                albums.Add(new AlbumItem() { AlbumArtist = "Very long albumartist name, very long"});
+                albums.Add(new AlbumItem() { Album = "Very long album name, very long", AlbumArtist = "Very long albumartist name, very long" });
+                albums.Add(new AlbumItem());
+                albums.Add(new AlbumItem());
+                albums.Add(new AlbumItem());
+                albums.Add(new AlbumItem());
+                albums.Add(new AlbumItem());
+            }
         }
         private ObservableCollection<AlbumItem> albums = new ObservableCollection<AlbumItem>();
         public ObservableCollection<AlbumItem> Albums

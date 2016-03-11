@@ -7,6 +7,16 @@
         >
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ListItemForegroundSolid" Color="White"/>
+                    <SolidColorBrush x:Key="ListItemForegroundLight" Color="#cccccc"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="ListItemForegroundSolid" Color="Black"/>
+                    <SolidColorBrush x:Key="ListItemForegroundLight" Color="#323232"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:NextPlayerUWP.ViewModels" />
 
             <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
@@ -31,6 +41,7 @@
             <converters:BoolToBackground x:Key="BoolToBackgroundConverter"/>
             <converters:PlaylistNameToBool x:Key="PlaylistNameToBoolConverter"/>
             <converters:SongItemConverter x:Key="SongItemConverter"/>
+            <converters:YearConverter x:Key="YearConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  BorderThickness="1" 

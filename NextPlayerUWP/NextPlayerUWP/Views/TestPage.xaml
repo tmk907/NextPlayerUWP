@@ -7,9 +7,152 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Template10.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
-    DataContext="{Binding Source={StaticResource Locator}, Path=TestVM}"
+    DataContext="{Binding Source={StaticResource Locator}, Path=AlbumsVM}"
     mc:Ignorable="d">
     <Page.Resources>
+        <CollectionViewSource x:Name="AlbumsCVS" Source="{Binding GroupedAlbums}" IsSourceGrouped="True"/>
+        
+        <Style x:Key="AlbumNameStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="TextWrapping" Value="WrapWholeWords"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="4,0,4,0"/>
+            <Setter Property="MaxHeight" Value="44"/>
+        </Style>
+        <Style x:Key="AlbumArtistStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextWrapping" Value="WrapWholeWords"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="4,0,4,4"/>
+        </Style>
+        <DataTemplate x:Key="AlbumItemTemplate" x:DataType="data:AlbumItem">
+            <Grid Width="136" Height="212">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="136"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <!--<RowDefinition Height="Auto"/>-->
+                </Grid.RowDefinitions>
+                <Image Grid.Row="0" Width="128" Height="128" Margin="4">
+                    <Image.Source>
+                        <BitmapImage UriSource="{x:Bind ImageUri}"
+                                     DecodePixelHeight="128" DecodePixelWidth="128"/>
+                    </Image.Source>
+                </Image>
+                <TextBlock Grid.Row="1"
+                    Text="{x:Bind Album}"
+                    Style="{StaticResource AlbumNameStyle}"
+                    />
+                <TextBlock Grid.Row="2"
+                    Text="{x:Bind AlbumArtist}"
+                    Style="{StaticResource AlbumArtistStyle}"
+                    />
+                <!--<TextBlock 
+                        Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                        x:Phase="0"/>-->
+                <!--<TextBlock Grid.Row="3"
+                    Text="{x:Bind SongsNumber}"
+                    x:Phase="0"/>-->
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+                BackButtonVisibility="Collapsed" 
+                Frame="{x:Bind Frame, Mode=OneWay}"
+                x:Uid="PageHeaderAlbums"
+                Content="Albums" 
+                VisualStateNarrowMinWidth="-1" />
+        <!--<UserControl Grid.Column="1" Grid.Row="1">
+            <local:RightPanelControl/>
+        </UserControl>-->
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <AutoSuggestBox  Grid.Column="2" 
+                    PlaceholderText="search" 
+                    QueryIcon="Find" 
+                    Margin="4,0,4,0" 
+                    HorizontalAlignment="Right" 
+                    Width="200" 
+                    VerticalAlignment="Center"
+                    >
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Album}"/>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
+                    <ComboBox Margin="4,0,8,0" 
+                            BorderThickness="0" 
+                            Width="Auto" 
+                            VerticalAlignment="Center"
+                            
+                            DisplayMemberPath="Label"
+                            
+                            />
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <ListView x:Name="AlbumsListView"
+                            ItemsSource="{Binding Albums}"
+                            ItemTemplate="{StaticResource AlbumItemTemplate}"
+                            IsItemClickEnabled="True"
+                            
+                            
+                            SelectionMode="None"
+                            ShowsScrollingPlaceholders="True"
+                            Margin="8,4,0,0"
+                            ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <!--<ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>-->
+                    <ListView.GroupStyle>
+                        <GroupStyle >
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate x:DataType="data:GroupList">
+                                    <TextBlock Text="{x:Bind Key}" 
+                                            Style="{StaticResource GroupHeaderTextBlockStyle}"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                </ListView>
+            </Grid>
+        </Grid>
+    </Grid>
+    <!--<Page.Resources>
         <DataTemplate x:Key="Item1Template" x:DataType="data:SongItem">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -96,8 +239,8 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <!--<UserControl Grid.Column="1" Grid.Row="1">
+        --><!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
-        </UserControl>-->
-    </Grid>
+        </UserControl>--><!--
+    </Grid>-->
 </Page>
