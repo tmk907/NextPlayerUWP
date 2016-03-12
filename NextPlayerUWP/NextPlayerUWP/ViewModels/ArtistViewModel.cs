@@ -14,9 +14,31 @@ using Template10.Services.NavigationService;
 
 namespace NextPlayerUWP.ViewModels
 {
+    public class ArtistItemHeader
+    {
+        public string Album { get; set; }
+        public int Year { get; set; }
+        public Uri ImageUri { get; set; }
+    }
+
     public class ArtistViewModel : MusicViewModelBase
     {
         private string artistParam;
+
+        public ArtistViewModel()
+        {
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            {
+                Artist = new ArtistItem();
+                Albums = new ObservableCollection<GroupList>();
+                GroupList g = new GroupList();
+                g.Key = "Nowy album";
+                g.Add(new SongItem());
+                g.Add(new SongItem());
+                g.Add(new SongItem());
+                Albums.Add(g);
+            }
+        }
 
         private ArtistItem artist = new ArtistItem();
         public ArtistItem Artist
@@ -30,6 +52,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return songs; }
             set { Set(ref songs, value); }
+        }
+
+        private ObservableCollection<GroupList> albums = new ObservableCollection<GroupList>();
+        public ObservableCollection<GroupList> Albums
+        {
+            get { return albums; }
+            set { Set(ref albums, value); }
         }
 
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -51,6 +80,42 @@ namespace NextPlayerUWP.ViewModels
             {
                 Artist = await DatabaseManager.Current.GetArtistItemAsync(artistParam);
                 Songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(artistParam);
+                var query = songs.OrderBy(s => s.Album).ThenBy(t => t.TrackNumber).
+                    GroupBy(u => u.Album).
+                    OrderBy(g => g.Key).
+                    Select(group => new { GroupName = group.Key, Items = group });
+                int i = 0;
+                foreach (var g in query)
+                {
+                    i = 0;
+                    GroupList group = new GroupList();
+                    group.Key = g.GroupName;
+
+                    var album = await DatabaseManager.Current.GetAlbumItemAsync(g.GroupName);
+
+                    var header = new ArtistItemHeader();
+                    if (g.GroupName == "")
+                    {
+                        var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                        header.Album = loader.GetString("UnknownAlbum");
+                    }
+                    else
+                    {
+                        header.Album = g.GroupName;
+                    }
+                    header.Year = album.Year;
+                    header.ImageUri = album.ImageUri;
+
+                    group.Header = header;
+
+                    foreach (var item in g.Items)
+                    {
+                        item.Index = i;
+                        i++;
+                        group.Add(item);
+                    }
+                    Albums.Add(group);
+                }
             }
         }
 
@@ -60,6 +125,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 songs = new ObservableCollection<SongItem>();
                 artist = new ArtistItem();
+                albums = new ObservableCollection<GroupList>();
             }
             return base.OnNavigatingFromAsync(args);
         }
@@ -67,12 +133,21 @@ namespace NextPlayerUWP.ViewModels
         public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
             int index = 0;
-            foreach (var s in songs)
+            bool found = false;
+            foreach (var album in albums)
             {
-                if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
-                index++;
+                foreach(SongItem song in album)
+                {
+                    if (song.SongId == ((SongItem)e.ClickedItem).SongId)
+                    {
+                        found = true;
+                        break;
+                    }
+                    index++;
+                }
+                if (found) break;
             }
-            await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
+            await NowPlayingPlaylistManager.Current.NewPlaylist(albums);
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());

@@ -32,7 +32,8 @@ namespace NextPlayerUWP.ViewModels
         {
             if (folders.Count == 0)
             {
-                Folders = await DatabaseManager.Current.GetFolderItemsAsync();
+                folders = await DatabaseManager.Current.GetFolderItemsAsync();
+                SortItems(null, null);
             }
         }
 
@@ -88,7 +89,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text)).OrderBy(f => f.Folder);
+                var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(f => f.Folder);
                 sender.ItemsSource = matchingFolders.ToList();
             }
         }
@@ -103,7 +104,7 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                var list = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Folder).ToList();
+                var list = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(s => s.Folder).ToList();
                 if (list.Count == 0) return;
                 index = 0;
                 bool find = false;

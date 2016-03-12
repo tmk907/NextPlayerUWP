@@ -12,19 +12,19 @@ namespace NextPlayerUWP.ViewModels
     {
         public TestViewModel()
         {
-            songs = new ObservableCollection<SongItem>();
-            for (int i = 1; i < 10; i++)
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
-                SongItem s = new SongItem();
-                Songs.Add(s);
+                Keys = new ObservableCollection<string>();
+                Keys.Add("25.04.2014");
+                Keys.Add("5.04.2016");
             }
         }
 
-        private ObservableCollection<SongItem> songs;
-        public ObservableCollection<SongItem> Songs
+        private ObservableCollection<string> keys = new ObservableCollection<string>();
+        public ObservableCollection<string> Keys
         {
-            get { return songs; }
-            set { Set(ref songs, value); }
+            get { return keys; }
+            set { Set(ref keys, value); }
         }
     }
 }

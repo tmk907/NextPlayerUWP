@@ -128,6 +128,8 @@
     <Compile Include="Converters\ThumbToolTipValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Converters\YearConverter.cs" />
+    <Compile Include="Converters\ZoomedOutItemContainerStyleConverter.cs" />
+    <Compile Include="Converters\ZoomedOutItemWidthConverter.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
     <Compile Include="Helpers\SaveLater.cs" />

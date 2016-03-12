@@ -271,5 +271,25 @@ namespace NextPlayerUWP.ViewModels
             }).AsAsyncOperation();           
         }
 
+        private string TimeSpanFormat(TimeSpan span)
+        {
+            if (span.CompareTo(TimeSpan.Zero) == -1)
+            {
+                return "0:00";
+            }
+            if (span.Hours == 0)
+            {
+                if (span.Duration().Minutes == 0) return "0" + span.ToString(@"\:ss");
+                else return span.ToString(@"m\:ss");
+            }
+            else if (span.Days == 0)
+            {
+                return span.ToString(@"h\:mm\:ss");
+            }
+            else
+            {
+                return span.ToString(@"d\.hh\:mm\:ss");
+            }
+        }
     }
 }

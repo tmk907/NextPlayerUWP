@@ -66,6 +66,9 @@
                 <TextBlock Grid.Column="1"
                     Text="{x:Bind Directory}"
                     Style="{StaticResource ItemStyleCenter}"/>
+                <!--<TextBlock Grid.Column="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource ItemStyleRight}"/>-->
                 <TextBlock Grid.Column="2"
                     Text="{x:Bind SongsNumber}"
                     Style="{StaticResource ItemStyleRight}"/>

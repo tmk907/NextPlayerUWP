@@ -55,27 +55,27 @@ namespace NextPlayerUWP.Common
                     comboboxItems.Add(new ComboBoxItemValue(Album, loader.GetString(Album)));
                     comboboxItems.Add(new ComboBoxItemValue(AlbumArtist, loader.GetString(AlbumArtist)));
                     comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
-                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
                     comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
                     comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.artist:
                     comboboxItems.Add(new ComboBoxItemValue(Artist, loader.GetString(Artist)));
-                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
                     comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
                     comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.folder:
-                    comboboxItems.Add(new ComboBoxItemValue(FolderName, loader.GetString(FolderName)));
                     comboboxItems.Add(new ComboBoxItemValue(Directory, loader.GetString(Directory)));
+                    comboboxItems.Add(new ComboBoxItemValue(FolderName, loader.GetString(FolderName)));
                     comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
-                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    //comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
                     comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.genre:
                     comboboxItems.Add(new ComboBoxItemValue(Genre, loader.GetString(Genre)));
-                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
                     comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
+                    comboboxItems.Add(new ComboBoxItemValue(SongCount, loader.GetString(SongCount)));
                     comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     break;
                 case MusicItemTypes.song:
@@ -83,13 +83,13 @@ namespace NextPlayerUWP.Common
                     comboboxItems.Add(new ComboBoxItemValue(Album, loader.GetString(Album)));
                     comboboxItems.Add(new ComboBoxItemValue(Artist, loader.GetString(Artist)));
                     comboboxItems.Add(new ComboBoxItemValue(AlbumArtist, loader.GetString(AlbumArtist)));
+                    comboboxItems.Add(new ComboBoxItemValue(Rating, loader.GetString(Rating)));
+                    comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
+                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
                     comboboxItems.Add(new ComboBoxItemValue(Composer, loader.GetString(Composer)));
                     comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     comboboxItems.Add(new ComboBoxItemValue(LastPlayed, loader.GetString(LastPlayed)));
                     comboboxItems.Add(new ComboBoxItemValue(PlayCount, loader.GetString(PlayCount)));
-                    comboboxItems.Add(new ComboBoxItemValue(Rating, loader.GetString(Rating)));
-                    comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
-                    comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
                     break;
             }
             return comboboxItems;

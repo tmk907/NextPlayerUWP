@@ -78,7 +78,7 @@
         <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
         </UserControl>-->
-        <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
+        <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="44"/>
                 <RowDefinition/>

@@ -161,8 +161,9 @@
                     </SemanticZoom.ZoomedInView>
                     <SemanticZoom.ZoomedOutView>
                         <ListView
-                        ItemsSource="{Binding Source={StaticResource ArtistsCVS}, Path=CollectionGroups}"
-                        ItemTemplate="{StaticResource ZoomedOutItemsTemplate}">
+                            ItemsSource="{Binding Source={StaticResource ArtistsCVS}, Path=CollectionGroups}"
+                            ItemTemplate="{StaticResource ZoomedOutItemsTemplate}"
+                            ItemContainerStyle="{StaticResource ZoomedOutItemContainerStyle}">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsWrapGrid Orientation="Horizontal"
@@ -170,18 +171,6 @@
                                                VerticalAlignment="Center"/>
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalAlignment" Value="Stretch"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="Height" Value="84" />
-                                    <Setter Property="Width" Value="84" />
-                                    <Setter Property="Margin" Value="4"/>
-                                    <Setter Property="Padding" Value="0"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
                         </ListView>
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>

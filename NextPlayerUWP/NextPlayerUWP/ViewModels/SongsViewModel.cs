@@ -118,17 +118,15 @@ namespace NextPlayerUWP.ViewModels
         {
             int index = 0;
             int i = 0;
-            var list = new List<SongItem>();
             foreach(var group in groupedSongs)
             {
                 foreach(SongItem song in group)
                 {
-                    list.Add(song);
                     if (song.SongId == songid) index = i;
                     i++;
                 }
             }
-            await NowPlayingPlaylistManager.Current.NewPlaylist(list);
+            await NowPlayingPlaylistManager.Current.NewPlaylist(groupedSongs);
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
@@ -158,10 +156,10 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
                     break;
                 case SortNames.Year:
-                    Sort(s => s.Year, t => t.Year, "SongId");
+                    Sort(s => s.Year, t => t.Year, "SongId", "year");
                     break;
                 case SortNames.Duration:
-                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "SongId");
+                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "SongId", "duration");
                     break;
                 case SortNames.Rating:
                     Sort(s => s.Rating, t => t.Rating, "SongId");
@@ -170,10 +168,10 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
                     break;
                 case SortNames.LastAdded:
-                    Sort(s => s.DateAdded, t => String.Format("{0:d}", t.DateAdded), "SongId");
+                    Sort(s => s.DateAdded, t => String.Format("{0:d}", t.DateAdded), "SongId", "date");
                     break;
                 case SortNames.LastPlayed:
-                    Sort(s => s.LastPlayed, t => String.Format("{0:d}", t.DateAdded), "SongId");
+                    Sort(s => s.LastPlayed, t => String.Format("{0:d}", t.DateAdded), "SongId", "date");
                     break;
                 case SortNames.PlayCount:
                     Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
@@ -184,12 +182,15 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem,object> groupSelector, string propertyName)
+        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem,object> groupSelector, string propertyName, string format = "no")
         {
             var query = songs.OrderBy(orderSelector).ThenBy(a => a.Title).
                 GroupBy(groupSelector).
                 OrderBy(g => g.Key).
-                Select(group => new { GroupName = group.Key.ToString().ToUpper(), Items = group });
+                Select(group => new { GroupName = (format != "duration") ? group.Key.ToString().ToUpper() 
+                : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss") 
+                : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss") 
+                : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"), Items = group });
             int i = 0;
             string s;
             GroupedSongs.Clear();
@@ -199,6 +200,11 @@ namespace NextPlayerUWP.ViewModels
                 s = "";
                 GroupList group = new GroupList();
                 group.Key = g.GroupName;
+                group.Header = format;
+                //(t.Duration.TotalMinutes < 1) ? "0" + t.Duration.ToString(@"\:ss") :
+                //        (t.Duration.Hours == 0) ? t.Duration.ToString(@"m\:ss") :
+                //        (t.Duration.Days == 0) ? t.Duration.ToString(@"h\:mm\:ss") : t.Duration.ToString(@"d\.hh\:mm\:ss"),
+
                 foreach (var item in g.Items)
                 {
                     string prop = item.GetType().GetProperty(propertyName).GetValue(item, null).ToString();
@@ -215,7 +221,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingSongs = songs.Where(s => s.Title.ToLower().StartsWith(sender.Text));
+                var matchingSongs = songs.Where(s => s.Title.ToLower().StartsWith(sender.Text.ToLower()));
                 sender.ItemsSource = matchingSongs.ToList();
             }
         }
@@ -229,7 +235,7 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                var list = songs.Where(s => s.Title.ToLower().StartsWith(args.QueryText)).OrderBy(s => s.Title).ToList();
+                var list = songs.Where(s => s.Title.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Title).ToList();
                 id = list.FirstOrDefault().SongId;
             }
             int index = 0;

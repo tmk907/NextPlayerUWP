@@ -18,9 +18,13 @@ namespace NextPlayerUWP.Converters
                 if (span.Duration().Minutes == 0) formatted = "0" + span.ToString(@"\:ss");
                 else formatted = span.ToString(@"m\:ss");
             }
-            else
+            else if (span.Days == 0)
             {
                 formatted = span.ToString(@"h\:mm\:ss");
+            }
+            else
+            {
+                formatted = span.ToString(@"d\.hh\:mm\:ss");
             }
             return formatted;
         }

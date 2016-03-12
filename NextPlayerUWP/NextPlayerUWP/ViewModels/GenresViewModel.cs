@@ -38,7 +38,8 @@ namespace NextPlayerUWP.ViewModels
         {
             if (genres.Count == 0)
             {
-                Genres = await DatabaseManager.Current.GetGenreItemsAsync();
+                genres = await DatabaseManager.Current.GetGenreItemsAsync();
+                SortItems(null, null);
             }
         }
 
@@ -102,7 +103,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var query = genres.Where(s => s.Genre.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Genre);
+                var query = genres.Where(s => s.Genre.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(s => s.Genre);
                 sender.ItemsSource = query.ToList();
             }
         }
@@ -117,7 +118,7 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                var list = genres.Where(s => s.Genre.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Genre).ToList();
+                var list = genres.Where(s => s.Genre.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(s => s.Genre).ToList();
                 if (list.Count == 0) return;
                 index = 0;
                 bool find = false;

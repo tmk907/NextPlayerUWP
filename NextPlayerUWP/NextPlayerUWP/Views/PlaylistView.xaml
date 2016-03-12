@@ -113,7 +113,7 @@
                     <TextBlock 
                         Text="{Binding PageSubTitle}" 
                         Margin="16"
-                        FontSize="18" 
+                        FontSize="17" 
                         TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
                 <AutoSuggestBox  Grid.Column="2" 

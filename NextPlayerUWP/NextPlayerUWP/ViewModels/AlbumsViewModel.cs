@@ -123,13 +123,13 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.Year, t => t.Year, "AlbumId");
                     break;
                 case SortNames.Duration:
-                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId");
+                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId", "duration");
                     break;
                 case SortNames.SongCount:
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "AlbumId");
                     break;
                 case SortNames.LastAdded:
-                    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Album");
+                    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Album", "date");
                     break;
                 default:
                     Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
@@ -137,12 +137,15 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private void Sort(Func<AlbumItem, object> orderSelector, Func<AlbumItem, object> groupSelector, string propertyName)
+        private void Sort(Func<AlbumItem, object> orderSelector, Func<AlbumItem, object> groupSelector, string propertyName, string format = "no")
         {
             var query = albums.OrderBy(orderSelector).
                 GroupBy(groupSelector).
                 OrderBy(g => g.Key).
-                Select(group => new { GroupName = group.Key.ToString().ToUpper(), Items = group });
+                Select(group => new { GroupName = (format != "duration") ? group.Key.ToString().ToUpper() 
+                : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss") 
+                : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss") 
+                : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"), Items = group });
             int i = 0;
             string s;
             GroupedAlbums.Clear();
@@ -152,6 +155,7 @@ namespace NextPlayerUWP.ViewModels
                 s = "";
                 GroupList group = new GroupList();
                 group.Key = g.GroupName;
+                group.Header = format;
                 foreach (var item in g.Items)
                 {
                     string prop = item.GetType().GetProperty(propertyName).GetValue(item, null).ToString();
@@ -190,7 +194,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingAlbums = albums.Where(s => s.Album.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Album);
+                var matchingAlbums = albums.Where(s => s.Album.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(s => s.Album);
                 sender.ItemsSource = matchingAlbums.ToList();
             }
         }
@@ -204,7 +208,7 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                var list = albums.Where(s => s.Album.ToLower().StartsWith(args.QueryText)).OrderBy(s => s.Album).ToList();
+                var list = albums.Where(s => s.Album.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Album).ToList();
                 album = list.FirstOrDefault().Album;
             }
             int index = 0;

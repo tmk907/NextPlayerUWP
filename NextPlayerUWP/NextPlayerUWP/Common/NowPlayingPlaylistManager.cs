@@ -235,6 +235,19 @@ namespace NextPlayerUWP.Common
             await NotifyChange();
         }
 
+        public async Task NewPlaylist(ObservableCollection<GroupList> grouped)
+        {
+            songs.Clear();
+            foreach(GroupList group in grouped)
+            {
+                foreach(SongItem song in group)
+                {
+                    songs.Add(song);
+                }
+            }
+            await NotifyChange();
+        }
+
         private async Task SaveNowPlayingInDB()
         {
             await DatabaseManager.Current.InsertNewNowPlayingPlaylistAsync(songs);
