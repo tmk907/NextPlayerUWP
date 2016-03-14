@@ -84,7 +84,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="76"/>
+            <RowDefinition Height="72"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -157,40 +157,53 @@
               Grid.ColumnSpan="3"
               Background="LightBlue"
               DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+            
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
-                
                 <ColumnDefinition Width="Auto"/>
-                
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Image Grid.RowSpan="2" Grid.Column="0" 
-                   Margin="4"
-                   Source="{Binding Cover}"/>
-            <TextBlock Grid.Column="1" Grid.Row="0" 
-                       Margin="4,4,4,4"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       TextTrimming="CharacterEllipsis"
-                       Text="{Binding Song.Title, Mode=OneWay}"/>
-            <TextBlock Grid.Column="1" Grid.Row="1" 
-                       Margin="4,4,4,4"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       TextTrimming="CharacterEllipsis"
-                       Text="{Binding Song.Artist}"/>
-            <Grid Grid.Column="2" Grid.RowSpan="2" Width="300">
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="72"/>
                     <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.RowSpan="2" Grid.Column="0" 
+                       Margin="4"
+                       Source="{Binding Cover}">
+                    <!--<Image.Source>
+                        <BitmapImage UriSource="{Binding Cover}"
+                            DecodePixelHeight="68" DecodePixelWidth="68"/>
+                    </Image.Source>-->
+                </Image>
+                <TextBlock Grid.Column="1" Grid.Row="0" 
+                           Margin="4,4,4,4"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="Left"
+                           TextTrimming="CharacterEllipsis"
+                           Text="{Binding Song.Title}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" 
+                           Margin="4,4,4,4"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           FontSize="14"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left"
+                           TextTrimming="CharacterEllipsis"
+                           Text="{Binding Song.Artist}"/>
+            </Grid>
+            <Grid Grid.Column="1" Width="Auto">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
                     Command="{Binding ShuffleCommand}" 
@@ -198,70 +211,133 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <Viewbox Height="20">
+                            <!--<Viewbox Height="20">
                                 <SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
-                                <!--<TextBlock Text="&#xE14B;" FontFamily="Segoe MDL2 Assets"/>
-                                <SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>-->
-                            </Viewbox>
+                            </Viewbox>-->
+                            <Grid>
+                                <TextBlock Text="&#xE14B;" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontSize="20" 
+                                           FontFamily="Segoe MDL2 Assets" 
+                                           Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
+                                <!--<TextBlock Text="&#xEA3A;" 
+                                           FontSize="36" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>-->
+                            </Grid>
+                            <!--<SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>-->
                             <!--<Image Source="/Assets/Buttons/shuffle.png" Height="32"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Column="1"
                     Command="{Binding Previous}"
-                    Width="60" Height="60"
+                    Width="48" Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <Viewbox Height="32">
+                            <!--<Viewbox Height="32">
                                 <SymbolIcon Symbol="Previous"/>
-                            </Viewbox>
+                            </Viewbox>-->
+                            <Grid>
+                                <TextBlock Text="&#xE892;" 
+                                           FontSize="30" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>
+                                <!--<TextBlock Text="&#xEA3A;" 
+                                           FontSize="46" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>-->
+                            </Grid>
                             <!--<Image Source="/Assets/Buttons/prev.png" Height="40"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Column="2"
                     Command="{Binding Play}"
-                    Width="60" Height="60"
+                    Width="48" Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <Viewbox Height="44">
-                                <SymbolIcon Symbol="{Binding PlayButtonContent, Mode=OneWay}"/>
-                            </Viewbox>
+                            <!--<Viewbox Height="44">
+                                <SymbolIcon Symbol="{Binding PlayButtonContent}"/>
+                            </Viewbox>-->
+                            <Grid>
+                                <TextBlock Text="{Binding PlayButtonContent}" 
+                                           FontSize="32" 
+                                           FontFamily="Segoe MDL2 Assets"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="8,0,0,0"/>
+                                <!--<TextBlock Text="&#xEA3A;" 
+                                           FontSize="56" 
+                                           FontWeight="ExtraLight"
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>-->
+                            </Grid>
                             <!--<Image Source="/Assets/Buttons/play.png" Height="52" Width="52"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Column="3"
                     Command="{Binding Next}"
-                    Width="60" Height="60"
+                    Width="48" Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <Viewbox Height="32">
+                            <!--<Viewbox Height="32">
                                 <SymbolIcon Symbol="Next"/>
-                            </Viewbox>
+                            </Viewbox>-->
+                            <Grid>
+                                <TextBlock Text="&#xE893;" 
+                                           FontSize="30" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>
+                                <!--<TextBlock Text="&#xEA3A;" 
+                                           FontSize="46" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>-->
+                            </Grid>
                             <!--<Image Source="/Assets/Buttons/next.png" Height="40"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Column="4"
                     Command="{Binding RepeatCommand}"
-                    Width="60" Height="60"
+                    Width="48" Height="60"
                     
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <Viewbox Height="22">
+                            <!--<Viewbox Height="22">
                                 <SymbolIcon Symbol="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"/>
-                            </Viewbox>
+                            </Viewbox>-->
+                            <Grid>
+                                <TextBlock Text="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
+                                           Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
+                                           FontSize="18" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>
+                                <!--<TextBlock Text="&#xEA3A;" 
+                                           FontSize="36" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>-->
+                            </Grid>
                             <!--<Image Source="/Assets/Buttons/repeat.png" Height="32"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
             </Grid>
-            <Grid Grid.Column="3" Grid.RowSpan="2">
+            <Grid Grid.Column="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition/>
@@ -269,9 +345,9 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                            FontSize="18"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"
-                           
                            Margin="0,0,8,0"
                            Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
                 <Slider x:Name="timeslider" Grid.Column="1"
@@ -283,6 +359,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"/>
                 <TextBlock Grid.Column="2"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
                            FontSize="18"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"

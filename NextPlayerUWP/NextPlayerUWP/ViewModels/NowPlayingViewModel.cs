@@ -21,14 +21,7 @@ namespace NextPlayerUWP.ViewModels
     {
         public NowPlayingViewModel()
         {
-            if (PlaybackManager.Current.PlayerState == MediaPlayerState.Playing)
-            {
-                PlayButtonContent = Symbol.Pause;
-            }
-            else
-            {
-                PlayButtonContent = Symbol.Play;
-            }
+            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
@@ -84,8 +77,8 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref timeEnd, value); }
         }
 
-        private Symbol playButtonContent = Symbol.Play;
-        public Symbol PlayButtonContent
+        private string playButtonContent = "\uE768";
+        public string PlayButtonContent
         {
             get { return playButtonContent; }
             set { Set(ref playButtonContent, value); }
@@ -191,11 +184,13 @@ namespace NextPlayerUWP.ViewModels
         {
             if (state== MediaPlayerState.Playing)
             {
-                PlayButtonContent = Symbol.Pause;
+                PlayButtonContent = "\uE769";
+                //PlayButtonContent = Symbol.Pause;
             }
             else
             {
-                PlayButtonContent = Symbol.Play;
+                PlayButtonContent = "\uE768";
+                //PlayButtonContent = Symbol.Play;
             }
         }
 
@@ -244,14 +239,7 @@ namespace NextPlayerUWP.ViewModels
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             ChangeCover();
             //cover
-            if (PlaybackManager.Current.PlayerState == MediaPlayerState.Playing)
-            {
-                PlayButtonContent = Symbol.Play;
-            }
-            else
-            {
-                PlayButtonContent = Symbol.Pause;
-            }
+            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
             return Task.CompletedTask;
         }
 

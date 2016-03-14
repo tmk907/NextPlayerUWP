@@ -483,8 +483,9 @@ namespace NextPlayerUWPDataLayer.Services
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
-            var result = await songsConnectionAsync.Where(a=>a.Album.Equals(album)).OrderBy(s => s.Title).ToListAsync();
-            foreach (var item in result)
+            var result = await songsConnectionAsync.Where(a=>a.Album.Equals(album)).ToListAsync();
+            var list = result.OrderBy(s => s.Track).ThenBy(t => t.Title);
+            foreach (var item in list)
             {
                 songs.Add(new SongItem(item));
             }

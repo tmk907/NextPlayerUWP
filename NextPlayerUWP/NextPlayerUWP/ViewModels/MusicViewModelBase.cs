@@ -25,14 +25,6 @@ namespace NextPlayerUWP.ViewModels
         protected bool onNavigatedCompleted = false;
         protected bool onLoadedCompleted = false;
 
-
-        protected MusicItem selectedItem;
-        public MusicItem SelectedItem
-        {
-            get { return selectedItem; }
-            set { Set(ref selectedItem, value); }
-        }
-
         protected string pageTitle;
         public string PageTitle
         {
@@ -71,7 +63,6 @@ namespace NextPlayerUWP.ViewModels
 
         public async void AddToNowPlaying(object sender, RoutedEventArgs e)
         {
-            //SelectedItem = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.Add(item);
         }

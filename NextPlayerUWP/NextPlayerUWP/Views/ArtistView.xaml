@@ -28,8 +28,8 @@
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
                             Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
-            <!--<MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
-                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{x:Bind}" />-->
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
@@ -120,8 +120,14 @@
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderArtist"
-                Content="Artist" 
-                VisualStateNarrowMinWidth="-1" />
+                
+                VisualStateNarrowMinWidth="-1" >
+            <controls:PageHeader.Content>
+                <TextBlock Text="Artist" 
+                           FontSize="27"
+                           Style="{StaticResource TitleTextBlockStyle}"/>
+            </controls:PageHeader.Content>
+        </controls:PageHeader>
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -139,9 +145,8 @@
                     ItemTemplate="{StaticResource SongItemTemplate}"
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
-                    SelectedItem="{Binding SelectedItem}"
                     SelectionMode="None"
-                    Margin="24,12,12,4"
+                    Margin="12,12,12,4"
                     >
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>

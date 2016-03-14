@@ -38,10 +38,10 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref selectedPivotIndex, value); }
         }
 
-        private void TrackChanged(int index)
+        private async void TrackChanged(int index)
         {
             ScrollAfterTrackChanged(index);
-            ChangeLyrics(index);
+            //await Task.Run(() => ChangeLyrics(index));
         }
 
         #region NowPlaying
@@ -273,7 +273,7 @@ namespace NextPlayerUWP.ViewModels
         //TODO sprawdzac z ustawien
         private bool autoLoadFromWeb = true;
 
-        private async void ChangeLyrics(int index)
+        private async Task ChangeLyrics(int index)
         {
             original = true;
 

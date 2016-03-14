@@ -34,10 +34,6 @@
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
-                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
         <DataTemplate x:Key="SongTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped"
@@ -57,7 +53,7 @@
                            VerticalAlignment="Center"
                            Foreground="{ThemeResource ListItemForegroundSolid}"
                            FontSize="14"
-                           TextTrimming="Clip"
+                           TextTrimming="CharacterEllipsis"
                            Text="{x:Bind Title}"
                            />
                     <TextBlock Grid.Column="0" Grid.Row="1"
@@ -65,7 +61,7 @@
                            VerticalAlignment="Center"
                            Foreground="{ThemeResource ListItemForegroundLight}"
                            FontSize="12"
-                           TextTrimming="Clip"
+                           TextTrimming="CharacterEllipsis"
                            Text="{x:Bind Artist}"
                            />
                     <TextBlock Grid.Column="1" Grid.RowSpan="2"
@@ -73,7 +69,7 @@
                            VerticalAlignment="Center"
                            Foreground="{ThemeResource ListItemForegroundSolid}"
                            FontSize="13"
-                           TextTrimming="Clip"
+                           TextTrimming="CharacterEllipsis"
                            Text="{x:Bind Duration,Converter={StaticResource TimeSpanToStringConverter}}"
                            />
                 </Grid>
@@ -356,7 +352,7 @@
                 <PivotItem.Header>
                     <TextBlock Text="lyrics" FontSize="22"/>
                 </PivotItem.Header>
-                <Grid>
+                <Grid Margin="0,8,0,0">
                     <Grid Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" MinHeight="40"/>
@@ -366,8 +362,8 @@
                         <TextBlock Grid.Row="0" 
                            x:Name="titleTB"
                            Text="{x:Bind ViewModel.Title, Mode=OneWay}"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
                            FontSize="19"
-                           FontWeight="Medium"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
                            TextWrapping="WrapWholeWords"
@@ -376,8 +372,8 @@
                         <TextBlock Grid.Row="1" 
                            x:Name="artistTB"
                            Text="{x:Bind ViewModel.Artist, Mode=OneWay}"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
                            FontSize="17"
-                           FontWeight="Medium"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
                            TextWrapping="WrapWholeWords"

@@ -77,8 +77,14 @@
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderArtists"
-                Content="Artists" 
-                VisualStateNarrowMinWidth="-1" />
+                
+                VisualStateNarrowMinWidth="-1" >
+            <controls:PageHeader.Content>
+                <TextBlock Text="Artist" 
+                           FontSize="27"
+                           Style="{StaticResource TitleTextBlockStyle}"/>
+            </controls:PageHeader.Content>
+        </controls:PageHeader>  
         <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
         </UserControl>-->

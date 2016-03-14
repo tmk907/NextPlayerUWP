@@ -83,18 +83,22 @@ namespace NextPlayerUWPDataLayer.Helpers
             }
         }
 
-        public static Symbol GetContent(RepeatEnum repeat)
+        public static string GetContent(RepeatEnum repeat)
         {
             switch (repeat)
             {
                 case RepeatEnum.NoRepeat:
-                    return Symbol.RepeatAll;
+                    return "\uE8EE";
+                    //return Symbol.RepeatAll;
                 case RepeatEnum.RepeatOnce:
-                    return Symbol.RepeatOne;
+                    return "\uE8ED";
+                    //return Symbol.RepeatOne;
                 case RepeatEnum.RepeatPlaylist:
-                    return Symbol.RepeatAll;
+                    return "\uE8EE";
+                    //return Symbol.RepeatAll;
                 default:
-                    return Symbol.RepeatAll;
+                    return "\uE8EE";
+                    //return Symbol.RepeatAll;
             }
         }
     }
