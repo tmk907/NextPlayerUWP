@@ -28,12 +28,13 @@
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
                             Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
         <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
@@ -136,7 +137,7 @@
             <TextBlock Grid.Row="0"
                 Text="{Binding Artist.Artist}"
                 Style="{StaticResource HeaderTextBlockStyle}"
-                Margin="24,16,4,12"
+                Margin="24,16,4,6"
                 FontSize="27"
                 VerticalAlignment="Center"/>
             <ListView x:Name="ArtistSongsListView"
@@ -146,7 +147,7 @@
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     SelectionMode="None"
-                    Margin="12,12,12,4"
+                    Margin="12,6,12,4"
                     >
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>

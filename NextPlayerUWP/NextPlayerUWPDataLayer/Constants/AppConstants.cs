@@ -3,8 +3,9 @@
     public sealed class AppConstants
     {
         //App
-        public const string AppName = "Next Player UWP";
+        public const string AppName = "Next-Player UWP";
         public const string AppId = "5709a693-517f-4619-9942-4d8a3e15c758";
+        public const string ProductId = "";
         public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";
         public const string DBVersion = "DBVersion";
@@ -12,6 +13,8 @@
         public const string LastFmDBFileName = "lastfm.db";
         public const string LastFmDBVersion = "lastfmDBVersion";
         public const string DeviceName = "devicename";
+        public const string DeveloperEmail = "@outlook.com";
+        public const string EnableTelemetry = "EnableTelemetry";
 
         //Layout
         public const string AppTheme = "AppTheme";

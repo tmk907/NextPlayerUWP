@@ -26,6 +26,7 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             App.SongUpdated += App_SongUpdated;
+            MediaImport.MediaImported += MediaImport_MediaImported;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 albums = new ObservableCollection<AlbumItem>();
@@ -40,6 +41,7 @@ namespace NextPlayerUWP.ViewModels
                 albums.Add(new AlbumItem());
             }
         }
+
         private ObservableCollection<AlbumItem> albums = new ObservableCollection<AlbumItem>();
         public ObservableCollection<AlbumItem> Albums
         {
@@ -90,6 +92,11 @@ namespace NextPlayerUWP.ViewModels
         {
             tokenSource2.Cancel();
             return base.OnNavigatedFromAsync(state, suspending);
+        }
+
+        private async void MediaImport_MediaImported(string s)
+        {
+            await Dispatcher.DispatchAsync(() => ReloadData());
         }
 
         private async void App_SongUpdated(int id)

@@ -53,7 +53,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 string type = file.FileType.ToLower();
                 if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
-                    type == ".wav" || type == ".aac" || type == ".asf" ||
+                    type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
                     type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4")
                 {
                     if (dbFiles.TryGetValue(file.Path, out tuple))
@@ -75,10 +75,10 @@ namespace NextPlayerUWPDataLayer.Services
                     catch (Exception ex) { }
                 }
             }
-            if (newSongs.Count != 0 || available.Count != 0)
-            {
+            //if (newSongs.Count != 0 || available.Count != 0)
+            //{
                 DatabaseManager.Current.UpdateFolder(newSongs, available, folder.Path);//.InsertSongsAsync(newSongs);
-            }
+            //}
             songsAdded += newSongs.Count;
             progress.Report(songsAdded);
             var folders = await folder.GetFoldersAsync();

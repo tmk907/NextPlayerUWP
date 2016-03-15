@@ -37,6 +37,23 @@ namespace NextPlayerUWPDataLayer.Helpers
             }
         }
 
+        //public static T ReadSettingsValue<T>(string key)
+        //{
+        //    if (ApplicationData.Current.LocalSettings.Values.ContainsKey(key))
+        //    {
+        //        try
+        //        {
+        //            T value = (T)ApplicationData.Current.LocalSettings.Values[key];
+        //            return value;
+        //        }
+        //        catch (Exception ex)
+        //        {
+
+        //        }
+        //    }
+        //    return null;
+        //}
+
         /// <summary>
         /// Save a key value pair in settings. Create if it doesn't exist
         /// </summary>

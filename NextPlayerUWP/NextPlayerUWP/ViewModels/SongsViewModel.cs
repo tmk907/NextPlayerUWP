@@ -23,6 +23,12 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             App.SongUpdated += App_SongUpdated;
+            MediaImport.MediaImported += MediaImport_MediaImported;
+        }
+
+        private async void MediaImport_MediaImported(string s)
+        {
+            await Dispatcher.DispatchAsync(() => ReloadData());
         }
 
         private async void App_SongUpdated(int id)

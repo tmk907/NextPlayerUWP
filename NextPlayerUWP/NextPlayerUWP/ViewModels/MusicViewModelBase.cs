@@ -210,11 +210,6 @@ namespace NextPlayerUWP.ViewModels
 
         protected async Task SetScrollPosition()
         {
-            //SemanticZoomLocation loc = new SemanticZoomLocation();
-            ////listView.SelectedIndex = selectedItemIndex;
-            ////loc.Item = listView.SelectedIndex;
-            //listView.UpdateLayout();
-            //listView.MakeVisible(loc);
             listView.ScrollIntoView(listView.Items[firstVisibleItemIndex], ScrollIntoViewAlignment.Leading);
             if (positionKey != null)
             {

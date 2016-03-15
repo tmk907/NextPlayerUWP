@@ -29,6 +29,12 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
             ViewModel = (SettingsViewModel)DataContext;
-        }        
+        }
+
+        private void RemoveFolder_Click(object sender, RoutedEventArgs e)
+        {
+            MusicFolder folder = (MusicFolder)((Button)sender).Tag;
+            ViewModel.RemoveFolder(folder);
+        }
     }
 }

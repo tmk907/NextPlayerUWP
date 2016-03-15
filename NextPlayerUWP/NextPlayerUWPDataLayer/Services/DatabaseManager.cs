@@ -105,11 +105,24 @@ namespace NextPlayerUWPDataLayer.Services
                 connection.Execute("UPDATE SongsTable SET IsAvailable = 0 WHERE SongId = ?", id);
             }
 
-            var query = connection.Table<SongsTable>().Where(s => notAvailable.Contains(s.SongId));
-            TimeSpan removedDuration = TimeSpan.Zero;
-            foreach(var item in query)
+            if (newSongs.Count + available.Count == 0)
             {
-                removedDuration += item.Duration;
+                //usun folder
+                connection.Execute("DELETE FROM FoldersTable WHERE Directory = ?", directoryName);
+                return;
+            }
+            //else
+
+            foreach (var id in available)
+            {
+                connection.Execute("UPDATE SongsTable SET IsAvailable = 1 WHERE SongId = ?", id);
+            }
+
+            var queryOldAvailableSongs = old.Where(s => available.Contains(s.SongId));
+            TimeSpan oldAvailableSongsDuration = TimeSpan.Zero;
+            foreach(var item in queryOldAvailableSongs)
+            {
+                oldAvailableSongsDuration += item.Duration;
             }
             TimeSpan newDuration = TimeSpan.Zero;
             DateTime lastAdded = DateTime.MinValue;
@@ -122,18 +135,21 @@ namespace NextPlayerUWPDataLayer.Services
             var query2 = connection.Table<FoldersTable>().Where(f => f.Directory.Equals(directoryName)).ToList();
             if (query2.Count == 1)
             {
-                connection.Execute("UPDATE FoldersTable SET SongsNumber = ?, Duration = ? WHERE FolderId = ?", newSongs.Count + available.Count, query2.FirstOrDefault().Duration - removedDuration + newDuration, query2.FirstOrDefault().FolderId);
+                connection.Execute("UPDATE FoldersTable SET SongsNumber = ?, Duration = ? WHERE FolderId = ?", newSongs.Count + available.Count, oldAvailableSongsDuration + newDuration, query2.FirstOrDefault().FolderId);
             }
             else
-            {
-                connection.Insert(new FoldersTable()
+            { 
+                if (newSongs.Count > 0)
                 {
-                    Directory = directoryName,
-                    Duration = newDuration,
-                    Folder = Path.GetFileName(directoryName),
-                    LastAdded = lastAdded,
-                    SongsNumber = newSongs.Count,
-                });
+                    connection.Insert(new FoldersTable()
+                    {
+                        Directory = directoryName,
+                        Duration = newDuration,
+                        Folder = Path.GetFileName(directoryName),
+                        LastAdded = lastAdded,
+                        SongsNumber = newSongs.Count,
+                    });
+                }
             }
 
             List<SongsTable> list = new List<SongsTable>();
@@ -421,6 +437,13 @@ namespace NextPlayerUWPDataLayer.Services
         public string GetLyrics(int id)
         {
             var list = connection.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToList();
+            if (list.Count == 0) return "";
+            else return list.FirstOrDefault().Lyrics;
+        }
+
+        public async Task<string> GetLyricsAsync(int id)
+        {
+            var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
             if (list.Count == 0) return "";
             else return list.FirstOrDefault().Lyrics;
         }
@@ -988,7 +1011,12 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.DeleteAsync(playlist);
         }
 
-        
+        public async Task DeleteFolderAsync(string path)
+        {
+            await connectionAsync.ExecuteAsync("UPDATE SongsTable SET IsAvailable = 0 WHERE DirectoryName LIKE ?", path + "%");
+            await connectionAsync.ExecuteAsync("DELETE FROM FoldersTable WHERE Directory = ?", path);
+            await UpdateTables();
+        }
 
         #endregion
 

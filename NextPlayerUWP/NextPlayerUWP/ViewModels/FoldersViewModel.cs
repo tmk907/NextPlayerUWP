@@ -20,7 +20,20 @@ namespace NextPlayerUWP.ViewModels
             SortNames si = new SortNames(MusicItemTypes.folder);
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            MediaImport.MediaImported += MediaImport_MediaImported;
         }
+
+        private async void MediaImport_MediaImported(string s)
+        {
+            await Dispatcher.DispatchAsync(() => ReloadData());
+        }
+
+        private async Task ReloadData()
+        {
+            Folders = await DatabaseManager.Current.GetFolderItemsAsync();
+            SortItems(null, null);
+        }
+
         private ObservableCollection<FolderItem> folders = new ObservableCollection<FolderItem>();
         public ObservableCollection<FolderItem> Folders
         {

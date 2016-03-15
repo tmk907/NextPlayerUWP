@@ -42,6 +42,7 @@ namespace NextPlayerUWP.ViewModels
         {
             ScrollAfterTrackChanged(index);
             //await Task.Run(() => ChangeLyrics(index));
+            await ChangeLyrics(index);
         }
 
         #region NowPlaying
@@ -69,7 +70,7 @@ namespace NextPlayerUWP.ViewModels
             lyricsWebview.ContentLoading += webView1_ContentLoading;
             lyricsWebview.NavigationStarting += webView1_NavigationStarting;
             lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
-
+            
             bool scroll = false;
             if (listView != null)
             {
@@ -106,7 +107,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
             }
-            if (index > lastVisibleIndex)
+            else if (index > lastVisibleIndex)
             {
                 listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
             }
@@ -265,16 +266,36 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref webVisibility, value); }
         }
 
+        public async void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((Pivot)sender).SelectedIndex == 1)
+            {
+                if (lyricsNotLoaded)
+                {
+                    await ChangeLyrics(cachedIndex);
+                    lyricsNotLoaded = false;
+                }
+            }
+        }
+
         private WebView lyricsWebview;
         private string address;
         private bool original = true;
         private Windows.ApplicationModel.Resources.ResourceLoader loader;
+        private bool lyricsNotLoaded = false;
+        private int cachedIndex = 0;
 
         //TODO sprawdzac z ustawien
         private bool autoLoadFromWeb = true;
 
         private async Task ChangeLyrics(int index)
         {
+            if (SelectedPivotIndex == 0)
+            {
+                lyricsNotLoaded = true;
+                cachedIndex = index;
+                return;
+            }
             original = true;
 
             //appBarSave.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
@@ -283,13 +304,13 @@ namespace NextPlayerUWP.ViewModels
             Title = song.Title;
             Artist = song.Artist;
             Lyrics = "";
-            string dbLyrics = DatabaseManager.Current.GetLyrics(song.SongId);
+            string dbLyrics = await DatabaseManager.Current.GetLyricsAsync(song.SongId);
             WebVisibility = false;
             if (string.IsNullOrEmpty(dbLyrics))
             {
                 if (autoLoadFromWeb)
                 {
-                    LoadLyricsFromWebsite();
+                    await LoadLyricsFromWebsite();
                 }
             }
             else

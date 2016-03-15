@@ -17,19 +17,18 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
-        <Style x:Key="DescriptionStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="17"/>
+        <Style x:Key="DescriptionStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="MinHeight" Value="36"/>
-            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
         </Style>
-        <Style x:Key="ValueStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="17"/>
+        <Style x:Key="ValueStyle" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
+            <Setter Property="FontSize" Value="15"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="MinHeight" Value="36"/>
-            <Setter Property="Margin" Value="4,0,0,4"/>
+            <Setter Property="Margin" Value="4,0,0,0"/>
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -50,9 +49,8 @@
         <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
         </UserControl>-->
-        <ScrollViewer Grid.Row="1" Grid.Column="0"
-                      Margin="8,4,0,0">
-            <Grid>
+        <ScrollViewer Grid.Row="1" Grid.Column="0">
+            <Grid Margin="24,24,12,4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

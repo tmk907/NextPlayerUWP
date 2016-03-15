@@ -16,6 +16,44 @@
             </NavigationThemeTransition>
         </TransitionCollection>
     </Page.Transitions>
+    <Page.Resources>
+        <DataTemplate x:Key="MusicFolderTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <FontIcon Grid.Column="0" Grid.RowSpan="2"
+                          FontFamily="Segoe MDL2 Assets"
+                          Glyph="&#xE8B7;" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,12,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Name}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           FontSize="13"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Path}"/>
+                <Button Grid.Column="3" Grid.RowSpan="2"
+                        Click="RemoveFolder_Click"
+                        Width="40"
+                        Height="40"
+                        Background="Transparent"
+                        Tag="{Binding}"
+                        VerticalAlignment="Center">
+                    <Button.Content>
+                        <SymbolIcon Symbol="Cancel"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -36,13 +74,100 @@
         <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
         </UserControl>-->
-        <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
-            <StackPanel Orientation="Vertical">
-                <Button Content="update" Click="{x:Bind ViewModel.UpdateLibrary}"/>
-                <TextBlock Text="{x:Bind ViewModel.UpdateProgressText, Mode=OneWay}"/>
-                <Button Content="Add folder" Click="{x:Bind ViewModel.AddFolder}"/>
-                <Button Content="Remove folder" Click="{x:Bind ViewModel.RemoveFolder}"/>
+        <Grid Grid.Column="0" Grid.Row="1" Margin="12,12,12,4">
+            <ScrollViewer>
+                <StackPanel Orientation="Vertical">
+                <TextBlock x:Uid="TBLibrary"
+                           Style="{StaticResource TitleTextBlockStyle}" 
+                           Margin="0,0,0,8"
+                           Text="Library"/>
+                <TextBlock x:Uid="TBUpdateLibrary"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="Update library"/>
+                <StackPanel Orientation="Horizontal" Margin="4,4,4,4">
+                    <Button x:Uid="ButtonUpdate"
+                            Content="Update" 
+                            Margin="0,0,12,0"
+                            Click="{x:Bind ViewModel.UpdateLibrary}"/>
+                    <TextBlock x:Uid="TBNewSongs"
+                               VerticalAlignment="Center"
+                               Text="new songs: "
+                               Margin="0,0,4,0"
+                               Visibility="{Binding UpdateProgressTextVisibility, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <TextBlock Text="{Binding UpdateProgressText}"
+                               VerticalAlignment="Center"/>
+                    <ProgressRing VerticalAlignment="Center"
+                                  Width="28"
+                                  Height="28"
+                                  Margin="12,0,4,0"
+                                  IsActive="{Binding IsUpdating}" 
+                                  Visibility="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="4,4,4,4">
+                    <TextBlock x:Uid="TBAddLibraryFolders"
+                               Style="{StaticResource BodyTextBlockStyle}"
+                               FontSize="17"
+                               Text="Folders, where app look music"/>
+                    <ListView Margin="0,4,4,4"
+                            ItemsSource="{x:Bind ViewModel.MusicLibraryFolders, Mode=OneWay}"
+                            ItemTemplate="{StaticResource MusicFolderTemplate}">
+                    </ListView>
+                    <Button x:Uid="ButtonAddFolder"
+                            Content="Add folder" 
+                            Click="{x:Bind ViewModel.AddFolder}"
+                            Margin="0,4,4,4"/>
+                </StackPanel>
+                <TextBlock x:Uid="TBTools"
+                           Style="{StaticResource TitleTextBlockStyle}" 
+                           Margin="0,0,0,8"
+                           Text="Tools"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                </StackPanel>
+                <TextBlock x:Uid="TBPersonalize"
+                           Style="{StaticResource TitleTextBlockStyle}" 
+                           Margin="0,0,0,8"
+                           Text="Personalise"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                </StackPanel>
+                <TextBlock x:Uid="TBAbout"
+                           Style="{StaticResource TitleTextBlockStyle}" 
+                           Margin="0,0,0,8"
+                           Text="About"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock 
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                            Margin="0,0,8,0"
+                           Text="Music Player"/>
+                        <TextBlock
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            FontSize="17"
+                            Text="{x:Bind ViewModel.AppVersion}"/>
+                    </StackPanel>
+                    <Button x:Uid="ButtonSendEmail"
+                            Content="Send e-mail"
+                            Margin="0,8,0,4"
+                            Width="128"
+                            Click="{x:Bind ViewModel.SendEmail}"/>
+                    <Button x:Uid="ButtonRateApp"
+                            Content="Rate app"
+                            Margin="0,4,0,8"
+                            Width="128"
+                            Click="{x:Bind ViewModel.RateApp}"/>
+                    <TextBlock x:Uid="TBAllowTelemetry"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            FontSize="17"
+                            Text="Enable application telemetry"/>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.EnableTelemetry, Mode=TwoWay}"
+                                  Toggled="{x:Bind ViewModel.TelemetrySwitchToggled}"
+                                  />
+                </StackPanel>
+                
             </StackPanel>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Page>

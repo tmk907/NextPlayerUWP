@@ -315,12 +315,13 @@
             <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Rectangle Grid.Row="0" Fill="{StaticResource TopAppBarBrush}"/>
+        <Rectangle Grid.Row="0" Fill="{ThemeResource SystemChromeMediumColor}"/>
         <Pivot Grid.Row="1" 
                
                Style="{StaticResource RightPanelPivotStyle}" 
+               SelectionChanged="{x:Bind ViewModel.PivotSelectionChanged}"
                SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
-
+               
             <PivotItem Style="{StaticResource PivotItemStyle}">
                 <PivotItem.Header>
                     <TextBlock Text="now playing" FontSize="22"/>
@@ -352,22 +353,23 @@
                 <PivotItem.Header>
                     <TextBlock Text="lyrics" FontSize="22"/>
                 </PivotItem.Header>
-                <Grid Margin="0,8,0,0">
+                <Grid Margin="0,0,0,0">
                     <Grid Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" MinHeight="40"/>
-                            <RowDefinition Height="Auto" MinHeight="40"/>
+                            <RowDefinition Height="Auto" MinHeight="28"/>
+                            <RowDefinition Height="Auto" MinHeight="28"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" 
                            x:Name="titleTB"
                            Text="{x:Bind ViewModel.Title, Mode=OneWay}"
                            Style="{StaticResource SubtitleTextBlockStyle}"
-                           FontSize="19"
+                           FontSize="20"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
                            TextWrapping="WrapWholeWords"
                            TextAlignment="Center"
+                                   Margin="0,4,0,0"
                            />
                         <TextBlock Grid.Row="1" 
                            x:Name="artistTB"
@@ -378,11 +380,13 @@
                            HorizontalAlignment="Center"
                            TextWrapping="WrapWholeWords"
                            TextAlignment="Center"
+                                   Margin="0,0,0,4"
                            />
                         <ScrollViewer Grid.Row="2" 
-                                      Margin="4,0,4,4">
+                                      Margin="0,0,0,4">
                             <TextBlock x:Name="lyricsTB"
                                 Text="{x:Bind ViewModel.Lyrics, Mode=OneWay}"
+                                Margin="4,0,12,0"
                                 TextWrapping="WrapWholeWords"
                                 HorizontalAlignment="Stretch"
                                 FontSize="15"
@@ -398,7 +402,8 @@
                            VerticalAlignment="Center" 
                            HorizontalAlignment="Center"
                            Visibility="Collapsed"/>
-                        <WebView x:Name="lyricsWebview" Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <WebView x:Name="lyricsWebview" 
+                                 Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
                 </Grid>
                 </Grid>
             </PivotItem>

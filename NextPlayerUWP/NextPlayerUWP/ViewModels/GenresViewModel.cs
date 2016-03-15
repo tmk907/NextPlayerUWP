@@ -24,7 +24,13 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             App.SongUpdated += App_SongUpdated;
+            MediaImport.MediaImported += MediaImport_MediaImported;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) Genres.Add(new GenreItem());
+        }
+
+        private async void MediaImport_MediaImported(string s)
+        {
+            await Dispatcher.DispatchAsync(() => ReloadData());
         }
 
         private ObservableCollection<GenreItem> genres = new ObservableCollection<GenreItem>();

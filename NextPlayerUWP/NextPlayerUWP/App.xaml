@@ -11,10 +11,12 @@
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="White"/>
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#cccccc"/>
+                    <SolidColorBrush x:Key="PageHeaderBackground" Color="DarkGray"/>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="Black"/>
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#323232"/>
+                    <SolidColorBrush x:Key="PageHeaderBackground" Color="LightGray"/>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:NextPlayerUWP.ViewModels" />

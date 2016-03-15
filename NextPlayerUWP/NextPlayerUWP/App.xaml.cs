@@ -217,5 +217,10 @@ namespace NextPlayerUWP
             await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4", SPUtility.Operator.Or);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
         }
+
+        public void ChangeTelemetry(bool enable)
+        {
+            //TODO
+        }
     }
 }

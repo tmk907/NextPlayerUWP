@@ -221,11 +221,6 @@
                                            FontSize="20" 
                                            FontFamily="Segoe MDL2 Assets" 
                                            Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
-                                <!--<TextBlock Text="&#xEA3A;" 
-                                           FontSize="36" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>-->
                             </Grid>
                             <!--<SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>-->
                             <!--<Image Source="/Assets/Buttons/shuffle.png" Height="32"/>-->
@@ -247,11 +242,6 @@
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
-                                <!--<TextBlock Text="&#xEA3A;" 
-                                           FontSize="46" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>-->
                             </Grid>
                             <!--<Image Source="/Assets/Buttons/prev.png" Height="40"/>-->
                         </DataTemplate>
@@ -272,13 +262,7 @@
                                            FontFamily="Segoe MDL2 Assets"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"
-                                           Margin="8,0,0,0"/>
-                                <!--<TextBlock Text="&#xEA3A;" 
-                                           FontSize="56" 
-                                           FontWeight="ExtraLight"
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>-->
+                                           Margin="0,0,0,0"/>
                             </Grid>
                             <!--<Image Source="/Assets/Buttons/play.png" Height="52" Width="52"/>-->
                         </DataTemplate>
@@ -299,11 +283,6 @@
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
-                                <!--<TextBlock Text="&#xEA3A;" 
-                                           FontSize="46" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>-->
                             </Grid>
                             <!--<Image Source="/Assets/Buttons/next.png" Height="40"/>-->
                         </DataTemplate>
@@ -326,11 +305,6 @@
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
-                                <!--<TextBlock Text="&#xEA3A;" 
-                                           FontSize="36" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>-->
                             </Grid>
                             <!--<Image Source="/Assets/Buttons/repeat.png" Height="32"/>-->
                         </DataTemplate>
@@ -344,7 +318,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                           FontSize="18"
+                           FontSize="17"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"
@@ -360,7 +334,7 @@
                         VerticalAlignment="Center"/>
                 <TextBlock Grid.Column="2"
                            Style="{StaticResource SubtitleTextBlockStyle}"
-                           FontSize="18"
+                           FontSize="17"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"
                            Margin="0,0,8,0"

@@ -28,10 +28,11 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
         <Style x:Key="AlbumNameStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
@@ -49,13 +50,13 @@
             <Setter Property="Margin" Value="4,0,4,4"/>
         </Style>
         <DataTemplate x:Key="AlbumItemTemplate" x:DataType="data:AlbumItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Width="136" Height="212">
+            <Grid RightTapped="ListViewItem_RightTapped" Width="140" Height="216">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="136"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Image Grid.Row="0" Width="128" Height="128" Margin="4">
+                <Image Grid.Row="0" Width="132" Height="132" Margin="4">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind ImageUri}"
                                      DecodePixelHeight="128" DecodePixelWidth="128"/>
@@ -145,7 +146,6 @@
                             ItemTemplate="{StaticResource AlbumItemTemplate}"
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
-                            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                             SelectionMode="None"
                             ShowsScrollingPlaceholders="True"
                             Margin="12,4,0,0">
