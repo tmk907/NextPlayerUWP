@@ -124,7 +124,19 @@
                            Margin="0,0,0,8"
                            Text="Tools"/>
                 <StackPanel Orientation="Vertical" Margin="4">
-                </StackPanel>
+                        <TextBlock x:Uid="TBTimer"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="Timer"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
+                                  Toggled="{x:Bind ViewModel.TimerSwitchToggled}"/>
+                            <TimePicker IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
+                                        TimeChanged="{x:Bind ViewModel.TimeChanged}"
+                                        />
+                        </StackPanel>
+                    </StackPanel>
                 <TextBlock x:Uid="TBPersonalize"
                            Style="{StaticResource TitleTextBlockStyle}" 
                            Margin="0,0,0,8"

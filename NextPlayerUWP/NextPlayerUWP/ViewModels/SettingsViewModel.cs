@@ -1,5 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -32,6 +35,7 @@ namespace NextPlayerUWP.ViewModels
             AppVersion = string.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         }
 
+        private bool initialization = false;
 
         private string updateProgressText = "";
         public string UpdateProgressText
@@ -63,6 +67,8 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            initialization = true;
+
             if (!isUpdating)
             {
                 UpdateProgressText = "";
@@ -77,6 +83,8 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             EnableTelemetry = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableTelemetry);
+
+            initialization = false;
         }
 
         public async void UpdateLibrary()
@@ -122,7 +130,58 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        //About
+        #region Tools
+
+        private bool isTimerOn = false;
+        public bool IsTimerOn
+        {
+            get { return isTimerOn; }
+            set { Set(ref isTimerOn, value); }
+        }
+
+        private TimeSpan time = TimeSpan.Zero;
+        public TimeSpan Time
+        {
+            get { return time; }
+            set { Set(ref time, value); }
+        }
+
+        public void TimerSwitchToggled(object sender, RoutedEventArgs e)
+        {
+            if (((ToggleSwitch)sender).IsOn)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
+                SendMessage(AppConstants.SetTimer);
+                //App.TelemetryClient.TrackEvent("Timer On");
+            }
+            else
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+                SendMessage(AppConstants.CancelTimer);
+            }
+        }
+
+        public void TimeChanged(object sender, TimePickerValueChangedEventArgs e)
+        {
+            if (!initialization)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
+                TimeSpan t1 = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
+                long l1 = t1.Ticks;
+                long l2 = Time.Ticks;
+                TimeSpan t2 = TimeSpan.FromTicks(l2 - l1);
+                if (t2 <= TimeSpan.Zero) return;
+                else
+                {
+                    SendMessage(AppConstants.SetTimer);
+                }
+            }
+        }
+
+        #endregion
+
+        #region About
         private string appVersion = "";
         public string AppVersion
         {
@@ -169,6 +228,33 @@ namespace NextPlayerUWP.ViewModels
             emailMessage.To.Add(new Windows.ApplicationModel.Email.EmailRecipient(AppConstants.DeveloperEmail));
 
             await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
+        }
+        #endregion
+
+        private bool IsMyBackgroundTaskRunning
+        {
+            get
+            {
+                object value = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundTaskState);
+                if (value == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    var state = EnumHelper.Parse<BackgroundTaskState>(value as string);
+                    bool isRunning = state == BackgroundTaskState.Running;
+                    return isRunning;
+                }
+            }
+        }
+
+        private void SendMessage(string message)
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                PlaybackManager.Current.SendMessage(message, "");
+            }
         }
     }
 }

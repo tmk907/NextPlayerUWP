@@ -18,17 +18,17 @@
     </Page.Transitions>
     <Page.Resources>
         <Style x:Key="DescriptionStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="MinHeight" Value="36"/>
-            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Margin" Value="0,4,0,4"/>
+            <Setter Property="MinHeight" Value="24"/>
         </Style>
         <Style x:Key="ValueStyle" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="MinHeight" Value="36"/>
-            <Setter Property="Margin" Value="4,0,0,0"/>
+            <Setter Property="Margin" Value="4,4,0,4"/>
+            <Setter Property="MinHeight" Value="24"/>
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -73,11 +73,28 @@
                                 Text="File path"
                                 Style="{StaticResource DescriptionStyle}"
                                 />
-                    <TextBlock
-                                Grid.Row="0" Grid.Column="1"
-                                Text="{Binding FileInfo.Path}"
-                                Style="{StaticResource ValueStyle}"
-                                />
+                    <StackPanel Grid.Row="0" Grid.Column="1" 
+                                Margin="4,0,0,0"
+                                Orientation="Horizontal">
+                        <TextBlock Margin="0" x:Name="FilePath_TextBlock"
+                                    Text="{Binding FileInfo.Path}"
+                                    Style="{StaticResource ValueStyle}"
+                                    />
+                        <Button Click="CopyPath_Click"
+                                Margin="8,0,0,4"
+                                MinHeight="20"
+                                MinWidth="20"
+                                Width="24"
+                                Height="24"
+                                Padding="0"
+                                Background="Transparent"
+                                VerticalAlignment="Center">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Copy"/>
+                            </Button.Content>
+                        </Button>
+                        
+                    </StackPanel>
                     <TextBlock
                                 Grid.Row="1" Grid.Column="0"
                                 Text="Bitrate"

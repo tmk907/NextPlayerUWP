@@ -126,7 +126,7 @@
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderAlbum"
                 Content="Album" 
-                VisualStateNarrowMinWidth="720" />
+                VisualStateNarrowMinWidth="-1" />
             <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
