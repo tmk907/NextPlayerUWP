@@ -68,6 +68,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<GenresTable>();
             connection.CreateTable<AlbumsTable>();
             connection.CreateTable<ArtistsTable>();
+            connection.CreateTable<CachedScrobble>();
         }
 
         public void DeleteDatabase()
@@ -82,6 +83,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<GenresTable>();
             connection.DropTable<AlbumsTable>();
             connection.DropTable<ArtistsTable>();
+            connection.DropTable<CachedScrobble>();
         }
 
 
@@ -95,30 +97,29 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.InsertAllAsync(newSongs);
         }
 
-        public void UpdateFolder(List<SongData> newSongs, List<int> available, string directoryName)
+        public void UpdateFolder(List<SongData> newSongs, List<int> toAvailable, List<int> oldAvailable, string directoryName)
         {
             var old = connection.Table<SongsTable>().Where(s => s.DirectoryName.Equals(directoryName)).ToList();
 
-            var notAvailable = old.Select(s => s.SongId).Except(available);
+            var notAvailable = old.Select(s => s.SongId).Except(toAvailable).Except(oldAvailable);
             foreach(var id in notAvailable)
             {
                 connection.Execute("UPDATE SongsTable SET IsAvailable = 0 WHERE SongId = ?", id);
             }
 
-            if (newSongs.Count + available.Count == 0)
+            if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count == 0)
             {
                 //usun folder
                 connection.Execute("DELETE FROM FoldersTable WHERE Directory = ?", directoryName);
                 return;
             }
-            //else
 
-            foreach (var id in available)
+            foreach (var id in toAvailable)
             {
                 connection.Execute("UPDATE SongsTable SET IsAvailable = 1 WHERE SongId = ?", id);
             }
 
-            var queryOldAvailableSongs = old.Where(s => available.Contains(s.SongId));
+            var queryOldAvailableSongs = old.Where(s => (toAvailable.Contains(s.SongId) || oldAvailable.Contains(s.SongId)));
             TimeSpan oldAvailableSongsDuration = TimeSpan.Zero;
             foreach(var item in queryOldAvailableSongs)
             {
@@ -135,7 +136,7 @@ namespace NextPlayerUWPDataLayer.Services
             var query2 = connection.Table<FoldersTable>().Where(f => f.Directory.Equals(directoryName)).ToList();
             if (query2.Count == 1)
             {
-                connection.Execute("UPDATE FoldersTable SET SongsNumber = ?, Duration = ? WHERE FolderId = ?", newSongs.Count + available.Count, oldAvailableSongsDuration + newDuration, query2.FirstOrDefault().FolderId);
+                connection.Execute("UPDATE FoldersTable SET SongsNumber = ?, Duration = ? WHERE FolderId = ?", newSongs.Count + toAvailable.Count + oldAvailable.Count, oldAvailableSongsDuration + newDuration, query2.FirstOrDefault().FolderId);
             }
             else
             { 
@@ -433,6 +434,17 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         #region Get
+
+        public string GetAlbumArt(string album)
+        {
+            var q = connection.Table<AlbumsTable>().Where(a => a.Album.Equals(album)).ToList();
+            string imagepath = AppConstants.AssetDefaultAlbumCover;
+            if (q.Count > 0)
+            {
+                imagepath = q.FirstOrDefault().ImagePath;
+            }
+            return imagepath;
+        }
 
         public string GetLyrics(int id)
         {
@@ -1020,6 +1032,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         #endregion
 
+        #region Update
         public async Task UpdateAlbumItem(AlbumItem album)
         {
             await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET ImagePath = ? WHERE AlbumId = ?", album.ImagePath, album.AlbumId);
@@ -1056,16 +1069,53 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.ExecuteAsync("UPDATE PlainPlaylistsTable SET Name = ? WHERE PlainPlaylistId = ?", name, id);
         }
 
-        public string GetAlbumArt(string album)
+        public async Task UpdateSongStatistics(int id)
         {
-            var q = connection.Table<AlbumsTable>().Where(a => a.Album.Equals(album)).ToList();
-            string imagepath = AppConstants.AssetDefaultAlbumCover;
-            if (q.Count > 0)
-            {
-                imagepath = q.FirstOrDefault().ImagePath;
-            }
-            return imagepath;
+            var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
+            uint playCount = list.FirstOrDefault().PlayCount++;
+            DateTime lastPlayed = DateTime.Now;
+            await connectionAsync.ExecuteAsync("UPDATE SongsTable SET PlayCount = ?, LastPlayed = ? WHERE SongId = ?", playCount, lastPlayed, id);
         }
+
+        #endregion
+
+        
+
+        public async Task CacheTrackScrobbleAsync(string function, string artist, string title, string timestamp)
+        {
+            CachedScrobble scrobble = new CachedScrobble()
+            {
+                Artist = artist,
+                Function = function,
+                Timestamp = timestamp,
+                Track = title
+            };
+            await connectionAsync.InsertAsync(scrobble);
+        }
+
+        public async Task CacheTrackLoveAsync(string function, string artist, string title)
+        {
+            var list = await connectionAsync.Table<CachedScrobble>().Where(c => (c.Artist.Equals(artist) && c.Track.Equals(title) && c.Timestamp == "")).ToListAsync();
+            if (list.Count == 0)
+            {
+                CachedScrobble scrobble = new CachedScrobble()
+                {
+                    Artist = artist,
+                    Function = function,
+                    Timestamp = "",
+                    Track = title
+                };
+                await connectionAsync.InsertAsync(scrobble);
+            }
+            else
+            {
+                var scrobble = list.FirstOrDefault();
+                scrobble.Function = function;
+                await connectionAsync.UpdateAsync(scrobble);
+            }
+        }
+
+
 
         private static SongsTable CreateCopy(SongsTable s)
         {

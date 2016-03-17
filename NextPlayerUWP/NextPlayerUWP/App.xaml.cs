@@ -193,6 +193,18 @@ namespace NextPlayerUWP
             DatabaseManager.Current.CreateDatabase();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 1);
             await CreateDefaultSmartPlaylists();
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, 5);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmUnLove, 1);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSendNP, false);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
+
+
         }
 
         private async Task CreateDefaultSmartPlaylists()

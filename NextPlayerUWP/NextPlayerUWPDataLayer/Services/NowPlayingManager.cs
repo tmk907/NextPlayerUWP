@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Constants;
+﻿using NextPlayerDataLayer.Services;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -25,6 +26,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         private Playlist playlist;
 
+        private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
+
         public NowPlayingManager()
         {
             playlist = new Playlist();
@@ -48,53 +51,24 @@ namespace NextPlayerUWPDataLayer.Services
             try
             {
                 NowPlayingSong song = playlist.GetCurrentSong();
-                //if (song == null)
-                //{
-                //    //exception
-                //    throw new Exception("end of playlist");
-                //}
                 StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
                 mediaPlayer.AutoPlay = false;
                 mediaPlayer.SetFileSource(file);
             }
             catch (Exception e)
             {
-                //open default empty song
                 if (!paused)
                 {
                     Pause();
                 }
-                //ValueSet message = new ValueSet();
-                //message.Add(AppConstants.ShutdownBGPlayer, "");
-                //BackgroundMediaPlayer.SendMessageToBackground(message);
-
-                //if (currentSongIndex >= 0 && currentSongIndex < songList.Count)
-                //{
-                //    if (!paused)
-                //    {
-                //        Pause();
-                //    }
-                //    Diagnostics.Logger.SaveBG("NPManager LoadSong() index OK" + "\n" + e.Message);
-                //    Diagnostics.Logger.SaveToFileBG();
-                //}
-                //else
-                //{
-                //    Diagnostics.Logger.SaveBG("NPManager LoadSong() index not OK" + "\n" + e.Message);
-                //    Diagnostics.Logger.SaveToFileBG();
-
-                //    ValueSet message = new ValueSet();
-                //    message.Add(AppConstants.ShutdownBGPlayer, "");
-                //    BackgroundMediaPlayer.SendMessageToBackground(message);
-                //}
             }
-
         }
 
         public async Task PlaySong(int index)
         {
             if (!isFirst)
             {
-                StopSongEvent();
+                await StopSongEvent(playlist.GetCurrentSong(), mediaPlayer.NaturalDuration);
             }
             else
             {
@@ -127,6 +101,10 @@ namespace NextPlayerUWPDataLayer.Services
             mediaPlayer.Play();
             paused = false;
             songsStart = DateTime.Now;
+            //if (mediaPlayer.Position == TimeSpan.Zero)
+            //{
+            //    ScrobbleNowPlaying();
+            //}
         }
 
         public void Pause()
@@ -138,7 +116,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task Next(bool userchoice = true)
         {
-            StopSongEvent();
+            await StopSongEvent(playlist.GetCurrentSong(), mediaPlayer.NaturalDuration);
             if (playlist.NextSong(userchoice) == null)
             {
                 paused = true;
@@ -156,13 +134,13 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task Previous()
         {
-            if (mediaPlayer.Position > TimeSpan.FromSeconds(5))
+            if (mediaPlayer.Position > timePreviousOrBeggining)
             {
                 mediaPlayer.Position = TimeSpan.Zero;
             }
             else
             {
-                StopSongEvent();
+                await StopSongEvent(playlist.GetCurrentSong(), mediaPlayer.NaturalDuration);
                 playlist.PreviousSong();
                 await LoadFile(playlist.GetCurrentSong().Path);
                 SendIndex();
@@ -174,9 +152,16 @@ namespace NextPlayerUWPDataLayer.Services
             playlist.LoadSongsFromDB();
         }
 
-        private void StopSongEvent()
+        private async Task StopSongEvent(NowPlayingSong song, TimeSpan songDuration)
         {
-            //UpdateSongStatistics();
+            if (WasSongPlayed(songDuration))
+            {
+                await UpdateSongStatistics(song.SongId, songDuration);
+                //if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "")
+                //{
+                //    ScrobbleTrack(song);
+                //}
+            }
             //if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "" && BackgroundMediaPlayer.Current.NaturalDuration != TimeSpan.Zero)
             //{
             //    System.Diagnostics.Debug.WriteLine("scrobble");
@@ -211,60 +196,57 @@ namespace NextPlayerUWPDataLayer.Services
             SendPosition();
         }
 
-        private void ScrobbleTrack()
+        public async Task UpdateSongStatistics(int songId, TimeSpan totalDuration)
         {
-            if (!paused)
+            if (songId > 0)
             {
-                try
-                {
-                    songPlayed += DateTime.Now - songsStart;
-                }
-                catch (Exception ex)
-                {
-                    Diagnostics.Logger.SaveBG("Scrobble !paused" + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
-                    Diagnostics.Logger.SaveToFileBG();
-                }
+                await DatabaseManager.Current.UpdateSongStatistics(songId);
             }
-            if (songPlayed.TotalSeconds >= BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds * 0.5 || songPlayed.TotalSeconds >= 4 * 60)
+            else
             {
-                int seconds = 0;
-                try
-                {
-                    DateTime start = DateTime.UtcNow - songPlayed;
-                    seconds = (int)start.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                }
-                catch (Exception ex)
-                {
-                    Diagnostics.Logger.SaveBG("Scrobble paused" + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
-                    Diagnostics.Logger.SaveToFileBG();
-                    return;
-                }
-                string artist = playlist.GetCurrentSong().Artist;
-                string track = playlist.GetCurrentSong().Title;
-                string timestamp = seconds.ToString();
-                //TrackScrobble scrobble = new TrackScrobble()
-                //{
-                //    Artist = artist,
-                //    Track = track,
-                //    Timestamp = timestamp
-                //};
-                ////System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track + " " + songPlayed);
-                ////SendScrobble(scrobble);
-                //LastFmManager.Current.CacheTrackScrobble(scrobble);
+                //log error
             }
         }
 
-        //private async Task SendScrobble(TrackScrobble s)
-        //{
-        //    await Task.Run(() => LastFmManager.Current.CacheTrackScrobble(s));
-        //}
+        private bool WasSongPlayed(TimeSpan totalTime)
+        {
+            return (songPlayed.TotalSeconds >= totalTime.TotalSeconds * 0.5 || songPlayed.TotalSeconds >= 4 * 60);
+        }
 
-        private void ScrobbleNowPlaying()
+        private void ScrobbleTrack(NowPlayingSong song)
+        {
+            int seconds = 0;
+            try
+            {
+                DateTime start = DateTime.UtcNow - songPlayed;
+                seconds = (int)start.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.Logger.SaveBG("Scrobble paused" + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
+                Diagnostics.Logger.SaveToFileBG();
+                return;
+            }
+            string artist = song.Artist;
+            string track = song.Title;
+            string timestamp = seconds.ToString();
+            TrackScrobble scrobble = new TrackScrobble()
+            {
+                Artist = artist,
+                Track = track,
+                Timestamp = timestamp
+            };
+            LastFmManager.Current.CacheTrackScrobble(scrobble).ConfigureAwait(false);
+            ////System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track + " " + songPlayed);
+            ////SendScrobble(scrobble);
+        }
+
+        private void ScrobbleNowPlaying(NowPlayingSong song)
         {
             //if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSendNP))
             //{
-            //    string artist = playlist.GetCurrentSong().Artist;
-            //    string track = playlist.GetCurrentSong().Title;
+            //    string artist = song.Artist;
+            //    string track = song.Title;
             //    SendNowPlayingScrobble(artist, track);
             //}
         }
@@ -272,14 +254,6 @@ namespace NextPlayerUWPDataLayer.Services
         private async Task SendNowPlayingScrobble(string artist, string track)
         {
             //await Task.Run(() => LastFmManager.Current.TrackUpdateNowPlaying(artist, track));
-        }
-
-        public void UpdateSongStatistics()
-        {
-            if (playlist.GetCurrentSong().SongId > 0 && BackgroundMediaPlayer.Current.Position.TotalSeconds >= 5.0)
-            {
-                //DatabaseManager.UpdateSongStatistics(playlist.GetCurrentSong().SongId);
-            }
         }
 
         void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
@@ -293,12 +267,12 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 sender.Play();
                 songsStart = DateTime.Now;
-                ScrobbleNowPlaying();
                 if (!startPosition.Equals(TimeSpan.Zero))
                 {
                     sender.Position = startPosition;
                     startPosition = TimeSpan.Zero;
                 }
+                ScrobbleNowPlaying(playlist.GetCurrentSong());
             }
             else
             {
@@ -313,7 +287,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private void mediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
-            //Debug.WriteLine("Failed with error code " + args.ExtendedErrorCode.ToString());
+            System.Diagnostics.Debug.WriteLine("Failed with error code " + args.ExtendedErrorCode.ToString());
         }
 
         public void RemoveHandlers()
@@ -363,7 +337,7 @@ namespace NextPlayerUWPDataLayer.Services
             playlist.UpdateSong(updatedSong);
         }
 
-        public void ChangeRate(int percent)
+        public void ChangePlaybackRate(int percent)
         {
             double rate = percent / 100.0;
             mediaPlayer.PlaybackRate = rate;
@@ -624,10 +598,6 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 currentIndex = playlist.Count - 1;
             }
-            //if (currentIndex < 0)
-            //{
-            //    currentIndex = 0;
-            //}
             lastPlayed.Clear();
             if (playlist.Count < 20)
             {
@@ -652,6 +622,8 @@ namespace NextPlayerUWPDataLayer.Services
                     song.Title = updatedSong.Title;
                     song.Artist = updatedSong.Artist;
                     song.Album = updatedSong.Album;
+                    //song.ImagePath = updatedSong.ImagePath;
+                    //song.Path = updatedSong.Path;
                 }
             }
         }

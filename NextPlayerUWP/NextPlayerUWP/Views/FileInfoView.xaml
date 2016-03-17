@@ -81,7 +81,7 @@
                                     Style="{StaticResource ValueStyle}"
                                     />
                         <Button Click="CopyPath_Click"
-                                Margin="8,0,0,4"
+                                Margin="12,0,0,4"
                                 MinHeight="20"
                                 MinWidth="20"
                                 Width="24"

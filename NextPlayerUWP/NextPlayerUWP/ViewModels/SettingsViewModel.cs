@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
-using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
@@ -69,6 +68,32 @@ namespace NextPlayerUWP.ViewModels
         {
             initialization = true;
 
+            // Timer
+            var tt = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
+            var to = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn);
+            if (to == null)
+            {
+                IsTimerOn = false;
+            }
+            else
+            {
+                IsTimerOn = (bool)to;
+            }
+            Time = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            if (isTimerOn)
+            {
+                if (tt != null)
+                {
+                    Time = TimeSpan.FromTicks((long)tt);
+                }
+            }
+            else
+            {
+                IsTimerOn = false;
+            }
+
+            //Library
+
             if (!isUpdating)
             {
                 UpdateProgressText = "";
@@ -82,6 +107,9 @@ namespace NextPlayerUWP.ViewModels
                     MusicLibraryFolders.Add(new MusicFolder() { Name = f.DisplayName, Path = f.Path });
                 }
             }
+
+            //About
+
             EnableTelemetry = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableTelemetry);
 
             initialization = false;
@@ -167,11 +195,9 @@ namespace NextPlayerUWP.ViewModels
             if (!initialization)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
-                TimeSpan t1 = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
-                long l1 = t1.Ticks;
-                long l2 = Time.Ticks;
-                TimeSpan t2 = TimeSpan.FromTicks(l2 - l1);
-                if (t2 <= TimeSpan.Zero) return;
+                TimeSpan now = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
+                TimeSpan difference = TimeSpan.FromTicks(Time.Ticks - now.Ticks);
+                if (difference <= TimeSpan.Zero) return;
                 else
                 {
                     SendMessage(AppConstants.SetTimer);

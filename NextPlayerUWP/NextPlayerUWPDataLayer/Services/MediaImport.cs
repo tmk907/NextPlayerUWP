@@ -37,8 +37,9 @@ namespace NextPlayerUWPDataLayer.Services
         {
             var files = await folder.GetFilesAsync();
             List<SongData> newSongs = new List<SongData>();
-            List<int> available = new List<int>();
-            Tuple<int, int> tuple;
+            List<int> oldAvailable = new List<int>();
+            List<int> toAvailable = new List<int>();
+            Tuple<int, int> tuple;//(isAvailable, SongId)
             //.qcp
             //.m4r
             //.3g2
@@ -58,7 +59,15 @@ namespace NextPlayerUWPDataLayer.Services
                 {
                     if (dbFiles.TryGetValue(file.Path, out tuple))
                     {
-                        available.Add(tuple.Item2);
+                        
+                        if (tuple.Item1 == 0) //not available in db
+                        {
+                            toAvailable.Add(tuple.Item2);
+                        }
+                        else //available in db
+                        {
+                            oldAvailable.Add(tuple.Item2);
+                        }
                     }
                     else
                     {
@@ -75,10 +84,15 @@ namespace NextPlayerUWPDataLayer.Services
                     catch (Exception ex) { }
                 }
             }
-            //if (newSongs.Count != 0 || available.Count != 0)
-            //{
-                DatabaseManager.Current.UpdateFolder(newSongs, available, folder.Path);//.InsertSongsAsync(newSongs);
-            //}
+
+            if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count > 0)
+            {
+
+            }
+            else
+            {
+                DatabaseManager.Current.UpdateFolder(newSongs, toAvailable, oldAvailable, folder.Path);
+            }
             songsAdded += newSongs.Count;
             progress.Report(songsAdded);
             var folders = await folder.GetFoldersAsync();

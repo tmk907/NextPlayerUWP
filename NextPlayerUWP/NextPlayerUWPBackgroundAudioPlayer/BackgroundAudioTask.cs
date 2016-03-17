@@ -25,10 +25,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
         private ManualResetEvent backgroundTaskStarted = new ManualResetEvent(false);
         private AppState foregroundAppState = AppState.Unknown;
         private NowPlayingManager nowPlayingManager;
-        private bool shutdown;
-
-        ThreadPoolTimer timer = null;
-        bool timerIsSet = false;
+        private bool shutdown;       
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
@@ -171,7 +168,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                         BackgroundMediaPlayer.Current.Position = TimeSpan.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString());
                         break;
                     case AppConstants.ChangeRate:
-                        nowPlayingManager.ChangeRate(Int32.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString()));
+                        nowPlayingManager.ChangePlaybackRate(Int32.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString()));
                         break;
                     case AppConstants.SetTimer:
                         SetTimer();
@@ -332,27 +329,31 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             BackgroundMediaPlayer.SendMessageToForeground(value);
         }
 
+        #region Timer
+
+        ThreadPoolTimer timer = null;
+        bool isTimerSet = false;
+
         private void SetTimer()
         {
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
-            long tt = 0;
+            long timerTicks = 0;
             if (t != null)
             {
-                tt = (long)t;
+                timerTicks = (long)t;
             }
 
             TimeSpan currentTime = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute) + TimeSpan.FromSeconds(DateTime.Now.Second);
-            long currentTimeTicks = currentTime.Ticks;
 
-            TimeSpan delay = TimeSpan.FromTicks(tt - currentTimeTicks);
+            TimeSpan delay = TimeSpan.FromTicks(timerTicks - currentTime.Ticks);
             if (delay > TimeSpan.Zero)
             {
-                if (timerIsSet)
+                if (isTimerSet)
                 {
                     TimerCancel();
                 }
                 timer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(TimerCallback), delay);
-                timerIsSet = true;
+                isTimerSet = true;
             }
         }
 
@@ -365,11 +366,13 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
         private void TimerCancel()
         {
-            timerIsSet = false;
+            isTimerSet = false;
             if (timer != null)
             {
                 timer.Cancel();
             }
         }
+
+        #endregion
     }
 }
