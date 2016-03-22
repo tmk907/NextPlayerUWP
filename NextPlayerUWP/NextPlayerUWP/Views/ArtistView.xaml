@@ -26,6 +26,7 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
                             Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
             <MenuFlyoutSeparator/>
@@ -36,25 +37,77 @@
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
-        <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
+        <Style x:Key="ArtistDescriptionTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontWeight" Value="Light"/>
+            <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="IndexItemStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+        </Style>
+        <Style x:Key="LeftItemStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
-        <Style x:Key="ItemStyleCenter" TargetType="TextBlock">
+        <Style x:Key="CenterItemStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
-        <Style x:Key="ItemStyleRight" TargetType="TextBlock">
+        <Style x:Key="RightItemStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
-        <DataTemplate x:Key="HeaderTemplate">
+        <Style x:Key="GroupHeaderContainerStyle" TargetType="ListViewHeaderItem">
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Margin" Value="0,0,12,4"/>
+            <Setter Property="Padding" Value="0,8,12,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewHeaderItem">
+                        <StackPanel Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter x:Name="ContentPresenter"
+                          Margin="{TemplateBinding Padding}"
+                          Content="{TemplateBinding Content}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <Rectangle Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                   StrokeThickness="0.5"
+                   Height="1"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Stretch"
+                   Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="GroupHeaderTemplate">
             <Grid Margin="0,12,0,4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
@@ -88,23 +141,23 @@
         <DataTemplate x:Key="SongItemTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition Width="40"/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                     Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource ItemStyleLeft}"/>
+                    Style="{StaticResource IndexItemStyle}"/>
                 <TextBlock Grid.Column="1"
                     Text="{x:Bind Title}"
-                    Style="{StaticResource ItemStyleLeft}"/>
+                    Style="{StaticResource LeftItemStyle}"/>
                 <TextBlock Grid.Column="2"
                     Text="{x:Bind Album}"
-                    Style="{StaticResource ItemStyleCenter}"/>
+                    Style="{StaticResource CenterItemStyle}"/>
                 <TextBlock Grid.Column="3"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource ItemStyleRight}"/>
+                    Style="{StaticResource RightItemStyle}"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -121,13 +174,8 @@
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderArtist"
-                
+                Content="Artist"
                 VisualStateNarrowMinWidth="-1" >
-            <controls:PageHeader.Content>
-                <TextBlock Text="Artist" 
-                           FontSize="27"
-                           Style="{StaticResource TitleTextBlockStyle}"/>
-            </controls:PageHeader.Content>
         </controls:PageHeader>
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
@@ -136,34 +184,25 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"
                 Text="{Binding Artist.Artist}"
-                Style="{StaticResource HeaderTextBlockStyle}"
-                Margin="24,16,4,6"
-                FontSize="27"
-                VerticalAlignment="Center"/>
+                Style="{StaticResource ArtistDescriptionTextBlockStyle}"
+                Margin="12,20,12,12"/>
             <ListView x:Name="ArtistSongsListView"
                     Grid.Row="1"
                     ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
                     ItemTemplate="{StaticResource SongItemTemplate}"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     SelectionMode="None"
-                    Margin="12,6,12,4"
-                    >
+                    Margin="12,0,0,4">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
                 <ListView.GroupStyle>
-                    <GroupStyle HeaderTemplate="{StaticResource HeaderTemplate}"/>
+                    <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}"
+                                HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"/>
                 </ListView.GroupStyle>
             </ListView>
         </Grid>

@@ -50,7 +50,7 @@
             <local:RightPanelControl/>
         </UserControl>-->
         <ScrollViewer Grid.Row="1" Grid.Column="0">
-            <Grid Margin="24,24,12,4">
+            <Grid Margin="16,12,12,4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -136,6 +136,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -236,12 +237,23 @@
                             />
                     <TextBlock
                             Grid.Row="8" Grid.Column="0"
+                            Text="Disc"
+                            x:Uid="TBDiscNumber"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="8" Grid.Column="1"
+                            Text="{Binding FileInfo.Tag.Disc}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="9" Grid.Column="0"
                             Text="Year"
                             x:Uid="TBYear"
                             Style="{StaticResource DescriptionStyle}"
                             />
                     <TextBlock
-                            Grid.Row="8" Grid.Column="1"
+                            Grid.Row="9" Grid.Column="1"
                             Text="{Binding FileInfo.Tag.Year}"
                             Style="{StaticResource ValueStyle}"
                             />

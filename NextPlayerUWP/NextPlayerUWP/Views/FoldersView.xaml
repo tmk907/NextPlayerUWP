@@ -97,7 +97,7 @@
         </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="44"/>
+                <RowDefinition Height="48"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
@@ -141,22 +141,14 @@
                     ItemTemplate="{StaticResource FolderItemTemplate}"
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
-                    Margin="12,4,0,0"
-                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle}"
+                    Margin="12,4,0,4"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
                     SelectionMode="None">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical"/>
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
-                        <!--<ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>-->
                 </ListView>
             </Grid>
         </Grid>

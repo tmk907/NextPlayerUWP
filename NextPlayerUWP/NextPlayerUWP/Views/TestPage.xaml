@@ -10,7 +10,7 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=TestVM}"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="ZoomedOutItemsTemplate2">
+        <!--<DataTemplate x:Key="ZoomedOutItemsTemplate2">
             <Border  BorderThickness="1" 
                      BorderBrush="LightGray" 
                      Background="Transparent"
@@ -22,7 +22,14 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Bottom"/>
             </Border>
-        </DataTemplate>
+        </DataTemplate>-->
+        <Style x:Key="rect1" TargetType="Rectangle">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <SolidColorBrush x:Key="bg" Color="Gray"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -44,7 +51,7 @@
         </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="44"/>
+                <RowDefinition Height="48"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
@@ -79,9 +86,62 @@
                             />
                 </StackPanel>
             </Grid>
+            <StackPanel Grid.Row="1" Orientation="Vertical">
+                <StackPanel  Orientation="Horizontal" Background="{StaticResource bg}">
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundAccentBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundAltHighBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundAltMediumHighBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundBaseHighBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundBaseMediumHighBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundChromeBlackHighBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundChromeBlackMediumBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundChromeMediumBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundChromeWhiteBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundListLowBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlBackgroundListMediumBrush}" />
 
-            <Grid Grid.Row="1">
-                <ListView
+                    
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Background="{StaticResource bg}">
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlPageBackgroundAltMediumBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlPageBackgroundBaseLowBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlPageBackgroundBaseMediumBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource ListViewItemPointerOverBackgroundThemeBrush}" />
+                    <Rectangle Style="{StaticResource rect1}"
+                    Fill="{ThemeResource SystemControlPageBackgroundMediumAltMediumBrush}" />
+                </StackPanel>
+            </StackPanel>
+            
+        </Grid>
+    </Grid>
+    <!--<ListView
                             ItemsSource="{Binding Keys}"
                             ItemTemplate="{StaticResource ZoomedOutItemsTemplate2}"
                         >
@@ -104,8 +164,8 @@
                             <Setter Property="Padding" Value="0"/>
                         </Style>
                     </ListView.ItemContainerStyle>
-                </ListView>
-                <!--<ListView x:Name="AlbumsListView"
+                </ListView>-->
+    <!--<ListView x:Name="AlbumsListView"
                             ItemsSource="{Binding Albums}"
                             ItemTemplate="{StaticResource AlbumItemTemplate}"
                             IsItemClickEnabled="True"
@@ -118,14 +178,16 @@
                             <ItemsWrapGrid Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
-                    --><!--<ListView.ItemContainerStyle>
+                    -->
+    <!--<ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                 </Style>
-                            </ListView.ItemContainerStyle>--><!--
+                            </ListView.ItemContainerStyle>-->
+    <!--
                     <ListView.GroupStyle>
                         <GroupStyle >
                             <GroupStyle.HeaderTemplate>
@@ -137,9 +199,6 @@
                         </GroupStyle>
                     </ListView.GroupStyle>
                 </ListView>-->
-            </Grid>
-        </Grid>
-    </Grid>
     <!--<Page.Resources>
         <DataTemplate x:Key="Item1Template" x:DataType="data:SongItem">
             <Grid>
@@ -187,7 +246,7 @@
         </Grid>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="44"/>
+                <RowDefinition Height="48"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">

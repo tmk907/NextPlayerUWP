@@ -120,7 +120,6 @@ namespace NextPlayerUWP.ViewModels
             if (args.ChosenSuggestion != null)
             {
                 index = genres.IndexOf((GenreItem)args.ChosenSuggestion);
-                //NavigationService.Navigate(App.Pages.Album, ((GenreItem)args.ChosenSuggestion).GetParameter());
             }
             else
             {

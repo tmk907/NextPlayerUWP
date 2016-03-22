@@ -204,20 +204,18 @@ namespace NextPlayerUWP.ViewModels
             App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter()); 
         }
 
-        public void GoToArtist(object sender, RoutedEventArgs e)
+        public async void GoToArtist(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            ArtistItem temp = new ArtistItem();
-            temp.SetParameter(item.Artist);
-            App.Current.NavigationService.Navigate(App.Pages.Artist, temp.GetParameter());
+            ArtistItem temp = await DatabaseManager.Current.GetArtistItemAsync(item.FirstArtist);
+            App.Current.NavigationService.Navigate(App.Pages.Artist, temp.ArtistId);
         }
 
-        public void GoToAlbum(object sender, RoutedEventArgs e)
+        public async void GoToAlbum(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            AlbumItem temp = new AlbumItem();
-            temp.SetParameter(item.Album);
-            App.Current.NavigationService.Navigate(App.Pages.Album, temp.GetParameter());
+            AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
+            App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
         }
 
         #endregion

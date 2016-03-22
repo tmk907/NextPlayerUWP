@@ -180,7 +180,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public override string ToString()
         {
-            return "album|" + album;
+            return "album|" + album + " "+ albumArtist;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -193,14 +193,15 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
-        public void SetParameter(string param)
+        public void SetParameter(string album ,string albumartist)
         {
-            albumParam = param;
+            albumParam = album;
+            albumArtist = albumartist;
         }
 
         public override string GetParameter()
         {
-            return MusicItemTypes.album + separator + albumParam;// + separator + artistParam;
+            return MusicItemTypes.album + separator + albumParam + separator + albumArtist;
         }
     }
 }

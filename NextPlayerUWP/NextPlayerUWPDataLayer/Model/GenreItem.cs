@@ -11,6 +11,8 @@ namespace NextPlayerUWPDataLayer.Model
         public string GenreParam { get { return genreParam; } }
         private string genre;
         public string Genre { get { return genre; } }
+        private int genreId;
+        public int GenreId { get { return genreId; } }
         private int songsNumber;
         public int SongsNumber
         {
@@ -48,15 +50,17 @@ namespace NextPlayerUWPDataLayer.Model
             duration = TimeSpan.Zero;
             genre = "Unknown Genre";
             genreParam = "";
+            genreId = 0;
             songsNumber = 0;
             lastAdded = DateTime.MinValue;
         }
 
-        public GenreItem(GenresTable item)
+        public GenreItem(GenresTable table)
         {
-            duration = item.Duration;
-            songsNumber = item.SongsNumber;
-            genreParam = item.Genre;
+            duration = table.Duration;
+            songsNumber = table.SongsNumber;
+            genreParam = table.Genre;
+            genreId = table.GenreId;
             if (genreParam == "")
             {
                 ResourceLoader loader = new ResourceLoader();
@@ -66,7 +70,7 @@ namespace NextPlayerUWPDataLayer.Model
             {
                 genre = genreParam;
             }
-            lastAdded = item.LastAdded;
+            lastAdded = table.LastAdded;
         }
 
         public override string ToString()

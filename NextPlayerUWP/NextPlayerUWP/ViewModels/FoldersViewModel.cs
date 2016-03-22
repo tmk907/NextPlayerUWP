@@ -113,7 +113,6 @@ namespace NextPlayerUWP.ViewModels
             if (args.ChosenSuggestion != null)
             {
                 index = folders.IndexOf((FolderItem)args.ChosenSuggestion);
-                //NavigationService.Navigate(App.Pages.Album, ((FolderItem)args.ChosenSuggestion).GetParameter());
             }
             else
             {

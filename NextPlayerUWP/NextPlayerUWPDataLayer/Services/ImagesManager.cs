@@ -18,9 +18,9 @@ namespace NextPlayerUWPDataLayer.Services
 {
     public class ImagesManager
     {
-        public static async Task<string> SaveAlbumCover(string album, string tileId)
+        public static async Task<string> SaveAlbumCover(string album, string albumArtist,string tileId)
         {
-            var songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album);
+            var songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album, albumArtist);
             string path = songs.FirstOrDefault().Path;
             string name = await SaveSongCover(path, tileId);
             return name;
@@ -282,7 +282,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (!album.IsImageSet)
             {
                 WriteableBitmap cover;
-                var songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam);
+                var songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam, album.AlbumArtist);
                 string songPath = songs.FirstOrDefault().Path;
                 cover = await CreateBitmap(songPath);
 

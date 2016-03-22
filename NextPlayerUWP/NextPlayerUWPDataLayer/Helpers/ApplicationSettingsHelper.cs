@@ -85,7 +85,7 @@ namespace NextPlayerUWPDataLayer.Helpers
             {
                 return Int32.Parse(value.ToString());
             }
-            else return -1;
+            else return 0;
         }
 
         public static Dictionary<int,string> PredefinedSmartPlaylistsId()

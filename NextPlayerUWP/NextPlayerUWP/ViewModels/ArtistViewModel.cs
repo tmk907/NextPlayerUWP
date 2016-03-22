@@ -23,7 +23,7 @@ namespace NextPlayerUWP.ViewModels
 
     public class ArtistViewModel : MusicViewModelBase
     {
-        private string artistParam;
+        private int artistId;
 
         public ArtistViewModel()
         {
@@ -67,8 +67,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 try
                 {
-                    var s = parameter.ToString().Split(new string[] { MusicItem.separator }, StringSplitOptions.None);
-                    artistParam = s[1];
+                    artistId = (int)parameter;
                 }
                 catch (Exception ex) { }
             }
@@ -78,11 +77,11 @@ namespace NextPlayerUWP.ViewModels
         {
             if (songs.Count == 0)
             {
-                Artist = await DatabaseManager.Current.GetArtistItemAsync(artistParam);
-                Songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(artistParam);
+                Artist = await DatabaseManager.Current.GetArtistItemAsync(artistId);
+                Songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(artist.ArtistParam);
                 var query = songs.OrderBy(s => s.Album).ThenBy(t => t.TrackNumber).
-                    GroupBy(u => u.Album).
-                    OrderBy(g => g.Key).
+                    GroupBy(u => new { u.Album, u.AlbumArtist }).
+                    OrderBy(g => g.Key.Album).
                     Select(group => new { GroupName = group.Key, Items = group });
                 int i = 0;
                 foreach (var g in query)
@@ -91,17 +90,17 @@ namespace NextPlayerUWP.ViewModels
                     GroupList group = new GroupList();
                     group.Key = g.GroupName;
 
-                    var album = await DatabaseManager.Current.GetAlbumItemAsync(g.GroupName);
+                    var album = await DatabaseManager.Current.GetAlbumItemAsync(g.GroupName.Album, g.GroupName.AlbumArtist);
 
                     var header = new ArtistItemHeader();
-                    if (g.GroupName == "")
+                    if (g.GroupName.Album == "")
                     {
                         var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
                         header.Album = loader.GetString("UnknownAlbum");
                     }
                     else
                     {
-                        header.Album = g.GroupName;
+                        header.Album = g.GroupName.Album;
                     }
                     header.Year = album.Year;
                     header.ImageUri = album.ImageUri;

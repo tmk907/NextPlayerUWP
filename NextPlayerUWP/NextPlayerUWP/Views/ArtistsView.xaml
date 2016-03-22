@@ -64,6 +64,44 @@
                     Style="{StaticResource ArtistItemStyleRight}"/>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="GroupHeaderItemTemplate" x:DataType="data:GroupList">
+            <TextBlock Text="{x:Bind Key}" 
+                       Style="{StaticResource GroupHeaderTextBlockStyle}"/>
+        </DataTemplate>
+        <Style x:Key="GroupHeaderContainerStyle" TargetType="ListViewHeaderItem">
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Margin" Value="0,0,12,4"/>
+            <Setter Property="Padding" Value="0,8,12,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewHeaderItem">
+                        <StackPanel Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter x:Name="ContentPresenter"
+                          Margin="{TemplateBinding Padding}"
+                          Content="{TemplateBinding Content}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <Rectangle Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                   StrokeThickness="0.5"
+                   Height="1"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Stretch"
+                   Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -91,7 +129,7 @@
         </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="44"/>
+                <RowDefinition Height="48"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
@@ -139,30 +177,16 @@
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
                             ShowsScrollingPlaceholders="False"
                             SelectionMode="None"
-                            Margin="12,4,0,0"
-                            ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
+                            Margin="12,0,0,4"
+                            ItemContainerStyle="{StaticResource ZoomedInListViewItemContainerStyle}">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsStackPanel Orientation="Vertical"/>
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
-                            <!--<ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>-->
                             <ListView.GroupStyle>
-                                <GroupStyle >
-                                    <GroupStyle.HeaderTemplate>
-                                        <DataTemplate x:DataType="data:GroupList">
-                                            <TextBlock Text="{x:Bind Key}" 
-                                            Style="{StaticResource GroupHeaderTextBlockStyle}"/>
-                                        </DataTemplate>
-                                    </GroupStyle.HeaderTemplate>
-                                </GroupStyle>
+                                <GroupStyle HeaderTemplate="{StaticResource GroupHeaderItemTemplate}" 
+                                            HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"/>
                             </ListView.GroupStyle>
                         </ListView>
                     </SemanticZoom.ZoomedInView>

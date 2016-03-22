@@ -59,7 +59,7 @@ namespace NextPlayerUWP.Common
             switch (MusicItem.ParseType(item.GetParameter()))
             {
                 case MusicItemTypes.album:
-                    list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam);
+                    list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
                 case MusicItemTypes.artist:
                     list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
@@ -103,7 +103,7 @@ namespace NextPlayerUWP.Common
             switch (MusicItem.ParseType(item.GetParameter()))
             {
                 case MusicItemTypes.album:
-                    list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam);
+                    list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
                 case MusicItemTypes.artist:
                     list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
@@ -173,7 +173,7 @@ namespace NextPlayerUWP.Common
             switch (MusicItem.ParseType(item.GetParameter()))
             {
                 case MusicItemTypes.album:
-                    list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam);
+                    list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
                 case MusicItemTypes.artist:
                     list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);

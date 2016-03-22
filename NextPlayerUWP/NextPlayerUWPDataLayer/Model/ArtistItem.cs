@@ -25,6 +25,8 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        private int artistId;
+        public int ArtistId { get { return artistId; } }
         private TimeSpan duration;
         public TimeSpan Duration { get { return duration; } }
         private int albumsNumber;
@@ -77,6 +79,7 @@ namespace NextPlayerUWPDataLayer.Model
         {
             artistParam = "";
             artist = "Unknown Artist";
+            artistId = 0;
             duration = TimeSpan.Zero;
             songsNumber = 0;
             albumsNumber = 0;
@@ -89,6 +92,7 @@ namespace NextPlayerUWPDataLayer.Model
             songsNumber = table.SongsNumber;
             duration = table.Duration;
             artistParam = table.Artist;
+            artistId = table.ArtistId;
             if (artistParam == "")
             {
                 ResourceLoader loader = new ResourceLoader();

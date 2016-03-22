@@ -234,13 +234,13 @@ namespace NextPlayerUWPDataLayer.Services
             #region albums
             List<AlbumsTable> newAlbums = new List<AlbumsTable>();
             List<AlbumsTable> updatedAlbums = new List<AlbumsTable>();
-            var groupedAlbums = songsList.GroupBy(a => a.Album);
+            var groupedAlbums = songsList.GroupBy(a => new { a.Album, a.AlbumArtist });
             var aList = await connectionAsync.Table<AlbumsTable>().ToListAsync();
-            var oldAlbums = aList.ToDictionary(l => l.Album);
+            var oldAlbums = aList.ToDictionary(l=> Tuple.Create(l.Album,l.AlbumArtist));
             foreach (var group in groupedAlbums)
             {
                 TimeSpan duration = TimeSpan.Zero;
-                string albumArtist = "";
+                //string albumArtist = group.Key.AlbumArtist;
                 int year = 0;
                 int count = 0;
                 DateTime lastAdded = DateTime.MinValue;
@@ -253,13 +253,13 @@ namespace NextPlayerUWPDataLayer.Services
                     {
                         year = song.Year;
                     }
-                    if (song.AlbumArtist != "")
-                    {
-                        albumArtist = song.AlbumArtist;
-                    }
+                    //if (song.AlbumArtist != "")
+                    //{
+                    //    albumArtist = song.AlbumArtist;
+                    //}
                 }
                 AlbumsTable oldAlbum;
-                if (oldAlbums.TryGetValue(group.FirstOrDefault().Album, out oldAlbum))
+                if (oldAlbums.TryGetValue(Tuple.Create(group.Key.Album,group.Key.AlbumArtist), out oldAlbum))
                 {
                     oldAlbum.Duration = duration;
                     oldAlbum.SongsNumber = count;
@@ -272,8 +272,8 @@ namespace NextPlayerUWPDataLayer.Services
                 {
                     newAlbums.Add(new AlbumsTable()
                     {
-                        Album = group.FirstOrDefault().Album,
-                        AlbumArtist = albumArtist,
+                        Album = group.Key.Album,
+                        AlbumArtist = group.Key.AlbumArtist,
                         Duration = duration,
                         ImagePath = "",
                         LastAdded = lastAdded,
@@ -514,11 +514,11 @@ namespace NextPlayerUWPDataLayer.Services
             return songs;
         }
 
-        public async Task<ObservableCollection<SongItem>> GetSongItemsFromAlbumAsync(string album)
+        public async Task<ObservableCollection<SongItem>> GetSongItemsFromAlbumAsync(string album, string albumArtist)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
-            var result = await songsConnectionAsync.Where(a=>a.Album.Equals(album)).ToListAsync();
+            var result = await songsConnectionAsync.Where(a => (a.Album.Equals(album) && a.AlbumArtist.Equals(albumArtist))).ToListAsync();
             var list = result.OrderBy(s => s.Track).ThenBy(t => t.Title);
             foreach (var item in list)
             {
@@ -724,9 +724,22 @@ namespace NextPlayerUWPDataLayer.Services
             return albums;
         }
 
-        public async Task<AlbumItem> GetAlbumItemAsync(string album)
+        public async Task<AlbumItem> GetAlbumItemAsync(int id)
         {
-            var result = await connectionAsync.Table<AlbumsTable>().Where(a => a.Album.Equals(album)).ToListAsync();
+            var result = await connectionAsync.Table<AlbumsTable>().Where(a => a.AlbumId.Equals(id)).ToListAsync();
+            if (result.Count > 0)
+            {
+                return new AlbumItem(result.FirstOrDefault());
+            }
+            else
+            {
+                return new AlbumItem();
+            }
+        }
+
+        public async Task<AlbumItem> GetAlbumItemAsync(string album, string albumArtist)
+        {
+            var result = await connectionAsync.Table<AlbumsTable>().Where(a => (a.Album.Equals(album) && a.AlbumArtist.Equals(albumArtist))).ToListAsync();
             if (result.Count > 0)
             {
                 return new AlbumItem(result.FirstOrDefault());
@@ -746,6 +759,19 @@ namespace NextPlayerUWPDataLayer.Services
                 artists.Add(new ArtistItem(item));
             }
             return artists;
+        }
+
+        public async Task<ArtistItem> GetArtistItemAsync(int artistId)
+        {
+            var result = await connectionAsync.Table<ArtistsTable>().Where(a => a.ArtistId.Equals(artistId)).ToListAsync();
+            if (result.Count > 0)
+            {
+                return new ArtistItem(result.FirstOrDefault());
+            }
+            else
+            {
+                return new ArtistItem();
+            }
         }
 
         public async Task<ArtistItem> GetArtistItemAsync(string artist)
@@ -1030,22 +1056,66 @@ namespace NextPlayerUWPDataLayer.Services
             await UpdateTables();
         }
 
+        public async Task DeleteAlbumAsync(string album, string albumArtist)
+        {
+            await connectionAsync.ExecuteAsync("DELETE FROM AlbumsTable WHERE Album = ? AND AlbumArtist = ?", album, albumArtist);
+        }
+
+        public async Task DeleteArtistAsync(string artist)
+        {
+            await connectionAsync.ExecuteAsync("DELETE FROM ArtistsTable WHERE Artist = ?", artist);
+        }
+
         #endregion
 
         #region Update
-        public async Task UpdateAlbumItem(AlbumItem album)
+
+        public async Task UpdateAlbumImagePath(AlbumItem album)
         {
             await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET ImagePath = ? WHERE AlbumId = ?", album.ImagePath, album.AlbumId);
         }
 
+        public async Task UpdateAlbumItem(AlbumItem album)
+        {
+            AlbumsTable t = new AlbumsTable()
+            {
+                Album = album.Album,
+                AlbumArtist = album.AlbumArtist,
+                AlbumId = album.AlbumId,
+                Duration = album.Duration,
+                ImagePath = album.ImagePath,
+                LastAdded = album.LastAdded,
+                SongsNumber = album.SongsNumber,
+                Year = album.Year
+            };
+            await connectionAsync.UpdateAsync(t);
+        }
+
         public async Task UpdateArtistItem(ArtistItem artist)
         {
-            await connectionAsync.UpdateAsync(artist);
+            ArtistsTable t = new ArtistsTable()
+            {
+                AlbumsNumber = artist.AlbumsNumber,
+                Artist = artist.Artist,
+                ArtistId = artist.ArtistId,
+                Duration = artist.Duration,
+                LastAdded = artist.LastAdded,
+                SongsNumber = artist.SongsNumber
+            };
+            await connectionAsync.UpdateAsync(t);
         }
 
         public async Task UpdateGenreItem(GenreItem genre)
         {
-            await connectionAsync.UpdateAsync(genre);
+            GenresTable t = new GenresTable()
+            {
+                Duration = genre.Duration,
+                Genre = genre.Genre,
+                GenreId = genre.GenreId,
+                LastAdded = genre.LastAdded,
+                SongsNumber = genre.SongsNumber
+            };
+            await connectionAsync.UpdateAsync(t);
         }
 
         public async Task UpdateSongData(SongData songData)
@@ -1208,6 +1278,31 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<SmartPlaylistsTable>();
             connection.CreateTable<SmartPlaylistsTable>();
             connection.CreateTable<SmartPlaylistEntryTable>();
+        }
+
+        public void resetdb()
+        {
+            
+
+            connection.DropTable<SongsTable>();
+            connection.DropTable<PlainPlaylistEntryTable>();
+            connection.DropTable<PlainPlaylistsTable>();
+            connection.DropTable<NowPlayingTable>();
+            connection.DropTable<FoldersTable>();
+            connection.DropTable<GenresTable>();
+            connection.DropTable<AlbumsTable>();
+            connection.DropTable<ArtistsTable>();
+            connection.DropTable<CachedScrobble>();
+
+            connection.CreateTable<PlainPlaylistsTable>();
+            connection.CreateTable<PlainPlaylistEntryTable>();
+            connection.CreateTable<SongsTable>();
+            connection.CreateTable<NowPlayingTable>();
+            connection.CreateTable<FoldersTable>();
+            connection.CreateTable<GenresTable>();
+            connection.CreateTable<AlbumsTable>();
+            connection.CreateTable<ArtistsTable>();
+            connection.CreateTable<CachedScrobble>();
         }
     }
 }

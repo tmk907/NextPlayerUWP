@@ -16,7 +16,7 @@ namespace NextPlayerUWP.ViewModels
 {
     public class AlbumViewModel : MusicViewModelBase
     {
-        private string albumParam;
+        int albumId;
 
         public AlbumViewModel()
         {
@@ -48,15 +48,15 @@ namespace NextPlayerUWP.ViewModels
         {
             if (songs.Count == 0)
             {
-                songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(albumParam);
-                Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.TrackNumber));
-                Album = await DatabaseManager.Current.GetAlbumItemAsync(albumParam);
+                Album = await DatabaseManager.Current.GetAlbumItemAsync(albumId);
+                songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam, album.AlbumArtist);
+                Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.Disc).ThenBy(t=>t.TrackNumber));
                 if (!album.IsImageSet)
                 {
                     string path = await ImagesManager.GetAlbumCoverPath(album);
                     Album.ImagePath = path;
                     Album.ImageUri = new Uri(path);
-                    await DatabaseManager.Current.UpdateAlbumItem(album);
+                    await DatabaseManager.Current.UpdateAlbumImagePath(album);
                 }
             }
         }
@@ -67,9 +67,12 @@ namespace NextPlayerUWP.ViewModels
             {
                 try
                 {
-                    albumParam = (MusicItem.ParseParameter(parameter as string))[1];
+                    albumId = (int)parameter;
                 }
-                catch (Exception ex) { }
+                catch (Exception ex)
+                {
+
+                }
             }
         }
 

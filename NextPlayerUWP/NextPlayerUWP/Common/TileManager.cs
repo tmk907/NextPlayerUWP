@@ -74,7 +74,7 @@ namespace NextPlayerUWP.Common
                 case MusicItemTypes.album:
                     name = ((AlbumItem)item).Album;
                     type = loader.GetString("Album");
-                    string imageName = await ImagesManager.SaveAlbumCover(((AlbumItem)item).AlbumParam, tileId);
+                    string imageName = await ImagesManager.SaveAlbumCover(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist, tileId);
                     if (imageName.Contains(tileId))
                     {
                         hasImage = "yes";

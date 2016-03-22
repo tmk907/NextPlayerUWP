@@ -47,8 +47,7 @@ namespace NextPlayerUWP
             App.Current.UnhandledException += App_UnhandledException;
             Logger.SaveFromSettingsToFile();
             //insights
-
-            
+                        
             //DatabaseManager.Current.ClearCoverPaths();
         }
 
@@ -233,6 +232,11 @@ namespace NextPlayerUWP
         public void ChangeTelemetry(bool enable)
         {
             //TODO
+        }
+
+        private void Resetdb()
+        {
+            DatabaseManager.Current.resetdb();
         }
     }
 }

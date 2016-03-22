@@ -106,7 +106,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.Album, ((AlbumItem)e.ClickedItem).GetParameter());
+            NavigationService.Navigate(App.Pages.Album, ((AlbumItem)e.ClickedItem).AlbumId);
         }
 
         private async Task ReloadData()
@@ -192,7 +192,7 @@ namespace NextPlayerUWP.ViewModels
                         album.ImageUri = new Uri(path);
                         album.IsImageSet = true;
                     });
-                    await DatabaseManager.Current.UpdateAlbumItem(album);
+                    await DatabaseManager.Current.UpdateAlbumImagePath(album);
                 }
             }
         }

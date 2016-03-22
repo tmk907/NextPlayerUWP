@@ -75,6 +75,22 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        private int disc;
+        public int Disc
+        {
+            get
+            {
+                return disc;
+            }
+            set
+            {
+                if (value != disc)
+                {
+                    disc = value;
+                    onPropertyChanged(this, "Disc");
+                }
+            }
+        }
         private int trackNumber;
         public int TrackNumber
         {
@@ -190,6 +206,13 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        public string FirstArtist
+        {
+            get
+            {
+                return artist.Split(';')[0];
+            }
+        }
 
         public SongItem()
         {
@@ -202,6 +225,7 @@ namespace NextPlayerUWPDataLayer.Model
             rating = 0;
             songId = -1;
             composer = "";
+            disc = 1;
             trackNumber = 0;
             year = 0;
             dateAdded = new DateTime();
@@ -221,6 +245,7 @@ namespace NextPlayerUWPDataLayer.Model
             path = table.Path;
             rating = (int)table.Rating;
             title = table.Title;
+            disc = (table.Disc == 0) ? 1 : table.Disc;
             trackNumber = table.Track;
             year = table.Year;
             songId = table.SongId;
