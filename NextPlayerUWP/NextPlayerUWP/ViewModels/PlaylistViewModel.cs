@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using System.IO;
+using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -51,12 +52,20 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref pageSubTitle, value); }
         }
 
+        private bool isPlainPlaylist = false;
+        public bool IsPlainPlaylist
+        {
+            get { return isPlainPlaylist; }
+            set { Set(ref isPlainPlaylist, value); }
+        }
+
         protected override async Task LoadData()
         {
             if (Playlist.Count == 0)
             {
                 PlaylistItem p = new PlaylistItem(-1, false, "Playlist");
                 var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                IsPlainPlaylist = false;
                 switch (type)
                 {
                     case MusicItemTypes.folder:
@@ -74,6 +83,7 @@ namespace NextPlayerUWP.ViewModels
                         p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
                         PageSubTitle = p.Name;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
+                        IsPlainPlaylist = true;
                         break;
                     case MusicItemTypes.smartplaylist:
                         PageTitle = loader.GetString("Playlist");
@@ -121,6 +131,19 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+        }
+
+        public async void DeleteFromPlaylist(object sender, RoutedEventArgs e)
+        {
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            int i = 0;
+            foreach (var s in playlist)
+            {
+                if (s.SongId == item.SongId) break;
+                i++;
+            }
+            Playlist.RemoveAt(i);
+            await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(item.SongId);
         }
 
         public void SortItems(object sender, SelectionChangedEventArgs e)

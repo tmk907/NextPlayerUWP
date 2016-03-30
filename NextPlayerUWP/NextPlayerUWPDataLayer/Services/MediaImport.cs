@@ -218,6 +218,10 @@ namespace NextPlayerUWPDataLayer.Services
                             song.Tag.Year = (int)tags.Year;
 
                             MusicProperties musicProperties = await file.Properties.GetMusicPropertiesAsync();
+                            if (musicProperties.Duration != TimeSpan.Zero)
+                            {
+                                song.Duration = musicProperties.Duration;
+                            }
                             if (song.Tag.Track == 0 && musicProperties.TrackNumber != 0)
                             {
                                 song.Tag.Track = (int)musicProperties.TrackNumber;

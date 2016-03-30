@@ -1032,10 +1032,15 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.DeleteAsync(playlist);
         }
 
+        public async Task DeletePlainPlaylistEntryByIdAsync(int songId)
+        {
+            var item = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(s => s.SongId == songId).ToListAsync();
+            await connectionAsync.DeleteAsync(item.FirstOrDefault());
+        }
+
         public void DeletePlainPlaylistEntry(int primaryId)
         {
             connection.Delete<PlainPlaylistEntryTable>(primaryId);
-
         }
         public async Task DeletePlainPlaylistAsync(int playlistId)
         {

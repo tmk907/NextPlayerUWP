@@ -45,7 +45,7 @@ namespace NextPlayerUWP.Common
                     if (DateTime.Now - removedTime > TimeSpan.FromSeconds(1))
                         return;
                     addIndex = e.NewStartingIndex;
-                    await HandleReorder();
+                    HandleReorder();
                     break;
             }
         }
@@ -59,7 +59,7 @@ namespace NextPlayerUWP.Common
             }
             else if (removeIndex < index && addIndex >= index)
             {
-                index++;
+                index--;
             }
             else if (removeIndex > index && addIndex <= index)
             {

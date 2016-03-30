@@ -49,7 +49,7 @@ namespace NextPlayerUWP
             //insights
             //Resetdb();            
             //DatabaseManager.Current.ClearCoverPaths();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
+            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)

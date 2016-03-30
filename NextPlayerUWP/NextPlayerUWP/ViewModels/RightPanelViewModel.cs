@@ -100,27 +100,34 @@ namespace NextPlayerUWP.ViewModels
                     foreach(var file in items)
                     {
                         var storageFile = file as Windows.Storage.StorageFile;
-                        SongItem newSong = new SongItem();
-                        newSong.Path = storageFile.Path;
-                        Windows.Storage.FileProperties.MusicProperties mp = await storageFile.Properties.GetMusicPropertiesAsync();
-                        newSong.Title = mp.Title;
-                        if (newSong.Title == "")
+                        string type = storageFile.FileType.ToLower();
+                        if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
+                            type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
+                            type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4")
                         {
-                            newSong.Title = file.Name;
-                        }
-                        newSong.Album = mp.Album;
-                        newSong.AlbumArtist = mp.AlbumArtist;
-                        newSong.Artist = mp.Artist;
-                        newSong.Duration = mp.Duration;
-                        newSong.SongId = -10;
+                            SongItem newSong = new SongItem();
+                            newSong.Path = storageFile.Path;
+                            Windows.Storage.FileProperties.MusicProperties mp = await storageFile.Properties.GetMusicPropertiesAsync();
+                            newSong.Title = mp.Title;
+                            if (newSong.Title == "")
+                            {
+                                newSong.Title = file.Name;
+                            }
+                            newSong.Album = mp.Album;
+                            newSong.AlbumArtist = mp.AlbumArtist;
+                            newSong.Artist = mp.Artist;
+                            newSong.Duration = mp.Duration;
+                            //if max songId in DB is less than 1 000 000 => it's OK
+                            newSong.SongId = (DateTime.Now.Second + DateTime.Now.Minute * 100 + DateTime.Now.Hour * 10000 + DateTime.Now.Day * 1000000);
 
-                        if (action.Equals(AppConstants.ActionAddToNowPlaying))
-                        {
-                            await NowPlayingPlaylistManager.Current.Add(newSong);
-                        }
-                        else if (action.Equals(AppConstants.ActionPlayNext))
-                        {
-                            await NowPlayingPlaylistManager.Current.AddNext(newSong);
+                            if (action.Equals(AppConstants.ActionAddToNowPlaying))
+                            {
+                                await NowPlayingPlaylistManager.Current.Add(newSong);
+                            }
+                            else if (action.Equals(AppConstants.ActionPlayNext))
+                            {
+                                await NowPlayingPlaylistManager.Current.AddNext(newSong);
+                            }
                         }
                     }
                 }
