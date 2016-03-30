@@ -4,6 +4,7 @@ using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using TagLib;
 using Windows.Data.Xml.Dom;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.UI.Notifications;
 
 namespace NextPlayerUWPDataLayer.Services
@@ -91,7 +93,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
             else
             {
-                DatabaseManager.Current.UpdateFolder(newSongs, toAvailable, oldAvailable, folder.Path);
+                await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
             }
             songsAdded += newSongs.Count;
             progress.Report(songsAdded);
@@ -130,7 +132,7 @@ namespace NextPlayerUWPDataLayer.Services
             song.LastPlayed = DateTime.MinValue;
             song.IsAvailable = 1;
             song.Tag.Rating = 0;
-            song.FileSize = 0;
+            song.FileSize = 0;            
 
             try
             {
@@ -151,8 +153,6 @@ namespace NextPlayerUWPDataLayer.Services
                         }
                         try
                         {
-                            //TagLib.Id3v2.Tag.DefaultVersion = 3;
-                            //TagLib.Id3v2.Tag.ForceDefaultVersion = true;
                             Tag tags;
                             if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
                             {
@@ -175,6 +175,26 @@ namespace NextPlayerUWPDataLayer.Services
                             {
                                 tags = tagFile.GetTag(TagTypes.Apple);
                             }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.FlacMetadata.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.FlacMetadata);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Asf.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Asf);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Ape.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Ape);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Xiph.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Xiph);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.None.ToString()))
+                            {
+                                tags = tagFile.GetTag(tagFile.TagTypes);
+                            }
                             else
                             {
                                 tags = tagFile.GetTag(tagFile.TagTypes);
@@ -196,6 +216,50 @@ namespace NextPlayerUWPDataLayer.Services
                             song.Tag.Track = (int)tags.Track;
                             song.Tag.TrackCount = (int)tags.TrackCount;
                             song.Tag.Year = (int)tags.Year;
+
+                            MusicProperties musicProperties = await file.Properties.GetMusicPropertiesAsync();
+                            if (song.Tag.Track == 0 && musicProperties.TrackNumber != 0)
+                            {
+                                song.Tag.Track = (int)musicProperties.TrackNumber;
+                            }
+                            if (song.Tag.Year == 0 && musicProperties.Year != 0)
+                            {
+                                song.Tag.Year = (int)musicProperties.Year;
+                            }
+                            if (song.Tag.Rating == 0 && musicProperties.Rating != 0)
+                            {
+                                switch (musicProperties.Rating)
+                                {
+                                    case 99:
+                                        song.Tag.Rating = 5;
+                                        break;
+                                    case 75:
+                                        song.Tag.Rating = 4;
+                                        break;
+                                    case 50:
+                                        song.Tag.Rating = 3;
+                                        break;
+                                    case 25:
+                                        song.Tag.Rating = 2;
+                                        break;
+                                    case 1:
+                                        song.Tag.Rating = 1;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            if (file.FileType == ".wav")
+                            {
+                                if (musicProperties.Album != "" && musicProperties.Album != song.Tag.Album)
+                                {
+                                    song.Tag.Album = musicProperties.Album;
+                                }
+                                if (musicProperties.Title != "" && musicProperties.Title != song.Tag.Title)
+                                {
+                                    song.Tag.Title = musicProperties.Title;
+                                }
+                            }
                         }
                         catch (CorruptFileException e)
                         {

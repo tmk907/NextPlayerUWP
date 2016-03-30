@@ -57,6 +57,12 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
             deferral = taskInstance.GetDeferral(); // This must be retrieved prior to subscribing to events below which use it
 
+            var to = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn);
+            if (to != null && (bool)to)
+            {
+                //SetTimer();//!
+            }
+
             // Mark the background task as started to unblock SMTC Play operation (see related WaitOne on this signal)
             backgroundTaskStarted.Set();
 

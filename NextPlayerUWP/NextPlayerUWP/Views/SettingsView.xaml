@@ -134,7 +134,7 @@
                                   Toggled="{x:Bind ViewModel.TimerSwitchToggled}"/>
                             <TimePicker IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
                                         Time="{x:Bind ViewModel.Time, Mode=TwoWay}"
-                                        TimeChanged="{x:Bind ViewModel.TimeChanged}"
+                                        
                                         />
                         </StackPanel>
                     </StackPanel>

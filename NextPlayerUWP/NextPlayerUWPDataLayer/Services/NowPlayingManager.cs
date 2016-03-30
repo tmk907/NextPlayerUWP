@@ -1,4 +1,4 @@
-﻿using NextPlayerDataLayer.Services;
+﻿using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;

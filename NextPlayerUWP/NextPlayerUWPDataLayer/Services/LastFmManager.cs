@@ -12,7 +12,7 @@ using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Diagnostics;
 
-namespace NextPlayerDataLayer.Services
+namespace NextPlayerUWPDataLayer.Services
 {
     public enum ErrorCode
     {
@@ -149,7 +149,7 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
-        private void PrepareAuth(ref Dictionary<string, string> msg)
+        private void AddAuth(ref Dictionary<string, string> msg)
         {
             msg.Add("api_key", ApiKey);
             msg.Add("sk", SessionKey);
@@ -182,6 +182,14 @@ namespace NextPlayerDataLayer.Services
                             break;
                     }
                 }
+                else
+                {
+
+                }
+            }
+            else
+            {
+
             }
             return he;
         }
@@ -246,7 +254,7 @@ namespace NextPlayerDataLayer.Services
             }
             
             msg.Add("method", "track.scrobble");
-            PrepareAuth(ref msg);
+            AddAuth(ref msg);
 
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
@@ -264,7 +272,7 @@ namespace NextPlayerDataLayer.Services
                 {"track", track},
                 {"method", "track.love"}
             };
-            PrepareAuth(ref msg);
+            AddAuth(ref msg);
 
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
@@ -283,7 +291,7 @@ namespace NextPlayerDataLayer.Services
                 {"track", track},
                 {"method", "track.unlove"}
             };
-            PrepareAuth(ref msg);
+            AddAuth(ref msg);
 
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
@@ -302,7 +310,7 @@ namespace NextPlayerDataLayer.Services
                 {"track", track},
                 {"method", "track.updateNowPlaying"}
             };
-            PrepareAuth(ref msg);
+            AddAuth(ref msg);
 
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
@@ -386,6 +394,23 @@ namespace NextPlayerDataLayer.Services
             if (AreCredentialsSet())
             {
                 await DatabaseManager.Current.CacheTrackLoveAsync("track.unlove", artist, track);
+            }
+        }
+
+        public async Task TrackGetInfo(string title, string artist, bool autocorrect = true)
+        {
+            Dictionary<string, string> msg = new Dictionary<string, string>();
+            msg.Add("method", "track.getInfo");
+            msg.Add("api_key", ApiKey);
+            msg.Add("artist", artist);
+            msg.Add("track", title);
+            msg.Add("autocorrect", (autocorrect ? 1 : 0).ToString());
+            
+            string response = await SendMessage(msg, false);
+
+            if (!IsStatusOK(response))
+            {
+                //await HadleError(ParseError(response), "track.scrobble", data);
             }
         }
     }

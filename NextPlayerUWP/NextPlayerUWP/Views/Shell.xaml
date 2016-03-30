@@ -84,7 +84,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="72"/>
+            <RowDefinition Height="68"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -169,7 +169,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="72"/>
+                    <ColumnDefinition Width="68"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Image Grid.RowSpan="2" Grid.Column="0" 

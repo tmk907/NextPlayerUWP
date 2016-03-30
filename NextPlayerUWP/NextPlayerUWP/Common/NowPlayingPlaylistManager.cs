@@ -6,6 +6,7 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
@@ -24,7 +25,52 @@ namespace NextPlayerUWP.Common
         private NowPlayingPlaylistManager()
         {
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
+            songs.CollectionChanged += Songs_CollectionChanged;
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
+        }
+
+        private int removeIndex = 0;
+        private int addIndex = 0;
+        private DateTime removedTime = DateTime.Now;
+
+        private async void Songs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Remove:
+                    removeIndex = e.OldStartingIndex;
+                    removedTime = DateTime.Now;
+                    break;
+                case NotifyCollectionChangedAction.Add:
+                    if (DateTime.Now - removedTime > TimeSpan.FromSeconds(1))
+                        return;
+                    addIndex = e.NewStartingIndex;
+                    await HandleReorder();
+                    break;
+            }
+        }
+
+        private async Task HandleReorder()
+        {
+            int index = ApplicationSettingsHelper.ReadSongIndex();
+            if (removeIndex == index)
+            {
+                index = addIndex;
+            }
+            else if (removeIndex < index && addIndex >= index)
+            {
+                index++;
+            }
+            else if (removeIndex > index && addIndex <= index)
+            {
+                index++;
+            }
+            else
+            {
+                return;
+            }
+            ApplicationSettingsHelper.SaveSongIndex(index);
+            await NotifyChange();
         }
 
         private void PlaybackManager_MediaPlayerTrackChanged(int index)
@@ -68,7 +114,7 @@ namespace NextPlayerUWP.Common
                     list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);
                     break;
                 case MusicItemTypes.genre:
-                    list = await DatabaseManager.Current.GetSongItemsFromGenreAsync(((GenreItem)item).Genre);
+                    list = await DatabaseManager.Current.GetSongItemsFromGenreAsync(((GenreItem)item).GenreParam);
                     break;
                 case MusicItemTypes.plainplaylist:
                     list = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(((PlaylistItem)item).Id);

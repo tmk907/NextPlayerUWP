@@ -202,7 +202,8 @@
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
                             Margin="12,4,0,0"
                             ItemContainerStyle="{StaticResource ZoomedInListViewItemContainerStyle}"
-                            >
+                            CanDragItems="True"
+                            DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical" />

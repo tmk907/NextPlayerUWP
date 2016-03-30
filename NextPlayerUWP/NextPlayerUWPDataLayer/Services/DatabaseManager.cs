@@ -34,7 +34,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             connectionAsync = new SQLiteAsyncConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName), true);
             connection = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName), true);
-            connection.BusyTimeout = TimeSpan.FromSeconds(2);
+            connection.BusyTimeout = TimeSpan.FromSeconds(4);
         }
 
         private SQLiteAsyncConnection connectionAsync;
@@ -97,9 +97,9 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.InsertAllAsync(newSongs);
         }
 
-        public void UpdateFolder(List<SongData> newSongs, List<int> toAvailable, List<int> oldAvailable, string directoryName)
+        public async Task UpdateFolderAsync(List<SongData> newSongs, List<int> toAvailable, List<int> oldAvailable, string directoryName)
         {
-            var old = connection.Table<SongsTable>().Where(s => s.DirectoryName.Equals(directoryName)).ToList();
+            var old = await connectionAsync.Table<SongsTable>().Where(s => s.DirectoryName.Equals(directoryName)).ToListAsync();
 
             var notAvailable = old.Select(s => s.SongId).Except(toAvailable).Except(oldAvailable);
             foreach(var id in notAvailable)
@@ -110,7 +110,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count == 0)
             {
                 //usun folder
-                connection.Execute("DELETE FROM FoldersTable WHERE Directory = ?", directoryName);
+                await connectionAsync.ExecuteAsync("DELETE FROM FoldersTable WHERE Directory = ?", directoryName);
                 return;
             }
 
@@ -133,16 +133,16 @@ namespace NextPlayerUWPDataLayer.Services
                 newDuration += item.Duration;
             }
 
-            var query2 = connection.Table<FoldersTable>().Where(f => f.Directory.Equals(directoryName)).ToList();
+            var query2 = await connectionAsync.Table<FoldersTable>().Where(f => f.Directory.Equals(directoryName)).ToListAsync();
             if (query2.Count == 1)
             {
-                connection.Execute("UPDATE FoldersTable SET SongsNumber = ?, Duration = ? WHERE FolderId = ?", newSongs.Count + toAvailable.Count + oldAvailable.Count, oldAvailableSongsDuration + newDuration, query2.FirstOrDefault().FolderId);
+                await connectionAsync.ExecuteAsync("UPDATE FoldersTable SET SongsNumber = ?, Duration = ? WHERE FolderId = ?", newSongs.Count + toAvailable.Count + oldAvailable.Count, oldAvailableSongsDuration + newDuration, query2.FirstOrDefault().FolderId);
             }
             else
             { 
                 if (newSongs.Count > 0)
                 {
-                    connection.Insert(new FoldersTable()
+                    await connectionAsync.InsertAsync(new FoldersTable()
                     {
                         Directory = directoryName,
                         Duration = newDuration,
@@ -158,7 +158,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 list.Add(CreateSongsTable(item));
             }
-            connection.InsertAll(list);
+            await connectionAsync.InsertAllAsync(list);
         }
 
         //Albums, Artists, Genres
@@ -1122,6 +1122,11 @@ namespace NextPlayerUWPDataLayer.Services
         {
             var song = CreateSongsTable(songData);
             await connectionAsync.UpdateAsync(song);
+        }
+
+        public async Task UpdateSongAlbumData(SongItem song)
+        {
+            await connectionAsync.ExecuteAsync("UPDATE SongsTable SET Album = ?, AlbumArtist = ?, Year = ? WHERE SongId = ?", song.Album, song.AlbumArtist, song.Year, song.SongId);
         }
 
         public async Task UpdateNowPlayingSong(SongData song)

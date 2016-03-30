@@ -12,6 +12,7 @@ using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Helpers;
 using GalaSoft.MvvmLight.Threading;
 using System.Collections.ObjectModel;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -254,6 +255,14 @@ namespace NextPlayerUWP.ViewModels
                 }
             }).AsAsyncOperation();           
         }
+
+        public void DragStarting(object sender, DragItemsStartingEventArgs args)
+        {
+            args.Data.RequestedOperation = DataPackageOperation.Copy;
+            object item = args.Items.FirstOrDefault();
+            args.Data.Properties.Add(item.GetType().ToString(), item);
+        }
+
 
         private string TimeSpanFormat(TimeSpan span)
         {

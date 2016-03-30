@@ -236,17 +236,24 @@ namespace NextPlayerUWPDataLayer.Services
             StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
             StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
 
-            using (var stream = await file.OpenStreamForWriteAsync())
+            try
             {
-                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream.AsRandomAccessStream());
-                var pixelStream = image.PixelBuffer.AsStream();
-                byte[] pixels = new byte[image.PixelBuffer.Length];
+                using (var stream = await file.OpenStreamForWriteAsync())
+                {
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream.AsRandomAccessStream());
+                    var pixelStream = image.PixelBuffer.AsStream();
+                    byte[] pixels = new byte[image.PixelBuffer.Length];
 
-                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
 
-                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)image.PixelWidth, (uint)image.PixelHeight, 96, 96, pixels);
+                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)image.PixelWidth, (uint)image.PixelHeight, 96, 96, pixels);
 
-                await encoder.FlushAsync();
+                    await encoder.FlushAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                //image exists and is opened in album view
             }
             return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
         }

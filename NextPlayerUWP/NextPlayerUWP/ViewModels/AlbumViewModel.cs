@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
+using NextPlayerUWPDataLayer.SpotifyAPI.Web;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -35,6 +36,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return album; }
             set { Set(ref album, value); }
+        }
+
+        private AlbumItem editedAlbum = new AlbumItem();
+        public AlbumItem EditedAlbum
+        {
+            get { return editedAlbum; }
+            set { Set(ref editedAlbum, value); }
         }
 
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
@@ -102,6 +110,76 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+        }
+
+        public void EditAlbum()
+        {
+            EditedAlbum = album;
+        }
+
+        public async void SaveAlbum()
+        {
+            Album = editedAlbum;
+            var a2 = await DatabaseManager.Current.GetAlbumItemAsync(editedAlbum.Album, editedAlbum.AlbumArtist);
+            if (a2.AlbumId > 0)//merge albums
+            {
+                album.LastAdded = (album.LastAdded > a2.LastAdded) ? album.LastAdded : a2.LastAdded;
+                if (!album.IsImageSet && a2.IsImageSet)
+                {
+                    album.ImagePath = a2.ImagePath;
+                    album.ImageUri = a2.ImageUri;
+                }
+                album.Duration += a2.Duration;
+                album.SongsNumber += a2.SongsNumber;
+                
+                await DatabaseManager.Current.DeleteAlbumAsync(editedAlbum.Album, editedAlbum.AlbumArtist);
+            }
+            await DatabaseManager.Current.UpdateAlbumItem(album);
+            foreach(var song in songs)
+            {
+                song.Album = album.Album;
+                song.AlbumArtist = album.AlbumArtist;
+                song.Year = album.Year;
+                await DatabaseManager.Current.UpdateSongAlbumData(song);
+            }
+            songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(editedAlbum.Album, editedAlbum.AlbumArtist);
+            Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.Disc).ThenBy(t => t.TrackNumber));
+            App.OnSongUpdated(songs.FirstOrDefault().SongId);   
+        }
+
+        public async void PlayAlbum()
+        {
+            int index = 0;
+            await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
+            ApplicationSettingsHelper.SaveSongIndex(index);
+            PlaybackManager.Current.PlayNew();
+        }
+
+        public async void PlayAlbumNext()
+        {
+            await NowPlayingPlaylistManager.Current.AddNext(album);
+        }
+
+        public async void AddAlbumToNowPlaying()
+        {
+            //FindYear();
+            await NowPlayingPlaylistManager.Current.Add(album);
+        }
+
+        public void AddAlbumToPlaylist()
+        {
+            NavigationService.Navigate(App.Pages.AddToPlaylist, album.GetParameter());
+        }
+
+        public async void FindYear()
+        {
+            SpotifyWebAPI s = new SpotifyWebAPI();
+            //Uri.EscapeDataString()
+            string q = "album%3A%22" + System.Net.WebUtility.UrlEncode(album.Album)+ "%22";
+            var i = await s.SearchItemsAsync(q, NextPlayerUWPDataLayer.SpotifyAPI.Web.Enums.SearchType.Album);
+            string id = i.Albums.Items.FirstOrDefault().Id;
+            var a = await s.GetAlbumAsync(id);
+            string y = a.ReleaseDate.Substring(0, 4);
         }
     }
 }

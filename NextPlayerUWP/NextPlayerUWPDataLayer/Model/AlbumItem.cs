@@ -61,7 +61,7 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
         private TimeSpan duration;
-        public TimeSpan Duration { get { return duration; } }
+        public TimeSpan Duration { get { return duration; } set { duration = value; } }
         private string imagePath;
         public string ImagePath
         {

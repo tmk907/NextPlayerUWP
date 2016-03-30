@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.Helpers;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Json;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -45,6 +47,97 @@ namespace NextPlayerUWP.ViewModels
             await ChangeLyrics(index);
         }
 
+        public void DragOver(object sender, DragEventArgs e)
+        {
+            if (e.DataView.Properties.ContainsKey(typeof(AlbumItem).ToString()) ||
+                e.DataView.Properties.ContainsKey(typeof(ArtistItem).ToString()) ||
+                e.DataView.Properties.ContainsKey(typeof(FolderItem).ToString()) ||
+                e.DataView.Properties.ContainsKey(typeof(GenreItem).ToString()) ||
+                e.DataView.Properties.ContainsKey(typeof(PlaylistItem).ToString()) ||
+                e.DataView.Properties.ContainsKey(typeof(SongItem).ToString()))
+            {
+                e.AcceptedOperation = DataPackageOperation.Copy;
+            }
+            else if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                e.AcceptedOperation = DataPackageOperation.Copy;
+            }
+        }
+
+        public async void DropItem(object sender, DragEventArgs e)
+        {
+            object item;
+            string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterDropItem) as string;
+            if (e.DataView.Properties.TryGetValue(typeof(AlbumItem).ToString(),out item))
+            {
+                
+            }
+            else if (e.DataView.Properties.TryGetValue(typeof(ArtistItem).ToString(), out item))
+            {
+
+            }
+            else if (e.DataView.Properties.TryGetValue(typeof(FolderItem).ToString(), out item))
+            {
+
+            }
+            else if (e.DataView.Properties.TryGetValue(typeof(GenreItem).ToString(), out item))
+            {
+
+            }
+            else if (e.DataView.Properties.TryGetValue(typeof(PlaylistItem).ToString(), out item))
+            {
+
+            }
+            else if (e.DataView.Properties.TryGetValue(typeof(SongItem).ToString(), out item))
+            {
+
+            }
+            else if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                var items = await e.DataView.GetStorageItemsAsync();
+                if (items.Count > 0)
+                {
+                    foreach(var file in items)
+                    {
+                        var storageFile = file as Windows.Storage.StorageFile;
+                        SongItem newSong = new SongItem();
+                        newSong.Path = storageFile.Path;
+                        Windows.Storage.FileProperties.MusicProperties mp = await storageFile.Properties.GetMusicPropertiesAsync();
+                        newSong.Title = mp.Title;
+                        if (newSong.Title == "")
+                        {
+                            newSong.Title = file.Name;
+                        }
+                        newSong.Album = mp.Album;
+                        newSong.AlbumArtist = mp.AlbumArtist;
+                        newSong.Artist = mp.Artist;
+                        newSong.Duration = mp.Duration;
+                        newSong.SongId = -10;
+
+                        if (action.Equals(AppConstants.ActionAddToNowPlaying))
+                        {
+                            await NowPlayingPlaylistManager.Current.Add(newSong);
+                        }
+                        else if (action.Equals(AppConstants.ActionPlayNext))
+                        {
+                            await NowPlayingPlaylistManager.Current.AddNext(newSong);
+                        }
+                    }
+                }
+            }
+            if (item != null)
+            {
+                if (action.Equals(AppConstants.ActionAddToNowPlaying))
+                {
+                    await NowPlayingPlaylistManager.Current.Add((MusicItem)item);
+                }
+                else if (action.Equals(AppConstants.ActionPlayNext))
+                {
+                    await NowPlayingPlaylistManager.Current.AddNext((MusicItem)item);
+                }
+            }
+        }
+
         #region NowPlaying
 
         private void NPListChanged()
@@ -70,7 +163,9 @@ namespace NextPlayerUWP.ViewModels
             lyricsWebview.ContentLoading += webView1_ContentLoading;
             lyricsWebview.NavigationStarting += webView1_NavigationStarting;
             lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
-            
+            lyricsWebview.LongRunningScriptDetected += LyricsWebview_LongRunningScriptDetected;
+
+
             bool scroll = false;
             if (listView != null)
             {
@@ -88,6 +183,11 @@ namespace NextPlayerUWP.ViewModels
             {
                 await SetScrollPosition();
             }
+        }
+
+        private void LyricsWebview_LongRunningScriptDetected(WebView sender, WebViewLongRunningScriptDetectedEventArgs args)
+        {
+            var a = args.ExecutionTime;
         }
 
         public void OnUnLoaded()
@@ -420,7 +520,7 @@ namespace NextPlayerUWP.ViewModels
                         Title = title;
                         Lyrics = lyrics;
 
-                        SaveLyrics();
+                        await SaveLyrics();
                     }
                 }
             }
@@ -431,7 +531,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private async void SaveLyrics()
+        private async Task SaveLyrics()
         {
             int songId = NowPlayingPlaylistManager.Current.GetCurrentPlaying().SongId;
             await DatabaseManager.Current.UpdateLyricsAsync(songId, lyrics);

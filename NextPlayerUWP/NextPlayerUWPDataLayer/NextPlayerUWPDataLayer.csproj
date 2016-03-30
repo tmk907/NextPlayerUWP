@@ -141,6 +141,40 @@
     <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\NowPlayingManager.cs" />
+    <Compile Include="Services\SpotifyService.cs" />
+    <Compile Include="Spotify\Enums\AlbumType.cs" />
+    <Compile Include="Spotify\Enums\FollowType.cs" />
+    <Compile Include="Spotify\Enums\Scope.cs" />
+    <Compile Include="Spotify\Enums\SearchType.cs" />
+    <Compile Include="Spotify\IClient.cs" />
+    <Compile Include="Spotify\Models\ArrayResponse.cs" />
+    <Compile Include="Spotify\Models\BasicModel.cs" />
+    <Compile Include="Spotify\Models\Category.cs" />
+    <Compile Include="Spotify\Models\CategoryList.cs" />
+    <Compile Include="Spotify\Models\CategoryPlaylist.cs" />
+    <Compile Include="Spotify\Models\CursorPaging.cs" />
+    <Compile Include="Spotify\Models\FeaturedPlaylists.cs" />
+    <Compile Include="Spotify\Models\FollowedArtists.cs" />
+    <Compile Include="Spotify\Models\FullAlbum.cs" />
+    <Compile Include="Spotify\Models\FullArtist.cs" />
+    <Compile Include="Spotify\Models\FullPlaylist.cs" />
+    <Compile Include="Spotify\Models\FullTrack.cs" />
+    <Compile Include="Spotify\Models\GeneralModels.cs" />
+    <Compile Include="Spotify\Models\NewAlbumReleases.cs" />
+    <Compile Include="Spotify\Models\Paging.cs" />
+    <Compile Include="Spotify\Models\PrivateProfile.cs" />
+    <Compile Include="Spotify\Models\PublicProfile.cs" />
+    <Compile Include="Spotify\Models\SearchItem.cs" />
+    <Compile Include="Spotify\Models\SimpleAlbum.cs" />
+    <Compile Include="Spotify\Models\SimpleArtist.cs" />
+    <Compile Include="Spotify\Models\SimplePlaylist.cs" />
+    <Compile Include="Spotify\Models\SimpleTrack.cs" />
+    <Compile Include="Spotify\Models\Snapshot.cs" />
+    <Compile Include="Spotify\Models\Token.cs" />
+    <Compile Include="Spotify\SpotifyWebAPI.cs" />
+    <Compile Include="Spotify\SpotifyWebBuilder.cs" />
+    <Compile Include="Spotify\SpotifyWebClient.cs" />
+    <Compile Include="Spotify\Util.cs" />
     <Compile Include="Tables\AlbumsTable.cs" />
     <Compile Include="Tables\ArtistsTable.cs" />
     <Compile Include="Tables\CachedScrobble.cs" />
@@ -159,6 +193,9 @@
     <SDKReference Include="SQLite.UAP.2015, Version=3.10.2">
       <Name>SQLite for Universal App Platform %28SQLite.UAP.2015, Version=3.10.2%29</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Spotify\Auth\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

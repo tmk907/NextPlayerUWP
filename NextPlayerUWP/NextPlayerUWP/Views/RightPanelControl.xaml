@@ -332,7 +332,13 @@
                         ItemTemplate="{StaticResource SongTemplate}"
                         SelectionMode="None"
                         IsItemClickEnabled="True"
-                        ItemClick="{x:Bind ViewModel.ItemClicked}">
+                        ItemClick="{x:Bind ViewModel.ItemClicked}"
+                          AllowDrop="True"
+                          CanDrag="True"
+                          CanReorderItems="True"
+                          DragOver="{x:Bind ViewModel.DragOver}"
+                          Drop="{x:Bind ViewModel.DropItem}"
+                          >
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>
@@ -402,8 +408,8 @@
                            VerticalAlignment="Center" 
                            HorizontalAlignment="Center"
                            Visibility="Collapsed"/>
-                        <WebView x:Name="lyricsWebview" 
-                                 Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <!--<WebView x:Name="lyricsWebview" 
+                                 Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>-->
                 </Grid>
                 </Grid>
             </PivotItem>

@@ -178,7 +178,9 @@
                             ShowsScrollingPlaceholders="False"
                             SelectionMode="None"
                             Margin="12,0,0,4"
-                            ItemContainerStyle="{StaticResource ZoomedInListViewItemContainerStyle}">
+                            ItemContainerStyle="{StaticResource ZoomedInListViewItemContainerStyle}"
+                            CanDragItems="True"
+                            DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsStackPanel Orientation="Vertical"/>

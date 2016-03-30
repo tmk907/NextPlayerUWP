@@ -146,13 +146,15 @@
             </Grid>
             <Grid Grid.Row="1">
                 <ListView x:Name="PlaylistListView"
-                ItemsSource="{Binding Playlist}"
-                ItemTemplate="{StaticResource SongItemTemplate}"
-                IsItemClickEnabled="True"
-                ItemClick="{x:Bind ViewModel.ItemClicked }"  
-                Margin="12,4,0,4"
-                ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
-                SelectionMode="None">
+                          ItemsSource="{Binding Playlist}"
+                          ItemTemplate="{StaticResource SongItemTemplate}"
+                          IsItemClickEnabled="True"
+                          ItemClick="{x:Bind ViewModel.ItemClicked }"  
+                          Margin="12,4,0,4"
+                          ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
+                          SelectionMode="None"
+                          CanDragItems="True"
+                          DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>

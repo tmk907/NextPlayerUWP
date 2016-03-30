@@ -52,7 +52,8 @@ namespace NextPlayerUWP.ViewModels
             switch (type)
             {
                 case MusicItemTypes.album:
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.Album.Equals(value),s=>s.Track);
+                    string albArt = values[2];
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => (a.Album.Equals(value) && a.AlbumArtist.Equals(albArt)),s=>s.Track);
                     break;
                 case MusicItemTypes.artist:
                     await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.Artists.Equals(value), s => s.Title);

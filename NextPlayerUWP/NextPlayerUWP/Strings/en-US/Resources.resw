@@ -129,8 +129,17 @@
   <data name="Artist" xml:space="preserve">
     <value>Artist</value>
   </data>
+  <data name="ButtonAddToNowPlaying.Content" xml:space="preserve">
+    <value>Add to now playing</value>
+  </data>
+  <data name="ButtonAddToPlaylist" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
   <data name="ButtonCancel.Content" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="ButtonPlayNext.Content" xml:space="preserve">
+    <value>Play next</value>
   </data>
   <data name="ButtonSave.Content" xml:space="preserve">
     <value>Save</value>

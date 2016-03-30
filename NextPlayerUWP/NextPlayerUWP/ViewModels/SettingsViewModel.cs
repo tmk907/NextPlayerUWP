@@ -171,7 +171,20 @@ namespace NextPlayerUWP.ViewModels
         public TimeSpan Time
         {
             get { return time; }
-            set { Set(ref time, value); }
+            set {
+                if (!initialization)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
+                    TimeSpan now = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
+                    TimeSpan difference = TimeSpan.FromTicks(Time.Ticks - now.Ticks);
+                    if (difference <= TimeSpan.Zero || !isTimerOn) return;
+                    else
+                    {
+                        SendMessage(AppConstants.SetTimer);
+                    }
+                }
+                Set(ref time, value);
+            }
         }
 
         public void TimerSwitchToggled(object sender, RoutedEventArgs e)

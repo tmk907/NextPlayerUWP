@@ -42,6 +42,7 @@ namespace NextPlayerUWP.ViewModels
             TagsData.FirstComposer = GetFirst(tagsData.Composers);
             songData.Tag = TagsData;
             await DatabaseManager.Current.UpdateSongData(songData);
+
             if (album != tagsData.Album || albumArtist != tagsData.AlbumArtist )
             {
                 AlbumItem a = await DatabaseManager.Current.GetAlbumItemAsync(album, albumArtist);
@@ -50,18 +51,18 @@ namespace NextPlayerUWP.ViewModels
                 {
                     if (a2.AlbumId > 0)
                     {
-                        await DatabaseManager.Current.DeleteAlbumAsync(album, albumArtist);
+                        a.LastAdded = (a.LastAdded > a2.LastAdded) ? a.LastAdded : a2.LastAdded;
+                        a.ImagePath = a2.ImagePath;
+                        a.ImageUri = a2.ImageUri;
+                        a.IsImageSet = a2.IsImageSet;
+                        await DatabaseManager.Current.DeleteAlbumAsync(a2.Album, a2.AlbumArtist);
                     }
-                    else
-                    {
-                        a.Album = tagsData.Album;
-                        a.AlbumArtist = tagsData.AlbumArtist;
-                        await DatabaseManager.Current.UpdateAlbumItem(a);
-                    }
+                    a.Album = tagsData.Album;
+                    a.AlbumArtist = tagsData.AlbumArtist;
+                    await DatabaseManager.Current.UpdateAlbumItem(a);
                 }
-                
-                await DatabaseManager.Current.UpdateTables();
             }
+
             if (artists != tagsData.Artists)
             {
                 tagsData.Artists = tagsData.Artists.TrimEnd(new char[] { ';', ' ' });
@@ -80,43 +81,43 @@ namespace NextPlayerUWP.ViewModels
                 if (old.Length == 1 && edited.Length == 1)
                 {
                     ArtistItem a = await DatabaseManager.Current.GetArtistItemAsync(old[0]);
+                    ArtistItem a2 = await DatabaseManager.Current.GetArtistItemAsync(edited[0]);
                     if (a.SongsNumber == 1)
                     {
+                        if (a2.ArtistId > 0)
+                        {
+                            a.LastAdded = (a.LastAdded > a2.LastAdded) ? a.LastAdded : a2.LastAdded;
+                            await DatabaseManager.Current.DeleteArtistAsync(edited[0]);
+                        }
                         a.Artist = tagsData.Artists;
                         await DatabaseManager.Current.UpdateArtistItem(a);
                     }
-                    else
-                    {
-                        //await DatabaseManager.Current.DeleteArtistAsync(a.Artist);
-                    }
                 }
-                else
-                {
-                    foreach (var o in old)
-                    {
-                        bool find = false;
-                        foreach (var ed in edited)
-                        {
-                            if (o.Equals(ed))
-                            {
-                                find = true;
-                                break;
-                            }
-                        }
-                        if (!find)
-                        {
-                            ArtistItem a = await DatabaseManager.Current.GetArtistItemAsync(o);
-                            if (a.SongsNumber == 1)
-                            {
-                                await DatabaseManager.Current.DeleteArtistAsync(o);
-                            }
-                        }
-                    }
-                }
-                
-                
-                await DatabaseManager.Current.UpdateTables();
+                //else
+                //{
+                //    foreach (var o in old)
+                //    {
+                //        bool find = false;
+                //        foreach (var ed in edited)
+                //        {
+                //            if (o.Equals(ed))
+                //            {
+                //                find = true;
+                //                break;
+                //            }
+                //        }
+                //        if (!find)
+                //        {
+                //            ArtistItem a = await DatabaseManager.Current.GetArtistItemAsync(o);
+                //            if (a.SongsNumber == 1)
+                //            {
+                //                await DatabaseManager.Current.DeleteArtistAsync(o);
+                //            }
+                //        }
+                //    }
+                //}
             }
+
             if (genres != tagsData.Genres)
             {
                 tagsData.Genres = tagsData.Genres.TrimEnd(new char[] { ';', ' ' });
@@ -130,8 +131,11 @@ namespace NextPlayerUWP.ViewModels
                     }
                 }
                 tagsData.Genres = sb.ToString();
-                await DatabaseManager.Current.UpdateTables();
+                
             }
+
+            await DatabaseManager.Current.UpdateTables();
+
             await NowPlayingPlaylistManager.Current.UpdateSong(songData);
             SaveLater.Current.SaveTagsLater(songData);
             App.OnSongUpdated(songData.SongId);

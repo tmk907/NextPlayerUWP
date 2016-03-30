@@ -38,5 +38,11 @@ namespace NextPlayerUWP.Views
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
         }
+
+        private async void EditAlbum_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.EditAlbum();
+            await ContentDialogEditAlbum.ShowAsync();
+        }
     }
 }

@@ -47,8 +47,9 @@ namespace NextPlayerUWP
             App.Current.UnhandledException += App_UnhandledException;
             Logger.SaveFromSettingsToFile();
             //insights
-                        
+            //Resetdb();            
             //DatabaseManager.Current.ClearCoverPaths();
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -195,6 +196,8 @@ namespace NextPlayerUWP
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, 5);

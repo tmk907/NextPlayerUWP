@@ -194,7 +194,9 @@
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     SelectionMode="None"
-                    Margin="12,0,0,4">
+                    Margin="12,0,0,4"
+                    CanDragItems="True"
+                    DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Vertical"/>

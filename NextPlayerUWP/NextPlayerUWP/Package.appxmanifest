@@ -25,6 +25,16 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="next-player-fa-name">
+            <uap:DisplayName>Next-Player Music Files</uap:DisplayName>
+            <uap:InfoTip>Info tip music files</uap:InfoTip>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.mp3</uap:FileType>
+              <uap:FileType>.wma</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
         <Extension Category="windows.backgroundTasks" EntryPoint="NextPlayerUWPBackgroundAudioPlayer.BackgroundAudioTask">
           <BackgroundTasks>
             <Task Type="audio" />

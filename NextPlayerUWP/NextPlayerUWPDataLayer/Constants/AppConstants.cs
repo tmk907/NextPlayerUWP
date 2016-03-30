@@ -109,5 +109,11 @@
 
         //assets
         public const string AssetDefaultAlbumCover = "ms-appx:///Assets/Albums/DefaultAlbumCover.png";
+
+
+        public const string ActionAfterDropItem = "ActionAfterDropItem";
+        public const string ActionPlayNext = "ActionPlayNext";
+        public const string ActionAddToNowPlaying = "ActionAddToNowPlaying";
+        public const string ActionPlayNow = "ActionPlayNow";
     }
 }

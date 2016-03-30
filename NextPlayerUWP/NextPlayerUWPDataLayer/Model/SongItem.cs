@@ -38,9 +38,9 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
         private TimeSpan duration;
-        public TimeSpan Duration { get { return duration; } }
+        public TimeSpan Duration { get { return duration; } set { duration = value; } }
         private string path;
-        public string Path { get { return path; } }
+        public string Path { get { return path; } set { path = value; } }
         private int rating;
         public int Rating
         {
@@ -58,7 +58,7 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
         private int songId;
-        public int SongId { get { return songId; } }
+        public int SongId { get { return songId; } set { songId = value; } }
         private string title;
         public string Title
         {

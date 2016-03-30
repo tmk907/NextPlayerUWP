@@ -189,7 +189,9 @@
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
                             SelectionMode="None"
                             ShowsScrollingPlaceholders="True"
-                            Margin="12,0,0,4">
+                            Margin="12,0,0,4"
+                            CanDragItems="True"
+                            DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsWrapGrid Orientation="Horizontal"/>

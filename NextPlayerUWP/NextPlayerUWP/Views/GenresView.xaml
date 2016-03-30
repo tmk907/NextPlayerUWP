@@ -133,7 +133,9 @@
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     SelectionMode="None"
-                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}">
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
+                    CanDragItems="True"
+                    DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>

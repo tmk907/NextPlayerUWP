@@ -16,9 +16,20 @@ using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
+    
     public class AlbumsViewModel : MusicViewModelBase
     {
-        CancellationTokenSource tokenSource2;
+        private delegate void StartLookingForCovers();
+        private event StartLookingForCovers StartLookingForCoversEvent;
+        private void OnDataLoaded()
+        {
+            if (StartLookingForCoversEvent != null)
+            {
+                StartLookingForCoversEvent();
+            }
+        }
+
+        private bool isRunning = false;
 
         public AlbumsViewModel()
         {
@@ -40,6 +51,7 @@ namespace NextPlayerUWP.ViewModels
                 albums.Add(new AlbumItem());
                 albums.Add(new AlbumItem());
             }
+            StartLookingForCoversEvent += StartLooking;
         }
 
         private ObservableCollection<AlbumItem> albums = new ObservableCollection<AlbumItem>();
@@ -83,14 +95,11 @@ namespace NextPlayerUWP.ViewModels
                 GroupedAlbums = gr;
             }
 
-            tokenSource2 = new CancellationTokenSource();
-            CancellationToken ct = tokenSource2.Token;
-            await Task.Run(() => CheckCovers(ct));
+            OnDataLoaded();
         }
 
         public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
-            tokenSource2.Cancel();
             return base.OnNavigatedFromAsync(state, suspending);
         }
 
@@ -175,18 +184,21 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public async Task CheckCovers(CancellationToken ct)
+        private async void StartLooking()
         {
-            foreach(AlbumItem album in albums)
+            if (isRunning) return;
+            isRunning = true;
+            await Task.Run(() => FindAlbumArts());
+            isRunning = false;
+        }
+
+        private async Task FindAlbumArts()
+        {
+            foreach (AlbumItem album in albums)
             {
-                if (ct.IsCancellationRequested)
-                {
-                    break;
-                }
                 if (!album.IsImageSet)
                 {
-                    await Dispatcher.DispatchAsync(async() => {
-
+                    await Dispatcher.DispatchAsync(async () => {
                         string path = await ImagesManager.GetAlbumCoverPath(album);
                         album.ImagePath = path;
                         album.ImageUri = new Uri(path);

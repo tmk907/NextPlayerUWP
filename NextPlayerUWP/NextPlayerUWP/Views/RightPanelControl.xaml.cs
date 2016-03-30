@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -14,8 +15,11 @@ namespace NextPlayerUWP.Views
         public RightPanelControl()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((RightPanelViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView, lyricsWebview); };
+            WebView web = new WebView(WebViewExecutionMode.SeparateThread);
+            WebGrid.Children.Add(web);
+            this.Loaded += delegate { ((RightPanelViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView, web); };
             ViewModel = (RightPanelViewModel)DataContext;
+
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
