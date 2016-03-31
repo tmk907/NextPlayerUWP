@@ -5,6 +5,7 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     DataContext="{Binding Source={StaticResource Locator}, Path=RightPanelVM}"
     mc:Ignorable="d"
@@ -39,7 +40,8 @@
             <Grid RightTapped="ListViewItem_RightTapped"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
-                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundConverter}, Mode=OneWay}">
+                  Padding="4,0,4,0"
+                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="44"/>
@@ -326,8 +328,10 @@
                 <PivotItem.Header>
                     <TextBlock Text="now playing" FontSize="22"/>
                 </PivotItem.Header>
-                <ListView x:Name="NowPlayingPlaylistListView"
-                        Margin="0,8,0,0" 
+                <mycontrols:AlternatingRowListView x:Name="NowPlayingPlaylistListView"
+                        OddRowBackground="{ThemeResource SystemControlBackgroundChromeWhiteBrush}"
+                        EvenRowBackground="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+                        Margin="8,8,0,8" 
                         ItemsSource="{x:Bind ViewModel.Songs}"
                         ItemTemplate="{StaticResource SongTemplate}"
                         SelectionMode="None"
@@ -339,21 +343,22 @@
                           DragOver="{x:Bind ViewModel.DragOver}"
                           Drop="{x:Bind ViewModel.DropItem}"
                           >
-                    <ListView.ItemsPanel>
+                    <mycontrols:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemContainerStyle>
+                    </mycontrols:AlternatingRowListView.ItemsPanel>
+                    <mycontrols:AlternatingRowListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalAlignment" Value="Stretch"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="VerticalAlignment" Value="Stretch"/>
                             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                             <Setter Property="Margin" Value="0,0,8,0"/>
+                            <Setter Property="Padding" Value="0,0,0,0"/>
                         </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                    </mycontrols:AlternatingRowListView.ItemContainerStyle>
+                </mycontrols:AlternatingRowListView>
             </PivotItem>
             <PivotItem Style="{StaticResource PivotItemStyle}">
                 <PivotItem.Header>

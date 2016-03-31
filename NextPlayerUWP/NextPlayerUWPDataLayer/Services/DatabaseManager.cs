@@ -494,6 +494,16 @@ namespace NextPlayerUWPDataLayer.Services
             ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
             foreach (var e in query)
             {
+                if (e.SongId>= 10000000) //! TODO!!!
+                {
+                    SongItem s = new SongItem();
+                    s.SongId = e.SongId;
+                    s.Title = e.Title;
+                    s.Album = e.Album;
+                    s.Artist = e.Artist;
+                    s.Path = e.Path;
+                    list.Add(s);
+                }
                 var query2 = songsConnection.Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
                 if (query2 != null)
                 {

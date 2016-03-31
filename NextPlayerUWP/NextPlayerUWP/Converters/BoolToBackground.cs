@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP.Converters
 {
-    public class BoolToBackground : IValueConverter
+    public class BoolToBackgroundHighlight : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -14,7 +14,7 @@ namespace NextPlayerUWP.Converters
             }
             else
             {
-                return new SolidColorBrush(Windows.UI.Colors.White);
+                return new SolidColorBrush(Windows.UI.Colors.Transparent);
             }
         }
 

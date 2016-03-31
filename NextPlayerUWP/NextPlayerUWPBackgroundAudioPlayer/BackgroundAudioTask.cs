@@ -32,6 +32,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             nowPlayingManager = new NowPlayingManager();
 
             smtc = BackgroundMediaPlayer.Current.SystemMediaTransportControls;
+            
             smtc.ButtonPressed += smtc_ButtonPressed;
             smtc.PropertyChanged += smtc_PropertyChanged;
             smtc.IsEnabled = true;
@@ -218,7 +219,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             //    smtc.DisplayUpdater.Update();
             //    return;
             //}
-
+            
             //SystemMediaTransportControlsDisplayUpdater updater = systemMediaControls.DisplayUpdater;
             //await updater.CopyFromFileAsync(MediaPlaybackType.Music, file );
 
@@ -295,6 +296,8 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                     catch (Exception ex)
                     {
                     }
+                    break;
+                default:
                     break;
             }
         }

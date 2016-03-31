@@ -106,6 +106,7 @@
     <Compile Include="Common\SortEnums.cs" />
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="Common\TileManager.cs" />
+    <Compile Include="Controls\AlternatingRowListView.cs" />
     <Compile Include="Converters\AlbumImagePath.cs" />
     <Compile Include="Converters\BackgroundConverter.cs" />
     <Compile Include="Converters\BoolToBackground.cs" />

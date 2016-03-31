@@ -29,6 +29,8 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             ChangeCover();
+            RepeatMode = Repeat.CurrentState();
+            ShuffleMode = Shuffle.CurrentState();
             _timer = new DispatcherTimer();
             SetupTimer();
         }
@@ -272,8 +274,8 @@ namespace NextPlayerUWP.ViewModels
         {
             if (!sliderpressed)
             {
-                SliderValue = BackgroundMediaPlayer.Current.Position.TotalSeconds;
-                CurrentTime = BackgroundMediaPlayer.Current.Position;
+                SliderValue = PlaybackManager.Current.CurrentPlayer.Position.TotalSeconds;
+                CurrentTime = PlaybackManager.Current.CurrentPlayer.Position;
             }
             else
             {

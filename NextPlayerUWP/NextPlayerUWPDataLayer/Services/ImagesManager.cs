@@ -209,7 +209,14 @@ namespace NextPlayerUWPDataLayer.Services
         {
             BitmapImage bitmap = new BitmapImage();
 
-            bitmap = await GetOriginalCover(path);
+            if (string.IsNullOrEmpty(path))
+            {
+                bitmap = await GetDefaultCover();
+            }
+            else
+            {
+                bitmap = await GetOriginalCover(path);
+            }
 
             if (bitmap.PixelHeight == 0)
             {

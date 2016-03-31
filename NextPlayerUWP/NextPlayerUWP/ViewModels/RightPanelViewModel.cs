@@ -68,6 +68,7 @@ namespace NextPlayerUWP.ViewModels
         {
             object item;
             string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterDropItem) as string;
+
             if (e.DataView.Properties.TryGetValue(typeof(AlbumItem).ToString(),out item))
             {
                 
@@ -97,7 +98,7 @@ namespace NextPlayerUWP.ViewModels
                 var items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
                 {
-                    foreach(var file in items)
+                    foreach (var file in items)
                     {
                         var storageFile = file as Windows.Storage.StorageFile;
                         string type = storageFile.FileType.ToLower();
@@ -117,8 +118,9 @@ namespace NextPlayerUWP.ViewModels
                             newSong.AlbumArtist = mp.AlbumArtist;
                             newSong.Artist = mp.Artist;
                             newSong.Duration = mp.Duration;
-                            //if max songId in DB is less than 1 000 000 => it's OK
-                            newSong.SongId = (DateTime.Now.Second + DateTime.Now.Minute * 100 + DateTime.Now.Hour * 10000 + DateTime.Now.Day * 1000000);
+                            //if max songId in DB is less than 10 000 000 => it's OK
+                            // 23 59 59 999 -- 235 959 999     min value 01 00 00 000 -- 10 000 000
+                            newSong.SongId = (DateTime.Now.Millisecond + DateTime.Now.Second *1000 + DateTime.Now.Minute * 100000 + (DateTime.Now.Hour+1) * 10000000);// + DateTime.Now.Day * 1000000);
 
                             if (action.Equals(AppConstants.ActionAddToNowPlaying))
                             {

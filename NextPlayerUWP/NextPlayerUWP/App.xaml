@@ -40,7 +40,7 @@
             <converters:RepeatForeground x:Key="RepeatForegroundConverter"/>
             <converters:RepeatContent x:Key="RepeatContentConverter"/>
             <converters:ComboBoxItemValueConverter x:Key="ComboBoxItemValueConverter"/>
-            <converters:BoolToBackground x:Key="BoolToBackgroundConverter"/>
+            <converters:BoolToBackgroundHighlight x:Key="BoolToBackgroundHighlightConverter"/>
             <converters:PlaylistNameToBool x:Key="PlaylistNameToBoolConverter"/>
             <converters:SongItemConverter x:Key="SongItemConverter"/>
             <converters:YearConverter x:Key="YearConverter"/>

@@ -119,7 +119,7 @@ namespace NextPlayerUWP.Common
             }
         } 
 
-        private MediaPlayer CurrentPlayer
+        public MediaPlayer CurrentPlayer
         {
             get
             {

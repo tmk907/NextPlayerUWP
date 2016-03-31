@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=PlaylistVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -42,7 +43,7 @@
         </MenuFlyout>
         <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="15"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -56,7 +57,7 @@
         </Style>
         <Style x:Key="ItemStyleRight" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -147,22 +148,24 @@
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="1">
-                <ListView x:Name="PlaylistListView"
+                <mycontrols:AlternatingRowListView x:Name="PlaylistListView"
+                        OddRowBackground="{ThemeResource SystemControlBackgroundChromeWhiteBrush}"
+                        EvenRowBackground="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
                           ItemsSource="{Binding Playlist}"
                           ItemTemplate="{StaticResource SongItemTemplate}"
                           IsItemClickEnabled="True"
                           ItemClick="{x:Bind ViewModel.ItemClicked }"  
-                          Margin="12,4,0,4"
+                          Margin="12,0,0,0"
                           ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
                           SelectionMode="None"
                           CanDragItems="True"
                           DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                    <ListView.ItemsPanel>
+                    <mycontrols:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                </ListView>
+                    </mycontrols:AlternatingRowListView.ItemsPanel>
+                </mycontrols:AlternatingRowListView>
             </Grid>
         </Grid>
     </Grid>
