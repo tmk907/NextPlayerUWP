@@ -328,9 +328,7 @@
                 <PivotItem.Header>
                     <TextBlock Text="now playing" FontSize="22"/>
                 </PivotItem.Header>
-                <mycontrols:AlternatingRowListView x:Name="NowPlayingPlaylistListView"
-                        OddRowBackground="{ThemeResource SystemControlBackgroundChromeWhiteBrush}"
-                        EvenRowBackground="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+                <ListView x:Name="NowPlayingPlaylistListView"
                         Margin="8,8,0,8" 
                         ItemsSource="{x:Bind ViewModel.Songs}"
                         ItemTemplate="{StaticResource SongTemplate}"
@@ -343,12 +341,12 @@
                           DragOver="{x:Bind ViewModel.DragOver}"
                           Drop="{x:Bind ViewModel.DropItem}"
                           >
-                    <mycontrols:AlternatingRowListView.ItemsPanel>
+                    <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
-                    </mycontrols:AlternatingRowListView.ItemsPanel>
-                    <mycontrols:AlternatingRowListView.ItemContainerStyle>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalAlignment" Value="Stretch"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -357,8 +355,8 @@
                             <Setter Property="Margin" Value="0,0,8,0"/>
                             <Setter Property="Padding" Value="0,0,0,0"/>
                         </Style>
-                    </mycontrols:AlternatingRowListView.ItemContainerStyle>
-                </mycontrols:AlternatingRowListView>
+                    </ListView.ItemContainerStyle>
+                </ListView>
             </PivotItem>
             <PivotItem Style="{StaticResource PivotItemStyle}">
                 <PivotItem.Header>

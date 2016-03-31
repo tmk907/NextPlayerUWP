@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -58,7 +59,7 @@
 
         <Style x:Key="IndexItemStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="15"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -66,7 +67,7 @@
         </Style>
         <Style x:Key="LeftItemStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="15"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -362,8 +363,10 @@
                         </StackPanel>
                     </Grid>
                 </Grid>
-                <ListView Grid.Row="1" Grid.ColumnSpan="2"
+                <mycontrols:AlternatingRowListView Grid.Row="1" Grid.ColumnSpan="2"
                         x:Name="AlbumSongsListView"
+                        EvenRowBackground="{ThemeResource ListViewItemBackgroundDark}"
+                        OddRowBackground="{ThemeResource ListViewItemBackgroundLight}"
                         ItemsSource="{Binding Songs}"
                         ItemTemplate="{StaticResource AlbumSongItemTemplate}"
                         ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
@@ -373,12 +376,12 @@
                         SelectionMode="None"
                         CanDragItems="True"
                         DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                    <ListView.ItemsPanel>
+                    <mycontrols:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                </ListView>
+                    </mycontrols:AlternatingRowListView.ItemsPanel>
+                </mycontrols:AlternatingRowListView>
             </Grid>
         </Grid>
     </Grid>

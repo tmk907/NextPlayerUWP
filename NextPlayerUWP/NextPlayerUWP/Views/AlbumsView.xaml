@@ -63,8 +63,8 @@
                 <Image Grid.Row="0" Width="132" Height="132" Margin="4">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind ImageUri}"
-                                     DecodePixelHeight="128" 
-                                     DecodePixelWidth="128"/>
+                                     DecodePixelHeight="132" 
+                                     DecodePixelWidth="132"/>
                     </Image.Source>
                 </Image>
                 <TextBlock Grid.Row="1"

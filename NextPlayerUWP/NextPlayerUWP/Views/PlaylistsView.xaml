@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=PlaylistsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -127,8 +128,10 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
-            <ListView x:Name="PlaylistsListView"
+            <mycontrols:AlternatingRowListView x:Name="PlaylistsListView"
                       Grid.Row="1"
+                EvenRowBackground="{ThemeResource ListViewItemBackgroundDark}"
+                OddRowBackground="{ThemeResource ListViewItemBackgroundLight}"
                 ItemsSource="{Binding Playlists, Mode=OneWay}"
                 ItemTemplate="{StaticResource PlaylistItemTemplate}"
                 SelectionMode="None"
@@ -138,12 +141,12 @@
                 ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
                 CanDragItems="True"
                 DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                <ListView.ItemsPanel>
+                <mycontrols:AlternatingRowListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-            </ListView>
+                </mycontrols:AlternatingRowListView.ItemsPanel>
+            </mycontrols:AlternatingRowListView>
         </Grid>
     </Grid>
 </Page>

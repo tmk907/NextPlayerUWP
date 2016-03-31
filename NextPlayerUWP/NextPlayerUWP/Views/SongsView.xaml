@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=SongsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -41,7 +42,7 @@
         </MenuFlyout>
         <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="15"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -194,7 +195,9 @@
             </Grid>
             <SemanticZoom Grid.Row="1">
                 <SemanticZoom.ZoomedInView>
-                    <ListView x:Name="SongsListView"
+                    <mycontrols:AlternatingRowListView x:Name="SongsListView"
+                            EvenRowBackground="{ThemeResource ListViewItemBackgroundDark}"
+                            OddRowBackground="{ThemeResource ListViewItemBackgroundLight}"
                             ItemsSource="{Binding Source={StaticResource SongsCVS}}"
                             ItemTemplate="{StaticResource SongsListViewItemTemplate}"
                             SelectionMode="None"
@@ -204,16 +207,16 @@
                             ItemContainerStyle="{StaticResource ZoomedInListViewItemContainerStyle}"
                             CanDragItems="True"
                             DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                        <ListView.ItemsPanel>
+                        <mycontrols:AlternatingRowListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical" />
                             </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.GroupStyle>
+                        </mycontrols:AlternatingRowListView.ItemsPanel>
+                        <mycontrols:AlternatingRowListView.GroupStyle>
                             <GroupStyle HeaderTemplate="{StaticResource GroupHeaderItemTemplate}" 
                                         HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"/>
-                        </ListView.GroupStyle>
-                    </ListView>
+                        </mycontrols:AlternatingRowListView.GroupStyle>
+                    </mycontrols:AlternatingRowListView>
                 </SemanticZoom.ZoomedInView>
                 <SemanticZoom.ZoomedOutView>
                     <ListView
