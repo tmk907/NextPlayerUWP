@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Album" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Album Artist" xml:space="preserve">
+    <value>Wykonawca albumu</value>
+  </data>
+  <data name="AppBarButtonAddPlaylist.Label" xml:space="preserve">
+    <value>Nowa playlista</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artysta</value>
+  </data>
+  <data name="ButtonAddToNowPlaying.Content" xml:space="preserve">
+    <value>Dodaj do teraz odtwarzane</value>
+  </data>
+  <data name="ButtonAddToPlaylist" xml:space="preserve">
+    <value>Dodaj do playlisty</value>
+  </data>
+  <data name="ButtonCancel.Content" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="ButtonPlayNext.Content" xml:space="preserve">
+    <value>Play next</value>
+  </data>
+  <data name="ButtonSave.Content" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Composer" xml:space="preserve">
+    <value>Kompozytor</value>
+  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Connecting</value>
+  </data>
+  <data name="ConnectionError" xml:space="preserve">
+    <value>Connection error</value>
+  </data>
+  <data name="ContentDialogEditName.Title" xml:space="preserve">
+    <value>Edytuj nazwę</value>
+  </data>
+  <data name="ContentDialogNewPlaylist.Title" xml:space="preserve">
+    <value>Nowa playlista</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Czy jesteś pewien, że chcesz usunąć tę playlistę?</value>
+  </data>
+  <data name="Directory" xml:space="preserve">
+    <value>Directory</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Długość</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Folder Name" xml:space="preserve">
+    <value>Nazwa folderu</value>
+  </data>
+  <data name="Genre" xml:space="preserve">
+    <value>Gatunek</value>
+  </data>
+  <data name="Last Added" xml:space="preserve">
+    <value>Ostatnio dodane</value>
+  </data>
+  <data name="Last Played" xml:space="preserve">
+    <value>Ostatnio odtwarzane</value>
+  </data>
+  <data name="Later" xml:space="preserve">
+    <value>Później</value>
+  </data>
+  <data name="LibraryUpdated" xml:space="preserve">
+    <value>Biblioteka zaktualizowana</value>
+  </data>
+  <data name="MFIAddToNowPlaying.Text" xml:space="preserve">
+    <value>Dodaj do teraz odtwarzane</value>
+  </data>
+  <data name="MFIAddToPlaylist.Text" xml:space="preserve">
+    <value>Dodaj do playlisty</value>
+  </data>
+  <data name="MFIDelete.Text" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="MFIEditPlainName.Text" xml:space="preserve">
+    <value>Edytuj nazwę</value>
+  </data>
+  <data name="MFIEditSmart.Text" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="MFIEditTags.Text" xml:space="preserve">
+    <value>Edytuj tagi</value>
+  </data>
+  <data name="MFIGoToAlbum.Text" xml:space="preserve">
+    <value>Go to album</value>
+  </data>
+  <data name="MFIGoToArtist.Text" xml:space="preserve">
+    <value>Go to artist</value>
+  </data>
+  <data name="MFIPin.Text" xml:space="preserve">
+    <value>Przypnij</value>
+  </data>
+  <data name="MFIPlayNext.Text" xml:space="preserve">
+    <value>Play next</value>
+  </data>
+  <data name="MFIShare.Text" xml:space="preserve">
+    <value>Udostępnij</value>
+  </data>
+  <data name="MFIShowDetails.Text" xml:space="preserve">
+    <value>Pokaż szczegóły</value>
+  </data>
+  <data name="NajczesciejOdtwarzane" xml:space="preserve">
+    <value>Najczęściej odtwarzane</value>
+  </data>
+  <data name="NajgorzejOceniane" xml:space="preserve">
+    <value>Najgorzej oceniane</value>
+  </data>
+  <data name="NajlepiejOceniane" xml:space="preserve">
+    <value>Najlepiej oceniane</value>
+  </data>
+  <data name="NajrzadziejOdtwarzane" xml:space="preserve">
+    <value>Najrzadziej odtwarzane</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="OstatnioDodane" xml:space="preserve">
+    <value>Ostatnio dodane</value>
+  </data>
+  <data name="OstatnioOdtwarzane" xml:space="preserve">
+    <value>Ostatnio odtwarzane</value>
+  </data>
+  <data name="PageHeaderAddToPlaylist.Content" xml:space="preserve">
+    <value>Dodaj do playlisty</value>
+  </data>
+  <data name="PageHeaderAlbum.Content" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="PageHeaderAlbums.Content" xml:space="preserve">
+    <value>Albumy</value>
+  </data>
+  <data name="PageHeaderArtist.Content" xml:space="preserve">
+    <value>Artysta</value>
+  </data>
+  <data name="PageHeaderArtists.Content" xml:space="preserve">
+    <value>Artyści</value>
+  </data>
+  <data name="PageHeaderFileInfo.Content" xml:space="preserve">
+    <value>File info</value>
+  </data>
+  <data name="PageHeaderFolders.Content" xml:space="preserve">
+    <value>Foldery</value>
+  </data>
+  <data name="PageHeaderGenres.Content" xml:space="preserve">
+    <value>Gatunki</value>
+  </data>
+  <data name="PageHeaderPlaylist.Content" xml:space="preserve">
+    <value>Playlista</value>
+  </data>
+  <data name="PageHeaderSettings.Content" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="PageHeaderSongs.Content" xml:space="preserve">
+    <value>Utwory</value>
+  </data>
+  <data name="PageHeaderTagsEditor.Content" xml:space="preserve">
+    <value>Edytor tagów</value>
+  </data>
+  <data name="Play Count" xml:space="preserve">
+    <value>Liczba odtworzeń</value>
+  </data>
+  <data name="Playlist" xml:space="preserve">
+    <value>Playlista</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Playlisty</value>
+  </data>
+  <data name="RateAppMsg" xml:space="preserve">
+    <value>If you enjoy using Next player, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!</value>
+  </data>
+  <data name="RateAppTitle" xml:space="preserve">
+    <value>Oceń aplikację</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Ocena</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Utwór</value>
+  </data>
+  <data name="Song Count" xml:space="preserve">
+    <value>Liczba utworów</value>
+  </data>
+  <data name="TBAlbum.Text" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="TBAlbumArtist.Text" xml:space="preserve">
+    <value>Wykonawca albumu</value>
+  </data>
+  <data name="TBAlbums.Text" xml:space="preserve">
+    <value>Albumy</value>
+  </data>
+  <data name="TBArtist.Text" xml:space="preserve">
+    <value>Artysta</value>
+  </data>
+  <data name="TBArtists.Text" xml:space="preserve">
+    <value>Artyści</value>
+  </data>
+  <data name="TBComment.Text" xml:space="preserve">
+    <value>Komentarz</value>
+  </data>
+  <data name="TBComposer.Text" xml:space="preserve">
+    <value>Kompozytor</value>
+  </data>
+  <data name="TBConductor.Text" xml:space="preserve">
+    <value>Dyrygent</value>
+  </data>
+  <data name="TBDisc.Text" xml:space="preserve">
+    <value>Dysk</value>
+  </data>
+  <data name="TBFolders.Text" xml:space="preserve">
+    <value>Foldery</value>
+  </data>
+  <data name="TBGenre.Text" xml:space="preserve">
+    <value>Gatunek</value>
+  </data>
+  <data name="TBGenres.Text" xml:space="preserve">
+    <value>Gatunki</value>
+  </data>
+  <data name="TBPlaylistName.Text" xml:space="preserve">
+    <value>Nazwa playlisty</value>
+  </data>
+  <data name="TBPlaylistNewName.Text" xml:space="preserve">
+    <value>Nowa nazwa:</value>
+  </data>
+  <data name="TBPlaylists.Text" xml:space="preserve">
+    <value>Playlisty</value>
+  </data>
+  <data name="TBSettings.Text" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="TBSongs.Text" xml:space="preserve">
+    <value>Utwory</value>
+  </data>
+  <data name="TBSortBy.Text" xml:space="preserve">
+    <value>Sortuj wg</value>
+  </data>
+  <data name="TBTitle.Text" xml:space="preserve">
+    <value>Tytuł</value>
+  </data>
+  <data name="TBTrackNumber.Text" xml:space="preserve">
+    <value>Numer utworu</value>
+  </data>
+  <data name="TBYear.Text" xml:space="preserve">
+    <value>Rok</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Tytuł</value>
+  </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>Nieznany album</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Nieznany artysta</value>
+  </data>
+  <data name="UnknownGenre" xml:space="preserve">
+    <value>Nieznany gatunek</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Rok</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Tak</value>
+  </data>
+</root>

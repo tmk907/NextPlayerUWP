@@ -251,7 +251,8 @@
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderAlbum"
                 Content="Album" 
-                VisualStateNarrowMinWidth="-1" />
+                VisualStateNarrowMinWidth="0" 
+                VisualStateNormalMinWidth="720"/>
             <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -365,8 +366,8 @@
                 </Grid>
                 <mycontrols:AlternatingRowListView Grid.Row="1" Grid.ColumnSpan="2"
                         x:Name="AlbumSongsListView"
-                        EvenRowBackground="{ThemeResource ListViewItemBackgroundDark}"
-                        OddRowBackground="{ThemeResource ListViewItemBackgroundLight}"
+                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                         ItemsSource="{Binding Songs}"
                         ItemTemplate="{StaticResource AlbumSongItemTemplate}"
                         ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"

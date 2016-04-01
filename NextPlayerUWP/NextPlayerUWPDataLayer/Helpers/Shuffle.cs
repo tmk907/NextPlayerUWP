@@ -39,15 +39,16 @@ namespace NextPlayerUWPDataLayer.Helpers
         {
             if (shuffle)
             {
-                if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                {
-                    return new SolidColorBrush(Windows.UI.Colors.White);
-                }
-                else return new SolidColorBrush(Windows.UI.Colors.Black);
+                return new SolidColorBrush(Windows.UI.Colors.White);
+                //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                //{
+                //    return new SolidColorBrush(Windows.UI.Colors.White);
+                //}
+                //else return new SolidColorBrush(Windows.UI.Colors.Black);
             }
             else
             {
-                return new SolidColorBrush(Windows.UI.Colors.Gray);
+                return new SolidColorBrush(Windows.UI.Color.FromArgb(255,204,204,204));
             }
         }
     }

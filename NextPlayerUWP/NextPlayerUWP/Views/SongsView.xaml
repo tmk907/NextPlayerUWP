@@ -167,7 +167,7 @@
                 <AutoSuggestBox  Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
-                    Margin="4,0,4,0" 
+                    Margin="4,0,12,0" 
                     HorizontalAlignment="Right" 
                     Width="200" 
                     VerticalAlignment="Center"
@@ -196,8 +196,8 @@
             <SemanticZoom Grid.Row="1">
                 <SemanticZoom.ZoomedInView>
                     <mycontrols:AlternatingRowListView x:Name="SongsListView"
-                            EvenRowBackground="{ThemeResource ListViewItemBackgroundDark}"
-                            OddRowBackground="{ThemeResource ListViewItemBackgroundLight}"
+                            EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                            OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                             ItemsSource="{Binding Source={StaticResource SongsCVS}}"
                             ItemTemplate="{StaticResource SongsListViewItemTemplate}"
                             SelectionMode="None"

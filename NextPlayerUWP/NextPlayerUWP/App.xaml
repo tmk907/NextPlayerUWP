@@ -11,22 +11,27 @@
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="White"/>
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#cccccc"/>
-                    <SolidColorBrush x:Key="PageHeaderBackground" Color="DarkGray"/>
-                    <SolidColorBrush x:Key="ListViewItemBackgroundDark" Color="{StaticResource SystemChromeLowColor}"/>
-                    <SolidColorBrush x:Key="ListViewItemBackgroundLight" Color="{StaticResource SystemChromeBlackHighColor}"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="{StaticResource SystemChromeLowColor}"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundNormal" Color="{StaticResource SystemChromeBlackHighColor}"/>
+                    <SolidColorBrush x:Key="BottomPlayerTextForeground" Color="White"/>
+                    
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="Black"/>
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#323232"/>
-                    <SolidColorBrush x:Key="PageHeaderBackground" Color="LightGray"/>
-                    <SolidColorBrush x:Key="ListViewItemBackgroundDark" Color="{StaticResource SystemChromeLowColor}"/>
-                    <SolidColorBrush x:Key="ListViewItemBackgroundLight" Color="{StaticResource SystemChromeWhiteColor}"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="{StaticResource SystemChromeLowColor}"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundNormal" Color="{StaticResource SystemChromeWhiteColor}"/>
+                    <SolidColorBrush x:Key="BottomPlayerTextForeground" Color="White"/>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:NextPlayerUWP.ViewModels" />
 
             <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
+            <SolidColorBrush x:Key="PageHeaderBackground" Color="{ThemeResource SystemChromeMediumColor}"/>
 
+            <SolidColorBrush x:Key="SliderThumbBackground" Color="White"/>
+            <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFill" Color="#FFE6E6E6"/>
+            <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlit" Color="#FFF2F2F2"/>
 
             <SolidColorBrush x:Key="TopAppBarBrush" Color="LightGray"/>
 

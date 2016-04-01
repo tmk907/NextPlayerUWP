@@ -45,7 +45,7 @@
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderAlbums"
                 Content="Albums" 
-                VisualStateNarrowMinWidth="-1" />
+                VisualStateNarrowMinWidth="0" />
         <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
         </UserControl>-->

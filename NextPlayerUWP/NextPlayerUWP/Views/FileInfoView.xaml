@@ -45,7 +45,8 @@
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderFileInfo"
                 Content="File Info" 
-                VisualStateNarrowMinWidth="-1" />
+                VisualStateNarrowMinWidth="0"
+                VisualStateNormalMinWidth="720"/>
         <!--<UserControl Grid.Column="1" Grid.Row="1">
             <local:RightPanelControl/>
         </UserControl>-->

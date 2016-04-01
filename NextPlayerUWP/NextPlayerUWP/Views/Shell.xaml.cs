@@ -1,22 +1,12 @@
 ﻿using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Template10.Services.NavigationService;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -32,6 +22,19 @@ namespace NextPlayerUWP.Views
             this.InitializeComponent();
             this.Loaded += LoadSlider;
             Menu.NavigationService = navigationService;
+            App.AppThemeChanged += App_AppThemeChanged;
+        }
+
+        private void App_AppThemeChanged(bool isLight)
+        {
+            if (isLight)
+            {
+                this.RequestedTheme = ElementTheme.Light;
+            }
+            else
+            {
+                this.RequestedTheme = ElementTheme.Dark;
+            }
         }
 
         #region Slider 

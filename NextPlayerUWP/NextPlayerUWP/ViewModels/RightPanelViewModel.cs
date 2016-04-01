@@ -42,6 +42,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async void TrackChanged(int index)
         {
+            if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
             ScrollAfterTrackChanged(index);
             //await Task.Run(() => ChangeLyrics(index));
             await ChangeLyrics(index);

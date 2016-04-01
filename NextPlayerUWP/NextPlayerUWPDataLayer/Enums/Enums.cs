@@ -15,6 +15,12 @@
         Canceled
     }
 
+    public enum AppTheme
+    {
+        Light,
+        Dark
+    }
+
     public class Enums
     {
     }

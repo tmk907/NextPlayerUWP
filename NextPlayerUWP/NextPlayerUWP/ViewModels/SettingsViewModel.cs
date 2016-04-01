@@ -11,7 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.System;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -90,6 +93,17 @@ namespace NextPlayerUWP.ViewModels
             else
             {
                 IsTimerOn = false;
+            }
+
+            //Personalization
+            bool islightthemeon = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+            if (islightthemeon)
+            {
+                IsLightThemeOn = true;
+            }
+            else
+            {
+                IsLightThemeOn = false;
             }
 
             //Library
@@ -214,6 +228,59 @@ namespace NextPlayerUWP.ViewModels
                 else
                 {
                     SendMessage(AppConstants.SetTimer);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Personalize
+
+        private bool isLightThemeOn = true;
+        public bool IsLightThemeOn
+        {
+            get { return isLightThemeOn; }
+            set { Set(ref isLightThemeOn, value); }
+        }
+
+        public void ThemeSwitchToggled(object sender, RoutedEventArgs e)
+        {
+            if (initialization) return;
+            bool isLight = ((ToggleSwitch)sender).IsOn;
+            if (isLight)
+            {
+                //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppTheme.Light);
+                App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
+            }
+            else
+            {
+                App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Dark;
+            }
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, isLight);
+
+            App.OnAppThemChanged(isLight);
+
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            {
+                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                if (titleBar != null)
+                {
+                    if (isLight)
+                    {
+                        titleBar.BackgroundColor = Colors.White;
+                        titleBar.ButtonBackgroundColor = Colors.White;
+                        titleBar.ButtonForegroundColor = Colors.Black;
+                        titleBar.ForegroundColor = Colors.Black;
+                        //titleBar.ButtonHoverBackgroundColor = 
+                    }
+                    else
+                    {
+                        titleBar.BackgroundColor = Colors.Black;
+                        titleBar.ButtonBackgroundColor = Colors.Black;
+                        titleBar.ButtonForegroundColor = Colors.White;
+                        titleBar.ForegroundColor = Colors.White;
+                    }
                 }
             }
         }

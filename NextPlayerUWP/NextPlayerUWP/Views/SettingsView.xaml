@@ -143,7 +143,9 @@
                            Margin="0,0,0,8"
                            Text="Personalise"/>
                 <StackPanel Orientation="Vertical" Margin="4">
-                </StackPanel>
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsLightThemeOn, Mode=TwoWay}"
+                                  Toggled="{x:Bind ViewModel.ThemeSwitchToggled}"/>
+                    </StackPanel>
                 <TextBlock x:Uid="TBAbout"
                            Style="{StaticResource TitleTextBlockStyle}" 
                            Margin="0,0,0,8"

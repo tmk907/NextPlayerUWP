@@ -130,8 +130,8 @@
             </ContentDialog>
             <mycontrols:AlternatingRowListView x:Name="PlaylistsListView"
                       Grid.Row="1"
-                EvenRowBackground="{ThemeResource ListViewItemBackgroundDark}"
-                OddRowBackground="{ThemeResource ListViewItemBackgroundLight}"
+                EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                 ItemsSource="{Binding Playlists, Mode=OneWay}"
                 ItemTemplate="{StaticResource PlaylistItemTemplate}"
                 SelectionMode="None"

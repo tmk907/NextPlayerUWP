@@ -23,6 +23,7 @@ namespace NextPlayerUWP
     /// </summary>
 
     public delegate void SongUpdatedHandler(int id);
+    public delegate void AppThemeChangedHandler(bool isLight);
 
     sealed partial class App : Template10.Common.BootStrapper
     {
@@ -32,6 +33,14 @@ namespace NextPlayerUWP
             if (SongUpdated != null)
             {
                 SongUpdated(id);
+            }
+        }
+        public static event AppThemeChangedHandler AppThemeChanged;
+        public static void OnAppThemChanged(bool isLight)
+        {
+            if (AppThemeChanged != null)
+            {
+                AppThemeChanged(isLight);
             }
         }
 
@@ -46,10 +55,22 @@ namespace NextPlayerUWP
             InitializeComponent();
             App.Current.UnhandledException += App_UnhandledException;
             Logger.SaveFromSettingsToFile();
+            var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+            if (t != null)
+            {
+                if ((bool)t)
+                {
+                    RequestedTheme = ApplicationTheme.Light;
+                }
+                else
+                {
+                    RequestedTheme = ApplicationTheme.Dark;
+                }
+            }
+
             //insights
             //Resetdb();            
             //DatabaseManager.Current.ClearCoverPaths();
-            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -82,6 +103,7 @@ namespace NextPlayerUWP
             {
                 await FirstRunSetup();
             }
+            
             await TileManager.ManageSecondaryTileImages();
             try
             {
@@ -196,6 +218,8 @@ namespace NextPlayerUWP
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
 
