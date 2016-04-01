@@ -239,7 +239,7 @@
                     <TextBlock
                             Grid.Row="8" Grid.Column="0"
                             Text="Disc"
-                            x:Uid="TBDiscNumber"
+                            x:Uid="TBDisc"
                             Style="{StaticResource DescriptionStyle}"
                             />
                     <TextBlock

@@ -326,7 +326,7 @@
                
             <PivotItem Style="{StaticResource PivotItemStyle}">
                 <PivotItem.Header>
-                    <TextBlock Text="now playing" FontSize="22"/>
+                    <TextBlock x:Uid="PivotHeaderTBNowPlaying" Text="now playing" FontSize="22"/>
                 </PivotItem.Header>
                 <ListView x:Name="NowPlayingPlaylistListView"
                         Margin="8,8,0,8" 
@@ -360,7 +360,7 @@
             </PivotItem>
             <PivotItem Style="{StaticResource PivotItemStyle}">
                 <PivotItem.Header>
-                    <TextBlock Text="lyrics" FontSize="22"/>
+                    <TextBlock x:Uid="PivotHeaderTBLyrics" Text="lyrics" FontSize="22"/>
                 </PivotItem.Header>
                 <Grid Margin="0,0,0,0">
                     <Grid Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">

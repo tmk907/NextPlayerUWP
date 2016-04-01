@@ -79,7 +79,7 @@
                 <StackPanel Orientation="Vertical">
                 <TextBlock x:Uid="TBLibrary"
                            Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,0,0,8"
+                           Margin="0,0,0,12"
                            Text="Library"/>
                 <TextBlock x:Uid="TBUpdateLibrary"
                            Style="{StaticResource BodyTextBlockStyle}"
@@ -90,11 +90,12 @@
                     <Button x:Uid="ButtonUpdate"
                             Content="Update" 
                             Margin="0,0,12,0"
+                            MinWidth="128"
                             Click="{x:Bind ViewModel.UpdateLibrary}"/>
                     <TextBlock x:Uid="TBNewSongs"
                                VerticalAlignment="Center"
-                               Text="new songs: "
-                               Margin="0,0,4,0"
+                               Text="new songs:"
+                               Margin="0,0,8,0"
                                Visibility="{Binding UpdateProgressTextVisibility, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     <TextBlock Text="{Binding UpdateProgressText}"
                                VerticalAlignment="Center"/>
@@ -106,7 +107,7 @@
                                   Visibility="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="4,4,4,4">
-                    <TextBlock x:Uid="TBAddLibraryFolders"
+                    <TextBlock x:Uid="TBAddMusicLibraryFolders"
                                Style="{StaticResource BodyTextBlockStyle}"
                                FontSize="17"
                                Text="Folders, where app look music"/>
@@ -117,11 +118,12 @@
                     <Button x:Uid="ButtonAddFolder"
                             Content="Add folder" 
                             Click="{x:Bind ViewModel.AddFolder}"
-                            Margin="0,4,4,4"/>
+                            Margin="0,4,4,4"
+                            MinWidth="128"/>
                 </StackPanel>
                 <TextBlock x:Uid="TBTools"
                            Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,0,0,8"
+                           Margin="0,0,0,12"
                            Text="Tools"/>
                 <StackPanel Orientation="Vertical" Margin="4">
                         <TextBlock x:Uid="TBTimer"
@@ -140,7 +142,7 @@
                     </StackPanel>
                 <TextBlock x:Uid="TBPersonalize"
                            Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,0,0,8"
+                           Margin="0,0,0,12"
                            Text="Personalise"/>
                 <StackPanel Orientation="Vertical" Margin="4">
                         <ToggleSwitch IsOn="{x:Bind ViewModel.IsLightThemeOn, Mode=TwoWay}"
@@ -148,7 +150,7 @@
                     </StackPanel>
                 <TextBlock x:Uid="TBAbout"
                            Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,0,0,8"
+                           Margin="0,0,0,12"
                            Text="About"/>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <StackPanel Orientation="Horizontal">
@@ -156,29 +158,29 @@
                            Style="{StaticResource BodyTextBlockStyle}"
                            FontSize="17"
                             Margin="0,0,8,0"
-                           Text="Music Player"/>
+                           Text="Next-Player"/>
                         <TextBlock
                             Style="{StaticResource BodyTextBlockStyle}"
                             FontSize="17"
                             Text="{x:Bind ViewModel.AppVersion}"/>
                     </StackPanel>
-                    <Button x:Uid="ButtonSendEmail"
-                            Content="Send e-mail"
-                            Margin="0,8,0,4"
-                            Width="128"
-                            Click="{x:Bind ViewModel.SendEmail}"/>
                     <Button x:Uid="ButtonRateApp"
                             Content="Rate app"
                             Margin="0,4,0,8"
-                            Width="128"
+                            MinWidth="128"
                             Click="{x:Bind ViewModel.RateApp}"/>
-                    <TextBlock x:Uid="TBAllowTelemetry"
+                    <Button x:Uid="ButtonSendEmail"
+                            Content="Send e-mail"
+                            Margin="0,8,0,4"
+                            MinWidth="128"
+                            Click="{x:Bind ViewModel.SendEmail}"/>
+                        <!--<TextBlock x:Uid="TBAllowTelemetry"
                             Style="{StaticResource BodyTextBlockStyle}"
                             FontSize="17"
                             Text="Enable application telemetry"/>
                     <ToggleSwitch IsOn="{x:Bind ViewModel.EnableTelemetry, Mode=TwoWay}"
                                   Toggled="{x:Bind ViewModel.TelemetrySwitchToggled}"
-                                  />
+                                  />-->
                 </StackPanel>
                 
             </StackPanel>

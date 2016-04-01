@@ -38,8 +38,8 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
         <DataTemplate x:Key="PlaylistItemTemplate" x:DataType="data:PlaylistItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
@@ -49,8 +49,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                            Text="{x:Bind Name, Mode=OneWay}"
-                           VerticalAlignment="Center"
-                           />
+                           VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
