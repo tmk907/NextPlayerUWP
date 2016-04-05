@@ -1162,7 +1162,7 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task UpdateSongStatistics(int id)
         {
             var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
-            uint playCount = list.FirstOrDefault().PlayCount++;
+            uint playCount = list.FirstOrDefault().PlayCount + 1;
             DateTime lastPlayed = DateTime.Now;
             await connectionAsync.ExecuteAsync("UPDATE SongsTable SET PlayCount = ?, LastPlayed = ? WHERE SongId = ?", playCount, lastPlayed, id);
         }

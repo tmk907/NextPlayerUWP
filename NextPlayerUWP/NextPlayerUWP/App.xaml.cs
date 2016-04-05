@@ -50,6 +50,8 @@ namespace NextPlayerUWP
         private bool dev = false;
 #endif
 
+        public static bool IsLightThemeOn = false;
+
         public App()
         {
             InitializeComponent();
@@ -60,10 +62,12 @@ namespace NextPlayerUWP
             {
                 if ((bool)t)
                 {
+                    IsLightThemeOn = true;
                     RequestedTheme = ApplicationTheme.Light;
                 }
                 else
                 {
+                    IsLightThemeOn = false;
                     RequestedTheme = ApplicationTheme.Dark;
                 }
             }
@@ -103,7 +107,7 @@ namespace NextPlayerUWP
             {
                 await FirstRunSetup();
             }
-            
+
             await TileManager.ManageSecondaryTileImages();
             try
             {
@@ -132,7 +136,6 @@ namespace NextPlayerUWP
                 Logger.SaveToFile();
             }
             DispatcherHelper.Initialize();
-            //return Task.CompletedTask;
         }
 
         public override Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
@@ -181,6 +184,10 @@ namespace NextPlayerUWP
             {
                 NavigationService.Navigate(Pages.Playlists);
             }
+
+            ColorsHelper ch = new ColorsHelper();
+            ch.RestoreUserAccentColors();
+
             return Task.FromResult<object>(null);
         }
         
@@ -220,6 +227,10 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+            var brush = App.Current.Resources["SystemColorControlAccentColor"] as Windows.UI.Xaml.Media.SolidColorBrush;
+            ColorsHelper ch = new ColorsHelper();
+            ch.SaveUserAccentColor(brush.Color);
+            ch.SetAccentColorShades(brush.Color);
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
 
@@ -236,22 +247,22 @@ namespace NextPlayerUWP
         private async Task CreateDefaultSmartPlaylists()
         {
             int i;
-            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio dodane", 50, SPUtility.SortBy.MostRecentlyAdded);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio dodane", 100, SPUtility.SortBy.MostRecentlyAdded);
             await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString(), SPUtility.Operator.Or);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioDodane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio odtwarzane", 50, SPUtility.SortBy.MostRecentlyPlayed);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio odtwarzane", 100, SPUtility.SortBy.MostRecentlyPlayed);
             await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.LastPlayed, SPUtility.Comparison.IsGreater, DateTime.MinValue.Ticks.ToString(), SPUtility.Operator.Or);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najczęściej odtwarzane", 50, SPUtility.SortBy.MostOftenPlayed);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najczęściej odtwarzane", 100, SPUtility.SortBy.MostOftenPlayed);
             await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "0", SPUtility.Operator.Or);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajczesciejOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najlepiej oceniane", 50, SPUtility.SortBy.HighestRating);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najlepiej oceniane", 100, SPUtility.SortBy.HighestRating);
             await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsGreater, "3", SPUtility.Operator.Or);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajlepiejOceniane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najrzadziej odtwarzane", 50, SPUtility.SortBy.LeastOftenPlayed);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najrzadziej odtwarzane", 100, SPUtility.SortBy.LeastOftenPlayed);
             await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "-1", SPUtility.Operator.Or);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajrzadziejOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najgorzej oceniane", 50, SPUtility.SortBy.LowestRating);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najgorzej oceniane", 100, SPUtility.SortBy.LowestRating);
             await DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4", SPUtility.Operator.Or);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
         }

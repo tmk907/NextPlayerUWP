@@ -174,10 +174,10 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
                     break;
                 case SortNames.LastAdded:
-                    Sort(s => s.DateAdded, t => String.Format("{0:d}", t.DateAdded), "SongId", "date");
+                    Sort(s => s.DateAdded.Ticks, t => String.Format("{0:d}", t.DateAdded), "SongId", "date");
                     break;
                 case SortNames.LastPlayed:
-                    Sort(s => s.LastPlayed, t => String.Format("{0:d}", t.DateAdded), "SongId", "date");
+                    Sort(s => s.LastPlayed.Ticks, t => String.Format("{0:d}", t.LastPlayed), "SongId", "date");
                     break;
                 case SortNames.PlayCount:
                     Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
@@ -227,8 +227,12 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingSongs = songs.Where(s => s.Title.ToLower().StartsWith(sender.Text.ToLower()));
-                sender.ItemsSource = matchingSongs.ToList();
+                string query = sender.Text.ToLower();
+                var matchingSongs = songs.Where(s => s.Title.ToLower().StartsWith(query));
+                var m2 = songs.Where(s => s.Title.ToLower().Contains(query));
+                var m3 = songs.Where(s => (s.Album.ToLower().Contains(query) || s.Artist.ToLower().Contains(query)));
+                var m4 = matchingSongs.Concat(m2).Concat(m3).Distinct();
+                sender.ItemsSource = m4.ToList();
             }
         }
 

@@ -110,7 +110,7 @@
         </DataTemplate>
         <Style x:Key="AlbumButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource UserAccentBrush}"/>
+            <Setter Property="Foreground" Value="{ThemeResource UserAccentBrush}"/>
             <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}"/>
             <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
             <Setter Property="Padding" Value="16,4,16,4"/>

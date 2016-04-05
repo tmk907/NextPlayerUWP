@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using System;
+using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Popups;
@@ -23,6 +24,7 @@ namespace NextPlayerUWP.Views
             this.Loaded += LoadSlider;
             Menu.NavigationService = navigationService;
             App.AppThemeChanged += App_AppThemeChanged;
+            ReviewReminder();
         }
 
         private void App_AppThemeChanged(bool isLight)
@@ -72,8 +74,9 @@ namespace NextPlayerUWP.Views
         }
         #endregion
 
-        private async void ReviewReminder()
+        private async Task ReviewReminder()
         {
+            await Task.Delay(2000);
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
             if (!settings.Values.ContainsKey(AppConstants.IsReviewed))
@@ -86,7 +89,7 @@ namespace NextPlayerUWP.Views
                 int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
                 long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
                 TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
-                if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(5) <= elapsed)//!!!!!!!!! <=
+                if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(1) <= elapsed)//!!!!!!!!! <=
                 {
                     settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
                     settings.Values[AppConstants.IsReviewed] = isReviewed++;
@@ -101,12 +104,7 @@ namespace NextPlayerUWP.Views
 
                     await dialog.ShowAsync();
                 }
-            }
-
-            //if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
-            //{
-            //    // Adding a 3rd command will crash the app when running on Mobile !!!
-            //}
+            }}
         }
     }
 }

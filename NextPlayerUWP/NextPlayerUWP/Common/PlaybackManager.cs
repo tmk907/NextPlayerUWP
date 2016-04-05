@@ -198,7 +198,7 @@ namespace NextPlayerUWP.Common
                 //Send message to initiate playback
                 if (result == true)
                 {
-                    SendMessage(s, o);
+                    SendMessageBG(s, o);
                 }
                 else
                 {
@@ -385,7 +385,7 @@ namespace NextPlayerUWP.Common
             OnMediaPlayerTrackChanged(CurrentSongIndex);
             if (IsMyBackgroundTaskRunning)
             {
-                SendMessage(AppConstants.StartPlayback, CurrentSongIndex);
+                SendMessageBG(AppConstants.StartPlayback, CurrentSongIndex);
             }
             else
             {
@@ -413,6 +413,16 @@ namespace NextPlayerUWP.Common
         }
 
         public void SendMessage(string constants, object value)
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                var message = new ValueSet();
+                message.Add(constants, value);
+                BackgroundMediaPlayer.SendMessageToBackground(message);
+            }
+        }
+
+        private void SendMessageBG(string constants, object value)
         {
             var message = new ValueSet();
             message.Add(constants, value);

@@ -47,9 +47,9 @@
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>
+                                            </ObjectAnimationUsingKeyFrames>-->
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
@@ -263,8 +263,8 @@
                                 NavButtonBackground="{ThemeResource SystemChromeLowColor}"
                                 NavButtonForeground="{ThemeResource SystemBaseHighColor}"
                                 SecondarySeparator="{ThemeResource SystemChromeHighColor}"
-                                NavButtonHoverBackground="{ThemeResource SystemChromeHighColor}"
-                                NavButtonCheckedBackground="{ThemeResource SystemChromeMediumColor}"
+                                NavButtonHoverBackground="{ThemeResource SystemChromeMediumColor}"
+                                NavButtonCheckedBackground="{ThemeResource SystemChromeHighColor}"
                                 PaneBorderThickness="0"
                                 VisualStateNarrowMinWidth="0"
                                 VisualStateNormalMinWidth="720">

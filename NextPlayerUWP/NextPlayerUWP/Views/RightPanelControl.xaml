@@ -333,6 +333,7 @@
                         ItemsSource="{x:Bind ViewModel.Songs}"
                         ItemTemplate="{StaticResource SongTemplate}"
                         SelectionMode="None"
+                        
                         IsItemClickEnabled="True"
                         ItemClick="{x:Bind ViewModel.ItemClicked}"
                           AllowDrop="True"

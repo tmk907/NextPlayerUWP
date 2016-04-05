@@ -32,9 +32,12 @@ namespace NextPlayerUWPDataLayer.Services
         {
             playlist = new Playlist();
 
+            //ChangeRepeat();
+            //ChangeShuffle();
+
             startPosition = TimeSpan.Zero;
             songPlayed = TimeSpan.Zero;
-            songsStart = DateTime.MinValue;
+            songsStart = DateTime.Now;
 
             paused = false;
             isFirst = true;
@@ -111,7 +114,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             mediaPlayer.Pause();
             paused = true;
-            songPlayed = DateTime.Now - songsStart;
+            songPlayed = DateTime.Now - songsStart + songPlayed;
         }
 
         public async Task Next(bool userchoice = true)
@@ -154,6 +157,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private async Task StopSongEvent(NowPlayingSong song, TimeSpan songDuration)
         {
+            songPlayed = DateTime.Now - songsStart + songPlayed;
             if (WasSongPlayed(songDuration))
             {
                 await UpdateSongStatistics(song.SongId, songDuration);

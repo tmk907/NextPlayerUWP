@@ -84,7 +84,7 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "Folder");
                     break;
                 case SortNames.LastAdded:
-                    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Folder");
+                    Sort(s => s.LastAdded.Ticks, t => String.Format("{0:d}", t.LastAdded), "Folder");
                     break;
                 default:
                     Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
@@ -102,8 +102,12 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(f => f.Folder);
-                sender.ItemsSource = matchingFolders.ToList();
+                string query = sender.Text.ToLower();
+                var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(query)).OrderBy(f => f.Folder);
+                var m2 = folders.Where(f => f.Folder.ToLower().Contains(query));
+                var m3 = folders.Where(f => f.Directory.ToLower().Contains(query));
+                var result = matchingFolders.Concat(m2).Concat(m3).Distinct();
+                sender.ItemsSource = result.ToList();
             }
         }
 

@@ -123,34 +123,95 @@
                 </StackPanel>
                 <TextBlock x:Uid="TBTools"
                            Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,0,0,12"
+                           Margin="0,12,0,12"
                            Text="Tools"/>
                 <StackPanel Orientation="Vertical" Margin="4">
                         <TextBlock x:Uid="TBTimer"
                            Style="{StaticResource BodyTextBlockStyle}"
                            FontSize="17"
                            Margin="4,4,4,4"
-                           Text="Timer"/>
+                           Text="Timer:"/>
                         <StackPanel Orientation="Horizontal">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
                                   Toggled="{x:Bind ViewModel.TimerSwitchToggled}"/>
                             <TimePicker IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
-                                        Time="{x:Bind ViewModel.Time, Mode=TwoWay}"
-                                        
-                                        />
+                                        Time="{x:Bind ViewModel.Time, Mode=TwoWay}"/>
                         </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="4">
+                        <TextBlock x:Uid="TBActionAfterDragDrop"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="After dragging item to now playing list:"/>
+                        <RadioButton x:Uid="RBPlay"
+                                     Margin="4,0,4,0"
+                                     GroupName="DragDropAction"
+                                     Content="Play"
+                                     IsChecked="{Binding ActionNr1, Mode=TwoWay}"/>
+                        <RadioButton x:Uid="RBPlayNext"
+                                     Margin="4,0,4,0"
+                                     GroupName="DragDropAction"
+                                     Content="Play next"
+                                     IsChecked="{Binding ActionNr2, Mode=TwoWay}"/>
+                        <RadioButton x:Uid="RBAddToNowPlaying"
+                                     Margin="4,0,4,0"
+                                     GroupName="DragDropAction"
+                                     Content="Add to now playing"
+                                     IsChecked="{Binding ActionNr3, Mode=TwoWay}"/>
                     </StackPanel>
                 <TextBlock x:Uid="TBPersonalize"
                            Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,0,0,12"
+                           Margin="0,12,0,12"
                            Text="Personalise"/>
                 <StackPanel Orientation="Vertical" Margin="4">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsLightThemeOn, Mode=TwoWay}"
-                                  Toggled="{x:Bind ViewModel.ThemeSwitchToggled}"/>
+                        <TextBlock x:Uid="TBAppTheme"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="App theme:"/>
+                        <RadioButton x:Uid="RBLight"
+                                     Margin="4,0,4,0"
+                                     GroupName="AppThemeGroup"
+                                     Content="Light"
+                                     IsChecked="{x:Bind ViewModel.IsLightThemeOn, Mode=TwoWay, Converter={StaticResource BoolToNullableBoolConverter}}"/>
+                        <RadioButton x:Uid="RBDark"
+                                     Margin="4,0,4,0"
+                                     GroupName="AppThemeGroup"
+                                     Content="Dark"
+                                     IsChecked="{x:Bind ViewModel.IsDarkThemeOn, Mode=TwoWay, Converter={StaticResource BoolToNullableBoolConverter}}"/>
+                        <TextBlock x:Uid="TBAppAccentColor"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="App accent color:"/>
+                        <GridView ItemsSource="{x:Bind ViewModel.AccentColors}"
+                                  Margin="4,0,4,0"
+                                  SelectionChanged="{x:Bind ViewModel.ChangeAccentColor}">
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Width="36" Height="36" Fill="{Binding}"/>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsWrapGrid MaximumRowsOrColumns="6"
+                                                   GroupPadding="0"
+                                                   Margin="0"
+                                                   Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
                     </StackPanel>
                 <TextBlock x:Uid="TBAbout"
                            Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,0,0,12"
+                           Margin="0,12,0,12"
                            Text="About"/>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <StackPanel Orientation="Horizontal">

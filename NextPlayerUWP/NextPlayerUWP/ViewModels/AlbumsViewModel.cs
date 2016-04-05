@@ -145,7 +145,7 @@ namespace NextPlayerUWP.ViewModels
                     Sort(s => s.SongsNumber, t => t.SongsNumber, "AlbumId");
                     break;
                 case SortNames.LastAdded:
-                    Sort(s => s.LastAdded, t => String.Format("{0:d}", t.LastAdded), "Album", "date");
+                    Sort(s => s.LastAdded.Ticks, t => String.Format("{0:d}", t.LastAdded), "Album", "date");
                     break;
                 default:
                     Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
@@ -213,8 +213,12 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var matchingAlbums = albums.Where(s => s.Album.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(s => s.Album);
-                sender.ItemsSource = matchingAlbums.ToList();
+                string query = sender.Text.ToLower();
+                var m1 = albums.Where(s => s.Album.ToLower().StartsWith(query));
+                var m2 = albums.Where(s => s.Album.ToLower().Contains(query));
+                //var m3 = albums.Where(a => a.ArtistParam.ToLower().Contains(query));
+                var result = m1.Concat(m2).Distinct();
+                sender.ItemsSource = result.ToList();
             }
         }
 

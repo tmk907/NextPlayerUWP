@@ -11,22 +11,69 @@
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="White"/>
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#cccccc"/>
-                    <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="{StaticResource SystemChromeLowColor}"/>
-                    <SolidColorBrush x:Key="ListViewItemBackgroundNormal" Color="{StaticResource SystemChromeBlackHighColor}"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="#FF171717"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundNormal" Color="#FF000000"/>
                     <SolidColorBrush x:Key="BottomPlayerTextForeground" Color="White"/>
+                    <SolidColorBrush x:Key="ChromeMedium2" Color="#FF1F1F1F"/>
+                    <SolidColorBrush x:Key="ChromeHigh2" Color="#FF767676"/>
+
+                    <Color x:Key="UserAccentColor">#FFFFA500</Color>
+                    <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     
+                    <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlForegroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlHyperlinkTextBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="ContentDialogBorderThemeBrush" Color="{StaticResource UserAccentColor}" />
+                    <SolidColorBrush x:Key="JumpListDefaultEnabledBackground" Color="{StaticResource UserAccentColor}" />
+
+                    <SolidColorBrush x:Key="SystemControlHighlightAltListAccentHighBrush" Color="{StaticResource UserAccentColor}" Opacity="0.9" />
+                    <SolidColorBrush x:Key="SystemControlHighlightAltListAccentLowBrush" Color="{StaticResource UserAccentColor}" Opacity="0.6" />
+                    <SolidColorBrush x:Key="SystemControlHighlightAltListAccentMediumBrush" Color="{StaticResource UserAccentColor}" Opacity="0.8" />
+                    <SolidColorBrush x:Key="SystemControlHighlightListAccentHighBrush" Color="{StaticResource UserAccentColor}" Opacity="0.9" />
+                    <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="{StaticResource UserAccentColor}" Opacity="0.6" />
+                    <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource UserAccentColor}" Opacity="0.8" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="Black"/>
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#323232"/>
-                    <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="{StaticResource SystemChromeLowColor}"/>
-                    <SolidColorBrush x:Key="ListViewItemBackgroundNormal" Color="{StaticResource SystemChromeWhiteColor}"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="#FFF2F2F2"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundNormal" Color="#FFFFFFFF"/>
                     <SolidColorBrush x:Key="BottomPlayerTextForeground" Color="White"/>
+                    <SolidColorBrush x:Key="ChromeMedium2" Color="#FFE6E6E6"/>
+                    <SolidColorBrush x:Key="ChromeHigh2" Color="#FFCCCCCC"/>
+
+                    <Color x:Key="UserAccentColor">#FF00B7C3</Color>
+                    <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    
+                    <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlForegroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="SystemControlHyperlinkTextBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="ContentDialogBorderThemeBrush" Color="{StaticResource UserAccentColor}" />
+                    <SolidColorBrush x:Key="JumpListDefaultEnabledBackground" Color="{StaticResource UserAccentColor}" />
+                    
+                    <SolidColorBrush x:Key="SystemControlHighlightAltListAccentHighBrush" Color="{StaticResource UserAccentColor}" Opacity="0.7" />
+                    <SolidColorBrush x:Key="SystemControlHighlightAltListAccentLowBrush" Color="{StaticResource UserAccentColor}" Opacity="0.4" />
+                    <SolidColorBrush x:Key="SystemControlHighlightAltListAccentMediumBrush" Color="{StaticResource UserAccentColor}" Opacity="0.6" />
+                    <SolidColorBrush x:Key="SystemControlHighlightListAccentHighBrush" Color="{StaticResource UserAccentColor}" Opacity="0.7" />
+                    <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="{StaticResource UserAccentColor}" Opacity="0.4" />
+                    <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource UserAccentColor}" Opacity="0.6" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:NextPlayerUWP.ViewModels" />
 
-            <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
+            <SolidColorBrush x:Key="UserAccentBrush1Lighter" Color="Orange"/>
+            <SolidColorBrush x:Key="UserAccentBrush2Lighter" Color="Orange"/>
+            <SolidColorBrush x:Key="UserAccentBrush3Lighter" Color="Orange"/>
+            <SolidColorBrush x:Key="UserAccentBrush1Darker" Color="Orange"/>
+            <SolidColorBrush x:Key="UserAccentBrush2Darker" Color="Orange"/>
+            <SolidColorBrush x:Key="UserAccentBrush3Darker" Color="Orange"/>
+
             <SolidColorBrush x:Key="PageHeaderBackground" Color="{ThemeResource SystemChromeMediumColor}"/>
 
             <SolidColorBrush x:Key="SliderThumbBackground" Color="White"/>
@@ -55,12 +102,14 @@
             <converters:YearConverter x:Key="YearConverter"/>
             <converters:ComboBoxItemValueConverter x:Key="ZoomedOutItemContainerStyleConverter"/>
             <converters:ZoomedOutItemWidthConverter x:Key="ZoomedOutItemWidthConverter"/>
+            <converters:BoolToNullableBool x:Key="BoolToNullableBoolConverter"/>
+            <converters:BoolToHighlightedItemForeground x:Key="BoolToHighlightedItemForegroundConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}}"
                      Height="84"
                      BorderThickness="1" 
-                     BorderBrush="LightGray" 
+                     BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
                      Background="Transparent">
                     <TextBlock Text="{Binding Group.Key}"
                            FontSize="32"

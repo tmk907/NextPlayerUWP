@@ -17,6 +17,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
@@ -94,6 +95,19 @@ namespace NextPlayerUWP.ViewModels
             {
                 IsTimerOn = false;
             }
+            string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterDropItem) as string;
+            if (action.Equals(AppConstants.ActionPlayNow))
+            {
+                ActionNr = 1;
+            }
+            else if (action.Equals(AppConstants.ActionPlayNext))
+            {
+                ActionNr = 2;
+            }
+            else
+            {
+                ActionNr = 3;
+            }
 
             //Personalization
             bool islightthemeon = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
@@ -104,6 +118,15 @@ namespace NextPlayerUWP.ViewModels
             else
             {
                 IsLightThemeOn = false;
+            }
+            if (accentColors.Count == 0)
+            {
+                ColorsHelper ch = new ColorsHelper();
+                var sc = ch.GetSavedUserAccentColor();
+                foreach (var c in ch.GetWin10Colors())
+                {
+                    AccentColors.Add(new SolidColorBrush(c));
+                }
             }
 
             //Library
@@ -128,6 +151,8 @@ namespace NextPlayerUWP.ViewModels
 
             initialization = false;
         }
+
+        #region Library
 
         public async void UpdateLibrary()
         {
@@ -172,6 +197,8 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        #endregion
+
         #region Tools
 
         private bool isTimerOn = false;
@@ -179,6 +206,49 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return isTimerOn; }
             set { Set(ref isTimerOn, value); }
+        }
+
+        private int actionNr = default(int);
+        public int ActionNr
+        {
+            get { return actionNr; }
+            set
+            {
+                Set(ref actionNr, value);
+                RaisePropertyChanged("ActionNr1");
+                RaisePropertyChanged("ActionNr2");
+                RaisePropertyChanged("ActionNr3");
+            }
+        }
+
+        public bool ActionNr1
+        {
+            get { return actionNr.Equals(1); }
+            set
+            {
+                ActionNr = 1;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionPlayNow);
+            }
+        }
+
+        public bool ActionNr2
+        {
+            get { return actionNr.Equals(2); }
+            set
+            {
+                ActionNr = 2;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionPlayNext);
+            }
+        }
+
+        public bool ActionNr3
+        {
+            get { return actionNr.Equals(3); }
+            set
+            {
+                ActionNr = 3;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
+            }
         }
 
         private TimeSpan time = TimeSpan.Zero;
@@ -240,15 +310,35 @@ namespace NextPlayerUWP.ViewModels
         public bool IsLightThemeOn
         {
             get { return isLightThemeOn; }
-            set { Set(ref isLightThemeOn, value); }
+            set {
+                Set(ref isLightThemeOn, value);
+                if (value) ChangeAppTheme(); //only one radiobutton is true, so ChangeAppTheme is executed once
+            }
         }
 
-        public void ThemeSwitchToggled(object sender, RoutedEventArgs e)
+        private bool isDarkThemeOn = true;
+        public bool IsDarkThemeOn
+        {
+            get { return isDarkThemeOn; }
+            set {
+                Set(ref isDarkThemeOn, value);
+                if (value) ChangeAppTheme();
+            }
+        }
+
+        private ObservableCollection<SolidColorBrush> accentColors = new ObservableCollection<SolidColorBrush>();
+        public ObservableCollection<SolidColorBrush> AccentColors
+        {
+            get { return accentColors; }
+            set { Set(ref accentColors, value); }
+        }
+
+        public void ChangeAppTheme()
         {
             if (initialization) return;
-            bool isLight = ((ToggleSwitch)sender).IsOn;
-            if (isLight)
-            {
+            App.IsLightThemeOn = isLightThemeOn;
+            if (isLightThemeOn)
+            {               
                 //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppTheme.Light);
                 App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
             }
@@ -257,16 +347,16 @@ namespace NextPlayerUWP.ViewModels
                 App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Dark;
             }
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, isLight);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, isLightThemeOn);
 
-            App.OnAppThemChanged(isLight);
+            App.OnAppThemChanged(isLightThemeOn);
 
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
             {
                 var titleBar = ApplicationView.GetForCurrentView().TitleBar;
                 if (titleBar != null)
                 {
-                    if (isLight)
+                    if (isLightThemeOn)
                     {
                         titleBar.BackgroundColor = Colors.White;
                         titleBar.ButtonBackgroundColor = Colors.White;
@@ -283,6 +373,15 @@ namespace NextPlayerUWP.ViewModels
                     }
                 }
             }
+        }
+
+        public void ChangeAccentColor(object sender, RoutedEventArgs e)
+        {
+            var grid = (GridView)sender;
+            var brush = grid.SelectedItem as SolidColorBrush;
+            ColorsHelper ch = new ColorsHelper();
+            ch.ChangeCurrentAccentColor(brush.Color);
+            ch.SaveUserAccentColor(brush.Color);
         }
 
         #endregion

@@ -351,6 +351,21 @@
   <data name="Rating" xml:space="preserve">
     <value>Rating</value>
   </data>
+  <data name="RBAddToNowPlaying.Content" xml:space="preserve">
+    <value>Add to now playing</value>
+  </data>
+  <data name="RBDark.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="RBLight.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="RBPlay.Content" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="RBPlayNext.Content" xml:space="preserve">
+    <value>Play next</value>
+  </data>
   <data name="Song" xml:space="preserve">
     <value>Song</value>
   </data>
@@ -359,6 +374,9 @@
   </data>
   <data name="TBAbout.Text" xml:space="preserve">
     <value>About</value>
+  </data>
+  <data name="TBActionAfterDragDrop.Text" xml:space="preserve">
+    <value>After dragging item to now playing list:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
     <value>music folders</value>
@@ -371,6 +389,12 @@
   </data>
   <data name="TBAlbums.Text" xml:space="preserve">
     <value>Albums</value>
+  </data>
+  <data name="TBAppAccentColor.Text" xml:space="preserve">
+    <value>Accent color:</value>
+  </data>
+  <data name="TBAppTheme.Text" xml:space="preserve">
+    <value>Theme:</value>
   </data>
   <data name="TBArtist.Text" xml:space="preserve">
     <value>Artist</value>

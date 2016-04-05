@@ -4,6 +4,7 @@ using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -108,7 +109,8 @@ namespace NextPlayerUWP.Common
                     list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
                 case MusicItemTypes.artist:
-                    list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
+                    var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
+                    list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
                     list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);
@@ -152,7 +154,8 @@ namespace NextPlayerUWP.Common
                     list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
                 case MusicItemTypes.artist:
-                    list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
+                    var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
+                    list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
                     list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);
@@ -222,7 +225,8 @@ namespace NextPlayerUWP.Common
                     list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
                 case MusicItemTypes.artist:
-                    list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
+                    var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
+                    list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
                     list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);

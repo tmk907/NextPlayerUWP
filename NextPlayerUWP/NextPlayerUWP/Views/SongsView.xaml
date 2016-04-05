@@ -125,7 +125,7 @@
                           ContentTransitions="{TemplateBinding ContentTransitions}"
                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                            <Rectangle Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                            <Rectangle Stroke="{ThemeResource UserAccentBrush}"
                    StrokeThickness="0.5"
                    Height="1"
                    VerticalAlignment="Bottom"

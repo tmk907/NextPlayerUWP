@@ -351,6 +351,21 @@
   <data name="Rating" xml:space="preserve">
     <value>Ocena</value>
   </data>
+  <data name="RBAddToNowPlaying.Content" xml:space="preserve">
+    <value>Dodaj do teraz odtwarzane</value>
+  </data>
+  <data name="RBDark.Content" xml:space="preserve">
+    <value>Ciemny</value>
+  </data>
+  <data name="RBLight.Content" xml:space="preserve">
+    <value>Jasny</value>
+  </data>
+  <data name="RBPlay.Content" xml:space="preserve">
+    <value>Odtwórz</value>
+  </data>
+  <data name="RBPlayNext.Content" xml:space="preserve">
+    <value>Odtwórz jako następne</value>
+  </data>
   <data name="Song" xml:space="preserve">
     <value>Utwór</value>
   </data>
@@ -359,6 +374,9 @@
   </data>
   <data name="TBAbout.Text" xml:space="preserve">
     <value>O aplikacji</value>
+  </data>
+  <data name="TBActionAfterDragDrop.Text" xml:space="preserve">
+    <value>Po przeciągnięciu do listy teraz odtwarzane:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
     <value>Foldery, w których aplikacja szuka muzyki:</value>
@@ -371,6 +389,12 @@
   </data>
   <data name="TBAlbums.Text" xml:space="preserve">
     <value>Albumy</value>
+  </data>
+  <data name="TBAppAccentColor.Text" xml:space="preserve">
+    <value>Kolor wiodący:</value>
+  </data>
+  <data name="TBAppTheme.Text" xml:space="preserve">
+    <value>Motyw</value>
   </data>
   <data name="TBArtist.Text" xml:space="preserve">
     <value>Artysta</value>

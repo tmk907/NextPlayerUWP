@@ -131,6 +131,10 @@ namespace NextPlayerUWP.ViewModels
                             {
                                 await NowPlayingPlaylistManager.Current.AddNext(newSong);
                             }
+                            else if (action.Equals(AppConstants.ActionPlayNow))//!
+                            {
+                                 
+                            }
                         }
                     }
                 }
@@ -144,6 +148,10 @@ namespace NextPlayerUWP.ViewModels
                 else if (action.Equals(AppConstants.ActionPlayNext))
                 {
                     await NowPlayingPlaylistManager.Current.AddNext((MusicItem)item);
+                }
+                else if (action.Equals(AppConstants.ActionPlayNow))
+                {
+                    await NowPlayingPlaylistManager.Current.NewPlaylist((MusicItem)item);
                 }
             }
         }
