@@ -146,9 +146,10 @@ namespace NextPlayerUWP.ViewModels
             }
 
             //About
-
-            EnableTelemetry = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableTelemetry);
-
+            if (Microsoft.Services.Store.Engagement.Feedback.IsSupported)
+            {
+                FeedbackVisibility = true;
+            }
             initialization = false;
         }
 
@@ -394,28 +395,11 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref appVersion, value); }
         }
 
-        private bool enableTelemetry = true;
-        public bool EnableTelemetry
+        private bool feedbackVisibility = false;
+        public bool FeedbackVisibility
         {
-            get { return enableTelemetry; }
-            set { Set(ref enableTelemetry, value); }
-        }
-
-        public void TelemetrySwitchToggled(object sender, RoutedEventArgs e)
-        {
-            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            if (toggleSwitch != null)
-            {
-                if (toggleSwitch.IsOn == true)
-                {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableTelemetry, true);
-                }
-                else
-                {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableTelemetry, true);
-                }
-            }
-            //App..Current..ChangeTelemetry(toggleSwitch.IsOn);
+            get { return feedbackVisibility; }
+            set { Set(ref feedbackVisibility, value); }
         }
 
         public async void RateApp()
@@ -423,6 +407,11 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsReviewed, -1);
             var uri = new Uri("ms-windows-store://review/?ProductId=" + AppConstants.ProductId);
             await Launcher.LaunchUriAsync(uri);
+        }
+
+        public async void LeaveFeedback()
+        {
+            await Microsoft.Services.Store.Engagement.Feedback.LaunchFeedbackAsync();
         }
 
         public async void SendEmail()

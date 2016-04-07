@@ -55,7 +55,8 @@ namespace NextPlayerUWP
         public App()
         {
             InitializeComponent();
-            App.Current.UnhandledException += App_UnhandledException;
+
+            //App.Current.UnhandledException += App_UnhandledException;
             Logger.SaveFromSettingsToFile();
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
             if (t != null)
@@ -71,7 +72,7 @@ namespace NextPlayerUWP
                     RequestedTheme = ApplicationTheme.Dark;
                 }
             }
-
+            added = false;
             //insights
             //Resetdb();            
             //DatabaseManager.Current.ClearCoverPaths();
@@ -100,9 +101,15 @@ namespace NextPlayerUWP
             Songs,
             TagsEditor
         }
-        
+        private bool added;
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
+            //if (!added)
+            //{
+            //    added = true;
+            //    App.Current.UnhandledException += App_UnhandledException;
+            //}
+
             if (IsFirstRun())
             {
                 await FirstRunSetup();
@@ -227,10 +234,10 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
-            var brush = App.Current.Resources["SystemColorControlAccentColor"] as Windows.UI.Xaml.Media.SolidColorBrush;
+            var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
             ColorsHelper ch = new ColorsHelper();
-            ch.SaveUserAccentColor(brush.Color);
-            ch.SetAccentColorShades(brush.Color);
+            ch.SaveUserAccentColor(color);
+            ch.SetAccentColorShades(color);
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
 

@@ -4,8 +4,7 @@
     {
         //App
         public const string AppName = "Next-Player UWP";
-        public const string AppId = "5709a693-517f-4619-9942-4d8a3e15c758";
-        public const string ProductId = "";
+        public const string ProductId = "9nblggh67n4f";
         public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";
         public const string DBVersion = "DBVersion";

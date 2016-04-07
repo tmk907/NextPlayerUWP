@@ -104,7 +104,7 @@ namespace NextPlayerUWP.Views
 
                     await dialog.ShowAsync();
                 }
-            }}
+            }
         }
     }
 }
