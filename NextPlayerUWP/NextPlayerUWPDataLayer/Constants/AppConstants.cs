@@ -12,8 +12,9 @@
         public const string LastFmDBFileName = "lastfm.db";
         public const string LastFmDBVersion = "lastfmDBVersion";
         public const string DeviceName = "devicename";
-        public const string DeveloperEmail = "@outlook.com";
+        public const string DeveloperEmail = "next-player@outlook.com";
         public const string EnableTelemetry = "EnableTelemetry";
+        public const string HockeyAppId = "35b4dc0a397c4b9cb04b958de8947e03 ";
 
         //Layout
         public const string AppTheme = "AppTheme";

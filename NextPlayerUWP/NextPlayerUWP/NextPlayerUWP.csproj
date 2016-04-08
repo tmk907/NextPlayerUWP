@@ -222,36 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Albums\DefaultAlbumCover.png" />
-    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-100.png" />
-    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-140.png" />
-    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-240.png" />
-    <Content Include="Assets\AppImages\Logo\Logo.scale-100.png" />
-    <Content Include="Assets\AppImages\Logo\Logo.scale-140.png" />
-    <Content Include="Assets\AppImages\Logo\Logo.scale-240.png" />
-    <Content Include="Assets\AppImages\Logo\LogoTr.scale-100.png" />
-    <Content Include="Assets\AppImages\Logo\LogoTr.scale-140.png" />
-    <Content Include="Assets\AppImages\Logo\LogoTr.scale-240.png" />
-    <Content Include="Assets\AppImages\Splash\SplashScreen.scale-100.png" />
-    <Content Include="Assets\AppImages\Splash\SplashScreen.scale-140.png" />
-    <Content Include="Assets\AppImages\Splash\SplashScreen.scale-240.png" />
-    <Content Include="Assets\AppImages\Square44x44Logo\Square44x44Logo.scale-100.png" />
-    <Content Include="Assets\AppImages\Square44x44Logo\Square44x44Logo.scale-140.png" />
-    <Content Include="Assets\AppImages\Square44x44Logo\Square44x44Logo.scale-240.png" />
-    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71Logo.scale-100.png" />
-    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71Logo.scale-140.png" />
-    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71Logo.scale-240.png" />
-    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71LogoTr.scale-100.png" />
-    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71LogoTr.scale-140.png" />
-    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71LogoTr.scale-240.png" />
-    <Content Include="Assets\AppImages\StoreLogo\StoreLogo.scale-100.png" />
-    <Content Include="Assets\AppImages\StoreLogo\StoreLogo.scale-140.png" />
-    <Content Include="Assets\AppImages\StoreLogo\StoreLogo.scale-240.png" />
-    <Content Include="Assets\AppImages\WideLogo\WideLogo.scale-100.png" />
-    <Content Include="Assets\AppImages\WideLogo\WideLogo.scale-140.png" />
-    <Content Include="Assets\AppImages\WideLogo\WideLogo.scale-240.png" />
-    <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-100.png" />
-    <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-140.png" />
-    <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-240.png" />
+    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71Logo.scale-400.png" />
     <Content Include="Assets\Buttons\next.png" />
     <Content Include="Assets\Buttons\pause.png" />
     <Content Include="Assets\Buttons\play.png" />
@@ -266,6 +237,16 @@
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small.scale-400.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
@@ -361,6 +342,13 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Visual Assets\SplashScreen\" />
+    <Folder Include="Assets\Visual Assets\Square310\" />
+    <Folder Include="Assets\Visual Assets\Square44\" />
+    <Folder Include="Assets\Visual Assets\StoreLogo\" />
+    <Folder Include="Assets\Visual Assets\Wide310\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

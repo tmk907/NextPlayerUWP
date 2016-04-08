@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Threading;
+using Microsoft.HockeyApp;
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
@@ -72,7 +73,9 @@ namespace NextPlayerUWP
                     RequestedTheme = ApplicationTheme.Dark;
                 }
             }
-            added = false;
+
+            HockeyClient.Current.Configure(AppConstants.HockeyAppId);
+
             //insights
             //Resetdb();            
             //DatabaseManager.Current.ClearCoverPaths();
@@ -101,7 +104,7 @@ namespace NextPlayerUWP
             Songs,
             TagsEditor
         }
-        private bool added;
+
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             //if (!added)
