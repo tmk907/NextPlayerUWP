@@ -23,6 +23,9 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <PackageCertificateThumbprint>32A43A2CE81645C4906F3F3D9D792A0AEE6F7091</PackageCertificateThumbprint>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -222,55 +225,37 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Albums\DefaultAlbumCover.png" />
-    <Content Include="Assets\AppImages\Square71x71Logo\Square71x71Logo.scale-400.png" />
-    <Content Include="Assets\Buttons\next.png" />
-    <Content Include="Assets\Buttons\pause.png" />
-    <Content Include="Assets\Buttons\play.png" />
-    <Content Include="Assets\Buttons\prev.png" />
-    <Content Include="Assets\Buttons\repeat.png" />
-    <Content Include="Assets\Buttons\repeatall.png" />
-    <Content Include="Assets\Buttons\shuffle.png" />
-    <Content Include="Assets\SongCover.png" />
-    <Content Include="Assets\SongCover192.scale-100.png" />
-    <Content Include="Assets\SongCover192.scale-140.png" />
-    <Content Include="Assets\SongCover192.scale-240.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-100.png" />
-    <Content Include="Assets\StoreLogo.scale-200.png" />
-    <Content Include="Assets\StoreLogo.scale-400.png" />
-    <Content Include="Assets\Visual Assets\SplashScreen\Splash.scale-100.png" />
-    <Content Include="Assets\Visual Assets\SplashScreen\Splash.scale-125.png" />
-    <Content Include="Assets\Visual Assets\SplashScreen\Splash.scale-150.png" />
-    <Content Include="Assets\Visual Assets\SplashScreen\Splash.scale-200.png" />
-    <Content Include="Assets\Visual Assets\SplashScreen\Splash.scale-400.png" />
-    <Content Include="Assets\Visual Assets\Square150\Medium.scale-100.png" />
-    <Content Include="Assets\Visual Assets\Square150\Medium.scale-125.png" />
-    <Content Include="Assets\Visual Assets\Square150\Medium.scale-150.png" />
-    <Content Include="Assets\Visual Assets\Square150\Medium.scale-200.png" />
-    <Content Include="Assets\Visual Assets\Square150\Medium.scale-400.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon.scale-100.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon.scale-125.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon.scale-150.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon.scale-200.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon.scale-400.png" />
-    <Content Include="Assets\Visual Assets\Square71\Small.scale-100.png" />
-    <Content Include="Assets\Visual Assets\Square71\Small.scale-125.png" />
-    <Content Include="Assets\Visual Assets\Square71\Small.scale-150.png" />
-    <Content Include="Assets\Visual Assets\Square71\Small.scale-200.png" />
-    <Content Include="Assets\Visual Assets\Square71\Small.scale-400.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store.scale-100.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store.scale-125.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store.scale-150.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store.scale-200.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store.scale-400.png" />
-    <Content Include="Assets\Visual Assets\Wide310\Wide.scale-100.png" />
-    <Content Include="Assets\Visual Assets\Wide310\Wide.scale-125.png" />
-    <Content Include="Assets\Visual Assets\Wide310\Wide.scale-150.png" />
-    <Content Include="Assets\Visual Assets\Wide310\Wide.scale-200.png" />
-    <Content Include="Assets\Visual Assets\Wide310\Wide.scale-400.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <None Include="Package.StoreAssociation.xml" />
+    <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-100.png" />
+    <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-125.png" />
+    <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-150.png" />
+    <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-200.png" />
+    <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium3.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium3.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium3.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium3.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Square150\Medium3.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small3.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small3.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small3.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small3.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Square71\Small3.scale-400.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-100.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-125.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-150.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-200.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>

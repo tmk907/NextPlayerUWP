@@ -79,10 +79,12 @@ namespace NextPlayerUWP.Common
                     {
                         hasImage = "yes";
                     }
+                    parameter = ((AlbumItem)item).AlbumId.ToString();
                     break;
                 case MusicItemTypes.artist:
                     name = ((ArtistItem)item).Artist;
                     type = loader.GetString("Artist");
+                    parameter = ((ArtistItem)item).ArtistId.ToString();
                     break;
                 case MusicItemTypes.folder:
                     name = ((FolderItem)item).Folder;

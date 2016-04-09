@@ -40,41 +40,27 @@ namespace NextPlayerUWP.Common
         public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;
         public void OnMediaPlayerStateChanged(MediaPlayerState state)
         {
-            if (MediaPlayerStateChanged!=null){
-                MediaPlayerStateChanged(state);
-            }
+            MediaPlayerStateChanged?.Invoke(state);
         }
         public static event MediaPlayerTrackChangeHandler MediaPlayerTrackChanged;
         public void OnMediaPlayerTrackChanged(int index)
         {
-            if (MediaPlayerTrackChanged != null)
-            {
-                MediaPlayerTrackChanged(index);
-            }
+             MediaPlayerTrackChanged?.Invoke(index);
         }
         public static event MediaPlayerPositionChangeHandler MediaPlayerPositionChanged;
         public void OnMediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)
         {
-            if (MediaPlayerPositionChanged != null)
-            {
-                MediaPlayerPositionChanged(position, duration);
-            }
+            MediaPlayerPositionChanged?.Invoke(position, duration);
         }
         public static event MediaPlayerMediaOpenHandler MediaPlayerMediaOpened;
         public void OnMediaPlayerMediaOpened(TimeSpan duration)
         {
-            if (MediaPlayerMediaOpened != null)
-            {
-                MediaPlayerMediaOpened(duration);
-            }
+            MediaPlayerMediaOpened?.Invoke(duration);
         }
         public static event MediaPlayerCloseHandler MediaPlayerMediaClosed;
         public void OnMediaPlayerMediaClosed()
         {
-            if (MediaPlayerMediaClosed!=null)
-            {
-                MediaPlayerMediaClosed();
-            }
+            MediaPlayerMediaClosed?.Invoke();
         }
 
         private AutoResetEvent backgroundAudioTaskStarted;
@@ -414,12 +400,12 @@ namespace NextPlayerUWP.Common
 
         public void SendMessage(string constants, object value)
         {
-            if (IsMyBackgroundTaskRunning)
-            {
+            //if (IsMyBackgroundTaskRunning)
+            //{
                 var message = new ValueSet();
                 message.Add(constants, value);
                 BackgroundMediaPlayer.SendMessageToBackground(message);
-            }
+            //}
         }
 
         private void SendMessageBG(string constants, object value)

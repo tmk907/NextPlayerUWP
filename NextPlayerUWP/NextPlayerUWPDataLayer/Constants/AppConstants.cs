@@ -3,7 +3,7 @@
     public sealed class AppConstants
     {
         //App
-        public const string AppName = "Next-Player UWP";
+        public const string AppName = "Next-Player";
         public const string ProductId = "9nblggh67n4f";
         public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";

@@ -343,7 +343,7 @@
     <value>Playlists</value>
   </data>
   <data name="RateAppMsg" xml:space="preserve">
-    <value>If you enjoy using Next player, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!</value>
+    <value>If you enjoy using Next-Player, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!</value>
   </data>
   <data name="RateAppTitle" xml:space="preserve">
     <value>Rate the app</value>

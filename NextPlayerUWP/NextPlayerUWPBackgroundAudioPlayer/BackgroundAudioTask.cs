@@ -32,7 +32,6 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             nowPlayingManager = new NowPlayingManager();
 
             smtc = BackgroundMediaPlayer.Current.SystemMediaTransportControls;
-            
             smtc.ButtonPressed += smtc_ButtonPressed;
             smtc.PropertyChanged += smtc_PropertyChanged;
             smtc.IsEnabled = true;

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
+using Template10.Common;
 
 namespace NextPlayerUWP
 {
@@ -75,7 +76,6 @@ namespace NextPlayerUWP
             }
 
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
-
             //insights
             //Resetdb();            
             //DatabaseManager.Current.ClearCoverPaths();
@@ -186,6 +186,8 @@ namespace NextPlayerUWP
                         break;
                     case MusicItemTypes.song:
                         //page = Pages.NowPlaying; ?
+                        break;
+                    default:
                         break;
                 }
                 NavigationService.Navigate(page, parameter);
