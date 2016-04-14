@@ -90,7 +90,6 @@
             <converters:SizeToString x:Key="SizeToStringConverter"/>
             <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>
             <converters:BackgroundConverter x:Key="BackgroundConverter"/>
-            <converters:AlbumImagePath x:Key="AlbumImagePathConverter"/>
             <converters:ThumbToolTipValue x:Key="ThumbToolTipValueConverter"/>
             <converters:ShuffleForeground x:Key="ShuffleForegroundConverter"/>
             <converters:RepeatForeground x:Key="RepeatForegroundConverter"/>
@@ -104,6 +103,7 @@
             <converters:ZoomedOutItemWidthConverter x:Key="ZoomedOutItemWidthConverter"/>
             <converters:BoolToNullableBool x:Key="BoolToNullableBoolConverter"/>
             <converters:BoolToHighlightedItemForeground x:Key="BoolToHighlightedItemForegroundConverter"/>
+            <converters:IntToRatingStar x:Key="IntToRatingStarConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}}"

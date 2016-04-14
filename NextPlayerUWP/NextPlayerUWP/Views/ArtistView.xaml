@@ -121,7 +121,8 @@
                 <Image Grid.Column="0" Grid.RowSpan="2">
                     <Image.Source>
                         <BitmapImage UriSource="{Binding Header.ImageUri, Mode=OneWay}"
-                            DecodePixelHeight="100" DecodePixelWidth="100"/>
+                                     DecodePixelType="Logical"
+                                     DecodePixelHeight="100" DecodePixelWidth="100"/>
                     </Image.Source>
                 </Image>
                 <TextBlock Grid.Column="1" Grid.Row="0"

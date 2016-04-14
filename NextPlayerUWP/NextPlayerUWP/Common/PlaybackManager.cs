@@ -400,12 +400,12 @@ namespace NextPlayerUWP.Common
 
         public void SendMessage(string constants, object value)
         {
-            //if (IsMyBackgroundTaskRunning)
-            //{
+            if (IsMyBackgroundTaskRunning)
+            {
                 var message = new ValueSet();
                 message.Add(constants, value);
                 BackgroundMediaPlayer.SendMessageToBackground(message);
-            //}
+            }
         }
 
         private void SendMessageBG(string constants, object value)

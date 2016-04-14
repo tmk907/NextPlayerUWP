@@ -131,10 +131,9 @@ namespace NextPlayerUWP.ViewModels
                 }
                 state.Clear();
             }
-            if (mode == NavigationMode.Back)
+            if (NavigationMode.Back == mode) isBack = true;
+            if (RestoreListPosition(mode))
             {
-                isBack = true;
-
                 var navState = StateManager.Current.Read(this.GetType().ToString());
                 if (navState != null && navState.Any())
                 {
@@ -158,6 +157,12 @@ namespace NextPlayerUWP.ViewModels
                 LoadAndScroll();
             }
             return Task.CompletedTask;
+        }
+
+        virtual public bool RestoreListPosition(NavigationMode mode)
+        {
+            if (NavigationMode.Back == mode) return true;
+            else return false;
         }
 
         virtual public void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state) { }
@@ -191,7 +196,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void OnLoaded(ListView p)
         {
-            listView = (ListView)p;
+            listView = p;
             if (onNavigatedCompleted) LoadAndScroll();
             else onLoadedCompleted = true;//zanim zostanie zmieniona wartosc, w OnNavigatedToAsync moze przeskoczyc do if(onloadedcomplete) ?
         }
@@ -262,7 +267,6 @@ namespace NextPlayerUWP.ViewModels
             object item = args.Items.FirstOrDefault();
             args.Data.Properties.Add(item.GetType().ToString(), item);
         }
-
 
         private string TimeSpanFormat(TimeSpan span)
         {

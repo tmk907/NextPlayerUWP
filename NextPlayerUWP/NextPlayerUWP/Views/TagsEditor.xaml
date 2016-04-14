@@ -240,6 +240,7 @@
                         Content="Save"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ButtonsEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.SaveTags}"/>
                 <Button Grid.Column="1"
                         Margin="4,0,0,0"
@@ -247,6 +248,7 @@
                         Content="Cancel"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ButtonsEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.Cancel}"/>
             </Grid>
         </Grid>

@@ -32,18 +32,12 @@ namespace NextPlayerUWP
         public static event SongUpdatedHandler SongUpdated;
         public static void OnSongUpdated(int id)
         {
-            if (SongUpdated != null)
-            {
-                SongUpdated(id);
-            }
+            SongUpdated?.Invoke(id);
         }
         public static event AppThemeChangedHandler AppThemeChanged;
         public static void OnAppThemChanged(bool isLight)
         {
-            if (AppThemeChanged != null)
-            {
-                AppThemeChanged(isLight);
-            }
+            AppThemeChanged?.Invoke(isLight);
         }
 
 #if DEBUG
@@ -75,15 +69,17 @@ namespace NextPlayerUWP
                 }
             }
 
+            //App.Current.UnhandledException += Current_UnhandledException;
+
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
             //insights
             //Resetdb();            
             //DatabaseManager.Current.ClearCoverPaths();
         }
 
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Logger.SaveInSettings(e.Message+Environment.NewLine+e.Exception);
+            Logger.SaveInSettings(e.Message + Environment.NewLine + e.Exception);
         }
 
         public enum Pages
@@ -107,12 +103,6 @@ namespace NextPlayerUWP
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
-            //if (!added)
-            //{
-            //    added = true;
-            //    App.Current.UnhandledException += App_UnhandledException;
-            //}
-
             if (IsFirstRun())
             {
                 await FirstRunSetup();

@@ -17,9 +17,10 @@ namespace NextPlayerUWP.Views
             this.InitializeComponent();
             WebView web = new WebView(WebViewExecutionMode.SeparateThread);
             WebGrid.Children.Add(web);
+            ViewModelLocator vml = new ViewModelLocator();
+            DataContext = vml.RightPanelVM;
             this.Loaded += delegate { ((RightPanelViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView, web); };
             ViewModel = (RightPanelViewModel)DataContext;
-
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

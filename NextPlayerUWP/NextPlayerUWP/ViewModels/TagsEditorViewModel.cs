@@ -35,13 +35,19 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref showProgressBar, value); }
         }
 
+        private bool buttonsEnabled = true;
+        public bool ButtonsEnabled
+        {
+            get { return buttonsEnabled; }
+            set { Set(ref buttonsEnabled, value); }
+        }
+
         public async void SaveTags(object sender, RoutedEventArgs e)
         {
             ShowProgressBar = true;
+            ButtonsEnabled = false;
             TagsData.FirstArtist = GetFirst(tagsData.Artists);
-            TagsData.FirstComposer = GetFirst(tagsData.Composers);
-            songData.Tag = TagsData;
-            await DatabaseManager.Current.UpdateSongData(songData);
+            TagsData.FirstComposer = GetFirst(tagsData.Composers);            
 
             if (album != tagsData.Album || albumArtist != tagsData.AlbumArtist )
             {
@@ -134,12 +140,17 @@ namespace NextPlayerUWP.ViewModels
                 
             }
 
+            songData.Tag = TagsData;
+            await DatabaseManager.Current.UpdateSongData(songData);
+
             await DatabaseManager.Current.UpdateTables();
 
             await NowPlayingPlaylistManager.Current.UpdateSong(songData);
-            SaveLater.Current.SaveTagsLater(songData);
+            TagsManager tm = new TagsManager();
+            await tm.SaveTags(songData);
             App.OnSongUpdated(songData.SongId);
             ShowProgressBar = false;
+            ButtonsEnabled = true;
             NavigationService.GoBack();
         }
 
@@ -157,21 +168,20 @@ namespace NextPlayerUWP.ViewModels
             return text;
         }
 
-        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             songId = -1;
             songData = new SongData();
             if (parameter != null)
             {
                 songId = Int32.Parse(MusicItem.ParseParameter(parameter as string)[1]);
-                songData = DatabaseManager.Current.GetSongData(songId);
+                songData = await DatabaseManager.Current.GetSongDataAsync(songId);
             }
             TagsData = songData.Tag;
             album = tagsData.Album;
             artists = tagsData.Artists;
             genres = tagsData.Genres;
             albumArtist = tagsData.AlbumArtist;
-            return Task.CompletedTask;
         }
     }
 }

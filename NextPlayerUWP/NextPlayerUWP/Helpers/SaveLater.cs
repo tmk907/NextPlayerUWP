@@ -161,6 +161,18 @@ namespace NextPlayerUWP.Helpers
 
         public void SaveTagsLater(SongData song)
         {
+            object t = ApplicationSettingsHelper.ReadResetSettingsValue("savelatertags");
+            if (t != null)
+            {
+                string[] a = t.ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var item in a)
+                {
+                    songs.Add(DatabaseManager.Current.GetSongData(Int32.Parse(item)));
+                }
+            }
+
+
+
             bool duplicate = songs.Remove(song);
             songs.Add(song);
             if (!duplicate)

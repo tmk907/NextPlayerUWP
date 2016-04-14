@@ -36,8 +36,6 @@ namespace NextPlayerUWP.ViewModels
             await Dispatcher.DispatchAsync(() => ReloadData());
         }
 
-        
-
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
         public ObservableCollection<SongItem> Songs
         {

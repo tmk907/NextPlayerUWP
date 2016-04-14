@@ -16,6 +16,11 @@
         public const string EnableTelemetry = "EnableTelemetry";
         public const string HockeyAppId = "35b4dc0a397c4b9cb04b958de8947e03 ";
 
+        //Assets
+        public const string AlbumCoverSmall = "ms-appx:///Assets/Albums/AlbumCoverTRSmall.png";
+        public const string AlbumCover = "ms-appx:///Assets/Albums/AlbumCoverTRnG.png";
+
+
         //Layout
         public const string AppTheme = "AppTheme";
         public const string AppAccent = "AppAccent";
@@ -107,8 +112,7 @@
         public const string LfmSendNP = "lfmsendnp";
 
 
-        //assets
-        public const string AssetDefaultAlbumCover = "ms-appx:///Assets/Albums/DefaultAlbumCover.png";
+        
 
 
         public const string ActionAfterDropItem = "ActionAfterDropItem";

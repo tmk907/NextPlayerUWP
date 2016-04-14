@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
+using NextPlayerUWP.Common;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -68,6 +69,7 @@ namespace NextPlayerUWP.ViewModels
                     await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.SongId.Equals(value), s => s.Title);
                     break;
                 case MusicItemTypes.nowplayinglist:
+                    await DatabaseManager.Current.AddNowPlayingToPlaylist(p.Id);
                     break;
                 default:
                     break;

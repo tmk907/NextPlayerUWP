@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
-    DataContext="{Binding Source={StaticResource Locator}, Path=RightPanelVM}"
     mc:Ignorable="d"
     d:DesignHeight="600"
     d:DesignWidth="250">
@@ -329,7 +328,7 @@
                     <TextBlock x:Uid="PivotHeaderTBNowPlaying" Text="now playing" FontSize="22"/>
                 </PivotItem.Header>
                 <ListView x:Name="NowPlayingPlaylistListView"
-                        Margin="8,8,0,8" 
+                        Margin="8,8,0,0" 
                         ItemsSource="{x:Bind ViewModel.Songs}"
                         ItemTemplate="{StaticResource SongTemplate}"
                         SelectionMode="None"

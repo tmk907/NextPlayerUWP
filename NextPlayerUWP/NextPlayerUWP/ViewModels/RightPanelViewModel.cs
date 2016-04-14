@@ -1,15 +1,11 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWP.Helpers;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Json;
@@ -27,10 +23,17 @@ namespace NextPlayerUWP.ViewModels
 
         public RightPanelViewModel()
         {
-            UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
+            //App.SongUpdated += App_SongUpdated;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            DelayedUpdatePlaylist();
+        }
+
+        private async Task DelayedUpdatePlaylist()
+        {
+            await Task.Delay(200);
+            UpdatePlaylist();
         }
 
         private int selectedPivotIndex = 0;
@@ -152,6 +155,8 @@ namespace NextPlayerUWP.ViewModels
                 else if (action.Equals(AppConstants.ActionPlayNow))
                 {
                     await NowPlayingPlaylistManager.Current.NewPlaylist((MusicItem)item);
+                    ApplicationSettingsHelper.SaveSongIndex(0);
+                    PlaybackManager.Current.PlayNew();
                 }
             }
         }
@@ -181,8 +186,6 @@ namespace NextPlayerUWP.ViewModels
             lyricsWebview.ContentLoading += webView1_ContentLoading;
             lyricsWebview.NavigationStarting += webView1_NavigationStarting;
             lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
-            lyricsWebview.LongRunningScriptDetected += LyricsWebview_LongRunningScriptDetected;
-
 
             bool scroll = false;
             if (listView != null)
@@ -201,11 +204,6 @@ namespace NextPlayerUWP.ViewModels
             {
                 await SetScrollPosition();
             }
-        }
-
-        private void LyricsWebview_LongRunningScriptDetected(WebView sender, WebViewLongRunningScriptDetectedEventArgs args)
-        {
-            var a = args.ExecutionTime;
         }
 
         public void OnUnLoaded()
@@ -513,7 +511,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (original)
             {
-                await ParseLyrics();
+                //await ParseLyrics();
                 original = false;
             }
         }

@@ -165,7 +165,7 @@ namespace NextPlayerUWPDataLayer.Services
         /// Return default cover.
         /// UI Thread
         /// </summary>
-        public static async Task<BitmapImage> GetDefaultCover()
+        public static async Task<BitmapImage> GetDefaultCover(bool small = true)
         {
             BitmapImage bitmap = new BitmapImage();
             Uri uri;
@@ -191,10 +191,17 @@ namespace NextPlayerUWPDataLayer.Services
             //{
             //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-dark.png");
             //}
-            uri = new System.Uri("ms-appx:///Assets/SongCover.png");
+            if (small)
+            {
+                uri = new Uri(AppConstants.AlbumCoverSmall);
+            }
+            else
+            {
+                uri = new Uri(AppConstants.AlbumCover);
+            }
             //}
-            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
-            using (IRandomAccessStream stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
             {
                 await bitmap.SetSourceAsync(stream);
             }
@@ -302,7 +309,7 @@ namespace NextPlayerUWPDataLayer.Services
 
                 if (cover == null || cover.PixelHeight == 1)
                 {
-                    imagePath = AppConstants.AssetDefaultAlbumCover;
+                    imagePath = AppConstants.AlbumCover;
                 }
                 else
                 {

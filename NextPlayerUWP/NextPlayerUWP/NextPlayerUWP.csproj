@@ -100,6 +100,9 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="NextPlayerUWP_StoreKey.pfx" />
     <None Include="project.json" />
+    <PRIResource Include="Strings\ru-RU\Resources.resw" />
+    <PRIResource Include="Strings\it-IT\Resources.resw" />
+    <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\pl-PL\Resources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
@@ -108,13 +111,17 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\ColorsHelper.cs" />
+    <Compile Include="Common\HockeyAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
     <Compile Include="Common\PlaybackManager.cs" />
     <Compile Include="Common\SortEnums.cs" />
     <Compile Include="Common\StateManager.cs" />
+    <Compile Include="Common\TagsManager.cs" />
     <Compile Include="Common\TileManager.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
-    <Compile Include="Converters\AlbumImagePath.cs" />
+    <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
+      <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BackgroundConverter.cs" />
     <Compile Include="Converters\BoolToBackground.cs" />
     <Compile Include="Converters\BoolToHighlightedItemForeground.cs" />
@@ -126,6 +133,7 @@
     <Compile Include="Converters\DateTimeToString.cs" />
     <Compile Include="Converters\GetListView.cs" />
     <Compile Include="Converters\IntToBitrate.cs" />
+    <Compile Include="Converters\IntToRatingStar.cs" />
     <Compile Include="Converters\IntToSongs.cs" />
     <Compile Include="Converters\NumberToPercent.cs" />
     <Compile Include="Converters\PlaylistNameToBool.cs" />
@@ -192,6 +200,9 @@
     <Compile Include="Views\NewSmartPlaylistView.xaml.cs">
       <DependentUpon>NewSmartPlaylistView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NowPlayingPlaylistView.xaml.cs">
+      <DependentUpon>NowPlayingPlaylistView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PlaylistsView.xaml.cs">
       <DependentUpon>PlaylistsView.xaml</DependentUpon>
     </Compile>
@@ -224,8 +235,9 @@
     <None Include="NextPlayerUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Albums\DefaultAlbumCover.png" />
     <None Include="Package.StoreAssociation.xml" />
+    <Content Include="Assets\Albums\AlbumCoverTRnG.png" />
+    <Content Include="Assets\Albums\AlbumCoverTRSmall.png" />
     <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-100.png" />
     <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-125.png" />
     <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-150.png" />
@@ -263,6 +275,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\SongListViewItemTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AddToPlaylistView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -296,6 +312,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NewSmartPlaylistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NowPlayingPlaylistView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

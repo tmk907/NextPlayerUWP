@@ -28,13 +28,25 @@ namespace NextPlayerUWP.Common
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
             songs.CollectionChanged += Songs_CollectionChanged;
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
+            App.SongUpdated += App_SongUpdated;
+        }
+
+        private async void App_SongUpdated(int id)
+        {
+            SongItem si = songs.Where(s => s.SongId.Equals(id)).FirstOrDefault();
+            if (si != null)
+            {
+                int i = songs.IndexOf(si);
+                songs[i] = await DatabaseManager.Current.GetSongItemAsync(id);
+                await NotifyChange();
+            }
         }
 
         private int removeIndex = 0;
         private int addIndex = 0;
         private DateTime removedTime = DateTime.Now;
 
-        private async void Songs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Songs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
@@ -92,10 +104,7 @@ namespace NextPlayerUWP.Common
 
         public static void OnNPChanged()
         {
-            if (NPListChanged != null)
-            {
-                NPListChanged();
-            }
+            NPListChanged?.Invoke();
         }
 
         public ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
@@ -213,6 +222,11 @@ namespace NextPlayerUWP.Common
                 i++;
             }
             songs.RemoveAt(i);
+            int index = ApplicationSettingsHelper.ReadSongIndex();
+            if (i < index)
+            {
+                ApplicationSettingsHelper.SaveSongIndex(index - 1);
+            }
             await NotifyChange();
         }
 

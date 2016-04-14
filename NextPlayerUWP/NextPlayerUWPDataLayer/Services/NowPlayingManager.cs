@@ -329,7 +329,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (song.ImagePath == "")
             {
                 song.ImagePath = DatabaseManager.Current.GetAlbumArt(playlist.GetCurrentSong().Album);
-                if (song.ImagePath == "") song.ImagePath = AppConstants.AssetDefaultAlbumCover;//!
+                if (song.ImagePath == "") song.ImagePath = AppConstants.AlbumCover;//!
             }
             return song.ImagePath;
         }

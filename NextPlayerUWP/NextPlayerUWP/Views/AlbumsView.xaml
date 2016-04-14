@@ -63,6 +63,7 @@
                 <Image Grid.Row="0" Width="132" Height="132" Margin="4">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind ImageUri}"
+                                     DecodePixelType="Logical"
                                      DecodePixelHeight="132" 
                                      DecodePixelWidth="132"/>
                     </Image.Source>
@@ -124,21 +125,17 @@
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+        <controls:PageHeader Grid.Row="0"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderAlbums"
                 Content="Albums" 
                 VisualStateNarrowMinWidth="0"
                 VisualStateNormalMinWidth="720"/>
-        <Grid Grid.Column="0" Grid.Row="1">
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
                 <RowDefinition/>

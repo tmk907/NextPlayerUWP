@@ -220,6 +220,7 @@
                         <Setter Target="SliderGrid.Opacity" Value="0" />
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
+                        <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState  x:Name="VisualStateNormal">
@@ -231,6 +232,7 @@
                         <Setter Target="SliderGrid.Opacity" Value="1" />
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
+                        <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="VisualStateWide">
@@ -242,6 +244,7 @@
                         <Setter Target="SliderGrid.Opacity" Value="1" />
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
+                        <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -313,6 +316,12 @@
                         <TextBlock x:Uid="TBSongs" Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
+                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingPlaylistView"  ClearHistory="False">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Play" Width="48" Height="48" />
+                        <TextBlock x:Uid="TBNowPlaying" Text="Now playing" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
             </controls:HamburgerMenu.PrimaryButtons>
 
             <controls:HamburgerMenu.SecondaryButtons>
@@ -328,7 +337,7 @@
         <Grid Grid.Row="1" x:Name="BottomPlayerGrid" 
               Grid.ColumnSpan="3"
               Background="{StaticResource UserAccentBrush}"
-              DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}">
+              >
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -345,11 +354,12 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Image Grid.RowSpan="2" Grid.Column="0" 
-                       Margin="4"
-                       Source="{Binding Cover}">
+                       Margin="4" Source="{Binding Cover}">
                     <!--<Image.Source>
                         <BitmapImage UriSource="{Binding Cover}"
-                            DecodePixelHeight="68" DecodePixelWidth="68"/>
+                                     DecodePixelType="Logical"
+                                     DecodePixelHeight="68" 
+                                     DecodePixelWidth="68"/>
                     </Image.Source>-->
                 </Image>
                 <TextBlock Grid.Column="1" Grid.Row="0" 
@@ -385,9 +395,6 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <!--<Viewbox Height="20">
-                                <SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
-                            </Viewbox>-->
                             <Grid>
                                 <TextBlock Text="&#xE14B;" 
                                            VerticalAlignment="Center" 
@@ -396,8 +403,6 @@
                                            FontFamily="Segoe MDL2 Assets" 
                                            Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
                             </Grid>
-                            <!--<SymbolIcon Symbol="Shuffle" Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>-->
-                            <!--<Image Source="/Assets/Buttons/shuffle.png" Height="32"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
@@ -407,9 +412,6 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <!--<Viewbox Height="32">
-                                <SymbolIcon Symbol="Previous"/>
-                            </Viewbox>-->
                             <Grid>
                                 <TextBlock Text="&#xE892;" 
                                            Foreground="{ThemeResource BottomPlayerTextForeground}"
@@ -418,7 +420,6 @@
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
                             </Grid>
-                            <!--<Image Source="/Assets/Buttons/prev.png" Height="40"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
@@ -428,9 +429,6 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <!--<Viewbox Height="44">
-                                <SymbolIcon Symbol="{Binding PlayButtonContent}"/>
-                            </Viewbox>-->
                             <Grid>
                                 <TextBlock Text="{Binding PlayButtonContent}" 
                                            Foreground="{ThemeResource BottomPlayerTextForeground}"
@@ -440,7 +438,6 @@
                                            HorizontalAlignment="Center"
                                            Margin="0,0,0,0"/>
                             </Grid>
-                            <!--<Image Source="/Assets/Buttons/play.png" Height="52" Width="52"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
@@ -450,9 +447,6 @@
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <!--<Viewbox Height="32">
-                                <SymbolIcon Symbol="Next"/>
-                            </Viewbox>-->
                             <Grid>
                                 <TextBlock Text="&#xE893;" 
                                            FontSize="30" 
@@ -461,20 +455,16 @@
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
                             </Grid>
-                            <!--<Image Source="/Assets/Buttons/next.png" Height="40"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Column="4"
                     Command="{Binding RepeatCommand}"
-                    Width="48" Height="60"
-                    
+                    Width="48" 
+                    Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <!--<Viewbox Height="22">
-                                <SymbolIcon Symbol="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"/>
-                            </Viewbox>-->
                             <Grid>
                                 <TextBlock Text="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
                                            Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
@@ -483,7 +473,6 @@
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
                             </Grid>
-                            <!--<Image Source="/Assets/Buttons/repeat.png" Height="32"/>-->
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>

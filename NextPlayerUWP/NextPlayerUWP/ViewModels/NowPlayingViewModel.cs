@@ -21,18 +21,23 @@ namespace NextPlayerUWP.ViewModels
     {
         public NowPlayingViewModel()
         {
-            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
+            RepeatMode = Repeat.CurrentState();
+            ShuffleMode = Shuffle.CurrentState();
+            _timer = new DispatcherTimer();
+            SetupTimer();
+            Initialize();
+        }
+
+        private async Task Initialize()
+        {
+            ChangePlayButtonContent(MediaPlayerState.Paused);
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
             PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
             PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            ChangeCover();
-            RepeatMode = Repeat.CurrentState();
-            ShuffleMode = Shuffle.CurrentState();
-            _timer = new DispatcherTimer();
-            SetupTimer();
+            await ChangeCover();
         }
 
         #region Properties

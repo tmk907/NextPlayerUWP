@@ -21,14 +21,14 @@ namespace NextPlayerUWP.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class PlaylistView : Page
+    public sealed partial class NowPlayingPlaylistView : Page
     {
-        public PlaylistViewModel ViewModel;
-        public PlaylistView()
-        {          
+        public NowPlayingPlaylistViewModel ViewModel;
+        public NowPlayingPlaylistView()
+        {
             this.InitializeComponent();
-            this.Loaded += delegate { ((PlaylistViewModel)DataContext).OnLoaded(PlaylistListView); };
-            ViewModel = (PlaylistViewModel)DataContext;
+            this.Loaded += delegate { ((NowPlayingPlaylistViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView); };
+            ViewModel = (NowPlayingPlaylistViewModel)DataContext;
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

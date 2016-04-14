@@ -516,4 +516,13 @@
   <data name="ButtonFeedback.Content" xml:space="preserve">
     <value>Feedback</value>
   </data>
+  <data name="TBNowPlaying.Text" xml:space="preserve">
+    <value>Now playing</value>
+  </data>
+  <data name="PageHeaderNowPlayingPlaylist.Content" xml:space="preserve">
+    <value>Now playing</value>
+  </data>
+  <data name="AppBarButtonSave.Label" xml:space="preserve">
+    <value>Save</value>
+  </data>
 </root>

@@ -24,6 +24,8 @@ namespace NextPlayerUWP.Views
             this.Loaded += LoadSlider;
             Menu.NavigationService = navigationService;
             App.AppThemeChanged += App_AppThemeChanged;
+            ViewModelLocator vml = new ViewModelLocator();
+            BottomPlayerGrid.DataContext = vml.NowPlayingVM;
             ReviewReminder();
         }
 
@@ -37,6 +39,13 @@ namespace NextPlayerUWP.Views
             {
                 this.RequestedTheme = ElementTheme.Dark;
             }
+        }
+
+        private async Task DelayedLoad()
+        {
+            //await Task.Delay(100);
+            ViewModelLocator vml = new ViewModelLocator();
+            BottomPlayerGrid.DataContext = vml.NowPlayingVM;
         }
 
         #region Slider 
@@ -89,7 +98,7 @@ namespace NextPlayerUWP.Views
                 int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
                 long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
                 TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
-                if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(1) <= elapsed)//!!!!!!!!! <=
+                if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(7) <= elapsed)//!!!!!!!!! <=
                 {
                     settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
                     settings.Values[AppConstants.IsReviewed] = isReviewed++;

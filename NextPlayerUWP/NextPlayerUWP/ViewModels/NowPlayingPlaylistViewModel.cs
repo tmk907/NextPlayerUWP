@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,8 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -23,8 +26,45 @@ namespace NextPlayerUWP.ViewModels
         {
             UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
+            PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
+            Initialize();
         }
-        
+
+        private async Task Initialize()
+        {
+            int i = ApplicationSettingsHelper.ReadSongIndex();
+            CurrentSong = songs[i];
+            await ChangeCover();
+        }
+
+        private int selectedPivotIndex = 0;
+        public int SelectedPivotIndex
+        {
+            get { return selectedPivotIndex; }
+            set { Set(ref selectedPivotIndex, value); }
+        }
+
+        private async void TrackChanged(int index)
+        {
+            if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
+            CurrentSong = songs[index];
+            await ChangeCover();
+            ScrollAfterTrackChanged(index);
+        }
+
+        private async Task ChangeCover()
+        {
+            if (currentSong.Path == "")
+            {
+                Cover = await ImagesManager.GetDefaultCover(false);
+            }
+            else
+            {
+                Cover = await ImagesManager.GetCover(currentSong.Path);
+            }
+        }
+
+
         private void NPListChanged()
         {
             UpdatePlaylist();
@@ -37,6 +77,20 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref songs, value); }
         }
 
+        private BitmapImage cover = new BitmapImage();
+        public BitmapImage Cover
+        {
+            get { return cover; }
+            set { Set(ref cover, value); }
+        }
+
+        private SongItem currentSong = new SongItem();
+        public SongItem CurrentSong
+        {
+            get { return currentSong; }
+            set { Set(ref currentSong, value); }
+        }
+
         private void UpdatePlaylist()
         {
             Songs = NowPlayingPlaylistManager.Current.songs;
@@ -44,30 +98,51 @@ namespace NextPlayerUWP.ViewModels
 
         public async void OnLoaded(ListView p)
         {
-            bool scroll = false;
-            if (listView != null)
+            listView = p;
+            if (firstVisibleIndex >= songs.Count || firstVisibleIndex < 0)
             {
-                positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
-                var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-                firstVisibleIndex = isp.FirstVisibleIndex;
-                scroll = true;
+                firstVisibleIndex = ApplicationSettingsHelper.ReadSongIndex();
+                if (firstVisibleIndex >= songs.Count)
+                {
+                    firstVisibleIndex = 0;
+                    HockeyAdapter.TrackEvent("NowPlayingPlaylistViewModel " + nameof(firstVisibleIndex) + " >=songs.Count");
+                }
             }
-            listView = (ListView)p;
-            if (songs.Count == 0)
-            {
-                UpdatePlaylist();
-            }
-            if (scroll && songs.Count > 0 && firstVisibleIndex < songs.Count)
+            if (songs.Count != 0)
             {
                 await SetScrollPosition();
             }
         }
 
-        public void OnUnLoaded()
+        public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
             positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
             firstVisibleIndex = isp.FirstVisibleIndex;
+
+            if (suspending)
+            {
+                pageState[nameof(firstVisibleIndex)] = firstVisibleIndex;
+                pageState[nameof(positionKey)] = positionKey;
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private void ScrollAfterTrackChanged(int index)
+        {
+            var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
+            int firstVisibleIndex = isp.FirstVisibleIndex;
+            int lastVisibleIndex = isp.LastVisibleIndex;
+            if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;
+            if (index < firstVisibleIndex)
+            {
+                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            }
+            else if (index > lastVisibleIndex)
+            {
+                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
+            }
         }
 
         private async Task SetScrollPosition()
@@ -110,6 +185,8 @@ namespace NextPlayerUWP.ViewModels
             }).AsAsyncOperation();
         }
 
+        #region Commands
+
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
             int index = 0;
@@ -121,8 +198,6 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
         }
-
-        #region Commands
 
         public async void Delete(object sender, RoutedEventArgs e)
         {
@@ -150,16 +225,43 @@ namespace NextPlayerUWP.ViewModels
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            // App.Current.NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)SelectedItem).SongId);
+            App.Current.NavigationService.Navigate(App.Pages.FileInfo, item.GetParameter());
         }
 
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            // App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, SelectedItem.GetParameter()); 
+            App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
+
+        public async void GoToArtist(object sender, RoutedEventArgs e)
+        {
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            ArtistItem temp = await DatabaseManager.Current.GetArtistItemAsync(item.FirstArtist);
+            App.Current.NavigationService.Navigate(App.Pages.Artist, temp.ArtistId);
+        }
+
+        public async void GoToAlbum(object sender, RoutedEventArgs e)
+        {
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
+            App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
         }
 
         #endregion
+
+        public async void RateSong(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            CurrentSong.Rating = Int32.Parse(button.Tag.ToString());
+            await DatabaseManager.Current.UpdateRatingAsync(currentSong.SongId, currentSong.Rating).ConfigureAwait(false);
+        }
+
+        public void SavePlaylist()
+        {
+            NowPlayingListItem item = new NowPlayingListItem();
+            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
 
     }
 }

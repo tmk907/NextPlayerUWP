@@ -347,11 +347,13 @@ namespace NextPlayerUWPDataLayer.Services
         private void SendToast()
         {
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            ToastTemplateType toastTemplate = ToastTemplateType.ToastText01;
+            ToastTemplateType toastTemplate = ToastTemplateType.ToastText02;
             XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
             XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
             toastTextElements[0].AppendChild(toastXml.CreateTextNode(loader.GetString("LibraryUpdated")));
+            toastTextElements[1].AppendChild(toastXml.CreateTextNode(loader.GetString("TBNewSongs.Text")+" "+ songsAdded));
             ToastNotification toast = new ToastNotification(toastXml);
+            toast.ExpirationTime = DateTime.Now.AddMinutes(2);
             try
             {
                 ToastNotificationManager.CreateToastNotifier().Show(toast);

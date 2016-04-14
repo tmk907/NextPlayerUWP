@@ -47,9 +47,6 @@
                 Content="File Info" 
                 VisualStateNarrowMinWidth="0"
                 VisualStateNormalMinWidth="720"/>
-        <!--<UserControl Grid.Column="1" Grid.Row="1">
-            <local:RightPanelControl/>
-        </UserControl>-->
         <ScrollViewer Grid.Row="1" Grid.Column="0">
             <Grid Margin="16,12,12,4">
                 <Grid.RowDefinitions>

@@ -140,7 +140,7 @@ namespace NextPlayerUWPDataLayer.Model
             songsNumber = 0;
             duration = TimeSpan.Zero;
             year = 2020;
-            imagePath = AppConstants.AssetDefaultAlbumCover;
+            imagePath = AppConstants.AlbumCover;
             IsImageSet = true;
             imageUri = new Uri(imagePath);
             lastAdded = DateTime.MinValue;
@@ -167,7 +167,7 @@ namespace NextPlayerUWPDataLayer.Model
             if (table.ImagePath == "")
             {
                 IsImageSet = false;
-                imagePath = AppConstants.AssetDefaultAlbumCover;
+                imagePath = AppConstants.AlbumCover;
             }
             else
             {

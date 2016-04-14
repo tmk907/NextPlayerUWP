@@ -227,13 +227,13 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             smtc.DisplayUpdater.MusicProperties.Artist = nowPlayingManager.GetArtist();
 
             string path = nowPlayingManager.GetAlbumArt();
-            if (path != AppConstants.AssetDefaultAlbumCover)
+            if (path != AppConstants.AlbumCover)
             {
                 smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(path));
             }
             else
             {
-                smtc.DisplayUpdater.Thumbnail = null;
+                smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
             }
             //var albumArtUri = item.Source.CustomProperties[AlbumArtKey] as Uri;
             //if (albumArtUri != null)

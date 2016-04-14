@@ -438,7 +438,7 @@ namespace NextPlayerUWPDataLayer.Services
         public string GetAlbumArt(string album)
         {
             var q = connection.Table<AlbumsTable>().Where(a => a.Album.Equals(album)).ToList();
-            string imagepath = AppConstants.AssetDefaultAlbumCover;
+            string imagepath = AppConstants.AlbumCover;
             if (q.Count > 0)
             {
                 imagepath = q.FirstOrDefault().ImagePath;
@@ -462,9 +462,25 @@ namespace NextPlayerUWPDataLayer.Services
 
         public SongData GetSongData(int songId)
         {
-            var q = connection.Table<SongsTable>().Where(e => e.SongId.Equals(songId)).FirstOrDefault();
+            var l = connection.Table<SongsTable>().Where(e => e.SongId.Equals(songId)).ToList();
+            var q = l.FirstOrDefault();
             SongData s = CreateSongData(q);
             return s;
+        }
+
+        public async Task<SongData> GetSongDataAsync(int songId)
+        {
+            var l = await connectionAsync.Table<SongsTable>().Where(e => e.SongId.Equals(songId)).ToListAsync();
+            var q = l.FirstOrDefault();
+            SongData s = CreateSongData(q);
+            return s;
+        }
+
+        public async Task<SongItem> GetSongItemAsync(int id)
+        {
+            var l = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
+            var i = l.FirstOrDefault();
+            return new SongItem(i);
         }
 
         public List<NowPlayingSong> GetNowPlayingSongs()
@@ -1152,6 +1168,11 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task UpdateLyricsAsync(int id, string lyrics)
         {
             await connectionAsync.ExecuteAsync("UPDATE SongsTable SET Lyrics = ? WHERE SongId = ?", lyrics, id);
+        }
+
+        public async Task UpdateRatingAsync(int id, int rating)
+        {
+            await connectionAsync.ExecuteAsync("UPDATE SongsTable SET Rating = ? WHERE SongId = ?", rating, id);
         }
 
         public async Task UpdatePlaylistName(int id, string name)
