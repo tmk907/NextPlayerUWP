@@ -18,14 +18,16 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class Shell : Page
     {
+        public string Family { get; set; }
+
         public Shell(INavigationService  navigationService)
         {
             this.InitializeComponent();
             this.Loaded += LoadSlider;
             Menu.NavigationService = navigationService;
             App.AppThemeChanged += App_AppThemeChanged;
-            ViewModelLocator vml = new ViewModelLocator();
-            BottomPlayerGrid.DataContext = vml.NowPlayingVM;
+            //ViewModelLocator vml = new ViewModelLocator();
+            //BottomPlayerGrid.DataContext = vml.NowPlayingVM;
             ReviewReminder();
         }
 
@@ -39,6 +41,15 @@ namespace NextPlayerUWP.Views
             {
                 this.RequestedTheme = ElementTheme.Dark;
             }
+        }
+
+        private void GetDeviceFamilyInfo()
+        {
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+            {
+                Family = "Mobile";
+            }
+            else Family = "Desktop";
         }
 
         private async Task DelayedLoad()

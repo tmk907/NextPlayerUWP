@@ -8,6 +8,7 @@
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=FoldersVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -37,25 +38,19 @@
         <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
             <Setter Property="FontSize" Value="15"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="ItemStyleCenter" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="ItemStyleRight" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
-        <DataTemplate x:Key="FolderItemTemplate" x:DataType="data:FolderItem">
+        <DataTemplate x:Key="FolderItemTemplateDesktop" x:DataType="data:FolderItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*" MinWidth="250"/>
@@ -64,21 +59,100 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                     Text="{x:Bind Folder}"
-                    Style="{StaticResource ItemStyleLeft}"/>
+                    Style="{StaticResource SongItemStyleLeft}"/>
                 <TextBlock Grid.Column="1"
                     Text="{x:Bind Directory}"
-                    Style="{StaticResource ItemStyleCenter}"/>
+                    Style="{StaticResource SongItemStyleCenter}"/>
                 <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
                 <TextBlock Grid.Column="2"
                     Text="{x:Bind SongsNumber}"
-                    Style="{StaticResource ItemStyleRight}"/>
+                    Style="{StaticResource SongItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="FolderItemTemplateMobile" x:DataType="data:FolderItem">
+            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                    Text="{x:Bind Folder}"
+                    Style="{StaticResource SongItemStyleTop}"/>
+                <TextBlock Grid.Column="0" Grid.Row="1"
+                    Text="{x:Bind Directory}"
+                    Style="{StaticResource SongItemStyleBottom}"/>
+                <!--<TextBlock Grid.Column="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource ItemStyleRight}"/>-->
+                <TextBlock Grid.Column="1" Grid.RowSpan="2"
+                    Text="{x:Bind SongsNumber}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="FolderItemTemplateMobileWide" x:DataType="data:FolderItem">
+            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="6*" MinWidth="250"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="*" MinWidth="30"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                    Text="{x:Bind Folder}"
+                    Style="{StaticResource SongItemStyleLeft}"/>
+                <TextBlock Grid.Column="1"
+                    Text="{x:Bind Directory}"
+                    Style="{StaticResource SongItemStyleCenter}"/>
+                <!--<TextBlock Grid.Column="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource ItemStyleRight}"/>-->
+                <TextBlock Grid.Column="2"
+                    Text="{x:Bind SongsNumber}"
+                    Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
     <!--{ThemeResource ApplicationPageBackgroundThemeBrush}-->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="MobileWide">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                            <triggers:AdaptiveTrigger MinWindowWidth="480"/>
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FoldersListView.ItemTemplate" Value="{StaticResource FolderItemTemplateMobileWide}"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MobileNarrow">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                            <triggers:AdaptiveTrigger MinWindowWidth="0"/>
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FoldersListView.ItemTemplate" Value="{StaticResource FolderItemTemplateMobile}"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FoldersListView.ItemTemplate" Value="{StaticResource FolderItemTemplateDesktop}"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -142,7 +216,7 @@
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                     ItemsSource="{Binding Folders}"
-                    ItemTemplate="{StaticResource FolderItemTemplate}"
+                    ItemTemplate="{StaticResource FolderItemTemplateDesktop}"
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     Margin="12,4,0,0"

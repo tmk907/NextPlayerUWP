@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Template10.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=SettingsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -55,6 +56,18 @@
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Phone">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TimerStackPanel.Orientation" Value="Vertical"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -131,7 +144,7 @@
                            FontSize="17"
                            Margin="4,4,4,4"
                            Text="Timer:"/>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel x:Name="TimerStackPanel" Orientation="Horizontal">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
                                   Toggled="{x:Bind ViewModel.TimerSwitchToggled}"/>
                             <TimePicker IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"

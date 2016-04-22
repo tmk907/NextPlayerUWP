@@ -54,14 +54,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ChangeCover()
         {
-            if (currentSong.Path == "")
-            {
-                Cover = await ImagesManager.GetDefaultCover(false);
-            }
-            else
-            {
-                Cover = await ImagesManager.GetCover(currentSong.Path);
-            }
+            Cover = await ImagesManager.GetCover(currentSong.Path, false);
         }
 
 
@@ -105,7 +98,7 @@ namespace NextPlayerUWP.ViewModels
                 if (firstVisibleIndex >= songs.Count)
                 {
                     firstVisibleIndex = 0;
-                    HockeyAdapter.TrackEvent("NowPlayingPlaylistViewModel " + nameof(firstVisibleIndex) + " >=songs.Count");
+                    //HockeyAdapter.TrackEvent("NowPlayingPlaylistViewModel " + nameof(firstVisibleIndex) + " >=songs.Count");
                 }
             }
             if (songs.Count != 0)

@@ -27,7 +27,7 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
             //App.SongUpdated += App_SongUpdated;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            DelayedUpdatePlaylist();
+            UpdatePlaylist();
         }
 
         private async Task DelayedUpdatePlaylist()
@@ -216,6 +216,7 @@ namespace NextPlayerUWP.ViewModels
         private void ScrollAfterTrackChanged(int index)
         {
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
+            if (isp == null) return;
             int firstVisibleIndex = isp.FirstVisibleIndex;
             int lastVisibleIndex = isp.LastVisibleIndex;
             if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;

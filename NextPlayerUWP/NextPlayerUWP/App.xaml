@@ -182,6 +182,43 @@
                 <Setter Property="Foreground" Value="{StaticResource SystemControlBackgroundAccentBrush}"/>
             </Style>
 
+            <Style x:Key="SongItemStyleBase" TargetType="TextBlock">
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="SongItemStyleIndex" TargetType="TextBlock" BasedOn="{StaticResource SongItemStyleBase}">
+                <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Margin" Value="0,0,12,0"/>
+            </Style>
+            <Style x:Key="SongItemStyleLeft" TargetType="TextBlock" BasedOn="{StaticResource SongItemStyleBase}">
+                <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+            <Style x:Key="SongItemStyleCenter" TargetType="TextBlock" BasedOn="{StaticResource SongItemStyleBase}">
+                <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+            <Style x:Key="SongItemStyleRight" TargetType="TextBlock" BasedOn="{StaticResource SongItemStyleBase}">
+                <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+            </Style>
+            <Style x:Key="SongItemStyleTop" TargetType="TextBlock" BasedOn="{StaticResource SongItemStyleBase}">
+                <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+            <Style x:Key="SongItemStyleBottom" TargetType="TextBlock" BasedOn="{StaticResource SongItemStyleBase}">
+                <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+
+
             <Style x:Key="SongsListViewItemStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

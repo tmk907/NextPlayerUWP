@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
+using Windows.UI.Xaml.Input;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -152,5 +153,23 @@ namespace NextPlayerUWP.ViewModels
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
+        public async void ImageTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var image = (Image)sender;
+            var header = (ArtistItemHeader)image.Tag;
+            var album = header.Album;
+            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            if (album == loader.GetString("UnknownAlbum"))
+            {
+                album = "";
+            }
+            var item = songs.Where(s => s.Album.Equals(album)).FirstOrDefault();
+            if (item == null)//?
+            {
+                item = songs.FirstOrDefault();
+            }
+            AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
+            App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
+        }
     }
 }

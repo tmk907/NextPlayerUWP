@@ -169,28 +169,6 @@ namespace NextPlayerUWPDataLayer.Services
         {
             BitmapImage bitmap = new BitmapImage();
             Uri uri;
-            //if (small)
-            //{
-            //    //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-            //    //{
-            //    //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-light192.png");
-            //    //}
-            //    //else
-            //    //{
-            //    //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-dark192.png");
-            //    //}
-            //    uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
-            //}
-            //else
-            //{
-            //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-            //{
-            //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-light.png");
-            //}
-            //else
-            //{
-            //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-dark.png");
-            //}
             if (small)
             {
                 uri = new Uri(AppConstants.AlbumCoverSmall);
@@ -199,7 +177,6 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 uri = new Uri(AppConstants.AlbumCover);
             }
-            //}
             var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
             using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
             {
@@ -212,13 +189,13 @@ namespace NextPlayerUWPDataLayer.Services
         /// Return cover saved in file tags or .jpg from folder or default cover.
         /// UI Thread
         /// </summary>
-        public static async Task<BitmapImage> GetCover(string path)
+        public static async Task<BitmapImage> GetCover(string path, bool small = true)
         {
             BitmapImage bitmap = new BitmapImage();
 
             if (string.IsNullOrEmpty(path))
             {
-                bitmap = await GetDefaultCover();
+                bitmap = await GetDefaultCover(small);
             }
             else
             {
@@ -227,7 +204,7 @@ namespace NextPlayerUWPDataLayer.Services
 
             if (bitmap.PixelHeight == 0)
             {
-                bitmap = await GetDefaultCover();
+                bitmap = await GetDefaultCover(small);
             }
 
             return bitmap;

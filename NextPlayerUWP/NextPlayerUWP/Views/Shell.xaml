@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:NextPlayerUWP.Views"
     xmlns:controls="using:Template10.Controls"
+    xmlns:winstatetriggers="using:WindowsStateTriggers"
     mc:Ignorable="d">
     <Page.Resources>
         <Style x:Key="BottomPlayerButtonStyle" TargetType="Button">
@@ -210,34 +211,28 @@
     <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
-                <!--VisualState to be triggered when window width is >=720 effective pixels.-->
-                <VisualState x:Name="VisualStateNarrow">
+                <VisualState x:Name="Phone">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="320" />
+                        <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="RightPanel.Opacity" Value="0" />
+                        <Setter Target="RightPanel.Visibility" Value="Collapsed" />
                         <Setter Target="RightPanel.Width" Value="0" />
                         <Setter Target="SliderGrid.Opacity" Value="0" />
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
-                        <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
+                        <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
+                        <Setter Target="RepeatButton.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState  x:Name="VisualStateNormal">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="720" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="RightPanel.Width" Value="250" />
-                        <Setter Target="SliderGrid.Opacity" Value="1" />
-                        <Setter Target="SliderGrid.Visibility" Value="Visible"/>
-                        <Setter Target="SliderColumn.Width" Value="*"/>
-                        <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
-                    </VisualState.Setters>
-                </VisualState>
+                <!--VisualState to be triggered when window width is >=720 effective pixels.-->
                 <VisualState x:Name="VisualStateWide">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1008" />
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="1008" />
+                        </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="RightPanel.Width" Value="300" />
@@ -247,6 +242,38 @@
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState  x:Name="VisualStateNormal">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="720" />
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RightPanel.Width" Value="250" />
+                        <Setter Target="SliderGrid.Opacity" Value="1" />
+                        <Setter Target="SliderGrid.Visibility" Value="Visible"/>
+                        <Setter Target="SliderColumn.Width" Value="*"/>
+                        <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateNarrow">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RightPanel.Width" Value="0"/>
+                        <Setter Target="SliderGrid.Opacity" Value="0" />
+                        <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SliderColumn.Width" Value="0"/>
+                        <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
+                    </VisualState.Setters>
+                </VisualState>
+                
+                
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
@@ -260,6 +287,7 @@
         </Grid.ColumnDefinitions>
         <controls:HamburgerMenu x:Name="Menu" 
                                 Grid.Row="0" Grid.Column="0"
+                                
                                 HamburgerBackground="{ThemeResource SystemChromeMediumColor}"
                                 HamburgerForeground="{ThemeResource SystemBaseHighColor}"
                                 NavAreaBackground="{ThemeResource SystemChromeLowColor}"
@@ -267,7 +295,11 @@
                                 NavButtonForeground="{ThemeResource SystemBaseHighColor}"
                                 SecondarySeparator="{ThemeResource SystemChromeHighColor}"
                                 NavButtonHoverBackground="{ThemeResource SystemChromeMediumColor}"
+                                NavButtonHoverForeground="{ThemeResource SystemBaseHighColor}"
                                 NavButtonCheckedBackground="{ThemeResource SystemChromeHighColor}"
+                                NavButtonCheckedForeground="{ThemeResource SystemBaseHighColor}"
+                                NavButtonPressedBackground="{ThemeResource SystemChromeMediumColor}"
+                                NavButtonPressedForeground="{ThemeResource SystemBaseHighColor}"
                                 PaneBorderThickness="0"
                                 VisualStateNarrowMinWidth="0"
                                 VisualStateNormalMinWidth="720">
@@ -337,6 +369,7 @@
         <Grid Grid.Row="1" x:Name="BottomPlayerGrid" 
               Grid.ColumnSpan="3"
               Background="{StaticResource UserAccentBrush}"
+              DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}"
               >
 
             <Grid.ColumnDefinitions>
@@ -389,7 +422,8 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0"
+                <Button x:Name="ShuffleButton"
+                    Grid.Column="0"
                     Command="{Binding ShuffleCommand}" 
                     Width="48" Height="48"
                     Style="{StaticResource BottomPlayerButtonStyle}">
@@ -459,6 +493,7 @@
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Column="4"
+                        x:Name="RepeatButton"
                     Command="{Binding RepeatCommand}"
                     Width="48" 
                     Height="60"

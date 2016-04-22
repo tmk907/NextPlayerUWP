@@ -40,20 +40,12 @@ namespace NextPlayerUWP
             AppThemeChanged?.Invoke(isLight);
         }
 
-#if DEBUG
-        private bool dev = true;
-#else
-        private bool dev = false;
-#endif
-
         public static bool IsLightThemeOn = false;
 
         public App()
         {
             InitializeComponent();
-
-            //App.Current.UnhandledException += App_UnhandledException;
-            Logger.SaveFromSettingsToFile();
+            
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
             if (t != null)
             {
@@ -68,18 +60,22 @@ namespace NextPlayerUWP
                     RequestedTheme = ApplicationTheme.Dark;
                 }
             }
+            else
+            {
+                RequestedTheme = ApplicationTheme.Light;
+            }
 
-            //App.Current.UnhandledException += Current_UnhandledException;
 
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
-            //insights
-            //Resetdb();            
-            //DatabaseManager.Current.ClearCoverPaths();
-        }
 
-        private void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            Logger.SaveInSettings(e.Message + Environment.NewLine + e.Exception);
+            try
+            {
+                Logger.SaveFromSettingsToFile();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public enum Pages
@@ -94,6 +90,7 @@ namespace NextPlayerUWP
             Folders,
             Lyrics,
             NowPlaying,
+            NowPlayingPlaylist,
             Playlists,
             Playlist,
             Settings,
@@ -107,7 +104,10 @@ namespace NextPlayerUWP
             {
                 await FirstRunSetup();
             }
-
+            else
+            {
+                Logger.SaveFromSettingsToFile();
+            }
             await TileManager.ManageSecondaryTileImages();
             try
             {
@@ -120,6 +120,7 @@ namespace NextPlayerUWP
                 keys.Add(Pages.FileInfo, typeof(FileInfoView));
                 keys.Add(Pages.Folders, typeof(FoldersView));
                 keys.Add(Pages.Genres, typeof(GenresView));
+                keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
                 keys.Add(Pages.Playlist, typeof(PlaylistView));
                 keys.Add(Pages.Settings, typeof(SettingsView));

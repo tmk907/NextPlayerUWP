@@ -2,7 +2,7 @@
 
 namespace NextPlayerUWP.Common
 {
-    public class HockeyAdapter
+    public class HockeyProxy
     {
         public static void TrackEvent(string eventName)
         {

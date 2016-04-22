@@ -55,13 +55,13 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, BackgroundTaskState.Running.ToString());
 
-            deferral = taskInstance.GetDeferral(); // This must be retrieved prior to subscribing to events below which use it
-
             var to = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn);
             if (to != null && (bool)to)
             {
                 //SetTimer();//!
             }
+
+            deferral = taskInstance.GetDeferral(); // This must be retrieved prior to subscribing to events below which use it
 
             // Mark the background task as started to unblock SMTC Play operation (see related WaitOne on this signal)
             backgroundTaskStarted.Set();
@@ -263,8 +263,9 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                     // again unless it needs to.
                     bool result = backgroundTaskStarted.WaitOne(5000);
                     if (!result)
+                    {
                         throw new Exception("Background Task didnt initialize in time");
-
+                    }
                     Play();
                     break;
                 case SystemMediaTransportControlsButton.Pause:

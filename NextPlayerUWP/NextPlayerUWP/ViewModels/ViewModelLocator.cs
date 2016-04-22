@@ -45,6 +45,5 @@ namespace NextPlayerUWP.ViewModels
         public SongsViewModel SongsVM => ServiceLocator.Current.GetInstance<SongsViewModel>();
         public TagsEditorViewModel TagsEditorVM => ServiceLocator.Current.GetInstance<TagsEditorViewModel>();
         public TestViewModel TestVM => ServiceLocator.Current.GetInstance<TestViewModel>();
-        //public ViewModel VM => ServiceLocator.Current.GetInstance<MainPageViewModel>();
     }
 }

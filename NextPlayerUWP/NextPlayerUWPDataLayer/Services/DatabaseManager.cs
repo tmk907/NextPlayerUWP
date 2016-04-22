@@ -34,7 +34,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             connectionAsync = new SQLiteAsyncConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName), true);
             connection = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName), true);
-            connection.BusyTimeout = TimeSpan.FromSeconds(4);
+            connection.BusyTimeout = TimeSpan.FromSeconds(5);
         }
 
         private SQLiteAsyncConnection connectionAsync;
