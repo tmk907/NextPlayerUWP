@@ -183,6 +183,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SongsListView.ItemTemplate" Value="{StaticResource SongsListViewItemTemplateMobileWide}"/>
+                        <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplateMobile}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -194,6 +195,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SongsListView.ItemTemplate" Value="{StaticResource SongsListViewItemTemplateMobile}"/>
+                        <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplateMobile}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -202,6 +204,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SongsListView.ItemTemplate" Value="{StaticResource SongsListViewItemTemplateDesktop}"/>
+                        <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplate}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -288,7 +291,7 @@
                     </mycontrols:AlternatingRowListView>
                 </SemanticZoom.ZoomedInView>
                 <SemanticZoom.ZoomedOutView>
-                    <ListView
+                    <ListView x:Name="ZoomedOutListView"
                             ItemsSource="{Binding Source={StaticResource SongsCVS}, Path=CollectionGroups}"
                             ItemTemplate="{StaticResource ZoomedOutItemsTemplate}"
                             ItemContainerStyle="{StaticResource ZoomedOutItemContainerStyle}">

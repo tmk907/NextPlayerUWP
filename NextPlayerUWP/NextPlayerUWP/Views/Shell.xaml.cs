@@ -26,8 +26,10 @@ namespace NextPlayerUWP.Views
             this.Loaded += LoadSlider;
             Menu.NavigationService = navigationService;
             App.AppThemeChanged += App_AppThemeChanged;
-            //ViewModelLocator vml = new ViewModelLocator();
-            //BottomPlayerGrid.DataContext = vml.NowPlayingVM;
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
+            {
+                ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
+            }
             ReviewReminder();
         }
 
@@ -43,6 +45,30 @@ namespace NextPlayerUWP.Views
             }
         }
 
+        public void ChangeRightPanelVisibility(bool visible)
+        {
+            if (visible)
+            {
+                RightPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                RightPanel.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public void ChangeBottomPlayerVisibility(bool visible)
+        {
+            if (visible)
+            {
+                BottomPlayerGrid.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BottomPlayerGrid.Visibility = Visibility.Collapsed;
+            }
+        }
+
         private void GetDeviceFamilyInfo()
         {
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
@@ -50,13 +76,6 @@ namespace NextPlayerUWP.Views
                 Family = "Mobile";
             }
             else Family = "Desktop";
-        }
-
-        private async Task DelayedLoad()
-        {
-            //await Task.Delay(100);
-            ViewModelLocator vml = new ViewModelLocator();
-            BottomPlayerGrid.DataContext = vml.NowPlayingVM;
         }
 
         #region Slider 
@@ -71,13 +90,13 @@ namespace NextPlayerUWP.Views
 
         void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            NowPlayingViewModel viewModel = (NowPlayingViewModel)BottomPlayerGrid.DataContext;
+            BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             viewModel.sliderpressed = true;
         }
 
         void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
-            NowPlayingViewModel viewModel = (NowPlayingViewModel)BottomPlayerGrid.DataContext;
+            BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             viewModel.sliderpressed = false;
             Common.PlaybackManager.Current.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
             //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
@@ -85,7 +104,7 @@ namespace NextPlayerUWP.Views
 
         void progressbar_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
-            NowPlayingViewModel viewModel = (NowPlayingViewModel)BottomPlayerGrid.DataContext;
+            BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             if (!viewModel.sliderpressed)
             {
                 Common.PlaybackManager.Current.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
@@ -96,7 +115,7 @@ namespace NextPlayerUWP.Views
 
         private async Task ReviewReminder()
         {
-            await Task.Delay(2000);
+            await Task.Delay(3000);
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
             if (!settings.Values.ContainsKey(AppConstants.IsReviewed))

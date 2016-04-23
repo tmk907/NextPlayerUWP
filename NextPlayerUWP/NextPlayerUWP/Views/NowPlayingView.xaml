@@ -1,14 +1,23 @@
 ﻿<Page
-    x:Class="NextPlayerUWP.Views.Shell"
+    x:Class="NextPlayerUWP.Views.NowPlayingView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="using:NextPlayerUWP.Views"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
-    xmlns:winstatetriggers="using:WindowsStateTriggers"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
+    DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}"
     mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Page.Resources>
         <Style x:Key="BottomPlayerButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -208,220 +217,50 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <Grid>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="Phone">
-                    <VisualState.StateTriggers>
-                        <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
-                        <Setter Target="SliderColumn.Width" Value="0"/>
-                        <Setter Target="SliderGrid.Opacity" Value="0" />
-                        <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
-                        <Setter Target="RepeatButton.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <!--VisualState to be triggered when window width is >=720 effective pixels.-->
-                <VisualState x:Name="VisualStateWide">
-                    <VisualState.StateTriggers>
-                        <winstatetriggers:CompositeStateTrigger Operator="And">
-                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
-                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="1008" />
-                        </winstatetriggers:CompositeStateTrigger>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="RightPanel.Visibility" Value="Visible"/>
-                        <Setter Target="RightPanel.Width" Value="300" />
-                        <Setter Target="SliderGrid.Visibility" Value="Visible"/>
-                        <Setter Target="SliderColumn.Width" Value="*"/>
-                        <Setter Target="SliderGrid.Opacity" Value="1" />
-                        <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState  x:Name="VisualStateNormal">
-                    <VisualState.StateTriggers>
-                        <winstatetriggers:CompositeStateTrigger Operator="And">
-                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
-                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="720" />
-                        </winstatetriggers:CompositeStateTrigger>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="RightPanel.Visibility" Value="Visible"/>
-                        <Setter Target="RightPanel.Width" Value="250" />
-                        <Setter Target="SliderGrid.Visibility" Value="Visible"/>
-                        <Setter Target="SliderColumn.Width" Value="*"/>
-                        <Setter Target="SliderGrid.Opacity" Value="1" />
-                        <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="VisualStateNarrow">
-                    <VisualState.StateTriggers>
-                        <winstatetriggers:CompositeStateTrigger Operator="And">
-                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
-                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
-                        </winstatetriggers:CompositeStateTrigger>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="RightPanel.Visibility" Value="Visible"/>
-                        <Setter Target="RightPanel.Width" Value="0"/>
-                        <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
-                        <Setter Target="SliderColumn.Width" Value="0"/>
-                        <Setter Target="SliderGrid.Opacity" Value="0" />
-                        <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
-                    </VisualState.Setters>
-                </VisualState>
-                
-                
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="68"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <controls:HamburgerMenu x:Name="Menu" 
-                                Grid.Row="0" Grid.Column="0"
-                                
-                                HamburgerBackground="{ThemeResource SystemChromeMediumColor}"
-                                HamburgerForeground="{ThemeResource SystemBaseHighColor}"
-                                NavAreaBackground="{ThemeResource SystemChromeLowColor}"
-                                NavButtonBackground="{ThemeResource SystemChromeLowColor}"
-                                NavButtonForeground="{ThemeResource SystemBaseHighColor}"
-                                SecondarySeparator="{ThemeResource SystemChromeHighColor}"
-                                NavButtonHoverBackground="{ThemeResource SystemChromeMediumColor}"
-                                NavButtonHoverForeground="{ThemeResource SystemBaseHighColor}"
-                                NavButtonCheckedBackground="{ThemeResource SystemChromeHighColor}"
-                                NavButtonCheckedForeground="{ThemeResource SystemBaseHighColor}"
-                                NavButtonPressedBackground="{ThemeResource SystemChromeMediumColor}"
-                                NavButtonPressedForeground="{ThemeResource SystemBaseHighColor}"
-                                PaneBorderThickness="0"
-                                VisualStateNarrowMinWidth="0"
-                                VisualStateNormalMinWidth="720">
-            <controls:HamburgerMenu.PrimaryButtons>
-                <controls:HamburgerButtonInfo PageType="views:AlbumsView" ClearHistory="True">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Grid Width="48" Height="48">
-                            <Viewbox Height="20">
-                                <TextBlock Text="&#xE958;" FontFamily="Segoe MDL2 Assets"/>
-                            </Viewbox>
-                        </Grid>
-                        <TextBlock x:Uid="TBAlbums" Text="Albums" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:ArtistsView"  ClearHistory="True">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="People" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBArtists" Text="Artists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:FoldersView"  ClearHistory="True">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Grid Width="48" Height="48">
-                            <Viewbox Height="20">
-                                <TextBlock Text="&#xE16F;" FontFamily="Segoe MDL2 Assets"/>
-                            </Viewbox>
-                        </Grid>
-                        <TextBlock x:Uid="TBFolders" Text="Folders" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:GenresView"  ClearHistory="True">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="World" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBGenres" Text="Genres" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:PlaylistsView"  ClearHistory="True">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="MusicInfo" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBPlaylists" Text="Playlists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:SongsView"  ClearHistory="True">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Audio" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBSongs" Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingPlaylistView"  ClearHistory="False">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Play" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBNowPlaying" Text="Now playing" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-            </controls:HamburgerMenu.PrimaryButtons>
-
-            <controls:HamburgerMenu.SecondaryButtons>
-                <controls:HamburgerButtonInfo PageType="views:SettingsView">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Setting" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBSettings" Text="Settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-            </controls:HamburgerMenu.SecondaryButtons>
-
-        </controls:HamburgerMenu>
-        <Grid Grid.Row="1" x:Name="BottomPlayerGrid" 
-             
-              Grid.ColumnSpan="3"
-              Background="{StaticResource UserAccentBrush}"
-              DataContext="{Binding Source={StaticResource Locator}, Path=BottomPlayerVM}"
-              >
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition x:Name="SliderColumn" Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="68"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Image Grid.RowSpan="2" Grid.Column="0" 
-                       Margin="4" Source="{Binding Cover}">
-                    <!--<Image.Source>
-                        <BitmapImage UriSource="{Binding Cover}"
-                                     DecodePixelType="Logical"
-                                     DecodePixelHeight="68" 
-                                     DecodePixelWidth="68"/>
-                    </Image.Source>-->
-                </Image>
-                <TextBlock Grid.Column="1" Grid.Row="0" 
-                           Margin="4,4,4,4"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           FontSize="16"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           VerticalAlignment="Bottom"
-                           HorizontalAlignment="Left"
-                           TextTrimming="CharacterEllipsis"
-                           Text="{Binding Song.Title}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" 
-                           Margin="4,4,4,4"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           FontSize="14"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           VerticalAlignment="Top"
-                           HorizontalAlignment="Left"
-                           TextTrimming="CharacterEllipsis"
-                           Text="{Binding Song.Artist}"/>
+        <controls:PageHeader Grid.Row="0"
+                BackButtonVisibility="Collapsed" 
+                Frame="{x:Bind Frame, Mode=OneWay}"
+                x:Uid="PageHeaderNowPlayingPlaylist"
+                Content="Now playing" 
+                VisualStateNarrowMinWidth="0" 
+                VisualStateNormalMinWidth="720">
+            <AppBarButton Icon="Save"
+                x:Uid="AppBarButtonSave"
+                Label="Save"
+                Click="{x:Bind ViewModel.SavePlaylist}"/>
+        </controls:PageHeader>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0"
+                       Margin="12,12,12,12" 
+                       Width="220" Height="220" 
+                       Source="{Binding Cover}">
+            </Image>
+            <Grid Grid.Row="1">
+                
             </Grid>
-            <Grid Grid.Column="1" Width="Auto">
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <!--<ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>-->
                 </Grid.ColumnDefinitions>
                 <Button x:Name="ShuffleButton"
                     Grid.Column="0"
@@ -513,41 +352,37 @@
                     </Button.ContentTemplate>
                 </Button>
             </Grid>
-            <Grid Grid.Column="3" x:Name="SliderGrid" >
+            <Grid Grid.Row="3" x:Name="SliderGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                           FontSize="17"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"
-                           Margin="0,0,8,0"
-                           Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
+                        FontSize="17"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Foreground="{ThemeResource BottomPlayerTextForeground}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,8,0"
+                        Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
                 <Slider x:Name="timeslider" Grid.Column="1"
-                        StepFrequency="1.0"
-                        Margin="4,8,4,0"
-                        Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
-                        Value="{Binding SliderValue, Mode=TwoWay}"
-                        ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
+                    StepFrequency="1.0"
+                    Margin="4,8,4,0"
+                    Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
+                    Value="{Binding SliderValue, Mode=TwoWay}"
+                    ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
                 <TextBlock Grid.Column="2"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           FontSize="17"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"
-                           Margin="0,0,8,0"
-                           Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Foreground="{ThemeResource BottomPlayerTextForeground}"
+                        FontSize="17"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,8,0"
+                        Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
             </Grid>
         </Grid>
-        <UserControl Grid.Row="0" Grid.Column="1">
-            <local:RightPanelControl x:Name="RightPanel" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Width="250"/>
-        </UserControl>
     </Grid>
-
 </Page>

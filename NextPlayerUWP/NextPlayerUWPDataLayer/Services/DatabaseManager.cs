@@ -529,6 +529,31 @@ namespace NextPlayerUWPDataLayer.Services
             return list;
         }
 
+        public async Task<ObservableCollection<SongItem>> GetSongItemsFromNowPlayingAsync()
+        {
+            var query = await connectionAsync.Table<NowPlayingTable>().OrderBy(e => e.Position).ToListAsync();
+            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
+            foreach (var e in query)
+            {
+                if (e.SongId >= 10000000) //! TODO!!!
+                {
+                    SongItem s = new SongItem();
+                    s.SongId = e.SongId;
+                    s.Title = e.Title;
+                    s.Album = e.Album;
+                    s.Artist = e.Artist;
+                    s.Path = e.Path;
+                    list.Add(s);
+                }
+                var query2 = await songsConnectionAsync.Where(x => x.SongId.Equals(e.SongId)).ToListAsync();
+                if (query2 != null && query2.Count > 0)
+                {
+                    list.Add(new SongItem(query2.FirstOrDefault()));
+                }
+            }
+            return list;
+        }
+
         public async Task<ObservableCollection<SongItem>> GetSongItemsAsync()
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();

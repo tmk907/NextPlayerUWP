@@ -337,6 +337,12 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
+        public void SavePlaylist()
+        {
+            NowPlayingListItem item = new NowPlayingListItem();
+            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
+
         #region Lyrics
 
         private string artist = "Artist";

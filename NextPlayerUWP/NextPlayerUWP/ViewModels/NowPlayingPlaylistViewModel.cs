@@ -109,6 +109,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
+            //App.ChangeRightPanelVisibility(true);
             positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
             firstVisibleIndex = isp.FirstVisibleIndex;
@@ -120,6 +121,12 @@ namespace NextPlayerUWP.ViewModels
             }
 
             return Task.CompletedTask;
+        }
+
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            //App.ChangeRightPanelVisibility(false);
+            return base.OnNavigatedToAsync(parameter, mode, state);
         }
 
         private void ScrollAfterTrackChanged(int index)

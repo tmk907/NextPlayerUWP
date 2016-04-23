@@ -27,8 +27,16 @@ namespace NextPlayerUWP.Common
         {
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
             songs.CollectionChanged += Songs_CollectionChanged;
+            //Init();
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
             App.SongUpdated += App_SongUpdated;
+        }
+
+        private async void Init()
+        {
+            songs = await DatabaseManager.Current.GetSongItemsFromNowPlayingAsync();
+            songs.CollectionChanged += Songs_CollectionChanged;
+            OnNPChanged();
         }
 
         private async void App_SongUpdated(int id)

@@ -39,6 +39,7 @@ namespace NextPlayerUWP
         {
             AppThemeChanged?.Invoke(isLight);
         }
+        
 
         public static bool IsLightThemeOn = false;
 
@@ -159,9 +160,11 @@ namespace NextPlayerUWP
                 {
                     case MusicItemTypes.album:
                         page = Pages.Album;
+                        parameter = MusicItem.ParseParameter(parameter)[1];
                         break;
                     case MusicItemTypes.artist:
                         page = Pages.Artist;
+                        parameter = MusicItem.ParseParameter(parameter)[1];
                         break;
                     case MusicItemTypes.folder:
                         page = Pages.Playlist;
@@ -278,6 +281,18 @@ namespace NextPlayerUWP
         private void Resetdb()
         {
             DatabaseManager.Current.resetdb();
+        }
+
+        public static void ChangeRightPanelVisibility(bool visible)
+        {
+            if (Window.Current.Content == null) return;
+            ((Shell)Window.Current.Content).ChangeRightPanelVisibility(visible);
+        }
+
+        public static void ChangeBottomPlayerVisibility(bool visible)
+        {
+            if (Window.Current.Content == null) return;
+            ((Shell)Window.Current.Content).ChangeBottomPlayerVisibility(visible);
         }
     }
 }

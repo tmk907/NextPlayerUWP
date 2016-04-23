@@ -38,7 +38,8 @@
         </MenuFlyout>
 
         <DataTemplate x:Key="SongItemTemplateDesktop" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewItem_RightTapped" 
+                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="8*"/>
                     <ColumnDefinition Width="6*"/>
@@ -60,7 +61,8 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SongItemTemplateMobile" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewItem_RightTapped"
+                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="8*"/>
                     <ColumnDefinition Width="2*"/>
@@ -81,7 +83,8 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SongItemTemplateMobileWide" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewItem_RightTapped" 
+                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="8*"/>
                     <ColumnDefinition Width="8*"/>
@@ -193,6 +196,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="NowPlayingPlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
+                        <Setter Target="SongInfoGrid.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -218,12 +222,19 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" x:Name="SongInfoGrid" x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Image Margin="12,12,12,12" Width="220" Height="220" Source="{Binding Cover}">
+                <!--<Rectangle Grid.Column="0" 
+                           Margin="12,12,12,12" 
+                           Width="220" Height="220" 
+                           Fill="{StaticResource UserAccentBrush}"/>-->
+                <Image Grid.Column="0"
+                       Margin="12,12,12,12" 
+                       Width="220" Height="220" 
+                       Source="{Binding Cover}">
                     <!--<Image.Source>
                         <BitmapImage UriSource="{Binding CurrentSong.ImageUri, Mode=OneWay}"
                                      DecodePixelType="Logical"

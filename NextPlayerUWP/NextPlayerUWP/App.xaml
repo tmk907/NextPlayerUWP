@@ -106,13 +106,27 @@
             <converters:IntToRatingStar x:Key="IntToRatingStarConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
-                <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}}"
+                <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"
                      Height="84"
                      BorderThickness="1" 
                      BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
                      Background="Transparent">
                     <TextBlock Text="{Binding Group.Key}"
                            FontSize="32"
+                           FontWeight="Normal"
+                           Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="ZoomedOutItemsTemplateMobile">
+                <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=mobile}"
+                     Height="48"
+                     BorderThickness="1" 
+                     BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
+                     Background="Transparent">
+                    <TextBlock Text="{Binding Group.Key}"
+                           FontSize="18"
                            FontWeight="Normal"
                            Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
                            HorizontalAlignment="Center"

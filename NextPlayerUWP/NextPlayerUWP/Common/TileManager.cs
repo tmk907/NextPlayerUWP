@@ -49,21 +49,9 @@ namespace NextPlayerUWP.Common
         public static async Task CreateTile(MusicItem item)
         {
             int id = ApplicationSettingsHelper.ReadTileIdValue() + 1;
-            string tileId = AppConstants.TileId + id.ToString();
             ApplicationSettingsHelper.SaveTileIdValue(id);
-            string parameter = item.GetParameter();
-
-            string displayName = AppConstants.AppName;
-            string tileActivationArguments = parameter;
-            Uri square150x150Logo = new Uri("ms-appx:///Assets/AppImages/Logo/Logo.png");
-
-            SecondaryTile secondaryTile = new SecondaryTile(tileId,
-                                                displayName,
-                                                tileActivationArguments,
-                                                square150x150Logo,
-                                                TileSize.Square150x150);
-            secondaryTile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/AppImages/WideLogo/WideLogo.png");
-            secondaryTile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/AppImages/Square71x71Logo/Square71x71LogoTr.png");
+            string tileId = AppConstants.TileId + id.ToString();
+            string parameter = item.GetParameter();            
 
             ResourceLoader loader = new ResourceLoader();
             string hasImage = "no";
@@ -79,12 +67,12 @@ namespace NextPlayerUWP.Common
                     {
                         hasImage = "yes";
                     }
-                    parameter = ((AlbumItem)item).AlbumId.ToString();
+                    parameter = MusicItemTypes.album + MusicItem.separator + ((AlbumItem)item).AlbumId.ToString();
                     break;
                 case MusicItemTypes.artist:
                     name = ((ArtistItem)item).Artist;
                     type = loader.GetString("Artist");
-                    parameter = ((ArtistItem)item).ArtistId.ToString();
+                    parameter = MusicItemTypes.artist + MusicItem.separator + ((ArtistItem)item).ArtistId.ToString();
                     break;
                 case MusicItemTypes.folder:
                     name = ((FolderItem)item).Folder;
@@ -107,6 +95,22 @@ namespace NextPlayerUWP.Common
                     type = loader.GetString("Song");
                     break;
             }
+
+            string displayName = AppConstants.AppName;
+            string tileActivationArguments = parameter;
+            Uri square150x150Logo = new Uri("ms-appx:///Assets/Visual Assets/Square150/Medium3.png");
+
+            SecondaryTile secondaryTile = new SecondaryTile(tileId, displayName, displayName, tileActivationArguments, TileOptions.ShowNameOnLogo, square150x150Logo);
+            //SecondaryTile secondaryTile = new SecondaryTile(tileId,
+            //                                    displayName,
+            //                                    tileActivationArguments,
+            //                                    square150x150Logo,
+            //                                    TileSize.Square150x150);
+            secondaryTile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Visual Assets/Wide310/Wide3.png");
+            //secondaryTile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/Visual Assets/Square71/Small3.png");
+
+            secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
+            secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
 
             ApplicationSettingsHelper.SaveTileData(new TileData() {
                 Id = tileId,

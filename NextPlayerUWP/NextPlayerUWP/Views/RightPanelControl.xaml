@@ -317,7 +317,9 @@
             <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Rectangle Grid.Row="0" Fill="{ThemeResource SystemChromeMediumColor}"/>
+        <CommandBar Grid.Row="0" Background="{ThemeResource SystemChromeMediumColor}">
+            <AppBarButton x:Uid="AppBarButtonSave" Icon="Save" Click="{x:Bind ViewModel.SavePlaylist}" Label="Save playlist"/>
+        </CommandBar>
         <Pivot Grid.Row="1" 
                
                Style="{StaticResource RightPanelPivotStyle}" 
