@@ -279,7 +279,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="68"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -348,7 +348,7 @@
                         <TextBlock x:Uid="TBSongs" Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingPlaylistView"  ClearHistory="False">
+                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingView"  ClearHistory="False">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Play" Width="48" Height="48" />
                         <TextBlock x:Uid="TBNowPlaying" Text="Now playing" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
@@ -367,7 +367,7 @@
 
         </controls:HamburgerMenu>
         <Grid Grid.Row="1" x:Name="BottomPlayerGrid" 
-             
+              Height="68"
               Grid.ColumnSpan="3"
               Background="{StaticResource UserAccentBrush}"
               DataContext="{Binding Source={StaticResource Locator}, Path=BottomPlayerVM}"
@@ -392,8 +392,8 @@
                     <!--<Image.Source>
                         <BitmapImage UriSource="{Binding Cover}"
                                      DecodePixelType="Logical"
-                                     DecodePixelHeight="68" 
-                                     DecodePixelWidth="68"/>
+                                     DecodePixelHeight="60" 
+                                     DecodePixelWidth="60"/>
                     </Image.Source>-->
                 </Image>
                 <TextBlock Grid.Column="1" Grid.Row="0" 

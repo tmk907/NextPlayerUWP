@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -21,23 +22,8 @@ namespace NextPlayerUWP.ViewModels
     {
         public NowPlayingViewModel()
         {
-            RepeatMode = Repeat.CurrentState();
-            ShuffleMode = Shuffle.CurrentState();
             _timer = new DispatcherTimer();
             SetupTimer();
-            ChangePlayButtonContent(MediaPlayerState.Paused);
-            PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
-            PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
-            PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
-            PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
-            PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
-            Initialize();
-        }
-
-        private async Task Initialize()
-        {
-            Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            await ChangeCover();
         }
 
         #region Properties
@@ -116,77 +102,70 @@ namespace NextPlayerUWP.ViewModels
         #endregion
 
         #region Commands
-        private RelayCommand play;
-        public RelayCommand Play
+
+        public void Play()
         {
-            get
+            PlaybackManager.Current.Play();
+        }
+
+        public void Previous()
+        {
+            PlaybackManager.Current.Previous();
+        }
+
+        public void Next()
+        {
+            PlaybackManager.Current.Next();
+        }
+
+        public void ShuffleCommand()
+        {
+            ShuffleMode = !ShuffleMode;
+            PlaybackManager.Current.SendMessage(AppConstants.Shuffle, "");
+        }
+
+        public void RepeatCommand()
+        {
+            RepeatMode = Repeat.Change();
+            PlaybackManager.Current.SendMessage(AppConstants.Repeat, "");
+        }
+
+        public async void RateSong(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            Song.Rating = Int32.Parse(button.Tag.ToString());
+            await DatabaseManager.Current.UpdateRatingAsync(song.SongId, song.Rating).ConfigureAwait(false);
+        }
+
+        private double x, y;
+
+        public void Image_Pressed(object sender, PointerRoutedEventArgs e)
+        {
+            var a = e.GetCurrentPoint(null);
+            x = a.Position.X;
+            y = a.Position.Y;
+        }
+
+        public void Image_Released(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
+
+        public void Image_Exited(object sender, PointerRoutedEventArgs e)
+        {
+            var a = e.GetCurrentPoint(null);
+            if (Math.Abs(x - a.Position.X) > 50)
             {
-                return play
-                    ?? (play = new RelayCommand(
-                    () =>
-                    {
-                        PlaybackManager.Current.Play();
-                    }));
+                if (x - a.Position.X > 0) Next();
+                else Previous();
             }
         }
 
-        private RelayCommand previous;
-        public RelayCommand Previous
+        public void Image_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            get
-            {
-                return previous
-                    ?? (previous = new RelayCommand(
-                    () =>
-                    {
-                        PlaybackManager.Current.Previous();
-                    }));
-            }
+            Play();
         }
 
-        private RelayCommand next;
-        public RelayCommand Next
-        {
-            get
-            {
-                return next
-                    ?? (next = new RelayCommand(
-                    () =>
-                    {
-                        PlaybackManager.Current.Next();
-                    }));
-            }
-        }
-
-        private RelayCommand shuffleCommand;
-        public RelayCommand ShuffleCommand
-        {
-            get
-            {
-                return shuffleCommand
-                    ?? (shuffleCommand = new RelayCommand(
-                        () =>
-                        {
-                            ShuffleMode = !ShuffleMode;
-                            PlaybackManager.Current.SendMessage(AppConstants.Shuffle, "");
-                        }));
-            }
-        }
-
-        private RelayCommand repeatCommand;
-        public RelayCommand RepeatCommand
-        {
-            get
-            {
-                return repeatCommand
-                    ?? (repeatCommand = new RelayCommand(
-                        () =>
-                        {
-                            RepeatMode = Repeat.Change();
-                            PlaybackManager.Current.SendMessage(AppConstants.Repeat, "");
-                        }));
-            }
-        }
         #endregion
 
         private void ChangePlayButtonContent(MediaPlayerState state)
@@ -237,6 +216,7 @@ namespace NextPlayerUWP.ViewModels
         {
             Cover = await ImagesManager.GetCover(song.Path);
         }
+
 
 
         #region Slider Timer
@@ -311,6 +291,8 @@ namespace NextPlayerUWP.ViewModels
             ChangeCover();
             //cover
             ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
+            RepeatMode = Repeat.CurrentState();
+            ShuffleMode = Shuffle.CurrentState();
             return Task.CompletedTask;
         }
 
