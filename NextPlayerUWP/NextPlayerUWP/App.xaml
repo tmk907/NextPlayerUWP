@@ -17,6 +17,12 @@
                     <SolidColorBrush x:Key="ChromeMedium2" Color="#FF1F1F1F"/>
                     <SolidColorBrush x:Key="ChromeHigh2" Color="#FF767676"/>
 
+                    <SolidColorBrush x:Key="SliderThumbBackground" Color="White"/>
+                    <!--ChromeMedium-->
+                    <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFill" Color="#FFE6E6E6"/>
+                    <!--ChromeLow-->
+                    <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlit" Color="#FFF2F2F2"/>
+
                     <Color x:Key="UserAccentColor">#FFFFA500</Color>
                     <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     
@@ -45,6 +51,12 @@
                     <SolidColorBrush x:Key="ChromeMedium2" Color="#FFE6E6E6"/>
                     <SolidColorBrush x:Key="ChromeHigh2" Color="#FFCCCCCC"/>
 
+                    <SolidColorBrush x:Key="SliderThumbBackground" Color="Black"/>
+                    <!--ChromeMedium-->
+                    <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFill" Color="#FF1F1F1F"/>
+                    <!--ChromeLow-->
+                    <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlit" Color="#FF171717"/>
+                    
                     <Color x:Key="UserAccentColor">#FF00B7C3</Color>
                     <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     
@@ -76,9 +88,11 @@
 
             <SolidColorBrush x:Key="PageHeaderBackground" Color="{ThemeResource SystemChromeMediumColor}"/>
 
-            <SolidColorBrush x:Key="SliderThumbBackground" Color="White"/>
-            <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFill" Color="#FFE6E6E6"/>
-            <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlit" Color="#FFF2F2F2"/>
+            <SolidColorBrush x:Key="SliderThumbBackgroundLight" Color="White"/>
+            <!--ChromeMedium-->
+            <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillLight" Color="#FFE6E6E6"/>
+            <!--ChromeLow-->
+            <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlitLight" Color="#FFF2F2F2"/>
 
             <SolidColorBrush x:Key="TopAppBarBrush" Color="LightGray"/>
 

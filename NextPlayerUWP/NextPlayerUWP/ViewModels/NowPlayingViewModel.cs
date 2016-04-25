@@ -24,6 +24,7 @@ namespace NextPlayerUWP.ViewModels
         {
             _timer = new DispatcherTimer();
             SetupTimer();
+            Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
         }
 
         #region Properties
@@ -99,6 +100,13 @@ namespace NextPlayerUWP.ViewModels
             get { return cover; }
             set { Set(ref cover, value); }
         }
+
+        private Uri coverUri;
+        public Uri CoverUri
+        {
+            get { return coverUri; }
+            set { Set(ref coverUri, value); }
+        }
         #endregion
 
         #region Commands
@@ -137,6 +145,9 @@ namespace NextPlayerUWP.ViewModels
             await DatabaseManager.Current.UpdateRatingAsync(song.SongId, song.Rating).ConfigureAwait(false);
         }
 
+        #endregion
+
+        #region Image
         private double x, y;
 
         public void Image_Pressed(object sender, PointerRoutedEventArgs e)
@@ -165,7 +176,6 @@ namespace NextPlayerUWP.ViewModels
         {
             Play();
         }
-
         #endregion
 
         private void ChangePlayButtonContent(MediaPlayerState state)
@@ -173,19 +183,16 @@ namespace NextPlayerUWP.ViewModels
             if (state == MediaPlayerState.Playing)
             {
                 PlayButtonContent = "\uE769";
-                //PlayButtonContent = Symbol.Pause;
             }
             else
             {
                 PlayButtonContent = "\uE768";
-                //PlayButtonContent = Symbol.Play;
             }
         }
 
         private void ChangeSong(int index)
         {
             Song = NowPlayingPlaylistManager.Current.GetSongItem(index);
-            ChangeCover();
         }
 
         private void PlaybackManager_MediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)
@@ -211,13 +218,6 @@ namespace NextPlayerUWP.ViewModels
         {
             StopTimer();
         }
-
-        private async Task ChangeCover()
-        {
-            Cover = await ImagesManager.GetCover(song.Path);
-        }
-
-
 
         #region Slider Timer
 
@@ -279,26 +279,34 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
-        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             App.ChangeBottomPlayerVisibility(false);
+            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
             PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
-            StartTimer();
+            if (PlaybackManager.Current.IsBackgroundTaskRunning())
+            {
+                StartTimer();
+            }
+
+            TimeEnd = song.Duration;
+            SliderValue = 0.0;
+            SliderMaxValue = (int)Math.Round(song.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            ChangeCover();
+            CoverUri = await SongCoverManager.Instance.PrepareCover(song);
             //cover
-            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
+            //ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
             RepeatMode = Repeat.CurrentState();
             ShuffleMode = Shuffle.CurrentState();
-            return Task.CompletedTask;
         }
 
         public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
             App.ChangeBottomPlayerVisibility(true);
+            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
@@ -309,6 +317,11 @@ namespace NextPlayerUWP.ViewModels
 
             }
             return base.OnNavigatedFromAsync(state, suspending);
+        }
+
+        public void ChangeCoverUri(Uri cacheUri)
+        {
+            CoverUri = cacheUri;
         }
     }
 }

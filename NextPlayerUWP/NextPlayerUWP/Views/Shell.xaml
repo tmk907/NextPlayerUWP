@@ -194,12 +194,12 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="18"/>
                                     </Grid.RowDefinitions>
-                                    <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" Fill="{ThemeResource SliderThumbBackground}" Height="{ThemeResource SliderTrackThemeHeight}" Grid.Row="1"/>
-                                    <Rectangle x:Name="HorizontalDecreaseRect" Fill="{StaticResource SliderHorizontalDecreaseRectFill}" Grid.Row="1"/>
+                                    <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" Fill="{StaticResource SliderThumbBackgroundLight}" Height="{ThemeResource SliderTrackThemeHeight}" Grid.Row="1"/>
+                                    <Rectangle x:Name="HorizontalDecreaseRect" Fill="{StaticResource SliderHorizontalDecreaseRectFillLight}" Grid.Row="1"/>
                                     <TickBar x:Name="TopTickBar" Grid.ColumnSpan="3" Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" Height="{ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom"/>
                                     <TickBar x:Name="HorizontalInlineTickBar" Grid.ColumnSpan="3" Fill="{ThemeResource SystemControlBackgroundAltHighBrush}" Height="{ThemeResource SliderTrackThemeHeight}" Grid.Row="1" Visibility="Collapsed"/>
                                     <TickBar x:Name="BottomTickBar" Grid.ColumnSpan="3" Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" Height="{ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,4,0,0" Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top"/>
-                                    <Thumb x:Name="HorizontalThumb" AutomationProperties.AccessibilityView="Raw" Background="{ThemeResource SliderThumbBackground}" Grid.Column="1" DataContext="{TemplateBinding Value}" Height="16" Grid.Row="0" Grid.RowSpan="3" Style="{StaticResource SliderThumbStyle}" Width="16"/>
+                                    <Thumb x:Name="HorizontalThumb" AutomationProperties.AccessibilityView="Raw" Background="{StaticResource SliderThumbBackgroundLight}" Grid.Column="1" DataContext="{TemplateBinding Value}" Height="16" Grid.Row="0" Grid.RowSpan="3" Style="{StaticResource SliderThumbStyle}" Width="16"/>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -348,7 +348,7 @@
                         <TextBlock x:Uid="TBSongs" Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingView"  ClearHistory="False">
+                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingPlaylistView"  ClearHistory="False">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Play" Width="48" Height="48" />
                         <TextBlock x:Uid="TBNowPlaying" Text="Now playing" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
@@ -388,16 +388,21 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Image Grid.RowSpan="2" Grid.Column="0" 
-                       Margin="4" Source="{Binding Cover}">
-                    <!--<Image.Source>
-                        <BitmapImage UriSource="{Binding Cover}"
+                       Margin="4"
+                       Tapped="GoToNowPlaying">
+                    <Image.Source>
+                        <BitmapImage UriSource="{Binding CoverUri}"
                                      DecodePixelType="Logical"
                                      DecodePixelHeight="60" 
                                      DecodePixelWidth="60"/>
-                    </Image.Source>-->
+                    </Image.Source>
                 </Image>
-                <TextBlock Grid.Column="1" Grid.Row="0" 
-                           Margin="4,4,4,4"
+
+                <Grid Grid.Column="1" Grid.Row="0"
+                      Background="Transparent"
+                      Tapped="GoToNowPlaying">
+                    <TextBlock Margin="4,4,4,4"
+                           Tapped="GoToNowPlaying"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            FontSize="16"
                            Foreground="{ThemeResource BottomPlayerTextForeground}"
@@ -405,8 +410,11 @@
                            HorizontalAlignment="Left"
                            TextTrimming="CharacterEllipsis"
                            Text="{Binding Song.Title}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" 
-                           Margin="4,4,4,4"
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="1"
+                      Background="Transparent"
+                      Tapped="GoToNowPlaying">
+                    <TextBlock Margin="4,4,4,4"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            FontSize="14"
                            Foreground="{ThemeResource BottomPlayerTextForeground}"
@@ -414,6 +422,7 @@
                            HorizontalAlignment="Left"
                            TextTrimming="CharacterEllipsis"
                            Text="{Binding Song.Artist}"/>
+                </Grid>
             </Grid>
             <Grid Grid.Column="1" Width="Auto">
                 <Grid.ColumnDefinitions>

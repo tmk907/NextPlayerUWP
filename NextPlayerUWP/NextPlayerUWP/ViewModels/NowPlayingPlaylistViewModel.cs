@@ -34,7 +34,7 @@ namespace NextPlayerUWP.ViewModels
         {
             int i = ApplicationSettingsHelper.ReadSongIndex();
             CurrentSong = songs[i];
-            await ChangeCover();
+            CoverUri = await SongCoverManager.Instance.PrepareCover(CurrentSong);
         }
 
         private int selectedPivotIndex = 0;
@@ -48,15 +48,9 @@ namespace NextPlayerUWP.ViewModels
         {
             if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
             CurrentSong = songs[index];
-            await ChangeCover();
+            //await ChangeCover();
             ScrollAfterTrackChanged(index);
         }
-
-        private async Task ChangeCover()
-        {
-            Cover = await ImagesManager.GetCover(currentSong.Path, false);
-        }
-
 
         private void NPListChanged()
         {
@@ -70,18 +64,18 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref songs, value); }
         }
 
-        private BitmapImage cover = new BitmapImage();
-        public BitmapImage Cover
-        {
-            get { return cover; }
-            set { Set(ref cover, value); }
-        }
-
         private SongItem currentSong = new SongItem();
         public SongItem CurrentSong
         {
             get { return currentSong; }
             set { Set(ref currentSong, value); }
+        }
+
+        private Uri coverUri;
+        public Uri CoverUri
+        {
+            get { return coverUri; }
+            set { Set(ref coverUri, value); }
         }
 
         private void UpdatePlaylist()
@@ -92,16 +86,12 @@ namespace NextPlayerUWP.ViewModels
         public async void OnLoaded(ListView p)
         {
             listView = p;
+            firstVisibleIndex = ApplicationSettingsHelper.ReadSongIndex();
             if (firstVisibleIndex >= songs.Count || firstVisibleIndex < 0)
             {
-                firstVisibleIndex = ApplicationSettingsHelper.ReadSongIndex();
-                if (firstVisibleIndex >= songs.Count)
-                {
-                    firstVisibleIndex = 0;
-                    //HockeyAdapter.TrackEvent("NowPlayingPlaylistViewModel " + nameof(firstVisibleIndex) + " >=songs.Count");
-                }
+                firstVisibleIndex = 0;
             }
-            if (songs.Count != 0)
+            else
             {
                 await SetScrollPosition();
             }
@@ -110,6 +100,7 @@ namespace NextPlayerUWP.ViewModels
         public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
             //App.ChangeRightPanelVisibility(true);
+            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
             firstVisibleIndex = isp.FirstVisibleIndex;
@@ -123,10 +114,11 @@ namespace NextPlayerUWP.ViewModels
             return Task.CompletedTask;
         }
 
-        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             //App.ChangeRightPanelVisibility(false);
-            return base.OnNavigatedToAsync(parameter, mode, state);
+            CoverUri = await SongCoverManager.Instance.PrepareCover(CurrentSong);
+            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
         }
 
         private void ScrollAfterTrackChanged(int index)
@@ -263,5 +255,9 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
         }
 
+        public void ChangeCoverUri(Uri cacheUri)
+        {
+            CoverUri = cacheUri;
+        }
     }
 }

@@ -18,6 +18,7 @@
 
         //Assets
         public const string AlbumCoverSmall = "ms-appx:///Assets/Albums/AlbumCoverTRSmall.png";
+        public const string SongCoverBig = "ms-appx:///Assets/Albums/AlbumCoverTR.png";
         public const string AlbumCover = "ms-appx:///Assets/Albums/AlbumCoverTRnG.png";
 
 

@@ -78,6 +78,12 @@ namespace NextPlayerUWP.Views
             else Family = "Desktop";
         }
 
+        private bool IsDesktop()
+        {
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop") return true;
+            else return false;
+        }
+
         #region Slider 
         private void LoadSlider(object sender, RoutedEventArgs e)
         {
@@ -143,6 +149,19 @@ namespace NextPlayerUWP.Views
 
                     await dialog.ShowAsync();
                 }
+            }
+        }
+
+        private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
+        {
+            if (IsDesktop())
+            {
+                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+                //Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
+            }
+            else
+            {
+                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
             }
         }
     }

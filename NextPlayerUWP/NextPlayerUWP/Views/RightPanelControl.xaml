@@ -314,10 +314,12 @@
     <!--Background="Black"-->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <CommandBar Grid.Row="0" Background="{ThemeResource SystemChromeMediumColor}">
+        <CommandBar Grid.Row="0" 
+                    Height="48"
+                    Background="{ThemeResource SystemChromeMediumColor}">
             <AppBarButton x:Uid="AppBarButtonSave" Icon="Save" Click="{x:Bind ViewModel.SavePlaylist}" Label="Save playlist"/>
         </CommandBar>
         <Pivot Grid.Row="1" 

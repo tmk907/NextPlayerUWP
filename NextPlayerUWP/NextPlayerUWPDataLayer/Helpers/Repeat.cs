@@ -60,26 +60,32 @@ namespace NextPlayerUWPDataLayer.Helpers
             return repeat;
         }
 
-        public static SolidColorBrush GetColor(RepeatEnum repeat)
+        public static SolidColorBrush GetColor(RepeatEnum repeat, bool adjustToTheme = false)
         {
             switch (repeat)
             {
                 case RepeatEnum.NoRepeat:
                     return new SolidColorBrush(Windows.UI.Color.FromArgb(255, 204, 204, 204));
                 case RepeatEnum.RepeatOnce:
+                    if (adjustToTheme)
+                    {
+                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                        if (isLight)
+                        {
+                            return new SolidColorBrush(Windows.UI.Colors.Black);
+                        }
+                    }
                     return new SolidColorBrush(Windows.UI.Colors.White);
-                    //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                    //{
-                    //    return new SolidColorBrush(Windows.UI.Colors.White);
-                    //}
-                    //else return new SolidColorBrush(Windows.UI.Colors.Black);
                 case RepeatEnum.RepeatPlaylist:
+                    if (adjustToTheme)
+                    {
+                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                        if (isLight)
+                        {
+                            return new SolidColorBrush(Windows.UI.Colors.Black);
+                        }
+                    }
                     return new SolidColorBrush(Windows.UI.Colors.White);
-                    //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                    //{
-                    //    return new SolidColorBrush(Windows.UI.Colors.White);
-                    //}
-                    //else return new SolidColorBrush(Windows.UI.Colors.Black);
                 default:
                     return new SolidColorBrush(Windows.UI.Color.FromArgb(255, 204, 204, 204));
             }

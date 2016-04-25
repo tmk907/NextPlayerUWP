@@ -65,6 +65,7 @@ namespace NextPlayerUWP.Common
 
         private AutoResetEvent backgroundAudioTaskStarted;
         const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA
+
         private int CurrentSongIndex
         {
             get
@@ -76,6 +77,7 @@ namespace NextPlayerUWP.Common
                 ApplicationSettingsHelper.SaveSongIndex(value);
             }
         }
+
         private bool _isMyBackgroundTaskRunning = false;
         private bool IsMyBackgroundTaskRunning
         {
@@ -96,6 +98,7 @@ namespace NextPlayerUWP.Common
                 }
             }
         }
+
         public MediaPlayerState PlayerState
         {
             get
@@ -413,6 +416,11 @@ namespace NextPlayerUWP.Common
             var message = new ValueSet();
             message.Add(constants, value);
             BackgroundMediaPlayer.SendMessageToBackground(message);
+        }
+
+        public bool IsBackgroundTaskRunning()
+        {
+            return IsMyBackgroundTaskRunning;
         }
     }
 }

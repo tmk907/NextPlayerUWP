@@ -8,8 +8,10 @@ namespace NextPlayerUWP.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            bool adjust = false;
+            if (parameter != null) adjust = Boolean.Parse(parameter.ToString());
             RepeatEnum repeat = (RepeatEnum)value;
-            return Repeat.GetColor(repeat);
+            return Repeat.GetColor(repeat, adjust);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

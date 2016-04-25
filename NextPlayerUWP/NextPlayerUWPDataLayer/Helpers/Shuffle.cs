@@ -35,16 +35,19 @@ namespace NextPlayerUWPDataLayer.Helpers
             return b;
         }
 
-        public static SolidColorBrush GetColor(bool shuffle)
+        public static SolidColorBrush GetColor(bool shuffle, bool adjustToTheme = false)
         {
             if (shuffle)
             {
+                if (adjustToTheme)
+                {
+                    bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                    if (isLight)
+                    {
+                        return new SolidColorBrush(Windows.UI.Colors.Black);
+                    }
+                }
                 return new SolidColorBrush(Windows.UI.Colors.White);
-                //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                //{
-                //    return new SolidColorBrush(Windows.UI.Colors.White);
-                //}
-                //else return new SolidColorBrush(Windows.UI.Colors.Black);
             }
             else
             {

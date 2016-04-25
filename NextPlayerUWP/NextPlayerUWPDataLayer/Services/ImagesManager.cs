@@ -189,13 +189,13 @@ namespace NextPlayerUWPDataLayer.Services
         /// Return cover saved in file tags or .jpg from folder or default cover.
         /// UI Thread
         /// </summary>
-        public static async Task<BitmapImage> GetCover(string path, bool small = true)
+        public static async Task<BitmapImage> GetCover(string path, bool isSmall = true)
         {
             BitmapImage bitmap = new BitmapImage();
 
             if (string.IsNullOrEmpty(path))
             {
-                bitmap = await GetDefaultCover(small);
+                bitmap = await GetDefaultCover(isSmall);
             }
             else
             {
@@ -204,7 +204,7 @@ namespace NextPlayerUWPDataLayer.Services
 
             if (bitmap.PixelHeight == 0)
             {
-                bitmap = await GetDefaultCover(small);
+                bitmap = await GetDefaultCover(isSmall);
             }
 
             return bitmap;
@@ -217,11 +217,12 @@ namespace NextPlayerUWPDataLayer.Services
 
         /// <summary>
         /// UI Thread
+        /// fileName without extension
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="folderName"></param>
         /// <param name="image"></param>
-        /// <returns></returns>
+        /// <returns>file path "ms-appdata:///local/..."</returns>
         public static async Task<string> SaveCover(string fileName, string folderName, WriteableBitmap image)
         {
             StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
@@ -307,7 +308,7 @@ namespace NextPlayerUWPDataLayer.Services
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        private static async Task<WriteableBitmap> CreateBitmap(string path)
+        public static async Task<WriteableBitmap> CreateBitmap(string path)
         {
             try
             {
