@@ -64,6 +64,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="TimerStackPanel.Orientation" Value="Vertical"/>
+                        <Setter Target="DragDropActionStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -104,6 +106,7 @@
                             Content="Update" 
                             Margin="0,0,12,0"
                             MinWidth="128"
+                            IsEnabled="{x:Bind ViewModel.IsUpdating, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
                             Click="{x:Bind ViewModel.UpdateLibrary}"/>
                     <TextBlock x:Uid="TBNewSongs"
                                VerticalAlignment="Center"
@@ -119,7 +122,9 @@
                                   IsActive="{Binding IsUpdating}" 
                                   Visibility="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="4,4,4,4">
+                <StackPanel x:Name="AddMusicFoldersStackPanel"
+                            Orientation="Vertical" 
+                            Margin="4,4,4,4">
                     <TextBlock x:Uid="TBAddMusicLibraryFolders"
                                Style="{StaticResource BodyTextBlockStyle}"
                                FontSize="17"
@@ -151,7 +156,9 @@
                                         Time="{x:Bind ViewModel.Time, Mode=TwoWay}"/>
                         </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="4">
+                <StackPanel x:Name="DragDropActionStackPanel"
+                            Orientation="Vertical" 
+                            Margin="4">
                         <TextBlock x:Uid="TBActionAfterDragDrop"
                            Style="{StaticResource BodyTextBlockStyle}"
                            FontSize="17"

@@ -228,18 +228,18 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Rectangle Grid.Column="0" 
-                           Margin="12,12,12,12" 
+                           Margin="12,12,12,0" 
                            Width="220" Height="220" 
                            Fill="{StaticResource UserAccentBrush}"/>
                 <Image Grid.Column="0"
-                       Margin="12,12,12,12">
+                       Margin="12,12,12,0">
                     <Image.Source>
                         <BitmapImage UriSource="{Binding CoverUri}"
                                      DecodePixelType="Logical"
                                      DecodePixelHeight="220" DecodePixelWidth="220"/>
                     </Image.Source>
                 </Image>
-                <Grid Grid.Column="1" Grid.Row="0" Margin="12,12,12,12">
+                <Grid Grid.Column="1" Grid.Row="0" Margin="12,12,12,0">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -325,7 +325,6 @@
                             
                         </StackPanel>
                     </Grid>
-
                 </Grid>
             </Grid>
             <mycontrols:AlternatingRowListView 
@@ -337,7 +336,7 @@
                 ItemTemplate="{StaticResource SongItemTemplateDesktop}"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked}"  
-                Margin="12,0,0,4"
+                Margin="12,12,0,4"
                 SelectionMode="None"
                 AllowDrop="True"
                 CanDragItems="True"

@@ -44,7 +44,7 @@ namespace NextPlayerUWP.Common
             OnCoverUriPrepared(newUri);
         }
 
-        private const int cacheCapacity = 30;
+        private const int cacheCapacity = 40;
         private string coverPath = "";
 
         private Dictionary<int, Uri> cachedUris;

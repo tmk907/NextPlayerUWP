@@ -124,6 +124,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobileWide}"/>
+                        <Setter Target="Column1.Width" Value="0"/>
+                        <Setter Target="Column3Search.Width" Value="*"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -135,6 +137,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobile}"/>
+                        <Setter Target="Column1.Width" Value="0"/>
+                        <Setter Target="Column3Search.Width" Value="*"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -143,6 +147,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -168,9 +174,9 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition x:Name="Column1"/>
+                    <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
+                    <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                     <TextBlock 
@@ -183,8 +189,7 @@
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
-                    HorizontalAlignment="Right" 
-                    Width="200" 
+                    HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"

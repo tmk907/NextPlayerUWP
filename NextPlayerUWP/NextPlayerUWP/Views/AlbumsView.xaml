@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -124,6 +125,28 @@
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Mobile">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Column1.Width" Value="0"/>
+                        <Setter Target="Column3Search.Width" Value="*"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
@@ -142,16 +165,15 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition x:Name="Column1"/>
+                    <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
+                    <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <AutoSuggestBox  Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
-                    HorizontalAlignment="Right" 
-                    Width="200" 
+                    HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"

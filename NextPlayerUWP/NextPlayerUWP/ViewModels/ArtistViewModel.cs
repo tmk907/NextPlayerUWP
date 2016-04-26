@@ -68,7 +68,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 try
                 {
-                    artistId = (int)parameter;
+                    artistId = Int32.Parse(parameter.ToString());
                 }
                 catch (Exception ex) { }
             }

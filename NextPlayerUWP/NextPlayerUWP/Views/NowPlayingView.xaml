@@ -304,7 +304,8 @@
                 <RowDefinition Height="5*"/>
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
-            <local:SizeNotifyPanel x:Name="SizePanel" Grid.Row="0" >
+            <local:SizeNotifyPanel x:Name="SizePanel" Grid.Row="0" 
+                                   Margin="12,8,12,0">
                 <Grid>
                     <Rectangle Grid.Column="0" Grid.Row="0"
                                VerticalAlignment="Bottom"
@@ -389,22 +390,19 @@
                     <Rectangle Fill="Transparent" Width="24" Height="36"/>
                 </StackPanel>
             </Grid>
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="2" Margin="12,0,12,0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" 
-                           Margin="4,4,4,4"
                            Style="{StaticResource SongTitleTextBlockStyle}"
                            Text="{x:Bind ViewModel.Song.Title, Mode=OneWay}"/>
                 <TextBlock Grid.Row="1" 
-                           Margin="4,4,4,4"
                            Style="{StaticResource SongArtistTextBlockStyle}"
                            Text="{x:Bind ViewModel.Song.Artist, Mode=OneWay}"/>
                 <TextBlock Grid.Row="2" 
-                           Margin="4,4,4,4"
                            Style="{StaticResource SongAlbumTextBlockStyle}"
                            Text="{x:Bind ViewModel.Song.Album, Mode=OneWay}"/>
             </Grid>

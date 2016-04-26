@@ -75,12 +75,9 @@
                 Label="Add playlist"
                 Click="newPlainPlaylist_Click"/>
         </controls:PageHeader>
-        <!--<UserControl Grid.Column="1" Grid.Row="1">
-            <local:RightPanelControl/>
-        </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="48"/>
+                <RowDefinition Height="0"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <ContentDialog x:Name="ContentDialogNewPlaylist"

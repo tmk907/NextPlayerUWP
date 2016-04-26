@@ -75,7 +75,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 try
                 {
-                    albumId = (int)parameter;
+                    albumId = Int32.Parse(parameter.ToString());
                 }
                 catch (Exception ex)
                 {

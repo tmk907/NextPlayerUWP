@@ -118,6 +118,7 @@
             <converters:BoolToNullableBool x:Key="BoolToNullableBoolConverter"/>
             <converters:BoolToHighlightedItemForeground x:Key="BoolToHighlightedItemForegroundConverter"/>
             <converters:IntToRatingStar x:Key="IntToRatingStarConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"

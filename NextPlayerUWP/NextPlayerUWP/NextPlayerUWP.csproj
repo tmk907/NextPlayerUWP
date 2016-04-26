@@ -136,6 +136,7 @@
     <Compile Include="Converters\IntToBitrate.cs" />
     <Compile Include="Converters\IntToRatingStar.cs" />
     <Compile Include="Converters\IntToSongs.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\NumberToPercent.cs" />
     <Compile Include="Converters\PlaylistNameToBool.cs" />
     <Compile Include="Converters\RatingConverter.cs" />
