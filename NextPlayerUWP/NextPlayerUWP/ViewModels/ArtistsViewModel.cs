@@ -162,6 +162,7 @@ namespace NextPlayerUWP.ViewModels
             else
             {
                 var list = artists.Where(s => s.Artist.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Artist).ToList();
+                if (list.Count == 0) return;
                 artist = list.FirstOrDefault().Artist;
             }
             int index = 0;

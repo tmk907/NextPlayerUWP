@@ -25,7 +25,14 @@ namespace NextPlayerUWP.ViewModels
             ShuffleMode = Shuffle.CurrentState();
             _timer = new DispatcherTimer();
             SetupTimer();
-            ChangePlayButtonContent(MediaPlayerState.Paused);
+            if (PlaybackManager.Current.IsBackgroundTaskRunning())
+            {
+                ChangePlayButtonContent(MediaPlayerState.Playing);
+            }
+            else
+            {
+                ChangePlayButtonContent(MediaPlayerState.Paused);
+            }
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
@@ -276,12 +283,15 @@ namespace NextPlayerUWP.ViewModels
             //_timer.Tick += _timer_Tick;
         }
 
+        private TimeSpan position = TimeSpan.Zero;
+
         private void _timer_Tick(object sender, object e)
         {
             if (!sliderpressed)
             {
-                SliderValue = PlaybackManager.Current.CurrentPlayer.Position.TotalSeconds;
-                CurrentTime = PlaybackManager.Current.CurrentPlayer.Position;
+                position = PlaybackManager.Current.CurrentPlayer.Position;
+                SliderValue = position.TotalSeconds;
+                CurrentTime = position;
             }
             else
             {

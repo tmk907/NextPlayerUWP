@@ -230,12 +230,15 @@ namespace NextPlayerUWP.ViewModels
             //_timer.Tick += _timer_Tick;
         }
 
+        private TimeSpan position = TimeSpan.Zero;
+
         private void _timer_Tick(object sender, object e)
         {
             if (!sliderpressed)
             {
-                SliderValue = PlaybackManager.Current.CurrentPlayer.Position.TotalSeconds;
-                CurrentTime = PlaybackManager.Current.CurrentPlayer.Position;
+                position = PlaybackManager.Current.CurrentPlayer.Position;
+                SliderValue = position.TotalSeconds;
+                CurrentTime = position;
             }
             else
             {
@@ -290,6 +293,11 @@ namespace NextPlayerUWP.ViewModels
             if (PlaybackManager.Current.IsBackgroundTaskRunning())
             {
                 StartTimer();
+                ChangePlayButtonContent(MediaPlayerState.Playing);
+            }
+            else
+            {
+                ChangePlayButtonContent(MediaPlayerState.Paused);
             }
 
             TimeEnd = song.Duration;

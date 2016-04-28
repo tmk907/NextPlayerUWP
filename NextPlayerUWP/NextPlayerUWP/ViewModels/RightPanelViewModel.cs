@@ -215,6 +215,11 @@ namespace NextPlayerUWP.ViewModels
 
         private void ScrollAfterTrackChanged(int index)
         {
+            if (listView == null)
+            {
+                HockeyProxy.TrackEvent("ScrollAfterTrackChanged listview == null");
+                return;
+            }
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
             if (isp == null) return;
             int firstVisibleIndex = isp.FirstVisibleIndex;

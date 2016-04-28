@@ -110,6 +110,7 @@ namespace NextPlayerUWP
                 Logger.SaveFromSettingsToFile();
             }
             await TileManager.ManageSecondaryTileImages();
+            DispatcherHelper.Initialize();
             try
             {
                 var keys = PageKeys<Pages>();
@@ -138,7 +139,7 @@ namespace NextPlayerUWP
                 Logger.Save("OnInitializeAsync" + Environment.NewLine+ex);
                 Logger.SaveToFile();
             }
-            DispatcherHelper.Initialize();
+            
         }
 
         public override Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)

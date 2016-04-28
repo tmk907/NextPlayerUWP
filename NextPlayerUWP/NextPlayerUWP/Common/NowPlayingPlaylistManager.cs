@@ -369,7 +369,14 @@ namespace NextPlayerUWP.Common
             {
                 var value = new ValueSet();
                 value.Add(message, "");
-                BackgroundMediaPlayer.SendMessageToBackground(value);
+                try
+                {
+                    BackgroundMediaPlayer.SendMessageToBackground(value);
+                }
+                catch(Exception ex)
+                {
+                    HockeyProxy.TrackEvent("NPPM SendMessage" + ex.Message);
+                }
             }
         }
     }

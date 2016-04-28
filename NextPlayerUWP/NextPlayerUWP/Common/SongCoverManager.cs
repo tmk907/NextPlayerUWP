@@ -1,11 +1,9 @@
 ﻿using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -55,9 +53,10 @@ namespace NextPlayerUWP.Common
 
         public async Task<Uri> PrepareCover(SongItem song)
         {
-            if (cachedUris.ContainsKey(song.SongId))
+            int songId = song.SongId;
+            if (cachedUris.ContainsKey(songId))
             {
-                return cachedUris[song.SongId];
+                return cachedUris[songId];
             }
             currentSongPath = song.Path;
             var image = await ImagesManager.CreateBitmap(currentSongPath);
@@ -67,7 +66,7 @@ namespace NextPlayerUWP.Common
             }
             else
             {
-                coverPath = await ImagesManager.SaveCover("cover" + song.SongId.ToString(), "CachedCovers", image);
+                coverPath = await ImagesManager.SaveCover("cover" + songId.ToString(), "CachedCovers", image);
             }
 
             Uri newUri = new Uri(coverPath);
@@ -78,7 +77,7 @@ namespace NextPlayerUWP.Common
                 //delete from disk
                 cachedUris.Remove(key);
             }
-            cachedUris.Add(song.SongId, newUri);
+            cachedUris.Add(songId, newUri);
 
             return newUri;
         }

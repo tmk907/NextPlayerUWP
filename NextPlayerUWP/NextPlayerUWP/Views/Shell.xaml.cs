@@ -18,8 +18,6 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class Shell : Page
     {
-        public string Family { get; set; }
-
         public Shell(INavigationService  navigationService)
         {
             this.InitializeComponent();
@@ -67,15 +65,6 @@ namespace NextPlayerUWP.Views
             {
                 BottomPlayerGrid.Visibility = Visibility.Collapsed;
             }
-        }
-
-        private void GetDeviceFamilyInfo()
-        {
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-            {
-                Family = "Mobile";
-            }
-            else Family = "Desktop";
         }
 
         private bool IsDesktop()
@@ -156,7 +145,7 @@ namespace NextPlayerUWP.Views
         {
             if (IsDesktop())
             {
-                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+                //Menu.NavigationService.Navigate(App.Pages.NowPlaying);
                 //Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
             }
             else

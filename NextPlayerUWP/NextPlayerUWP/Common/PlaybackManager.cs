@@ -35,6 +35,17 @@ namespace NextPlayerUWP.Common
         private PlaybackManager()
         {
             backgroundAudioTaskStarted = new AutoResetEvent(false);
+            if (IsMyBackgroundTaskRunning)
+            {
+                try
+                {
+                    AddMediaPlayerEventHandlers();
+                }
+                catch(Exception ex)
+                {
+                    HockeyProxy.TrackEvent("PlaybackManager constructor AddMediaPlayerEventHandlers " + ex.Message);
+                }
+            }
         }
 
         public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;
@@ -133,6 +144,14 @@ namespace NextPlayerUWP.Common
                         }
                         else
                         {
+                            try
+                            {
+                                SendMessage(AppConstants.ShutdownBGPlayer);
+                            }
+                            catch (Exception ex2)
+                            {
+                                HockeyProxy.TrackEvent("ShutdownBGPlayer dont work" + ex2.Message);
+                            }
                             throw;
                         }
                     }
@@ -168,7 +187,7 @@ namespace NextPlayerUWP.Common
             {
                 if (ex.HResult == RPC_S_SERVER_UNAVAILABLE)
                 {
-                    throw new Exception("Failed to get a MediaPlayer instance.");
+                    throw new Exception("Failed to get a MediaPlayer instance. ResetAfterLostBackground");
                 }
                 else
                 {

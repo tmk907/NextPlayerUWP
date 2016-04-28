@@ -202,7 +202,7 @@
     <value>Czy jesteś pewien, że chcesz usunąć tę playlistę?</value>
   </data>
   <data name="Directory" xml:space="preserve">
-    <value>Directory</value>
+    <value>Ścieżka</value>
   </data>
   <data name="Duration" xml:space="preserve">
     <value>Długość</value>

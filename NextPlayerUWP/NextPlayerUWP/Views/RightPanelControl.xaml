@@ -320,7 +320,7 @@
         <CommandBar Grid.Row="0" 
                     Height="48"
                     Background="{ThemeResource SystemChromeMediumColor}">
-            <AppBarButton x:Uid="AppBarButtonSave" Icon="Save" Click="{x:Bind ViewModel.SavePlaylist}" Label="Save playlist"/>
+            <!--<AppBarButton x:Uid="AppBarButtonSave" Icon="Save" Click="{x:Bind ViewModel.SavePlaylist}" Label="Save playlist"/>-->
         </CommandBar>
         <Pivot Grid.Row="1" 
                

@@ -232,6 +232,7 @@ namespace NextPlayerUWP.ViewModels
             else
             {
                 var list = albums.Where(s => s.Album.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Album).ToList();
+                if (list.Count == 0) return;
                 album = list.FirstOrDefault().Album;
             }
             int index = 0;

@@ -244,6 +244,7 @@ namespace NextPlayerUWP.ViewModels
             else
             {
                 var list = songs.Where(s => s.Title.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Title).ToList();
+                if (list.Count == 0) return;
                 id = list.FirstOrDefault().SongId;
             }
             int index = 0;
