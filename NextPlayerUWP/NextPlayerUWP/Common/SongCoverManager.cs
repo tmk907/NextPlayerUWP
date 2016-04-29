@@ -77,7 +77,15 @@ namespace NextPlayerUWP.Common
                 //delete from disk
                 cachedUris.Remove(key);
             }
-            cachedUris.Add(songId, newUri);
+            if (cachedUris.ContainsKey(songId))
+            {
+                HockeyProxy.TrackEventException("Duplicate key SongCoverManager " + cachedUris[songId] + ", " + newUri);
+                cachedUris[songId] = newUri;
+            }
+            else
+            {
+                cachedUris.Add(songId, newUri);
+            }
 
             return newUri;
         }

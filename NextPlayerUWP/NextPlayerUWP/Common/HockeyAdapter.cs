@@ -8,5 +8,10 @@ namespace NextPlayerUWP.Common
         {
             HockeyClient.Current.TrackEvent(eventName);
         }
+
+        public static void TrackEventException(string exception)
+        {
+            HockeyClient.Current.TrackEvent("Exception: "+exception);
+        }
     }
 }

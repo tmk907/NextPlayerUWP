@@ -173,7 +173,7 @@ namespace NextPlayerUWP.ViewModels
                     ?? (shuffleCommand = new RelayCommand(
                         () =>
                         {
-                            ShuffleMode = !ShuffleMode;
+                            ShuffleMode = Shuffle.Change();
                             PlaybackManager.Current.SendMessage(AppConstants.Shuffle, "");
                         }));
             }

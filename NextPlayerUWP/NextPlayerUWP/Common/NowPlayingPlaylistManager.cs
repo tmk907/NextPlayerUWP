@@ -99,10 +99,13 @@ namespace NextPlayerUWP.Common
             int i = 0;
             foreach(var song in songs)
             {
-                if (i == index) song.IsPlaying = true;
-                else
+                if (i != index)
                 {
                     song.IsPlaying = false;
+                }
+                else
+                {
+                    song.IsPlaying = true;
                 }
                 i++;
             }

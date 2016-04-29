@@ -1,6 +1,4 @@
-﻿using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Helpers;
-using System;
+﻿using System;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
