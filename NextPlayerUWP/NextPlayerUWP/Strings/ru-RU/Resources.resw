@@ -328,7 +328,7 @@
     <value>редактор меток</value>
   </data>
   <data name="PivotHeaderTBLyrics.Text" xml:space="preserve">
-    <value>Слова песни</value>
+    <value>слова песни</value>
   </data>
   <data name="PivotHeaderTBNowPlaying.Text" xml:space="preserve">
     <value>сейчас играет</value>
@@ -447,8 +447,8 @@
   <data name="TBLyrics.Text" xml:space="preserve">
     <value>Слова песни</value>
   </data>
-  <data name="TBNewSongs.Text" xml:space="preserve">
-    <value>new songs:</value>
+  <data name="NewSongs" xml:space="preserve">
+    <value>New songs:</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
     <value>настроить</value>

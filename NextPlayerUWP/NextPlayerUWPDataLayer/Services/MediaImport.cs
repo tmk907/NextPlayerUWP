@@ -351,7 +351,7 @@ namespace NextPlayerUWPDataLayer.Services
             XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
             XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
             toastTextElements[0].AppendChild(toastXml.CreateTextNode(loader.GetString("LibraryUpdated")));
-            toastTextElements[1].AppendChild(toastXml.CreateTextNode(loader.GetString("TBNewSongs.Text")+" "+ songsAdded));
+            toastTextElements[1].AppendChild(toastXml.CreateTextNode(loader.GetString("NewSongs")+" "+ songsAdded));
             ToastNotification toast = new ToastNotification(toastXml);
             toast.ExpirationTime = DateTime.Now.AddMinutes(2);
             try

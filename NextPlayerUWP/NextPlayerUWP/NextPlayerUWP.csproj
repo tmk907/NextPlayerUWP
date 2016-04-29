@@ -100,6 +100,7 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="NextPlayerUWP_StoreKey.pfx" />
     <None Include="project.json" />
+    <PRIResource Include="Strings\es-ES\Resources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />
     <PRIResource Include="Strings\it-IT\Resources.resw" />
     <PRIResource Include="Strings\de-DE\Resources.resw" />

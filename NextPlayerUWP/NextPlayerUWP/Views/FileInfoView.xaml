@@ -73,6 +73,7 @@
                                 />
                     <StackPanel Grid.Row="0" Grid.Column="1" 
                                 Margin="4,0,0,0"
+                                HorizontalAlignment="Stretch"
                                 Orientation="Horizontal">
                         <TextBlock Margin="0" x:Name="FilePath_TextBlock"
                                     Text="{Binding FileInfo.Path}"

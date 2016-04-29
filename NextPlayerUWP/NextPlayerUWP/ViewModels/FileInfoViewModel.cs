@@ -1,9 +1,8 @@
-﻿using NextPlayerUWPDataLayer.Model;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
 
@@ -27,6 +26,7 @@ namespace NextPlayerUWP.ViewModels
                 FileInfo = await DatabaseManager.Current.GetSongDataAsync(songId);
                 await AddFileSize();
             }
+            HockeyProxy.TrackEvent("Page: File Info");
         }
 
         private async Task AddFileSize()

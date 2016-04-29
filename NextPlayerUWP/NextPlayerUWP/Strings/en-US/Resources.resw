@@ -379,7 +379,7 @@
     <value>After dragging item to now playing list:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>music folders</value>
+    <value>Music folders</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -447,8 +447,8 @@
   <data name="TBLyrics.Text" xml:space="preserve">
     <value>Lyrics</value>
   </data>
-  <data name="TBNewSongs.Text" xml:space="preserve">
-    <value>new songs:</value>
+  <data name="NewSongs" xml:space="preserve">
+    <value>New songs:</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
     <value>Personalize</value>

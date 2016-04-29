@@ -144,14 +144,17 @@ namespace NextPlayerUWP.Common
                         }
                         else
                         {
+                            bool success = false;
                             try
                             {
                                 SendMessage(AppConstants.ShutdownBGPlayer);
+                                success = true;
                             }
                             catch (Exception ex2)
                             {
                                 HockeyProxy.TrackEvent("ShutdownBGPlayer dont work" + ex2.Message);
                             }
+                            if (success) HockeyProxy.TrackEvent("ShutdownBGPlayer works");
                             throw;
                         }
                     }

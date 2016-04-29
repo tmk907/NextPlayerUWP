@@ -328,10 +328,10 @@
     <value>Tag editor</value>
   </data>
   <data name="PivotHeaderTBLyrics.Text" xml:space="preserve">
-    <value>Testo</value>
+    <value>testo</value>
   </data>
   <data name="PivotHeaderTBNowPlaying.Text" xml:space="preserve">
-    <value>In riproduzione</value>
+    <value>in riproduzione</value>
   </data>
   <data name="Play Count" xml:space="preserve">
     <value>Numero riproduzione</value>
@@ -367,7 +367,7 @@
     <value>Riproduci successivo</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>canzone</value>
+    <value>Canzone</value>
   </data>
   <data name="Song Count" xml:space="preserve">
     <value>Conteggio canzone</value>
@@ -447,7 +447,7 @@
   <data name="TBLyrics.Text" xml:space="preserve">
     <value>Testo</value>
   </data>
-  <data name="TBNewSongs.Text" xml:space="preserve">
+  <data name="NewSongs" xml:space="preserve">
     <value>Nuove canzoni:</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
