@@ -27,14 +27,9 @@ namespace NextPlayerUWP.ViewModels
             UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
-            Initialize();
-        }
-
-        private async Task Initialize()
-        {
             int i = ApplicationSettingsHelper.ReadSongIndex();
             CurrentSong = songs[i];
-            CoverUri = await SongCoverManager.Instance.PrepareCover(CurrentSong);
+            CoverUri = SongCoverManager.Instance.GetFirst();
         }
 
         private int selectedPivotIndex = 0;
@@ -114,11 +109,21 @@ namespace NextPlayerUWP.ViewModels
             return Task.CompletedTask;
         }
 
-        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             //App.ChangeRightPanelVisibility(false);
-            CoverUri = await SongCoverManager.Instance.PrepareCover(CurrentSong);
+            CoverUri = SongCoverManager.Instance.GetCurrent();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
+            if (state.ContainsKey(nameof(firstVisibleIndex)))
+            {
+                firstVisibleIndex = (int)state[nameof(firstVisibleIndex)];
+            }
+            if (state.ContainsKey(nameof(positionKey)))
+            {
+                positionKey = (string)state[nameof(positionKey)];
+            }
+
+            return Task.CompletedTask;
         }
 
         private void ScrollAfterTrackChanged(int index)

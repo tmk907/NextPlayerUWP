@@ -77,20 +77,23 @@ namespace NextPlayerUWP.Common
             if (removeIndex == index)
             {
                 index = addIndex;
+                ApplicationSettingsHelper.SaveSongIndex(index);
             }
             else if (removeIndex < index && addIndex >= index)
             {
                 index--;
+                ApplicationSettingsHelper.SaveSongIndex(index);
             }
             else if (removeIndex > index && addIndex <= index)
             {
                 index++;
+                ApplicationSettingsHelper.SaveSongIndex(index);
             }
             else
             {
-                return;
+                
             }
-            ApplicationSettingsHelper.SaveSongIndex(index);
+            
             await NotifyChange();
         }
 
@@ -338,6 +341,15 @@ namespace NextPlayerUWP.Common
         {
             int index = ApplicationSettingsHelper.ReadSongIndex();
             if (index < 0 || index > songs.Count - 1) return new SongItem();
+            return songs[index];
+        }
+
+        public SongItem GetNextSong()
+        {
+            int index = ApplicationSettingsHelper.ReadSongIndex();
+            if (index < 0 || index > songs.Count - 1) return new SongItem();
+            index++;
+            if (index == songs.Count) index = 0;
             return songs[index];
         }
 

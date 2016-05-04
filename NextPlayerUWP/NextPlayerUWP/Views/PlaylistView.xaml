@@ -27,7 +27,7 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" Visibility="{x:Bind DataContext.IsPlainPlaylist, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+            <!--<MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" Visibility="{x:Bind ViewModel.IsPlainPlaylist, Converter={StaticResource BoolToVisibilityConverter}}"
                             Click="{x:Bind ViewModel.DeleteFromPlaylist}" CommandParameter="{Binding}" />-->
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 

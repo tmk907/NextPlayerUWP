@@ -82,7 +82,7 @@ namespace NextPlayerUWPDataLayer.Diagnostics
             return text;
         }
 
-        public async static void ClearAll()
+        public async static Task ClearAll()
         {
             await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             await ApplicationData.Current.LocalFolder.CreateFileAsync(filenameBG, CreationCollisionOption.ReplaceExisting);

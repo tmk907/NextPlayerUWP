@@ -22,7 +22,7 @@ namespace NextPlayerUWP.ViewModels
             fileInfo = new SongData();
             if (parameter != null)
             {
-                int songId = Int32.Parse(MusicItem.ParseParameter(parameter as string)[1]);
+                int songId = Int32.Parse(MusicItem.SplitParameter(parameter as string)[1]);
                 FileInfo = await DatabaseManager.Current.GetSongDataAsync(songId);
                 await AddFileSize();
             }

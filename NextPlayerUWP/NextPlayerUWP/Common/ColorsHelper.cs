@@ -42,6 +42,7 @@ namespace NextPlayerUWP.Common
         public Color GetSavedUserAccentColor()
         {
             string hexColor = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppAccent) as string;
+            if (hexColor == null) return Windows.UI.Color.FromArgb(255, 0, 120, 215);
             byte a = byte.Parse(hexColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
             byte r = byte.Parse(hexColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
             byte g = byte.Parse(hexColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);

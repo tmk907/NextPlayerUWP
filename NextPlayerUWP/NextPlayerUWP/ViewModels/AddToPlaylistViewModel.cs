@@ -34,7 +34,7 @@ namespace NextPlayerUWP.ViewModels
         {
             Playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             type = MusicItem.ParseType((string)parameter);
-            values = MusicItem.ParseParameter((string)parameter);
+            values = MusicItem.SplitParameter((string)parameter);
         }
 
         public override Task OnNavigatingFromAsync(NavigatingEventArgs args)

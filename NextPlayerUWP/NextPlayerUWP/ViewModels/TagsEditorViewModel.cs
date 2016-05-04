@@ -174,7 +174,7 @@ namespace NextPlayerUWP.ViewModels
             songData = new SongData();
             if (parameter != null)
             {
-                songId = Int32.Parse(MusicItem.ParseParameter(parameter as string)[1]);
+                songId = Int32.Parse(MusicItem.SplitParameter(parameter as string)[1]);
                 songData = await DatabaseManager.Current.GetSongDataAsync(songId);
             }
             TagsData = songData.Tag;

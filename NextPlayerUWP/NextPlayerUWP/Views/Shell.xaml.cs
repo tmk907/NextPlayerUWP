@@ -18,12 +18,15 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class Shell : Page
     {
+        BottomPlayerViewModel BPViewModel;
+
         public Shell(INavigationService  navigationService)
         {
             this.InitializeComponent();
             this.Loaded += LoadSlider;
             Menu.NavigationService = navigationService;
             App.AppThemeChanged += App_AppThemeChanged;
+            BPViewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
             {
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;

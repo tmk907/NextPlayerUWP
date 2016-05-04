@@ -39,13 +39,8 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
             PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
-            Initialize();
-        }
-
-        private async Task Initialize()
-        {
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            CoverUri = await SongCoverManager.Instance.PrepareCover(song);
+            CoverUri = SongCoverManager.Instance.GetFirst();
         }
 
         #region Properties
@@ -122,77 +117,34 @@ namespace NextPlayerUWP.ViewModels
         #endregion
 
         #region Commands
-        private RelayCommand play;
-        public RelayCommand Play
+
+        public void Play()
         {
-            get
-            {
-                return play
-                    ?? (play = new RelayCommand(
-                    () =>
-                    {
-                        PlaybackManager.Current.Play();
-                    }));
-            }
+            PlaybackManager.Current.Play();
         }
 
-        private RelayCommand previous;
-        public RelayCommand Previous
+        public void Previous()
         {
-            get
-            {
-                return previous
-                    ?? (previous = new RelayCommand(
-                    () =>
-                    {
-                        PlaybackManager.Current.Previous();
-                    }));
-            }
+            PlaybackManager.Current.Previous();
         }
 
-        private RelayCommand next;
-        public RelayCommand Next
+        public void Next()
         {
-            get
-            {
-                return next
-                    ?? (next = new RelayCommand(
-                    () =>
-                    {
-                        PlaybackManager.Current.Next();
-                    }));
-            }
+            PlaybackManager.Current.Next();
         }
 
-        private RelayCommand shuffleCommand;
-        public RelayCommand ShuffleCommand
+        public void ShuffleCommand()
         {
-            get
-            {
-                return shuffleCommand
-                    ?? (shuffleCommand = new RelayCommand(
-                        () =>
-                        {
-                            ShuffleMode = Shuffle.Change();
-                            PlaybackManager.Current.SendMessage(AppConstants.Shuffle, "");
-                        }));
-            }
+            ShuffleMode = Shuffle.Change();
+            PlaybackManager.Current.SendMessage(AppConstants.Shuffle, "");
         }
 
-        private RelayCommand repeatCommand;
-        public RelayCommand RepeatCommand
+        public void RepeatCommand()
         {
-            get
-            {
-                return repeatCommand
-                    ?? (repeatCommand = new RelayCommand(
-                        () =>
-                        {
-                            RepeatMode = Repeat.Change();
-                            PlaybackManager.Current.SendMessage(AppConstants.Repeat, "");
-                        }));
-            }
+            RepeatMode = Repeat.Change();
+            PlaybackManager.Current.SendMessage(AppConstants.Repeat, "");
         }
+
         #endregion
 
         private void ChangePlayButtonContent(MediaPlayerState state)
@@ -200,19 +152,16 @@ namespace NextPlayerUWP.ViewModels
             if (state== MediaPlayerState.Playing)
             {
                 PlayButtonContent = "\uE769";
-                //PlayButtonContent = Symbol.Pause;
             }
             else
             {
                 PlayButtonContent = "\uE768";
-                //PlayButtonContent = Symbol.Play;
             }
         }
 
         private void ChangeSong(int index)
         {
-            Song = NowPlayingPlaylistManager.Current.GetSongItem(index);
-            //ChangeCover();
+            Song = NowPlayingPlaylistManager.Current.GetSongItem(index);           
         }
 
         private void PlaybackManager_MediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)
@@ -242,35 +191,44 @@ namespace NextPlayerUWP.ViewModels
         public void ChangeCoverUri(Uri cacheUri)
         {
             CoverUri = cacheUri;
+            TileUpdater tu = new TileUpdater();
+            if (CoverUri.OriginalString == SongCoverManager.DefaultCover)
+            {
+                tu.UpdateAppTile(song.Title, song.Album, AppConstants.AppLogoMedium);
+            }
+            else
+            {
+                tu.UpdateAppTile(song.Title, song.Album, CoverUri.OriginalString);
+            }
         }
 
-        //public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        //{
-        //    PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
-        //    PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
-        //    PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
-        //    PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
-        //    StartTimer();
-        //    Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-        //    ChangeCover();
-        //    //cover
-        //    ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
-        //    return Task.CompletedTask;
-        //}
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
+            PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
+            PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
+            StartTimer();
+            Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            CoverUri = SongCoverManager.Instance.GetCurrent();
+            //cover
+            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
+            return Task.CompletedTask;
+        }
 
-        //public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
-        //{
-        //    PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
-        //    PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
-        //    PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
-        //    PlaybackManager.MediaPlayerPositionChanged -= PlaybackManager_MediaPlayerPositionChanged;
-        //    StopTimer();
-        //    if (suspending)
-        //    {
+        public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
+        {
+            PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
+            PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
+            PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerPositionChanged -= PlaybackManager_MediaPlayerPositionChanged;
+            StopTimer();
+            if (suspending)
+            {
 
-        //    }
-        //    return base.OnNavigatedFromAsync(state, suspending);
-        //}
+            }
+            return base.OnNavigatedFromAsync(state, suspending);
+        }
 
         #region Slider Timer
 
@@ -336,8 +294,6 @@ namespace NextPlayerUWP.ViewModels
 
 
         #endregion
-
-        
 
     }
 }

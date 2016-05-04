@@ -65,7 +65,19 @@ namespace NextPlayerUWPDataLayer.Helpers
             switch (repeat)
             {
                 case RepeatEnum.NoRepeat:
-                    return new SolidColorBrush(Windows.UI.Color.FromArgb(255, 204, 204, 204));
+                    if (adjustToTheme)
+                    {
+                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                        if (isLight)
+                        {
+                            return new SolidColorBrush(Windows.UI.Color.FromArgb(255, 204, 204, 204));
+                        }
+                        else
+                        {
+                            return new SolidColorBrush(Windows.UI.Color.FromArgb(255, 119, 119, 119));
+                        }
+                    }
+                    else return new SolidColorBrush(Windows.UI.Color.FromArgb(255, 204, 204, 204));
                 case RepeatEnum.RepeatOnce:
                     if (adjustToTheme)
                     {

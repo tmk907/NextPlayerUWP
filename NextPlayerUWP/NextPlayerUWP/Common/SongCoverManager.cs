@@ -32,7 +32,7 @@ namespace NextPlayerUWP.Common
         {
             cachedUris = new Dictionary<int, Uri>(cacheCapacity);
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
-            DeleteAllCached();
+            initialized = false;
         }
 
         private async void PlaybackManager_MediaPlayerTrackChanged(int index)
@@ -42,55 +42,101 @@ namespace NextPlayerUWP.Common
             OnCoverUriPrepared(newUri);
         }
 
-        private const int cacheCapacity = 40;
+        private const int cacheCapacity = 50;
         private string coverPath = "";
 
         private Dictionary<int, Uri> cachedUris;
 
-        private string currentSongPath = "";
-
         private const string basePath = "ms-appdata:///local/CachedCovers/";
 
-        public async Task<Uri> PrepareCover(SongItem song)
+        public const string DefaultCover = AppConstants.SongCoverBig;
+
+        private bool initialized;
+
+        public async Task Initialize()
         {
-            int songId = song.SongId;
-            if (cachedUris.ContainsKey(songId))
+            if (initialized) return;
+            await DeleteAllCached();
+            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            Uri uri = await SaveFromFileToCache(song.Path, song.SongId);
+            cachedUris.Add(song.SongId, uri);
+            initialized = true;
+        }
+
+        public Uri GetFirst()
+        {
+            if (cachedUris.Count > 0) return cachedUris.FirstOrDefault().Value;
+            else return new Uri(DefaultCover);
+        }
+
+        public Uri GetCurrent()
+        {
+            int id = NowPlayingPlaylistManager.Current.GetCurrentPlaying().SongId;
+            if (cachedUris.ContainsKey(id))
             {
-                return cachedUris[songId];
-            }
-            currentSongPath = song.Path;
-            var image = await ImagesManager.CreateBitmap(currentSongPath);
-            if (image.PixelWidth == 1)
-            {
-                coverPath = AppConstants.SongCoverBig;
+                return cachedUris[id];
             }
             else
             {
-                coverPath = await ImagesManager.SaveCover("cover" + songId.ToString(), "CachedCovers", image);
+                return new Uri(DefaultCover);
+            }
+        }
+
+        private async Task<Uri> PrepareCover(SongItem song)
+        {
+            //var ticks = DateTime.Now.Ticks;
+            //System.Diagnostics.Debug.WriteLine(ticks+" 1 Prepare cover id=" + song.SongId);
+            int songId = song.SongId;
+            if (cachedUris.ContainsKey(songId))
+            {
+                //System.Diagnostics.Debug.WriteLine(ticks + " 2 Prepare cover id=" + songId + " count=" + cachedUris.Keys.Count);
+                return cachedUris[songId];
             }
 
-            Uri newUri = new Uri(coverPath);
+            //var nextSong = NowPlayingPlaylistManager.Current.GetNextSong();
+
+            Uri newUri = await SaveFromFileToCache(song.Path, song.SongId);
 
             if (cachedUris.Count == cacheCapacity)
             {
-                int key = cachedUris.FirstOrDefault().Key;
-                //delete from disk
-                cachedUris.Remove(key);
+                for(int i = 0; i < 5; i++)
+                {
+                    int key = cachedUris.FirstOrDefault().Key;
+                    //delete from disk
+                    cachedUris.Remove(key);
+                }
             }
             if (cachedUris.ContainsKey(songId))
             {
+                //System.Diagnostics.Debug.WriteLine(ticks + " 3 Prepare cover id=" + songId + " count=" + cachedUris.Keys.Count);
                 HockeyProxy.TrackEventException("Duplicate key SongCoverManager " + cachedUris[songId] + ", " + newUri);
                 cachedUris[songId] = newUri;
             }
             else
             {
+                //System.Diagnostics.Debug.WriteLine(ticks + " 4 Prepare cover id=" + songId + " count=" + cachedUris.Keys.Count);
                 cachedUris.Add(songId, newUri);
             }
 
             return newUri;
         }
 
-        private async void DeleteAllCached()
+        private async Task<Uri> SaveFromFileToCache(string path, int id)
+        {
+            var image = await ImagesManager.CreateBitmap(path);
+            if (image.PixelWidth == 1)
+            {
+                coverPath = DefaultCover;
+            }
+            else
+            {
+                coverPath = await ImagesManager.SaveCover("cover" + id.ToString(), "CachedCovers", image);
+            }
+
+            return new Uri(coverPath);
+        }
+
+        private async Task DeleteAllCached()
         {
             await ApplicationData.Current.LocalFolder.CreateFolderAsync("CachedCovers", CreationCollisionOption.ReplaceExisting);
         }

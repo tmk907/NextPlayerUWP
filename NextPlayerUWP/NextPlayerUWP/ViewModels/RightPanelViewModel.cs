@@ -73,9 +73,9 @@ namespace NextPlayerUWP.ViewModels
             object item;
             string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterDropItem) as string;
 
-            if (e.DataView.Properties.TryGetValue(typeof(AlbumItem).ToString(),out item))
+            if (e.DataView.Properties.TryGetValue(typeof(AlbumItem).ToString(), out item))
             {
-                
+
             }
             else if (e.DataView.Properties.TryGetValue(typeof(ArtistItem).ToString(), out item))
             {
@@ -124,7 +124,7 @@ namespace NextPlayerUWP.ViewModels
                             newSong.Duration = mp.Duration;
                             //if max songId in DB is less than 10 000 000 => it's OK
                             // 23 59 59 999 -- 235 959 999     min value 01 00 00 000 -- 10 000 000
-                            newSong.SongId = (DateTime.Now.Millisecond + DateTime.Now.Second *1000 + DateTime.Now.Minute * 100000 + (DateTime.Now.Hour+1) * 10000000);// + DateTime.Now.Day * 1000000);
+                            newSong.SongId = (DateTime.Now.Millisecond + DateTime.Now.Second * 1000 + DateTime.Now.Minute * 100000 + (DateTime.Now.Hour + 1) * 10000000);// + DateTime.Now.Day * 1000000);
 
                             if (action.Equals(AppConstants.ActionAddToNowPlaying))
                             {
@@ -136,7 +136,7 @@ namespace NextPlayerUWP.ViewModels
                             }
                             else if (action.Equals(AppConstants.ActionPlayNow))//!
                             {
-                                 
+
                             }
                         }
                     }
@@ -186,6 +186,7 @@ namespace NextPlayerUWP.ViewModels
             lyricsWebview.ContentLoading += webView1_ContentLoading;
             lyricsWebview.NavigationStarting += webView1_NavigationStarting;
             lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
+            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
 
             bool scroll = false;
             if (listView != null)
@@ -323,7 +324,7 @@ namespace NextPlayerUWP.ViewModels
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter()); 
+            App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
         }
 
         public async void GoToArtist(object sender, RoutedEventArgs e)
@@ -392,6 +393,13 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref webVisibility, value); }
         }
 
+        private bool showProgressBar = false;
+        public bool ShowProgressBar
+        {
+            get { return showProgressBar; }
+            set { Set(ref showProgressBar, value); }
+        }
+
         public async void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (((Pivot)sender).SelectedIndex == 1)
@@ -448,6 +456,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task LoadLyricsFromWebsite()
         {
+            ShowProgressBar = true;
             StatusText = loader.GetString("Connecting") + "...";
             StatusVisibility = true;
             WebVisibility = false;
@@ -455,7 +464,7 @@ namespace NextPlayerUWP.ViewModels
             if (result == null || result == "")
             {
                 StatusText = loader.GetString("ConnectionError");
-                StatusVisibility = true;
+                ShowProgressBar = false;
                 return;
             }
             JsonValue jsonList;
@@ -468,19 +477,18 @@ namespace NextPlayerUWP.ViewModels
                 {
                     Uri a = new Uri(address);
                     lyricsWebview.Navigate(a);
-                    WebVisibility = true;
-                    StatusVisibility = false;
+
                 }
                 catch (FormatException e)
                 {
                     StatusText = loader.GetString("ConnectionError");
-                    StatusVisibility = true;
+                    ShowProgressBar = false;
                 }
             }
             else
             {
                 StatusText = loader.GetString("ConnectionError");
-                StatusVisibility = true;
+                ShowProgressBar = false;
             }
         }
 
@@ -519,14 +527,24 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private async void webView1_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+        private void webView1_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
+            StatusVisibility = false;
+            WebVisibility = true;
+
             if (original)
             {
                 //await ParseLyrics();
                 original = false;
             }
         }
+
+
+        private void LyricsWebview_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        {
+            ShowProgressBar = false;
+        }
+
 
         private async Task ParseLyrics()
         {

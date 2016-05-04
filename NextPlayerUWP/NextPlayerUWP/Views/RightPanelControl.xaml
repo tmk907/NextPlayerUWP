@@ -317,11 +317,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <CommandBar Grid.Row="0" 
+        <Rectangle Grid.Row="0" Height="48" Fill="{ThemeResource SystemChromeMediumColor}"/>
+        <!--<CommandBar Grid.Row="0" 
                     Height="48"
                     Background="{ThemeResource SystemChromeMediumColor}">
-            <!--<AppBarButton x:Uid="AppBarButtonSave" Icon="Save" Click="{x:Bind ViewModel.SavePlaylist}" Label="Save playlist"/>-->
-        </CommandBar>
+            --><!--<AppBarButton x:Uid="AppBarButtonSave" Icon="Save" Click="{x:Bind ViewModel.SavePlaylist}" Label="Save playlist"/>--><!--
+        </CommandBar>-->
         <Pivot Grid.Row="1" 
                
                Style="{StaticResource RightPanelPivotStyle}" 
@@ -368,7 +369,20 @@
                     <TextBlock x:Uid="PivotHeaderTBLyrics" Text="lyrics" FontSize="22"/>
                 </PivotItem.Header>
                 <Grid Margin="0,0,0,0">
-                    <Grid Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ProgressBar Grid.Row="0"
+                        Visibility="{x:Bind ViewModel.ShowProgressBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                        IsIndeterminate="True"
+                        Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        IsEnabled="{x:Bind ViewModel.ShowProgressBar, Mode=OneWay}"/>
+                    <Grid Grid.Row="1"
+                        Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" MinHeight="28"/>
                             <RowDefinition Height="Auto" MinHeight="28"/>
@@ -409,16 +423,17 @@
                             />
                         </ScrollViewer>
                     </Grid>
-                    <Grid x:Name="WebGrid" Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                        <TextBlock x:Name="statusTextBlock" 
+                    <Grid Grid.Row="1" x:Name="WebGrid"
+                          Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                        <!--<TextBlock x:Name="statusTextBlock" 
                            Text="Connecting..." 
                            FontSize="30" 
                            VerticalAlignment="Center" 
                            HorizontalAlignment="Center"
-                           Visibility="Collapsed"/>
+                           Visibility="Collapsed"/>-->
                         <!--<WebView x:Name="lyricsWebview" 
                                  Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>-->
-                </Grid>
+                    </Grid>
                 </Grid>
             </PivotItem>
         </Pivot>

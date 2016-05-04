@@ -191,6 +191,9 @@
     <Compile Include="Views\ArtistView.xaml.cs">
       <DependentUpon>ArtistView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BottomPlayerControl.xaml.cs">
+      <DependentUpon>BottomPlayerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FileInfoView.xaml.cs">
       <DependentUpon>FileInfoView.xaml</DependentUpon>
     </Compile>
@@ -226,6 +229,9 @@
     </Compile>
     <Compile Include="Views\SongsView.xaml.cs">
       <DependentUpon>SongsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Splash.xaml.cs">
+      <DependentUpon>Splash.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TagsEditor.xaml.cs">
       <DependentUpon>TagsEditor.xaml</DependentUpon>
@@ -306,6 +312,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\BottomPlayerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FileInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -351,6 +361,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SongsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Splash.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

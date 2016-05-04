@@ -464,6 +464,10 @@ namespace NextPlayerUWPDataLayer.Services
         {
             var l = connection.Table<SongsTable>().Where(e => e.SongId.Equals(songId)).ToList();
             var q = l.FirstOrDefault();
+            if (q == null)
+            {
+                Diagnostics.Logger.Save("GetSongData null id=" + songId);
+            }
             SongData s = CreateSongData(q);
             return s;
         }
@@ -472,6 +476,10 @@ namespace NextPlayerUWPDataLayer.Services
         {
             var l = await connectionAsync.Table<SongsTable>().Where(e => e.SongId.Equals(songId)).ToListAsync();
             var q = l.FirstOrDefault();
+            if (q == null)
+            {
+                Diagnostics.Logger.Save("GetSongDataAsync null id=" + songId);
+            }
             SongData s = CreateSongData(q);
             return s;
         }
@@ -1048,7 +1056,7 @@ namespace NextPlayerUWPDataLayer.Services
             return newplaylist.SmartPlaylistId;
         }
 
-        public async Task InsertSmartPlaylistEntry(int _playlistId, string _item, string _comparison, string _value, string _operator)
+        public async Task InsertSmartPlaylistEntryAsync(int _playlistId, string _item, string _comparison, string _value, string _operator)
         {
             var newEntry = new SmartPlaylistEntryTable
             {
@@ -1060,6 +1068,20 @@ namespace NextPlayerUWPDataLayer.Services
             };
 
             await connectionAsync.InsertAsync(newEntry);
+        }
+
+        public void InsertSmartPlaylistEntry(int _playlistId, string _item, string _comparison, string _value, string _operator)
+        {
+            var newEntry = new SmartPlaylistEntryTable
+            {
+                PlaylistId = _playlistId,
+                Item = _item,
+                Comparison = _comparison,
+                Operator = _operator,
+                Value = _value,
+            };
+
+           connection.Insert(newEntry);
         }
 
         #endregion
@@ -1208,6 +1230,7 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task UpdateSongStatistics(int id)
         {
             var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
+            if (list.Count == 0) return;
             uint playCount = list.FirstOrDefault().PlayCount + 1;
             DateTime lastPlayed = DateTime.Now;
             await connectionAsync.ExecuteAsync("UPDATE SongsTable SET PlayCount = ?, LastPlayed = ? WHERE SongId = ?", playCount, lastPlayed, id);

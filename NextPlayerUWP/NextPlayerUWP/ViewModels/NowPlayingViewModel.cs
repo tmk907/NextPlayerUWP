@@ -24,7 +24,6 @@ namespace NextPlayerUWP.ViewModels
         {
             _timer = new DispatcherTimer();
             SetupTimer();
-            Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
         }
 
         #region Properties
@@ -94,13 +93,6 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref repeatMode, value); }
         }
 
-        private BitmapImage cover = new BitmapImage();
-        public BitmapImage Cover
-        {
-            get { return cover; }
-            set { Set(ref cover, value); }
-        }
-
         private Uri coverUri;
         public Uri CoverUri
         {
@@ -128,7 +120,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void ShuffleCommand()
         {
-            ShuffleMode = !ShuffleMode;
+            ShuffleMode = Shuffle.Change();
             PlaybackManager.Current.SendMessage(AppConstants.Shuffle, "");
         }
 
@@ -219,6 +211,11 @@ namespace NextPlayerUWP.ViewModels
             StopTimer();
         }
 
+        public void ChangeCoverUri(Uri cacheUri)
+        {
+            CoverUri = cacheUri;
+        }
+
         #region Slider Timer
 
         public bool sliderpressed = false;
@@ -282,7 +279,7 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
-        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             App.ChangeBottomPlayerVisibility(false);
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
@@ -300,15 +297,16 @@ namespace NextPlayerUWP.ViewModels
                 ChangePlayButtonContent(MediaPlayerState.Paused);
             }
 
+            Song =  NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            CoverUri = SongCoverManager.Instance.GetCurrent();
+            RepeatMode = Repeat.CurrentState();
+            ShuffleMode = Shuffle.CurrentState();
+
             TimeEnd = song.Duration;
             SliderValue = 0.0;
             SliderMaxValue = (int)Math.Round(song.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
-            Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            CoverUri = await SongCoverManager.Instance.PrepareCover(song);
-            //cover
-            //ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
-            RepeatMode = Repeat.CurrentState();
-            ShuffleMode = Shuffle.CurrentState();
+
+            return Task.CompletedTask;
         }
 
         public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
@@ -322,14 +320,13 @@ namespace NextPlayerUWP.ViewModels
             StopTimer();
             if (suspending)
             {
-
+                //state[nameof(ShuffleMode)] = ShuffleMode;
+                //state[nameof(RepeatMode)] = RepeatMode;
+                state[nameof(CoverUri)] = CoverUri.ToString();
             }
             return base.OnNavigatedFromAsync(state, suspending);
         }
 
-        public void ChangeCoverUri(Uri cacheUri)
-        {
-            CoverUri = cacheUri;
-        }
+        
     }
 }

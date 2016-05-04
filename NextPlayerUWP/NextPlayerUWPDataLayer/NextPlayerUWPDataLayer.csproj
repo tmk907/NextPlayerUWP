@@ -140,6 +140,7 @@
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\NowPlayingManager.cs" />
     <Compile Include="Services\SpotifyService.cs" />
+    <Compile Include="Services\TileUpdater.cs" />
     <Compile Include="Spotify\Enums\AlbumType.cs" />
     <Compile Include="Spotify\Enums\FollowType.cs" />
     <Compile Include="Spotify\Enums\Scope.cs" />

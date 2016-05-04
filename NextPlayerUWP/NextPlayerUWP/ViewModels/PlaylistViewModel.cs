@@ -71,24 +71,27 @@ namespace NextPlayerUWP.ViewModels
                     case MusicItemTypes.folder:
                         PageTitle = loader.GetString("Folder");
                         PageSubTitle = Path.GetFileName(firstParam);
+                        IsPlainPlaylist = false;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromFolderAsync(firstParam);
                         break;
                     case MusicItemTypes.genre:
                         PageTitle = loader.GetString("Genre");
                         PageSubTitle = firstParam;
+                        IsPlainPlaylist = false;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromGenreAsync(firstParam);
                         break;
                     case MusicItemTypes.plainplaylist:
                         PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
                         PageSubTitle = p.Name;
-                        Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
                         IsPlainPlaylist = true;
+                        Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
                         break;
                     case MusicItemTypes.smartplaylist:
                         PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetSmartPlaylistAsync(Int32.Parse(firstParam));
                         PageSubTitle = p.Name;
+                        IsPlainPlaylist = false;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(Int32.Parse(firstParam));
                         break;
                 }
@@ -100,7 +103,7 @@ namespace NextPlayerUWP.ViewModels
             if (parameter != null)
             {
                 type = MusicItem.ParseType(parameter as string);
-                firstParam = MusicItem.ParseParameter(parameter as string)[1];
+                firstParam = MusicItem.SplitParameter(parameter as string)[1];
             }
         }
 

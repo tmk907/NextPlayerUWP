@@ -33,7 +33,7 @@ namespace NextPlayerUWPDataLayer.Model
                 return MusicItemTypes.unknown;
             }
         }
-        public static string[] ParseParameter(string param)
+        public static string[] SplitParameter(string param)
         {
             return param.Split(new string[] { separator }, StringSplitOptions.None);
         }

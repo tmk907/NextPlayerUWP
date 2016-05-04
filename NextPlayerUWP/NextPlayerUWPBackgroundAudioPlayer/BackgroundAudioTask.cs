@@ -25,7 +25,8 @@ namespace NextPlayerUWPBackgroundAudioPlayer
         private ManualResetEvent backgroundTaskStarted = new ManualResetEvent(false);
         private AppState foregroundAppState = AppState.Unknown;
         private NowPlayingManager nowPlayingManager;
-        private bool shutdown;       
+        private bool shutdown;
+        private TileUpdater myTileUpdater;    
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
@@ -60,6 +61,8 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             {
                 //SetTimer();//!
             }
+
+            myTileUpdater = new TileUpdater();
 
             deferral = taskInstance.GetDeferral(); // This must be retrieved prior to subscribing to events below which use it
 
@@ -222,14 +225,28 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             //SystemMediaTransportControlsDisplayUpdater updater = systemMediaControls.DisplayUpdater;
             //await updater.CopyFromFileAsync(MediaPlaybackType.Music, file );
 
+            string title = nowPlayingManager.GetTitle();
+            string artist = nowPlayingManager.GetArtist();
+
             smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
-            smtc.DisplayUpdater.MusicProperties.Title = nowPlayingManager.GetTitle();
-            smtc.DisplayUpdater.MusicProperties.Artist = nowPlayingManager.GetArtist();
+            smtc.DisplayUpdater.MusicProperties.Title = title;
+            smtc.DisplayUpdater.MusicProperties.Artist = artist;
 
             string path = nowPlayingManager.GetAlbumArt();
             if (path != AppConstants.AlbumCover)
             {
-                smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(path));
+                Uri coverUri;
+                try
+                {
+                    coverUri = new Uri(path);
+                }
+                catch(Exception ex)
+                {
+                    coverUri = new Uri(AppConstants.AlbumCover);
+                    NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("UpdateUVCOnNewTrack path:" + path + Environment.NewLine + ex);
+                    NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFileBG();
+                }
+                smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(coverUri);
             }
             else
             {
@@ -242,6 +259,16 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             //    smtc.DisplayUpdater.Thumbnail = null;
 
             smtc.DisplayUpdater.Update();
+
+            //if (path != AppConstants.AlbumCover)
+            //{
+            //    myTileUpdater.UpdateAppTile(title, artist, path);
+            //}
+            //else
+            //{
+            //    myTileUpdater.UpdateAppTile(title, artist, AppConstants.AppLogoMedium);
+            //}
+            
         }
 
         void smtc_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
@@ -336,6 +363,11 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             var value = new ValueSet();
             value.Add(message, content);
             BackgroundMediaPlayer.SendMessageToForeground(value);
+        }
+
+        private void UpdateAppTile()
+        {
+
         }
 
         #region Timer
