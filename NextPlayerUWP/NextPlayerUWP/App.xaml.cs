@@ -109,33 +109,64 @@ namespace NextPlayerUWP
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             Debug.WriteLine("OnInitializeAsync");
-            
+            //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
+            //Logger.SaveToFile();
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
            
             DispatcherHelper.Initialize();
+
+            var keys = PageKeys<Pages>();
+            if (!keys.ContainsKey(Pages.AddToPlaylist))
+                keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
+            if (!keys.ContainsKey(Pages.Albums))
+                keys.Add(Pages.Albums, typeof(AlbumsView));
+            if (!keys.ContainsKey(Pages.Album))
+                keys.Add(Pages.Album, typeof(AlbumView));
+            if (!keys.ContainsKey(Pages.Artists))
+                keys.Add(Pages.Artists, typeof(ArtistsView));
+            if (!keys.ContainsKey(Pages.Artist))
+                keys.Add(Pages.Artist, typeof(ArtistView));
+            if (!keys.ContainsKey(Pages.FileInfo))
+                keys.Add(Pages.FileInfo, typeof(FileInfoView));
+            if (!keys.ContainsKey(Pages.Folders))
+                keys.Add(Pages.Folders, typeof(FoldersView));
+            if (!keys.ContainsKey(Pages.Genres))
+                keys.Add(Pages.Genres, typeof(GenresView));
+            if (!keys.ContainsKey(Pages.NowPlaying))
+                keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
+            if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
+                keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
+            if (!keys.ContainsKey(Pages.Playlists))
+                keys.Add(Pages.Playlists, typeof(PlaylistsView));
+            if (!keys.ContainsKey(Pages.Playlist))
+                keys.Add(Pages.Playlist, typeof(PlaylistView));
+            if (!keys.ContainsKey(Pages.Settings))
+                keys.Add(Pages.Settings, typeof(SettingsView));
+            if (!keys.ContainsKey(Pages.Songs))
+                keys.Add(Pages.Songs, typeof(SongsView));
+            if (!keys.ContainsKey(Pages.TagsEditor))
+                keys.Add(Pages.TagsEditor, typeof(TagsEditor));
+
+            //keys.Add(Pages, typeof());
+            //check if import was finished
             try
             {
-                var keys = PageKeys<Pages>();
-                keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
-                keys.Add(Pages.Albums, typeof(AlbumsView));
-                keys.Add(Pages.Album, typeof(AlbumView));
-                keys.Add(Pages.Artists, typeof(ArtistsView));
-                keys.Add(Pages.Artist, typeof(ArtistView));
-                keys.Add(Pages.FileInfo, typeof(FileInfoView));
-                keys.Add(Pages.Folders, typeof(FoldersView));
-                keys.Add(Pages.Genres, typeof(GenresView));
-                keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
-                keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
-                keys.Add(Pages.Playlists, typeof(PlaylistsView));
-                keys.Add(Pages.Playlist, typeof(PlaylistView));
-                keys.Add(Pages.Settings, typeof(SettingsView));
-                keys.Add(Pages.Songs, typeof(SongsView));
-                keys.Add(Pages.TagsEditor, typeof(TagsEditor));
-                //keys.Add(Pages, typeof());
-                //check if import was finished
-                var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-                Window.Current.Content = new Views.Shell(nav);
+                if (Window.Current.Content as Shell == null)
+                {
+                    //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
+                    //Logger.SaveToFile();
+                    var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+                    //Logger.Save("OnInitializeAsync 2 ");
+                    //Logger.SaveToFile();
+                    Window.Current.Content = new Views.Shell(nav);
+                }
+                else
+                {
+                    //Logger.Save("OnInitializeAsync not null " + args.Kind + " " + args.PreviousExecutionState);
+                    //Logger.SaveToFile();
+                }
+                
             }
             catch (Exception ex)
             {
@@ -148,21 +179,23 @@ namespace NextPlayerUWP
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
-            Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState);
-            
+            Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
+            //Logger.Save("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
+            //Logger.SaveToFile();
+            await SongCoverManager.Instance.Initialize();
             if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser
                 || args.PreviousExecutionState == ApplicationExecutionState.NotRunning
                 || args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
+                
+
                 await TileManager.ManageSecondaryTileImages();
-                await SongCoverManager.Instance.Initialize();
                 if (!IsFirstRun())
                 {
-                    SendLogs();
+                    //SendLogs();
                 }
             }
 
-            AdditionalKinds cause = DetermineStartCause(args);
             switch (DetermineStartCause(args))
             {
                 case AdditionalKinds.SecondaryTile:
@@ -211,8 +244,12 @@ namespace NextPlayerUWP
                     if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser
                         || args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                     {
-                        NavigationService.Navigate(Pages.Playlists);
+                        //Logger.Save("OnStart primary navigate");
+                        //Logger.SaveToFile();
+                            NavigationService.Navigate(Pages.Playlists);
                     }
+                    //Logger.Save("OnStart primary ");
+                    //Logger.SaveToFile();
                     break;
                 case AdditionalKinds.Toast:
                     var toastargs = args as ToastNotificationActivatedEventArgs;
@@ -220,6 +257,8 @@ namespace NextPlayerUWP
                     NavigationService.Navigate(Pages.Playlists);
                     break;
                 default:
+                    //Logger.Save("OnStart default");
+                    //Logger.SaveToFile();
                     if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser
                         || args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                     {
@@ -232,12 +271,21 @@ namespace NextPlayerUWP
         
         public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
         {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Suspended));
+            
             if (OnNewTilePinned != null)
             {
                 OnNewTilePinned();
                 OnNewTilePinned = null;
             }
             return base.OnSuspendingAsync(s, e, prelaunch);
+        }
+
+        public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
+        {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Active));
+            
+            base.OnResuming(s, e, previousExecutionState);
         }
 
         public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)

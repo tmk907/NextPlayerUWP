@@ -161,10 +161,12 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                         break;
                     case AppConstants.AppResumed:
                         foregroundAppState = AppState.Active;
+                        nowPlayingManager.UpdateForegroundState(foregroundAppState);
                         nowPlayingManager.CompleteUpdate();
                         break;
                     case AppConstants.AppSuspended:
                         foregroundAppState = AppState.Suspended;
+                        nowPlayingManager.UpdateForegroundState(foregroundAppState);
                         //ApplicationSettingsHelper.SaveSettingsValue(Constants.SongId, nowPlayingManager.GetCurrentSongId());
                         break;
                     case AppConstants.Repeat:
@@ -259,16 +261,14 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             //    smtc.DisplayUpdater.Thumbnail = null;
 
             smtc.DisplayUpdater.Update();
-
-            //if (path != AppConstants.AlbumCover)
-            //{
-            //    myTileUpdater.UpdateAppTile(title, artist, path);
-            //}
-            //else
-            //{
-            //    myTileUpdater.UpdateAppTile(title, artist, AppConstants.AppLogoMedium);
-            //}
-            
+            if (path != AppConstants.AlbumCover)
+            {
+                myTileUpdater.UpdateAppTileBG(title, artist, path);
+            }
+            else
+            {
+                myTileUpdater.UpdateAppTileBG(title, artist, AppConstants.AppLogoMedium);
+            }
         }
 
         void smtc_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)

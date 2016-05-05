@@ -55,18 +55,29 @@ namespace NextPlayerUWP.Common
 
         public async Task Initialize()
         {
+            System.Diagnostics.Debug.WriteLine("SCM Initialize start");
             if (initialized) return;
             await DeleteAllCached();
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             Uri uri = await SaveFromFileToCache(song.Path, song.SongId);
             cachedUris.Add(song.SongId, uri);
+            OnCoverUriPrepared(uri);
             initialized = true;
+            System.Diagnostics.Debug.WriteLine("SCM Initialize end");
         }
 
         public Uri GetFirst()
         {
-            if (cachedUris.Count > 0) return cachedUris.FirstOrDefault().Value;
-            else return new Uri(DefaultCover);
+            if (cachedUris.Count > 0)
+            {
+                System.Diagnostics.Debug.WriteLine(this.GetType().Name + " GetFirst cached");
+                return cachedUris.FirstOrDefault().Value;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine(this.GetType().Name + " GetFirst default");
+                return new Uri(DefaultCover);
+            }
         }
 
         public Uri GetCurrent()

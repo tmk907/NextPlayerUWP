@@ -194,6 +194,7 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="SoundCloud\" />
     <Folder Include="Spotify\Auth\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

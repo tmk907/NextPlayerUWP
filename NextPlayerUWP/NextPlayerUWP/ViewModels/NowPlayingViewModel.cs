@@ -24,6 +24,33 @@ namespace NextPlayerUWP.ViewModels
         {
             _timer = new DispatcherTimer();
             SetupTimer();
+
+            App.Current.Resuming += Current_Resuming;
+            App.Current.Suspending += Current_Suspending;
+        }
+
+        private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {
+            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
+            PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
+            PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
+            PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerPositionChanged -= PlaybackManager_MediaPlayerPositionChanged;
+            StopTimer();
+        }
+
+        private void Current_Resuming(object sender, object e)
+        {
+            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
+            PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
+            PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
+            PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
+            if (PlaybackManager.Current.IsBackgroundTaskRunning())
+            {
+                StartTimer();
+            }
+            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
         }
 
         #region Properties
@@ -279,8 +306,9 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
-        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            System.Diagnostics.Debug.WriteLine("NowPlayingVM OnNavigatedToAsync");
             App.ChangeBottomPlayerVisibility(false);
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
@@ -290,7 +318,7 @@ namespace NextPlayerUWP.ViewModels
             if (PlaybackManager.Current.IsBackgroundTaskRunning())
             {
                 StartTimer();
-                ChangePlayButtonContent(MediaPlayerState.Playing);
+                ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
             }
             else
             {
@@ -306,11 +334,12 @@ namespace NextPlayerUWP.ViewModels
             SliderValue = 0.0;
             SliderMaxValue = (int)Math.Round(song.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
 
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
-        public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
+        public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
+            System.Diagnostics.Debug.WriteLine("NowPlayingVM OnNavigatedFromAsync");
             App.ChangeBottomPlayerVisibility(true);
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
@@ -324,7 +353,7 @@ namespace NextPlayerUWP.ViewModels
                 //state[nameof(RepeatMode)] = RepeatMode;
                 state[nameof(CoverUri)] = CoverUri.ToString();
             }
-            return base.OnNavigatedFromAsync(state, suspending);
+            await Task.CompletedTask;
         }
 
         

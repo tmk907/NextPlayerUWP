@@ -25,14 +25,7 @@ namespace NextPlayerUWP.ViewModels
             ShuffleMode = Shuffle.CurrentState();
             _timer = new DispatcherTimer();
             SetupTimer();
-            if (PlaybackManager.Current.IsBackgroundTaskRunning())
-            {
-                ChangePlayButtonContent(MediaPlayerState.Playing);
-            }
-            else
-            {
-                ChangePlayButtonContent(MediaPlayerState.Paused);
-            }
+            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
@@ -41,6 +34,38 @@ namespace NextPlayerUWP.ViewModels
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             CoverUri = SongCoverManager.Instance.GetFirst();
+            //App.Current.Resuming += Current_Resuming;
+            //App.Current.Suspending += Current_Suspending;
+        }
+
+        private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {
+            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Suspending");
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+            PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
+            PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
+            PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerMediaClosed -= PlaybackManager_MediaPlayerMediaClosed;
+            PlaybackManager.MediaPlayerPositionChanged -= PlaybackManager_MediaPlayerPositionChanged;
+            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
+            System.Diagnostics.Debug.WriteLine("BottomPlayerVM Suspending");
+            StopTimer();
+            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
+        }
+
+        private void Current_Resuming(object sender, object e)
+        {
+            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Resuming");
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+            PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
+            PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
+            PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
+            PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
+            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
+            System.Diagnostics.Debug.WriteLine("BottomPlayerVM Resuming");
+            StartTimer();
+            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
         }
 
         #region Properties
@@ -191,19 +216,12 @@ namespace NextPlayerUWP.ViewModels
         public void ChangeCoverUri(Uri cacheUri)
         {
             CoverUri = cacheUri;
-            TileUpdater tu = new TileUpdater();
-            if (CoverUri.OriginalString == SongCoverManager.DefaultCover)
-            {
-                tu.UpdateAppTile(song.Title, song.Album, AppConstants.AppLogoMedium);
-            }
-            else
-            {
-                tu.UpdateAppTile(song.Title, song.Album, CoverUri.OriginalString);
-            }
         }
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedToAsync");
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
@@ -218,6 +236,8 @@ namespace NextPlayerUWP.ViewModels
 
         public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
+            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedFromAsync");
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;

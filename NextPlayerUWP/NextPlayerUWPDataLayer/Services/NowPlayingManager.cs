@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using Windows.Storage;
+using NextPlayerUWPDataLayer.Enums;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -27,6 +28,8 @@ namespace NextPlayerUWPDataLayer.Services
         private Playlist playlist;
 
         private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
+
+        private AppState foregroundAppState = AppState.Unknown;
 
         public NowPlayingManager()
         {
@@ -179,6 +182,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private void SendIndex()
         {
+            if (foregroundAppState == AppState.Suspended) return;
             ValueSet message = new ValueSet();
             message.Add(AppConstants.SongIndex, playlist.CurrentIndex.ToString());
             BackgroundMediaPlayer.SendMessageToForeground(message);
@@ -186,6 +190,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private void SendPosition()
         {
+            if (foregroundAppState == AppState.Suspended) return;
             ValueSet message = new ValueSet();
             message.Add(AppConstants.Position, mediaPlayer.Position.ToString());
             BackgroundMediaPlayer.SendMessageToForeground(message);
@@ -193,6 +198,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void CompleteUpdate()
         {
+            if (foregroundAppState == AppState.Suspended) return;
             //SendIndex();
             ValueSet message = new ValueSet();
             message.Add(AppConstants.MediaOpened, BackgroundMediaPlayer.Current.NaturalDuration);
@@ -263,9 +269,13 @@ namespace NextPlayerUWPDataLayer.Services
         void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
         {
             // wait for media to be ready
-            ValueSet message = new ValueSet();
-            message.Add(AppConstants.MediaOpened, "");
-            BackgroundMediaPlayer.SendMessageToForeground(message);
+            if (foregroundAppState != AppState.Suspended)
+            {
+                ValueSet message = new ValueSet();
+                message.Add(AppConstants.MediaOpened, "");
+                BackgroundMediaPlayer.SendMessageToForeground(message);
+            }
+            
             songPlayed = TimeSpan.Zero;
             if (!paused)
             {
@@ -345,6 +355,11 @@ namespace NextPlayerUWPDataLayer.Services
         {
             double rate = percent / 100.0;
             mediaPlayer.PlaybackRate = rate;
+        }
+
+        public void UpdateForegroundState(AppState state)
+        {
+            foregroundAppState = state;
         }
     }
 

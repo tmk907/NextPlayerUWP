@@ -2,6 +2,7 @@
 using NextPlayerUWPDataLayer.Constants;
 using System;
 using System.Threading.Tasks;
+using Template10.Controls;
 using Template10.Services.NavigationService;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Popups;
@@ -20,11 +21,16 @@ namespace NextPlayerUWP.Views
     {
         BottomPlayerViewModel BPViewModel;
 
-        public Shell(INavigationService  navigationService)
+        public static Shell Instance { get; set; }
+        public static HamburgerMenu HamburgerMenu => Instance.Menu;
+
+        public Shell(INavigationService navigationService)
         {
+            Instance = this;
             this.InitializeComponent();
             this.Loaded += LoadSlider;
-            Menu.NavigationService = navigationService;
+            HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
+            SetNavigationService(navigationService);
             App.AppThemeChanged += App_AppThemeChanged;
             BPViewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
@@ -32,6 +38,11 @@ namespace NextPlayerUWP.Views
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
             ReviewReminder();
+        }
+
+        public void SetNavigationService(INavigationService navigationService)
+        {
+            Menu.NavigationService = navigationService;
         }
 
         private void App_AppThemeChanged(bool isLight)
@@ -153,6 +164,7 @@ namespace NextPlayerUWP.Views
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("GoToNowPlaying");
                 Menu.NavigationService.Navigate(App.Pages.NowPlaying);
             }
         }

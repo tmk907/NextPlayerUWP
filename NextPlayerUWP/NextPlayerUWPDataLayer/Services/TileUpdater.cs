@@ -14,6 +14,35 @@ namespace NextPlayerUWPDataLayer.Services
     {
         public void UpdateAppTile(string title, string artist, string coverUri)
         {
+            var notification = PrepareTileNotification(title, artist, coverUri);
+            // Generate WinRT notification
+            try
+            {
+                var updater = TileUpdateManager.CreateTileUpdaterForApplication();
+                updater.Update(notification);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public void UpdateAppTileBG(string title, string artist, string coverUri)
+        {
+            var notification = PrepareTileNotification(title, artist, coverUri);
+            // Generate WinRT notification
+            try
+            {
+                TileUpdateManager.CreateTileUpdaterForApplication("App").Update(notification);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private TileNotification PrepareTileNotification(string title, string artist, string coverUri)
+        {
             TileBindingContentAdaptive smallBindingContent = new TileBindingContentAdaptive()
             {
                 Children =
@@ -98,6 +127,32 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             };
 
+            TileBindingContentAdaptive largeBindingContent = new TileBindingContentAdaptive()
+            {
+                BackgroundImage = new TileBackgroundImage()
+                {
+                    Source = new TileImageSource(coverUri),
+                    Overlay = 60
+                },
+
+                Children =
+                {
+                    new TileText()
+                    {
+                        Text = title,
+                        Wrap = true,
+                        Style = TileTextStyle.Caption
+                    },
+
+                    new TileText()
+                    {
+                        Text = artist,
+                        Wrap = true,
+                        Style = TileTextStyle.CaptionSubtle
+                    }
+                }
+            };
+
             TileBinding smallBinding = new TileBinding()
             {
                 Branding = TileBranding.None,
@@ -119,12 +174,12 @@ namespace NextPlayerUWPDataLayer.Services
                 Content = wideBindingContent
             };
 
-            //TileBinding largeBinding = new TileBinding()
-            //{
-            //    Branding = TileBranding.Name,
-            //    DisplayName = "Next-Player",
-            //    Content = largeBindingContent
-            //};
+            TileBinding largeBinding = new TileBinding()
+            {
+                Branding = TileBranding.Name,
+                DisplayName = "Next-Player",
+                Content = largeBindingContent
+            };
 
             TileContent content = new TileContent()
             {
@@ -133,23 +188,13 @@ namespace NextPlayerUWPDataLayer.Services
                     TileSmall = smallBinding,
                     TileMedium = mediumBinding,
                     TileWide = wideBinding,
-                    //TileLarge = largeBinding
+                    TileLarge = largeBinding
                 }
             };
 
             XmlDocument doc = content.GetXml();
             var notification = new TileNotification(doc);
-            // Generate WinRT notification
-            try
-            {
-                string appId = "CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE";
-                var updater = TileUpdateManager.CreateTileUpdaterForApplication();
-                updater.Update(notification);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            return notification;
         }
     }
 }

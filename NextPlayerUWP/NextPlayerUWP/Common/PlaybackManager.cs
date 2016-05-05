@@ -34,6 +34,8 @@ namespace NextPlayerUWP.Common
         static PlaybackManager() { }
         private PlaybackManager()
         {
+            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("PlaybackManager ");
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             backgroundAudioTaskStarted = new AutoResetEvent(false);
             if (IsMyBackgroundTaskRunning)
             {
@@ -46,6 +48,39 @@ namespace NextPlayerUWP.Common
                     HockeyProxy.TrackEvent("PlaybackManager constructor AddMediaPlayerEventHandlers " + ex.Message);
                 }
             }
+            //App.Current.Resuming += Current_Resuming;
+            //App.Current.Suspending += Current_Suspending;
+        }
+
+        private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {
+            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Suspending " );
+            if (IsMyBackgroundTaskRunning)
+            {
+                PlaybackManager.Current.SendMessageBG(AppConstants.AppState, AppConstants.AppSuspended);
+                RemoveMediaPlayerEventHandlers();
+                NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Suspending removed");
+            }
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+        }
+
+        private void Current_Resuming(object sender, object e)
+        {
+            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Resuming ");
+            if (IsMyBackgroundTaskRunning)
+            {
+                try
+                {
+                    AddMediaPlayerEventHandlers();
+                }
+                catch (Exception ex)
+                {
+                    HockeyProxy.TrackEvent("PlaybackManager Resuming AddMediaPlayerEventHandlers " + ex.Message);
+                }
+                PlaybackManager.Current.SendMessageBG(AppConstants.AppState, AppConstants.AppResumed);
+                NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Resuming added");
+            }
+            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
         }
 
         public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;

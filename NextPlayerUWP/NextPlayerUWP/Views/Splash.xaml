@@ -15,7 +15,7 @@
     
     <Grid Background="Transparent">
 
-        <Canvas x:Name="rootCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <!--<Canvas x:Name="rootCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Canvas.Background>
                 <ImageBrush ImageSource="ms-appx:///Assets/Visual Assets/SplashScreen/Splash3.png" Stretch="Uniform">
                     <ImageBrush.Transform>
@@ -26,16 +26,17 @@
             <Viewbox x:Name="splashImage" Width="{Binding ActualWidth, ElementName=MyCanvas, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=MyCanvas, Mode=OneWay}">
                 <Image Source="ms-appx:///Assets/Visual Assets/SplashScreen/Splash3.png" />
             </Viewbox>
-        </Canvas>
+        </Canvas>-->
 
         <ProgressRing x:Name="progressRing" Width="50"
                       Height="50" HorizontalAlignment="Center"
                       VerticalAlignment="Center"
                       Foreground="{ThemeResource UserAccentBrush}"
-                      IsActive="True" RenderTransformOrigin="0.5,0.5">
+                      IsActive="True" >
+            <!--RenderTransformOrigin="0.5,0.5"
             <ProgressRing.RenderTransform>
                 <CompositeTransform x:Name="ProgressTransform" TranslateY="120" />
-            </ProgressRing.RenderTransform>
+            </ProgressRing.RenderTransform>-->
         </ProgressRing>
 
     </Grid>
