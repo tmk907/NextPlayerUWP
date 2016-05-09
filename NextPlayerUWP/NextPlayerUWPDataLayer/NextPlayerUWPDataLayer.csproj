@@ -131,6 +131,7 @@
     <Compile Include="Model\NowPlayingSong.cs" />
     <Compile Include="Model\ObservableRangeCollection.cs" />
     <Compile Include="Model\PlaylistItem.cs" />
+    <Compile Include="Model\SCSong.cs" />
     <Compile Include="Model\SongData.cs" />
     <Compile Include="Model\SongItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -141,6 +142,21 @@
     <Compile Include="Services\NowPlayingManager.cs" />
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="Services\TileUpdater.cs" />
+    <Compile Include="SoundCloud\Enums\License.cs" />
+    <Compile Include="SoundCloud\Enums\SCPlaylistType.cs" />
+    <Compile Include="SoundCloud\Enums\TrackState.cs" />
+    <Compile Include="SoundCloud\Enums\TrackType.cs" />
+    <Compile Include="SoundCloud\Models\AuthUser.cs" />
+    <Compile Include="SoundCloud\Models\Comment.cs" />
+    <Compile Include="SoundCloud\Models\CreatedWith.cs" />
+    <Compile Include="SoundCloud\Models\Group.cs" />
+    <Compile Include="SoundCloud\Models\MiniUser.cs" />
+    <Compile Include="SoundCloud\Models\Playlist.cs" />
+    <Compile Include="SoundCloud\Models\Track.cs" />
+    <Compile Include="SoundCloud\Models\User.cs" />
+    <Compile Include="SoundCloud\SoundCloudClient.cs" />
+    <Compile Include="SoundCloud\UriBuilder.cs" />
+    <Compile Include="SoundCloud\Util.cs" />
     <Compile Include="Spotify\Enums\AlbumType.cs" />
     <Compile Include="Spotify\Enums\FollowType.cs" />
     <Compile Include="Spotify\Enums\Scope.cs" />
@@ -194,7 +210,6 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SoundCloud\" />
     <Folder Include="Spotify\Auth\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

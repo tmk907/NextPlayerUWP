@@ -42,13 +42,13 @@ namespace NextPlayerUWP.ViewModels
             Playlists = await DatabaseManager.Current.GetPlaylistItemsAsync();
         }
 
-        public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
+        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
             if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
             {
                 playlists = new ObservableCollection<PlaylistItem>();
             }
-            return base.OnNavigatingFromAsync(args);
+            await base.OnNavigatingFromAsync(args);
         }
 
         public void ItemClicked(object sender, ItemClickEventArgs e)

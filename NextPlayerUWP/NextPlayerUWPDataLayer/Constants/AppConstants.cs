@@ -115,8 +115,10 @@
         public const string LfmLove = "lfmlove";
         public const string LfmSendNP = "lfmsendnp";
 
+        //SoundCloud
+        public const string SoundCloudClientId = "1a554caaef0c755f3a794ec4c46d2ee2";
+        public const string SoundCloudClientSecret = "292af0fae1bee4360317164d21cdf8dd";
 
-        
 
 
         public const string ActionAfterDropItem = "ActionAfterDropItem";

@@ -10,9 +10,9 @@ using NextPlayerUWP.Common;
 using Windows.Foundation;
 using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Helpers;
-using GalaSoft.MvvmLight.Threading;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.DataTransfer;
+using Template10.Services.NavigationService;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -113,12 +113,17 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
-        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             isBack = false;
             firstVisibleItemIndex = 0;
             selectedItemIndex = 0;
             positionKey = null;
+
+            if (state.ContainsKey(nameof(SelectedComboBoxItem)))
+            {
+                SelectedComboBoxItem =  ComboBoxItemValues.ElementAt((int)state[nameof(SelectedComboBoxItem)]);
+            }
             if (state.Any())
             {
                 if (state.ContainsKey(nameof(positionKey)))
@@ -156,7 +161,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 LoadAndScroll();
             }
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
         virtual public bool RestoreListPosition(NavigationMode mode)
@@ -167,7 +172,7 @@ namespace NextPlayerUWP.ViewModels
 
         virtual public void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state) { }
 
-        public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
+        public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
             positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             firstVisibleItemIndex = 0;
@@ -194,8 +199,18 @@ namespace NextPlayerUWP.ViewModels
             {
                 state[nameof(firstVisibleItemIndex)] = firstVisibleItemIndex;
                 state[nameof(positionKey)] = positionKey;
+                if (ComboBoxItemValues.Count > 0)
+                {
+                    state[nameof(SelectedComboBoxItem)] = ComboBoxItemValues.IndexOf(SelectedComboBoxItem);
+                }
             }
-            return Task.CompletedTask;
+            await Task.CompletedTask;
+        }
+
+        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
+        {
+            args.Cancel = false;
+            await Task.CompletedTask;
         }
 
         public void OnLoaded(ListView p)

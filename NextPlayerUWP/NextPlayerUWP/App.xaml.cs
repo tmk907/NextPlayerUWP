@@ -84,6 +84,14 @@ namespace NextPlayerUWP
             {
 
             }
+            this.UnhandledException += App_UnhandledException;
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Logger.Save("App_UnhandledException " + e.Exception);
+            Logger.SaveToFile();
+            HockeyClient.Current.TrackEvent("App_UnhandledException " + e.Exception);
         }
 
         public enum Pages
@@ -106,6 +114,21 @@ namespace NextPlayerUWP
             TagsEditor
         }
 
+        private bool NeedsNewNavigationService(IActivatedEventArgs args)
+        {
+            switch (args.PreviousExecutionState)
+            {
+                case ApplicationExecutionState.ClosedByUser:
+                case ApplicationExecutionState.NotRunning:
+                case ApplicationExecutionState.Terminated:
+                    return true;
+                case ApplicationExecutionState.Running:
+                case ApplicationExecutionState.Suspended:
+                    return false;
+            }
+            return true;
+        }
+
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             Debug.WriteLine("OnInitializeAsync");
@@ -113,8 +136,6 @@ namespace NextPlayerUWP
             //Logger.SaveToFile();
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
-           
-            DispatcherHelper.Initialize();
 
             var keys = PageKeys<Pages>();
             if (!keys.ContainsKey(Pages.AddToPlaylist))
@@ -148,29 +169,44 @@ namespace NextPlayerUWP
             if (!keys.ContainsKey(Pages.TagsEditor))
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
 
-            //keys.Add(Pages, typeof());
-            //check if import was finished
-            try
+            DispatcherHelper.Initialize();
+
+            //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
+            if (NeedsNewNavigationService(args))
             {
+                var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+
                 if (Window.Current.Content as Shell == null)
                 {
-                    //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
-                    //Logger.SaveToFile();
-                    var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-                    //Logger.Save("OnInitializeAsync 2 ");
-                    //Logger.SaveToFile();
                     Window.Current.Content = new Views.Shell(nav);
                 }
-                else
-                {
-                    //Logger.Save("OnInitializeAsync not null " + args.Kind + " " + args.PreviousExecutionState);
-                    //Logger.SaveToFile();
-                }
+                //Logger.Save("NeedsNewNavigationService");
+            }
+            //Logger.SaveToFile();
+
+            try
+            {
+                //if (Window.Current.Content as Shell == null)
+                //{
+                //    //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
+                //    //Logger.SaveToFile();
+                //    var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+                //    //Logger.Save("OnInitializeAsync 2 ");
+                //    //Logger.SaveToFile();
+                //    Window.Current.Content = new Views.Shell(nav);
+
+                //    DispatcherHelper.Initialize();
+                //}
+                //else
+                //{
+                //    //Logger.Save("OnInitializeAsync not null " + args.Kind + " " + args.PreviousExecutionState);
+                //    //Logger.SaveToFile();
+                //}
                 
             }
             catch (Exception ex)
             {
-                Logger.Save("OnInitializeAsync" + Environment.NewLine+ex);
+                Logger.Save("OnInitializeAsync Exception" + Environment.NewLine + ex);
                 Logger.SaveToFile();
             }
             
@@ -180,15 +216,12 @@ namespace NextPlayerUWP
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-            //Logger.Save("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-            //Logger.SaveToFile();
+            Logger.Save("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
+            Logger.SaveToFile();
             await SongCoverManager.Instance.Initialize();
             if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser
-                || args.PreviousExecutionState == ApplicationExecutionState.NotRunning
-                || args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                || args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
             {
-                
-
                 await TileManager.ManageSecondaryTileImages();
                 if (!IsFirstRun())
                 {
@@ -246,7 +279,7 @@ namespace NextPlayerUWP
                     {
                         //Logger.Save("OnStart primary navigate");
                         //Logger.SaveToFile();
-                            NavigationService.Navigate(Pages.Playlists);
+                            NavigationService.Navigate(Pages.Folders);
                     }
                     //Logger.Save("OnStart primary ");
                     //Logger.SaveToFile();
@@ -254,7 +287,7 @@ namespace NextPlayerUWP
                 case AdditionalKinds.Toast:
                     var toastargs = args as ToastNotificationActivatedEventArgs;
                     
-                    NavigationService.Navigate(Pages.Playlists);
+                    NavigationService.Navigate(Pages.Songs);
                     break;
                 default:
                     //Logger.Save("OnStart default");
@@ -262,7 +295,7 @@ namespace NextPlayerUWP
                     if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser
                         || args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                     {
-                        NavigationService.Navigate(Pages.Playlists);
+                        NavigationService.Navigate(Pages.Genres);
                     }
                     break;
             }

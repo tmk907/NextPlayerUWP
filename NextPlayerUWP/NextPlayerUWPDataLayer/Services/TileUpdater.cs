@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NotificationsExtensions.Tiles;
 using NextPlayerUWPDataLayer.Constants;
 using Windows.Data.Xml.Dom;

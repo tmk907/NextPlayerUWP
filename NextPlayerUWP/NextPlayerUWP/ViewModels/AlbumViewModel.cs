@@ -84,7 +84,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
+        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
             if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
             {
@@ -95,7 +95,8 @@ namespace NextPlayerUWP.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine("navvigation mode refresh");
             }
-            return base.OnNavigatingFromAsync(args);
+            args.Cancel = false;
+            await Task.CompletedTask;
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)

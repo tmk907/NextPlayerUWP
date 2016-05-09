@@ -20,6 +20,7 @@
         <DataTemplate x:Key="PlaylistItemTemplate" x:DataType="data:PlaylistItem">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <TextBlock 
+                    VerticalAlignment="Center"
                     Text="{x:Bind Name}" 
                     FontSize="20"
                     />

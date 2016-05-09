@@ -98,11 +98,6 @@ namespace NextPlayerUWP.ViewModels
             OnDataLoaded();
         }
 
-        public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
-        {
-            return base.OnNavigatedFromAsync(state, suspending);
-        }
-
         private async void MediaImport_MediaImported(string s)
         {
             await Dispatcher.DispatchAsync(() => ReloadData());

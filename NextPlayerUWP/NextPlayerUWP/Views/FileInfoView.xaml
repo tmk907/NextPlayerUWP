@@ -71,15 +71,21 @@
                                 Text="File path"
                                 Style="{StaticResource DescriptionStyle}"
                                 />
-                    <StackPanel Grid.Row="0" Grid.Column="1" 
+                    <Grid Grid.Row="0" Grid.Column="1" 
                                 Margin="4,0,0,0"
                                 HorizontalAlignment="Stretch"
-                                Orientation="Horizontal">
+                                >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
                         <TextBlock Margin="0" x:Name="FilePath_TextBlock"
+                                   Grid.Column="0"
                                     Text="{Binding FileInfo.Path}"
                                     Style="{StaticResource ValueStyle}"
                                     />
                         <Button Click="CopyPath_Click"
+                                Grid.Column="1"
                                 Margin="12,0,0,4"
                                 MinHeight="20"
                                 MinWidth="20"
@@ -87,13 +93,14 @@
                                 Height="24"
                                 Padding="0"
                                 Background="Transparent"
-                                VerticalAlignment="Center">
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left">
                             <Button.Content>
                                 <SymbolIcon Symbol="Copy"/>
                             </Button.Content>
                         </Button>
                         
-                    </StackPanel>
+                    </Grid>
                     <TextBlock
                                 Grid.Row="1" Grid.Column="0"
                                 Text="Bitrate"

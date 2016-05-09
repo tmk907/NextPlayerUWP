@@ -27,9 +27,7 @@ namespace NextPlayerUWP.Views
         public GenresView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate {
-                ((GenresViewModel)DataContext).OnLoaded(GenresListView);
-            };
+            this.Loaded += delegate {((GenresViewModel)DataContext).OnLoaded(GenresListView);};
             ViewModel = (GenresViewModel)DataContext;
         }
 

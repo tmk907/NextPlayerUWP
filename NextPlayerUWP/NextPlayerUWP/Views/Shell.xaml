@@ -287,6 +287,7 @@
         </Grid.ColumnDefinitions>
         <controls:HamburgerMenu x:Name="Menu" 
                                 Grid.Row="0" Grid.Column="0"
+                                OpenCloseMode="Swipe"
                                 
                                 HamburgerBackground="{ThemeResource SystemChromeMediumColor}"
                                 HamburgerForeground="{ThemeResource SystemBaseHighColor}"
@@ -304,7 +305,7 @@
                                 VisualStateNarrowMinWidth="0"
                                 VisualStateNormalMinWidth="720">
             <controls:HamburgerMenu.PrimaryButtons>
-                <controls:HamburgerButtonInfo PageType="views:AlbumsView" ClearHistory="True">
+                <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:AlbumsView" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Grid Width="48" Height="48">
                             <Viewbox Height="20">
@@ -314,13 +315,13 @@
                         <TextBlock x:Uid="TBAlbums" Text="Albums" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:ArtistsView"  ClearHistory="True">
+                <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:ArtistsView"  >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="People" Width="48" Height="48" />
                         <TextBlock x:Uid="TBArtists" Text="Artists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:FoldersView"  ClearHistory="True">
+                <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:FoldersView"  >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Grid Width="48" Height="48">
                             <Viewbox Height="20">
@@ -330,25 +331,25 @@
                         <TextBlock x:Uid="TBFolders" Text="Folders" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:GenresView"  ClearHistory="True">
+                <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:GenresView"  >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="World" Width="48" Height="48" />
                         <TextBlock x:Uid="TBGenres" Text="Genres" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:PlaylistsView"  ClearHistory="True">
+                <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:PlaylistsView"  >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="MusicInfo" Width="48" Height="48" />
                         <TextBlock x:Uid="TBPlaylists" Text="Playlists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo PageType="views:SongsView"  ClearHistory="True">
+                <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:SongsView"  >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Audio" Width="48" Height="48" />
                         <TextBlock x:Uid="TBSongs" Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingPlaylistView"  ClearHistory="False">
+                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingPlaylistView" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Play" Width="48" Height="48" />
                         <TextBlock x:Uid="TBNowPlaying" Text="Now playing" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
@@ -357,12 +358,13 @@
             </controls:HamburgerMenu.PrimaryButtons>
 
             <controls:HamburgerMenu.SecondaryButtons>
-                <controls:HamburgerButtonInfo PageType="views:SettingsView">
+                <controls:HamburgerButtonInfo PageType="views:SettingsView" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Setting" Width="48" Height="48" />
                         <TextBlock x:Uid="TBSettings" Text="Settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
+                
             </controls:HamburgerMenu.SecondaryButtons>
 
         </controls:HamburgerMenu>
@@ -372,7 +374,7 @@
               Background="{StaticResource UserAccentBrush}"
               DataContext="{Binding Source={StaticResource Locator}, Path=BottomPlayerVM}"
               >
-
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
