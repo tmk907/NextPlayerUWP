@@ -79,7 +79,7 @@
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
 			BackButtonVisibility="Collapsed" 
 			Frame="{x:Bind Frame, Mode=OneWay}"
-			Content="Radios"
+			Content="Radio"
 			x:Uid="PageHeaderRadios"
 			VisualStateNarrowMinWidth="0"
 			VisualStateNormalMinWidth="720">

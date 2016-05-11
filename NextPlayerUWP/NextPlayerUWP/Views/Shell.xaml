@@ -358,7 +358,7 @@
                 <controls:HamburgerButtonInfo PageType="views:RadiosView" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="View" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBRadios" Text="Radios" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TBRadio" Text="Radio" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
             </controls:HamburgerMenu.PrimaryButtons>
