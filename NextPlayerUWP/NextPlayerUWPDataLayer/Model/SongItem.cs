@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Tables;
+﻿using NextPlayerUWPDataLayer.Enums;
+using NextPlayerUWPDataLayer.Tables;
 using System;
 using System.ComponentModel;
 
@@ -214,6 +215,20 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
+        private MusicSource sourceType;
+        public MusicSource SourceType
+        {
+            get { return sourceType; }
+            set { sourceType = value; }
+        }
+
+        private string coverPath;
+        public string CoverPath
+        {
+            get { return coverPath; }
+            set { coverPath = value; }
+        }
+
         public SongItem()
         {
             title = "Unknown Title";
@@ -233,6 +248,8 @@ namespace NextPlayerUWPDataLayer.Model
             lastPlayed = new DateTime();
             playCount = 0;
             isPlaying = false;
+            sourceType = MusicSource.LocalFile;
+            coverPath = "";
         }
 
         public SongItem(SongsTable table)
@@ -253,7 +270,9 @@ namespace NextPlayerUWPDataLayer.Model
             genres = table.Genres;
             lastPlayed = table.LastPlayed;
             playCount = (int)table.PlayCount;
-            isPlaying = false; 
+            isPlaying = false;
+            sourceType = MusicSource.LocalFile;
+            coverPath = "";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

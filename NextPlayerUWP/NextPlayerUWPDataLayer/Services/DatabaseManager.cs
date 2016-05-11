@@ -429,6 +429,7 @@ namespace NextPlayerUWPDataLayer.Services
             s.ImagePath = npSong.ImagePath;
             s.Position = npSong.Position;
             s.SongId = npSong.SongId;
+            s.SourceType = (MusicSource)npSong.SourceType;
             s.Title = npSong.Title;
             return s;
         }
@@ -526,6 +527,7 @@ namespace NextPlayerUWPDataLayer.Services
                     s.Album = e.Album;
                     s.Artist = e.Artist;
                     s.Path = e.Path;
+                    s.SourceType = (MusicSource)e.SourceType;
                     list.Add(s);
                 }
                 var query2 = songsConnection.Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
@@ -551,6 +553,7 @@ namespace NextPlayerUWPDataLayer.Services
                     s.Album = e.Album;
                     s.Artist = e.Artist;
                     s.Path = e.Path;
+                    s.SourceType = (MusicSource)e.SourceType;
                     list.Add(s);
                 }
                 var query2 = await songsConnectionAsync.Where(x => x.SongId.Equals(e.SongId)).ToListAsync();
@@ -969,14 +972,17 @@ namespace NextPlayerUWPDataLayer.Services
             int lastPosition = l.Count;
             foreach (var item in songs)
             {
-                lastPosition++;
-                var newEntry = new PlainPlaylistEntryTable()
+                if ((MusicSource)item.SourceType == MusicSource.LocalFile)
                 {
-                    PlaylistId = playlistId,
-                    SongId = item.SongId,
-                    Place = lastPosition,
-                };
-                list.Add(newEntry);
+                    lastPosition++;
+                    var newEntry = new PlainPlaylistEntryTable()
+                    {
+                        PlaylistId = playlistId,
+                        SongId = item.SongId,
+                        Place = lastPosition,
+                    };
+                    list.Add(newEntry);
+                }
             }
             await connectionAsync.InsertAllAsync(list);
         }
@@ -1036,6 +1042,7 @@ namespace NextPlayerUWPDataLayer.Services
                     ImagePath = "",
                     Position = i,
                     SongId = item.SongId,
+                    SourceType = (int)item.SourceType,
                     Title = item.Title,
                 });
                 i++;
@@ -1392,6 +1399,12 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<AlbumsTable>();
             connection.CreateTable<ArtistsTable>();
             connection.CreateTable<CachedScrobble>();
+        }
+
+        public void UpdateToVersion2()
+        {
+            connection.Execute("ALTER TABLE NowPlayingTable ADD COLUMN SourceType INTEGER");
+            connection.Execute("UPDATE NowPlayingTable SET SourceType = 1");
         }
     }
 }

@@ -170,6 +170,7 @@
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
+    <Compile Include="ViewModels\RadiosViewModel.cs" />
     <Compile Include="ViewModels\RightPanelViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SongsViewModel.cs" />
@@ -217,6 +218,9 @@
     </Compile>
     <Compile Include="Views\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RadiosView.xaml.cs">
+      <DependentUpon>RadiosView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RightPanelControl.xaml.cs">
       <DependentUpon>RightPanelControl.xaml</DependentUpon>
@@ -348,6 +352,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\RadiosView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RightPanelControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -397,6 +405,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Visual Assets\Square310\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="JamendoApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Github\JamendoApi\JamendoApi\bin\Release\JamendoApi.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

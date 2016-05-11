@@ -1,4 +1,6 @@
-﻿namespace NextPlayerUWPDataLayer.Model
+﻿using NextPlayerUWPDataLayer.Enums;
+
+namespace NextPlayerUWPDataLayer.Model
 {
     public class NowPlayingSong
     {
@@ -9,5 +11,6 @@
         public string ImagePath { get; set; }
         public int SongId { get; set; }
         public int Position { get; set; }
+        public MusicSource SourceType { get; set; }
     }
 }

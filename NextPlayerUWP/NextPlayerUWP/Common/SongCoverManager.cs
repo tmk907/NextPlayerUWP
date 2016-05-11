@@ -32,7 +32,15 @@ namespace NextPlayerUWP.Common
         {
             cachedUris = new Dictionary<int, Uri>(cacheCapacity);
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
+            PlaybackManager.StreamUpdated += PlaybackManager_StreamUpdated;
             initialized = false;
+        }
+
+        private void PlaybackManager_StreamUpdated(NowPlayingSong song)
+        {
+            Uri uri = PrepareJamendoCover(song.ImagePath);
+            CacheUri(song.SongId, uri);
+            OnCoverUriPrepared(uri);
         }
 
         private async void PlaybackManager_MediaPlayerTrackChanged(int index)
@@ -82,7 +90,8 @@ namespace NextPlayerUWP.Common
 
         public Uri GetCurrent()
         {
-            int id = NowPlayingPlaylistManager.Current.GetCurrentPlaying().SongId;
+            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            int id = song.SongId * 10 + (int)song.SourceType;
             if (cachedUris.ContainsKey(id))
             {
                 return cachedUris[id];
@@ -97,20 +106,40 @@ namespace NextPlayerUWP.Common
         {
             //var ticks = DateTime.Now.Ticks;
             //System.Diagnostics.Debug.WriteLine(ticks+" 1 Prepare cover id=" + song.SongId);
-            int songId = song.SongId;
+            int songId = song.SongId * 10 + (int)song.SourceType;
+
             if (cachedUris.ContainsKey(songId))
             {
                 //System.Diagnostics.Debug.WriteLine(ticks + " 2 Prepare cover id=" + songId + " count=" + cachedUris.Keys.Count);
                 return cachedUris[songId];
             }
 
-            //var nextSong = NowPlayingPlaylistManager.Current.GetNextSong();
+            Uri newUri;
+            if (song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
+            {
+                //var nextSong = NowPlayingPlaylistManager.Current.GetNextSong();
 
-            Uri newUri = await SaveFromFileToCache(song.Path, song.SongId);
+                newUri = await SaveFromFileToCache(song.Path, song.SongId);               
+            }
+            else if(song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.RadioJamendo)
+            {
+                newUri = PrepareJamendoCover(song.CoverPath);
+            }
+            else
+            {
+                newUri = new Uri(DefaultCover);
+            }
 
+            CacheUri(songId, newUri);
+
+            return newUri;
+        }
+
+        private void CacheUri(int songId, Uri newUri)
+        {
             if (cachedUris.Count == cacheCapacity)
             {
-                for(int i = 0; i < 5; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     int key = cachedUris.FirstOrDefault().Key;
                     //delete from disk
@@ -128,8 +157,6 @@ namespace NextPlayerUWP.Common
                 //System.Diagnostics.Debug.WriteLine(ticks + " 4 Prepare cover id=" + songId + " count=" + cachedUris.Keys.Count);
                 cachedUris.Add(songId, newUri);
             }
-
-            return newUri;
         }
 
         private async Task<Uri> SaveFromFileToCache(string path, int id)
@@ -145,6 +172,27 @@ namespace NextPlayerUWP.Common
             }
 
             return new Uri(coverPath);
+        }
+
+        private Uri PrepareJamendoCover(string coverPath)
+        {
+            Uri newUri;
+            try
+            {
+                if (!String.IsNullOrEmpty(coverPath))
+                {
+                    newUri = new Uri(coverPath);
+                }
+                else
+                {
+                    newUri = new Uri(DefaultCover);
+                }
+            }
+            catch
+            {
+                newUri = new Uri(DefaultCover);
+            }
+            return newUri;
         }
 
         private async Task DeleteAllCached()

@@ -73,6 +73,10 @@ namespace NextPlayerUWP
             {
                 FirstRunSetup();
             }
+            else
+            {
+                UpdateDB();
+            }
 
             SplashFactory = (e) => new Views.Splash(e);
 
@@ -109,6 +113,7 @@ namespace NextPlayerUWP
             NowPlayingPlaylist,
             Playlists,
             Playlist,
+            Radios,
             Settings,
             Songs,
             TagsEditor
@@ -162,6 +167,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
             if (!keys.ContainsKey(Pages.Playlist))
                 keys.Add(Pages.Playlist, typeof(PlaylistView));
+            if (!keys.ContainsKey(Pages.Radios))
+                keys.Add(Pages.Radios, typeof(RadiosView));
             if (!keys.ContainsKey(Pages.Settings))
                 keys.Add(Pages.Settings, typeof(SettingsView));
             if (!keys.ContainsKey(Pages.Songs))
@@ -209,7 +216,9 @@ namespace NextPlayerUWP
                 Logger.Save("OnInitializeAsync Exception" + Environment.NewLine + ex);
                 Logger.SaveToFile();
             }
-            
+
+            //await JamendoTest.Start();
+
             await Task.CompletedTask;
         }
 
@@ -449,6 +458,17 @@ namespace NextPlayerUWP
         {
             if (Window.Current.Content == null) return;
             ((Shell)Window.Current.Content).ChangeBottomPlayerVisibility(visible);
+        }
+
+
+        private void UpdateDB()
+        {
+            object version = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DBVersion);
+            if (version.ToString() == "1")
+            {
+                DatabaseManager.Current.UpdateToVersion2();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
+            }
         }
     }
 }

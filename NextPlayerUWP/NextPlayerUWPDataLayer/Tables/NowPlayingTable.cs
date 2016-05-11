@@ -13,5 +13,6 @@ namespace NextPlayerUWPDataLayer.Tables
         public string Path { get; set; }
         public string ImagePath { get; set; }
         public int SongId { get; set; }
+        public int SourceType { get; set; }
     }
 }

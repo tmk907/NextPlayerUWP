@@ -2,6 +2,7 @@
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,6 +21,7 @@ namespace NextPlayerUWP.Common
     public delegate void MediaPlayerPositionChangeHandler(TimeSpan position, TimeSpan duration);
     public delegate void MediaPlayerMediaOpenHandler(TimeSpan duration);
     public delegate void MediaPlayerCloseHandler();
+    public delegate void StreamUpdatedHandler(NowPlayingSong song);
 
     public sealed class PlaybackManager
     {
@@ -107,6 +109,11 @@ namespace NextPlayerUWP.Common
         public void OnMediaPlayerMediaClosed()
         {
             MediaPlayerMediaClosed?.Invoke();
+        }
+        public static event StreamUpdatedHandler StreamUpdated;
+        public void OnStreamUpdated(NowPlayingSong song)
+        {
+            StreamUpdated?.Invoke(song);
         }
 
         private AutoResetEvent backgroundAudioTaskStarted;
@@ -383,8 +390,18 @@ namespace NextPlayerUWP.Common
                             OnMediaPlayerMediaClosed();
                         });
                         break;
+                    case AppConstants.StreamUpdated:
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            string serialized =e.Data[key].ToString();
+                            var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<NowPlayingSong>(serialized);
+                            OnStreamUpdated(deserialized);
+                        });
+                        break;
                     case AppConstants.BackgroundTaskStarted:
                         backgroundAudioTaskStarted.Set();
+                        break;
+                    default:
                         break;
                 }
             }

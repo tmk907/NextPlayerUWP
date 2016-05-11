@@ -21,7 +21,16 @@
         Dark
     }
 
-    public class Enums
+    public enum RadioType
     {
+        Jamendo,
+        Unknown
+    }
+
+    public enum MusicSource
+    {
+        LocalFile = 1,
+        RadioJamendo = 2,
+        OnlineFile = 3
     }
 }

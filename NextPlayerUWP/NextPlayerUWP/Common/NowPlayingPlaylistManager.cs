@@ -29,7 +29,21 @@ namespace NextPlayerUWP.Common
             songs.CollectionChanged += Songs_CollectionChanged;
             //Init();
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
+            PlaybackManager.StreamUpdated += PlaybackManager_StreamUpdated;
             App.SongUpdated += App_SongUpdated;
+        }
+
+        private void PlaybackManager_StreamUpdated(NowPlayingSong song)
+        {
+            SongItem si = songs.Where(s => (s.SongId.Equals(song.SongId) && s.SourceType.Equals(song.SourceType))).FirstOrDefault();
+            if (si != null)
+            {
+                int i = songs.IndexOf(si);
+                songs[i].Album = song.Album;
+                songs[i].Artist = song.Artist;
+                songs[i].CoverPath = song.ImagePath;
+                OnNPChanged();
+            }
         }
 
         private async void Init()
@@ -150,6 +164,9 @@ namespace NextPlayerUWP.Common
                 case MusicItemTypes.song:
                     songs.Add((SongItem)item);
                     break;
+                case MusicItemTypes.radio:
+                    list.Add(((RadioItem)item).ToSongItem());
+                    break;
             }
             foreach (var song in list)
             {
@@ -194,6 +211,9 @@ namespace NextPlayerUWP.Common
                     break;
                 case MusicItemTypes.song:
                     list.Add((SongItem)item);
+                    break;
+                case MusicItemTypes.radio:
+                    list.Add(((RadioItem)item).ToSongItem());
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
@@ -270,6 +290,9 @@ namespace NextPlayerUWP.Common
                     break;
                 case MusicItemTypes.song:
                     list.Add((SongItem)item);
+                    break;
+                case MusicItemTypes.radio:
+                    list.Add(((RadioItem)item).ToSongItem());
                     break;
             }
             songs.Clear();

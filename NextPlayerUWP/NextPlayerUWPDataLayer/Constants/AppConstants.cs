@@ -25,6 +25,8 @@
         public const string AppLogoMedium = "ms-appx:///Assets/Visual Assets/Square150/Medium3.png";
         public const string AppLogoWide = "ms-appx:///Assets/Visual Assets/Wide310/Wide3.png";
 
+        public const string RadioCover = "ms-appx:///Assets/Albums/AlbumCoverTRnG.png";
+
         //Layout
         public const string AppTheme = "AppTheme";
         public const string AppAccent = "AppAccent";
@@ -63,6 +65,7 @@
         public const string ShutdownBGPlayer = "shutdown";
         public const string ChangeRate = "changerate";
         public const string UpdateUVC = "updateuvc";
+        public const string StreamUpdated = "streamupdated";
 
         //Timer
         public const string TimerOn = "TimerOn";
@@ -119,6 +122,10 @@
         public const string SoundCloudClientId = "1a554caaef0c755f3a794ec4c46d2ee2";
         public const string SoundCloudClientSecret = "292af0fae1bee4360317164d21cdf8dd";
 
+
+        //Jamendo
+        public const string JamendoClientId = "8ed1da48";
+        public const string JamendoClientSecret = "45994f52254ba988c15abee8967bbc84";
 
 
         public const string ActionAfterDropItem = "ActionAfterDropItem";

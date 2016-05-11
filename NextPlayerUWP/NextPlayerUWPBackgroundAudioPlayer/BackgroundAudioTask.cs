@@ -248,7 +248,14 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                     NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("UpdateUVCOnNewTrack path:" + path + Environment.NewLine + ex);
                     NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFileBG();
                 }
-                smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(coverUri);
+                if (coverUri.IsFile)
+                {
+                    smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(coverUri);
+                }
+                else
+                {
+                    smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(coverUri);
+                }
             }
             else
             {

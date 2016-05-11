@@ -12,6 +12,7 @@ namespace NextPlayerUWPDataLayer.Model
         smartplaylist,
         song,
         nowplayinglist,
+        radio,
         unknown
     }
     public abstract class MusicItem

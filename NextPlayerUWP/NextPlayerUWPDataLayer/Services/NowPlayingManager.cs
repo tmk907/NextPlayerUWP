@@ -11,6 +11,7 @@ using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using Windows.Storage;
 using NextPlayerUWPDataLayer.Enums;
+using Windows.System.Threading;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -30,11 +31,12 @@ namespace NextPlayerUWPDataLayer.Services
         private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
 
         private AppState foregroundAppState = AppState.Unknown;
+        Jamendo.JamendoRadiosData jRadioData;
 
         public NowPlayingManager()
         {
             playlist = new Playlist();
-
+            
             //ChangeRepeat();
             //ChangeShuffle();
 
@@ -50,6 +52,25 @@ namespace NextPlayerUWPDataLayer.Services
             mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             //mediaPlayer.CurrentStateChanged += mediaPlayer_CurrentStateChanged;
             mediaPlayer.MediaFailed += mediaPlayer_MediaFailed;
+
+            jRadioData = new Jamendo.JamendoRadiosData();
+        }
+
+        private async Task LoadMusicSource(string path, MusicSource sourceType)
+        {
+            switch (sourceType)
+            {
+                case MusicSource.LocalFile:
+                    await LoadFile(path);
+                    break;
+                case MusicSource.OnlineFile:
+                    break;
+                case MusicSource.RadioJamendo:
+                    LoadRadio(path);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private async Task LoadFile(string path)
@@ -70,6 +91,23 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
+        private void LoadRadio(string path)
+        {
+            try
+            {
+                mediaPlayer.AutoPlay = false;
+                mediaPlayer.SetUriSource(new Uri(path));
+                SetTimer(1000);
+            }
+            catch (Exception ex)
+	        {
+                if (!paused)
+                {
+                    Pause();
+                }
+            }
+        }
+
         public async Task PlaySong(int index)
         {
             if (!isFirst)
@@ -82,7 +120,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
             playlist.ChangeSong(index);
             paused = false;
-            await LoadFile(playlist.GetCurrentSong().Path);
+            await LoadMusicSource(playlist.GetCurrentSong().Path, playlist.GetCurrentSong().SourceType);
         }
 
         public async Task ResumePlayback()
@@ -99,7 +137,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 startPosition = TimeSpan.Parse(position.ToString());
             }
-            await LoadFile(playlist.GetCurrentSong().Path);
+            await LoadMusicSource(playlist.GetCurrentSong().Path, playlist.GetCurrentSong().SourceType);
         }
 
         public void Play()
@@ -128,7 +166,7 @@ namespace NextPlayerUWPDataLayer.Services
                 paused = true;
                 return;
             }
-            await LoadFile(playlist.GetCurrentSong().Path);
+            await LoadMusicSource(playlist.GetCurrentSong().Path, playlist.GetCurrentSong().SourceType);
             if (!userchoice)
             {
                 ValueSet message = new ValueSet();
@@ -148,7 +186,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 await StopSongEvent(playlist.GetCurrentSong(), mediaPlayer.NaturalDuration);
                 playlist.PreviousSong();
-                await LoadFile(playlist.GetCurrentSong().Path);
+                await LoadMusicSource(playlist.GetCurrentSong().Path, playlist.GetCurrentSong().SourceType);
                 SendIndex();
             }
         }
@@ -161,7 +199,7 @@ namespace NextPlayerUWPDataLayer.Services
         private async Task StopSongEvent(NowPlayingSong song, TimeSpan songDuration)
         {
             songPlayed = DateTime.Now - songsStart + songPlayed;
-            if (WasSongPlayed(songDuration))
+            if (WasSongPlayed(songDuration) && song.SourceType == MusicSource.LocalFile)
             {
                 await UpdateSongStatistics(song.SongId, songDuration);
                 //if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "")
@@ -336,10 +374,20 @@ namespace NextPlayerUWPDataLayer.Services
         public string GetAlbumArt()
         {
             var song = playlist.GetCurrentSong();
-            if (song.ImagePath == "")
+            if (song.SourceType == MusicSource.LocalFile)
             {
-                song.ImagePath = DatabaseManager.Current.GetAlbumArt(playlist.GetCurrentSong().Album);
-                if (song.ImagePath == "") song.ImagePath = AppConstants.AlbumCover;//!
+                if (song.ImagePath == "")
+                {
+                    song.ImagePath = DatabaseManager.Current.GetAlbumArt(playlist.GetCurrentSong().Album);
+                    if (song.ImagePath == "") song.ImagePath = AppConstants.AlbumCover;//!
+                }
+            }
+            else
+            {
+                if (song.ImagePath == "")
+                {
+                    song.ImagePath = AppConstants.RadioCover;
+                }
             }
             return song.ImagePath;
         }
@@ -361,6 +409,70 @@ namespace NextPlayerUWPDataLayer.Services
         {
             foregroundAppState = state;
         }
+
+        private async Task RefreshRadioTrackInfo()
+        {
+            NowPlayingSong s = playlist.GetCurrentSong();
+            if (s.SourceType == MusicSource.RadioJamendo)
+            {
+                var stream = await jRadioData.GetRadioStream(s.SongId);
+                if (stream == null) return;
+                var radio = jRadioData.GetRadioItemFromStream(stream);
+                s.Album = radio.PlayingNowAlbum;
+                s.Artist = radio.PlayingNowArtistTitle;
+                s.ImagePath = radio.PlayingNowImagePath;
+
+                ValueSet message = new ValueSet();
+                message.Add(AppConstants.UpdateUVC, null);
+                BackgroundMediaPlayer.SendMessageToBackground(message);
+                if (foregroundAppState != AppState.Suspended)
+                {
+                    string serialized = Newtonsoft.Json.JsonConvert.SerializeObject(s);
+                    ValueSet message2 = new ValueSet();
+                    message2.Add(AppConstants.StreamUpdated, serialized);
+                    BackgroundMediaPlayer.SendMessageToForeground(message2);
+                }
+                    
+                int ms = jRadioData.GetRemainingTime(stream);
+                SetTimer(ms);
+            }
+        }
+
+        #region Timer
+
+        ThreadPoolTimer timer = null;
+        bool isTimerSet = false;
+
+        private void SetTimer(int ms)
+        {
+            ms += 100;
+            TimeSpan currentTime = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute) + TimeSpan.FromSeconds(DateTime.Now.Second);
+            
+            if (isTimerSet)
+            {
+                TimerCancel();
+            }
+            timer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(TimerCallback), TimeSpan.FromMilliseconds(ms));
+            isTimerSet = true;
+        }
+
+        private void TimerCallback(ThreadPoolTimer timer)
+        {
+            TimerCancel();
+            RefreshRadioTrackInfo();
+        }
+
+        private void TimerCancel()
+        {
+            isTimerSet = false;
+            if (timer != null)
+            {
+                timer.Cancel();
+            }
+        }
+
+        #endregion
+
     }
 
 
