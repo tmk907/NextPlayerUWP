@@ -72,6 +72,9 @@ namespace NextPlayerUWP.ViewModels
                 case MusicItemTypes.nowplayinglist:
                     await DatabaseManager.Current.AddNowPlayingToPlaylist(p.Id);
                     break;
+                case MusicItemTypes.radio:
+
+                    break;
                 default:
                     break;
             }

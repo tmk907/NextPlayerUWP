@@ -1,10 +1,7 @@
 ﻿using JamendoApi;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Model;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.Jamendo
@@ -23,7 +20,7 @@ namespace NextPlayerUWPDataLayer.Jamendo
             JamendoApi.ApiCalls.Radios.RadioStreamCall radiostream = new JamendoApi.ApiCalls.Radios.RadioStreamCall();
             radiostream.Name = new JamendoApi.ApiCalls.Parameters.NameParameter(radioName);
             var streamRadio = await client.CallAsync(radiostream);
-            if (streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
+            if (streamRadio !=null && streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
             {
                 var stream = streamRadio.Results.FirstOrDefault();
                 return stream;
@@ -36,7 +33,7 @@ namespace NextPlayerUWPDataLayer.Jamendo
             JamendoApi.ApiCalls.Radios.RadioStreamCall radiostream = new JamendoApi.ApiCalls.Radios.RadioStreamCall();
             radiostream.Id = new JamendoApi.ApiCalls.Parameters.IdParameter((uint)id);
             var streamRadio = await client.CallAsync(radiostream);
-            if (streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
+            if (streamRadio != null && streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
             {
                 var stream = streamRadio.Results.FirstOrDefault();
                 return stream;

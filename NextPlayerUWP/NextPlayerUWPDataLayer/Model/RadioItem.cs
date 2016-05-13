@@ -107,17 +107,33 @@ namespace NextPlayerUWPDataLayer.Model
             set { streamUrl = value; }
         }
 
+        private int remainingTime; //miliseconds
+        public int RemainingTime
+        {
+            get { return remainingTime; }
+            set { remainingTime = value; }
+        }
+
+        private DateTime streamUpdatedAt; //miliseconds
+        public DateTime StreamUpdatedAt
+        {
+            get { return streamUpdatedAt; }
+            set { streamUpdatedAt = value; }
+        }
+
         public RadioItem()
         {
             broadcastId = 0;//?
             type = RadioType.Unknown;
+            streamUrl = "";
             name = "Unknown radio";
             imagePath = AppConstants.RadioCover;
             playingNowAlbum = "Album";
             playingNowArtist = "Artist";
             playingNowTitle = "Title";
             playingNowImagePath = "";
-            streamUrl = "";
+            remainingTime = 1000 * 60 * 60 * 24;
+            streamUpdatedAt = DateTime.Now;
         }
 
         public RadioItem(int id, RadioType type, string stream)
@@ -125,7 +141,15 @@ namespace NextPlayerUWPDataLayer.Model
             this.broadcastId = id;
             this.type = type;
             this.streamUrl = stream;
+
+            name = "Unknown radio";
             imagePath = AppConstants.RadioCover;
+            playingNowAlbum = "";
+            playingNowArtist = "";
+            playingNowTitle = "";
+            playingNowImagePath = AppConstants.RadioCover;
+            remainingTime = 1000 * 60 * 60 * 24;
+            streamUpdatedAt = DateTime.Now;
         }
 
 

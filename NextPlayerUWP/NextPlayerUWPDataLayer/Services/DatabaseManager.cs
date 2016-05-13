@@ -519,21 +519,37 @@ namespace NextPlayerUWPDataLayer.Services
             ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
             foreach (var e in query)
             {
-                if (e.SongId>= 10000000) //! TODO!!!
+                if ((MusicSource)e.SourceType == MusicSource.LocalFile)
+                {
+                    if (e.SongId >= 10000000) //! TODO!!!
+                    {
+                        SongItem s = new SongItem();
+                        s.SongId = e.SongId;
+                        s.Title = e.Title;
+                        s.Album = e.Album;
+                        s.Artist = e.Artist;
+                        s.Path = e.Path;
+                        s.SourceType = (MusicSource)e.SourceType;
+                        list.Add(s);
+                    }
+
+                    var query2 = songsConnection.Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
+                    if (query2 != null)
+                    {
+                        list.Add(new SongItem(query2));
+                    }
+                }
+                else if((MusicSource)e.SourceType == MusicSource.RadioJamendo)
                 {
                     SongItem s = new SongItem();
-                    s.SongId = e.SongId;
+                    s.SourceType = MusicSource.RadioJamendo;
                     s.Title = e.Title;
-                    s.Album = e.Album;
                     s.Artist = e.Artist;
+                    s.Album = e.Album;
                     s.Path = e.Path;
-                    s.SourceType = (MusicSource)e.SourceType;
+                    s.CoverPath = e.ImagePath;
+                    s.SongId = e.SongId;
                     list.Add(s);
-                }
-                var query2 = songsConnection.Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
-                if (query2 != null)
-                {
-                    list.Add(new SongItem(query2));
                 }
             }
             return list;

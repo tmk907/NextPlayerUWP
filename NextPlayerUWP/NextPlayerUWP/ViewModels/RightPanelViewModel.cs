@@ -294,6 +294,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void Delete(object sender, RoutedEventArgs e)
         {
+            if (songs.Count == 1) return;
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }

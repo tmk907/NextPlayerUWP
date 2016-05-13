@@ -198,6 +198,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void Delete(object sender, RoutedEventArgs e)
         {
+            if (songs.Count == 1) return;
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }
@@ -250,8 +251,11 @@ namespace NextPlayerUWP.ViewModels
         public async void RateSong(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            CurrentSong.Rating = Int32.Parse(button.Tag.ToString());
-            await DatabaseManager.Current.UpdateRatingAsync(currentSong.SongId, currentSong.Rating).ConfigureAwait(false);
+            if (currentSong.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
+            {
+                CurrentSong.Rating = Int32.Parse(button.Tag.ToString());
+                await DatabaseManager.Current.UpdateRatingAsync(currentSong.SongId, currentSong.Rating).ConfigureAwait(false);
+            }
         }
 
         public void SavePlaylist()

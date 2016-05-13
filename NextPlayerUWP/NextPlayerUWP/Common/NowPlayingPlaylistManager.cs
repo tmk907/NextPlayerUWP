@@ -33,24 +33,35 @@ namespace NextPlayerUWP.Common
             App.SongUpdated += App_SongUpdated;
         }
 
-        private void PlaybackManager_StreamUpdated(NowPlayingSong song)
-        {
-            SongItem si = songs.Where(s => (s.SongId.Equals(song.SongId) && s.SourceType.Equals(song.SourceType))).FirstOrDefault();
-            if (si != null)
-            {
-                int i = songs.IndexOf(si);
-                songs[i].Album = song.Album;
-                songs[i].Artist = song.Artist;
-                songs[i].CoverPath = song.ImagePath;
-                OnNPChanged();
-            }
-        }
-
         private async void Init()
         {
             songs = await DatabaseManager.Current.GetSongItemsFromNowPlayingAsync();
             songs.CollectionChanged += Songs_CollectionChanged;
             OnNPChanged();
+
+        }
+
+        public static event NPListChangedHandler NPListChanged;
+
+        public static void OnNPChanged()
+        {
+            NPListChanged?.Invoke();
+        }
+
+        private void PlaybackManager_StreamUpdated(NowPlayingSong updatedSong)
+        {
+            SongItem si = songs.Where(s => (s.SongId.Equals(updatedSong.SongId) && s.SourceType.Equals(updatedSong.SourceType))).FirstOrDefault();
+            if (si != null)
+            {
+                int i = songs.IndexOf(si);
+                var temp = songs[i];
+                temp.Album = updatedSong.Album;
+                temp.Artist = updatedSong.Artist;
+                temp.Title = updatedSong.Title;
+                temp.CoverPath = updatedSong.ImagePath;
+                songs[i] = temp;
+                OnNPChanged();
+            }
         }
 
         private async void App_SongUpdated(int id)
@@ -63,6 +74,8 @@ namespace NextPlayerUWP.Common
                 await NotifyChange();
             }
         }
+
+        public ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
         private int removeIndex = 0;
         private int addIndex = 0;
@@ -127,15 +140,6 @@ namespace NextPlayerUWP.Common
                 i++;
             }
         }
-
-        public static event NPListChangedHandler NPListChanged;
-
-        public static void OnNPChanged()
-        {
-            NPListChanged?.Invoke();
-        }
-
-        public ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
         public async Task Add(MusicItem item)
         {

@@ -34,7 +34,16 @@ namespace NextPlayerUWP.Views
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
-            var menu = this.Resources["ContextMenu"] as MenuFlyout;
+            MenuFlyout menu;
+
+            if (ViewModel.IsPlainPlaylist)
+            {
+                menu = this.Resources["ContextMenuPlain"] as MenuFlyout;
+            }
+            else
+            {
+                menu = this.Resources["ContextMenuList"] as MenuFlyout;
+            }
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
         }

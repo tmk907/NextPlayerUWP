@@ -21,19 +21,24 @@
     <Page.Resources>
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=addtoplaylist}"
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
                             Click="{x:Bind ViewModel.Delete}" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
-                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
+                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}"
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=gotoartist}"/>
             <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=gotoalbum}"
                             Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=showdetails}"
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit"
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=edittags}"
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
         </MenuFlyout>
 

@@ -119,6 +119,7 @@
             <converters:BoolToHighlightedItemForeground x:Key="BoolToHighlightedItemForegroundConverter"/>
             <converters:IntToRatingStar x:Key="IntToRatingStarConverter"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <converters:ItemTypeToMenuVisibility x:Key="ItemTypeToMenuVisibilityConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"

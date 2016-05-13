@@ -19,7 +19,7 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
-        <MenuFlyout x:Key="ContextMenu">
+        <MenuFlyout x:Key="ContextMenuPlain">
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
@@ -27,8 +27,29 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" Visibility="{x:Bind ViewModel.IsPlainPlaylist, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Click="{x:Bind ViewModel.DeleteFromPlaylist}" CommandParameter="{Binding}" />-->
+            <MenuFlyoutItem x:Name="MFIDelete" x:Uid="MFIDelete" Text="Delete" 
+                            Click="{x:Bind ViewModel.DeleteFromPlaylist}" CommandParameter="{Binding}" />
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
+                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
+                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+        </MenuFlyout>
+        <MenuFlyout x:Key="ContextMenuList">
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
                             Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />

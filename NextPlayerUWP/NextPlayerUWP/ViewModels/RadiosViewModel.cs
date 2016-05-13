@@ -50,16 +50,17 @@ namespace NextPlayerUWP.ViewModels
             JamendoApi.ApiCalls.Radios.RadiosCall getRadios = new JamendoApi.ApiCalls.Radios.RadiosCall();
             getRadios.ImageSize = new JamendoApi.ApiCalls.Parameters.ImageSizeParameter<JamendoApi.ApiCalls.Parameters.RadioImageSize>(JamendoApi.ApiCalls.Parameters.RadioImageSize.Px150);
             var radiosList = await client.CallAsync(getRadios);
-            if (radiosList.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
+            if (radiosList!=null && radiosList.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
             {
                 foreach (var item in radiosList.Results)
                 {
                     RadioItem r = new RadioItem((int)item.Id, NextPlayerUWPDataLayer.Enums.RadioType.Jamendo, "");
                     r.Name = item.DisplayName;
                     r.ImagePath = item.Image;
-                    r.PlayingNowTitle = "PlayingNow.Name";
-                    r.PlayingNowAlbum = "PlayingNow.AlbumName";
-                    r.PlayingNowArtist = "PlayingNow.ArtistName";
+                    r.PlayingNowTitle = "";
+                    r.PlayingNowAlbum = "";
+                    r.PlayingNowArtist = "";
+                    r.RemainingTime = 0;
                     jamendoRadios.Add(r);
                 }
             }
@@ -71,38 +72,44 @@ namespace NextPlayerUWP.ViewModels
             JamendoApi.JamendoApiClient client = new JamendoApi.JamendoApiClient(AppConstants.JamendoClientId);
             foreach(var radio in Radios)
             {
-                JamendoApi.ApiCalls.Radios.RadioStreamCall radiostream = new JamendoApi.ApiCalls.Radios.RadioStreamCall();
-                radiostream.Id = new JamendoApi.ApiCalls.Parameters.IdParameter((uint)radio.BroadcastId);
-                var streamRadio = await client.CallAsync(radiostream);
-                if (streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
+                if (radio.RemainingTime < (DateTime.Now - radio.StreamUpdatedAt).Milliseconds)
                 {
-                    var stream = streamRadio.Results.FirstOrDefault();
-                    try
+                    JamendoApi.ApiCalls.Radios.RadioStreamCall radiostream = new JamendoApi.ApiCalls.Radios.RadioStreamCall();
+                    radiostream.Id = new JamendoApi.ApiCalls.Parameters.IdParameter((uint)radio.BroadcastId);
+                    var streamRadio = await client.CallAsync(radiostream);
+                    if (streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
                     {
-                        radio.StreamUrl = stream.Stream;
-                    }
-                    catch (Exception ex)
-                    {
+                        var stream = streamRadio.Results.FirstOrDefault();
+                        try
+                        {
+                            radio.StreamUrl = stream.Stream;
+                        }
+                        catch (Exception ex)
+                        {
 
-                    }
-                    radio.PlayingNowTitle = stream.PlayingNow.Name;
-                    radio.PlayingNowAlbum = stream.PlayingNow.AlbumName;
-                    radio.PlayingNowArtist = stream.PlayingNow.ArtistName;
-                    radio.PlayingNowImagePath = stream.PlayingNow.Image;
-                }
-                else
-                {
-                    try
-                    {
-                        radio.PlayingNowTitle = "";
-                        radio.PlayingNowAlbum = "";
-                        radio.PlayingNowArtist = "";
-                        radio.PlayingNowImagePath = AppConstants.AlbumCoverSmall;
-                    }
-                    catch (Exception)
-                    {
+                        }
+                        radio.PlayingNowTitle = stream.PlayingNow.Name;
+                        radio.PlayingNowAlbum = stream.PlayingNow.AlbumName;
+                        radio.PlayingNowArtist = stream.PlayingNow.ArtistName;
+                        radio.PlayingNowImagePath = stream.PlayingNow.Image;
 
-                        throw;
+                        radio.RemainingTime = (int)stream.CallMeBack;
+                        radio.StreamUpdatedAt = DateTime.Now;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            radio.PlayingNowTitle = "";
+                            radio.PlayingNowAlbum = "";
+                            radio.PlayingNowArtist = "";
+                            radio.PlayingNowImagePath = AppConstants.AlbumCoverSmall;
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
                     }
                 }
             }
