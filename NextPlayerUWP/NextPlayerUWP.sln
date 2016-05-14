@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextPlayerUWPDataLayer", "N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextPlayerUWPBackgroundAudioPlayer", "NextPlayerUWPBackgroundAudioPlayer\NextPlayerUWPBackgroundAudioPlayer.csproj", "{DAACA509-1AF5-476C-BED0-AB945229FC53}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFmpegInterop", "..\..\..\..\..\Github\FFmpegInterop\FFmpegInterop\Win10\FFmpegInterop\FFmpegInterop.vcxproj", "{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,44 +43,54 @@ Global
 		{D74D0E71-67FB-4BC2-A32C-CF10A3D493F8}.Release|x86.ActiveCfg = Release|x86
 		{D74D0E71-67FB-4BC2-A32C-CF10A3D493F8}.Release|x86.Build.0 = Release|x86
 		{D74D0E71-67FB-4BC2-A32C-CF10A3D493F8}.Release|x86.Deploy.0 = Release|x86
-		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|ARM.ActiveCfg = Debug|ARM
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|ARM.Build.0 = Debug|ARM
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|x64.ActiveCfg = Debug|x64
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|x64.Build.0 = Debug|x64
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|x86.ActiveCfg = Debug|x86
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Debug|x86.Build.0 = Debug|x86
-		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|Any CPU.ActiveCfg = Release|x86
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|ARM.ActiveCfg = Release|ARM
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|ARM.Build.0 = Release|ARM
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|x64.ActiveCfg = Release|x64
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|x64.Build.0 = Release|x64
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|x86.ActiveCfg = Release|x86
 		{25899887-6252-4635-84B5-0C54C736F0FB}.Release|x86.Build.0 = Release|x86
-		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|ARM.ActiveCfg = Debug|ARM
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|ARM.Build.0 = Debug|ARM
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|x64.ActiveCfg = Debug|x64
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|x64.Build.0 = Debug|x64
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|x86.ActiveCfg = Debug|x86
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Debug|x86.Build.0 = Debug|x86
-		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|Any CPU.ActiveCfg = Release|x86
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|ARM.ActiveCfg = Release|ARM
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|ARM.Build.0 = Release|ARM
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|x64.ActiveCfg = Release|x64
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|x64.Build.0 = Release|x64
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|x86.ActiveCfg = Release|x86
 		{DAACA509-1AF5-476C-BED0-AB945229FC53}.Release|x86.Build.0 = Release|x86
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Debug|ARM.ActiveCfg = Debug|ARM
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Debug|ARM.Build.0 = Debug|ARM
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Debug|x64.ActiveCfg = Debug|x64
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Debug|x64.Build.0 = Debug|x64
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Debug|x86.ActiveCfg = Debug|Win32
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Debug|x86.Build.0 = Debug|Win32
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Release|Any CPU.ActiveCfg = Release|Win32
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Release|ARM.ActiveCfg = Release|ARM
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Release|ARM.Build.0 = Release|ARM
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Release|x64.ActiveCfg = Release|x64
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Release|x64.Build.0 = Release|x64
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Release|x86.ActiveCfg = Release|Win32
+		{9CFA3B3E-B7AF-4629-84E2-C962C5B046B1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tomasz-walecki.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -91,5 +103,8 @@ Global
 		SccProjectUniqueName3 = NextPlayerUWPBackgroundAudioPlayer\\NextPlayerUWPBackgroundAudioPlayer.csproj
 		SccProjectName3 = NextPlayerUWPBackgroundAudioPlayer
 		SccLocalPath3 = NextPlayerUWPBackgroundAudioPlayer
+		SccProjectUniqueName4 = ..\\..\\..\\..\\..\\Github\\FFmpegInterop\\FFmpegInterop\\Win10\\FFmpegInterop\\FFmpegInterop.vcxproj
+		SccProjectName4 = FFmpegInterop
+		SccLocalPath4 = ..\\..\\..\\..\\..\\Github\\FFmpegInterop\\FFmpegInterop\\Win10\\FFmpegInterop
 	EndGlobalSection
 EndGlobal

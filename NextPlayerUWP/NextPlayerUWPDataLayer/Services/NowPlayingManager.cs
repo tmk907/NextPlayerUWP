@@ -1,5 +1,4 @@
-﻿using NextPlayerUWPDataLayer.Services;
-using NextPlayerUWPDataLayer.Constants;
+﻿using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -12,6 +11,8 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using NextPlayerUWPDataLayer.Enums;
 using Windows.System.Threading;
+using Windows.Storage.Streams;
+using Windows.Media.Core;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -32,6 +33,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         private AppState foregroundAppState = AppState.Unknown;
         Jamendo.JamendoRadiosData jRadioData;
+
+        //private FFmpegInteropMSS FFmpegMSS;
 
         public NowPlayingManager()
         {
@@ -78,9 +81,21 @@ namespace NextPlayerUWPDataLayer.Services
             try
             {
                 NowPlayingSong song = playlist.GetCurrentSong();
-                StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                mediaPlayer.AutoPlay = false;
-                mediaPlayer.SetFileSource(file);
+                string type = song.Path.Substring(song.Path.LastIndexOf('.'));
+                if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
+                    type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
+                    type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4")
+                {
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+                    mediaPlayer.AutoPlay = false;
+                    mediaPlayer.SetFileSource(file);
+                }
+                else
+                {
+                    ValueSet message = new ValueSet();
+                    message.Add("test", song.Path);
+                    BackgroundMediaPlayer.SendMessageToBackground(message);
+                }
             }
             catch (Exception e)
             {

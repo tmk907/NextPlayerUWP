@@ -3,7 +3,9 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <!--  <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform> -->
     <ProjectGuid>{25899887-6252-4635-84B5-0C54C736F0FB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -21,7 +23,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <!-- <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -39,7 +41,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+  </PropertyGroup> -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <PlatformTarget>ARM</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
@@ -208,15 +210,9 @@
     <Content Include="Properties\NextPlayerUWPDataLayer.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Windows10\$(PlatformTarget)\bin\avcodec-56.dll" />
-    <Content Include="Windows10\$(PlatformTarget)\bin\avdevice-56.dll" />
-    <Content Include="Windows10\$(PlatformTarget)\bin\avfilter-5.dll" />
-    <Content Include="Windows10\$(PlatformTarget)\bin\avformat-56.dll" />
-    <Content Include="Windows10\$(PlatformTarget)\bin\avutil-54.dll" />
-    <Content Include="Windows10\$(PlatformTarget)\bin\swresample-1.dll" />
-    <Content Include="Windows10\$(PlatformTarget)\bin\swscale-3.dll" />
-  </ItemGroup>
-  <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs.120, Version=14.0">
+      <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Universal</Name>
+    </SDKReference>
     <SDKReference Include="SQLite.UAP.2015, Version=3.10.2">
       <Name>SQLite for Universal App Platform %28SQLite.UAP.2015, Version=3.10.2%29</Name>
     </SDKReference>
@@ -230,30 +226,9 @@
       <HintPath>D:\Github\JamendoApi\JamendoApi\bin\Release\JamendoApi.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <!-- <ItemGroup>
-    <Reference Include="Opusfile.WindowsRuntime">
-      <HintPath>..\..\..\..\Documents\opus-winrt-master\objs\debug\lib\Opusfile.WindowsRuntime.winmd</HintPath>
-    </Reference>
-  </ItemGroup> -->
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
-  <!-- <Choose>
-    <When Condition=" '$(Platform)' == 'x86' ">
-      <ItemGroup>
-        <Content Include=".\Binaries\DebugWin32\Opusfile.WindowsRuntime.dll">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-      </ItemGroup>
-    </When>
-    <When Condition=" '$(Platform)' == 'ARM' ">
-      <ItemGroup>
-        <Content Include=".\Binaries\DebugARM\Opusfile.WindowsRuntime.dll">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-      </ItemGroup>
-    </When>
-  </Choose> -->
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

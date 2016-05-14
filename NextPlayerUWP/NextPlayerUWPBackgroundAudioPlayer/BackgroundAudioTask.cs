@@ -1,6 +1,8 @@
-﻿using NextPlayerUWPDataLayer.Constants;
+﻿using FFmpegInterop;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,9 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Foundation.Collections;
 using Windows.Media;
+using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
 
@@ -209,10 +213,48 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                             //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                         }
                         break;
+                    case "test":
+                        string path = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
+                        await test(path);
+                        break;
                 }
             }
         }
 
+        private FFmpegInteropMSS FFmpegMSS;
+
+        private async Task test(string path)
+        {
+            //path = @"D:\Muzyka\Jean Michel Jarre\Jean Michel Jarre - Aero [DTS]\11 - Aerology.ac3";
+            //path = @"D:\Muzyka\Moja muzyka\jhg.ogg";
+            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+
+
+            IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
+
+            try
+            {
+                // Instantiate FFmpegInteropMSS using the opened local file stream
+                FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
+                MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
+
+                if (mss != null)
+                {
+                    BackgroundMediaPlayer.Current.AutoPlay = false;
+                    // Pass MediaStreamSource to Media Element
+                    BackgroundMediaPlayer.Current.SetMediaSource(mss);
+                    //BackgroundMediaPlayer.Current.Play();
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
 
         private void UpdateUVCOnNewTrack()
         {
@@ -423,4 +465,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
         #endregion
     }
+
+
+    
 }
