@@ -100,6 +100,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            sortAfterOnNavigated = true;
             if (parameter != null)
             {
                 type = MusicItem.ParseType(parameter as string);
@@ -109,7 +110,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
-            if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
+            if (args.NavigationMode == NavigationMode.Back)// || args.NavigationMode == NavigationMode.New)
             {
                 playlist = new ObservableCollection<SongItem>();
                 pageTitle = "";
@@ -148,9 +149,14 @@ namespace NextPlayerUWP.ViewModels
             Playlist.RemoveAt(i);
             await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(item.SongId);
         }
-
+        private bool sortAfterOnNavigated = false;
         public void SortItems(object sender, SelectionChangedEventArgs e)
         {
+            if (sortAfterOnNavigated)
+            {
+                sortAfterOnNavigated = false;
+                return;
+            }
             ComboBoxItemValue value = SelectedComboBoxItem;
             switch (value.Option)
             {
@@ -186,6 +192,9 @@ namespace NextPlayerUWP.ViewModels
                     break;
                 case SortNames.PlayCount:
                     Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
+                    break;
+                case SortNames.TrackNumber:
+                    Sort(s => s.TrackNumber, s => s.TrackNumber, "SongId");
                     break;
                 default:
                     Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");

@@ -445,6 +445,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (autoLoadFromWeb)
                 {
+                    lyricsWebview.Stop();
                     await LoadLyricsFromWebsite();
                 }
             }
@@ -457,10 +458,14 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task LoadLyricsFromWebsite()
         {
+            StatusText = "";
+
             ShowProgressBar = true;
-            StatusText = loader.GetString("Connecting") + "...";
             StatusVisibility = true;
             WebVisibility = false;
+
+            //StatusText = loader.GetString("Connecting") + "...";
+
             string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?action=lyrics&artist=" + artist + "&song=" + title + "&fmt=realjson");
             if (result == null || result == "")
             {
@@ -472,18 +477,27 @@ namespace NextPlayerUWP.ViewModels
             bool isJson = JsonValue.TryParse(result, out jsonList);
             if (isJson)
             {
-                address = jsonList.GetObject().GetNamedString("url");
-                address += "?useskin=wikiamobile";
-                try
+                string l = jsonList.GetObject().GetNamedString("lyrics");
+                if (l== "Not found")
                 {
-                    Uri a = new Uri(address);
-                    lyricsWebview.Navigate(a);
-
-                }
-                catch (FormatException e)
-                {
-                    StatusText = loader.GetString("ConnectionError");
+                    StatusText = loader.GetString("CantFindLyrics");
                     ShowProgressBar = false;
+                }
+                else
+                {
+                    address = jsonList.GetObject().GetNamedString("url");
+                    address += "?useskin=wikiamobile";
+                    try
+                    {
+                        Uri a = new Uri(address);
+                        lyricsWebview.Navigate(a);
+
+                    }
+                    catch (FormatException e)
+                    {
+                        StatusText = loader.GetString("ConnectionError");
+                        ShowProgressBar = false;
+                    }
                 }
             }
             else
@@ -524,7 +538,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.Uri != null)
             {
-                StatusText = "Loading content for " + args.Uri.ToString();
+                //StatusText = "Loading content for " + args.Uri.ToString();
             }
         }
 

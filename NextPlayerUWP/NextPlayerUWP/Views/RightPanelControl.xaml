@@ -416,7 +416,8 @@
                                    Margin="0,0,0,4"
                            />
                         <ScrollViewer Grid.Row="2" 
-                                      Margin="0,0,0,4">
+                                      Margin="0,0,0,4"
+                                      Visibility="{x:Bind ViewModel.StatusVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
                             <TextBlock x:Name="lyricsTB"
                                 Text="{x:Bind ViewModel.Lyrics, Mode=OneWay}"
                                 Margin="4,0,12,0"
@@ -427,17 +428,16 @@
                                 TextAlignment="Center"
                             />
                         </ScrollViewer>
+                        <TextBlock Grid.Row="2" 
+                           Text="{x:Bind ViewModel.StatusText, Mode=OneWay}" 
+                           FontSize="16" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Center"
+                           TextWrapping="WrapWholeWords"
+                           Visibility="{x:Bind ViewModel.StatusVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
                     </Grid>
                     <Grid Grid.Row="1" x:Name="WebGrid"
                           Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                        <!--<TextBlock x:Name="statusTextBlock" 
-                           Text="Connecting..." 
-                           FontSize="30" 
-                           VerticalAlignment="Center" 
-                           HorizontalAlignment="Center"
-                           Visibility="Collapsed"/>-->
-                        <!--<WebView x:Name="lyricsWebview" 
-                                 Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>-->
                     </Grid>
                 </Grid>
             </PivotItem>

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TagLib;
 using Windows.Graphics.Imaging;
@@ -11,7 +10,6 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
 using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWPDataLayer.Services
@@ -209,11 +207,6 @@ namespace NextPlayerUWPDataLayer.Services
 
             return bitmap;
         }
-
-        //public static async Task<BitmapImage> GetCurrentCover(int index)
-        //{
-        //    return await GetCover(NowPlayingPlaylistManager.Current.GetSongItem(index).Path);
-        //}
 
         /// <summary>
         /// UI Thread

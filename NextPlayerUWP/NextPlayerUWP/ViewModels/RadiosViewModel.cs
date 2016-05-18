@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -72,7 +73,7 @@ namespace NextPlayerUWP.ViewModels
             JamendoApi.JamendoApiClient client = new JamendoApi.JamendoApiClient(AppConstants.JamendoClientId);
             foreach(var radio in Radios)
             {
-                if (radio.RemainingTime < (DateTime.Now - radio.StreamUpdatedAt).Milliseconds)
+                if (radio.RemainingTime < (DateTime.Now - radio.StreamUpdatedAt).TotalMilliseconds)
                 {
                     JamendoApi.ApiCalls.Radios.RadioStreamCall radiostream = new JamendoApi.ApiCalls.Radios.RadioStreamCall();
                     radiostream.Id = new JamendoApi.ApiCalls.Parameters.IdParameter((uint)radio.BroadcastId);
@@ -113,6 +114,26 @@ namespace NextPlayerUWP.ViewModels
                     }
                 }
             }
+        }
+
+        public async void PlayNow(object sender, RoutedEventArgs e)
+        {
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await NowPlayingPlaylistManager.Current.NewPlaylist(item);
+            ApplicationSettingsHelper.SaveSongIndex(0);
+            PlaybackManager.Current.PlayNew();
+        }
+
+        public async void PlayNext(object sender, RoutedEventArgs e)
+        {
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await NowPlayingPlaylistManager.Current.AddNext(item);
+        }
+
+        public async void AddToNowPlaying(object sender, RoutedEventArgs e)
+        {
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await NowPlayingPlaylistManager.Current.Add(item);
         }
     }
 }

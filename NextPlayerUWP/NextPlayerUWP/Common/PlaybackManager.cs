@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Threading;
-using NextPlayerUWPDataLayer.Constants;
+﻿using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -245,9 +244,9 @@ namespace NextPlayerUWP.Common
         {
             AddMediaPlayerEventHandlers();
 
-            var startResult = DispatcherHelper.RunAsync(() =>
+            var startResult = Template10.Common.DispatcherWrapper.Current().DispatchAsync(() =>
             {
-                bool result = backgroundAudioTaskStarted.WaitOne(10000);
+                bool result = backgroundAudioTaskStarted.WaitOne(3000);
                 //Send message to initiate playback
                 if (result == true)
                 {
@@ -260,7 +259,7 @@ namespace NextPlayerUWP.Common
                     throw new Exception("Background Audio Task didn't start in expected time");
                 }
             });
-            startResult.Completed = new AsyncActionCompletedHandler(BackgroundTaskInitializationCompleted);
+            //startResult.Completed = new AsyncActionCompletedHandler(BackgroundTaskInitializationCompleted);
         }
 
         private void BackgroundTaskInitializationCompleted(IAsyncAction action, AsyncStatus status)
@@ -340,12 +339,11 @@ namespace NextPlayerUWP.Common
         private void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
         {
             var currentState = sender.CurrentState; // cache outside of completion or you might get a different value
-            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
             {
                 UpdateTransportControls(currentState);
-
             });
-            }
+        }
 
         private void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
@@ -354,8 +352,8 @@ namespace NextPlayerUWP.Common
                 switch (key)
                 {
                     case AppConstants.SongIndex:
-                        
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+
+                        Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
                         {
                             int index = Int32.Parse(e.Data[key].ToString());
                             CurrentSongIndex = index;
@@ -363,7 +361,7 @@ namespace NextPlayerUWP.Common
                         });
                         break;
                     case AppConstants.MediaOpened:
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
                         {
                             OnMediaPlayerMediaOpened(CurrentPlayer.NaturalDuration);
                             //TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
@@ -377,7 +375,7 @@ namespace NextPlayerUWP.Common
                         });
                         break;
                     case AppConstants.Position:
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
                         {
                             TimeSpan result = TimeSpan.Zero;
                             TimeSpan.TryParse(e.Data[key].ToString(), out result);
@@ -385,13 +383,13 @@ namespace NextPlayerUWP.Common
                         });
                         break;
                     case AppConstants.PlayerClosed:
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
                         {
                             OnMediaPlayerMediaClosed();
                         });
                         break;
                     case AppConstants.StreamUpdated:
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
                         {
                             string serialized =e.Data[key].ToString();
                             var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<NowPlayingSong>(serialized);

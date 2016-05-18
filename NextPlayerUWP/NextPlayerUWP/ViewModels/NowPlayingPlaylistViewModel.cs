@@ -28,7 +28,10 @@ namespace NextPlayerUWP.ViewModels
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
             int i = ApplicationSettingsHelper.ReadSongIndex();
-            CurrentSong = songs[i];
+            if (i<songs.Count && i >= 0)
+            {
+                CurrentSong = songs[i];
+            }
             CoverUri = SongCoverManager.Instance.GetFirst();
         }
 
@@ -92,7 +95,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
+        public override async Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
             //App.ChangeRightPanelVisibility(true);
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
@@ -106,10 +109,10 @@ namespace NextPlayerUWP.ViewModels
                 pageState[nameof(positionKey)] = positionKey;
             }
 
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
-        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             //App.ChangeRightPanelVisibility(false);
             CoverUri = SongCoverManager.Instance.GetCurrent();
@@ -123,7 +126,7 @@ namespace NextPlayerUWP.ViewModels
                 positionKey = (string)state[nameof(positionKey)];
             }
 
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
         private void ScrollAfterTrackChanged(int index)

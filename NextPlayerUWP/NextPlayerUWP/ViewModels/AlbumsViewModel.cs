@@ -1,32 +1,22 @@
-﻿using GalaSoft.MvvmLight.Command;
-using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
-    
     public class AlbumsViewModel : MusicViewModelBase
     {
         private delegate void StartLookingForCovers();
         private event StartLookingForCovers StartLookingForCoversEvent;
         private void OnDataLoaded()
         {
-            if (StartLookingForCoversEvent != null)
-            {
-                StartLookingForCoversEvent();
-            }
+            StartLookingForCoversEvent?.Invoke();
         }
 
         private bool isRunning = false;
@@ -95,7 +85,7 @@ namespace NextPlayerUWP.ViewModels
                 GroupedAlbums = gr;
             }
 
-            OnDataLoaded();
+            //OnDataLoaded();
         }
 
         private async void MediaImport_MediaImported(string s)

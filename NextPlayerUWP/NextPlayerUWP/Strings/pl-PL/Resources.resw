@@ -525,4 +525,22 @@
   <data name="AppBarButtonSave.Label" xml:space="preserve">
     <value>Zapisz</value>
   </data>
+  <data name="TBRadio" xml:space="preserve">
+    <value>Radio</value>
+  </data>
+  <data name="PageHeaderRadios" xml:space="preserve">
+    <value>Radio</value>
+  </data>
+  <data name="TBOnAir" xml:space="preserve">
+    <value>Na antenie:</value>
+  </data>
+  <data name="TBJamendoRadio" xml:space="preserve">
+    <value>Jamendo Music</value>
+  </data>
+  <data name="CantFindLyrics" xml:space="preserve">
+    <value>Nie znaleziono tekstu</value>
+  </data>
+  <data name="TrackNumber" xml:space="preserve">
+    <value>Numer utworu</value>
+  </data>
 </root>

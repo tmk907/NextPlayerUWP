@@ -18,19 +18,19 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
-        <!--<MenuFlyout x:Key="ContextMenu">
-            --><!--<MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
+        <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
                             Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
                             Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
+            <!--<MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
-                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>-->
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>--><!--
-        </MenuFlyout>-->
+                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+        </MenuFlyout>
         <DataTemplate x:Key="RadioItemTemplate" x:DataType="data:RadioItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
@@ -86,9 +86,19 @@
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="0"/>
+                <RowDefinition Height="48"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock 
+                            x:Uid="TBJamendoRadio"
+                            Text="Jamendo radio" 
+                            Margin="16"
+                            FontSize="17" 
+                            TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+            </Grid>
             <mycontrols:AlternatingRowListView x:Name="RadiosListView"
                       Grid.Row="1"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"

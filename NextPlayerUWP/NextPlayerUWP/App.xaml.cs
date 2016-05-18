@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Threading;
-using Microsoft.HockeyApp;
+﻿using Microsoft.HockeyApp;
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
@@ -9,25 +8,20 @@ using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
+using Template10.Common;
+using Template10.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
-using Template10.Common;
 
 namespace NextPlayerUWP
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
-
     public delegate void SongUpdatedHandler(int id);
     public delegate void AppThemeChangedHandler(bool isLight);
 
-    sealed partial class App : Template10.Common.BootStrapper
+    sealed partial class App : BootStrapper
     {
         public static event SongUpdatedHandler SongUpdated;
         public static void OnSongUpdated(int id)
@@ -42,6 +36,7 @@ namespace NextPlayerUWP
         
 
         public static bool IsLightThemeOn = false;
+        private static AlbumArtFinder albumArtFinder;
 
         public App()
         {
@@ -88,6 +83,8 @@ namespace NextPlayerUWP
             {
 
             }
+
+            albumArtFinder = new AlbumArtFinder();
             this.UnhandledException += App_UnhandledException;
         }
 
@@ -134,6 +131,17 @@ namespace NextPlayerUWP
             return true;
         }
 
+        //public override UIElement CreateRootElement(IActivatedEventArgs e)
+        //{
+        //    var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);
+        //    return new ModalDialog
+        //    {
+        //        DisableBackButtonWhenModal = true,
+        //        Content = new Views.Shell(service),
+        //        ModalContent = new Views.Busy(),
+        //    };
+        //}
+
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             Debug.WriteLine("OnInitializeAsync");
@@ -141,7 +149,7 @@ namespace NextPlayerUWP
             //Logger.SaveToFile();
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
-
+            #region AddPageKeys
             var keys = PageKeys<Pages>();
             if (!keys.ContainsKey(Pages.AddToPlaylist))
                 keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
@@ -175,20 +183,37 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Songs, typeof(SongsView));
             if (!keys.ContainsKey(Pages.TagsEditor))
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
-
-            DispatcherHelper.Initialize();
+            #endregion
+            //DispatcherHelper.Initialize();
 
             //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
-            if (NeedsNewNavigationService(args))
+
+            if (Window.Current.Content as ModalDialog == null)
             {
                 var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-
-                if (Window.Current.Content as Shell == null)
+                // create modal root
+                Window.Current.Content = new ModalDialog
                 {
-                    Window.Current.Content = new Views.Shell(nav);
-                }
-                //Logger.Save("NeedsNewNavigationService");
+                    DisableBackButtonWhenModal = true,
+                    Content = new Views.Shell(nav),
+                    ModalContent = new Views.Busy(),
+                };
             }
+
+            //if (NeedsNewNavigationService(args))
+            //{
+            //    var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+            //    var s = BootStrapper.Current.NavigationService.FrameFacade.GetNavigationState();
+            //    if (Window.Current.Content as Shell == null)
+            //    {
+            //        Window.Current.Content = new Views.Shell(nav);
+            //    }
+            //    //Logger.Save("NeedsNewNavigationService");
+            //}
+            //else
+            //{
+
+            //}
             //Logger.SaveToFile();
 
             try
@@ -228,13 +253,15 @@ namespace NextPlayerUWP
             Logger.Save("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
             Logger.SaveToFile();
             await SongCoverManager.Instance.Initialize();
-            if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser
-                || args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+            if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
             {
                 await TileManager.ManageSecondaryTileImages();
                 if (!IsFirstRun())
                 {
-                    //SendLogs();
+                    Debug.WriteLine("before albumArtFinder.StartLooking");
+                    albumArtFinder.StartLooking();
+                    Debug.WriteLine("after albumArtFinder.StartLooking");
                 }
             }
 
@@ -283,12 +310,12 @@ namespace NextPlayerUWP
                     NavigationService.Navigate(page, parameter);
                     break;
                 case AdditionalKinds.Primary:
-                    if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser
-                        || args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+                    if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                        args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                     {
                         //Logger.Save("OnStart primary navigate");
                         //Logger.SaveToFile();
-                            NavigationService.Navigate(Pages.Folders);
+                            NavigationService.Navigate(Pages.Playlists);
                     }
                     //Logger.Save("OnStart primary ");
                     //Logger.SaveToFile();
@@ -296,15 +323,15 @@ namespace NextPlayerUWP
                 case AdditionalKinds.Toast:
                     var toastargs = args as ToastNotificationActivatedEventArgs;
                     
-                    NavigationService.Navigate(Pages.Songs);
+                    NavigationService.Navigate(Pages.Playlists);
                     break;
                 default:
                     //Logger.Save("OnStart default");
                     //Logger.SaveToFile();
-                    if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser
-                        || args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+                    if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                        args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                     {
-                        NavigationService.Navigate(Pages.Genres);
+                        NavigationService.Navigate(Pages.Playlists);
                     }
                     break;
             }
@@ -340,7 +367,7 @@ namespace NextPlayerUWP
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             try
             {
-                SongCoverManager.Instance.Initialize().RunSynchronously();
+                //SongCoverManager.Instance.Initialize().Wait();
             }
             catch (Exception ex)
             {
@@ -369,7 +396,7 @@ namespace NextPlayerUWP
         private void FirstRunSetup()
         {
             DatabaseManager.Current.CreateDatabase();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 1);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
             CreateDefaultSmartPlaylists();
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
@@ -379,7 +406,7 @@ namespace NextPlayerUWP
             var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
             ColorsHelper ch = new ColorsHelper();
             ch.SaveUserAccentColor(color);
-            ch.SetAccentColorShades(color);
+            //ch.SetAccentColorShades(color);
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
 

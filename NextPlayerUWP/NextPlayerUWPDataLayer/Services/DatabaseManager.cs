@@ -957,6 +957,17 @@ namespace NextPlayerUWPDataLayer.Services
             return new PlaylistItem(id, true, p.Name);
         }
 
+        public async Task<List<string>> GetImportedPlaylistPathsAsync()
+        {
+            List<string> list = new List<string>();
+            var query = await connectionAsync.Table<ImportedPlaylistsTable>().ToListAsync();
+            foreach(var q in query)
+            {
+                list.Add(q.Path);
+            }
+            return list;
+        }
+
         #endregion
 
         public async Task AddToPlaylist(int playlistId, System.Linq.Expressions.Expression<Func<SongsTable, bool>> condition, Func<SongsTable,object> sort)
@@ -1105,6 +1116,16 @@ namespace NextPlayerUWPDataLayer.Services
             };
 
            connection.Insert(newEntry);
+        }
+
+        public int InsertImportedPlaylist(string name, string path, int plainId)
+        {
+            var p = new ImportedPlaylistsTable() {
+                Name = name,
+                Path = path,
+                PlainPlaylistId = plainId
+            };
+            return connection.Insert(p);
         }
 
         #endregion
@@ -1259,9 +1280,14 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.ExecuteAsync("UPDATE SongsTable SET PlayCount = ?, LastPlayed = ? WHERE SongId = ?", playCount, lastPlayed, id);
         }
 
+        public async Task UpdateSongDurationAsync(int songId, TimeSpan duration)
+        {
+            await connectionAsync.ExecuteAsync("UPDATE SongsTable SET Duration = ? WHERE SongId = ?", duration , songId);
+        }
+
         #endregion
 
-        
+
 
         public async Task CacheTrackScrobbleAsync(string function, string artist, string title, string timestamp)
         {
@@ -1421,6 +1447,8 @@ namespace NextPlayerUWPDataLayer.Services
         {
             connection.Execute("ALTER TABLE NowPlayingTable ADD COLUMN SourceType INTEGER");
             connection.Execute("UPDATE NowPlayingTable SET SourceType = 1");
+            connection.CreateTable<ImportedPlaylistsTable>();
         }
+        
     }
 }

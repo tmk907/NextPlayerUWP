@@ -200,6 +200,7 @@
     <Compile Include="Tables\CachedScrobble.cs" />
     <Compile Include="Tables\FoldersTable.cs" />
     <Compile Include="Tables\GenresTable.cs" />
+    <Compile Include="Tables\ImportedPlaylistsTable.cs" />
     <Compile Include="Tables\NowPlayingTable.cs" />
     <Compile Include="Tables\PlainPlaylistEntryTable.cs" />
     <Compile Include="Tables\PlainPlaylistsTable.cs" />

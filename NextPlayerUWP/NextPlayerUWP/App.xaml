@@ -79,12 +79,12 @@
             </ResourceDictionary.ThemeDictionaries>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:NextPlayerUWP.ViewModels" />
 
-            <SolidColorBrush x:Key="UserAccentBrush1Lighter" Color="Orange"/>
+            <!--<SolidColorBrush x:Key="UserAccentBrush1Lighter" Color="Orange"/>
             <SolidColorBrush x:Key="UserAccentBrush2Lighter" Color="Orange"/>
             <SolidColorBrush x:Key="UserAccentBrush3Lighter" Color="Orange"/>
             <SolidColorBrush x:Key="UserAccentBrush1Darker" Color="Orange"/>
             <SolidColorBrush x:Key="UserAccentBrush2Darker" Color="Orange"/>
-            <SolidColorBrush x:Key="UserAccentBrush3Darker" Color="Orange"/>
+            <SolidColorBrush x:Key="UserAccentBrush3Darker" Color="Orange"/>-->
 
             <SolidColorBrush x:Key="PageHeaderBackground" Color="{ThemeResource SystemChromeMediumColor}"/>
 

@@ -19,6 +19,17 @@ namespace NextPlayerUWPDataLayer.Services
 {
     public delegate void MediaImportedHandler(string s);
 
+    class ImportedPlaylist
+    {
+        public string name { get; set; }
+        public string path { get; set; }
+        public List<string> paths { get; set; }
+        public ImportedPlaylist()
+        {
+            paths = new List<string>();
+        }
+    }
+
     public class MediaImport
     {
         public static event MediaImportedHandler MediaImported;
@@ -34,6 +45,8 @@ namespace NextPlayerUWPDataLayer.Services
         private Dictionary<string, Tuple<int, int>> dbFiles;
         private int songsAdded;
         private IProgress<int> progress;
+        private List<string> importedPlaylistPaths;
+        private List<ImportedPlaylist> importedPlaylists;
 
         private async Task AddFilesFromFolder(StorageFolder folder)
         {
@@ -54,7 +67,16 @@ namespace NextPlayerUWPDataLayer.Services
             foreach (var file in files)
             {
                 string type = file.FileType.ToLower();
-                if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
+                
+                if(type == ".m3u")// || type == ".wpl" || type == ".zpl"
+                {
+                    if (!importedPlaylistPaths.Contains(file.Path))
+                    {
+                        var ip = await ParseM3UPlaylist(file, folder.Path);
+                        importedPlaylists.Add(ip);
+                    }
+                }
+                else if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
                     type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
                     type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4" ||
                     type == ".ogg" || type == ".ape" || type == ".wv" || type == ".opus" ||
@@ -96,6 +118,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
             }
+
             songsAdded += newSongs.Count;
             progress.Report(songsAdded);
             var folders = await folder.GetFoldersAsync();
@@ -110,6 +133,8 @@ namespace NextPlayerUWPDataLayer.Services
             dbFiles = DatabaseManager.Current.GetFilePaths();
             songsAdded = 0;
             progress = p;
+            importedPlaylistPaths = await DatabaseManager.Current.GetImportedPlaylistPathsAsync();
+            importedPlaylists = new List<ImportedPlaylist>();
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
             foreach (var folder in library.Folders)
@@ -118,6 +143,12 @@ namespace NextPlayerUWPDataLayer.Services
             }
 
             await DatabaseManager.Current.UpdateTables();
+
+            foreach(var ip in importedPlaylists)
+            {
+                await SavePlaylist(ip);
+            }
+
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             OnMediaImported("Update");
             SendToast();
@@ -382,6 +413,87 @@ namespace NextPlayerUWPDataLayer.Services
         public static async Task UpdateFileTags(SongData songData)
         {
 
+        }
+
+        private async Task<ImportedPlaylist> ParseM3UPlaylist(StorageFile file, string folderPath)
+        {
+            string folderPath2 = Path.GetDirectoryName(file.Path);
+            ImportedPlaylist iplaylist = new ImportedPlaylist();
+            iplaylist.name = file.DisplayName;
+            iplaylist.path = file.Path;
+            using (var stream = await file.OpenStreamForReadAsync())
+            {
+                StreamReader streamReader = new StreamReader(stream);
+                bool isExtended = false;
+                while (!streamReader.EndOfStream)
+                {
+                    string line = streamReader.ReadLine();
+                    if (line.StartsWith("#"))
+                    {
+                        if (line.StartsWith("#EXTM3U"))
+                        {
+                            isExtended = true;
+                        }
+                        else if (line.StartsWith("#EXTINF"))
+                        {
+
+                        }
+                    }
+                    else if (line.StartsWith("http"))
+                    {
+
+                    }
+                    else
+                    {
+                        if (line.StartsWith(@"\"))
+                        {
+                            iplaylist.paths.Add(folderPath + line);
+                        }
+                        else
+                        {
+                            if (Path.IsPathRooted(line))
+                            {
+                                iplaylist.paths.Add(line);
+                            }
+                            else
+                            {
+                                iplaylist.paths.Add(folderPath + @"\" + line);
+                            }
+                        }
+                    }
+                }
+            }
+            return iplaylist;
+        }
+
+        private async Task SavePlaylist(ImportedPlaylist iplaylist)
+        {
+            if (iplaylist.paths.Count > 0)
+            {
+                string folderPath = Path.GetDirectoryName(iplaylist.path);
+                var songs = await DatabaseManager.Current.GetSongItemsFromFolderAsync(folderPath);
+                var res = songs.Where(s => iplaylist.paths.Contains(s.Path));
+                if (res.Count() == 0)
+                {
+                    DatabaseManager.Current.InsertImportedPlaylist(iplaylist.name, iplaylist.path, -1);
+                }
+                else
+                {
+                    int plainId = DatabaseManager.Current.InsertPlainPlaylist(iplaylist.name);
+                    int id = DatabaseManager.Current.InsertImportedPlaylist(iplaylist.name, iplaylist.path, plainId);
+                    int place = 0;
+                    foreach(var r in res)
+                    {
+                        await DatabaseManager.Current.InsertPlainPlaylistEntryAsync(plainId, r.SongId, place);
+                        place++;
+                    }
+                }
+                
+            }
+            else
+            {
+                DatabaseManager.Current.InsertImportedPlaylist(iplaylist.name, iplaylist.path, -1);
+            }
         }
     }
 }

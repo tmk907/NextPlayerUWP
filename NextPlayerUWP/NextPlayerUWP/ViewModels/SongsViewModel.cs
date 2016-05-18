@@ -180,6 +180,9 @@ namespace NextPlayerUWP.ViewModels
                 case SortNames.PlayCount:
                     Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
                     break;
+                case SortNames.TrackNumber:
+                    Sort(s => s.TrackNumber, s => s.TrackNumber, "SongId");
+                    break;
                 default:
                     Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
                     break;

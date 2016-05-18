@@ -196,7 +196,7 @@ namespace NextPlayerUWP.ViewModels
             //TimeEnd = duration;
         }
 
-        private void PlaybackManager_MediaPlayerMediaOpened(TimeSpan duration)
+        private async void PlaybackManager_MediaPlayerMediaOpened(TimeSpan duration)
         {
             if (!_timer.IsEnabled)
             {
@@ -206,6 +206,11 @@ namespace NextPlayerUWP.ViewModels
             TimeEnd = duration;
             SliderValue = 0.0;
             SliderMaxValue = (int)Math.Round(duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+            if (song.Duration == TimeSpan.Zero && song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
+            {
+                song.Duration = timeEnd;
+                await DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd).ConfigureAwait(false);
+            }
         }
 
         private void PlaybackManager_MediaPlayerMediaClosed()
@@ -218,7 +223,7 @@ namespace NextPlayerUWP.ViewModels
             CoverUri = cacheUri;
         }
 
-        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedToAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
@@ -231,10 +236,10 @@ namespace NextPlayerUWP.ViewModels
             CoverUri = SongCoverManager.Instance.GetCurrent();
             //cover
             ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
-        public override Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
+        public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
             NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedFromAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
@@ -247,7 +252,7 @@ namespace NextPlayerUWP.ViewModels
             {
 
             }
-            return base.OnNavigatedFromAsync(state, suspending);
+            await Task.CompletedTask;
         }
 
         #region Slider Timer
