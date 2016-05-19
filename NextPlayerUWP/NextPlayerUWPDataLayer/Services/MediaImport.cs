@@ -9,11 +9,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TagLib;
 using Windows.Data.Xml.Dom;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Notifications;
+
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -73,6 +75,22 @@ namespace NextPlayerUWPDataLayer.Services
                     if (!importedPlaylistPaths.Contains(file.Path))
                     {
                         var ip = await ParseM3UPlaylist(file, folder.Path);
+                        importedPlaylists.Add(ip);
+                    }
+                }
+                else if (type == ".wpl")
+                {
+                    if (!importedPlaylistPaths.Contains(file.Path))
+                    {
+                        var ip = await ParseWPLPlaylist(file, folder.Path);
+                        importedPlaylists.Add(ip);
+                    }
+                }
+                else if (type == ".pls")
+                {
+                    if (!importedPlaylistPaths.Contains(file.Path))
+                    {
+                        var ip = await ParsePLSPlaylist(file, folder.Path);
                         importedPlaylists.Add(ip);
                     }
                 }
@@ -417,7 +435,6 @@ namespace NextPlayerUWPDataLayer.Services
 
         private async Task<ImportedPlaylist> ParseM3UPlaylist(StorageFile file, string folderPath)
         {
-            string folderPath2 = Path.GetDirectoryName(file.Path);
             ImportedPlaylist iplaylist = new ImportedPlaylist();
             iplaylist.name = file.DisplayName;
             iplaylist.path = file.Path;
@@ -445,22 +462,71 @@ namespace NextPlayerUWPDataLayer.Services
                     }
                     else
                     {
-                        if (line.StartsWith(@"\"))
+                        iplaylist.paths.Add(CreateFullFilePath(line, folderPath));
+                    }
+                }
+            }
+            return iplaylist;
+        }
+
+        
+
+        private async Task<ImportedPlaylist> ParseWPLPlaylist(StorageFile file, string folderPath)
+        {
+            ImportedPlaylist iplaylist = new ImportedPlaylist();
+            iplaylist.name = file.DisplayName;
+            iplaylist.path = file.Path;
+            using (var stream = await file.OpenStreamForReadAsync())
+            {
+                try
+                {
+                    var doc = XDocument.Load(stream).Descendants("body").Elements("seq").Elements("media");
+                    foreach (var media in doc)
+                    {
+                        var src = media.Attribute("src").Value;
+                        iplaylist.paths.Add(CreateFullFilePath(src, folderPath));
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return iplaylist;
+        }
+
+        private async Task<ImportedPlaylist> ParsePLSPlaylist(StorageFile file, string folderPath)
+        {
+            ImportedPlaylist iplaylist = new ImportedPlaylist();
+            iplaylist.name = file.DisplayName;
+            iplaylist.path = file.Path;
+            using (var stream = await file.OpenStreamForReadAsync())
+            {
+                StreamReader streamReader = new StreamReader(stream);
+                if (!streamReader.EndOfStream)
+                {
+                    string header = streamReader.ReadLine();
+                    if (header != "[playlist]")
+                    {
+                        return iplaylist;
+                    }
+                }
+                while (!streamReader.EndOfStream)
+                {
+                    string line = streamReader.ReadLine();
+                    if (line.StartsWith("File"))
+                    {
+                        string path = line.Substring(line.IndexOf('=') + 1);
+                        if (path.StartsWith("http"))
                         {
-                            iplaylist.paths.Add(folderPath + line);
+
                         }
                         else
                         {
-                            if (Path.IsPathRooted(line))
-                            {
-                                iplaylist.paths.Add(line);
-                            }
-                            else
-                            {
-                                iplaylist.paths.Add(folderPath + @"\" + line);
-                            }
+                            iplaylist.paths.Add(CreateFullFilePath(path, folderPath));
                         }
                     }
+                    
                 }
             }
             return iplaylist;
@@ -494,6 +560,41 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 DatabaseManager.Current.InsertImportedPlaylist(iplaylist.name, iplaylist.path, -1);
             }
+        }
+
+        private static string CreateFullFilePath(string filePath, string folderPath)
+        {
+            string fullpath = "";
+            if (filePath.StartsWith(@"\"))
+            {
+                fullpath = folderPath + filePath;
+            }
+            else
+            {
+                bool isRooted = false;
+                try
+                {
+                    isRooted = Path.IsPathRooted(filePath);
+                }
+                catch (Exception) { }
+                if (isRooted)
+                {
+                    fullpath = filePath;
+                }
+                else if (filePath.StartsWith(@"..\"))
+                {
+                    try
+                    {
+                        fullpath = Path.GetFullPath(folderPath + @"\" + filePath);
+                    }
+                    catch (Exception) { }
+                }
+                else
+                {
+                    fullpath = folderPath + @"\" + filePath;
+                }
+            }
+            return fullpath;
         }
     }
 }

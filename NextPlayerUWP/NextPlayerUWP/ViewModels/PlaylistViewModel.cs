@@ -110,7 +110,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
-            if (args.NavigationMode == NavigationMode.Back)// || args.NavigationMode == NavigationMode.New)
+            if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
             {
                 playlist = new ObservableCollection<SongItem>();
                 pageTitle = "";
