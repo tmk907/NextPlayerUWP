@@ -40,13 +40,13 @@ namespace NextPlayerUWP.Common
                 {
                     AddMediaPlayerEventHandlers();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     HockeyProxy.TrackEvent("PlaybackManager constructor AddMediaPlayerEventHandlers " + ex.Message);
                 }
             }
-            App.Current.Resuming += Current_Resuming;
-            App.Current.Suspending += Current_Suspending;
+            //App.Current.Resuming += Current_Resuming;
+            //App.Current.Suspending += Current_Suspending;
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)

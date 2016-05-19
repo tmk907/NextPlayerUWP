@@ -28,6 +28,12 @@ namespace NextPlayerUWP.ViewModels
         public string Path { get; set; }
     }
 
+    public class LanguageItem
+    {
+        public string Name { get; set; }
+        public string Code { get; set; }
+    }
+
     public class SettingsViewModel : Template10.Mvvm.ViewModelBase
     {
         public SettingsViewModel()
@@ -36,6 +42,22 @@ namespace NextPlayerUWP.ViewModels
             PackageId packageId = package.Id;
             PackageVersion version = packageId.Version;
             AppVersion = string.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+
+            Languages = new ObservableCollection<LanguageItem>();
+            foreach (var code in Windows.Globalization.ApplicationLanguages.ManifestLanguages)
+            {
+                string name = "unknown";
+                languageDescriptions.TryGetValue(code.Substring(0, 2), out name);
+                Languages.Add(new LanguageItem() { Code = code, Name = name });
+            }
+            string primaryCode = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
+            foreach (var l in languages)
+            {
+                if (l.Code == primaryCode)
+                {
+                    SelectedLanguage = l;
+                }
+            }
         }
 
         private bool initialization = false;
@@ -144,6 +166,27 @@ namespace NextPlayerUWP.ViewModels
                     MusicLibraryFolders.Add(new MusicFolder() { Name = f.DisplayName, Path = f.Path });
                 }
             }
+
+            //if (languages.Count == 0)
+            //{
+            //    Languages = new ObservableCollection<LanguageItem>();
+            //    foreach(var code in Windows.Globalization.ApplicationLanguages.ManifestLanguages)
+            //    {
+            //        string name = "unknown";
+            //        languageDescriptions.TryGetValue(code.Substring(0, 2), out name);
+            //        Languages.Add(new LanguageItem() { Code = code, Name = name });
+            //    }
+            //}
+            //string primaryCode = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
+            //foreach(var l in languages)
+            //{
+            //    if (l.Code == primaryCode)
+            //    {
+            //        SelectedLanguage = new LanguageItem() { Code = l.Code, Name = l.Name };
+            //    }
+            //}
+
+
 
             //About
             if (Microsoft.Services.Store.Engagement.Feedback.IsSupported)
@@ -385,9 +428,44 @@ namespace NextPlayerUWP.ViewModels
             ch.SaveUserAccentColor(brush.Color);
         }
 
+        private Dictionary<string, string> languageDescriptions = new Dictionary<string, string>()
+        {
+            {"cs","čeština" },
+            {"de","Deutsch" },
+            {"en","English" },
+            {"es","Español" },
+            {"fr","français" },
+            {"id","Bahasa Indonesia" },
+            {"it","Italiano" },
+            {"pl","Polski" },
+            {"pt","Português" },
+            {"ru","русский" },
+        };
+
+        private ObservableCollection<LanguageItem> languages = new ObservableCollection<LanguageItem>();
+        public ObservableCollection<LanguageItem> Languages
+        {
+            get { return languages; }
+            set { Set(ref languages, value); }
+        }
+
+        private LanguageItem selectedLanguage = new LanguageItem();
+        public LanguageItem SelectedLanguage
+        {
+            get { return selectedLanguage; }
+            set { Set(ref selectedLanguage, value); }
+        }
+
+        public void ChangeLanguage(object sender, SelectionChangedEventArgs e)
+        {
+            if (Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride != selectedLanguage.Code)
+            {
+                Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = selectedLanguage.Code;
+            }
+        }
         #endregion
 
-        #region About
+            #region About
         private string appVersion = "";
         public string AppVersion
         {

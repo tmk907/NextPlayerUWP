@@ -1,19 +1,15 @@
-﻿using GalaSoft.MvvmLight.Command;
-using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
@@ -160,8 +156,11 @@ namespace NextPlayerUWP.ViewModels
         public async void RateSong(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            Song.Rating = Int32.Parse(button.Tag.ToString());
-            await DatabaseManager.Current.UpdateRatingAsync(song.SongId, song.Rating).ConfigureAwait(false);
+            if (song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
+            {
+                Song.Rating = Int32.Parse(button.Tag.ToString());
+                await DatabaseManager.Current.UpdateRatingAsync(song.SongId, song.Rating).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -310,6 +309,7 @@ namespace NextPlayerUWP.ViewModels
         {
             System.Diagnostics.Debug.WriteLine("NowPlayingVM OnNavigatedToAsync");
             App.ChangeBottomPlayerVisibility(false);
+            CoverUri = SongCoverManager.Instance.GetCurrent();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
@@ -326,7 +326,7 @@ namespace NextPlayerUWP.ViewModels
             }
 
             Song =  NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            CoverUri = SongCoverManager.Instance.GetCurrent();
+            
             RepeatMode = Repeat.CurrentState();
             ShuffleMode = Shuffle.CurrentState();
 

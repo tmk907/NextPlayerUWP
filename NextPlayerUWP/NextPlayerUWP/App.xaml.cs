@@ -14,6 +14,7 @@ using Template10.Common;
 using Template10.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Globalization;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP
@@ -83,7 +84,6 @@ namespace NextPlayerUWP
             {
 
             }
-
             albumArtFinder = new AlbumArtFinder();
             this.UnhandledException += App_UnhandledException;
         }
@@ -145,6 +145,7 @@ namespace NextPlayerUWP
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             Debug.WriteLine("OnInitializeAsync");
+
             //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
             //Logger.SaveToFile();
             ColorsHelper ch = new ColorsHelper();
@@ -478,13 +479,13 @@ namespace NextPlayerUWP
         public static void ChangeRightPanelVisibility(bool visible)
         {
             if (Window.Current.Content == null) return;
-            ((Shell)Window.Current.Content).ChangeRightPanelVisibility(visible);
+            ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeRightPanelVisibility(visible);
         }
 
         public static void ChangeBottomPlayerVisibility(bool visible)
         {
             if (Window.Current.Content == null) return;
-            ((Shell)Window.Current.Content).ChangeBottomPlayerVisibility(visible);
+            ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
         }
 
 

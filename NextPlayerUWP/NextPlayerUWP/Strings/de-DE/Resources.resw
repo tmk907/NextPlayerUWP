@@ -139,7 +139,7 @@
     <value>Zu Wiedergabeliste hinzufügen</value>
   </data>
   <data name="ButtonCancel.Content" xml:space="preserve">
-    <value>ABBRUCH</value>
+    <value>Abbruch</value>
   </data>
   <data name="ButtonPlayNext.Content" xml:space="preserve">
     <value>Nächstes abspielen</value>
@@ -157,7 +157,7 @@
     <value>Update</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>ABBRUCH</value>
+    <value>Abbruch</value>
   </data>
   <data name="Composer" xml:space="preserve">
     <value>Komponist</value>
@@ -172,7 +172,7 @@
     <value>Speichern</value>
   </data>
   <data name="ContentDialogEditAlbum.SecondaryButtonText" xml:space="preserve">
-    <value>ABBRUCH</value>
+    <value>Abbruch</value>
   </data>
   <data name="ContentDialogEditAlbum.Title" xml:space="preserve">
     <value>Bearbeiten</value>
@@ -181,7 +181,7 @@
     <value>Speichern</value>
   </data>
   <data name="ContentDialogEditName.SecondaryButtonText" xml:space="preserve">
-    <value>ABBRUCH</value>
+    <value>Abbruch</value>
   </data>
   <data name="ContentDialogEditName.Title" xml:space="preserve">
     <value>Name bearbeiten</value>
@@ -190,7 +190,7 @@
     <value>Speichern</value>
   </data>
   <data name="ContentDialogNewPlaylist.SecondaryButtonText" xml:space="preserve">
-    <value>ABBRUCH</value>
+    <value>Abbruch</value>
   </data>
   <data name="ContentDialogNewPlaylist.Title" xml:space="preserve">
     <value>Neue Wiedergabeliste</value>
@@ -223,7 +223,7 @@
     <value>Zuletzt gespielt</value>
   </data>
   <data name="Later" xml:space="preserve">
-    <value>später</value>
+    <value>Später</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
     <value>Buchhandlung hochladen</value>
@@ -253,7 +253,7 @@
     <value>Gehe zum Interpreten</value>
   </data>
   <data name="MFIPin.Text" xml:space="preserve">
-    <value>PIN</value>
+    <value>Pin</value>
   </data>
   <data name="MFIPlayNext.Text" xml:space="preserve">
     <value>Nächstes abspielen</value>
@@ -406,7 +406,7 @@
     <value>Bitrate</value>
   </data>
   <data name="TBComment.Text" xml:space="preserve">
-    <value>KOMMENTAR</value>
+    <value>Kommentar</value>
   </data>
   <data name="TBComposer.Text" xml:space="preserve">
     <value>Komponist</value>
@@ -451,7 +451,7 @@
     <value>Neue Songs</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
-    <value>personalisiere</value>
+    <value>Personalisiere</value>
   </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
     <value>Abscpielzahl</value>
@@ -525,16 +525,16 @@
   <data name="AppBarButtonSave.Label" xml:space="preserve">
     <value>Speichern</value>
   </data>
-  <data name="TBOnAir" xml:space="preserve">
+  <data name="TBOnAir.Text" xml:space="preserve">
     <value>On-air:</value>
   </data>
   <data name="PageHeaderRadios" xml:space="preserve">
     <value>Radio</value>
   </data>
-  <data name="TBJamendoRadio" xml:space="preserve">
+  <data name="TBJamendoRadio.Text" xml:space="preserve">
     <value>Jamendo Music</value>
   </data>
-  <data name="TBRadio" xml:space="preserve">
+  <data name="TBRadio.Text" xml:space="preserve">
     <value>Radio</value>
   </data>
   <data name="CantFindLyrics" xml:space="preserve">
@@ -542,5 +542,11 @@
   </data>
   <data name="TrackNumber" xml:space="preserve">
     <value>Liednummer</value>
+  </data>
+  <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
+    <value>Please restart app to apply changes.</value>
+  </data>
+  <data name="TBLanguage.Text" xml:space="preserve">
+    <value>Language:</value>
   </data>
 </root>

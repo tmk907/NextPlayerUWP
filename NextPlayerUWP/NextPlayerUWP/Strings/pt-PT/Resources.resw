@@ -196,7 +196,7 @@
     <value>Nova lista de reprodução</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>DELETAR</value>
+    <value>Deletar</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
     <value>Tem certeza que deseja deletar essa lista de execução?</value>
@@ -235,7 +235,7 @@
     <value>Adicionar à lista de execução</value>
   </data>
   <data name="MFIDelete.Text" xml:space="preserve">
-    <value>DELETAR</value>
+    <value>Deletar</value>
   </data>
   <data name="MFIEditPlainName.Text" xml:space="preserve">
     <value>Editar nome</value>
@@ -367,7 +367,7 @@
     <value>Tocar próximo</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>música</value>
+    <value>Música</value>
   </data>
   <data name="Song Count" xml:space="preserve">
     <value>Contagem de músicas</value>
@@ -525,16 +525,16 @@
   <data name="PageHeaderRadios" xml:space="preserve">
     <value>Rádio</value>
   </data>
-  <data name="TBRadio" xml:space="preserve">
+  <data name="TBRadio.Text" xml:space="preserve">
     <value>Rádio</value>
   </data>
   <data name="PageHeaderNowPlayingPlaylist.Content" xml:space="preserve">
     <value>Em execução agora</value>
   </data>
-  <data name="TBOnAir" xml:space="preserve">
+  <data name="TBOnAir.Text" xml:space="preserve">
     <value>On-air:</value>
   </data>
-  <data name="TBJamendoRadio" xml:space="preserve">
+  <data name="TBJamendoRadio.Text" xml:space="preserve">
     <value>Jamendo Music</value>
   </data>
   <data name="CantFindLyrics" xml:space="preserve">
@@ -542,5 +542,11 @@
   </data>
   <data name="NewSongs" xml:space="preserve">
     <value>Novas músicas:</value>
+  </data>
+  <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
+    <value>Please restart app to apply changes.</value>
+  </data>
+  <data name="TBLanguage.Text" xml:space="preserve">
+    <value>Language:</value>
   </data>
 </root>

@@ -223,7 +223,7 @@
     <value>Naposledy přehrané</value>
   </data>
   <data name="Later" xml:space="preserve">
-    <value>později</value>
+    <value>Později</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
     <value>Library updated</value>
@@ -307,7 +307,7 @@
     <value>File info</value>
   </data>
   <data name="PageHeaderFolders.Content" xml:space="preserve">
-    <value>složky</value>
+    <value>Složky</value>
   </data>
   <data name="PageHeaderGenres.Content" xml:space="preserve">
     <value>Žánry</value>
@@ -322,13 +322,13 @@
     <value>Nastavení</value>
   </data>
   <data name="PageHeaderSongs.Content" xml:space="preserve">
-    <value>skladby</value>
+    <value>Skladby</value>
   </data>
   <data name="PageHeaderTagsEditor.Content" xml:space="preserve">
     <value>Tags editor</value>
   </data>
   <data name="PivotHeaderTBLyrics.Text" xml:space="preserve">
-    <value>Texty</value>
+    <value>texty</value>
   </data>
   <data name="PivotHeaderTBNowPlaying.Text" xml:space="preserve">
     <value>právě se přehrává</value>
@@ -361,13 +361,13 @@
     <value>Mírný</value>
   </data>
   <data name="RBPlay.Content" xml:space="preserve">
-    <value>přehrát</value>
+    <value>Přehrát</value>
   </data>
   <data name="RBPlayNext.Content" xml:space="preserve">
     <value>Přehrát další</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>skladba</value>
+    <value>Skladba</value>
   </data>
   <data name="Song Count" xml:space="preserve">
     <value>Song count</value>
@@ -379,7 +379,7 @@
     <value>After dragging item to now playing list:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>music folders</value>
+    <value>Music folders</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -430,7 +430,7 @@
     <value>Velikost souboru</value>
   </data>
   <data name="TBFolders.Text" xml:space="preserve">
-    <value>složky</value>
+    <value>Složky</value>
   </data>
   <data name="TBGenre.Text" xml:space="preserve">
     <value>Žánr</value>
@@ -469,7 +469,7 @@
     <value>Nastavení</value>
   </data>
   <data name="TBSongs.Text" xml:space="preserve">
-    <value>skladby</value>
+    <value>Skladby</value>
   </data>
   <data name="TBSortBy.Text" xml:space="preserve">
     <value>Řadit podle</value>
@@ -519,7 +519,7 @@
   <data name="CantFindLyrics" xml:space="preserve">
     <value>Can't find lyrics</value>
   </data>
-  <data name="TBJamendoRadio" xml:space="preserve">
+  <data name="TBJamendoRadio.Text" xml:space="preserve">
     <value>Jamendo Music</value>
   </data>
   <data name="NewSongs" xml:space="preserve">
@@ -528,13 +528,13 @@
   <data name="PageHeaderNowPlayingPlaylist.Content" xml:space="preserve">
     <value>Právě se přehrává</value>
   </data>
-  <data name="TBOnAir" xml:space="preserve">
+  <data name="TBOnAir.Text" xml:space="preserve">
     <value>On-air:</value>
   </data>
   <data name="PageHeaderRadios" xml:space="preserve">
     <value>Rádio</value>
   </data>
-  <data name="TBRadio" xml:space="preserve">
+  <data name="TBRadio.Text" xml:space="preserve">
     <value>Rádio</value>
   </data>
   <data name="AppBarButtonSave.Label" xml:space="preserve">
@@ -542,5 +542,11 @@
   </data>
   <data name="TrackNumber" xml:space="preserve">
     <value>Číslo stopy</value>
+  </data>
+  <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
+    <value>Please restart app to apply changes.</value>
+  </data>
+  <data name="TBLanguage.Text" xml:space="preserve">
+    <value>Language:</value>
   </data>
 </root>

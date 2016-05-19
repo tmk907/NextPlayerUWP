@@ -223,7 +223,7 @@
     <value>Последние</value>
   </data>
   <data name="Later" xml:space="preserve">
-    <value>позже</value>
+    <value>Позже</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
     <value>Library updated</value>
@@ -295,7 +295,7 @@
     <value>Альбом</value>
   </data>
   <data name="PageHeaderAlbums.Content" xml:space="preserve">
-    <value>альбомы</value>
+    <value>Aльбомы</value>
   </data>
   <data name="PageHeaderArtist.Content" xml:space="preserve">
     <value>Исполнитель</value>
@@ -322,7 +322,7 @@
     <value>Настройки</value>
   </data>
   <data name="PageHeaderSongs.Content" xml:space="preserve">
-    <value>песни</value>
+    <value>Песни</value>
   </data>
   <data name="PageHeaderTagsEditor.Content" xml:space="preserve">
     <value>редактор меток</value>
@@ -367,7 +367,7 @@
     <value>Играть следующую</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>песня</value>
+    <value>Песня</value>
   </data>
   <data name="Song Count" xml:space="preserve">
     <value>Song count</value>
@@ -388,7 +388,7 @@
     <value>Дискография</value>
   </data>
   <data name="TBAlbums.Text" xml:space="preserve">
-    <value>альбомы</value>
+    <value>Aльбомы</value>
   </data>
   <data name="TBAppAccentColor.Text" xml:space="preserve">
     <value>Accent color:</value>
@@ -472,7 +472,7 @@
     <value>Настройки</value>
   </data>
   <data name="TBSongs.Text" xml:space="preserve">
-    <value>песни</value>
+    <value>Песни</value>
   </data>
   <data name="TBSortBy.Text" xml:space="preserve">
     <value>Сортировать по</value>
@@ -517,24 +517,24 @@
     <value>ОТЗЫВЫ</value>
   </data>
   <data name="TBNowPlaying.Text" xml:space="preserve">
-    <value>сейчас играет</value>
+    <value>Сейчас играет</value>
   </data>
   <data name="PageHeaderNowPlayingPlaylist.Content" xml:space="preserve">
-    <value>сейчас играет</value>
+    <value>Сейчас играет</value>
   </data>
   <data name="AppBarButtonSave.Label" xml:space="preserve">
     <value>Сохранить</value>
   </data>
-  <data name="TBRadio" xml:space="preserve">
+  <data name="TBRadio.Text" xml:space="preserve">
     <value>Радио</value>
   </data>
   <data name="PageHeaderRadios" xml:space="preserve">
     <value>Радио</value>
   </data>
-  <data name="TBOnAir" xml:space="preserve">
+  <data name="TBOnAir.Text" xml:space="preserve">
     <value>On-air:</value>
   </data>
-  <data name="TBJamendoRadio" xml:space="preserve">
+  <data name="TBJamendoRadio.Text" xml:space="preserve">
     <value>Jamendo Music</value>
   </data>
   <data name="CantFindLyrics" xml:space="preserve">
@@ -542,5 +542,11 @@
   </data>
   <data name="TrackNumber" xml:space="preserve">
     <value>Номер трека</value>
+  </data>
+  <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
+    <value>Please restart app to apply changes.</value>
+  </data>
+  <data name="TBLanguage.Text" xml:space="preserve">
+    <value>Language:</value>
   </data>
 </root>

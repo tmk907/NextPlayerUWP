@@ -113,13 +113,13 @@
             <converters:PlaylistNameToBool x:Key="PlaylistNameToBoolConverter"/>
             <converters:SongItemConverter x:Key="SongItemConverter"/>
             <converters:YearConverter x:Key="YearConverter"/>
-            <converters:ComboBoxItemValueConverter x:Key="ZoomedOutItemContainerStyleConverter"/>
             <converters:ZoomedOutItemWidthConverter x:Key="ZoomedOutItemWidthConverter"/>
             <converters:BoolToNullableBool x:Key="BoolToNullableBoolConverter"/>
             <converters:BoolToHighlightedItemForeground x:Key="BoolToHighlightedItemForegroundConverter"/>
             <converters:IntToRatingStar x:Key="IntToRatingStarConverter"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <converters:ItemTypeToMenuVisibility x:Key="ItemTypeToMenuVisibilityConverter"/>
+            <converters:LanguageComboBoxConverter x:Key="LanguageComboBoxConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"
@@ -287,6 +287,4 @@
             </Style>
         </ResourceDictionary>
     </Application.Resources>
-    
-    
 </common:BootStrapper> 

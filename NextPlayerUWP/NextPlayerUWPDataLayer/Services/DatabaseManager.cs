@@ -69,6 +69,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<AlbumsTable>();
             connection.CreateTable<ArtistsTable>();
             connection.CreateTable<CachedScrobble>();
+            connection.CreateTable<ImportedPlaylist>();
         }
 
         public void DeleteDatabase()
@@ -84,6 +85,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<AlbumsTable>();
             connection.DropTable<ArtistsTable>();
             connection.DropTable<CachedScrobble>();
+            connection.DropTable<ImportedPlaylist>();
         }
 
 
@@ -1431,6 +1433,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<AlbumsTable>();
             connection.DropTable<ArtistsTable>();
             connection.DropTable<CachedScrobble>();
+            connection.DropTable<ImportedPlaylist>();
 
             connection.CreateTable<PlainPlaylistsTable>();
             connection.CreateTable<PlainPlaylistEntryTable>();
@@ -1441,6 +1444,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<AlbumsTable>();
             connection.CreateTable<ArtistsTable>();
             connection.CreateTable<CachedScrobble>();
+            connection.CreateTable<ImportedPlaylistsTable>();
         }
 
         public void UpdateToVersion2()
@@ -1449,6 +1453,5 @@ namespace NextPlayerUWPDataLayer.Services
             connection.Execute("UPDATE NowPlayingTable SET SourceType = 1");
             connection.CreateTable<ImportedPlaylistsTable>();
         }
-        
     }
 }

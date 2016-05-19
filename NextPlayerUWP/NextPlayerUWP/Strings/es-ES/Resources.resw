@@ -133,7 +133,7 @@
     <value>Agregar carpeta</value>
   </data>
   <data name="ButtonAddToNowPlaying.Content" xml:space="preserve">
-    <value>Añadir a la lista de reproduccion actual</value>
+    <value>Añadir a jugar ahora</value>
   </data>
   <data name="ButtonAddToPlaylist.Content" xml:space="preserve">
     <value>Agregar a lista de reproducción</value>
@@ -229,7 +229,7 @@
     <value>Biblioteca actualizada</value>
   </data>
   <data name="MFIAddToNowPlaying.Text" xml:space="preserve">
-    <value>Añadir a la lista de reproduccion actual</value>
+    <value>Añadir a jugar ahora</value>
   </data>
   <data name="MFIAddToPlaylist.Text" xml:space="preserve">
     <value>Agregar a lista de reproducción</value>
@@ -316,7 +316,7 @@
     <value>Lista de reproducción</value>
   </data>
   <data name="PageHeaderPlaylists.Content" xml:space="preserve">
-    <value>LISTA DE REPRODUCCIÓN</value>
+    <value>Lista de reproducción</value>
   </data>
   <data name="PageHeaderSettings.Content" xml:space="preserve">
     <value>Configuración</value>
@@ -340,7 +340,7 @@
     <value>Lista de reproducción</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>LISTA DE REPRODUCCIÓN</value>
+    <value>Lista de reproducción</value>
   </data>
   <data name="RateAppMsg" xml:space="preserve">
     <value>Si te disfrutas Next-Player, ¿te importaría tomarte un momento para calificarlo? No te tomarás más de un minuto. ¡Gracias por tu apoyo!</value>
@@ -352,7 +352,7 @@
     <value>Clasificación</value>
   </data>
   <data name="RBAddToNowPlaying.Content" xml:space="preserve">
-    <value>Añadir a la lista de reproduccion actual</value>
+    <value>Añadir a jugar ahora</value>
   </data>
   <data name="RBDark.Content" xml:space="preserve">
     <value>Oscuro</value>
@@ -460,7 +460,7 @@
     <value>Nombre nuevo:</value>
   </data>
   <data name="TBPlaylists.Text" xml:space="preserve">
-    <value>LISTA DE REPRODUCCIÓN</value>
+    <value>Lista de reproducción</value>
   </data>
   <data name="TBRating.Text" xml:space="preserve">
     <value>Clasificación</value>
@@ -525,16 +525,16 @@
   <data name="AppBarButtonSave.Label" xml:space="preserve">
     <value>Guardar</value>
   </data>
-  <data name="TBRadio" xml:space="preserve">
+  <data name="TBRadio.Text" xml:space="preserve">
     <value>Radio</value>
   </data>
   <data name="PageHeaderRadios" xml:space="preserve">
     <value>Radio</value>
   </data>
-  <data name="TBOnAir" xml:space="preserve">
+  <data name="TBOnAir.Text" xml:space="preserve">
     <value>On-air:</value>
   </data>
-  <data name="TBJamendoRadio" xml:space="preserve">
+  <data name="TBJamendoRadio.Text" xml:space="preserve">
     <value>Jamendo Music</value>
   </data>
   <data name="CantFindLyrics" xml:space="preserve">
@@ -542,5 +542,11 @@
   </data>
   <data name="TrackNumber" xml:space="preserve">
     <value>Número de pista</value>
+  </data>
+  <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
+    <value>Please restart app to apply changes.</value>
+  </data>
+  <data name="TBLanguage.Text" xml:space="preserve">
+    <value>Language:</value>
   </data>
 </root>

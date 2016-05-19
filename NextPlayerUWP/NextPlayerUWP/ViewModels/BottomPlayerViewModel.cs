@@ -1,18 +1,13 @@
-﻿using GalaSoft.MvvmLight.Command;
-using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
@@ -225,27 +220,30 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            System.Diagnostics.Debug.WriteLine("BottomPlayerVM OnNavigatedToAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedToAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
             PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
             StartTimer();
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             CoverUri = SongCoverManager.Instance.GetCurrent();
-            //cover
             ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
             await Task.CompletedTask;
         }
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
+            System.Diagnostics.Debug.WriteLine("BottomPlayerVM OnNavigatedFromAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedFromAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
+            PlaybackManager.MediaPlayerMediaClosed -= PlaybackManager_MediaPlayerMediaClosed;
             PlaybackManager.MediaPlayerPositionChanged -= PlaybackManager_MediaPlayerPositionChanged;
             StopTimer();
             if (suspending)

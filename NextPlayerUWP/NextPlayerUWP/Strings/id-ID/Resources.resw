@@ -217,13 +217,13 @@
     <value>Genre</value>
   </data>
   <data name="Last Added" xml:space="preserve">
-    <value>terakhir ditambahkan</value>
+    <value>Terakhir ditambahkan</value>
   </data>
   <data name="Last Played" xml:space="preserve">
-    <value>terakhir diputar</value>
+    <value>Terakhir diputar</value>
   </data>
   <data name="Later" xml:space="preserve">
-    <value>nanti</value>
+    <value>Nanti</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
     <value>Library updated</value>
@@ -283,10 +283,10 @@
     <value>Nama</value>
   </data>
   <data name="OstatnioDodane" xml:space="preserve">
-    <value>terakhir ditambahkan</value>
+    <value>Terakhir ditambahkan</value>
   </data>
   <data name="OstatnioOdtwarzane" xml:space="preserve">
-    <value>terakhir diputar</value>
+    <value>Terakhir diputar</value>
   </data>
   <data name="PageHeaderAddToPlaylist.Content" xml:space="preserve">
     <value>Tambahkan ke daftar putar</value>
@@ -307,7 +307,7 @@
     <value>File info</value>
   </data>
   <data name="PageHeaderFolders.Content" xml:space="preserve">
-    <value>map</value>
+    <value>Map</value>
   </data>
   <data name="PageHeaderGenres.Content" xml:space="preserve">
     <value>Genre</value>
@@ -316,19 +316,19 @@
     <value>Daftar putar</value>
   </data>
   <data name="PageHeaderPlaylists.Content" xml:space="preserve">
-    <value>daftar putar</value>
+    <value>Daftar putar</value>
   </data>
   <data name="PageHeaderSettings.Content" xml:space="preserve">
     <value>Pengaturan</value>
   </data>
   <data name="PageHeaderSongs.Content" xml:space="preserve">
-    <value>lagu</value>
+    <value>Lagu</value>
   </data>
   <data name="PageHeaderTagsEditor.Content" xml:space="preserve">
     <value>Tags editor</value>
   </data>
   <data name="PivotHeaderTBLyrics.Text" xml:space="preserve">
-    <value>Lirik</value>
+    <value>lirik</value>
   </data>
   <data name="PivotHeaderTBNowPlaying.Text" xml:space="preserve">
     <value>kini memutar</value>
@@ -340,7 +340,7 @@
     <value>Daftar putar</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>daftar putar</value>
+    <value>Daftar putar</value>
   </data>
   <data name="RateAppMsg" xml:space="preserve">
     <value>If you enjoy using Next-Player, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!</value>
@@ -361,13 +361,13 @@
     <value>Terang</value>
   </data>
   <data name="RBPlay.Content" xml:space="preserve">
-    <value>MAINKAN</value>
+    <value>Mainkan</value>
   </data>
   <data name="RBPlayNext.Content" xml:space="preserve">
     <value>Putar selanjutnya</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>lagu</value>
+    <value>Lagu</value>
   </data>
   <data name="Song Count" xml:space="preserve">
     <value>Song count</value>
@@ -379,7 +379,7 @@
     <value>After dragging item to now playing list:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>music folders</value>
+    <value>Music folders</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -430,7 +430,7 @@
     <value>Ukuran berkas</value>
   </data>
   <data name="TBFolders.Text" xml:space="preserve">
-    <value>map</value>
+    <value>Map</value>
   </data>
   <data name="TBGenre.Text" xml:space="preserve">
     <value>Genre</value>
@@ -460,7 +460,7 @@
     <value>New name:</value>
   </data>
   <data name="TBPlaylists.Text" xml:space="preserve">
-    <value>daftar putar</value>
+    <value>Daftar putar</value>
   </data>
   <data name="TBRating.Text" xml:space="preserve">
     <value>Peringkat</value>
@@ -469,7 +469,7 @@
     <value>Pengaturan</value>
   </data>
   <data name="TBSongs.Text" xml:space="preserve">
-    <value>lagu</value>
+    <value>Lagu</value>
   </data>
   <data name="TBSortBy.Text" xml:space="preserve">
     <value>Atur menurut</value>
@@ -519,7 +519,7 @@
   <data name="CantFindLyrics" xml:space="preserve">
     <value>Can't find lyrics</value>
   </data>
-  <data name="TBJamendoRadio" xml:space="preserve">
+  <data name="TBJamendoRadio.Text" xml:space="preserve">
     <value>Jamendo Music</value>
   </data>
   <data name="NewSongs" xml:space="preserve">
@@ -528,13 +528,13 @@
   <data name="PageHeaderNowPlayingPlaylist.Content" xml:space="preserve">
     <value>Kini memutar</value>
   </data>
-  <data name="TBOnAir" xml:space="preserve">
+  <data name="TBOnAir.Text" xml:space="preserve">
     <value>On-air:</value>
   </data>
   <data name="PageHeaderRadios" xml:space="preserve">
     <value>Radio</value>
   </data>
-  <data name="TBRadio" xml:space="preserve">
+  <data name="TBRadio.Text" xml:space="preserve">
     <value>Radio</value>
   </data>
   <data name="AppBarButtonSave.Label" xml:space="preserve">
@@ -542,5 +542,11 @@
   </data>
   <data name="TrackNumber" xml:space="preserve">
     <value>Nomor track</value>
+  </data>
+  <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
+    <value>Please restart app to apply changes.</value>
+  </data>
+  <data name="TBLanguage.Text" xml:space="preserve">
+    <value>Language:</value>
   </data>
 </root>

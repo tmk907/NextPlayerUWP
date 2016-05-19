@@ -144,6 +144,7 @@
     <Compile Include="Converters\IntToSongs.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\ItemTypeToMenuVisibility.cs" />
+    <Compile Include="Converters\LanguageComboBoxConverter.cs" />
     <Compile Include="Converters\NumberToPercent.cs" />
     <Compile Include="Converters\PlaylistNameToBool.cs" />
     <Compile Include="Converters\RatingConverter.cs" />

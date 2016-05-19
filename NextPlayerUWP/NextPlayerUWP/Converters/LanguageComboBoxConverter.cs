@@ -1,19 +1,19 @@
-﻿using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.ViewModels;
 using System;
 using Windows.UI.Xaml.Data;
 
 namespace NextPlayerUWP.Converters
 {
-    public class ComboBoxItemValueConverter : IValueConverter
+    public class LanguageComboBoxConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (ComboBoxItemValue)value;
+            return (LanguageItem)value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return (ComboBoxItemValue)value;
+            return (LanguageItem)value;
         }
     }
 }

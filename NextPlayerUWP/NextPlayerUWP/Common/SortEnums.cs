@@ -1,8 +1,5 @@
 ﻿using NextPlayerUWPDataLayer.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Windows.ApplicationModel.Resources;
 
 namespace NextPlayerUWP.Common

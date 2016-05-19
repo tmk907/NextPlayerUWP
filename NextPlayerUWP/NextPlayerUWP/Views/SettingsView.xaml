@@ -139,52 +139,11 @@
                             Margin="0,4,4,4"
                             MinWidth="128"/>
                 </StackPanel>
-                    <TextBlock x:Uid="TBTools"
-                           Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,12,0,12"
-                           Text="Tools"/>
-                    <StackPanel Orientation="Vertical" Margin="4">
-                        <TextBlock x:Uid="TBTimer"
-                           Style="{StaticResource BodyTextBlockStyle}"
-                           FontSize="17"
-                           Margin="4,4,4,4"
-                           Text="Timer:"/>
-                        <StackPanel x:Name="TimerStackPanel" Orientation="Horizontal">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
-                                  Toggled="{x:Bind ViewModel.TimerSwitchToggled}"/>
-                            <TimePicker IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
-                                        Time="{x:Bind ViewModel.Time, Mode=TwoWay}"/>
-                        </StackPanel>
-                </StackPanel>
-                <StackPanel x:Name="DragDropActionStackPanel"
-                            Orientation="Vertical" 
-                            Margin="4">
-                        <TextBlock x:Uid="TBActionAfterDragDrop"
-                           Style="{StaticResource BodyTextBlockStyle}"
-                           FontSize="17"
-                           Margin="4,4,4,4"
-                           Text="After dragging item to now playing list:"/>
-                        <RadioButton x:Uid="RBPlay"
-                                     Margin="4,0,4,0"
-                                     GroupName="DragDropAction"
-                                     Content="Play"
-                                     IsChecked="{Binding ActionNr1, Mode=TwoWay}"/>
-                        <RadioButton x:Uid="RBPlayNext"
-                                     Margin="4,0,4,0"
-                                     GroupName="DragDropAction"
-                                     Content="Play next"
-                                     IsChecked="{Binding ActionNr2, Mode=TwoWay}"/>
-                        <RadioButton x:Uid="RBAddToNowPlaying"
-                                     Margin="4,0,4,0"
-                                     GroupName="DragDropAction"
-                                     Content="Add to now playing"
-                                     IsChecked="{Binding ActionNr3, Mode=TwoWay}"/>
-                    </StackPanel>
-                <TextBlock x:Uid="TBPersonalize"
+                    <TextBlock x:Uid="TBPersonalize"
                            Style="{StaticResource TitleTextBlockStyle}" 
                            Margin="0,12,0,12"
                            Text="Personalise"/>
-                <StackPanel Orientation="Vertical" Margin="4">
+                    <StackPanel Orientation="Vertical" Margin="4">
                         <TextBlock x:Uid="TBAppTheme"
                            Style="{StaticResource BodyTextBlockStyle}"
                            FontSize="17"
@@ -229,6 +188,70 @@
                             </GridView.ItemsPanel>
                         </GridView>
                     </StackPanel>
+                    <TextBlock x:Uid="TBTools"
+                        Style="{StaticResource TitleTextBlockStyle}" 
+                        Margin="0,12,0,12"
+                        Text="Tools"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                        <TextBlock x:Uid="TBTimer"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="Timer:"/>
+                        <StackPanel x:Name="TimerStackPanel" Orientation="Horizontal">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
+                                  Toggled="{x:Bind ViewModel.TimerSwitchToggled}"/>
+                            <TimePicker IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
+                                        Time="{x:Bind ViewModel.Time, Mode=TwoWay}"/>
+                        </StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="DragDropActionStackPanel"
+                            Orientation="Vertical" 
+                            Margin="4">
+                        <TextBlock x:Uid="TBActionAfterDragDrop"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="After dragging item to now playing list:"/>
+                        <RadioButton x:Uid="RBPlay"
+                                     Margin="4,0,4,0"
+                                     GroupName="DragDropAction"
+                                     Content="Play"
+                                     IsChecked="{Binding ActionNr1, Mode=TwoWay}"/>
+                        <RadioButton x:Uid="RBPlayNext"
+                                     Margin="4,0,4,0"
+                                     GroupName="DragDropAction"
+                                     Content="Play next"
+                                     IsChecked="{Binding ActionNr2, Mode=TwoWay}"/>
+                        <RadioButton x:Uid="RBAddToNowPlaying"
+                                     Margin="4,0,4,0"
+                                     GroupName="DragDropAction"
+                                     Content="Add to now playing"
+                                     IsChecked="{Binding ActionNr3, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" 
+                            Margin="4">
+                        <TextBlock x:Uid="TBLanguage"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="Language:"/>
+                        <ComboBox Margin="0" 
+                            BorderThickness="0" 
+                            MinWidth="128" 
+                            VerticalAlignment="Center"
+                            DisplayMemberPath="Name"
+                            SelectionChanged="{x:Bind ViewModel.ChangeLanguage}"
+                            SelectedItem="{x:Bind ViewModel.SelectedLanguage, Converter={StaticResource LanguageComboBoxConverter}, Mode=TwoWay}"
+                            ItemsSource="{x:Bind ViewModel.Languages}"
+                            />
+                        <TextBlock x:Uid="TBChangesAppliedAfterRestart"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="14"
+                           Margin="4,0,4,4"
+                           Text="Please restart app to apply changes."/>
+                    </StackPanel>
+                
                 <TextBlock x:Uid="TBAbout"
                            Style="{StaticResource TitleTextBlockStyle}" 
                            Margin="0,12,0,12"

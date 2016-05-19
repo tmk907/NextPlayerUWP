@@ -5,13 +5,10 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
@@ -42,11 +39,10 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref selectedPivotIndex, value); }
         }
 
-        private async void TrackChanged(int index)
+        private void TrackChanged(int index)
         {
             if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
             CurrentSong = songs[index];
-            //await ChangeCover();
             ScrollAfterTrackChanged(index);
         }
 
