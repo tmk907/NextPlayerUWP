@@ -49,11 +49,14 @@ namespace NextPlayerUWP.Common
             initialized = false;
         }
 
-        public async Task Initialize()
+        public async Task Initialize(bool terminated = false)
         {
             System.Diagnostics.Debug.WriteLine("SCM Initialize start");
             if (initialized) return;
-            await DeleteAllCached();
+            if (!terminated)
+            {
+                await DeleteAllCached();
+            }
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             //Uri uri = await CopyFromSongFileToCache(song.Path, song.SongId);
             //cachedUris.Add(song.SongId, uri);

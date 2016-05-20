@@ -285,10 +285,12 @@ namespace NextPlayerUWP.Common
                 if (ex.HResult == RPC_S_SERVER_UNAVAILABLE)
                 {
                     // do nothing
+                    HockeyProxy.TrackEventException("RemoveMediaPlayerEventHandlers " + ex.Message + Environment.NewLine + ex.StackTrace);
                 }
                 else
                 {
-                    throw;
+                    //throw;
+                    HockeyProxy.TrackEventException("RemoveMediaPlayerEventHandlers else" + ex.Message + Environment.NewLine + ex.StackTrace);
                 }
             }
         }
@@ -313,7 +315,8 @@ namespace NextPlayerUWP.Common
                 }
                 else
                 {
-                    throw;
+                    //throw;
+                    HockeyProxy.TrackEventException("AddMediaPlayerEventHandlers else " + ex.Message + Environment.NewLine + ex.StackTrace);
                 }
             }
         }
@@ -321,15 +324,6 @@ namespace NextPlayerUWP.Common
         private void UpdateTransportControls(MediaPlayerState state)
         {
             OnMediaPlayerStateChanged(state);
-            //switch (state)
-            //{
-            //    case MediaPlayerState.Playing:
-            //        //PlayButtonContent = "\uE17e\uE103";// Change to pause button
-            //        break;
-            //    case MediaPlayerState.Paused:
-            //        //PlayButtonContent = "\uE17e\uE102";     // Change to play button
-            //        break;
-            //}
         }
 
         private void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
@@ -360,14 +354,6 @@ namespace NextPlayerUWP.Common
                         Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
                         {
                             OnMediaPlayerMediaOpened(CurrentPlayer.NaturalDuration);
-                            //TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
-                            //double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
-                            //ProgressBarMaxValue = absvalue;
-                            //ProgressBarValue = 0.0;
-                            //CurrentTime = TimeSpan.Zero;
-                            //EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
-                            //PlaybackRate = BackgroundMediaPlayer.Current.PlaybackRate * 100.0;
-                            //SaveCached();
                         });
                         break;
                     case AppConstants.Position:
@@ -427,8 +413,9 @@ namespace NextPlayerUWP.Common
                 }
                 else if (MediaPlayerState.Closed == CurrentPlayer.CurrentState)
                 {
+                    SendMessage(AppConstants.Play);
                     OnMediaPlayerTrackChanged(CurrentSongIndex);
-                    StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+                    //StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
                 }
             }
             else

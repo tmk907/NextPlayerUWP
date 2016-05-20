@@ -69,7 +69,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<AlbumsTable>();
             connection.CreateTable<ArtistsTable>();
             connection.CreateTable<CachedScrobble>();
-            connection.CreateTable<ImportedPlaylist>();
+            connection.CreateTable<ImportedPlaylistsTable>();
         }
 
         public void DeleteDatabase()
@@ -1433,7 +1433,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<AlbumsTable>();
             connection.DropTable<ArtistsTable>();
             connection.DropTable<CachedScrobble>();
-            connection.DropTable<ImportedPlaylist>();
+            connection.DropTable<ImportedPlaylistsTable>();
 
             connection.CreateTable<PlainPlaylistsTable>();
             connection.CreateTable<PlainPlaylistEntryTable>();

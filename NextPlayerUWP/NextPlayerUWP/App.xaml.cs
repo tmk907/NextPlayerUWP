@@ -351,10 +351,13 @@ namespace NextPlayerUWP
             return base.OnSuspendingAsync(s, e, prelaunch);
         }
 
-        public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
+        public override async void OnResuming(object s, object e, AppExecutionState previousExecutionState)
         {
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Active));
-            
+            if (previousExecutionState == AppExecutionState.Terminated)
+            {
+                await SongCoverManager.Instance.Initialize(true);
+            }
             base.OnResuming(s, e, previousExecutionState);
         }
 

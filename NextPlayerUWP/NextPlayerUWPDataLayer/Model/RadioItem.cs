@@ -175,6 +175,7 @@ namespace NextPlayerUWPDataLayer.Model
             song.Path = streamUrl;
             song.SourceType = MusicSource.RadioJamendo;
             song.CoverPath = playingNowImagePath;
+            song.Duration = TimeSpan.Zero;
             return song;
         }
 

@@ -24,11 +24,7 @@ namespace NextPlayerUWP.ViewModels
             UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
-            int i = ApplicationSettingsHelper.ReadSongIndex();
-            if (i<songs.Count && i >= 0)
-            {
-                CurrentSong = songs[i];
-            }
+            
             CoverUri = SongCoverManager.Instance.GetFirst();
         }
 
@@ -113,6 +109,11 @@ namespace NextPlayerUWP.ViewModels
             //App.ChangeRightPanelVisibility(false);
             CoverUri = SongCoverManager.Instance.GetCurrent();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
+            int i = ApplicationSettingsHelper.ReadSongIndex();
+            if (i < songs.Count && i >= 0)
+            {
+                CurrentSong = songs[i];
+            }
             if (state.ContainsKey(nameof(firstVisibleIndex)))
             {
                 firstVisibleIndex = (int)state[nameof(firstVisibleIndex)];
