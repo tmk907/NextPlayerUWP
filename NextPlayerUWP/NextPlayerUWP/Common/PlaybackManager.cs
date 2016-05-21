@@ -31,8 +31,6 @@ namespace NextPlayerUWP.Common
         static PlaybackManager() { }
         private PlaybackManager()
         {
-            //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("PlaybackManager ");
-            //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             backgroundAudioTaskStarted = new AutoResetEvent(false);
             if (IsMyBackgroundTaskRunning)
             {
@@ -79,7 +77,7 @@ namespace NextPlayerUWP.Common
             }
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
         }
-
+        #region Events
         public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;
         public void OnMediaPlayerStateChanged(MediaPlayerState state)
         {
@@ -110,7 +108,7 @@ namespace NextPlayerUWP.Common
         {
             StreamUpdated?.Invoke(song);
         }
-
+        #endregion
         private AutoResetEvent backgroundAudioTaskStarted;
         const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA
 

@@ -544,7 +544,7 @@
     <value>Numer utworu</value>
   </data>
   <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
-    <value>Uruchomi ponownie aplikację, aby zastosować zmiany</value>
+    <value>Uruchom ponownie aplikację, aby zastosować zmiany</value>
   </data>
   <data name="TBLanguage.Text" xml:space="preserve">
     <value>Język:</value>

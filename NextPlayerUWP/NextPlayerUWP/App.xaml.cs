@@ -142,6 +142,17 @@ namespace NextPlayerUWP
         //    };
         //}
 
+        public override UIElement CreateRootElement(IActivatedEventArgs e)
+        {
+            var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);
+            return new ModalDialog
+            {
+                DisableBackButtonWhenModal = true,
+                Content = new Views.Shell(service),
+                ModalContent = new Views.Busy(),
+            };
+        }
+
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             Debug.WriteLine("OnInitializeAsync");
@@ -189,17 +200,17 @@ namespace NextPlayerUWP
 
             //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
 
-            if (Window.Current.Content as ModalDialog == null)
-            {
-                var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-                // create modal root
-                Window.Current.Content = new ModalDialog
-                {
-                    DisableBackButtonWhenModal = true,
-                    Content = new Views.Shell(nav),
-                    ModalContent = new Views.Busy(),
-                };
-            }
+            //if (Window.Current.Content as ModalDialog == null)
+            //{
+            //    var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+            //    // create modal root
+            //    Window.Current.Content = new ModalDialog
+            //    {
+            //        DisableBackButtonWhenModal = true,
+            //        Content = new Views.Shell(nav),
+            //        ModalContent = new Views.Busy(),
+            //    };
+            //}
 
             //if (NeedsNewNavigationService(args))
             //{
@@ -308,7 +319,7 @@ namespace NextPlayerUWP
                         default:
                             break;
                     }
-                    NavigationService.Navigate(page, parameter);
+                    await NavigationService.NavigateAsync(page, parameter);
                     break;
                 case AdditionalKinds.Primary:
                     if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
@@ -316,15 +327,15 @@ namespace NextPlayerUWP
                     {
                         //Logger.Save("OnStart primary navigate");
                         //Logger.SaveToFile();
-                            NavigationService.Navigate(Pages.Playlists);
+                        await NavigationService.NavigateAsync(Pages.Playlists);
                     }
                     //Logger.Save("OnStart primary ");
                     //Logger.SaveToFile();
                     break;
                 case AdditionalKinds.Toast:
                     var toastargs = args as ToastNotificationActivatedEventArgs;
-                    
-                    NavigationService.Navigate(Pages.Playlists);
+
+                    await NavigationService.NavigateAsync(Pages.Playlists);
                     break;
                 default:
                     //Logger.Save("OnStart default");
@@ -332,7 +343,7 @@ namespace NextPlayerUWP
                     if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                         args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                     {
-                        NavigationService.Navigate(Pages.Playlists);
+                        await NavigationService.NavigateAsync(Pages.Playlists);
                     }
                     break;
             }
