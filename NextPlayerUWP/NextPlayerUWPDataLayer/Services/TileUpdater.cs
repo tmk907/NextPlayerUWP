@@ -3,6 +3,7 @@ using NotificationsExtensions.Tiles;
 using NextPlayerUWPDataLayer.Constants;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
+using NotificationsExtensions;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -11,7 +12,6 @@ namespace NextPlayerUWPDataLayer.Services
         public void UpdateAppTile(string title, string artist, string coverUri)
         {
             var notification = PrepareTileNotification(title, artist, coverUri);
-            // Generate WinRT notification
             try
             {
                 var updater = TileUpdateManager.CreateTileUpdaterForApplication();
@@ -26,7 +26,6 @@ namespace NextPlayerUWPDataLayer.Services
         public void UpdateAppTileBG(string title, string artist, string coverUri)
         {
             var notification = PrepareTileNotification(title, artist, coverUri);
-            // Generate WinRT notification
             try
             {
                 TileUpdateManager.CreateTileUpdaterForApplication("App").Update(notification);
@@ -43,10 +42,10 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 Children =
                 {
-                   new TileImage()
+                   new AdaptiveImage()
                    {
-                       Source = new TileImageSource(AppConstants.AppLogoSmall71),
-                       RemoveMargin = true
+                       Source = AppConstants.AppLogoSmall71,
+                       HintRemoveMargin = true
                    }
                 }
             };
@@ -55,23 +54,23 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 PeekImage = new TilePeekImage()
                 {
-                    Source = new TileImageSource(coverUri)
+                    Source = coverUri
                 },
 
                 Children =
                 {
-                    new TileText()
+                    new AdaptiveText()
                     {
                         Text = title,
-                        Wrap = true,
-                        Style = TileTextStyle.Caption
+                        HintWrap = true,
+                        HintStyle = AdaptiveTextStyle.Caption
                     },
 
-                    new TileText()
+                    new AdaptiveText()
                     {
                         Text = artist,
-                        Wrap = true,
-                        Style = TileTextStyle.CaptionSubtle
+                        HintWrap = true,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
                     }
                 }
             };
@@ -80,43 +79,43 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 Children =
                 {
-                    new TileGroup()
+                    new AdaptiveGroup()
                     {
                         Children =
                         {
-                            new TileSubgroup()
+                            new AdaptiveSubgroup()
                             {
                                 Children =
                                 {
-                                   new TileImage()
+                                   new AdaptiveImage()
                                    {
-                                       Source = new TileImageSource(coverUri),
-                                       Align = TileImageAlign.Stretch,
-                                       RemoveMargin = true
+                                       Source = coverUri,
+                                       HintAlign = AdaptiveImageAlign.Stretch,
+                                       HintRemoveMargin = true
                                    }
                                 },
-                                Weight = 1
+                                HintWeight = 1
                             },
 
-                            new TileSubgroup()
+                            new AdaptiveSubgroup()
                             {
                                 Children =
                                 {
-                                    new TileText()
+                                    new AdaptiveText()
                                     {
                                         Text = title,
-                                        Wrap = true,
-                                        Style = TileTextStyle.Caption
+                                        HintWrap = true,
+                                        HintStyle = AdaptiveTextStyle.Caption
                                     },
 
-                                    new TileText()
+                                    new AdaptiveText()
                                     {
                                         Text = artist,
-                                        Wrap = true,
-                                        Style = TileTextStyle.CaptionSubtle
+                                        HintWrap = true,
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
                                     }
                                 },
-                                Weight = 2
+                                HintWeight = 2
                             }
                         }
                     }
@@ -127,24 +126,24 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 BackgroundImage = new TileBackgroundImage()
                 {
-                    Source = new TileImageSource(coverUri),
-                    Overlay = 60
+                    Source = coverUri,
+                    HintOverlay = 60
                 },
 
                 Children =
                 {
-                    new TileText()
+                    new AdaptiveText()
                     {
                         Text = title,
-                        Wrap = true,
-                        Style = TileTextStyle.Caption
+                        HintWrap = true,
+                        HintStyle = AdaptiveTextStyle.Caption
                     },
 
-                    new TileText()
+                    new AdaptiveText()
                     {
                         Text = artist,
-                        Wrap = true,
-                        Style = TileTextStyle.CaptionSubtle
+                        HintWrap = true,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
                     }
                 }
             };

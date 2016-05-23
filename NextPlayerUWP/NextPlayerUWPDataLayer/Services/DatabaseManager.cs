@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SQLitePCL;
 using SQLite;
 using System.IO;
 using NextPlayerUWPDataLayer.Constants;
