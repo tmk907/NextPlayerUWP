@@ -1,12 +1,10 @@
-﻿using GalaSoft.MvvmLight.Command;
-using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -45,7 +43,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (folders.Count == 0)
             {
-                folders = await DatabaseManager.Current.GetFolderItemsAsync();
+                Folders = await DatabaseManager.Current.GetFolderItemsAsync();
                 SortItems(null, null);
             }
         }

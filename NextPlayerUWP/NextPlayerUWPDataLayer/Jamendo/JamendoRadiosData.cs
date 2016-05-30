@@ -1,61 +1,49 @@
-﻿using JamendoApi;
-using NextPlayerUWPDataLayer.Constants;
+﻿using NextPlayerUWPDataLayer.Enums;
+using NextPlayerUWPDataLayer.Jamendo.Models;
 using NextPlayerUWPDataLayer.Model;
-using System.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.Jamendo
 {
     public class JamendoRadiosData
     {
-        private JamendoApiClient client;
+        private JamendoClient client;
 
         public JamendoRadiosData()
         {
-            client = new JamendoApi.JamendoApiClient(AppConstants.JamendoClientId);
+            client = new JamendoClient();
         }
 
-        public async Task<JamendoApi.ApiEntities.Radios.StreamRadio> GetRadioStream(string radioName)
+        public async Task<RadioStream> GetRadioStream(string radioName)
         {
-            JamendoApi.ApiCalls.Radios.RadioStreamCall radiostream = new JamendoApi.ApiCalls.Radios.RadioStreamCall();
-            radiostream.Name = new JamendoApi.ApiCalls.Parameters.NameParameter(radioName);
-            var streamRadio = await client.CallAsync(radiostream);
-            if (streamRadio !=null && streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
-            {
-                var stream = streamRadio.Results.FirstOrDefault();
-                return stream;
-            }
-            return null;
+            var stream = await client.GetStream(radioName);
+            return stream;
         }
 
-        public async Task<JamendoApi.ApiEntities.Radios.StreamRadio> GetRadioStream(int id)
+        public async Task<RadioStream> GetRadioStream(int id)
         {
-            JamendoApi.ApiCalls.Radios.RadioStreamCall radiostream = new JamendoApi.ApiCalls.Radios.RadioStreamCall();
-            radiostream.Id = new JamendoApi.ApiCalls.Parameters.IdParameter((uint)id);
-            var streamRadio = await client.CallAsync(radiostream);
-            if (streamRadio != null && streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
-            {
-                var stream = streamRadio.Results.FirstOrDefault();
-                return stream;
-
-            }
-            return null;
+            var stream = await client.GetStream(id);
+            return stream;
         }
 
-        public RadioItem GetRadioItemFromStream(JamendoApi.ApiEntities.Radios.StreamRadio stream)
+        public RadioItem GetRadioItemFromStream(RadioStream stream)
         {
-            RadioItem radio = new RadioItem((int)stream.Id, Enums.RadioType.Jamendo, stream.Stream);
+            RadioItem radio = new RadioItem(stream.Id, RadioType.Jamendo);
             radio.Name = stream.Name;
-            radio.PlayingNowTitle = stream.PlayingNow.Name;
+            radio.PlayingNowTitle = stream.PlayingNow.TrackName;
             radio.PlayingNowAlbum = stream.PlayingNow.AlbumName;
             radio.PlayingNowArtist = stream.PlayingNow.ArtistName;
-            radio.PlayingNowImagePath = stream.PlayingNow.Image;
+            radio.PlayingNowImagePath = stream.PlayingNow.TrackImage;
+            radio.StreamUrl = stream.StreamUrl;
+            radio.RemainingTime = stream.CallMeBack;
+            radio.StreamUpdatedAt = DateTime.Now;
             return radio;
         }
 
-        public int GetRemainingTime(JamendoApi.ApiEntities.Radios.StreamRadio stream)
+        public int GetRemainingTime(RadioStream stream)
         {
-            return (int)stream.CallMeBack;
+            return stream.CallMeBack;
         }
     }
 }

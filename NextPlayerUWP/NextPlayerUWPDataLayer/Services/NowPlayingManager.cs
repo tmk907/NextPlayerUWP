@@ -447,7 +447,7 @@ namespace NextPlayerUWPDataLayer.Services
                     message2.Add(AppConstants.StreamUpdated, serialized);
                     BackgroundMediaPlayer.SendMessageToForeground(message2);
                 }
-                    
+
                 int ms = jRadioData.GetRemainingTime(stream);
                 SetTimer(ms);
             }

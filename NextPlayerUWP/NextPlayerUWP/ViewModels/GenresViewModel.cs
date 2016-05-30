@@ -1,17 +1,12 @@
-﻿using GalaSoft.MvvmLight.Command;
-using NextPlayerUWPDataLayer.Model;
+﻿using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Template10.Services.NavigationService;
 using NextPlayerUWP.Common;
 
 namespace NextPlayerUWP.ViewModels
@@ -44,7 +39,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (genres.Count == 0)
             {
-                genres = await DatabaseManager.Current.GetGenreItemsAsync();
+                Genres = await DatabaseManager.Current.GetGenreItemsAsync();
                 SortItems(null, null);
             }
         }

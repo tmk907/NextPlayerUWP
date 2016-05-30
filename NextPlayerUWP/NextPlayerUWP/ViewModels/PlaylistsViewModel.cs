@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
+using System.IO;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -35,6 +36,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return editPlaylist; }
             set { Set(ref editPlaylist, value); }
+        }
+
+        private bool relativePaths = false;
+        public bool RelativePaths
+        {
+            get { return relativePaths; }
+            set { Set(ref relativePaths, value); }
         }
 
         protected override async Task LoadData()
@@ -98,6 +106,53 @@ namespace NextPlayerUWP.ViewModels
             }
             await DatabaseManager.Current.UpdatePlaylistName(editPlaylist.Id, editPlaylist.Name);
             //await LoadData();
+        }
+
+        public async void ExportPlaylist()
+        {
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+            savePicker.SuggestedStartLocation =  Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
+            // Dropdown of file types the user can save the file as
+            savePicker.FileTypeChoices.Add("Playlist", new List<string>() { ".m3u" });
+            savePicker.SuggestedFileName = editPlaylist.Name;
+
+            Windows.Storage.StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                // Prevent updates to the remote version of the file until
+                // we finish making changes and call CompleteUpdatesAsync.
+                Windows.Storage.CachedFileManager.DeferUpdates(file);
+
+                string folderPath = Path.GetDirectoryName(file.Path);
+                PlaylistExporter pe = new PlaylistExporter();
+                string content = await pe.ExportAsM3U(editPlaylist, relativePaths, folderPath);
+
+                await Windows.Storage.FileIO.WriteTextAsync(file, content);
+                // Let Windows know that we're finished changing the file so
+                // the other app can update the remote version of the file.
+                // Completing updates may require Windows to ask for user input.
+                Windows.Storage.Provider.FileUpdateStatus status = await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
+                if (status == Windows.Storage.Provider.FileUpdateStatus.Complete)
+                {
+                    //this.textBlock.Text = "File " + file.Name + " was saved.";
+                    if (editPlaylist.IsSmart)
+                    {
+                        DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, -1);
+                    }
+                    else
+                    {
+                        DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, editPlaylist.Id);
+                    }
+                }
+                else
+                {
+                    //this.textBlock.Text = "File " + file.Name + " couldn't be saved.";
+                }
+            }
+            else
+            {
+                //this.textBlock.Text = "Operation cancelled.";
+            }
         }
     }
 }

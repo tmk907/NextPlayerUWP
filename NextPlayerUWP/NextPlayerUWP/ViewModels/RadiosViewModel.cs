@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Jamendo;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            
+
             if (Radios.Count == 0)
             {
                 var jr = await GetJamendoRadios();
@@ -47,21 +48,20 @@ namespace NextPlayerUWP.ViewModels
         private async Task<List<RadioItem>> GetJamendoRadios()
         {
             List<RadioItem> jamendoRadios = new List<RadioItem>();
-            JamendoApi.JamendoApiClient client = new JamendoApi.JamendoApiClient(AppConstants.JamendoClientId);
-            JamendoApi.ApiCalls.Radios.RadiosCall getRadios = new JamendoApi.ApiCalls.Radios.RadiosCall();
-            getRadios.ImageSize = new JamendoApi.ApiCalls.Parameters.ImageSizeParameter<JamendoApi.ApiCalls.Parameters.RadioImageSize>(JamendoApi.ApiCalls.Parameters.RadioImageSize.Px150);
-            var radiosList = await client.CallAsync(getRadios);
-            if (radiosList!=null && radiosList.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
+            JamendoClient client = new JamendoClient();
+            var radiosList = await client.GetRadios();
+            if (radiosList != null)
             {
-                foreach (var item in radiosList.Results)
+                foreach (var item in radiosList)
                 {
-                    RadioItem r = new RadioItem((int)item.Id, NextPlayerUWPDataLayer.Enums.RadioType.Jamendo, "");
+                    RadioItem r = new RadioItem((int)item.Id, NextPlayerUWPDataLayer.Enums.RadioType.Jamendo);
                     r.Name = item.DisplayName;
                     r.ImagePath = item.Image;
                     r.PlayingNowTitle = "";
                     r.PlayingNowAlbum = "";
                     r.PlayingNowArtist = "";
                     r.RemainingTime = 0;
+                    r.StreamUrl = "";
                     jamendoRadios.Add(r);
                 }
             }
@@ -70,31 +70,28 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task UpdatePlayingNow()
         {
-            JamendoApi.JamendoApiClient client = new JamendoApi.JamendoApiClient(AppConstants.JamendoClientId);
-            foreach(var radio in Radios)
+            JamendoClient client = new JamendoClient();
+            foreach (var radio in Radios)
             {
                 if (radio.RemainingTime < (DateTime.Now - radio.StreamUpdatedAt).TotalMilliseconds)
                 {
-                    JamendoApi.ApiCalls.Radios.RadioStreamCall radiostream = new JamendoApi.ApiCalls.Radios.RadioStreamCall();
-                    radiostream.Id = new JamendoApi.ApiCalls.Parameters.IdParameter((uint)radio.BroadcastId);
-                    var streamRadio = await client.CallAsync(radiostream);
-                    if (streamRadio.Headers.Status == JamendoApi.ApiEntities.Headers.ResponseStatus.Success)
+                    var streamRadio = await client.GetStream(radio.BroadcastId);
+                    if (streamRadio != null)
                     {
-                        var stream = streamRadio.Results.FirstOrDefault();
                         try
                         {
-                            radio.StreamUrl = stream.Stream;
+                            radio.StreamUrl = streamRadio.StreamUrl;
                         }
                         catch (Exception ex)
                         {
 
                         }
-                        radio.PlayingNowTitle = stream.PlayingNow.Name;
-                        radio.PlayingNowAlbum = stream.PlayingNow.AlbumName;
-                        radio.PlayingNowArtist = stream.PlayingNow.ArtistName;
-                        radio.PlayingNowImagePath = stream.PlayingNow.Image;
+                        radio.PlayingNowTitle = streamRadio.PlayingNow.TrackName;
+                        radio.PlayingNowAlbum = streamRadio.PlayingNow.AlbumName;
+                        radio.PlayingNowArtist = streamRadio.PlayingNow.ArtistName;
+                        radio.PlayingNowImagePath = streamRadio.PlayingNow.TrackImage;
 
-                        radio.RemainingTime = (int)stream.CallMeBack;
+                        radio.RemainingTime = streamRadio.CallMeBack;
                         radio.StreamUpdatedAt = DateTime.Now;
                     }
                     else

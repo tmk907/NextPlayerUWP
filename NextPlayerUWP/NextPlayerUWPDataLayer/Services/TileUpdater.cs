@@ -38,6 +38,10 @@ namespace NextPlayerUWPDataLayer.Services
 
         private TileNotification PrepareTileNotification(string title, string artist, string coverUri)
         {
+            if (title == null) title = "";
+            if (artist == null) artist = "";
+            if (string.IsNullOrEmpty(coverUri)) coverUri = AppConstants.AlbumCover;
+
             TileBindingContentAdaptive smallBindingContent = new TileBindingContentAdaptive()
             {
                 Children =

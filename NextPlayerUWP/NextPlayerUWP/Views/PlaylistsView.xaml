@@ -31,10 +31,12 @@
                             Click="{x:Bind ViewModel.EditSmartPlaylist}" CommandParameter="{Binding}"/>-->
             <MenuFlyoutItem x:Uid="MFIEditPlainName" Text="Edit name"
                             Visibility="{Binding IsSmart, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
-                            Click="MenuFlyoutItemEditName_Click" CommandParameter="{Binding}"/>
+                            Click="MFIEditName_Click" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
                             Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"
                             Click="MenuFlyoutItemDelete_Click" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIExport" Text="Export" 
+                            Click="MFIExportChoosePathKind" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
@@ -124,6 +126,32 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
+            <!--<ContentDialog x:Name="ContentDialogChoosePathKind"
+                Grid.Row="1"
+                x:Uid="ContentDialogChoosePathKind"
+                VerticalAlignment="Center"
+                Title="Save playlist"
+                PrimaryButtonText="Save"
+                PrimaryButtonClick="{x:Bind ViewModel.ExportPlaylist}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Uid="TBChoosePathKind"
+                            Margin="0,4,4,4"
+                            Text="Song path"/>
+                        --><!--<RadioButton x:Uid="RBAbsolute"
+                                     GroupName="pathskind"
+                                     Content="Absolute"
+                                     IsChecked="{x:Bind ViewModel.RelativePaths, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"/>
+                        <RadioButton x:Uid="RBRelative"
+                                 GroupName="pathskind"
+                                 Content="Relative"
+                                 IsChecked="{x:Bind ViewModel.RelativePaths, Converter={StaticResource BoolToNullableBoolConverter}, Mode=TwoWay}"/>--><!--
+                    </StackPanel>
+                </ContentDialog.Content>
+            </ContentDialog>-->
             <mycontrols:AlternatingRowListView x:Name="PlaylistsListView"
                       Grid.Row="1"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"

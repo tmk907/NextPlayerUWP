@@ -465,7 +465,7 @@ namespace NextPlayerUWP.ViewModels
         }
         #endregion
 
-            #region About
+        #region About
         private string appVersion = "";
         public string AppVersion
         {
@@ -501,6 +501,12 @@ namespace NextPlayerUWP.ViewModels
 
             await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
         }
+
+        public void Licenses()
+        {
+            NavigationService.Navigate(App.Pages.Licenses);
+        }
+
         #endregion
 
         private bool IsMyBackgroundTaskRunning

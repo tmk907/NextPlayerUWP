@@ -549,4 +549,13 @@
   <data name="TBLanguage.Text" xml:space="preserve">
     <value>Language:</value>
   </data>
+  <data name="PageHeaderLicenses.Content" xml:space="preserve">
+    <value>Licenses</value>
+  </data>
+  <data name="ButtonLicenses.Content" xml:space="preserve">
+    <value>Licenses</value>
+  </data>
+  <data name="ContentDialogChoosePathKind.Title" xml:space="preserve">
+    <value>Save playlist</value>
+  </data>
 </root>

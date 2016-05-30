@@ -73,7 +73,7 @@ namespace NextPlayerUWP
             {
                 UpdateDB();
             }
-
+            
             SplashFactory = (e) => new Views.Splash(e);
 
             try
@@ -106,6 +106,7 @@ namespace NextPlayerUWP
             FileInfo,
             Folders,
             Lyrics,
+            Licenses,
             NowPlaying,
             NowPlayingPlaylist,
             Playlists,
@@ -115,32 +116,6 @@ namespace NextPlayerUWP
             Songs,
             TagsEditor
         }
-
-        private bool NeedsNewNavigationService(IActivatedEventArgs args)
-        {
-            switch (args.PreviousExecutionState)
-            {
-                case ApplicationExecutionState.ClosedByUser:
-                case ApplicationExecutionState.NotRunning:
-                case ApplicationExecutionState.Terminated:
-                    return true;
-                case ApplicationExecutionState.Running:
-                case ApplicationExecutionState.Suspended:
-                    return false;
-            }
-            return true;
-        }
-
-        //public override UIElement CreateRootElement(IActivatedEventArgs e)
-        //{
-        //    var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);
-        //    return new ModalDialog
-        //    {
-        //        DisableBackButtonWhenModal = true,
-        //        Content = new Views.Shell(service),
-        //        ModalContent = new Views.Busy(),
-        //    };
-        //}
 
         public override UIElement CreateRootElement(IActivatedEventArgs e)
         {
@@ -179,6 +154,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Folders, typeof(FoldersView));
             if (!keys.ContainsKey(Pages.Genres))
                 keys.Add(Pages.Genres, typeof(GenresView));
+            if (!keys.ContainsKey(Pages.Licenses))
+                keys.Add(Pages.Licenses, typeof(Licences));
             if (!keys.ContainsKey(Pages.NowPlaying))
                 keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
             if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
@@ -196,74 +173,15 @@ namespace NextPlayerUWP
             if (!keys.ContainsKey(Pages.TagsEditor))
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
             #endregion
-            //DispatcherHelper.Initialize();
-
-            //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
-
-            //if (Window.Current.Content as ModalDialog == null)
-            //{
-            //    var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-            //    // create modal root
-            //    Window.Current.Content = new ModalDialog
-            //    {
-            //        DisableBackButtonWhenModal = true,
-            //        Content = new Views.Shell(nav),
-            //        ModalContent = new Views.Busy(),
-            //    };
-            //}
-
-            //if (NeedsNewNavigationService(args))
-            //{
-            //    var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-            //    var s = BootStrapper.Current.NavigationService.FrameFacade.GetNavigationState();
-            //    if (Window.Current.Content as Shell == null)
-            //    {
-            //        Window.Current.Content = new Views.Shell(nav);
-            //    }
-            //    //Logger.Save("NeedsNewNavigationService");
-            //}
-            //else
-            //{
-
-            //}
-            //Logger.SaveToFile();
-
-            try
-            {
-                //if (Window.Current.Content as Shell == null)
-                //{
-                //    //Logger.Save("OnInitializeAsync null " + args.Kind + " " + args.PreviousExecutionState);
-                //    //Logger.SaveToFile();
-                //    var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-                //    //Logger.Save("OnInitializeAsync 2 ");
-                //    //Logger.SaveToFile();
-                //    Window.Current.Content = new Views.Shell(nav);
-
-                //    DispatcherHelper.Initialize();
-                //}
-                //else
-                //{
-                //    //Logger.Save("OnInitializeAsync not null " + args.Kind + " " + args.PreviousExecutionState);
-                //    //Logger.SaveToFile();
-                //}
-                
-            }
-            catch (Exception ex)
-            {
-                Logger.Save("OnInitializeAsync Exception" + Environment.NewLine + ex);
-                Logger.SaveToFile();
-            }
-
-            //await JamendoTest.Start();
-
+            
             await Task.CompletedTask;
         }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-            Logger.Save("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-            Logger.SaveToFile();
+            //Logger.Save("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
+            //Logger.SaveToFile();
             await SongCoverManager.Instance.Initialize();
             if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                 args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
@@ -363,6 +281,7 @@ namespace NextPlayerUWP
         }
 
         public override async void OnResuming(object s, object e, AppExecutionState previousExecutionState)
+
         {
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Active));
             if (previousExecutionState == AppExecutionState.Terminated)
@@ -411,7 +330,7 @@ namespace NextPlayerUWP
         private void FirstRunSetup()
         {
             DatabaseManager.Current.CreateDatabase();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
             CreateDefaultSmartPlaylists();
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
@@ -502,7 +421,6 @@ namespace NextPlayerUWP
             ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
         }
 
-
         private void UpdateDB()
         {
             object version = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DBVersion);
@@ -510,6 +428,15 @@ namespace NextPlayerUWP
             {
                 DatabaseManager.Current.UpdateToVersion2();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
+            }
+            if (version.ToString() == "2")
+            {
+                bool recreate = DatabaseManager.Current.DBCorrection();
+                if (recreate)
+                {
+                    CreateDefaultSmartPlaylists();
+                }
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
             }
         }
     }

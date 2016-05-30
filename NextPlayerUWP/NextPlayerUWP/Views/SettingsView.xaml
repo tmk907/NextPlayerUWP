@@ -86,9 +86,6 @@
 			VisualStateNarrowMinWidth="0"
 			VisualStateNormalMinWidth="720">
         </controls:PageHeader>
-        <!--<UserControl Grid.Column="1" Grid.Row="1">
-            <local:RightPanelControl/>
-        </UserControl>-->
         <Grid Grid.Column="0" Grid.Row="1" Margin="12,12,12,4">
             <ScrollViewer>
                 <StackPanel Orientation="Vertical">
@@ -279,15 +276,12 @@
                             Content="Feedback"
                             Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
                             Click="{x:Bind ViewModel.LeaveFeedback}"/>
-                    <!--<TextBlock>
-                        <Span xml:space="preserve">
-                            <Run>Icon made by </Run>
-                            <Hyperlink NavigateUri="http://www.flaticon.com/authors/dirtyworks">Dirtyworks</Hyperlink>
-                            <Run> from </Run>
-                            <Hyperlink NavigateUri="http://www.flaticon.com ">www.flaticon.com</Hyperlink>
-                        </Span>
-                    </TextBlock>-->
-                        <!--<Button x:Uid="ButtonSendEmail"
+                    <Button x:Uid="ButtonLicenses"
+                        Content="Licenses"
+                        Margin="0,4,0,8"
+                        MinWidth="128"
+                        Click="{x:Bind ViewModel.Licenses}"/>
+                    <!--<Button x:Uid="ButtonSendEmail"
                         Content="Send e-mail"
                         Margin="0,8,0,4"
                         MinWidth="128"

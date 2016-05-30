@@ -549,4 +549,28 @@
   <data name="TBLanguage.Text" xml:space="preserve">
     <value>Language:</value>
   </data>
+  <data name="PageHeaderLicenses.Content" xml:space="preserve">
+    <value>Licenses</value>
+  </data>
+  <data name="ButtonLicenses.Content" xml:space="preserve">
+    <value>Licenses</value>
+  </data>
+  <data name="ContentDialogChoosePathKind.Title" xml:space="preserve">
+    <value>Save playlist</value>
+  </data>
+  <data name="ContentDialogChoosePathKind.PrimaryButtonText" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ContentDialogChoosePathKind.SecondaryButtonText" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RBAbsolute.Content" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RBRelative.Content" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TBChoosePathKind.Text" xml:space="preserve">
+    <value></value>
+  </data>
 </root>

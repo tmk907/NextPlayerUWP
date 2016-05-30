@@ -136,12 +136,12 @@ namespace NextPlayerUWPDataLayer.Model
             streamUpdatedAt = DateTime.Now;
         }
 
-        public RadioItem(int id, RadioType type, string stream)
+        public RadioItem(int id, RadioType type)
         {
             this.broadcastId = id;
             this.type = type;
-            this.streamUrl = stream;
 
+            this.streamUrl = "";
             name = "Unknown radio";
             imagePath = AppConstants.RadioCover;
             playingNowAlbum = "";
@@ -177,6 +177,16 @@ namespace NextPlayerUWPDataLayer.Model
             song.CoverPath = playingNowImagePath;
             song.Duration = TimeSpan.Zero;
             return song;
+        }
+
+        public void UpdateStream(TrackStream stream)
+        {
+            PlayingNowTitle = stream.Title;
+            PlayingNowAlbum = stream.Album;
+            PlayingNowArtist = stream.Artist;
+            PlayingNowImagePath = stream.CoverUri;
+            StreamUrl = stream.Url;
+            RemainingTime = stream.RemainingSeconds;
         }
 
         public override string GetParameter()

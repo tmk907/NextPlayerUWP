@@ -159,7 +159,8 @@ namespace NextPlayerUWP.ViewModels
             onNavigatedCompleted = true;
             if (onLoadedCompleted)
             {
-                LoadAndScroll();
+                System.Diagnostics.Debug.WriteLine("OnNavigatedToAsync LoadAndScroll()");
+                await LoadAndScroll();
             }
             await Task.CompletedTask;
         }
@@ -216,7 +217,11 @@ namespace NextPlayerUWP.ViewModels
         public void OnLoaded(ListView p)
         {
             listView = p;
-            if (onNavigatedCompleted) LoadAndScroll();
+            if (onNavigatedCompleted)
+            {
+                System.Diagnostics.Debug.WriteLine("OnLoaded LoadAndScroll()");
+                LoadAndScroll();
+            }
             else onLoadedCompleted = true;//zanim zostanie zmieniona wartosc, w OnNavigatedToAsync moze przeskoczyc do if(onloadedcomplete) ?
         }
 
@@ -233,6 +238,14 @@ namespace NextPlayerUWP.ViewModels
 
         protected async Task SetScrollPosition()
         {
+            if (firstVisibleItemIndex < 0)
+            {
+                return;
+            }
+            if(listView.Items.Count <= firstVisibleItemIndex)
+            {
+                return;
+            }
             listView.ScrollIntoView(listView.Items[firstVisibleItemIndex], ScrollIntoViewAlignment.Leading);
             if (positionKey != null)
             {

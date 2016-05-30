@@ -469,7 +469,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (q == null)
             {
                 Diagnostics.Logger.Save("GetSongData null id=" + songId);
-            }
+            }//!
             SongData s = CreateSongData(q);
             return s;
         }
@@ -478,11 +478,17 @@ namespace NextPlayerUWPDataLayer.Services
         {
             var l = await connectionAsync.Table<SongsTable>().Where(e => e.SongId.Equals(songId)).ToListAsync();
             var q = l.FirstOrDefault();
+            SongData s;
             if (q == null)
             {
                 Diagnostics.Logger.Save("GetSongDataAsync null id=" + songId);
+
+                s = CreateEmptySongData();//!
             }
-            SongData s = CreateSongData(q);
+            else
+            {
+                s = CreateSongData(q);
+            }
             return s;
         }
 
@@ -1401,6 +1407,45 @@ namespace NextPlayerUWPDataLayer.Services
             return s;
         }
 
+        private static SongData CreateEmptySongData()
+        {
+            Tags tag = new Tags()
+            {
+                Album = "",
+                AlbumArtist = "",
+                Artists = "",
+                Comment = "",
+                Composers = "",
+                Conductor = "",
+                Disc = 0,
+                DiscCount = 0,
+                FirstArtist = "",
+                FirstComposer = "",
+                Genres = "",
+                Lyrics = "",
+                Rating = 0,
+                Title = "",
+                Track = 0,
+                TrackCount = 0,
+                Year = 0
+            };
+            SongData s = new SongData()
+            {
+                Bitrate = 0,
+                DateAdded = DateTime.Now,
+                Duration = TimeSpan.Zero,
+                Filename = "",
+                FileSize = (ulong)0,
+                IsAvailable = 0,
+                LastPlayed = DateTime.Now,
+                Path = "",
+                PlayCount = 0,
+                SongId = -2,
+                Tag = tag
+            };
+            return s;
+        }
+
         public void ClearCoverPaths()
         {
             connection.Execute("UPDATE AlbumsTable SET ImagePath = ''");
@@ -1451,6 +1496,44 @@ namespace NextPlayerUWPDataLayer.Services
             connection.Execute("ALTER TABLE NowPlayingTable ADD COLUMN SourceType INTEGER");
             connection.Execute("UPDATE NowPlayingTable SET SourceType = 1");
             connection.CreateTable<ImportedPlaylistsTable>();
+        }
+
+        public bool DBCorrection()
+        {
+            bool recreate = false;
+            try
+            {
+                var list = connection.Table<GenresTable>().ToList();
+                if (list.Count > 0)
+                {
+                    connection.Execute("UPDATE GenresTable SET SongsNumber = ? WHERE GenreId = ?", list.FirstOrDefault().SongsNumber, list.FirstOrDefault().GenreId);
+                }
+            }
+            catch(Exception ex)
+            {
+                recreate = true;
+            }
+            try
+            {
+                var list = connection.Table<FoldersTable>().ToList();
+                if (list.Count > 0)
+                {
+                    connection.Execute("UPDATE FoldersTable SET SongsNumber = ? WHERE FolderId = ?", list.FirstOrDefault().SongsNumber, list.FirstOrDefault().FolderId);
+                }
+            }
+            catch (Exception ex)
+            {
+                recreate = true;
+            }
+
+            if (recreate)
+            {
+                DeleteDatabase();
+                CreateDatabase();
+                Diagnostics.Logger.Save("Recreate db");
+                Diagnostics.Logger.SaveToFile();
+            }
+            return recreate;
         }
     }
 }

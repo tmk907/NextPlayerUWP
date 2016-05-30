@@ -70,7 +70,15 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 string type = file.FileType.ToLower();
                 
-                if(type == ".m3u")// || type == ".wpl" || type == ".zpl"
+                if(type == ".m3u")
+                {
+                    if (!importedPlaylistPaths.Contains(file.Path))
+                    {
+                        var ip = await ParseM3UPlaylist(file, folder.Path);
+                        importedPlaylists.Add(ip);
+                    }
+                }
+                else if (type == ".m3u8")
                 {
                     if (!importedPlaylistPaths.Contains(file.Path))
                     {

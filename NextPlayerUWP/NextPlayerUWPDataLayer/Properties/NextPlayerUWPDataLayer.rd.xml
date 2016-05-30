@@ -28,6 +28,6 @@
   <Library Name="NextPlayerUWPDataLayer">
 
   	<!-- add directives for your library here -->
-
+	<Namespace Name="NextPlayerUWPDataLayer.Tables" Dynamic="Required All" /> 
   </Library>
 </Directives>

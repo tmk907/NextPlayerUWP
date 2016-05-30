@@ -67,11 +67,18 @@ namespace NextPlayerUWP.Views
             await dialog.ShowAsync();
         }
 
-        private async void MenuFlyoutItemEditName_Click(object sender, RoutedEventArgs e)
+        private async void MFIEditName_Click(object sender, RoutedEventArgs e)
         {
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
             ViewModel.EditPlaylist = new PlaylistItem(selected.Id, false, selected.Name);
             await ContentDialogEditName.ShowAsync();
+        }
+
+        private async void MFIExportChoosePathKind(object sender, RoutedEventArgs e)
+        {
+            PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
+            ViewModel.EditPlaylist = new PlaylistItem(selected.Id, selected.IsSmart, selected.Name);
+            //await ContentDialogChoosePathKind.ShowAsync();
         }
 
     }
