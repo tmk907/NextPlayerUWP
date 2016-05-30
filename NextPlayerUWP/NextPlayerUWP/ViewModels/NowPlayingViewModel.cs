@@ -356,6 +356,9 @@ namespace NextPlayerUWP.ViewModels
             await Task.CompletedTask;
         }
 
-        
+        public void GoToNowPlayingPlaylist()
+        {
+            NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
+        }
     }
 }

@@ -126,7 +126,7 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
-            <!--<ContentDialog x:Name="ContentDialogChoosePathKind"
+            <ContentDialog x:Name="ContentDialogChoosePathKind"
                 Grid.Row="1"
                 x:Uid="ContentDialogChoosePathKind"
                 VerticalAlignment="Center"
@@ -141,17 +141,17 @@
                         <TextBlock x:Uid="TBChoosePathKind"
                             Margin="0,4,4,4"
                             Text="Song path"/>
-                        --><!--<RadioButton x:Uid="RBAbsolute"
+                        <RadioButton x:Uid="RBAbsolute"
                                      GroupName="pathskind"
                                      Content="Absolute"
-                                     IsChecked="{x:Bind ViewModel.RelativePaths, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"/>
+                                     IsChecked="{x:Bind ViewModel.RelativePaths, Converter={StaticResource InverseBooleanConverter}, Mode=TwoWay}"/>
                         <RadioButton x:Uid="RBRelative"
                                  GroupName="pathskind"
                                  Content="Relative"
-                                 IsChecked="{x:Bind ViewModel.RelativePaths, Converter={StaticResource BoolToNullableBoolConverter}, Mode=TwoWay}"/>--><!--
+                                 IsChecked="{x:Bind ViewModel.RelativePaths, Converter={StaticResource BoolToNullableBoolConverter}, Mode=TwoWay}"/>
                     </StackPanel>
                 </ContentDialog.Content>
-            </ContentDialog>-->
+            </ContentDialog>
             <mycontrols:AlternatingRowListView x:Name="PlaylistsListView"
                       Grid.Row="1"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"

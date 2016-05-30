@@ -69,7 +69,7 @@ namespace NextPlayerUWPDataLayer.Services
                 case MusicSource.OnlineFile:
                     break;
                 case MusicSource.RadioJamendo:
-                    LoadRadio(path);
+                    await LoadRadio(path);
                     break;
                 default:
                     break;
@@ -106,13 +106,21 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        private void LoadRadio(string path)
+        private async Task LoadRadio(string path)
         {
             try
             {
                 mediaPlayer.AutoPlay = false;
+                if ("" == path)
+                {
+                    var stream = await jRadioData.GetRadioStream(playlist.GetCurrentSong().SongId);
+                    if (stream != null)
+                    {
+                        path = stream.Url;
+                    }
+                }
                 mediaPlayer.SetUriSource(new Uri(path));
-                SetTimer(1000);
+                SetTimer(500);
             }
             catch (Exception ex)
 	        {
@@ -440,6 +448,7 @@ namespace NextPlayerUWPDataLayer.Services
                 ValueSet message = new ValueSet();
                 message.Add(AppConstants.UpdateUVC, null);
                 BackgroundMediaPlayer.SendMessageToBackground(message);
+
                 if (foregroundAppState != AppState.Suspended)
                 {
                     string serialized = Newtonsoft.Json.JsonConvert.SerializeObject(s);
@@ -448,7 +457,7 @@ namespace NextPlayerUWPDataLayer.Services
                     BackgroundMediaPlayer.SendMessageToForeground(message2);
                 }
 
-                int ms = jRadioData.GetRemainingTime(stream);
+                int ms = jRadioData.GetRemainingSeconds(stream);
                 SetTimer(ms);
             }
         }

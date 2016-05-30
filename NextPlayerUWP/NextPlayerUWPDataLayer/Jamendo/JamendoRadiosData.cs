@@ -1,5 +1,4 @@
 ﻿using NextPlayerUWPDataLayer.Enums;
-using NextPlayerUWPDataLayer.Jamendo.Models;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Threading.Tasks;
@@ -15,35 +14,38 @@ namespace NextPlayerUWPDataLayer.Jamendo
             client = new JamendoClient();
         }
 
-        public async Task<RadioStream> GetRadioStream(string radioName)
+        public async Task<TrackStream> GetRadioStream(string radioName)
         {
-            var stream = await client.GetStream(radioName);
-            return stream;
+            var s = await client.GetStream(radioName);
+            TrackStream ts = new TrackStream(s.PlayingNow.TrackName, s.PlayingNow.ArtistName, s.PlayingNow.AlbumName, s.Image, s.StreamUrl, s.CallMeBack, s.Id, s.Name);
+            return ts;
         }
 
-        public async Task<RadioStream> GetRadioStream(int id)
+        public async Task<TrackStream> GetRadioStream(int id)
         {
-            var stream = await client.GetStream(id);
-            return stream;
+            var s = await client.GetStream(id);
+            TrackStream ts = new TrackStream(s.PlayingNow.TrackName, s.PlayingNow.ArtistName, s.PlayingNow.AlbumName, s.Image, s.StreamUrl, s.CallMeBack, id, s.Name);
+            return ts;
         }
 
-        public RadioItem GetRadioItemFromStream(RadioStream stream)
+        public RadioItem GetRadioItemFromStream(TrackStream stream)
         {
             RadioItem radio = new RadioItem(stream.Id, RadioType.Jamendo);
-            radio.Name = stream.Name;
-            radio.PlayingNowTitle = stream.PlayingNow.TrackName;
-            radio.PlayingNowAlbum = stream.PlayingNow.AlbumName;
-            radio.PlayingNowArtist = stream.PlayingNow.ArtistName;
-            radio.PlayingNowImagePath = stream.PlayingNow.TrackImage;
-            radio.StreamUrl = stream.StreamUrl;
-            radio.RemainingTime = stream.CallMeBack;
+            radio.Name = stream.RadioName;
+            radio.PlayingNowTitle = stream.Title;
+            radio.PlayingNowAlbum = stream.Album;
+            radio.PlayingNowArtist = stream.Artist;
+            radio.PlayingNowImagePath = stream.CoverUri;
+            radio.StreamUrl = stream.Url;
+            radio.RemainingTime = stream.RemainingSeconds;
+
             radio.StreamUpdatedAt = DateTime.Now;
             return radio;
         }
 
-        public int GetRemainingTime(RadioStream stream)
+        public int GetRemainingSeconds(TrackStream stream)
         {
-            return stream.CallMeBack;
+            return stream.RemainingSeconds;
         }
     }
 }

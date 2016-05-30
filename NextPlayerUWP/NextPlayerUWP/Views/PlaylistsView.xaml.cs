@@ -78,7 +78,7 @@ namespace NextPlayerUWP.Views
         {
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
             ViewModel.EditPlaylist = new PlaylistItem(selected.Id, selected.IsSmart, selected.Name);
-            //await ContentDialogChoosePathKind.ShowAsync();
+            await ContentDialogChoosePathKind.ShowAsync();
         }
 
     }

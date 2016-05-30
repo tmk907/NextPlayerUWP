@@ -132,7 +132,7 @@ namespace NextPlayerUWPDataLayer.Model
             playingNowArtist = "Artist";
             playingNowTitle = "Title";
             playingNowImagePath = "";
-            remainingTime = 1000 * 60 * 60 * 24;
+            remainingTime = 0;// 1000 * 60 * 60 * 24;
             streamUpdatedAt = DateTime.Now;
         }
 
@@ -148,7 +148,7 @@ namespace NextPlayerUWPDataLayer.Model
             playingNowArtist = "";
             playingNowTitle = "";
             playingNowImagePath = AppConstants.RadioCover;
-            remainingTime = 1000 * 60 * 60 * 24;
+            remainingTime = 0;// 1000 * 60 * 60 * 24;
             streamUpdatedAt = DateTime.Now;
         }
 

@@ -295,6 +295,12 @@
                 Content="Now playing" 
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720">
+            <AppBarButton
+                x:Uid="Queue"
+                Icon="List"
+                Label="Queue"
+                Click="{x:Bind ViewModel.GoToNowPlayingPlaylist}"
+                />
         </controls:PageHeader>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

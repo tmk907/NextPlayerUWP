@@ -66,6 +66,10 @@ namespace NextPlayerUWPDataLayer.Model
 
         public int RemainingSeconds { get; set; }
 
+        public int Id { get; set; }
+
+        public string RadioName { get; set; }
+
         public TrackStream()
         {
             title = "";
@@ -73,17 +77,20 @@ namespace NextPlayerUWPDataLayer.Model
             album = "";
             coverUri = AppConstants.AlbumCover;
             Url = "";
-            RemainingSeconds = 24 * 60 * 60;
+            RemainingSeconds = 10; //if cant connect refresh stream after RemainingSeconds
+            Id = 0;
         }
 
-        public TrackStream(string title, string artist, string album, string coverUri,  string url, int seconds)
+        public TrackStream(string title, string artist, string album, string coverUri,  string url, int seconds, int id, string radioName)
         {
             this.title = title;
             this.artist = artist;
             this.album = album;
             this.coverUri = coverUri;
-            this.Url = url;
-            this.RemainingSeconds = seconds;
+            Url = url;
+            RemainingSeconds = seconds;
+            Id = id;
+            RadioName = radioName;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

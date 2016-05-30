@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Jamendo;
 using NextPlayerUWPDataLayer.Enums;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -20,8 +21,17 @@ namespace NextPlayerUWPDataLayer.Services
         {
             var r = await client.GetRadio(id);
             RadioItem radio = new RadioItem(id, RadioType.Jamendo);
-            radio.Name = r.DisplayName;
-            radio.ImagePath = r.Image;
+            if (r != null)
+            {
+                radio.Name = r.DisplayName;
+                radio.ImagePath = r.Image;
+            }
+            else
+            {
+                radio.Name = "";
+                radio.ImagePath = AppConstants.AlbumCover;
+            }
+            
             return radio;
         }
 
@@ -42,7 +52,15 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task<TrackStream> GetRadioStream(int id)
         {
             var s = await client.GetStream(id);
-            TrackStream ts = new TrackStream(s.PlayingNow.TrackName, s.PlayingNow.ArtistName, s.PlayingNow.AlbumName, s.PlayingNow.TrackImage, s.StreamUrl, s.CallMeBack);
+            TrackStream ts;
+            if (s != null)
+            {
+                ts = new TrackStream(s.PlayingNow.TrackName, s.PlayingNow.ArtistName, s.PlayingNow.AlbumName, s.PlayingNow.TrackImage, s.StreamUrl, s.CallMeBack, s.Id, s.Name);
+            }
+            else
+            {
+                ts = new TrackStream();
+            }
             return ts;
         }
     }

@@ -30,8 +30,8 @@ namespace NextPlayerUWPDataLayer.Services
 
     public sealed class LastFmManager
     {
-        private const string ApiKey = "9fc200c26a0fcd9fe847964f6dfc5860";
-        private const string ApiSecret = "784012f4290f2023f4d0ee43ecf6dd24";
+        private const string ApiKey = "4737e29d26f813ceeb64aefda42ec0ac";
+        private const string ApiSecret = "7b3dbb57b6fda2a24b95270acc77bbc4";
 
         private const string RootUrl = "http://ws.audioscrobbler.com/2.0/";
         private const string RootAuth = "https://ws.audioscrobbler.com/2.0/";

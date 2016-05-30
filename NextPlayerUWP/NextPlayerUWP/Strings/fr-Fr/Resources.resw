@@ -558,4 +558,22 @@
   <data name="ContentDialogChoosePathKind.Title" xml:space="preserve">
     <value>Save playlist</value>
   </data>
+  <data name="ContentDialogChoosePathKind.PrimaryButtonText" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="ContentDialogChoosePathKind.SecondaryButtonText" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="RBAbsolute.Content" xml:space="preserve">
+    <value>absolute paths</value>
+  </data>
+  <data name="RBRelative.Content" xml:space="preserve">
+    <value>relative paths</value>
+  </data>
+  <data name="TBChoosePathKind.Text" xml:space="preserve">
+    <value>Save using</value>
+  </data>
+  <data name="MFIExport.Text" xml:space="preserve">
+    <value>Save as m3u</value>
+  </data>
 </root>
