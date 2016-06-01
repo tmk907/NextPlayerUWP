@@ -212,9 +212,12 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                             //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                         }
                         break;
-                    case "test":
+                    case "ffmpeg":
                         string path = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
-                        await test(path);
+                        await OpenUsingFFmpeg(path);
+                        break;
+                    case AppConstants.LfmLogin:
+                        nowPlayingManager.RefreshLastFmCredentials();
                         break;
                 }
             }
@@ -222,12 +225,11 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
         private FFmpegInteropMSS FFmpegMSS;
 
-        private async Task test(string path)
+        private async Task OpenUsingFFmpeg(string path)
         {
             //path = @"D:\Muzyka\Jean Michel Jarre\Jean Michel Jarre - Aero [DTS]\11 - Aerology.ac3";
             //path = @"D:\Muzyka\Moja muzyka\jhg.ogg";
             StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-
 
             IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
 
@@ -242,7 +244,6 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                     BackgroundMediaPlayer.Current.AutoPlay = false;
                     // Pass MediaStreamSource to Media Element
                     BackgroundMediaPlayer.Current.SetMediaSource(mss);
-                    //BackgroundMediaPlayer.Current.Play();
                 }
                 else
                 {

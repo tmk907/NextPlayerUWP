@@ -579,4 +579,10 @@
   <data name="TBPreventScreenLock.Text" xml:space="preserve">
     <value>Prevent screen from dimming</value>
   </data>
+  <data name="ButtonLogin.Content" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="ButtonLogout.Content" xml:space="preserve">
+    <value>Log out</value>
+  </data>
 </root>

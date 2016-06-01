@@ -14,8 +14,9 @@ using NextPlayerUWPDataLayer.Diagnostics;
 
 namespace NextPlayerUWPDataLayer.Services
 {
-    public enum ErrorCode
+    public enum StatusCode
     {
+        Success,
         ReAuth,
         Cache,
         Nothing
@@ -43,24 +44,22 @@ namespace NextPlayerUWPDataLayer.Services
 
         private static readonly LastFmManager current = new LastFmManager();
 
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static LastFmManager()
-        {
-        }
+        //// Explicit static constructor to tell C# compiler
+        //// not to mark type as beforefieldinit
+        //static LastFmManager()
+        //{
+        //}
 
-        public static LastFmManager Current
-        {
-            get
-            {
-                return current;
-            }
-        }
+        //public static LastFmManager Current
+        //{
+        //    get
+        //    {
+        //        return current;
+        //    }
+        //}
         
-        private LastFmManager()
+        public LastFmManager()
         {
-            //Username = "tmk907";
-            //Password = "tom108pl";
             Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) ?? String.Empty).ToString();
             Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) ?? String.Empty).ToString();
             SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) ?? String.Empty).ToString();
@@ -115,9 +114,16 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 using(var content = new FormUrlEncodedContent(data))
                 {
-                    using (var result = await httpClient.PostAsync(host, content).ConfigureAwait(false))
+                    try
                     {
-                        response = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        using (var result = await httpClient.PostAsync(host, content))
+                        {
+                            response = await result.Content.ReadAsStringAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
                     }
                 }
             }
@@ -134,7 +140,7 @@ namespace NextPlayerUWPDataLayer.Services
             string signature = GetSignature(data);
             data.Add("api_sig", signature);
 
-            string response = await SendMessage(data, true).ConfigureAwait(false);
+            string response = await SendMessage(data, true);
 
             if (response.Contains("<lfm status=\"ok\">"))
             {
@@ -157,9 +163,9 @@ namespace NextPlayerUWPDataLayer.Services
             msg.Add("api_sig", signature);
         }
 
-        private ErrorCode ParseError(string response)
+        private StatusCode ParseError(string response)
         {
-            ErrorCode he = ErrorCode.Nothing;
+            StatusCode statusCode = StatusCode.Nothing;
 
             if (response.Contains("<error code="))
             {
@@ -172,13 +178,13 @@ namespace NextPlayerUWPDataLayer.Services
                     switch (code)
                     {
                         case 9:
-                            he = ErrorCode.ReAuth;
+                            statusCode = StatusCode.ReAuth;
                             break;
                         case 11:
-                            he = ErrorCode.Cache;
+                            statusCode = StatusCode.Cache;
                             break;
                         case 16:
-                            he = ErrorCode.Cache;
+                            statusCode = StatusCode.Cache;
                             break;
                     }
                 }
@@ -191,18 +197,18 @@ namespace NextPlayerUWPDataLayer.Services
             {
 
             }
-            return he;
+            return statusCode;
         }
 
-        private async Task HadleError(ErrorCode code, string function, object data)
+        private async Task HadleError(StatusCode code, string function, object data)
         {
-            if (code == ErrorCode.ReAuth)
+            if (code == StatusCode.ReAuth)
             {
                 SessionKey = "";
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSessionKey, "");
                 await SetMobileSession();
             }
-            if (code != ErrorCode.Nothing)
+            if (code != StatusCode.Nothing)
             {
                 string info = "";
                 switch (function)
@@ -233,9 +239,9 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        private async Task TrackScroblle(List<TrackScrobble> data)
+        private async Task<StatusCode> TrackScroblle(List<TrackScrobble> data)
         {
-            if (!AreCredentialsSet()) return;
+            if (!AreCredentialsSet()) return StatusCode.ReAuth;
             Dictionary<string, string> msg = new Dictionary<string, string>();
             if (data.Count == 1)
             {
@@ -259,13 +265,19 @@ namespace NextPlayerUWPDataLayer.Services
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
             {
-                await HadleError(ParseError(response), "track.scrobble", data);
+                var errorCode = ParseError(response);
+                await HadleError(errorCode, "track.scrobble", data);
+                return errorCode;
+            }
+            else
+            {
+                return StatusCode.Success;
             }
         }
 
-        private async Task TrackLove(string artist, string track)
+        private async Task<StatusCode> TrackLove(string artist, string track)
         {
-            if (!AreCredentialsSet()) return;
+            if (!AreCredentialsSet()) return StatusCode.ReAuth;
             Dictionary<string, string> msg = new Dictionary<string, string>
             {
                 {"artist", artist},
@@ -277,14 +289,19 @@ namespace NextPlayerUWPDataLayer.Services
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
             {
-                var er = ParseError(response);
-                await HadleError(er, "track.love", new Tuple<string,string>(artist,track));
+                var errorCode = ParseError(response);
+                await HadleError(errorCode, "track.love", new Tuple<string,string>(artist,track));
+                return errorCode;
+            }
+            else
+            {
+                return StatusCode.Success;
             }
         }
 
-        private async Task TrackUnlove(string artist, string track)
+        private async Task<StatusCode> TrackUnlove(string artist, string track)
         {
-            if (!AreCredentialsSet()) return;
+            if (!AreCredentialsSet()) return StatusCode.ReAuth;
             Dictionary<string, string> msg = new Dictionary<string, string>
             {
                 {"artist", artist},
@@ -296,14 +313,19 @@ namespace NextPlayerUWPDataLayer.Services
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
             {
-                var er = ParseError(response);
-                await HadleError(er, "track.unlove", new Tuple<string, string>(artist, track));
+                var errorCode = ParseError(response);
+                await HadleError(errorCode, "track.unlove", new Tuple<string, string>(artist, track));
+                return errorCode;
+            }
+            else
+            {
+                return StatusCode.Success;
             }
         }
 
-        public async Task TrackUpdateNowPlaying(string artist, string track)
+        public async Task<StatusCode> TrackUpdateNowPlaying(string artist, string track)
         {
-            if (!AreCredentialsSet()) return;
+            if (!AreCredentialsSet()) return StatusCode.ReAuth;
             Dictionary<string, string> msg = new Dictionary<string, string>
             {
                 {"artist", artist},
@@ -315,7 +337,13 @@ namespace NextPlayerUWPDataLayer.Services
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
             {
-                await HadleError(ParseError(response), "track.updateNowPlaying", null);
+                var errorCode = ParseError(response);
+                await HadleError(errorCode, "track.updateNowPlaying", null);
+                return errorCode;
+            }
+            else
+            {
+                return StatusCode.Success;
             }
         }
 
@@ -323,7 +351,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             Username = login;
             Password = password;
-            await SetMobileSession().ConfigureAwait(false);
+            await SetMobileSession();
             return IsSessionOn();
         }
 
@@ -336,33 +364,63 @@ namespace NextPlayerUWPDataLayer.Services
         
         public async Task SendCachedScrobbles()
         {
-            //if (!AreCredentialsSet()) return;
-            //var savedScrobbles = DatabaseManager.ReadAndDeleteAll();
-            //List<TrackScrobble> tracks = new List<TrackScrobble>();
-            //foreach(var scrobble in savedScrobbles)
-            //{
-            //    switch (scrobble["function"])
-            //    {
-            //        case "track.scrobble":
-            //            tracks.Add(new TrackScrobble() { Artist = scrobble["artist"], Timestamp = scrobble["timestamp"], Track = scrobble["track"] });
-            //            break;
-            //        case "track.love":
-            //            await TrackLove(scrobble["artist"], scrobble["track"]);
-            //            break;
-            //        case "track.unlove":
-            //            await TrackUnlove(scrobble["artist"], scrobble["track"]);
-            //            break;
-            //    }
-            //}
-            //while (tracks.Count > 50)
-            //{
-            //    await TrackScroblle(tracks.Take(50).ToList());
-            //    tracks.RemoveRange(0, 50);
-            //}
-            //if (tracks.Count > 0)
-            //{
-            //    await TrackScroblle(tracks);
-            //}
+            if (!AreCredentialsSet()) return;
+
+            var savedScrobbles = await DatabaseManager.Current.GetCachedScrobblesAsync();
+
+            List<TrackScrobble> tracks = new List<TrackScrobble>();
+            StatusCode code = StatusCode.Success;
+
+            foreach (var scrobble in savedScrobbles.Where(s=>s.Function == "track.scrobble"))
+            {
+                tracks.Add(new TrackScrobble() { Artist = scrobble.Artist, Timestamp = scrobble.Timestamp, Track = scrobble.Track });
+            }
+            while (tracks.Count > 50 && code == StatusCode.Success)
+            {
+                code = await TrackScroblle(tracks.Take(50).ToList());
+                if (code == StatusCode.Success) tracks.RemoveRange(0, 50);
+            }
+            if (tracks.Count > 0)
+            {
+                code = await TrackScroblle(tracks);
+                if (code == StatusCode.Success) tracks.Clear();
+            }
+            await DatabaseManager.Current.DeleteCachedScrobblesTrack();
+            if (tracks.Count > 0)
+            {
+                await DatabaseManager.Current.CacheTrackScrobblesAsync(tracks);
+            }
+
+            foreach (var scrobble in savedScrobbles.Where(s => (s.Function != "track.scrobble")))
+            {
+                switch (scrobble.Function)
+                {
+                    case "track.love":
+                        code = await TrackLove(scrobble.Artist, scrobble.Track);
+                        if (code == StatusCode.Success)
+                        {
+                            DatabaseManager.Current.DeleteCachedScrobble(scrobble.id);
+                        }
+                        else
+                        {
+                            await DatabaseManager.Current.CacheTrackLoveAsync(scrobble.Function, scrobble.Artist, scrobble.Track);
+                        }
+                        break;
+                    case "track.unlove":
+                        code = await TrackUnlove(scrobble.Artist, scrobble.Track);
+                        if (code == StatusCode.Success)
+                        {
+                            DatabaseManager.Current.DeleteCachedScrobble(scrobble.id);
+                        }
+                        else
+                        {
+                            await DatabaseManager.Current.CacheTrackLoveAsync(scrobble.Function, scrobble.Artist, scrobble.Track);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         private async Task SetSession()

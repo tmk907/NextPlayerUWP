@@ -26,7 +26,10 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
             
             CoverUri = SongCoverManager.Instance.GetFirst();
+            lastFmCache = new LastFmCache();
         }
+
+        LastFmCache lastFmCache;
 
         private int selectedPivotIndex = 0;
         public int SelectedPivotIndex
@@ -253,7 +256,9 @@ namespace NextPlayerUWP.ViewModels
             var button = sender as Button;
             if (currentSong.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
             {
-                CurrentSong.Rating = Int32.Parse(button.Tag.ToString());
+                int rating = Int32.Parse(button.Tag.ToString());
+                currentSong.Rating = rating;
+                await lastFmCache.RateSong(currentSong.Artist, currentSong.Title, rating);
                 await DatabaseManager.Current.UpdateRatingAsync(currentSong.SongId, currentSong.Rating).ConfigureAwait(false);
             }
         }

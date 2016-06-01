@@ -579,4 +579,10 @@
   <data name="TBPreventScreenLock.Text" xml:space="preserve">
     <value>Zapobiegaj  wygaszaniu ekranu</value>
   </data>
+  <data name="ButtonLogin.Content" xml:space="preserve">
+    <value>Zaloguj</value>
+  </data>
+  <data name="ButtonLogout.Content" xml:space="preserve">
+    <value>Wyloguj</value>
+  </data>
 </root>

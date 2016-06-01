@@ -424,6 +424,10 @@
       <Project>{25899887-6252-4635-84b5-0c54c736f0fb}</Project>
       <Name>NextPlayerUWPDataLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ScrobblerBG\ScrobblerBG.csproj">
+      <Project>{c02fc104-10f6-4388-8072-c8390d990281}</Project>
+      <Name>ScrobblerBG</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">

@@ -9,8 +9,6 @@
         public const string FirstRun = "firstrun";
         public const string DBVersion = "DBVersion";
         public const string AppVersion = "AppVersion";
-        public const string LastFmDBFileName = "lastfm.db";
-        public const string LastFmDBVersion = "lastfmDBVersion";
         public const string DeviceName = "devicename";
         public const string DeveloperEmail = "next-player@outlook.com";
         public const string EnableTelemetry = "EnableTelemetry";
@@ -111,10 +109,8 @@
         //Last.fm
         public const string LfmLogin = "lfmlogin";
         public const string LfmPassword = "lfmpassword";
-        public const string LfmIsScrobblingOn = "isscrobblingon";
         public const string LfmSessionKey = "lfmsessionkey";
         public const string LfmRateSongs = "lfmrate";
-        public const string LfmUnLove = "lfmunlove";
         public const string LfmLove = "lfmlove";
         public const string LfmSendNP = "lfmsendnp";
 

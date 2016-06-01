@@ -1308,6 +1308,23 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.InsertAsync(scrobble);
         }
 
+        public async Task CacheTrackScrobblesAsync(IEnumerable<TrackScrobble> scrobbles)
+        {
+            List<CachedScrobble> list = new List<CachedScrobble>();
+            foreach (var scrobble in scrobbles)
+            {
+                CachedScrobble cs = new CachedScrobble()
+                {
+                    Artist = scrobble.Artist,
+                    Function = "track.scrobble",
+                    Timestamp = scrobble.Timestamp,
+                    Track = scrobble.Track
+                };
+                list.Add(cs);
+            }
+            await connectionAsync.InsertAllAsync(list);
+        }
+
         public async Task CacheTrackLoveAsync(string function, string artist, string title)
         {
             var list = await connectionAsync.Table<CachedScrobble>().Where(c => (c.Artist.Equals(artist) && c.Track.Equals(title) && c.Timestamp == "")).ToListAsync();
@@ -1330,7 +1347,31 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
+        public async Task<List<CachedScrobble>> GetCachedScrobblesAsync()
+        {
+            var list = await connectionAsync.Table<CachedScrobble>().ToListAsync();
+            return list;
+        }
 
+        public void DeleteCachedScrobble(int id)
+        {
+            connection.Execute("DELETE * FROM CachedScrobble WHERE id = ?", id);
+        }
+
+        public async Task DeleteAllCachedScrobbles()
+        {
+            await connectionAsync.ExecuteAsync("DELETE * FROM CachedScrobble");
+        }
+
+        public async Task DeleteCachedScrobblesLove()
+        {
+            await connectionAsync.ExecuteAsync("DELETE * FROM CachedScrobble WHERE Function = ? OR Function = ?", "track.love", "track.unlove");
+        }
+
+        public async Task DeleteCachedScrobblesTrack()
+        {
+            await connectionAsync.ExecuteAsync("DELETE * FROM CachedScrobble WHERE Function = ?", "track.scrobble");
+        }
 
         private static SongsTable CreateCopy(SongsTable s)
         {

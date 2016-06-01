@@ -33,6 +33,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private AppState foregroundAppState = AppState.Unknown;
         Jamendo.JamendoRadiosData jRadioData;
+        private LastFmCache lastFmCache;
 
         //private FFmpegInteropMSS FFmpegMSS;
 
@@ -57,11 +58,12 @@ namespace NextPlayerUWPDataLayer.Services
             mediaPlayer.MediaFailed += mediaPlayer_MediaFailed;
 
             jRadioData = new Jamendo.JamendoRadiosData();
+            lastFmCache = new LastFmCache();
         }
 
         private async Task LoadMusicSource(string path, MusicSource sourceType)
         {
-            Diagnostics.Logger.SaveInSettings("LoadMusicSource");
+            //Diagnostics.Logger.SaveInSettings("LoadMusicSource");
             switch (sourceType)
             {
                 case MusicSource.LocalFile:
@@ -79,7 +81,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private async Task LoadFile(string path)
         {
-            Diagnostics.Logger.SaveInSettings("LoadFile1");
+            //Diagnostics.Logger.SaveInSettings("LoadFile1");
             try
             {
                 NowPlayingSong song = playlist.GetCurrentSong();
@@ -95,7 +97,7 @@ namespace NextPlayerUWPDataLayer.Services
                 else
                 {
                     ValueSet message = new ValueSet();
-                    message.Add("test", song.Path);
+                    message.Add("ffmpeg", song.Path);
                     BackgroundMediaPlayer.SendMessageToBackground(message);
                 }
             }
@@ -106,7 +108,7 @@ namespace NextPlayerUWPDataLayer.Services
                     Pause();
                 }
             }
-            Diagnostics.Logger.SaveInSettings("LoadFile2");
+            //Diagnostics.Logger.SaveInSettings("LoadFile2");
         }
 
         private async Task LoadRadio(string path)
@@ -186,7 +188,6 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task Next(bool userchoice = true)
         {
-            Diagnostics.Logger.SaveInSettings("Next");
             await StopSongEvent(playlist.GetCurrentSong(), mediaPlayer.NaturalDuration);
             if (playlist.NextSong(userchoice) == null)
             {
@@ -196,13 +197,11 @@ namespace NextPlayerUWPDataLayer.Services
             await LoadMusicSource(playlist.GetCurrentSong().Path, playlist.GetCurrentSong().SourceType);
             if (!userchoice)
             {
-                Diagnostics.Logger.SaveInSettings("Next send message");
                 ValueSet message = new ValueSet();
                 message.Add(AppConstants.UpdateUVC, null);
                 BackgroundMediaPlayer.SendMessageToBackground(message);
             }
             SendIndex();
-            Diagnostics.Logger.SaveInSettings("Next2");
         }
 
         public async Task Previous()
@@ -227,26 +226,15 @@ namespace NextPlayerUWPDataLayer.Services
 
         private async Task StopSongEvent(NowPlayingSong song, TimeSpan songDuration)
         {
-            Diagnostics.Logger.SaveInSettings("StopSongEvent");
             songPlayed = DateTime.Now - songsStart + songPlayed;
             if (WasSongPlayed(songDuration) && song.SourceType == MusicSource.LocalFile)
             {
                 await UpdateSongStatistics(song.SongId, songDuration);
-                //if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "")
-                //{
-                //    ScrobbleTrack(song);
-                //}
+                if (lastFmCache.AreCredentialsSet())
+                {
+                    await CacheScrobbleTrack(song);
+                }
             }
-            //if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "" && BackgroundMediaPlayer.Current.NaturalDuration != TimeSpan.Zero)
-            //{
-            //    System.Diagnostics.Debug.WriteLine("scrobble");
-            //    ScrobbleTrack();
-            //}
-            //else
-            //{
-            //    System.Diagnostics.Debug.WriteLine("no scrobble");
-            //}
-            Diagnostics.Logger.SaveInSettings("StopSongEvent2");
         }
 
         private void SendIndex()
@@ -292,7 +280,7 @@ namespace NextPlayerUWPDataLayer.Services
             return (songPlayed.TotalSeconds >= totalTime.TotalSeconds * 0.5 || songPlayed.TotalSeconds >= 4 * 60);
         }
 
-        private void ScrobbleTrack(NowPlayingSong song)
+        private async Task CacheScrobbleTrack(NowPlayingSong song)
         {
             int seconds = 0;
             try
@@ -315,9 +303,13 @@ namespace NextPlayerUWPDataLayer.Services
                 Track = track,
                 Timestamp = timestamp
             };
-            LastFmManager.Current.CacheTrackScrobble(scrobble).ConfigureAwait(false);
-            ////System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track + " " + songPlayed);
-            ////SendScrobble(scrobble);
+            await lastFmCache.CacheTrackScrobble(scrobble);
+            System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track + " " + songPlayed);
+        }
+
+        public void RefreshLastFmCredentials()
+        {
+            lastFmCache.RefreshCredentials();
         }
 
         private void ScrobbleNowPlaying(NowPlayingSong song)
@@ -338,10 +330,10 @@ namespace NextPlayerUWPDataLayer.Services
         void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
         {
             // wait for media to be ready
-            Diagnostics.Logger.SaveInSettings("MediaOpened1");
+            //Diagnostics.Logger.SaveInSettings("MediaOpened1");
             if (foregroundAppState != AppState.Suspended)
             {
-                Diagnostics.Logger.SaveInSettings("MediaOpened app not suspended");
+                //Diagnostics.Logger.SaveInSettings("MediaOpened app not suspended");
                 ValueSet message = new ValueSet();
                 message.Add(AppConstants.MediaOpened, "");
                 BackgroundMediaPlayer.SendMessageToForeground(message);
@@ -350,7 +342,7 @@ namespace NextPlayerUWPDataLayer.Services
             songPlayed = TimeSpan.Zero;
             if (!paused)
             {
-                Diagnostics.Logger.SaveInSettings("MediaOpened !paused");
+                //Diagnostics.Logger.SaveInSettings("MediaOpened !paused");
                 mediaPlayer.Play();
                 songsStart = DateTime.Now;
                 if (!startPosition.Equals(TimeSpan.Zero))
@@ -358,21 +350,21 @@ namespace NextPlayerUWPDataLayer.Services
                     mediaPlayer.Position = startPosition;
                     startPosition = TimeSpan.Zero;
                 }
-                Diagnostics.Logger.SaveInSettings("MediaOpened after play");
+                //Diagnostics.Logger.SaveInSettings("MediaOpened after play");
                 ScrobbleNowPlaying(playlist.GetCurrentSong());
             }
             else
             {
                 songsStart = DateTime.MinValue;
             }
-            Diagnostics.Logger.SaveInSettings("MediaOpened2");
+            //Diagnostics.Logger.SaveInSettings("MediaOpened2");
         }
 
         private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
         {
-            Diagnostics.Logger.SaveInSettings("MediaEnded1");
+            //Diagnostics.Logger.SaveInSettings("MediaEnded1");
             await Next(false);
-            Diagnostics.Logger.SaveInSettings("MediaEnded2");
+            //Diagnostics.Logger.SaveInSettings("MediaEnded2");
         }
 
         private void mediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
@@ -456,9 +448,9 @@ namespace NextPlayerUWPDataLayer.Services
                 var stream = await jRadioData.GetRadioStream(s.SongId);
                 if (stream == null) return;
                 var radio = jRadioData.GetRadioItemFromStream(stream);
-                s.Album = radio.PlayingNowAlbum;
-                s.Artist = radio.PlayingNowArtistTitle;
-                s.ImagePath = radio.PlayingNowImagePath;
+                s.Album = stream.Album;
+                s.Artist = stream.Artist;
+                s.ImagePath = stream.CoverUri;
 
                 ValueSet message = new ValueSet();
                 message.Add(AppConstants.UpdateUVC, null);

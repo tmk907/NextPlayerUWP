@@ -62,6 +62,15 @@ namespace NextPlayerUWP.ViewModels
         }
 
         DisplayRequestHelper displayRequestHelper;
+        LastFmManager lastFmManager = null;
+        LastFmManager LastFmManager
+        {
+            get
+            {
+                if (lastFmManager == null) lastFmManager = new LastFmManager();
+                return lastFmManager;
+            }
+        }
 
         private bool initialization = false;
 
@@ -179,26 +188,16 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
 
-            //if (languages.Count == 0)
-            //{
-            //    Languages = new ObservableCollection<LanguageItem>();
-            //    foreach(var code in Windows.Globalization.ApplicationLanguages.ManifestLanguages)
-            //    {
-            //        string name = "unknown";
-            //        languageDescriptions.TryGetValue(code.Substring(0, 2), out name);
-            //        Languages.Add(new LanguageItem() { Code = code, Name = name });
-            //    }
-            //}
-            //string primaryCode = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
-            //foreach(var l in languages)
-            //{
-            //    if (l.Code == primaryCode)
-            //    {
-            //        SelectedLanguage = new LanguageItem() { Code = l.Code, Name = l.Name };
-            //    }
-            //}
-
-
+            //Last.fm
+            string login = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string;
+            LastFmLogin = login;
+            string session = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) as string;
+            if (!String.IsNullOrEmpty(session))
+            {
+                IsLastFmLoggedIn = true;
+            }
+            LastFmRateSongs = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
+            LastFmShowError = false;
 
             //About
             if (Microsoft.Services.Store.Engagement.Feedback.IsSupported)
@@ -558,6 +557,111 @@ namespace NextPlayerUWP.ViewModels
         public void Licenses()
         {
             NavigationService.Navigate(App.Pages.Licenses);
+        }
+
+        #endregion
+
+        #region LastFm
+
+        private string lastFmLogin = "";
+        public string LastFmLogin
+        {
+            get { return lastFmLogin; }
+            set { Set(ref lastFmLogin, value); }
+        }
+
+        private string lastFmPassword = "";
+        public string LastFmPassword
+        {
+            get { return lastFmPassword; }
+            set { Set(ref lastFmPassword, value); }
+        }
+
+        private bool isLoginButtonEnabled = true;
+        public bool IsLoginButtonEnabled
+        {
+            get { return isLoginButtonEnabled; }
+            set { Set(ref isLoginButtonEnabled, value); }
+        }
+
+        private bool isLastFmLoggedIn = false;
+        public bool IsLastFmLoggedIn
+        {
+            get { return isLastFmLoggedIn; }
+            set { Set(ref isLastFmLoggedIn, value); }
+        }
+
+        private bool lastFmShowError = false;
+        public bool LastFmShowError
+        {
+            get { return lastFmShowError; }
+            set { Set(ref lastFmShowError, value); }
+        }
+
+        private bool lastFmRateSongs = false;
+        public bool LastFmRateSongs
+        {
+            get { return lastFmRateSongs; }
+            set
+            {
+                if (value != lastFmRateSongs)
+                {
+                    ChangeLastFmRateSongs(value);
+                }
+                Set(ref lastFmRateSongs, value);
+            }
+        }
+
+        private void ChangeLastFmRateSongs(bool isOn)
+        {
+            if (!initialization)
+            {
+                if (isOn)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, false);
+                }
+            }
+        }
+
+        public async void LastFmLogIn()
+        {
+            IsLoginButtonEnabled = false;
+            IsLastFmLoggedIn = await LastFmManager.Login(lastFmLogin, lastFmPassword);
+            if (isLastFmLoggedIn)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, lastFmLogin);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, lastFmPassword);
+
+                LastFmShowError = false;
+                LastFmPassword = "";
+                HockeyProxy.TrackEvent("LastFm log in");
+            }
+            else
+            {
+                LastFmShowError = true;
+                LastFmPassword = "";
+            }
+            IsLoginButtonEnabled = true;
+        }
+
+        public void LastFmLogOut()
+        {
+            LastFmLogin = "";
+            LastFmPassword = "";
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSessionKey, "");
+
+            LastFmManager.Logout();
+
+            IsLastFmLoggedIn = false;
+
+            HockeyProxy.TrackEvent("LastFm log out");
         }
 
         #endregion

@@ -154,6 +154,7 @@
     <Compile Include="Services\ImagesManager.cs" />
     <Compile Include="Services\IRadioService.cs" />
     <Compile Include="Services\JamendoRadioService.cs" />
+    <Compile Include="Services\LastFmCache.cs" />
     <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\NowPlayingManager.cs" />

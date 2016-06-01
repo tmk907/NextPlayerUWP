@@ -14,6 +14,7 @@ using Template10.Common;
 using Template10.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.Globalization;
 using Windows.UI.Xaml;
 
@@ -274,7 +275,7 @@ namespace NextPlayerUWP
                     }
                     break;
             }
-            
+            await RegisterBGScrobbler();
         }
         
         public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
@@ -290,7 +291,6 @@ namespace NextPlayerUWP
         }
 
         public override async void OnResuming(object s, object e, AppExecutionState previousExecutionState)
-
         {
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Active));
             if (previousExecutionState == AppExecutionState.Terminated)
@@ -354,8 +354,7 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, 5);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmUnLove, 1);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, 4);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSendNP, false);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
@@ -456,6 +455,37 @@ namespace NextPlayerUWP
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen) == null)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
+            }
+        }
+
+        private async Task RegisterBGScrobbler()
+       {
+            var taskRegistered = false;
+            var exampleTaskName = "NextPlayerBackgroundScrobbler";
+
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+            {
+                if (task.Value.Name == exampleTaskName)
+                {
+                    taskRegistered = true;
+                    //task.Value.Unregister(true);
+                    break;
+                }
+            }
+
+            if (!taskRegistered)
+            {
+                await BackgroundExecutionManager.RequestAccessAsync();
+
+                var builder = new BackgroundTaskBuilder();
+                builder.Name = exampleTaskName;
+                builder.TaskEntryPoint = "ScrobblerBG.BackgroundScrobbler";
+                TimeTrigger tt = new TimeTrigger(15, false);
+                builder.SetTrigger(tt);
+                SystemCondition internetCondition = new SystemCondition(SystemConditionType.InternetAvailable);
+                builder.AddCondition(internetCondition);
+
+                BackgroundTaskRegistration task = builder.Register();
             }
         }
     }

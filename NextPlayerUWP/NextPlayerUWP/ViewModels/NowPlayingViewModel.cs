@@ -23,7 +23,10 @@ namespace NextPlayerUWP.ViewModels
 
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
+            lastFmCache = new LastFmCache();
         }
+
+        private LastFmCache lastFmCache;
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
@@ -158,7 +161,9 @@ namespace NextPlayerUWP.ViewModels
             var button = sender as Button;
             if (song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
             {
-                Song.Rating = Int32.Parse(button.Tag.ToString());
+                int rating = Int32.Parse(button.Tag.ToString());
+                Song.Rating = rating;
+                await lastFmCache.CacheTrackLove(song.Artist, song.Title, rating);
                 await DatabaseManager.Current.UpdateRatingAsync(song.SongId, song.Rating).ConfigureAwait(false);
             }
         }

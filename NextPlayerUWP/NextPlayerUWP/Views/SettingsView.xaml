@@ -257,7 +257,41 @@
                            Margin="4,0,4,4"
                            Text="Please restart app to apply changes."/>
                     </StackPanel>
-                
+                <TextBlock
+                           Style="{StaticResource TitleTextBlockStyle}" 
+                           Margin="0,12,0,12"
+                           Text="Last.fm"/>
+                    <StackPanel Orientation="Vertical" Margin="4">
+                        <TextBox Text="{x:Bind ViewModel.LastFmLogin, Mode=TwoWay}"
+                                 HorizontalAlignment="Left"
+                                 Margin="0,4,0,0"
+                                 Width="256"/>
+                        <PasswordBox Password="{x:Bind ViewModel.LastFmPassword, Mode=TwoWay}"
+                                 HorizontalAlignment="Left"
+                                 Margin="0,4,0,0"
+                                 Width="256"/>
+                        <Button x:Uid="ButtonLogin"
+                                Content="Login"
+                                Margin="0,8,0,0"
+                                MinWidth="128"
+                                Click="{x:Bind ViewModel.LastFmLogIn}"
+                                IsEnabled="{x:Bind ViewModel.IsLoginButtonEnabled, Mode=OneWay}"
+                                Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"/>
+                        <Button x:Uid="ButtonLogout"
+                                Content="Logout"
+                                MinWidth="128"
+                                Margin="0,8,0,0"
+                                Click="{x:Bind ViewModel.LastFmLogOut}"
+                                Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <TextBlock x:Uid="TBLoginError"
+                                   Text="Can't log in. Check your login and password and make sure you have internet connection"
+                                   TextWrapping="WrapWholeWords"
+                                   Margin="0,4,0,0"
+                                   Visibility="{x:Bind ViewModel.LastFmShowError, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.LastFmRateSongs, Mode=TwoWay}"
+                                      Margin="0,8,0,0"
+                                      Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                    </StackPanel>
                 <TextBlock x:Uid="TBAbout"
                            Style="{StaticResource TitleTextBlockStyle}" 
                            Margin="0,12,0,12"
