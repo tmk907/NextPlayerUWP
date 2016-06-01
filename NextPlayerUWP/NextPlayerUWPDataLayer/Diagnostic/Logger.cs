@@ -156,7 +156,17 @@ namespace NextPlayerUWPDataLayer.Diagnostics
 
         public static void SaveInSettings(string data)
         {
-            ApplicationSettingsHelper.SaveSettingsValue("temperror", data);
+            var t = ApplicationSettingsHelper.ReadSettingsValue("temperror") as string;
+            data = DateTime.Now + "  " + data;
+            //System.Diagnostics.Debug.WriteLine(data);
+            try
+            {
+                ApplicationSettingsHelper.SaveSettingsValue("temperror", (t ?? "") + data + Environment.NewLine);
+            }
+            catch (Exception)
+            {
+
+            }
         }
         public static void SaveFromSettingsToFile()
         {

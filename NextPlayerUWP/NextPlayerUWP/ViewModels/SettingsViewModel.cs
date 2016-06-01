@@ -58,7 +58,10 @@ namespace NextPlayerUWP.ViewModels
                     SelectedLanguage = l;
                 }
             }
+            displayRequestHelper = new DisplayRequestHelper();
         }
+
+        DisplayRequestHelper displayRequestHelper;
 
         private bool initialization = false;
 
@@ -94,7 +97,7 @@ namespace NextPlayerUWP.ViewModels
         {
             initialization = true;
 
-            // Timer
+            // Tools
             var tt = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
             var to = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn);
             if (to == null)
@@ -129,6 +132,15 @@ namespace NextPlayerUWP.ViewModels
             else
             {
                 ActionNr = 3;
+            }
+            bool lockscreen = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
+            if (lockscreen)
+            {
+                PreventScreenLock = true;
+            }
+            else
+            {
+                PreventScreenLock = false;
             }
 
             //Personalization
@@ -245,13 +257,6 @@ namespace NextPlayerUWP.ViewModels
 
         #region Tools
 
-        private bool isTimerOn = false;
-        public bool IsTimerOn
-        {
-            get { return isTimerOn; }
-            set { Set(ref isTimerOn, value); }
-        }
-
         private int actionNr = default(int);
         public int ActionNr
         {
@@ -295,6 +300,20 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        private bool isTimerOn = false;
+        public bool IsTimerOn
+        {
+            get { return isTimerOn; }
+            set
+            {
+                if (value != isTimerOn)
+                {
+                    ChangeTimer(value);
+                }
+                Set(ref isTimerOn, value);
+            }
+        }
+
         private TimeSpan time = TimeSpan.Zero;
         public TimeSpan Time
         {
@@ -315,19 +334,22 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public void TimerSwitchToggled(object sender, RoutedEventArgs e)
+        public void ChangeTimer(bool isOn)
         {
-            if (((ToggleSwitch)sender).IsOn)
+            if (!initialization)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
-                SendMessage(AppConstants.SetTimer);
-                //App.TelemetryClient.TrackEvent("Timer On");
-            }
-            else
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
-                SendMessage(AppConstants.CancelTimer);
+                if (isOn)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
+                    SendMessage(AppConstants.SetTimer);
+                    //App.TelemetryClient.TrackEvent("Timer On");
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+                    SendMessage(AppConstants.CancelTimer);
+                }
             }
         }
 
@@ -342,6 +364,37 @@ namespace NextPlayerUWP.ViewModels
                 else
                 {
                     SendMessage(AppConstants.SetTimer);
+                }
+            }
+        }
+
+        private bool preventScreenLock = false;
+        public bool PreventScreenLock
+        {
+            get { return preventScreenLock; }
+            set
+            {
+                if (value != preventScreenLock)
+                {
+                    ChangeScreenLock(value);
+                }
+                Set(ref preventScreenLock, value);
+            }
+        }
+
+        private void ChangeScreenLock(bool isOn)
+        {
+            if (!initialization)
+            {
+                if (isOn)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, true);
+                    displayRequestHelper.ActivateDisplay();
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
+                    displayRequestHelper.ReleaseDisplay();
                 }
             }
         }

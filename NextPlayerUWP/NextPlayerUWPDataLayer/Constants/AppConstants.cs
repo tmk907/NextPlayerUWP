@@ -132,5 +132,7 @@
         public const string ActionPlayNext = "ActionPlayNext";
         public const string ActionAddToNowPlaying = "ActionAddToNowPlaying";
         public const string ActionPlayNow = "ActionPlayNow";
+
+        public const string DisableLockscreen = "DisableLockscreen";
     }
 }

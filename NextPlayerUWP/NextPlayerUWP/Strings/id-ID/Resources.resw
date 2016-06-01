@@ -576,4 +576,7 @@
   <data name="MFIExport.Text" xml:space="preserve">
     <value>Save as m3u</value>
   </data>
+  <data name="TBPreventScreenLock.Text" xml:space="preserve">
+    <value>Prevent screen from dimming</value>
+  </data>
 </root>

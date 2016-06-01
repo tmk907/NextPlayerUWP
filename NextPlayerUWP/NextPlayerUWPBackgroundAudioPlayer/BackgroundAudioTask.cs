@@ -85,6 +85,9 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                 // immediately set not running
                 backgroundTaskStarted.Reset();
 
+                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("OnCanceled" + "\n" + reason + "\n" + sender.SuspendedCount);
+                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFileBG();
+
                 // save state
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, BackgroundTaskState.Canceled.ToString());
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), foregroundAppState));
@@ -333,9 +336,11 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                     // Wait for task to start. 
                     // Once started, this stays signaled until shutdown so it won't wait
                     // again unless it needs to.
-                    bool result = backgroundTaskStarted.WaitOne(5000);
+                    bool result = backgroundTaskStarted.WaitOne(3000);
                     if (!result)
                     {
+                        NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("smtc_ButtonPressed Background Task didnt initialize in time");
+                        NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFileBG();
                         throw new Exception("Background Task didnt initialize in time");
                     }
                     Play();

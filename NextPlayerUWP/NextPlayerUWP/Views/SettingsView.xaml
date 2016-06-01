@@ -196,10 +196,8 @@
                            Margin="4,4,4,4"
                            Text="Timer:"/>
                         <StackPanel x:Name="TimerStackPanel" Orientation="Horizontal">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
-                                  Toggled="{x:Bind ViewModel.TimerSwitchToggled}"/>
-                            <TimePicker IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"
-                                        Time="{x:Bind ViewModel.Time, Mode=TwoWay}"/>
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"/>
+                            <TimePicker IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"/>
                         </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="DragDropActionStackPanel"
@@ -225,6 +223,17 @@
                                      GroupName="DragDropAction"
                                      Content="Add to now playing"
                                      IsChecked="{Binding ActionNr3, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="4">
+                        <TextBlock x:Uid="TBPreventScreenLock"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           FontSize="17"
+                           Margin="4,4,4,4"
+                           Text="Prevent screen from dimming"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PreventScreenLock, Mode=TwoWay}"
+                                  />
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Vertical" 
                             Margin="4">

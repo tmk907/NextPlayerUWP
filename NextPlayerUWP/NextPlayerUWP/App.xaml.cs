@@ -72,6 +72,7 @@ namespace NextPlayerUWP
             else
             {
                 UpdateDB();
+                UpdateApp();
             }
             
             SplashFactory = (e) => new Views.Splash(e);
@@ -174,6 +175,14 @@ namespace NextPlayerUWP
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
             #endregion
             
+            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated || 
+                args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser || 
+                args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+            {
+                DisplayRequestHelper drh = new DisplayRequestHelper();
+                drh.ActivateIfEnabled();
+            }
+
             await Task.CompletedTask;
         }
 
@@ -351,6 +360,8 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
 
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
+
             Debug.WriteLine("FirstRunSetup finished");
         }
 
@@ -437,6 +448,14 @@ namespace NextPlayerUWP
                     CreateDefaultSmartPlaylists();
                 }
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
+            }
+        }
+
+        private void UpdateApp()
+        {
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
             }
         }
     }
