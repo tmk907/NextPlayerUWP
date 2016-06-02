@@ -38,12 +38,14 @@
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
+        <SolidColorBrush x:Key="ForegroundColor" x:Name="ForegroundColor" Color="{ThemeResource SystemBaseHighColor}"/>
         <Style x:Key="AlbumDescriptionAlbumNameStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
             <Setter Property="FontSize" Value="27"/>
             <Setter Property="FontWeight" Value="Light"/>
             <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundColor}"/>
         </Style>
         <Style x:Key="AlbumDescriptionAlbumArtistStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
             <Setter Property="FontSize" Value="24"/>
@@ -51,11 +53,13 @@
             <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundColor}"/>
         </Style>
         <Style x:Key="AlbumDescription2TBStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleTextBlockStyle}">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundColor}"/>
         </Style>
 
         <DataTemplate x:Key="AlbumSongItemTemplateDesktop" x:DataType="data:SongItem">
@@ -93,16 +97,20 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="0" Grid.RowSpan="2"
                     Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource SongItemStyleIndex}"/>
+                    Style="{StaticResource SongItemStyleIndex}"
+                    Foreground="{StaticResource ForegroundColor}"/>
                 <TextBlock Grid.Column="1" Grid.Row="0"
                     Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleTop}"/>
+                    Style="{StaticResource SongItemStyleTop}"
+                    Foreground="{StaticResource ForegroundColor}"/>
                 <TextBlock Grid.Column="1" Grid.Row="1"
                     Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleBottom}"/>
+                    Style="{StaticResource SongItemStyleBottom}"
+                    Foreground="{StaticResource ForegroundColor}"/>
                 <TextBlock Grid.Column="2" Grid.RowSpan="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
+                    Style="{StaticResource SongItemStyleRight}"
+                    Foreground="{StaticResource ForegroundColor}"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="AlbumSongItemTemplateMobileWide" x:DataType="data:SongItem">
@@ -115,16 +123,20 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                     Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource SongItemStyleIndex}"/>
+                    Style="{StaticResource SongItemStyleIndex}"
+                    Foreground="{StaticResource ForegroundColor}"/>
                 <TextBlock Grid.Column="1"
                     Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleLeft}"/>
+                    Style="{StaticResource SongItemStyleLeft}"
+                    Foreground="{StaticResource ForegroundColor}"/>
                 <TextBlock Grid.Column="2"
                     Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
+                    Style="{StaticResource SongItemStyleCenter}"
+                    Foreground="{StaticResource ForegroundColor}"/>
                 <TextBlock Grid.Column="3"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
+                    Style="{StaticResource SongItemStyleRight}"
+                    Foreground="{StaticResource ForegroundColor}"/>
             </Grid>
         </DataTemplate>
         <Style x:Key="AlbumButtonStyle" TargetType="Button">
@@ -267,10 +279,15 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AlbumSongsListView.ItemTemplate" Value="{StaticResource AlbumSongItemTemplateMobileWide}"/>
+                        <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecondSemiTr}"/>
+                        <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormalSemiTr}"/>
                         <Setter Target="AlbumCoverImage.Visibility" Value="Collapsed"/>
                         <Setter Target="AlbumCoverImage.Opacity" Value="0"/>
-                        <!--<Setter Target="AlbumBitmapImage.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumBitmapImage.Opacity" Value="0"/>-->
+                        <Setter Target="AlbumCoverImageBG.Visibility" Value="Visible"/>
+                        <Setter Target="AlbumCoverImageBG.Opacity" Value="1"/>
+                        <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
+                        <Setter Target="DarkenLayer.Opacity" Value="1"/>
+                        <Setter Target="ForegroundColor.Color" Value="White"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -282,10 +299,15 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AlbumSongsListView.ItemTemplate" Value="{StaticResource AlbumSongItemTemplateMobile}"/>
+                        <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecondSemiTr}"/>
+                        <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormalSemiTr}"/>
                         <Setter Target="AlbumCoverImage.Visibility" Value="Collapsed"/>
                         <Setter Target="AlbumCoverImage.Opacity" Value="0"/>
-                        <!--<Setter Target="AlbumBitmapImage.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumBitmapImage.Opacity" Value="0"/>-->
+                        <Setter Target="AlbumCoverImageBG.Visibility" Value="Visible"/>
+                        <Setter Target="AlbumCoverImageBG.Opacity" Value="1"/>
+                        <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
+                        <Setter Target="DarkenLayer.Opacity" Value="1"/>
+                        <Setter Target="ForegroundColor.Color" Value="White"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -294,10 +316,15 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AlbumSongsListView.ItemTemplate" Value="{StaticResource AlbumSongItemTemplateDesktop}"/>
+                        <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecond}"/>
+                        <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormal}"/>
                         <Setter Target="AlbumCoverImage.Visibility" Value="Visible"/>
                         <Setter Target="AlbumCoverImage.Opacity" Value="1"/>
-                        <!--<Setter Target="AlbumBitmapImage.Visibility" Value="Visible"/>
-                        <Setter Target="AlbumBitmapImage.Opacity" Value="1"/>-->
+                        <Setter Target="AlbumCoverImageBG.Visibility" Value="Collapsed"/>
+                        <Setter Target="AlbumCoverImageBG.Opacity" Value="0"/>
+                        <Setter Target="DarkenLayer.Visibility" Value="Collapsed"/>
+                        <Setter Target="DarkenLayer.Opacity" Value="0"/>
+                        <Setter Target="ForegroundColor.Color" Value="{ThemeResource SystemBaseHighColor}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -318,6 +345,17 @@
                 Content="Album" 
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720"/>
+            <Image x:Name="AlbumCoverImageBG" Grid.Row="1" Stretch="UniformToFill"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center">
+                <Image.Source>
+                    <BitmapImage 
+                        UriSource="{Binding Album.ImageUri, Mode=OneWay}"/>
+                </Image.Source>
+            </Image>
+            <Rectangle x:Name="DarkenLayer" 
+                       Grid.Row="1"
+                       Fill="#80161616"/>
             <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

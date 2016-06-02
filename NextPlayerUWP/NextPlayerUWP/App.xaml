@@ -13,6 +13,8 @@
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#cccccc"/>
                     <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="#FF171717"/>
                     <SolidColorBrush x:Key="ListViewItemBackgroundNormal" Color="#FF000000"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSecondSemiTr" Color="#80171717"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundNormalSemiTr" Color="#80000000"/>
                     <SolidColorBrush x:Key="BottomPlayerTextForeground" Color="White"/>
                     <SolidColorBrush x:Key="ChromeMedium2" Color="#FF1F1F1F"/>
                     <SolidColorBrush x:Key="ChromeHigh2" Color="#FF767676"/>
@@ -47,6 +49,8 @@
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#323232"/>
                     <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="#FFF2F2F2"/>
                     <SolidColorBrush x:Key="ListViewItemBackgroundNormal" Color="#FFFFFFFF"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSecondSemiTr" Color="#80828282"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundNormalSemiTr" Color="#808F8F8F"/>
                     <SolidColorBrush x:Key="BottomPlayerTextForeground" Color="White"/>
                     <SolidColorBrush x:Key="ChromeMedium2" Color="#FFE6E6E6"/>
                     <SolidColorBrush x:Key="ChromeHigh2" Color="#FFCCCCCC"/>
