@@ -588,4 +588,7 @@
   <data name="TBAddSongToLoved.Text" xml:space="preserve">
     <value>If I will rate song, add it to 'Loved tracks'</value>
   </data>
+  <data name="TBNewSongs.Text" xml:space="preserve">
+    <value>Nuove canzoni:</value>
+  </data>
 </root>

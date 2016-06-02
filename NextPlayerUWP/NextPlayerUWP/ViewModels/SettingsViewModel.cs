@@ -247,7 +247,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 MusicLibraryFolders.Remove(musicFolder);
                 //usun utwory z biblioteki
-                await DatabaseManager.Current.DeleteFolderAsync(musicFolder.Path);
+                await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
                 MediaImport.OnMediaImported("FolderRemoved");
             }
         }

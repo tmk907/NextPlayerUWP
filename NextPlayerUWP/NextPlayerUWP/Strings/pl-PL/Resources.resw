@@ -588,4 +588,7 @@
   <data name="TBAddSongToLoved.Text" xml:space="preserve">
     <value>Gdy ocenię utwór dodaj go do ulubionych</value>
   </data>
+  <data name="TBNewSongs.Text" xml:space="preserve">
+    <value>Nowe utwory:</value>
+  </data>
 </root>

@@ -291,10 +291,10 @@
                         <TextBlock x:Uid="TBAddSongToLoved"
                            Style="{StaticResource BodyTextBlockStyle}"
                            FontSize="17"
-                           Margin="4,4,4,4"
+                           Margin="0,8,0,0"
                            Text="Scrobble loved tracks  "/>
                         <ToggleSwitch IsOn="{x:Bind ViewModel.LastFmRateSongs, Mode=TwoWay}"
-                                      Margin="0,8,0,0"
+                                      Margin="0,4,0,0"
                                       Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
                     </StackPanel>
                 <TextBlock x:Uid="TBAbout"

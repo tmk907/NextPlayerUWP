@@ -1187,10 +1187,10 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.DeleteAsync(playlist);
         }
 
-        public async Task DeleteFolderAsync(string path)
+        public async Task DeleteFolderAndSubFoldersAsync(string path)
         {
             await connectionAsync.ExecuteAsync("UPDATE SongsTable SET IsAvailable = 0 WHERE DirectoryName LIKE ?", path + "%");
-            await connectionAsync.ExecuteAsync("DELETE FROM FoldersTable WHERE Directory = ?", path);
+            await connectionAsync.ExecuteAsync("DELETE FROM FoldersTable WHERE Directory LIKE ?", path);
             await UpdateTables();
         }
 
