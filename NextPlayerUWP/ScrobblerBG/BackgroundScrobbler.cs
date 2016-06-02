@@ -25,8 +25,7 @@ namespace ScrobblerBG
         {
             if (!completed)
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("BackgroundScrobbler scrobbling interrupted");
-                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFileBG();
+                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveLastFm("BackgroundScrobbler scrobbling interrupted");
             }
             _deferral.Complete();
         }

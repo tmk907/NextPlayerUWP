@@ -73,7 +73,7 @@ namespace NextPlayerUWPDataLayer.Services
                 if (AreCredentialsSet())
                 {
                     int min = (int)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLove);
-                    if (rating > min)
+                    if (rating >= min)
                     {
                         await DatabaseManager.Current.CacheTrackLoveAsync("track.love", artist, track);
                     }

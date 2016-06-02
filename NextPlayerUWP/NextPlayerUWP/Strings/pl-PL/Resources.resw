@@ -585,4 +585,7 @@
   <data name="ButtonLogout.Content" xml:space="preserve">
     <value>Wyloguj</value>
   </data>
+  <data name="TBAddSongToLoved.Text" xml:space="preserve">
+    <value>Gdy ocenię utwór dodaj go do ulubionych</value>
+  </data>
 </root>

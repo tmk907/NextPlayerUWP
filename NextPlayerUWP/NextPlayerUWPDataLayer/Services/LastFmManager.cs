@@ -9,7 +9,6 @@ using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Diagnostics;
 
 namespace NextPlayerUWPDataLayer.Services
@@ -19,6 +18,7 @@ namespace NextPlayerUWPDataLayer.Services
         Success,
         ReAuth,
         Cache,
+        TryAgain,   
         Nothing
     }
 
@@ -31,8 +31,8 @@ namespace NextPlayerUWPDataLayer.Services
 
     public sealed class LastFmManager
     {
-        private const string ApiKey = "4737e29d26f813ceeb64aefda42ec0ac";
-        private const string ApiSecret = "7b3dbb57b6fda2a24b95270acc77bbc4";
+        private const string ApiKey = AppConstants.LastFmApiKey;
+        private const string ApiSecret = AppConstants.LastFmApiSecret;
 
         private const string RootUrl = "http://ws.audioscrobbler.com/2.0/";
         private const string RootAuth = "https://ws.audioscrobbler.com/2.0/";
@@ -65,6 +65,89 @@ namespace NextPlayerUWPDataLayer.Services
             SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) ?? String.Empty).ToString();
         }
 
+        public async Task<bool> Login(string login, string password)
+        {
+            Username = login;
+            Password = password;
+            await SetMobileSession();
+            return IsSessionOn();
+        }
+
+        public void Logout()
+        {
+            Username = "";
+            Password = "";
+            SessionKey = "";
+        }
+
+        private async Task SetSession()
+        {
+            if (!IsSessionOn())
+            {
+                await SetMobileSession();
+            }
+        }
+
+        public async Task<StatusCode> SetMobileSession()
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data.Add("username", Username);
+            data.Add("password", Password);
+            data.Add("method", "auth.getMobileSession");
+            data.Add("api_key", ApiKey);
+            string signature = GetSignature(data);
+            data.Add("api_sig", signature);
+
+            string response = await SendMessage(data, true);
+
+            if (IsStatusOK(response))
+            {
+                int i1 = response.IndexOf("<key>") + "<key>".Length;
+                int i2 = response.IndexOf("</key>");
+                SessionKey = response.Substring(i1, i2 - i1);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSessionKey, SessionKey);
+                return StatusCode.Success;
+            }
+            else
+            {
+                var code = ParseError(response);
+                return code;
+            }
+        }
+
+        private async Task<string> SendMessage(Dictionary<string, string> data, bool isHttps)
+        {
+            string response = "";
+            string host;
+            if (isHttps)
+            {
+                host = RootAuth;
+            }
+            else
+            {
+                host = RootUrl;
+            }
+            using (HttpClient httpClient = new HttpClient())
+            {
+                using (var content = new FormUrlEncodedContent(data))
+                {
+                    try
+                    {
+                        using (var result = await httpClient.PostAsync(host, content))
+                        {
+                            response = await result.Content.ReadAsStringAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.SaveLastFm("LastFmManager SendMessage" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
+                    }
+                }
+            }
+            return response;
+        }
+
+
         private bool IsSessionOn()
         {
             return SessionKey != "";
@@ -79,6 +162,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             return response.Contains("<lfm status=\"ok\">");
         }
+
 
         private string GetSignature(Dictionary<string,string> parameters)
         {
@@ -98,63 +182,6 @@ namespace NextPlayerUWPDataLayer.Services
             return CryptographicBuffer.EncodeToHexString(buffHash);
         }
 
-        private async Task<string> SendMessage(Dictionary<string,string> data, bool isHttps)
-        {
-            string response = "";
-            string host;
-            if (isHttps)
-            {
-                host = RootAuth;
-            }
-            else
-            {
-                host = RootUrl;
-            }
-            using(HttpClient httpClient = new HttpClient())
-            {
-                using(var content = new FormUrlEncodedContent(data))
-                {
-                    try
-                    {
-                        using (var result = await httpClient.PostAsync(host, content))
-                        {
-                            response = await result.Content.ReadAsStringAsync();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            }
-            return response;
-        }
-
-        public async Task SetMobileSession()
-        {
-            Dictionary<string, string> data = new Dictionary<string, string>();
-            data.Add("username", Username);
-            data.Add("password", Password);
-            data.Add("method", "auth.getMobileSession");
-            data.Add("api_key",ApiKey);
-            string signature = GetSignature(data);
-            data.Add("api_sig", signature);
-
-            string response = await SendMessage(data, true);
-
-            if (response.Contains("<lfm status=\"ok\">"))
-            {
-                int i1 = response.IndexOf("<key>") + "<key>".Length;
-                int i2 = response.IndexOf("</key>");
-                SessionKey = response.Substring(i1,i2-i1);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSessionKey, SessionKey);
-            }
-            else
-            {
-                ParseError(response);
-            }
-        }
-
         private void AddAuth(ref Dictionary<string, string> msg)
         {
             msg.Add("api_key", ApiKey);
@@ -163,11 +190,15 @@ namespace NextPlayerUWPDataLayer.Services
             msg.Add("api_sig", signature);
         }
 
+
         private StatusCode ParseError(string response)
         {
             StatusCode statusCode = StatusCode.Nothing;
-
-            if (response.Contains("<error code="))
+            if (IsStatusOK(response))
+            {
+                statusCode = StatusCode.Success;
+            }
+            else if (response.Contains("<error code="))
             {
                 Logger.SaveLastFm(response);
                 int i1 = response.IndexOf("code=\"") + "code=\"".Length;
@@ -177,14 +208,34 @@ namespace NextPlayerUWPDataLayer.Services
                 {
                     switch (code)
                     {
+                        case 4:
+                            statusCode = StatusCode.ReAuth;
+                            break;
                         case 9:
                             statusCode = StatusCode.ReAuth;
+                            break;
+                        case 10:
+                            statusCode = StatusCode.Cache;
                             break;
                         case 11:
                             statusCode = StatusCode.Cache;
                             break;
+                        case 14:
+                            statusCode = StatusCode.ReAuth;
+                            break;
                         case 16:
                             statusCode = StatusCode.Cache;
+                            break;
+                        case 17:
+                            statusCode = StatusCode.ReAuth;
+                            break;
+                        case 26:
+                            statusCode = StatusCode.Cache;
+                            break;
+                        case 29:
+                            statusCode = StatusCode.Cache;
+                            break;
+                        default:
                             break;
                     }
                 }
@@ -195,7 +246,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
             else
             {
-
+                
             }
             return statusCode;
         }
@@ -208,17 +259,17 @@ namespace NextPlayerUWPDataLayer.Services
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSessionKey, "");
                 await SetMobileSession();
             }
-            if (code != StatusCode.Nothing)
+            else if (code == StatusCode.Cache || code == StatusCode.Nothing)
             {
                 string info = "";
                 switch (function)
                 {
                     case "track.scrobble":
                         List<TrackScrobble> list = (List<TrackScrobble>)data;
-                        foreach(var item in list)
-                        {
-                            //await DatabaseManager.Current.SaveAsync(function, item.Artist, item.Track, item.Timestamp);
-                        }
+                        //foreach(var item in list)
+                        //{
+                        //    //await DatabaseManager.Current.SaveAsync(function, item.Artist, item.Track, item.Timestamp);
+                        //}
                         info = list[0].Artist + " " + list[0].Track;
                         break;
                     case "track.love":
@@ -238,6 +289,7 @@ namespace NextPlayerUWPDataLayer.Services
                 Logger.SaveLastFm("Error Last.fm " + function + Environment.NewLine + info);
             }
         }
+
 
         private async Task<StatusCode> TrackScroblle(List<TrackScrobble> data)
         {
@@ -263,16 +315,8 @@ namespace NextPlayerUWPDataLayer.Services
             AddAuth(ref msg);
 
             string response = await SendMessage(msg, false);
-            if (!IsStatusOK(response))
-            {
-                var errorCode = ParseError(response);
-                await HadleError(errorCode, "track.scrobble", data);
-                return errorCode;
-            }
-            else
-            {
-                return StatusCode.Success;
-            }
+            var errorCode = ParseError(response);
+            return errorCode;
         }
 
         private async Task<StatusCode> TrackLove(string artist, string track)
@@ -287,16 +331,8 @@ namespace NextPlayerUWPDataLayer.Services
             AddAuth(ref msg);
 
             string response = await SendMessage(msg, false);
-            if (!IsStatusOK(response))
-            {
-                var errorCode = ParseError(response);
-                await HadleError(errorCode, "track.love", new Tuple<string,string>(artist,track));
-                return errorCode;
-            }
-            else
-            {
-                return StatusCode.Success;
-            }
+            var errorCode = ParseError(response);
+            return errorCode;
         }
 
         private async Task<StatusCode> TrackUnlove(string artist, string track)
@@ -311,16 +347,8 @@ namespace NextPlayerUWPDataLayer.Services
             AddAuth(ref msg);
 
             string response = await SendMessage(msg, false);
-            if (!IsStatusOK(response))
-            {
-                var errorCode = ParseError(response);
-                await HadleError(errorCode, "track.unlove", new Tuple<string, string>(artist, track));
-                return errorCode;
-            }
-            else
-            {
-                return StatusCode.Success;
-            }
+            var errorCode = ParseError(response);
+            return errorCode;
         }
 
         public async Task<StatusCode> TrackUpdateNowPlaying(string artist, string track)
@@ -335,38 +363,17 @@ namespace NextPlayerUWPDataLayer.Services
             AddAuth(ref msg);
 
             string response = await SendMessage(msg, false);
-            if (!IsStatusOK(response))
-            {
-                var errorCode = ParseError(response);
-                await HadleError(errorCode, "track.updateNowPlaying", null);
-                return errorCode;
-            }
-            else
-            {
-                return StatusCode.Success;
-            }
+            var errorCode = ParseError(response);
+            return errorCode;
         }
 
-        public async Task<bool> Login(string login, string password)
-        {
-            Username = login;
-            Password = password;
-            await SetMobileSession();
-            return IsSessionOn();
-        }
 
-        public void Logout()
-        {
-            Username = "";
-            Password = "";
-            SessionKey = "";
-        }
-        
         public async Task SendCachedScrobbles()
         {
             if (!AreCredentialsSet()) return;
 
             var savedScrobbles = await DatabaseManager.Current.GetCachedScrobblesAsync();
+            if (savedScrobbles.Count == 0) return;
 
             List<TrackScrobble> tracks = new List<TrackScrobble>();
             StatusCode code = StatusCode.Success;
@@ -378,12 +385,27 @@ namespace NextPlayerUWPDataLayer.Services
             while (tracks.Count > 50 && code == StatusCode.Success)
             {
                 code = await TrackScroblle(tracks.Take(50).ToList());
-                if (code == StatusCode.Success) tracks.RemoveRange(0, 50);
+                if (code == StatusCode.Success)
+                {
+                    tracks.RemoveRange(0, 50);
+                }
+                else
+                {
+                    await HadleError(code, "track.scrobble", tracks.Take(1).ToList());
+                }
+                
             }
             if (tracks.Count > 0)
             {
                 code = await TrackScroblle(tracks);
-                if (code == StatusCode.Success) tracks.Clear();
+                if (code == StatusCode.Success)
+                {
+                    tracks.Clear();
+                }
+                else
+                {
+                    await HadleError(code, "track.scrobble", tracks.Take(1).ToList());
+                }
             }
             await DatabaseManager.Current.DeleteCachedScrobblesTrack();
             if (tracks.Count > 0)
@@ -423,13 +445,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        private async Task SetSession()
-        {
-            if (!IsSessionOn())
-            {
-                await SetMobileSession();
-            }
-        }
+        
 
         public async Task CacheTrackScrobble(TrackScrobble scrobble)
         {

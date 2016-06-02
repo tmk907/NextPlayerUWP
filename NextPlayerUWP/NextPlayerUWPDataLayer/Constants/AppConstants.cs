@@ -107,6 +107,8 @@
         public const string NajrzadziejOdtwarzane = "NajrzadziejOdtwarzane";
 
         //Last.fm
+        public const string LastFmApiKey = "4737e29d26f813ceeb64aefda42ec0ac";
+        public const string LastFmApiSecret = "7b3dbb57b6fda2a24b95270acc77bbc4";
         public const string LfmLogin = "lfmlogin";
         public const string LfmPassword = "lfmpassword";
         public const string LfmSessionKey = "lfmsessionkey";

@@ -38,10 +38,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public static void OnMediaImported(string s)
         {
-            if (MediaImported != null)
-            {
-                MediaImported(s);
-            }
+            MediaImported?.Invoke(s);
         }
 
         private Dictionary<string, Tuple<int, int>> dbFiles;
@@ -56,6 +53,7 @@ namespace NextPlayerUWPDataLayer.Services
             List<SongData> newSongs = new List<SongData>();
             List<int> oldAvailable = new List<int>();
             List<int> toAvailable = new List<int>();
+
             Tuple<int, int> tuple;//(isAvailable, SongId)
             //.qcp
             //.m4r
@@ -136,16 +134,18 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
 
-            if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count > 0)
-            {
+            await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
 
-            }
-            else
-            {
-                await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
-            }
+            //if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count > 0)
+            //{
+            //    await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
+            //}
+            //else
+            //{
+            //    await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
+            //}
 
-            songsAdded += newSongs.Count;
+            songsAdded += newSongs.Count + toAvailable.Count;
             progress.Report(songsAdded);
             var folders = await folder.GetFoldersAsync();
             foreach (var f in folders)

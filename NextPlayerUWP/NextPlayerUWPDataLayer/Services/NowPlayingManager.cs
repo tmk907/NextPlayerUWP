@@ -11,7 +11,6 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using NextPlayerUWPDataLayer.Enums;
 using Windows.System.Threading;
-using Windows.Storage.Streams;
 using Windows.Media.Core;
 
 namespace NextPlayerUWPDataLayer.Services
@@ -34,8 +33,6 @@ namespace NextPlayerUWPDataLayer.Services
         private AppState foregroundAppState = AppState.Unknown;
         Jamendo.JamendoRadiosData jRadioData;
         private LastFmCache lastFmCache;
-
-        //private FFmpegInteropMSS FFmpegMSS;
 
         public NowPlayingManager()
         {
@@ -230,7 +227,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (WasSongPlayed(songDuration) && song.SourceType == MusicSource.LocalFile)
             {
                 await UpdateSongStatistics(song.SongId, songDuration);
-                if (lastFmCache.AreCredentialsSet())
+                if (songDuration >TimeSpan.FromSeconds(30) && lastFmCache.AreCredentialsSet())
                 {
                     await CacheScrobbleTrack(song);
                 }
@@ -290,7 +287,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
             catch (Exception ex)
             {
-                Diagnostics.Logger.SaveBG("Scrobble paused" + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
+                Diagnostics.Logger.SaveBG("Scrobble paused " + songPlayed + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
                 Diagnostics.Logger.SaveToFileBG();
                 return;
             }

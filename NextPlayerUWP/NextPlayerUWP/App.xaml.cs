@@ -77,7 +77,7 @@ namespace NextPlayerUWP
             }
             
             SplashFactory = (e) => new Views.Splash(e);
-
+            
             try
             {
                 Logger.SaveFromSettingsToFile();

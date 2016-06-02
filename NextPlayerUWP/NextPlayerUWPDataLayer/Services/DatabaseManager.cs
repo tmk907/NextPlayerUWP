@@ -110,8 +110,13 @@ namespace NextPlayerUWPDataLayer.Services
 
             if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count == 0)
             {
-                //usun folder
+                //delete folder
                 await connectionAsync.ExecuteAsync("DELETE FROM FoldersTable WHERE Directory = ?", directoryName);
+                return;
+            }
+
+            if(newSongs.Count == 0 && toAvailable.Count == 0)//&& oldAvailable == 0
+            {
                 return;
             }
 
@@ -120,12 +125,14 @@ namespace NextPlayerUWPDataLayer.Services
                 connection.Execute("UPDATE SongsTable SET IsAvailable = 1 WHERE SongId = ?", id);
             }
 
+            //Caculate duration of songs in database
             var queryOldAvailableSongs = old.Where(s => (toAvailable.Contains(s.SongId) || oldAvailable.Contains(s.SongId)));
             TimeSpan oldAvailableSongsDuration = TimeSpan.Zero;
             foreach(var item in queryOldAvailableSongs)
             {
                 oldAvailableSongsDuration += item.Duration;
             }
+            //Calculate duration of new songs and date of last added
             TimeSpan newDuration = TimeSpan.Zero;
             DateTime lastAdded = DateTime.MinValue;
             foreach (var item in newSongs)
@@ -134,6 +141,7 @@ namespace NextPlayerUWPDataLayer.Services
                 newDuration += item.Duration;
             }
 
+            //Update folder informations or create new entry
             var query2 = await connectionAsync.Table<FoldersTable>().Where(f => f.Directory.Equals(directoryName)).ToListAsync();
             if (query2.Count == 1)
             {
@@ -154,6 +162,7 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
 
+            //Add new songs to database
             List<SongsTable> list = new List<SongsTable>();
             foreach (var item in newSongs)
             {
@@ -1278,6 +1287,11 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.ExecuteAsync("UPDATE PlainPlaylistsTable SET Name = ? WHERE PlainPlaylistId = ?", name, id);
         }
 
+        /// <summary>
+        /// Updates PlayCount and LastPlayed
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task UpdateSongStatistics(int id)
         {
             var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
@@ -1294,7 +1308,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         #endregion
 
-
+        #region Last.fm
 
         public async Task CacheTrackScrobbleAsync(string function, string artist, string title, string timestamp)
         {
@@ -1355,23 +1369,25 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void DeleteCachedScrobble(int id)
         {
-            connection.Execute("DELETE * FROM CachedScrobble WHERE id = ?", id);
+            connection.Execute("DELETE FROM CachedScrobble WHERE id = ?", id);
         }
 
         public async Task DeleteAllCachedScrobbles()
         {
-            await connectionAsync.ExecuteAsync("DELETE * FROM CachedScrobble");
+            await connectionAsync.ExecuteAsync("DELETE FROM CachedScrobble");
         }
 
         public async Task DeleteCachedScrobblesLove()
         {
-            await connectionAsync.ExecuteAsync("DELETE * FROM CachedScrobble WHERE Function = ? OR Function = ?", "track.love", "track.unlove");
+            await connectionAsync.ExecuteAsync("DELETE FROM CachedScrobble WHERE Function = ? OR Function = ?", "track.love", "track.unlove");
         }
 
         public async Task DeleteCachedScrobblesTrack()
         {
-            await connectionAsync.ExecuteAsync("DELETE * FROM CachedScrobble WHERE Function = ?", "track.scrobble");
+            await connectionAsync.ExecuteAsync("DELETE FROM CachedScrobble WHERE Function = ?", "track.scrobble");
         }
+
+        #endregion
 
         private static SongsTable CreateCopy(SongsTable s)
         {
@@ -1505,10 +1521,9 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<SmartPlaylistEntryTable>();
         }
 
+
         public void resetdb()
         {
-            
-
             connection.DropTable<SongsTable>();
             connection.DropTable<PlainPlaylistEntryTable>();
             connection.DropTable<PlainPlaylistsTable>();
