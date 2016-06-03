@@ -15,7 +15,6 @@ using Template10.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
-using Windows.Globalization;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP
@@ -247,6 +246,7 @@ namespace NextPlayerUWP
                         default:
                             break;
                     }
+                    HockeyProxy.TrackEvent("LaunchFromSecondaryTile " + type.ToString());
                     await NavigationService.NavigateAsync(page, parameter);
                     break;
                 case AdditionalKinds.Primary:
@@ -480,7 +480,7 @@ namespace NextPlayerUWP
                 var builder = new BackgroundTaskBuilder();
                 builder.Name = exampleTaskName;
                 builder.TaskEntryPoint = "ScrobblerBG.BackgroundScrobbler";
-                TimeTrigger tt = new TimeTrigger(15, false);
+                TimeTrigger tt = new TimeTrigger(3*60, false);
                 builder.SetTrigger(tt);
                 SystemCondition internetCondition = new SystemCondition(SystemConditionType.InternetAvailable);
                 builder.AddCondition(internetCondition);

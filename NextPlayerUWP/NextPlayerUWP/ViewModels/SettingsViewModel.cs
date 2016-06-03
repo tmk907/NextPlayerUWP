@@ -222,6 +222,7 @@ namespace NextPlayerUWP.ViewModels
             IsUpdating = true;
             await Task.Run(() => m.UpdateDatabase(progress));
             IsUpdating = false;
+            HockeyProxy.TrackEvent("Library updated");
         }
 
         public async void AddFolder()
@@ -276,6 +277,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 ActionNr = 1;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionPlayNow);
+                HockeyProxy.TrackEvent("After Drop Item " + AppConstants.ActionPlayNow);
             }
         }
 
@@ -286,6 +288,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 ActionNr = 2;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionPlayNext);
+                HockeyProxy.TrackEvent("After Drop Item " + AppConstants.ActionPlayNext);
             }
         }
 
@@ -296,6 +299,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 ActionNr = 3;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
+                HockeyProxy.TrackEvent("After Drop Item " + AppConstants.ActionAddToNowPlaying);
             }
         }
 
@@ -342,7 +346,7 @@ namespace NextPlayerUWP.ViewModels
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
                     SendMessage(AppConstants.SetTimer);
-                    //App.TelemetryClient.TrackEvent("Timer On");
+                    HockeyProxy.TrackEvent("Timer on");
                 }
                 else
                 {
@@ -389,11 +393,13 @@ namespace NextPlayerUWP.ViewModels
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, true);
                     displayRequestHelper.ActivateDisplay();
+                    HockeyProxy.TrackEvent("Prevent screen dimming on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
                     displayRequestHelper.ReleaseDisplay();
+                    HockeyProxy.TrackEvent("Prevent screen dimming off");
                 }
             }
         }
@@ -534,6 +540,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void RateApp()
         {
+            HockeyProxy.TrackEvent("Rate app button");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsReviewed, -1);
             var uri = new Uri("ms-windows-store://review/?ProductId=" + AppConstants.ProductId);
             await Launcher.LaunchUriAsync(uri);
@@ -541,6 +548,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void LeaveFeedback()
         {
+            HockeyProxy.TrackEvent("Leave feedback button");
             await Microsoft.Services.Store.Engagement.Feedback.LaunchFeedbackAsync();
         }
 
@@ -556,6 +564,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void Licenses()
         {
+            HockeyProxy.TrackEvent("View Licenses");
             NavigationService.Navigate(App.Pages.Licenses);
         }
 
@@ -619,10 +628,12 @@ namespace NextPlayerUWP.ViewModels
                 if (isOn)
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
+                    HockeyProxy.TrackEvent("Last.fm rate songs on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, false);
+                    HockeyProxy.TrackEvent("Lat.fm rate songs off");
                 }
             }
         }

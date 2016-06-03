@@ -3,6 +3,7 @@ using NextPlayerUWPDataLayer.Jamendo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.Jamendo
@@ -21,7 +22,7 @@ namespace NextPlayerUWPDataLayer.Jamendo
         private async Task<string> DownloadAsync(string url)
         {
             String response;
-            System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
+            HttpClient httpClient = new HttpClient();
             //Windows.Web.Http.HttpResponseMessage httpResponse = new Windows.Web.Http.HttpResponseMessage();
             try
             {
@@ -59,7 +60,7 @@ namespace NextPlayerUWPDataLayer.Jamendo
                 List<Radio> radios = response.Results.ToList();
                 return radios;
             }
-            return null;
+            return new List<Radio>();
         }
 
         public async Task<Radio> GetRadio(int id)

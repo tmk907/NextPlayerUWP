@@ -17,14 +17,30 @@ namespace NextPlayerUWPDataLayer.Jamendo
         public async Task<TrackStream> GetRadioStream(string radioName)
         {
             var s = await client.GetStream(radioName);
-            TrackStream ts = new TrackStream(s.PlayingNow.TrackName, s.PlayingNow.ArtistName, s.PlayingNow.AlbumName, s.PlayingNow.TrackImage, s.StreamUrl, s.CallMeBack, s.Id, s.Name);
+            TrackStream ts;
+            if (s != null)
+            {
+                ts = new TrackStream(s.PlayingNow.TrackName, s.PlayingNow.ArtistName, s.PlayingNow.AlbumName, s.PlayingNow.TrackImage, s.StreamUrl, s.CallMeBack, s.Id, s.Name);
+            }
+            else
+            {
+                ts = new TrackStream();
+            }
             return ts;
         }
 
         public async Task<TrackStream> GetRadioStream(int id)
         {
             var s = await client.GetStream(id);
-            TrackStream ts = new TrackStream(s.PlayingNow.TrackName, s.PlayingNow.ArtistName, s.PlayingNow.AlbumName, s.PlayingNow.TrackImage, s.StreamUrl, s.CallMeBack, id, s.Name);
+            TrackStream ts;
+            if (s != null)
+            {
+                ts = new TrackStream(s.PlayingNow.TrackName, s.PlayingNow.ArtistName, s.PlayingNow.AlbumName, s.PlayingNow.TrackImage, s.StreamUrl, s.CallMeBack, s.Id, s.Name);
+            }
+            else
+            {
+                ts = new TrackStream();
+            }
             return ts;
         }
 
