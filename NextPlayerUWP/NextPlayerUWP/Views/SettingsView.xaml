@@ -289,13 +289,14 @@
                                    Margin="0,4,0,0"
                                    Visibility="{x:Bind ViewModel.LastFmShowError, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
                         <TextBlock x:Uid="TBAddSongToLoved"
-                           Style="{StaticResource BodyTextBlockStyle}"
-                           FontSize="17"
-                           Margin="0,8,0,0"
-                           Text="Scrobble loved tracks  "/>
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            FontSize="17"
+                            Margin="0,8,0,0"
+                            Text="Scrobble loved tracks"
+                            Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
                         <ToggleSwitch IsOn="{x:Bind ViewModel.LastFmRateSongs, Mode=TwoWay}"
-                                      Margin="0,4,0,0"
-                                      Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                            Margin="0,4,0,0"
+                            Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
                     </StackPanel>
                 <TextBlock x:Uid="TBAbout"
                            Style="{StaticResource TitleTextBlockStyle}" 
@@ -322,25 +323,13 @@
                             Margin="0,4,0,8"
                             MinWidth="128"
                             Content="Feedback"
-                            Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                             Click="{x:Bind ViewModel.LeaveFeedback}"/>
                     <Button x:Uid="ButtonLicenses"
-                        Content="Licenses"
-                        Margin="0,4,0,8"
-                        MinWidth="128"
-                        Click="{x:Bind ViewModel.Licenses}"/>
-                    <!--<Button x:Uid="ButtonSendEmail"
-                        Content="Send e-mail"
-                        Margin="0,8,0,4"
-                        MinWidth="128"
-                        Click="{x:Bind ViewModel.SendEmail}"/>-->
-                    <!--<TextBlock x:Uid="TBAllowTelemetry"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        FontSize="17"
-                        Text="Enable application telemetry"/>
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.EnableTelemetry, Mode=TwoWay}"
-                                  Toggled="{x:Bind ViewModel.TelemetrySwitchToggled}"
-                                  />-->
+                            Content="Licenses"
+                            Margin="0,4,0,8"
+                            MinWidth="128"
+                            Click="{x:Bind ViewModel.Licenses}"/>
                 </StackPanel>
                 
             </StackPanel>
