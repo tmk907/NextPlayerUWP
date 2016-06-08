@@ -3,6 +3,7 @@
     "Microsoft.Net.Http": "2.2.29",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
     "Microsoft.NETNative.Analyzer": "1.0.0",
+    "Microsoft.OneDriveSDK": "1.1.47",
     "Newtonsoft.Json": "8.0.3",
     "NotificationsExtensions.Win10": "14332.0.0",
     "sqlite-net-pcl": "1.1.1",

@@ -64,6 +64,11 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.Playlist, ((PlaylistItem)e.ClickedItem).GetParameter());
         }
 
+        public void NewSmartPlaylist()
+        {
+            NavigationService.Navigate(App.Pages.NewSmartPlaylist);
+        }
+
         public void Save()
         {
             int id = DatabaseManager.Current.InsertPlainPlaylist(name);

@@ -17,7 +17,8 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<BottomPlayerViewModel>();
             SimpleIoc.Default.Register<FileInfoViewModel>();
             SimpleIoc.Default.Register<FoldersViewModel>();
-            SimpleIoc.Default.Register<GenresViewModel>();            
+            SimpleIoc.Default.Register<GenresViewModel>();
+            SimpleIoc.Default.Register<NewSmartPlaylistViewModel>();          
             SimpleIoc.Default.Register<NowPlayingViewModel>();
             SimpleIoc.Default.Register<NowPlayingPlaylistViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
@@ -39,6 +40,7 @@ namespace NextPlayerUWP.ViewModels
         public FileInfoViewModel FileInfoVM => ServiceLocator.Current.GetInstance<FileInfoViewModel>();
         public FoldersViewModel FoldersVM => ServiceLocator.Current.GetInstance<FoldersViewModel>();
         public GenresViewModel GenresVM => ServiceLocator.Current.GetInstance<GenresViewModel>();
+        public NewSmartPlaylistViewModel NewSmartPlaylistVM => ServiceLocator.Current.GetInstance<NewSmartPlaylistViewModel>();
         public NowPlayingViewModel NowPlayingVM => ServiceLocator.Current.GetInstance<NowPlayingViewModel>();
         public NowPlayingPlaylistViewModel NowPlayingPlaylistVM => ServiceLocator.Current.GetInstance<NowPlayingPlaylistViewModel>();
         public PlaylistViewModel PlaylistVM => ServiceLocator.Current.GetInstance<PlaylistViewModel>();

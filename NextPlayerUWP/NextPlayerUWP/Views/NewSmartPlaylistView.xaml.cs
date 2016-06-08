@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWP.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,11 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class NewSmartPlaylistView : Page
     {
+        NewSmartPlaylistViewModel ViewModel;
         public NewSmartPlaylistView()
         {
             this.InitializeComponent();
+            ViewModel = (NewSmartPlaylistViewModel)DataContext;
         }
     }
 }

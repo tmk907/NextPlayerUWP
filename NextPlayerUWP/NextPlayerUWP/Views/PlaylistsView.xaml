@@ -76,6 +76,10 @@
                 x:Uid="AppBarButtonAddPlaylist"
                 Label="Add playlist"
                 Click="newPlainPlaylist_Click"/>
+            <AppBarButton
+                Icon="Accept"
+                Label="New smart"
+                Click="{x:Bind ViewModel.NewSmartPlaylist}"/>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>

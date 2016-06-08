@@ -162,6 +162,7 @@
     <Compile Include="Converters\ZoomedOutItemWidthConverter.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
+    <Compile Include="Helpers\PlaylistRule.cs" />
     <Compile Include="Helpers\SaveLater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddToPlaylistViewModel.cs" />

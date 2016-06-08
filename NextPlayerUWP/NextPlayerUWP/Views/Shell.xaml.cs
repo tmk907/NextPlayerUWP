@@ -38,6 +38,13 @@ namespace NextPlayerUWP.Views
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
             ReviewReminder();
+            //test();
+        }
+
+        private async void test()
+        {
+            NextPlayerUWPDataLayer.OneDrive.TestOneDrive tod = new NextPlayerUWPDataLayer.OneDrive.TestOneDrive();
+            await tod.Test();
         }
 
         public void SetNavigationService(INavigationService navigationService)

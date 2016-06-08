@@ -25,21 +25,43 @@ namespace NextPlayerUWPDataLayer.Enums
             public static readonly string Title = "Title";
             public static readonly string Album = "Album";
             public static readonly string Artist = "Artist";
-            public static readonly string AlbumArtist = "AlbumArtist";
+            public static readonly string AlbumArtist = "Album Artist";
             public static readonly string Composer = "Composer";
             public static readonly string Genre = "Genre";
             public static readonly string Duration = "Duration";
             public static readonly string Year = "Year";
             public static readonly string Rating = "Rating";
-            public static readonly string PlayCount = "PlayCount";
-            public static readonly string FilePath = "FilePath";
-            public static readonly string DateAdded = "DateAdded";
-            public static readonly string LastPlayed = "LastPlayed";
+            public static readonly string PlayCount = "Play Count";
+            public static readonly string FilePath = "File Path";
+            public static readonly string DateAdded = "Last Added";
+            public static readonly string LastPlayed = "Last Played";
+
+            public static bool IsDateType(string value)
+            {
+                return (value == SPUtility.Item.DateAdded || value == SPUtility.Item.LastPlayed);
+            }
+
+            public static bool IsTimeType(string value)
+            {
+                return (value == SPUtility.Item.Duration);
+            }
+
+            public static bool IsNumberType(string value)
+            {
+                return (value == SPUtility.Item.PlayCount || value == SPUtility.Item.Rating || value == SPUtility.Item.Year);
+            }
+
+            public static bool IsStringType(string value)
+            {
+                return (value == SPUtility.Item.Album || value == SPUtility.Item.AlbumArtist || value == SPUtility.Item.Artist ||
+                    value == SPUtility.Item.Composer || value == SPUtility.Item.FilePath || value == SPUtility.Item.Genre ||
+                    value == SPUtility.Item.Title);
+            }
         }
 
         public class Comparison
         {
-            public static readonly string Is = "Is";
+            public static readonly string Is = "IsEqual";
             public static readonly string IsNot = "IsNot";
             public static readonly string IsGreater = "IsGreater";
             public static readonly string IsLess = "IsLess";

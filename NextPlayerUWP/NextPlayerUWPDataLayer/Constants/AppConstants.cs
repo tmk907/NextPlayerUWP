@@ -120,6 +120,11 @@
         public const string SoundCloudClientId = "1a554caaef0c755f3a794ec4c46d2ee2";
         public const string SoundCloudClientSecret = "292af0fae1bee4360317164d21cdf8dd";
 
+        //OneDrive
+        public const string OneDriveAppId = "0000000048172F05";
+        public const string OneDriveAppSecret = "1VO9tiGE/0apI83XTSl9N9qnp/Pcnn7A";
+        //urn:ietf:wg:oauth:2.0:oob
+        //https://login.live.com/oauth20_desktop.srf
 
         //Jamendo
         public const string JamendoClientId = "8ed1da48";

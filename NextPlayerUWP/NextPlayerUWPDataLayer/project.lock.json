@@ -45,6 +45,15 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+        "type": "package",
+        "compile": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        },
+        "runtime": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        }
+      },
       "Microsoft.Net.Http/2.2.29": {
         "type": "package",
         "dependencies": {
@@ -270,6 +279,23 @@
       },
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
+      },
+      "Microsoft.OneDriveSDK/1.1.47": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        },
+        "runtime": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        }
       },
       "Microsoft.VisualBasic/10.0.0": {
         "type": "package",
@@ -2020,6 +2046,15 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+        "type": "package",
+        "compile": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        },
+        "runtime": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        }
+      },
       "Microsoft.Net.Http/2.2.29": {
         "type": "package",
         "dependencies": {
@@ -2194,6 +2229,23 @@
       },
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
+      },
+      "Microsoft.OneDriveSDK/1.1.47": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        },
+        "runtime": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        }
       },
       "Microsoft.VisualBasic/10.0.0": {
         "type": "package",
@@ -3861,6 +3913,15 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+        "type": "package",
+        "compile": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        },
+        "runtime": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        }
+      },
       "Microsoft.Net.Http/2.2.29": {
         "type": "package",
         "dependencies": {
@@ -4033,6 +4094,23 @@
       },
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
+      },
+      "Microsoft.OneDriveSDK/1.1.47": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        },
+        "runtime": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        }
       },
       "Microsoft.VisualBasic/10.0.0": {
         "type": "package",
@@ -5659,6 +5737,15 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+        "type": "package",
+        "compile": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        },
+        "runtime": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        }
+      },
       "Microsoft.Net.Http/2.2.29": {
         "type": "package",
         "dependencies": {
@@ -5839,6 +5926,23 @@
       },
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
+      },
+      "Microsoft.OneDriveSDK/1.1.47": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        },
+        "runtime": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        }
       },
       "Microsoft.VisualBasic/10.0.0": {
         "type": "package",
@@ -7509,6 +7613,15 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+        "type": "package",
+        "compile": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        },
+        "runtime": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        }
+      },
       "Microsoft.Net.Http/2.2.29": {
         "type": "package",
         "dependencies": {
@@ -7681,6 +7794,23 @@
       },
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
+      },
+      "Microsoft.OneDriveSDK/1.1.47": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        },
+        "runtime": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        }
       },
       "Microsoft.VisualBasic/10.0.0": {
         "type": "package",
@@ -9307,6 +9437,15 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+        "type": "package",
+        "compile": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        },
+        "runtime": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        }
+      },
       "Microsoft.Net.Http/2.2.29": {
         "type": "package",
         "dependencies": {
@@ -9487,6 +9626,23 @@
       },
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
+      },
+      "Microsoft.OneDriveSDK/1.1.47": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        },
+        "runtime": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        }
       },
       "Microsoft.VisualBasic/10.0.0": {
         "type": "package",
@@ -11157,6 +11313,15 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+        "type": "package",
+        "compile": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        },
+        "runtime": {
+          "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
+        }
+      },
       "Microsoft.Net.Http/2.2.29": {
         "type": "package",
         "dependencies": {
@@ -11329,6 +11494,23 @@
       },
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
+      },
+      "Microsoft.OneDriveSDK/1.1.47": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        },
+        "runtime": {
+          "lib/win81/OneDriveSdk.WinRT.dll": {},
+          "lib/win81/OneDriveSdk.WinStore.dll": {},
+          "lib/win81/OneDriveSdk.dll": {}
+        }
       },
       "Microsoft.VisualBasic/10.0.0": {
         "type": "package",
@@ -13062,6 +13244,23 @@
         "ref/xamarinmac20/_._"
       ]
     },
+    "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+      "sha512": "Wxcp3XhZGRRyUgB8JIMMZJCAzSDCXpU63Ly76ywbbP0bh4CGGa915fiAxfYRj2layGA1MDc84tpRpHQCYKWFmw==",
+      "type": "package",
+      "files": [
+        "Microsoft.IdentityModel.Clients.ActiveDirectory.2.21.301221612.nupkg.sha512",
+        "Microsoft.IdentityModel.Clients.ActiveDirectory.nuspec",
+        "lib/net45/Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll",
+        "lib/net45/Microsoft.IdentityModel.Clients.ActiveDirectory.XML",
+        "lib/net45/Microsoft.IdentityModel.Clients.ActiveDirectory.dll",
+        "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.XML",
+        "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd",
+        "lib/wp/Microsoft.IdentityModel.Clients.ActiveDirectory.XML",
+        "lib/wp/Microsoft.IdentityModel.Clients.ActiveDirectory.dll",
+        "lib/wpa/Microsoft.IdentityModel.Clients.ActiveDirectory.XML",
+        "lib/wpa/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd"
+      ]
+    },
     "Microsoft.Net.Http/2.2.29": {
       "sha512": "fc4CPEewJ30Xgal+fSq1lYIBt582A7eKlAL7O4HXiYAiTp2VTnA4osSvk7T2n8aS4xTCPVJusQk3yKLT0XSpkg==",
       "type": "package",
@@ -13637,6 +13836,22 @@
         "analyzers/dotnet/cs/NativeGatekeeper.dll",
         "tools/install.ps1",
         "tools/uninstall.ps1"
+      ]
+    },
+    "Microsoft.OneDriveSDK/1.1.47": {
+      "sha512": "qwSDJGoTt9CkUE7sFXpYr7n9wSHHXFoR9OpV9VuTKLEfR4AdeBwKLcupFDZH7nefjezuUmDURfcgIIM7e/LdjQ==",
+      "type": "package",
+      "files": [
+        "Microsoft.OneDriveSDK.1.1.47.nupkg.sha512",
+        "Microsoft.OneDriveSDK.nuspec",
+        "lib/net451/OneDriveSdk.WindowsForms.dll",
+        "lib/net451/OneDriveSdk.dll",
+        "lib/portable-net45+netcore45+wpa81+win8/OneDriveSdk.dll",
+        "lib/portable-win81+wpa81/OneDriveSdk.WinStore.dll",
+        "lib/portable-win81+wpa81/OneDriveSdk.dll",
+        "lib/win81/OneDriveSdk.WinRT.dll",
+        "lib/win81/OneDriveSdk.WinStore.dll",
+        "lib/win81/OneDriveSdk.dll"
       ]
     },
     "Microsoft.VisualBasic/10.0.0": {
@@ -16745,6 +16960,7 @@
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0",
       "Microsoft.NETNative.Analyzer >= 1.0.0",
       "Microsoft.Net.Http >= 2.2.29",
+      "Microsoft.OneDriveSDK >= 1.1.47",
       "Newtonsoft.Json >= 8.0.3",
       "NotificationsExtensions.Win10 >= 14332.0.0",
       "TagLib.Portable >= 1.0.4",

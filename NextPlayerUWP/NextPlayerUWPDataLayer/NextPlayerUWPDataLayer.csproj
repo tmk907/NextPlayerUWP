@@ -149,6 +149,7 @@
     <Compile Include="Model\SongData.cs" />
     <Compile Include="Model\SongItem.cs" />
     <Compile Include="Model\TrackStream.cs" />
+    <Compile Include="OneDrive\TestOneDrive.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\ImagesManager.cs" />

@@ -108,6 +108,7 @@ namespace NextPlayerUWP
             Folders,
             Lyrics,
             Licenses,
+            NewSmartPlaylist,
             NowPlaying,
             NowPlayingPlaylist,
             Playlists,
@@ -157,6 +158,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Genres, typeof(GenresView));
             if (!keys.ContainsKey(Pages.Licenses))
                 keys.Add(Pages.Licenses, typeof(Licences));
+            if (!keys.ContainsKey(Pages.NewSmartPlaylist))
+                keys.Add(Pages.NewSmartPlaylist, typeof(NewSmartPlaylistView));
             if (!keys.ContainsKey(Pages.NowPlaying))
                 keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
             if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
@@ -183,6 +186,7 @@ namespace NextPlayerUWP
                 drh.ActivateIfEnabled();
             }
 
+            
             await Task.CompletedTask;
         }
 
@@ -480,7 +484,7 @@ namespace NextPlayerUWP
                 var builder = new BackgroundTaskBuilder();
                 builder.Name = exampleTaskName;
                 builder.TaskEntryPoint = "ScrobblerBG.BackgroundScrobbler";
-                TimeTrigger tt = new TimeTrigger(3*60, false);
+                TimeTrigger tt = new TimeTrigger(30, false);
                 builder.SetTrigger(tt);
                 SystemCondition internetCondition = new SystemCondition(SystemConditionType.InternetAvailable);
                 builder.AddCondition(internetCondition);

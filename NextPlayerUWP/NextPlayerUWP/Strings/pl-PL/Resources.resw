@@ -591,4 +591,46 @@
   <data name="TBNewSongs.Text" xml:space="preserve">
     <value>Nowe utwory:</value>
   </data>
+  <data name="And" xml:space="preserve">
+    <value>And</value>
+  </data>
+  <data name="Or" xml:space="preserve">
+    <value>Or</value>
+  </data>
+  <data name="File Path" xml:space="preserve">
+    <value>Ścieżka pliku</value>
+  </data>
+  <data name="DoesNotContain" xml:space="preserve">
+    <value>Nie zawiera</value>
+  </data>
+  <data name="EndsWith" xml:space="preserve">
+    <value>Kończy się na</value>
+  </data>
+  <data name="IsEqual" xml:space="preserve">
+    <value>Jest równe</value>
+  </data>
+  <data name="IsNot" xml:space="preserve">
+    <value>Jest różne</value>
+  </data>
+  <data name="IsGreater" xml:space="preserve">
+    <value>Jest większe</value>
+  </data>
+  <data name="IsLess" xml:space="preserve">
+    <value>Jest mniejsze</value>
+  </data>
+  <data name="Contains" xml:space="preserve">
+    <value>Zawiera</value>
+  </data>
+  <data name="StartsWith" xml:space="preserve">
+    <value>Zaczyna się na</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minuty</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Godziny</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>Sekundy</value>
+  </data>
 </root>
