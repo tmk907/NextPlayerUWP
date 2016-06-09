@@ -28,6 +28,7 @@ namespace NextPlayerUWPDataLayer.Model
         public bool IsSmart { get { return isSmart; } }
         private bool isNotDefault;
         public bool IsNotDefault { get { return isNotDefault; } }
+        public bool IsSmartAndNotDefault { get { return IsSmart && isNotDefault; } }
 
         public PlaylistItem(int id, bool issmart, string _name)
         {
@@ -38,10 +39,14 @@ namespace NextPlayerUWPDataLayer.Model
                 isNotDefault = !Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);
 
                 Dictionary<int, string> ids = Helpers.ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
-                if (ids.TryGetValue(id, out _name))
+                if (ids.ContainsKey(id))
                 {
                     var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-                    name = loader.GetString(_name);
+                    name = loader.GetString(ids[id]);
+                }
+                else
+                {
+                    name = _name;
                 }
             }
             else

@@ -146,6 +146,7 @@
     <Compile Include="Model\PlaylistItem.cs" />
     <Compile Include="Model\RadioItem.cs" />
     <Compile Include="Model\SCSong.cs" />
+    <Compile Include="Model\SmartPlaylistItem.cs" />
     <Compile Include="Model\SongData.cs" />
     <Compile Include="Model\SongItem.cs" />
     <Compile Include="Model\TrackStream.cs" />

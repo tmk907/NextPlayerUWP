@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Xaml.Controls;
 
 namespace NextPlayerUWP.Helpers
 {
@@ -31,51 +32,53 @@ namespace NextPlayerUWP.Helpers
             BoolOperators = new ObservableCollection<ComboBoxItemValue>();
             BoolOperators.Add(new ComboBoxItemValue(SPUtility.Operator.And, loader.GetString(SPUtility.Operator.And)));
             BoolOperators.Add(new ComboBoxItemValue(SPUtility.Operator.Or, loader.GetString(SPUtility.Operator.Or)));
-            //selectedBoolOperator = BoolOperators.FirstOrDefault();
+            selectedBoolOperator = BoolOperators.FirstOrDefault().Option;
         }
 
         #region Properties
 
         public List<ComboBoxItemValue> Items { get; }
-
-        public ComboBoxItemValue selectedItem;
-        public ComboBoxItemValue SelectedItem
+        private string selectedItem;
+        public string SelectedItem
         {
             get { return selectedItem; }
             set
             {
-                if (value != selectedItem)
+                if (value != selectedItem && value != null)
                 {
-                    if (SPUtility.Item.IsNumberType(value.Option))
+                    switch (SPUtility.Item.GetItemType(value))
                     {
-                        IsDatePickerVisible = false;
-                        IsTimePickerVisible = false;
-                        IsTextBoxVisible = true;
-                        ChangeComparisonItems(false);
-                    }
-                    else if (SPUtility.Item.IsDateType(value.Option))
-                    {
-                        IsDatePickerVisible = true;
-                        IsTimePickerVisible = false;
-                        IsTextBoxVisible = false;
-                        ChangeComparisonItems(false);
-                    }
-                    else if (SPUtility.Item.IsTimeType(value.Option))
-                    {
-                        IsDatePickerVisible = false;
-                        IsTimePickerVisible = true;
-                        IsTextBoxVisible = false;
-                        ChangeComparisonItems(false);
-                    }
-                    else
-                    {
-                        IsDatePickerVisible = false;
-                        IsTimePickerVisible = false;
-                        IsTextBoxVisible = true;
-                        ChangeComparisonItems(true);
+                        case SPUtility.ItemType.Date:
+                            IsDatePickerVisible = true;
+                            IsTimePickerVisible = false;
+                            IsTextBoxVisible = false;
+                            ChangeComparisonItems(SPUtility.ItemType.Date);
+                            break;
+                        case SPUtility.ItemType.Number:
+                            IsDatePickerVisible = false;
+                            IsTimePickerVisible = false;
+                            IsTextBoxVisible = true;
+                            ChangeComparisonItems(SPUtility.ItemType.Number);
+                            break;
+                        case SPUtility.ItemType.String:
+                            IsDatePickerVisible = false;
+                            IsTimePickerVisible = false;
+                            IsTextBoxVisible = true;
+                            ChangeComparisonItems(SPUtility.ItemType.String);
+                            break;
+                        case SPUtility.ItemType.Time:
+                            IsDatePickerVisible = false;
+                            IsTimePickerVisible = true;
+                            IsTextBoxVisible = false;
+                            ChangeComparisonItems(SPUtility.ItemType.Time);
+                            break;
+
+                        default:
+                            break;
                     }
                 }
-                Set(ref selectedItem, value);
+                selectedItem = value;
+                //Set(ref selectedItem, value);
             }
         }
 
@@ -86,32 +89,47 @@ namespace NextPlayerUWP.Helpers
             set { Set(ref comparisonItems, value); }
         }
 
-        public ComboBoxItemValue selectedComparison;
-        public ComboBoxItemValue SelectedComparison
+        private string selectedComparison;
+        public string SelectedComparison
         {
             get { return selectedComparison; }
-            set { Set(ref selectedComparison, value); }
+            set
+            {
+                selectedComparison = value;
+                //Set(ref selectedComparison, value);
+            }
         }
 
-        public string userInput = "";
+        private string userInput = "";
         public string UserInput
         {
             get { return userInput; }
             set { Set(ref userInput, value); }
         }
 
-        public ObservableCollection<ComboBoxItemValue> boolOperators;
+        private ObservableCollection<ComboBoxItemValue> boolOperators;
         public ObservableCollection<ComboBoxItemValue> BoolOperators
         {
             get { return boolOperators; }
             set { Set(ref boolOperators, value); }
         }
 
-        public ComboBoxItemValue selectedBoolOperator;
-        public ComboBoxItemValue SelectedBoolOperator
+        private string selectedBoolOperator;
+        public string SelectedBoolOperator
         {
             get { return selectedBoolOperator; }
-            set { Set(ref selectedBoolOperator, value); }
+            set
+            {
+                selectedBoolOperator = value;
+                //Set(ref selectedBoolOperator, value);
+            }
+        }
+
+        private bool isBoolOperatorsVisible = false;
+        public bool IsBoolOperatorsVisible
+        {
+            get { return isBoolOperatorsVisible; }
+            set { Set(ref isBoolOperatorsVisible, value); }
         }
 
         private bool isDatePickerVisible = false;
@@ -151,31 +169,98 @@ namespace NextPlayerUWP.Helpers
 
         #endregion
 
-        private void ChangeComparisonItems(bool isStringCompare)
+        public void ChangeInputsVisibility()
+        {
+            ChangeInputsVisibility(SPUtility.Item.GetItemType(SelectedItem));
+        }
+
+        private void ChangeInputsVisibility(SPUtility.ItemType type)
+        {
+            switch (type)
+            {
+                case SPUtility.ItemType.Date:
+                    IsDatePickerVisible = true;
+                    IsTimePickerVisible = false;
+                    IsTextBoxVisible = false;
+                    break;
+                case SPUtility.ItemType.Number:
+                    IsDatePickerVisible = false;
+                    IsTimePickerVisible = false;
+                    IsTextBoxVisible = true;
+                    break;
+                case SPUtility.ItemType.String:
+                    IsDatePickerVisible = false;
+                    IsTimePickerVisible = false;
+                    IsTextBoxVisible = true;
+                    break;
+                case SPUtility.ItemType.Time:
+                    IsDatePickerVisible = false;
+                    IsTimePickerVisible = true;
+                    IsTextBoxVisible = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void ChangeComparisonItems()
+        {
+            ChangeComparisonItems(SPUtility.Item.GetItemType(SelectedItem));
+        }
+
+        private void ChangeComparisonItems(SPUtility.ItemType type)
         {
             ComparisonItems.Clear();
-            if (isStringCompare)
+            switch (type)
             {
-                comparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.Contains, loader.GetString(SPUtility.Comparison.Contains)));
-                comparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.DoesNotContain, loader.GetString(SPUtility.Comparison.DoesNotContain)));
-                comparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.StartsWith, loader.GetString(SPUtility.Comparison.StartsWith)));
-                comparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.EndsWith, loader.GetString(SPUtility.Comparison.EndsWith)));
+                case SPUtility.ItemType.Date:
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsLess, loader.GetString(SPUtility.Comparison.IsLess)));
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsGreater, loader.GetString(SPUtility.Comparison.IsGreater)));
+                    break;
+                case SPUtility.ItemType.Number:
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.Is, loader.GetString(SPUtility.Comparison.Is)));
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsNot, loader.GetString(SPUtility.Comparison.IsNot)));
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsLess, loader.GetString(SPUtility.Comparison.IsLess)));
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsGreater, loader.GetString(SPUtility.Comparison.IsGreater)));
+                    break;
+                case SPUtility.ItemType.String:
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.Contains, loader.GetString(SPUtility.Comparison.Contains)));
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.DoesNotContain, loader.GetString(SPUtility.Comparison.DoesNotContain)));
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.StartsWith, loader.GetString(SPUtility.Comparison.StartsWith)));
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.EndsWith, loader.GetString(SPUtility.Comparison.EndsWith)));
+                    break;
+                case SPUtility.ItemType.Time:
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsLess, loader.GetString(SPUtility.Comparison.IsLess)));
+                    ComparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsGreater, loader.GetString(SPUtility.Comparison.IsGreater)));
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                comparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.Is, loader.GetString(SPUtility.Comparison.Is)));
-                comparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsNot, loader.GetString(SPUtility.Comparison.IsNot)));
-                comparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsLess, loader.GetString(SPUtility.Comparison.IsLess)));
-                comparisonItems.Add(new ComboBoxItemValue(SPUtility.Comparison.IsGreater, loader.GetString(SPUtility.Comparison.IsGreater)));
-            }
-            SelectedComparison = comparisonItems.FirstOrDefault();
+            SelectedComparison = ComparisonItems.FirstOrDefault().Option;
+        }
+
+        public void SelectSort()
+        {
+            SelectedComparison = comparisonItems.FirstOrDefault().Option;
+        }
+
+        public void SelectBool()
+        {
+            SelectedBoolOperator = BoolOperators.FirstOrDefault().Option;
+        }
+
+        public void InstanceBool()
+        {
+            BoolOperators = new ObservableCollection<ComboBoxItemValue>();
+            BoolOperators.Add(new ComboBoxItemValue(SPUtility.Operator.And, loader.GetString(SPUtility.Operator.And)));
+            //BoolOperators.Add(new ComboBoxItemValue(SPUtility.Operator.Or, loader.GetString(SPUtility.Operator.Or)));
         }
 
         public bool IsCorrect()
         {
             bool isCorrect = true;
 
-            if (SPUtility.Item.IsNumberType(selectedItem.Option))
+            if (SPUtility.Item.IsNumberType(selectedItem))
             {
                 int number;
                 if (userInput == "" || !Int32.TryParse(userInput, out number))
@@ -183,11 +268,11 @@ namespace NextPlayerUWP.Helpers
                     isCorrect = false;
                 }
             }
-            else if (SPUtility.Item.IsDateType(selectedItem.Option))
+            else if (SPUtility.Item.IsDateType(selectedItem))
             {
                 
             }
-            else if (SPUtility.Item.IsTimeType(selectedItem.Option))
+            else if (SPUtility.Item.IsTimeType(selectedItem))
             {
                 
             }
@@ -197,6 +282,18 @@ namespace NextPlayerUWP.Helpers
                 {
                     isCorrect = false;
                 }
+            }
+            if (selectedComparison == null)
+            {
+                isCorrect = false;
+            }
+            if (selectedBoolOperator == null)
+            {
+                isCorrect = false;
+            }
+            if (selectedItem == null)
+            {
+                isCorrect = false;
             }
 
             return isCorrect;

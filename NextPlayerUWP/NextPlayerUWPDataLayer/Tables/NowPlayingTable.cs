@@ -3,7 +3,7 @@
 namespace NextPlayerUWPDataLayer.Tables
 {
     [Table("NowPlayingTable")]
-    class NowPlayingTable
+    public class NowPlayingTable
     {
         [PrimaryKey]
         public int Position { get; set; }

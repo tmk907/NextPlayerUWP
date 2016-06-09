@@ -26,9 +26,9 @@
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
                             Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
-            <!--<MenuFlyoutItem x:Uid="MFIEditSmart" Text="Edit"
-                            Visibility="{Binding IsSmart, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Click="{x:Bind ViewModel.EditSmartPlaylist}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutItem x:Uid="MFIEditSmart" Text="Edit"
+                            Visibility="{Binding IsSmartAndNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Click="{x:Bind ViewModel.EditSmartPlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIEditPlainName" Text="Edit name"
                             Visibility="{Binding IsSmart, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
                             Click="MFIEditName_Click" CommandParameter="{Binding}"/>
@@ -76,10 +76,12 @@
                 x:Uid="AppBarButtonAddPlaylist"
                 Label="Add playlist"
                 Click="newPlainPlaylist_Click"/>
-            <AppBarButton
-                Icon="Accept"
-                Label="New smart"
-                Click="{x:Bind ViewModel.NewSmartPlaylist}"/>
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton 
+                    x:Uid="AppBarButtonNewSmartPlaylist"
+                    Label="New smart"
+                    Click="{x:Bind ViewModel.NewSmartPlaylist}"/>
+            </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>

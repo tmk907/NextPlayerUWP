@@ -120,7 +120,7 @@
   <data name="Album" xml:space="preserve">
     <value>Album</value>
   </data>
-  <data name="Album Artist" xml:space="preserve">
+  <data name="AlbumArtist" xml:space="preserve">
     <value>Wykonawca albumu</value>
   </data>
   <data name="AppBarButtonAddPlaylist.Label" xml:space="preserve">
@@ -199,7 +199,7 @@
     <value>Usuń</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Czy jesteś pewien, że chcesz usunąć tę playlistę?</value>
+    <value>Czy na pewno chcesz usunąć tę playlistę?</value>
   </data>
   <data name="Directory" xml:space="preserve">
     <value>Ścieżka</value>
@@ -210,16 +210,16 @@
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
   </data>
-  <data name="Folder Name" xml:space="preserve">
+  <data name="FolderName" xml:space="preserve">
     <value>Nazwa folderu</value>
   </data>
   <data name="Genre" xml:space="preserve">
     <value>Gatunek</value>
   </data>
-  <data name="Last Added" xml:space="preserve">
+  <data name="LastAdded" xml:space="preserve">
     <value>Ostatnio dodane</value>
   </data>
-  <data name="Last Played" xml:space="preserve">
+  <data name="LastPlayed" xml:space="preserve">
     <value>Ostatnio odtwarzane</value>
   </data>
   <data name="Later" xml:space="preserve">
@@ -333,7 +333,7 @@
   <data name="PivotHeaderTBNowPlaying.Text" xml:space="preserve">
     <value>teraz odtwarzane</value>
   </data>
-  <data name="Play Count" xml:space="preserve">
+  <data name="PlayCount" xml:space="preserve">
     <value>Liczba odtworzeń</value>
   </data>
   <data name="Playlist" xml:space="preserve">
@@ -369,7 +369,7 @@
   <data name="Song" xml:space="preserve">
     <value>Utwór</value>
   </data>
-  <data name="Song Count" xml:space="preserve">
+  <data name="SongCount" xml:space="preserve">
     <value>Liczba utworów</value>
   </data>
   <data name="TBAbout.Text" xml:space="preserve">
@@ -379,7 +379,7 @@
     <value>Po przeciągnięciu do listy teraz odtwarzane:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>Foldery, w których aplikacja szuka muzyki:</value>
+    <value>Music folders</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -592,12 +592,12 @@
     <value>Nowe utwory:</value>
   </data>
   <data name="And" xml:space="preserve">
-    <value>And</value>
+    <value>I</value>
   </data>
   <data name="Or" xml:space="preserve">
-    <value>Or</value>
+    <value>Lub</value>
   </data>
-  <data name="File Path" xml:space="preserve">
+  <data name="FilePath" xml:space="preserve">
     <value>Ścieżka pliku</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
@@ -624,13 +624,52 @@
   <data name="StartsWith" xml:space="preserve">
     <value>Zaczyna się na</value>
   </data>
-  <data name="Minutes" xml:space="preserve">
-    <value>Minuty</value>
+  <data name="HighestRating" xml:space="preserve">
+    <value>Rating (lowest first)</value>
   </data>
-  <data name="Hours" xml:space="preserve">
-    <value>Godziny</value>
+  <data name="LowestRating" xml:space="preserve">
+    <value>Rating (highest first)</value>
   </data>
-  <data name="Seconds" xml:space="preserve">
-    <value>Sekundy</value>
+  <data name="LeastOftenPlayed" xml:space="preserve">
+    <value>Play count (highest first)</value>
+  </data>
+  <data name="LeastRecentlyAdded" xml:space="preserve">
+    <value>Date added (oldest first)</value>
+  </data>
+  <data name="LeastRecentlyPlayed" xml:space="preserve">
+    <value>Date played (oldest first)</value>
+  </data>
+  <data name="MostOftenPlayed" xml:space="preserve">
+    <value>Play count (lowest first)</value>
+  </data>
+  <data name="MostRecentlyAdded" xml:space="preserve">
+    <value>Date added (newest first)</value>
+  </data>
+  <data name="MostRecentlyPlayed" xml:space="preserve">
+    <value>Date played (newest first)</value>
+  </data>
+  <data name="ButtonDelete.Content" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="ButtonAdd.Content" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="PageHeaderNewSmartPlaylist.Content" xml:space="preserve">
+    <value>Nowa smart playlista</value>
+  </data>
+  <data name="AppBarButtonNewSmartPlaylist.Label" xml:space="preserve">
+    <value>Nowa smart playlista</value>
+  </data>
+  <data name="TBName.Text" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="TBMaxSongsNumber.Text" xml:space="preserve">
+    <value>Maksymalna liczba utworów</value>
+  </data>
+  <data name="TBDefaultSort.Text" xml:space="preserve">
+    <value>Sortuj wg</value>
+  </data>
+  <data name="TBErrorSmartPlaylist.Text" xml:space="preserve">
+    <value>Proszę wypełnić poprawnie wszystkie pola.</value>
   </data>
 </root>

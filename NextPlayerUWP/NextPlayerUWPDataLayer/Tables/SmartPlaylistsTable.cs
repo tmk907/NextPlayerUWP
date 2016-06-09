@@ -3,7 +3,7 @@
 namespace NextPlayerUWPDataLayer.Tables
 {
     [Table("SmartPlaylistsTable")]
-    class SmartPlaylistsTable
+    public class SmartPlaylistsTable
     {
         [PrimaryKey, AutoIncrement]
         public int SmartPlaylistId { get; set; }

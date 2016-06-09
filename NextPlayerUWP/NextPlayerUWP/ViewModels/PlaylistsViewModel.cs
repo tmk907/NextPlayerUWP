@@ -96,7 +96,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void EditSmartPlaylist(object sender, RoutedEventArgs e)
         {
-
+            NavigationService.Navigate(App.Pages.NewSmartPlaylist,((PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter).Id);
         }
 
         public async void SaveEditedName()

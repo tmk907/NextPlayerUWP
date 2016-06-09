@@ -674,19 +674,6 @@ namespace NextPlayerUWPDataLayer.Services
             return songs;
         }
 
-        public int PrepPlain()
-        {
-            var newplaylist = new PlainPlaylistsTable
-            {
-                Name = "nowa playlista",
-            };
-
-            connection.Insert(newplaylist);
-
-           
-            return newplaylist.PlainPlaylistId;
-        }
-
         public async Task<ObservableCollection<SongItem>> GetSongItemsFromPlainPlaylistAsync(int id)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
@@ -911,30 +898,22 @@ namespace NextPlayerUWPDataLayer.Services
             var query1 = await connectionAsync.Table<SmartPlaylistsTable>().OrderBy(p => p.SmartPlaylistId).ToListAsync();
             Dictionary<int, string> ids = Helpers.ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
             string name;
-            foreach (var item in query1)
+            foreach (var item in query1) //default smart playlists
             {
-                if (ids.TryGetValue(item.SmartPlaylistId, out name))
+                if (ids.ContainsKey(item.SmartPlaylistId))
                 {
+                    name = ids[item.SmartPlaylistId];
                     playlists.Add(new PlaylistItem(item.SmartPlaylistId, true, name));
                 }
-                else
-                {
-                    //collection.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
-                }
-
             }
             var query2 = query1.OrderBy(p => p.Name);
-            foreach (var item in query2)
+            foreach (var item in query2) //user smart playlists
             {
-                if (ids.TryGetValue(item.SmartPlaylistId, out name))
-                {
-                    //playlists.Add(new PlaylistItem(item.SmartPlaylistId, true, loader.GetString(name)));
-                }
-                else
+                if (!ids.ContainsKey(item.SmartPlaylistId))
                 {
                     playlists.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
-                }
 
+                }
             }
 
             var query = await connectionAsync.Table<PlainPlaylistsTable>().OrderBy(p => p.Name).ToListAsync();
@@ -970,7 +949,13 @@ namespace NextPlayerUWPDataLayer.Services
         {
             var list = await connectionAsync.Table<SmartPlaylistsTable>().Where(s => s.SmartPlaylistId.Equals(id)).ToListAsync();
             var p = list.FirstOrDefault();
-            return new PlaylistItem(id, true, p.Name);
+            return new SmartPlaylistItem(id, p.Name, p.SongsNumber, p.SortBy);
+        }
+
+        public async Task<List<SmartPlaylistEntryTable>> GetSmartPlaylistEntries(int id)
+        {
+            List<SmartPlaylistEntryTable> list = await connectionAsync.Table<SmartPlaylistEntryTable>().Where(s => s.PlaylistId.Equals(id)).ToListAsync();
+            return list;
         }
 
         public async Task<List<string>> GetImportedPlaylistPathsAsync()
@@ -1106,6 +1091,19 @@ namespace NextPlayerUWPDataLayer.Services
             return newplaylist.SmartPlaylistId;
         }
 
+        public async Task<int> InsertSmartPlaylistAsync(string name, int songsNumber, string sorting)
+        {
+            var newplaylist = new SmartPlaylistsTable
+            {
+                Name = name,
+                SongsNumber = songsNumber,
+                SortBy = sorting,
+            };
+
+            await connectionAsync.InsertAsync(newplaylist);
+            return newplaylist.SmartPlaylistId;
+        }
+
         public async Task InsertSmartPlaylistEntryAsync(int _playlistId, string _item, string _comparison, string _value, string _operator)
         {
             var newEntry = new SmartPlaylistEntryTable
@@ -1153,13 +1151,18 @@ namespace NextPlayerUWPDataLayer.Services
             connection.Delete<SmartPlaylistEntryTable>(primaryId);
         }
 
-        public async Task DeleteSmartPlaylistAsync(int id)
+        public async Task DeleteSmartPlaylistEntries(int playlistId)
         {
-            var items = await connectionAsync.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToListAsync();
+            var items = await connectionAsync.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(playlistId)).ToListAsync();
             foreach (var item in items)
             {
                 DeleteSmartPlaylistEntry(item.Id);
             }
+        }
+
+        public async Task DeleteSmartPlaylistAsync(int id)
+        {
+            await DeleteSmartPlaylistEntries(id);
             var list =  await connectionAsync.Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).ToListAsync();
             var playlist = list.FirstOrDefault();
             await connectionAsync.DeleteAsync(playlist);

@@ -120,7 +120,7 @@
   <data name="Album" xml:space="preserve">
     <value>Альбом</value>
   </data>
-  <data name="Album Artist" xml:space="preserve">
+  <data name="AlbumArtist" xml:space="preserve">
     <value>Дискография</value>
   </data>
   <data name="AppBarButtonAddPlaylist.Label" xml:space="preserve">
@@ -210,16 +210,16 @@
   <data name="Folder" xml:space="preserve">
     <value>Папка</value>
   </data>
-  <data name="Folder Name" xml:space="preserve">
+  <data name="FolderName" xml:space="preserve">
     <value>Имя папки</value>
   </data>
   <data name="Genre" xml:space="preserve">
     <value>Жанр</value>
   </data>
-  <data name="Last Added" xml:space="preserve">
+  <data name="LastAdded" xml:space="preserve">
     <value>Последние добавленные</value>
   </data>
-  <data name="Last Played" xml:space="preserve">
+  <data name="LastPlayed" xml:space="preserve">
     <value>Последние</value>
   </data>
   <data name="Later" xml:space="preserve">
@@ -333,7 +333,7 @@
   <data name="PivotHeaderTBNowPlaying.Text" xml:space="preserve">
     <value>сейчас играет</value>
   </data>
-  <data name="Play Count" xml:space="preserve">
+  <data name="PlayCount" xml:space="preserve">
     <value>Счетчик прослушиваний</value>
   </data>
   <data name="Playlist" xml:space="preserve">
@@ -369,7 +369,7 @@
   <data name="Song" xml:space="preserve">
     <value>Песня</value>
   </data>
-  <data name="Song Count" xml:space="preserve">
+  <data name="SongCount" xml:space="preserve">
     <value>Song count</value>
   </data>
   <data name="TBAbout.Text" xml:space="preserve">
@@ -379,7 +379,7 @@
     <value>After dragging item to now playing list:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>Папки с музыкой</value>
+    <value>Music folders</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Альбом</value>
@@ -597,7 +597,7 @@
   <data name="Or" xml:space="preserve">
     <value>Or</value>
   </data>
-  <data name="File Path" xml:space="preserve">
+  <data name="FilePath" xml:space="preserve">
     <value>Путь к файлу</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
@@ -624,13 +624,52 @@
   <data name="StartsWith" xml:space="preserve">
     <value>Starts with</value>
   </data>
-  <data name="Minutes" xml:space="preserve">
-    <value>Minutes</value>
+  <data name="HighestRating" xml:space="preserve">
+    <value>Rating (lowest first)</value>
   </data>
-  <data name="Hours" xml:space="preserve">
-    <value>Hours</value>
+  <data name="LowestRating" xml:space="preserve">
+    <value>Rating (highest first)</value>
   </data>
-  <data name="Seconds" xml:space="preserve">
-    <value>Seconds</value>
+  <data name="LeastOftenPlayed" xml:space="preserve">
+    <value>Play count (highest first)</value>
+  </data>
+  <data name="LeastRecentlyAdded" xml:space="preserve">
+    <value>Date added (oldest first)</value>
+  </data>
+  <data name="LeastRecentlyPlayed" xml:space="preserve">
+    <value>Date played (oldest first)</value>
+  </data>
+  <data name="MostOftenPlayed" xml:space="preserve">
+    <value>Play count (lowest first)</value>
+  </data>
+  <data name="MostRecentlyAdded" xml:space="preserve">
+    <value>Date added (newest first)</value>
+  </data>
+  <data name="MostRecentlyPlayed" xml:space="preserve">
+    <value>Date played (newest first)</value>
+  </data>
+  <data name="ButtonDelete.Content" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="ButtonAdd.Content" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="PageHeaderNewSmartPlaylist.Content" xml:space="preserve">
+    <value>New smart playlist</value>
+  </data>
+  <data name="AppBarButtonNewSmartPlaylist.Label" xml:space="preserve">
+    <value>New smart playlist</value>
+  </data>
+  <data name="TBName.Text" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="TBMaxSongsNumber.Text" xml:space="preserve">
+    <value>Max number of songs</value>
+  </data>
+  <data name="TBDefaultSort.Text" xml:space="preserve">
+    <value>Сортировать по</value>
+  </data>
+  <data name="TBErrorSmartPlaylist.Text" xml:space="preserve">
+    <value>Please fill all fields correctly.</value>
   </data>
 </root>

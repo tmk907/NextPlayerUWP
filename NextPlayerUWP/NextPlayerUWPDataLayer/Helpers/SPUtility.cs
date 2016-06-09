@@ -20,21 +20,30 @@ namespace NextPlayerUWPDataLayer.Enums
             public static readonly string LeastRecentlyPlayed = "LeastRecentlyPlayed";
         }
 
+        public enum ItemType
+        {
+            Date,
+            Time,
+            Number,
+            String,
+            Unknown
+        }
+
         public class Item
         {
             public static readonly string Title = "Title";
             public static readonly string Album = "Album";
             public static readonly string Artist = "Artist";
-            public static readonly string AlbumArtist = "Album Artist";
+            public static readonly string AlbumArtist = "AlbumArtist";
             public static readonly string Composer = "Composer";
             public static readonly string Genre = "Genre";
             public static readonly string Duration = "Duration";
             public static readonly string Year = "Year";
             public static readonly string Rating = "Rating";
-            public static readonly string PlayCount = "Play Count";
-            public static readonly string FilePath = "File Path";
-            public static readonly string DateAdded = "Last Added";
-            public static readonly string LastPlayed = "Last Played";
+            public static readonly string PlayCount = "PlayCount";
+            public static readonly string FilePath = "FilePath";
+            public static readonly string DateAdded = "LastAdded";
+            public static readonly string LastPlayed = "LastPlayed";
 
             public static bool IsDateType(string value)
             {
@@ -56,6 +65,15 @@ namespace NextPlayerUWPDataLayer.Enums
                 return (value == SPUtility.Item.Album || value == SPUtility.Item.AlbumArtist || value == SPUtility.Item.Artist ||
                     value == SPUtility.Item.Composer || value == SPUtility.Item.FilePath || value == SPUtility.Item.Genre ||
                     value == SPUtility.Item.Title);
+            }
+
+            public static ItemType GetItemType(string item)
+            {
+                if (IsStringType(item)) return ItemType.String;
+                if (IsDateType(item)) return ItemType.Date;
+                if (IsNumberType(item)) return ItemType.Number;
+                if (IsTimeType(item)) return ItemType.Time;
+                return ItemType.Unknown;
             }
         }
 
@@ -88,7 +106,7 @@ namespace NextPlayerUWPDataLayer.Enums
             {SortBy.Title,"Title"},
             {SortBy.Album, "Album"},
             {SortBy.Artist, "Artists"},
-            {SortBy.Genre, "Genre"},
+            {SortBy.Genre, "Genres"},
             {SortBy.HighestRating, "Rating DESC"},
             {SortBy.LowestRating, "Rating"},
             {SortBy.MostOftenPlayed, "PlayCount DESC"},
@@ -106,7 +124,7 @@ namespace NextPlayerUWPDataLayer.Enums
             {Item.Artist, "Artists"},
             {Item.AlbumArtist, "AlbumArtist"},
             {Item.Composer, "Composers"},
-            {Item.Genre, "Genre"},
+            {Item.Genre, "Genres"},
             {Item.Duration, "Duration"},
             {Item.Year, "Year"},
             {Item.Rating, "Rating"},

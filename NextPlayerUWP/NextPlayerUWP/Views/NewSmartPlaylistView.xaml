@@ -25,43 +25,74 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <RowDefinition/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <ComboBox 
                     Grid.Row="0"
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Margin="0,0,4,4"
                     DisplayMemberPath="Label"
-                    SelectedItem="{x:Bind SelectedItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
-                    ItemsSource="{x:Bind Items, Mode=OneWay}"/>
+                    SelectedValuePath="Option"
+                    SelectedValue="{Binding SelectedItem, Mode=TwoWay}"
+                    ItemsSource="{x:Bind Items}"/>
                 <ComboBox
-                    Grid.Row="1"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Margin="4,0,0,4"
                     DisplayMemberPath="Label"
-                    SelectedItem="{x:Bind SelectedComparison, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
+                    SelectedValuePath="Option"
+                    SelectedValue="{Binding SelectedComparison, Mode=TwoWay}"
                     ItemsSource="{x:Bind ComparisonItems, Mode=OneWay}"/>
                 <TextBox
-                    Grid.Row="2"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    VerticalAlignment="Center"
+                    Margin="0,0,0,4"
                     Visibility="{x:Bind IsTextBoxVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                     Text="{x:Bind UserInput, Mode=TwoWay}"/>
                 <DatePicker
-                    Grid.Row="2"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    VerticalAlignment="Center"
+                    Margin="0,0,0,4"
+                    HorizontalAlignment="Stretch"
                     Date="{x:Bind SelectedDate, Converter={StaticResource DateTimeToDateTimeOffsetConverter}, Mode=TwoWay}"
                     Visibility="{x:Bind IsDatePickerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                     />
                 <TimePicker
-                    Grid.Row="2"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    VerticalAlignment="Center"
+                    Margin="0,0,0,4"
+                    HorizontalAlignment="Stretch"
                     Time="{x:Bind SelectedTime, Mode=TwoWay}"
                     ClockIdentifier="24HourClock"
                     Visibility="{x:Bind IsTimePickerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                     />
                 <ComboBox
-                    Grid.Row="3"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    VerticalAlignment="Center"
+                    Margin="0,8,0,8"
+                    MinWidth="128"
                     DisplayMemberPath="Label"
-                    SelectedItem="{x:Bind SelectedBoolOperator, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
-                    ItemsSource="{x:Bind BoolOperators, Mode=OneWay}"/>
+                    SelectedValuePath="Option"
+                    SelectedValue="{Binding SelectedBoolOperator, Mode=TwoWay}"
+                    ItemsSource="{x:Bind BoolOperators, Mode=OneWay}"
+                    Visibility="{x:Bind IsBoolOperatorsVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -78,7 +109,15 @@
                 Icon="Save"
                 Click="{x:Bind ViewModel.SavePlaylist}"/>
         </controls:PageHeader>
-        <Grid Grid.Row="1">
+        <TextBlock
+            Grid.Row="1"
+            x:Uid="TBErrorSmartPlaylist"
+            Text="Please fill all fields correctly."
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Foreground="Red"
+            Visibility="{x:Bind ViewModel.ErrorVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"/>
+        <Grid Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -86,21 +125,89 @@
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-        
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                x:Uid="TBName"
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="12,0,4,0"
+                Text="Name"
+                VerticalAlignment="Center"/>
             <TextBox 
                 Grid.Row="0"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                Margin="4,4,12,4"
                 Text="{x:Bind ViewModel.PlaylistName, Mode=TwoWay}"/>
+            <TextBlock
+                x:Uid="TBMaxSongsNumber"
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="12,0,4,0"
+                Text="Max songs"
+                VerticalAlignment="Center"/>
             <TextBox
                 Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                Margin="4,4,12,4"
                 Text="{x:Bind ViewModel.MaxSongsNumber, Mode=TwoWay}"/>
-            <ListView Grid.Row="3"
-                ItemsSource="{Binding PlaylistRules}"
-                ItemTemplate="{StaticResource PlaylistRuleTemplate}"     >
-            
+            <TextBlock
+                x:Uid="TBDefaultSort"
+                Grid.Row="2"
+                Grid.Column="0"
+                Margin="12,0,4,0"
+                Text="Select by"
+                VerticalAlignment="Center"/>
+            <ComboBox 
+                Grid.Row="2"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                Margin="4,4,12,4"
+                DisplayMemberPath="Label"
+                SelectedValuePath="Option"
+                SelectedItem="{x:Bind ViewModel.SelectedSortRule, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
+                ItemsSource="{x:Bind ViewModel.SortRules, Mode=OneWay}"/>
+            <ListView 
+                Grid.Row="3"
+                Grid.ColumnSpan="2"
+                Margin="12,4,12,4"
+                ItemsSource="{Binding PlaylistRules, Mode=TwoWay}"
+                ItemTemplate="{StaticResource PlaylistRuleTemplate}" 
+                SelectionMode="None"
+                IsItemClickEnabled="False">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>
+                    </Style>
+                </ListView.ItemContainerStyle>  
             </ListView>
-            <Button Grid.Row="4"
-                    Content="Add"
-                    Click="{x:Bind ViewModel.AddRule}"/>
+            <Button 
+                x:Uid="ButtonAdd"
+                Grid.Row="4"
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                Margin="12,4,0,4"
+                MinWidth="128"
+                Content="Add"
+                Click="{x:Bind ViewModel.AddRule}"/>
+            <Button 
+                x:Uid="ButtonDelete"
+                Grid.Row="4"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                Margin="4,4,12,4"
+                MinWidth="128"
+                Content="Delete"
+                Click="{x:Bind ViewModel.DeleteRule}"/>
         </Grid>
     </Grid>
 </Page>
