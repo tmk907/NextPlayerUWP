@@ -432,7 +432,7 @@
                            Text="{Binding Song.Artist}"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" Width="Auto">
+            <Grid Grid.Column="1" Width="Auto" FlowDirection="LeftToRight">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
