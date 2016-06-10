@@ -672,4 +672,7 @@
   <data name="TBErrorSmartPlaylist.Text" xml:space="preserve">
     <value>Proszę wypełnić poprawnie wszystkie pola.</value>
   </data>
+  <data name="ShellGrid.FlowDirection" xml:space="preserve">
+    <value>LeftToRight</value>
+  </data>
 </root>

@@ -488,6 +488,7 @@ namespace NextPlayerUWP.ViewModels
 
         private Dictionary<string, string> languageDescriptions = new Dictionary<string, string>()
         {
+            {"ar","العربية" },
             {"cs","čeština" },
             {"de","Deutsch" },
             {"en","English" },

@@ -208,7 +208,7 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <Grid>
+    <Grid x:Uid="ShellGrid">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Phone">

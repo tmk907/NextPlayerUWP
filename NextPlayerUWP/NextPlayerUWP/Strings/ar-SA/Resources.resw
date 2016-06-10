@@ -118,487 +118,487 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Album" xml:space="preserve">
-    <value>Album</value>
-  </data>
-  <data name="AlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>ألبوم</value>
   </data>
   <data name="AppBarButtonAddPlaylist.Label" xml:space="preserve">
-    <value>Playlist Baru</value>
+    <value>قائمة تشغيل جديدة</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artis</value>
+    <value>فنان</value>
   </data>
   <data name="ButtonAddFolder.Content" xml:space="preserve">
-    <value>Tambahkan folder</value>
+    <value>إضافة مجلد</value>
   </data>
   <data name="ButtonAddToNowPlaying.Content" xml:space="preserve">
-    <value>Tambahkan ke sekarang main</value>
+    <value>إضافة إلى التشغيل الآن</value>
   </data>
   <data name="ButtonAddToPlaylist.Content" xml:space="preserve">
-    <value>Tambahkan ke daftar putar</value>
+    <value>أضف إلى قائمة الأغاني</value>
   </data>
   <data name="ButtonCancel.Content" xml:space="preserve">
-    <value>Batal</value>
+    <value>إلغاء</value>
   </data>
   <data name="ButtonPlayNext.Content" xml:space="preserve">
-    <value>Putar selanjutnya</value>
+    <value>شغل التالي</value>
   </data>
   <data name="ButtonRateApp.Content" xml:space="preserve">
-    <value>Nilai Apl</value>
+    <value>قيّم التطبيق</value>
   </data>
   <data name="ButtonSave.Content" xml:space="preserve">
-    <value>Simpan</value>
+    <value>حفظ</value>
   </data>
   <data name="ButtonSendEmail.Content" xml:space="preserve">
-    <value>Send e-mail</value>
+    <value>إرسال بريد إلكتروني</value>
   </data>
   <data name="ButtonUpdate.Content" xml:space="preserve">
-    <value>Perbarui</value>
+    <value>تحديث</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Batal</value>
+    <value>إلغاء</value>
   </data>
   <data name="Composer" xml:space="preserve">
-    <value>Komposer</value>
+    <value>المؤلف</value>
   </data>
   <data name="Connecting" xml:space="preserve">
-    <value>Menyambungkan..</value>
+    <value>ربط</value>
   </data>
   <data name="ConnectionError" xml:space="preserve">
-    <value>Kesalahan jaringan</value>
+    <value>خطأ في الاتصال</value>
   </data>
   <data name="ContentDialogEditAlbum.PrimaryButtonText" xml:space="preserve">
-    <value>Simpan</value>
+    <value>حفظ</value>
   </data>
   <data name="ContentDialogEditAlbum.SecondaryButtonText" xml:space="preserve">
-    <value>Batal</value>
+    <value>إلغاء</value>
   </data>
   <data name="ContentDialogEditAlbum.Title" xml:space="preserve">
-    <value>Edit</value>
+    <value>تعديل</value>
   </data>
   <data name="ContentDialogEditName.PrimaryButtonText" xml:space="preserve">
-    <value>Simpan</value>
+    <value>حفظ</value>
   </data>
   <data name="ContentDialogEditName.SecondaryButtonText" xml:space="preserve">
-    <value>Batal</value>
+    <value>إلغاء</value>
   </data>
   <data name="ContentDialogEditName.Title" xml:space="preserve">
-    <value>Edit name</value>
+    <value>تعديل الاسم</value>
   </data>
   <data name="ContentDialogNewPlaylist.PrimaryButtonText" xml:space="preserve">
-    <value>Simpan</value>
+    <value>حفظ</value>
   </data>
   <data name="ContentDialogNewPlaylist.SecondaryButtonText" xml:space="preserve">
-    <value>Batal</value>
+    <value>إلغاء</value>
   </data>
   <data name="ContentDialogNewPlaylist.Title" xml:space="preserve">
-    <value>Playlist Baru</value>
+    <value>قائمة تشغيل جديدة</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Hapus</value>
+    <value>حذف</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Anda yakin ingin menghapus daftar putar ini?</value>
+    <value>هل ترغب حقاً في حذف قائمة التشغيل؟</value>
   </data>
   <data name="Directory" xml:space="preserve">
-    <value>Directory</value>
+    <value>الدليل</value>
   </data>
   <data name="Duration" xml:space="preserve">
-    <value>Durasi</value>
+    <value>فترة</value>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
-  </data>
-  <data name="FolderName" xml:space="preserve">
-    <value>Nama folder</value>
+    <value>المجلد</value>
   </data>
   <data name="Genre" xml:space="preserve">
-    <value>Genre</value>
-  </data>
-  <data name="LastAdded" xml:space="preserve">
-    <value>Terakhir ditambahkan</value>
-  </data>
-  <data name="LastPlayed" xml:space="preserve">
-    <value>Terakhir diputar</value>
+    <value>نوع</value>
   </data>
   <data name="Later" xml:space="preserve">
-    <value>Nanti</value>
+    <value>لاحقاً</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
-    <value>Library updated</value>
+    <value>تم تحديث المكتبة</value>
   </data>
   <data name="MFIAddToNowPlaying.Text" xml:space="preserve">
-    <value>Tambahkan ke sekarang main</value>
+    <value>إضافة إلى تشغيل الآن</value>
   </data>
   <data name="MFIAddToPlaylist.Text" xml:space="preserve">
-    <value>Tambahkan ke daftar putar</value>
+    <value>إضافة إلى قائمة تشغيل</value>
   </data>
   <data name="MFIDelete.Text" xml:space="preserve">
-    <value>Hapus</value>
+    <value>حذف</value>
   </data>
   <data name="MFIEditPlainName.Text" xml:space="preserve">
-    <value>Edit name</value>
+    <value>تعديل الاسم</value>
   </data>
   <data name="MFIEditSmart.Text" xml:space="preserve">
-    <value>Edit</value>
+    <value>تعديل</value>
   </data>
   <data name="MFIEditTags.Text" xml:space="preserve">
-    <value>Sunting tag</value>
+    <value>تحرير تعليقات</value>
   </data>
   <data name="MFIGoToAlbum.Text" xml:space="preserve">
-    <value>Kunjungi Album</value>
+    <value>اذهب إلى الألبوم</value>
   </data>
   <data name="MFIGoToArtist.Text" xml:space="preserve">
-    <value>Kunjungi Artis</value>
+    <value>اذهب إلى الفنان</value>
   </data>
   <data name="MFIPin.Text" xml:space="preserve">
-    <value>Sematkan</value>
+    <value>دبوس</value>
   </data>
   <data name="MFIPlayNext.Text" xml:space="preserve">
-    <value>Putar selanjutnya</value>
+    <value>تشغيل التالي</value>
   </data>
   <data name="MFIPlayNow.Text" xml:space="preserve">
-    <value>Putar sekarang</value>
+    <value>التشغيل الآن</value>
   </data>
   <data name="MFIShare.Text" xml:space="preserve">
-    <value>Bagikan</value>
+    <value>مشاركة</value>
   </data>
   <data name="MFIShowDetails.Text" xml:space="preserve">
-    <value>Tampilkan rincian</value>
+    <value>عرض التفاصيل</value>
   </data>
   <data name="NajczesciejOdtwarzane" xml:space="preserve">
-    <value>Paling sering dimainkan</value>
+    <value>الأكثر تشغيلاً</value>
   </data>
   <data name="NajgorzejOceniane" xml:space="preserve">
-    <value>Peringkat terendah</value>
+    <value>الأقل تقييماً</value>
   </data>
   <data name="NajlepiejOceniane" xml:space="preserve">
-    <value>Peringkat tertinggi</value>
+    <value>الأعلى تقييماً</value>
   </data>
   <data name="NajrzadziejOdtwarzane" xml:space="preserve">
-    <value>Kurang sering dimainkan</value>
+    <value>الأقل تشغيلاً</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nama</value>
+    <value>اسم</value>
   </data>
   <data name="OstatnioDodane" xml:space="preserve">
-    <value>Terakhir ditambahkan</value>
+    <value>آخر إضافة</value>
   </data>
   <data name="OstatnioOdtwarzane" xml:space="preserve">
-    <value>Terakhir diputar</value>
+    <value>آخر تشغيل</value>
   </data>
   <data name="PageHeaderAddToPlaylist.Content" xml:space="preserve">
-    <value>Tambahkan ke daftar putar</value>
+    <value>إضافة إلى قائمة تشغيل</value>
   </data>
   <data name="PageHeaderAlbum.Content" xml:space="preserve">
-    <value>Album</value>
+    <value>الألبوم</value>
   </data>
   <data name="PageHeaderAlbums.Content" xml:space="preserve">
-    <value>Album</value>
+    <value>ألبومات</value>
   </data>
   <data name="PageHeaderArtist.Content" xml:space="preserve">
-    <value>Artis</value>
+    <value>الفنان</value>
   </data>
   <data name="PageHeaderArtists.Content" xml:space="preserve">
-    <value>Penyanyi</value>
+    <value>الفنانين</value>
   </data>
   <data name="PageHeaderFileInfo.Content" xml:space="preserve">
-    <value>File info</value>
+    <value>معلومات الملف</value>
   </data>
   <data name="PageHeaderFolders.Content" xml:space="preserve">
-    <value>Map</value>
+    <value>المجلدات</value>
   </data>
   <data name="PageHeaderGenres.Content" xml:space="preserve">
-    <value>Genre</value>
+    <value>الأنواع</value>
   </data>
   <data name="PageHeaderPlaylist.Content" xml:space="preserve">
-    <value>Daftar putar</value>
+    <value>قائمة التشغيل</value>
   </data>
   <data name="PageHeaderPlaylists.Content" xml:space="preserve">
-    <value>Daftar putar</value>
+    <value>قوائم التشغيل</value>
   </data>
   <data name="PageHeaderSettings.Content" xml:space="preserve">
-    <value>Pengaturan</value>
+    <value>الإعدادات</value>
   </data>
   <data name="PageHeaderSongs.Content" xml:space="preserve">
-    <value>Lagu</value>
+    <value>الأغاني</value>
   </data>
   <data name="PageHeaderTagsEditor.Content" xml:space="preserve">
-    <value>Tags editor</value>
+    <value>محرر المعلومات</value>
   </data>
   <data name="PivotHeaderTBLyrics.Text" xml:space="preserve">
-    <value>lirik</value>
+    <value>الكلمات</value>
   </data>
   <data name="PivotHeaderTBNowPlaying.Text" xml:space="preserve">
-    <value>kini memutar</value>
-  </data>
-  <data name="PlayCount" xml:space="preserve">
-    <value>Jumlah main</value>
+    <value>يشغَّل الآن</value>
   </data>
   <data name="Playlist" xml:space="preserve">
-    <value>Daftar putar</value>
+    <value>قائمة التشغيل</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Daftar putar</value>
+    <value>قوائم التشغيل</value>
   </data>
   <data name="RateAppMsg" xml:space="preserve">
-    <value>If you enjoy using Next-Player, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!</value>
+    <value>إذا استمتعت باستخدام Next-Player, هل تمانع بأخذ لحظة من وقتك لتقييمه؟ لن تأخذ أكثر من دقيقة. شكراً لك على دعمك!</value>
   </data>
   <data name="RateAppTitle" xml:space="preserve">
-    <value>Nilai apl ini</value>
+    <value>قيّم التطبيق</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Peringkat</value>
+    <value>تقييم</value>
   </data>
   <data name="RBAddToNowPlaying.Content" xml:space="preserve">
-    <value>Tambahkan ke sekarang main</value>
+    <value>إضافة إلى التشغيل الآن</value>
   </data>
   <data name="RBDark.Content" xml:space="preserve">
-    <value>Gelap</value>
+    <value>داكن</value>
   </data>
   <data name="RBLight.Content" xml:space="preserve">
-    <value>Terang</value>
+    <value>الضوء</value>
   </data>
   <data name="RBPlay.Content" xml:space="preserve">
-    <value>Mainkan</value>
+    <value>تشغيل</value>
   </data>
   <data name="RBPlayNext.Content" xml:space="preserve">
-    <value>Putar selanjutnya</value>
+    <value>تشغيل التالي</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Lagu</value>
-  </data>
-  <data name="SongCount" xml:space="preserve">
-    <value>Song count</value>
+    <value>أغنية</value>
   </data>
   <data name="TBAbout.Text" xml:space="preserve">
-    <value>Tentang</value>
+    <value>عن البرنامج</value>
   </data>
   <data name="TBActionAfterDragDrop.Text" xml:space="preserve">
-    <value>After dragging item to now playing list:</value>
+    <value>بعد سحب العنصر إلى قائمة التشغيل الآن:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>Music folders</value>
+    <value>مجلدات الموسيقى</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
-    <value>Album</value>
+    <value>الألبوم</value>
   </data>
   <data name="TBAlbumArtist.Text" xml:space="preserve">
-    <value>Album artist</value>
+    <value>فنان الألبوم</value>
   </data>
   <data name="TBAlbums.Text" xml:space="preserve">
-    <value>Album</value>
+    <value>الألبومات</value>
   </data>
   <data name="TBAppAccentColor.Text" xml:space="preserve">
-    <value>Accent color:</value>
+    <value>لون التمييز:</value>
   </data>
   <data name="TBAppTheme.Text" xml:space="preserve">
-    <value>Tema:</value>
+    <value>الموضوع:</value>
   </data>
   <data name="TBArtist.Text" xml:space="preserve">
-    <value>Artis</value>
+    <value>الفنان</value>
   </data>
   <data name="TBArtists.Text" xml:space="preserve">
-    <value>Penyanyi</value>
+    <value>الفنانون</value>
   </data>
   <data name="TBBitrate.Text" xml:space="preserve">
-    <value>Bitrate</value>
+    <value>معدل البت</value>
   </data>
   <data name="TBComment.Text" xml:space="preserve">
-    <value>Komentar</value>
+    <value>التعليق</value>
   </data>
   <data name="TBComposer.Text" xml:space="preserve">
-    <value>Komposer</value>
+    <value>المؤلف</value>
   </data>
   <data name="TBConductor.Text" xml:space="preserve">
-    <value>Conductor</value>
+    <value>الموصل</value>
   </data>
   <data name="TBDateAdded.Text" xml:space="preserve">
-    <value>Tanggal ditambahkan</value>
+    <value>إضافة تاريخ</value>
   </data>
   <data name="TBDisc.Text" xml:space="preserve">
-    <value>Disc</value>
+    <value>القرص</value>
   </data>
   <data name="TBDuration.Text" xml:space="preserve">
-    <value>Durasi</value>
+    <value>المدة</value>
   </data>
   <data name="TBFilePath.Text" xml:space="preserve">
-    <value>Lokasi berkas</value>
+    <value>مسار الملف</value>
   </data>
   <data name="TBFileSize.Text" xml:space="preserve">
-    <value>Ukuran berkas</value>
+    <value>حجم الملف</value>
   </data>
   <data name="TBFolders.Text" xml:space="preserve">
-    <value>Map</value>
+    <value>المجلدات</value>
   </data>
   <data name="TBGenre.Text" xml:space="preserve">
-    <value>Genre</value>
+    <value>النوع</value>
   </data>
   <data name="TBGenres.Text" xml:space="preserve">
-    <value>Genre</value>
+    <value>الأنواع</value>
   </data>
   <data name="TBLastTimePlayed.Text" xml:space="preserve">
-    <value>Terakhir dimainkan</value>
+    <value>آخر تشغيل</value>
   </data>
   <data name="TBLibrary.Text" xml:space="preserve">
-    <value>Pustaka</value>
+    <value>مكتبة</value>
   </data>
   <data name="TBLyrics.Text" xml:space="preserve">
-    <value>Lirik</value>
+    <value>الكلمات</value>
+  </data>
+  <data name="NewSongs" xml:space="preserve">
+    <value>أغاني جديدة:</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
-    <value>Pengaturan diri</value>
+    <value>تخصيص</value>
   </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
-    <value>Jumlah main</value>
+    <value>مرات التشغيل</value>
   </data>
   <data name="TBPlaylistName.Text" xml:space="preserve">
-    <value>Playlist name:</value>
+    <value>اسم قائمة التشغيل:</value>
   </data>
   <data name="TBPlaylistNewName.Text" xml:space="preserve">
-    <value>New name:</value>
+    <value>الاسم الجديد:</value>
   </data>
   <data name="TBPlaylists.Text" xml:space="preserve">
-    <value>Daftar putar</value>
+    <value>قوائم التشغيل</value>
   </data>
   <data name="TBRating.Text" xml:space="preserve">
-    <value>Peringkat</value>
+    <value>تقييم</value>
   </data>
   <data name="TBSettings.Text" xml:space="preserve">
-    <value>Pengaturan</value>
+    <value>الإعدادات</value>
   </data>
   <data name="TBSongs.Text" xml:space="preserve">
-    <value>Lagu</value>
+    <value>الأغاني</value>
   </data>
   <data name="TBSortBy.Text" xml:space="preserve">
-    <value>Atur menurut</value>
+    <value>ترتيب حسب</value>
   </data>
   <data name="TBTimer.Text" xml:space="preserve">
-    <value>Pencatat waktu</value>
+    <value>المؤقت</value>
   </data>
   <data name="TBTitle.Text" xml:space="preserve">
-    <value>Judul</value>
+    <value>العنوان</value>
   </data>
   <data name="TBTools.Text" xml:space="preserve">
-    <value>Alat</value>
+    <value>الادوات</value>
   </data>
   <data name="TBTrackNumber.Text" xml:space="preserve">
-    <value>Nomor track</value>
+    <value>رقم المسار</value>
   </data>
   <data name="TBUpdateLibrary.Text" xml:space="preserve">
-    <value>Perbarui pustaka</value>
+    <value>تحديث المكتبة</value>
   </data>
   <data name="TBYear.Text" xml:space="preserve">
-    <value>Tahun</value>
+    <value>سنة</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Judul</value>
+    <value>العنوان</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Album Tidak Dikenal</value>
+    <value>الألبوم غير معروف</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>الفنان غير معروف</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>النوع غير معروف</value>
   </data>
   <data name="Year" xml:space="preserve">
-    <value>Tahun</value>
+    <value>سنة</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Ya</value>
+    <value>نعم</value>
   </data>
   <data name="ButtonFeedback.Content" xml:space="preserve">
-    <value>Masukan</value>
+    <value>ملاحظات</value>
   </data>
   <data name="TBNowPlaying.Text" xml:space="preserve">
-    <value>Kini memutar</value>
+    <value>يشغَّل الآن</value>
   </data>
-  <data name="CantFindLyrics" xml:space="preserve">
-    <value>Can't find lyrics</value>
+  <data name="PageHeaderNowPlayingPlaylist.Content" xml:space="preserve">
+    <value>ما يتم تشغيله الآن</value>
+  </data>
+  <data name="AppBarButtonSave.Label" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="TBRadio.Text" xml:space="preserve">
+    <value>الراديو</value>
+  </data>
+  <data name="PageHeaderRadios" xml:space="preserve">
+    <value>الراديو</value>
+  </data>
+  <data name="TBOnAir.Text" xml:space="preserve">
+    <value>على الهواء:</value>
   </data>
   <data name="TBJamendoRadio.Text" xml:space="preserve">
     <value>Jamendo Music</value>
   </data>
-  <data name="NewSongs" xml:space="preserve">
-    <value>New songs:</value>
-  </data>
-  <data name="PageHeaderNowPlayingPlaylist.Content" xml:space="preserve">
-    <value>Kini memutar</value>
-  </data>
-  <data name="TBOnAir.Text" xml:space="preserve">
-    <value>On-air:</value>
-  </data>
-  <data name="PageHeaderRadios" xml:space="preserve">
-    <value>Radio</value>
-  </data>
-  <data name="TBRadio.Text" xml:space="preserve">
-    <value>Radio</value>
-  </data>
-  <data name="AppBarButtonSave.Label" xml:space="preserve">
-    <value>Simpan</value>
+  <data name="CantFindLyrics" xml:space="preserve">
+    <value>لا يمكن العثور على الكلمات</value>
   </data>
   <data name="TrackNumber" xml:space="preserve">
-    <value>Nomor track</value>
+    <value>رقم المسار</value>
   </data>
   <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
-    <value>Please restart app to apply changes.</value>
+    <value>أعد تشغيل التطبيق لتفعيل التغييرات.</value>
   </data>
   <data name="TBLanguage.Text" xml:space="preserve">
-    <value>Language:</value>
+    <value>اللغة:</value>
   </data>
   <data name="PageHeaderLicenses.Content" xml:space="preserve">
-    <value>Licenses</value>
+    <value>الترخيص</value>
   </data>
   <data name="ButtonLicenses.Content" xml:space="preserve">
-    <value>Licenses</value>
+    <value>الترخيص</value>
   </data>
   <data name="ContentDialogChoosePathKind.Title" xml:space="preserve">
-    <value>Save playlist</value>
+    <value>حفظ قائمة التشغيل</value>
   </data>
   <data name="ContentDialogChoosePathKind.PrimaryButtonText" xml:space="preserve">
-    <value>Simpan</value>
+    <value>حفظ</value>
   </data>
   <data name="ContentDialogChoosePathKind.SecondaryButtonText" xml:space="preserve">
-    <value>Batal</value>
+    <value>إلغاء</value>
   </data>
   <data name="RBAbsolute.Content" xml:space="preserve">
-    <value>absolute paths</value>
+    <value>المسارات المطلقة</value>
   </data>
   <data name="RBRelative.Content" xml:space="preserve">
-    <value>relative paths</value>
+    <value>المسارات النسبية</value>
   </data>
   <data name="TBChoosePathKind.Text" xml:space="preserve">
-    <value>Save using</value>
+    <value>حفظ باستخدام</value>
   </data>
   <data name="MFIExport.Text" xml:space="preserve">
-    <value>Save as m3u</value>
+    <value>حفظ بصيغة m3u</value>
   </data>
   <data name="TBPreventScreenLock.Text" xml:space="preserve">
-    <value>Prevent screen from dimming</value>
+    <value>منع قفل الشاشة</value>
   </data>
   <data name="ButtonLogin.Content" xml:space="preserve">
-    <value>Log in</value>
+    <value>تسجيل دخول</value>
   </data>
   <data name="ButtonLogout.Content" xml:space="preserve">
-    <value>Log out</value>
+    <value>تسجيل خروج</value>
   </data>
   <data name="TBAddSongToLoved.Text" xml:space="preserve">
-    <value>If I will rate song, add it to 'Loved tracks'</value>
+    <value>إذا قمت بتقييم أغنية, قم بإضافتها إلى "المسارات المحببة"</value>
   </data>
   <data name="TBNewSongs.Text" xml:space="preserve">
-    <value>New songs:</value>
+    <value>أغاني جديدة:</value>
+  </data>
+  <data name="ButtonAdd.Content" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AlbumArtist" xml:space="preserve">
+    <value>فنان الألبوم</value>
   </data>
   <data name="And" xml:space="preserve">
     <value>And</value>
   </data>
-  <data name="Or" xml:space="preserve">
-    <value>Or</value>
+  <data name="Contains" xml:space="preserve">
+    <value>Contains</value>
   </data>
-  <data name="FilePath" xml:space="preserve">
-    <value>Lokasi berkas</value>
+  <data name="MostRecentlyAdded" xml:space="preserve">
+    <value>Date added (newest first)</value>
+  </data>
+  <data name="LeastRecentlyAdded" xml:space="preserve">
+    <value>Date added (oldest first)</value>
+  </data>
+  <data name="MostRecentlyPlayed" xml:space="preserve">
+    <value>Date played (newest first)</value>
+  </data>
+  <data name="LeastRecentlyPlayed" xml:space="preserve">
+    <value>Date played (oldest first)</value>
+  </data>
+  <data name="ButtonDelete.Content" xml:space="preserve">
+    <value>حذف</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>Does not contain</value>
@@ -606,11 +606,17 @@
   <data name="EndsWith" xml:space="preserve">
     <value>Ends with</value>
   </data>
-  <data name="IsEqual" xml:space="preserve">
-    <value>Is equal</value>
+  <data name="FilePath" xml:space="preserve">
+    <value>مسار الملف</value>
   </data>
-  <data name="IsGreater" xml:space="preserve">
-    <value>Is greater</value>
+  <data name="FolderName" xml:space="preserve">
+    <value>اسم المجلد</value>
+  </data>
+  <data name="LastAdded" xml:space="preserve">
+    <value>آخر إضافة</value>
+  </data>
+  <data name="LastPlayed" xml:space="preserve">
+    <value>آخر تشغيل</value>
   </data>
   <data name="IsLess" xml:space="preserve">
     <value>Is less</value>
@@ -618,61 +624,55 @@
   <data name="IsNot" xml:space="preserve">
     <value>Is not</value>
   </data>
-  <data name="Contains" xml:space="preserve">
-    <value>Contains</value>
+  <data name="IsGreater" xml:space="preserve">
+    <value>Is greater</value>
   </data>
-  <data name="StartsWith" xml:space="preserve">
-    <value>Starts with</value>
-  </data>
-  <data name="HighestRating" xml:space="preserve">
-    <value>Rating (lowest first)</value>
-  </data>
-  <data name="LowestRating" xml:space="preserve">
-    <value>Rating (highest first)</value>
-  </data>
-  <data name="LeastOftenPlayed" xml:space="preserve">
-    <value>Play count (highest first)</value>
-  </data>
-  <data name="LeastRecentlyAdded" xml:space="preserve">
-    <value>Date added (oldest first)</value>
-  </data>
-  <data name="LeastRecentlyPlayed" xml:space="preserve">
-    <value>Date played (oldest first)</value>
-  </data>
-  <data name="MostOftenPlayed" xml:space="preserve">
-    <value>Play count (lowest first)</value>
-  </data>
-  <data name="MostRecentlyAdded" xml:space="preserve">
-    <value>Date added (newest first)</value>
-  </data>
-  <data name="MostRecentlyPlayed" xml:space="preserve">
-    <value>Date played (newest first)</value>
-  </data>
-  <data name="ButtonDelete.Content" xml:space="preserve">
-    <value>Hapus</value>
-  </data>
-  <data name="ButtonAdd.Content" xml:space="preserve">
-    <value>Add</value>
-  </data>
-  <data name="PageHeaderNewSmartPlaylist.Content" xml:space="preserve">
-    <value>New smart playlist</value>
-  </data>
-  <data name="AppBarButtonNewSmartPlaylist.Label" xml:space="preserve">
-    <value>New smart playlist</value>
-  </data>
-  <data name="TBName.Text" xml:space="preserve">
-    <value>Nama</value>
+  <data name="IsEqual" xml:space="preserve">
+    <value>Is equal</value>
   </data>
   <data name="TBMaxSongsNumber.Text" xml:space="preserve">
     <value>Max number of songs</value>
   </data>
-  <data name="TBDefaultSort.Text" xml:space="preserve">
-    <value>Atur menurut</value>
+  <data name="TBName.Text" xml:space="preserve">
+    <value>اسم</value>
+  </data>
+  <data name="AppBarButtonNewSmartPlaylist.Label" xml:space="preserve">
+    <value>New smart playlist</value>
+  </data>
+  <data name="PageHeaderNewSmartPlaylist.Content" xml:space="preserve">
+    <value>New smart playlist</value>
+  </data>
+  <data name="Or" xml:space="preserve">
+    <value>Or</value>
+  </data>
+  <data name="PlayCount" xml:space="preserve">
+    <value>مرات التشغيل</value>
+  </data>
+  <data name="MostOftenPlayed" xml:space="preserve">
+    <value>Play count (lowest first)</value>
+  </data>
+  <data name="LeastOftenPlayed" xml:space="preserve">
+    <value>Play count (highest first)</value>
   </data>
   <data name="TBErrorSmartPlaylist.Text" xml:space="preserve">
     <value>Please fill all fields correctly.</value>
   </data>
+  <data name="LowestRating" xml:space="preserve">
+    <value>Rating (highest first)</value>
+  </data>
+  <data name="HighestRating" xml:space="preserve">
+    <value>Rating (lowest first)</value>
+  </data>
+  <data name="SongCount" xml:space="preserve">
+    <value>عدد الأغاني</value>
+  </data>
+  <data name="TBDefaultSort.Text" xml:space="preserve">
+    <value>ترتيب حسب</value>
+  </data>
+  <data name="StartsWith" xml:space="preserve">
+    <value>Starts with</value>
+  </data>
   <data name="ShellGrid.FlowDirection" xml:space="preserve">
-    <value>LeftToRight</value>
+    <value>RightToLeft</value>
   </data>
 </root>
