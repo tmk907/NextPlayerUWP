@@ -1,1 +1,1 @@
-C:\Users\tomek\Source\Workspaces\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\NextPlayerUWP_1.3.9.0\NextPlayerUWP_1.3.9.0_x86_x64_arm.appxbundle
+C:\Users\tomek\Source\Workspaces\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\NextPlayerUWP_1.4.0.0\NextPlayerUWP_1.4.0.0_x86_x64_arm.appxbundle

@@ -8,7 +8,7 @@ namespace NextPlayerUWPDataLayer.Model
     public class ArtistItem : MusicItem, INotifyPropertyChanged
     {
         private string artistParam;
-        public string ArtistParam { get { return artistParam; } }
+        public string ArtistParam { get { return artistParam; } set { artistParam = value; } }
         private string artist;
         public string Artist
         {

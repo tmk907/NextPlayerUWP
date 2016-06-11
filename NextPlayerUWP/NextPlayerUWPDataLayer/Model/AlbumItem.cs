@@ -9,7 +9,7 @@ namespace NextPlayerUWPDataLayer.Model
     public class AlbumItem : MusicItem, INotifyPropertyChanged
     {
         private string albumParam;
-        public string AlbumParam { get { return albumParam; } }
+        public string AlbumParam { get { return albumParam; } set { albumParam = value; } }
         private string album;
         public string Album
         {

@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.SpotifyAPI.Web;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -137,37 +138,66 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.Current.PlayNew();
         }
 
-        public void EditAlbum()
+        public async void EditAlbum()
         {
-            EditedAlbum = album;
+            EditedAlbum = await DatabaseManager.Current.GetAlbumItemAsync(albumId);
         }
 
         public async void SaveAlbum()
         {
-            Album = editedAlbum;
-            var a2 = await DatabaseManager.Current.GetAlbumItemAsync(editedAlbum.Album, editedAlbum.AlbumArtist);
-            if (a2.AlbumId > 0)//merge albums
+            var newAlbum = await DatabaseManager.Current.GetAlbumItemAsync(editedAlbum.AlbumParam, editedAlbum.AlbumArtist);
+
+            if (album.SongsNumber == 1)
             {
-                album.LastAdded = (album.LastAdded > a2.LastAdded) ? album.LastAdded : a2.LastAdded;
-                if (!album.IsImageSet && a2.IsImageSet)
+                if (newAlbum.AlbumId > 0)
                 {
-                    album.ImagePath = a2.ImagePath;
-                    album.ImageUri = a2.ImageUri;
+                    album.LastAdded = (album.LastAdded > newAlbum.LastAdded) ? album.LastAdded : newAlbum.LastAdded;
+                    album.ImagePath = (newAlbum.ImagePath == AppConstants.AlbumCover) ? album.ImagePath : 
+                        (album.ImagePath == AppConstants.AlbumCover) ? newAlbum.ImagePath : album.ImagePath;
+                    album.ImageUri = new Uri(album.ImagePath);
+                    album.IsImageSet = album.ImagePath != "";// newAlbum.IsImageSet;
+                    album.Duration += newAlbum.Duration;
+                    album.SongsNumber += newAlbum.SongsNumber;
+                    await DatabaseManager.Current.DeleteAlbumAsync(newAlbum.AlbumParam, newAlbum.AlbumArtist);
                 }
-                album.Duration += a2.Duration;
-                album.SongsNumber += a2.SongsNumber;
-                
-                await DatabaseManager.Current.DeleteAlbumAsync(editedAlbum.Album, editedAlbum.AlbumArtist);
+                album.AlbumParam = editedAlbum.AlbumParam;
+                album.AlbumArtist = editedAlbum.AlbumArtist;
+                album.Year = editedAlbum.Year;
+                await DatabaseManager.Current.UpdateAlbumItem(album);
             }
+            else
+            {
+                if (newAlbum.AlbumId > 0 && newAlbum.AlbumId != albumId)//merge albums
+                {
+                    album.LastAdded = (album.LastAdded > newAlbum.LastAdded) ? album.LastAdded : newAlbum.LastAdded;
+                    if (!album.IsImageSet && newAlbum.IsImageSet)
+                    {
+                        album.ImagePath = newAlbum.ImagePath;
+                        album.ImageUri = newAlbum.ImageUri;
+                        album.IsImageSet = true;
+                    }
+                    album.Duration += newAlbum.Duration;
+                    album.SongsNumber += newAlbum.SongsNumber;
+
+                    await DatabaseManager.Current.DeleteAlbumAsync(editedAlbum.AlbumParam, editedAlbum.AlbumArtist);
+                }
+            }
+            //Album = editedAlbum;
+            Album.Album = editedAlbum.AlbumParam;
+            Album.AlbumParam = EditedAlbum.AlbumParam;
+            Album.AlbumArtist = editedAlbum.AlbumArtist;
+            Album.Year = editedAlbum.Year;
+
             await DatabaseManager.Current.UpdateAlbumItem(album);
+            //Album = await DatabaseManager.Current.GetAlbumItemAsync(albumId);
             foreach(var song in songs)
             {
-                song.Album = album.Album;
+                song.Album = album.AlbumParam;
                 song.AlbumArtist = album.AlbumArtist;
                 song.Year = album.Year;
                 await DatabaseManager.Current.UpdateSongAlbumData(song);
             }
-            songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(editedAlbum.Album, editedAlbum.AlbumArtist);
+            songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(editedAlbum.AlbumParam, editedAlbum.AlbumArtist);
             Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.Disc).ThenBy(t => t.TrackNumber));
             App.OnSongUpdated(songs.FirstOrDefault().SongId);   
         }

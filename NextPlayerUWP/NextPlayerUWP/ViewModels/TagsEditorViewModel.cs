@@ -4,6 +4,7 @@ using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -47,25 +48,25 @@ namespace NextPlayerUWP.ViewModels
             ShowProgressBar = true;
             ButtonsEnabled = false;
             TagsData.FirstArtist = GetFirst(tagsData.Artists);
-            TagsData.FirstComposer = GetFirst(tagsData.Composers);            
-
+            TagsData.FirstComposer = GetFirst(tagsData.Composers);
             if (album != tagsData.Album || albumArtist != tagsData.AlbumArtist )
             {
-                AlbumItem a = await DatabaseManager.Current.GetAlbumItemAsync(album, albumArtist);
-                AlbumItem a2 = await DatabaseManager.Current.GetAlbumItemAsync(tagsData.Album, tagsData.AlbumArtist);
-                if (a.SongsNumber == 1)
+                AlbumItem oldAlbum = await DatabaseManager.Current.GetAlbumItemAsync(album, albumArtist);
+                AlbumItem newAlbum = await DatabaseManager.Current.GetAlbumItemAsync(tagsData.Album, tagsData.AlbumArtist);
+                //if there is no album with (tagsData.Album, tagsData.AlbumArtist) in db then default AlbumItem is returned and id = -1
+                if (oldAlbum.SongsNumber == 1)
                 {
-                    if (a2.AlbumId > 0)
+                    if (newAlbum.AlbumId > 0)
                     {
-                        a.LastAdded = (a.LastAdded > a2.LastAdded) ? a.LastAdded : a2.LastAdded;
-                        a.ImagePath = a2.ImagePath;
-                        a.ImageUri = a2.ImageUri;
-                        a.IsImageSet = a2.IsImageSet;
-                        await DatabaseManager.Current.DeleteAlbumAsync(a2.Album, a2.AlbumArtist);
+                        oldAlbum.LastAdded = (oldAlbum.LastAdded > newAlbum.LastAdded) ? oldAlbum.LastAdded : newAlbum.LastAdded;
+                        oldAlbum.ImagePath = newAlbum.ImagePath;
+                        oldAlbum.ImageUri = newAlbum.ImageUri;
+                        oldAlbum.IsImageSet = newAlbum.IsImageSet;
+                        await DatabaseManager.Current.DeleteAlbumAsync(newAlbum.AlbumParam, newAlbum.AlbumArtist);
                     }
-                    a.Album = tagsData.Album;
-                    a.AlbumArtist = tagsData.AlbumArtist;
-                    await DatabaseManager.Current.UpdateAlbumItem(a);
+                    oldAlbum.AlbumParam = tagsData.Album;
+                    oldAlbum.AlbumArtist = tagsData.AlbumArtist;
+                    await DatabaseManager.Current.UpdateAlbumItem(oldAlbum);
                 }
             }
 
@@ -86,17 +87,17 @@ namespace NextPlayerUWP.ViewModels
                 var edited = tagsData.Artists.Split(new string[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
                 if (old.Length == 1 && edited.Length == 1)
                 {
-                    ArtistItem a = await DatabaseManager.Current.GetArtistItemAsync(old[0]);
-                    ArtistItem a2 = await DatabaseManager.Current.GetArtistItemAsync(edited[0]);
-                    if (a.SongsNumber == 1)
+                    ArtistItem prevArtist = await DatabaseManager.Current.GetArtistItemAsync(old[0]);
+                    ArtistItem newArtist = await DatabaseManager.Current.GetArtistItemAsync(edited[0]);
+                    if (prevArtist.SongsNumber == 1)
                     {
-                        if (a2.ArtistId > 0)
+                        if (newArtist.ArtistId > 0)
                         {
-                            a.LastAdded = (a.LastAdded > a2.LastAdded) ? a.LastAdded : a2.LastAdded;
+                            prevArtist.LastAdded = (prevArtist.LastAdded > newArtist.LastAdded) ? prevArtist.LastAdded : newArtist.LastAdded;
                             await DatabaseManager.Current.DeleteArtistAsync(edited[0]);
                         }
-                        a.Artist = tagsData.Artists;
-                        await DatabaseManager.Current.UpdateArtistItem(a);
+                        prevArtist.ArtistParam = tagsData.Artists;
+                        await DatabaseManager.Current.UpdateArtistItem(prevArtist);
                     }
                 }
                 //else
@@ -137,14 +138,10 @@ namespace NextPlayerUWP.ViewModels
                     }
                 }
                 tagsData.Genres = sb.ToString();
-                
             }
-
             songData.Tag = TagsData;
             await DatabaseManager.Current.UpdateSongData(songData);
-
             await DatabaseManager.Current.UpdateTables();
-
             await NowPlayingPlaylistManager.Current.UpdateSong(songData);
             TagsManager tm = new TagsManager();
             await tm.SaveTags(songData);

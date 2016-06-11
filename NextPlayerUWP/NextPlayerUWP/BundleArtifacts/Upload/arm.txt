@@ -1,4 +1,4 @@
-MainPackage=C:\Users\tomek\Source\Workspaces\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\ARM\Release\Upload\NextPlayerUWP_1.3.9.0_ARM.appx
+MainPackage=C:\Users\tomek\Source\Workspaces\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\ARM\Release\Upload\NextPlayerUWP_1.4.0.0_ARM.appx
 ResourcePack=C:\Users\tomek\Source\Workspaces\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\_language-ar.appx
 ResourcePack=C:\Users\tomek\Source\Workspaces\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\_language-cs.appx
 ResourcePack=C:\Users\tomek\Source\Workspaces\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\_language-de.appx

@@ -1220,7 +1220,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             AlbumsTable t = new AlbumsTable()
             {
-                Album = album.Album,
+                Album = album.AlbumParam,
                 AlbumArtist = album.AlbumArtist,
                 AlbumId = album.AlbumId,
                 Duration = album.Duration,
@@ -1237,7 +1237,7 @@ namespace NextPlayerUWPDataLayer.Services
             ArtistsTable t = new ArtistsTable()
             {
                 AlbumsNumber = artist.AlbumsNumber,
-                Artist = artist.Artist,
+                Artist = artist.ArtistParam,
                 ArtistId = artist.ArtistId,
                 Duration = artist.Duration,
                 LastAdded = artist.LastAdded,

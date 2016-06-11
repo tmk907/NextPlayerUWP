@@ -389,19 +389,19 @@
                                        VerticalAlignment="Center"
                                        Text="Album:"/>
                             <TextBox Margin="0,4,4,0"
-                                     Text="{Binding Album.Album, Mode=TwoWay}"/>
+                                     Text="{Binding EditedAlbum.AlbumParam, Mode=TwoWay}"/>
                             <TextBlock Margin="0,4,4,0"
                                        x:Uid="TBAlbumArtist"
                                        VerticalAlignment="Center"
                                        Text="Album artist:"/>
                             <TextBox Margin="0,4,4,0"
-                                     Text="{Binding Album.AlbumArtist, Mode=TwoWay}"/>
+                                     Text="{Binding EditedAlbum.AlbumArtist, Mode=TwoWay}"/>
                             <TextBlock Margin="0,4,4,0"
                                        VerticalAlignment="Center"
                                        x:Uid="TBYear"
                                        Text="Year:"/>
                             <TextBox Margin="0,4,4,0"
-                                     Text="{Binding Album.Year, Mode=TwoWay}"/>
+                                     Text="{Binding EditedAlbum.Year, Mode=TwoWay}"/>
                         </StackPanel>
                     </ContentDialog.Content>
                 </ContentDialog>
@@ -421,13 +421,13 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0"
-                           Text="{Binding Album.Album}" 
+                           Text="{x:Bind ViewModel.Album.Album, Mode=OneWay}" 
                            Style="{StaticResource AlbumDescriptionAlbumNameStyle}"/>
                     <TextBlock Grid.Row="1"
-                           Text="{Binding Album.AlbumArtist}"
+                           Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
                            Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
                     <TextBlock Grid.Row="2"
-                               Text="{Binding Album.Year, Converter={StaticResource YearConverter}}"
+                               Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
                                Style="{StaticResource AlbumDescription2TBStyle}"/>
                     <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
