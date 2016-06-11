@@ -675,4 +675,10 @@
   <data name="ShellGrid.FlowDirection" xml:space="preserve">
     <value>LeftToRight</value>
   </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Добавлено</value>
+  </data>
+  <data name="AppBarButtonShuffleAll.Label" xml:space="preserve">
+    <value>Shuffle all</value>
+  </data>
 </root>

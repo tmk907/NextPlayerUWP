@@ -187,7 +187,13 @@
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 Content="{Binding PageTitle}" 
                 VisualStateNarrowMinWidth="0"
-                VisualStateNormalMinWidth="720"/>
+                VisualStateNormalMinWidth="720">
+            <AppBarButton
+                x:Uid="AppBarButtonShuffleAll"
+                Label="Shuffle all"
+                Icon="Shuffle"
+                Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
+        </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>

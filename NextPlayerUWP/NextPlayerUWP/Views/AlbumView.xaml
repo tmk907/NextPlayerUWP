@@ -344,7 +344,13 @@
                 x:Uid="PageHeaderAlbum"
                 Content="Album" 
                 VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720"/>
+                VisualStateNormalMinWidth="720">
+                <AppBarButton
+                x:Uid="AppBarButtonShuffleAll"
+                Label="Shuffle all"
+                Icon="Shuffle"
+                Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
+            </controls:PageHeader>
             <Image x:Name="AlbumCoverImageBG" Grid.Row="1" Stretch="UniformToFill"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center">

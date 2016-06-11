@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Album" xml:space="preserve">
-    <value>ألبوم</value>
+    <value>الألبوم</value>
   </data>
   <data name="AppBarButtonAddPlaylist.Label" xml:space="preserve">
     <value>قائمة تشغيل جديدة</value>
@@ -674,5 +674,11 @@
   </data>
   <data name="ShellGrid.FlowDirection" xml:space="preserve">
     <value>RightToLeft</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>إضافة تاريخ</value>
+  </data>
+  <data name="AppBarButtonShuffleAll.Label" xml:space="preserve">
+    <value>Shuffle all</value>
   </data>
 </root>

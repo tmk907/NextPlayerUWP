@@ -42,7 +42,7 @@ namespace NextPlayerUWPDataLayer.Enums
             public static readonly string Rating = "Rating";
             public static readonly string PlayCount = "PlayCount";
             public static readonly string FilePath = "FilePath";
-            public static readonly string DateAdded = "LastAdded";
+            public static readonly string DateAdded = "DateAdded";
             public static readonly string LastPlayed = "LastPlayed";
 
             public static bool IsDateType(string value)

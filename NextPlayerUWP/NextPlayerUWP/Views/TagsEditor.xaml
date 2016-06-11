@@ -35,7 +35,10 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="lyricsGrid.(RelativePanel.Below)" Value="tagsGrid"/>
+                        <Setter Target="DesktopLayout.Opacity" Value="0"/>
+                        <Setter Target="DesktopLayout.Visibility" Value="Collapsed"/>
+                        <Setter Target="MobileLayout.Opacity" Value="1"/>
+                        <Setter Target="MobileLayout.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -43,7 +46,10 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="lyricsGrid.(RelativePanel.RightOf)" Value="tagsGrid"/>
+                        <Setter Target="DesktopLayout.Opacity" Value="1"/>
+                        <Setter Target="DesktopLayout.Visibility" Value="Visible"/>
+                        <Setter Target="MobileLayout.Opacity" Value="0"/>
+                        <Setter Target="MobileLayout.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -52,27 +58,21 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+        <controls:PageHeader Grid.Row="0"
 			BackButtonVisibility="Collapsed" 
 			Frame="{x:Bind Frame, Mode=OneWay}"
 			Content="Tags editor"
 			x:Uid="PageHeaderTagsEditor"
 			VisualStateNarrowMinWidth="0"
 			VisualStateNormalMinWidth="720"/>
-        <!--<UserControl Grid.Column="1" Grid.Row="1">
-            <local:RightPanelControl/>
-        </UserControl>-->
-        <Grid Grid.Column="0" Grid.Row="1" Margin="8,0,8,4">
+        <Grid Grid.Row="1" Margin="0,0,0,0" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="8"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <ProgressBar Grid.Row="0"
+                Height="8"
                 Visibility="{x:Bind ViewModel.ShowProgressBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                 IsIndeterminate="True"
                 Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
@@ -80,12 +80,16 @@
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
                 IsEnabled="{x:Bind ViewModel.ShowProgressBar, Mode=OneWay}"/>
-            <ScrollViewer Grid.Row="1" Margin="0,4,0,4">
-                <RelativePanel>
-                    <Grid Width="360" MinWidth="340"
-                          x:Name="tagsGrid"
-                          Margin="4,0,8,0"
-                          HorizontalAlignment="Left" 
+            <ScrollViewer Grid.Row="1"
+                x:Name="DesktopLayout">
+                <Grid HorizontalAlignment="Stretch" Margin="8,0,8,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0"
+                          Margin="4,0,4,0"
+                          HorizontalAlignment="Stretch" 
                           VerticalAlignment="Top">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -227,12 +231,10 @@
                             Text="{x:Bind ViewModel.TagsData.Comment,Mode=TwoWay}"
                         />
                         </Grid>
-                    <Grid Width="360" MinWidth="340"
-                          Margin="4,0,8,0"
-                          HorizontalAlignment="Left"
-                          VerticalAlignment="Top"
-                          RelativePanel.RightOf="tagsGrid"
-                          x:Name="lyricsGrid">
+                    <Grid Grid.Column="1"
+                        Margin="4,0,4,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -242,15 +244,186 @@
                             Text="Lyrics"
                             Style="{StaticResource DescriptionStyle}"/>
                         <TextBox Grid.Row="1"
-                            x:Name="lyricsTextBox"
                             TextWrapping="Wrap"
                             AcceptsReturn="True"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             Text="{x:Bind ViewModel.TagsData.Lyrics, Mode=TwoWay}"/>
                     </Grid>
-                </RelativePanel>
+                </Grid>
             </ScrollViewer>
-            <Grid Grid.Row="2" Margin="0,4,0,4" Width="360" HorizontalAlignment="Left">
+            <ScrollViewer Grid.Row="1"
+                x:Name="MobileLayout">
+                <Grid HorizontalAlignment="Stretch" Margin="8,0,8,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0"
+                          Margin="4,0,4,0"
+                          HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Top">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!--
+                            title
+                            album
+                            artists
+                            album artist
+                            genre
+                            track disc year
+                            comment
+                            composers
+                            conductor
+                        -->
+                        <TextBlock Grid.Row="0"
+                            x:Uid="TBTitle"
+                            Text="Title"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="1"
+                            Text="{x:Bind ViewModel.TagsData.Title,Mode=TwoWay}"
+                        />
+                        <TextBlock Grid.Row="2"
+                            x:Uid="TBAlbum"
+                            Text="Album"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="3"
+                            Text="{x:Bind ViewModel.TagsData.Album,Mode=TwoWay}"
+                        />
+                        <TextBlock Grid.Row="4"
+                            x:Uid="TBArtist"
+                            Text="Artist"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="5"
+                            Text="{x:Bind ViewModel.TagsData.Artists,Mode=TwoWay}"
+                        />
+                        <TextBlock Grid.Row="6"
+                            x:Uid="TBAlbumArtist"
+                            Text="Album artist"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="7"
+                            Text="{x:Bind ViewModel.TagsData.AlbumArtist,Mode=TwoWay}"
+                        />
+                        <TextBlock Grid.Row="8"
+                            x:Uid="TBGenre"
+                            Text="Genre"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="9"
+                            Text="{x:Bind ViewModel.TagsData.Genres,Mode=TwoWay}"
+                        />
+                        <Grid Grid.Row="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                            x:Uid="TBTrackNumber"
+                            Text="Track"
+                            Style="{StaticResource DescriptionStyle}"
+                            Margin="0,0,4,0"
+                            />
+                            <TextBox Grid.Row="1" Grid.Column="0"
+                                Text="{x:Bind ViewModel.TagsData.Track,Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                Margin="0,0,4,0"
+                                />
+                            <TextBlock Grid.Row="0" Grid.Column="1"
+                            x:Uid="TBDisc"
+                            Text="Disc"
+                            Style="{StaticResource DescriptionStyle}"
+                            Margin="4,0,4,0"
+                            />
+                            <TextBox Grid.Row="1" Grid.Column="1"
+                            Text="{x:Bind ViewModel.TagsData.Disc,Mode=TwoWay}"
+                            VerticalAlignment="Center"
+                            Margin="4,0,4,0"
+                                />
+                            <TextBlock Grid.Row="0" Grid.Column="2"
+                            x:Uid="TBYear"
+                            Text="Year"
+                            Style="{StaticResource DescriptionStyle}"
+                            Margin="4,0,0,0"
+                            />
+                            <TextBox Grid.Row="1" Grid.Column="2"
+                            Text="{x:Bind ViewModel.TagsData.Year,Mode=TwoWay}"
+                            VerticalAlignment="Center"
+                            Margin="4,0,0,0"
+                            />
+                        </Grid>
+                        <TextBlock Grid.Row="11"
+                            x:Uid="TBComposer"
+                            Text="Composer"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="12"
+                            Text="{x:Bind ViewModel.TagsData.Composers,Mode=TwoWay}"
+                        />
+                        <TextBlock Grid.Row="13"
+                            x:Uid="TBConductor"
+                            Text="Conductor"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="14"
+                            Text="{x:Bind ViewModel.TagsData.Conductor,Mode=TwoWay}"
+                        />
+                        <TextBlock Grid.Row="15"
+                            x:Uid="TBComment"
+                            Text="Comment"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="16"
+                            Text="{x:Bind ViewModel.TagsData.Comment,Mode=TwoWay}"
+                        />
+                    </Grid>
+                    <Grid Grid.Row="1"
+                        Margin="4,0,4,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                            x:Uid="TBLyrics"
+                            Text="Lyrics"
+                            Style="{StaticResource DescriptionStyle}"/>
+                        <TextBox Grid.Row="1"
+                            TextWrapping="Wrap"
+                            AcceptsReturn="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            Text="{x:Bind ViewModel.TagsData.Lyrics, Mode=TwoWay}"/>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
+            <Grid Grid.Row="2" Margin="12,4,12,4" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>

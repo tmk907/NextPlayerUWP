@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -111,6 +110,31 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSongIndex(index);
             PlaybackManager.Current.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+        }
+
+        public async void ShuffleAllSongs()
+        {
+            if (songs.Count == 0) return;
+            List<SongItem> list = new List<SongItem>();
+            foreach (var s in songs)
+            {
+                list.Add(s);
+            }
+            Random rnd = new Random();
+
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rnd.Next(n + 1);
+                SongItem value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+
+            await NowPlayingPlaylistManager.Current.NewPlaylist(list);
+            ApplicationSettingsHelper.SaveSongIndex(0);
+            PlaybackManager.Current.PlayNew();
         }
 
         public void EditAlbum()

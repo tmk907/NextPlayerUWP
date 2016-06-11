@@ -39,6 +39,8 @@ namespace NextPlayerUWP
         public static bool IsLightThemeOn = false;
         private static AlbumArtFinder albumArtFinder;
 
+        private bool isFirstRun = false;
+
         public App()
         {
             InitializeComponent();
@@ -67,7 +69,11 @@ namespace NextPlayerUWP
 
             if (IsFirstRun())
             {
+                isFirstRun = true;
                 FirstRunSetup();
+
+                var deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
+                HockeyClient.Current.TrackEvent("New instalation: " + deviceFamily);
             }
             else
             {
@@ -463,7 +469,7 @@ namespace NextPlayerUWP
         }
 
         private async Task RegisterBGScrobbler()
-       {
+        {
             var taskRegistered = false;
             var exampleTaskName = "NextPlayerBackgroundScrobbler";
 
@@ -475,6 +481,27 @@ namespace NextPlayerUWP
                     //task.Value.Unregister(true);
                     break;
                 }
+            }
+
+            if (ApplicationSettingsHelper.ReadSettingsValue("updatedto1.4") == null)
+            {
+                foreach (var task in BackgroundTaskRegistration.AllTasks)
+                {
+                    if (task.Value.Name == exampleTaskName)
+                    {
+                        try
+                        {
+                            task.Value.Unregister(true);
+                            taskRegistered = false;
+                        }
+                        catch (Exception ex1)
+                        {
+                            HockeyProxy.TrackEventException("Failed to unregister task after update");
+                        }
+                        break;
+                    }
+                }
+                ApplicationSettingsHelper.SaveSettingsValue("updatedto1.4",true);
             }
 
             if (!taskRegistered)

@@ -234,6 +234,11 @@
                 Content="Artist"
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720">
+            <AppBarButton
+                x:Uid="AppBarButtonShuffleAll"
+                Label="Shuffle all"
+                Icon="Shuffle"
+                Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
         </controls:PageHeader>
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>

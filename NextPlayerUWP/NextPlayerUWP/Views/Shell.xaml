@@ -530,7 +530,7 @@
                     </Button.ContentTemplate>
                 </Button>
             </Grid>
-            <Grid Grid.Column="3" x:Name="SliderGrid" >
+            <Grid Grid.Column="3" x:Name="SliderGrid" FlowDirection="LeftToRight">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition/>
