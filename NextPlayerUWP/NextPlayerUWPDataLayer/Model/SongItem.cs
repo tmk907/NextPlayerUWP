@@ -275,6 +275,11 @@ namespace NextPlayerUWPDataLayer.Model
             coverPath = "";
         }
 
+        public void GenerateId()
+        {
+            songId = (DateTime.Now.Millisecond + DateTime.Now.Second * 1000 + DateTime.Now.Minute * 100000 + (DateTime.Now.Hour + 1) * 10000000);// + DateTime.Now.Day * 1000000);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void onPropertyChanged(object sender, string propertyName)

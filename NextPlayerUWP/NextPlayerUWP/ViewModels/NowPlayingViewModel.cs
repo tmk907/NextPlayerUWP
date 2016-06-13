@@ -365,5 +365,10 @@ namespace NextPlayerUWP.ViewModels
         {
             NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
         }
+
+        public void GoToLyrics()
+        {
+            NavigationService.Navigate(App.Pages.Lyrics);
+        }
     }
 }

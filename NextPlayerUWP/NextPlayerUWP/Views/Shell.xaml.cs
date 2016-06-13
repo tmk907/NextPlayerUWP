@@ -24,13 +24,13 @@ namespace NextPlayerUWP.Views
         public static Shell Instance { get; set; }
         public static HamburgerMenu HamburgerMenu => Instance.Menu;
 
-        public Shell(INavigationService navigationService)
+        public Shell()
         {
             Instance = this;
-            this.InitializeComponent();
+            InitializeComponent();
             this.Loaded += LoadSlider;
-            HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
-            SetNavigationService(navigationService);
+            //HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
+            //SetNavigationService(navigationService);
             App.AppThemeChanged += App_AppThemeChanged;
             BPViewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
@@ -47,9 +47,18 @@ namespace NextPlayerUWP.Views
             await tod.Test();
         }
 
+
+        public Shell(INavigationService navigationService) : this()
+        {
+            SetNavigationService(navigationService);
+        }
+
         public void SetNavigationService(INavigationService navigationService)
         {
             Menu.NavigationService = navigationService;
+            //HamburgerMenu.RefreshStyles(_settings.AppTheme, true);
+            //HamburgerMenu.IsFullScreen = _settings.IsFullScreen;
+            //HamburgerMenu.HamburgerButtonVisibility = _settings.ShowHamburgerButton ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void App_AppThemeChanged(bool isLight)
@@ -57,10 +66,12 @@ namespace NextPlayerUWP.Views
             if (isLight)
             {
                 this.RequestedTheme = ElementTheme.Light;
+                Menu.RequestedTheme = ElementTheme.Light;
             }
             else
             {
                 this.RequestedTheme = ElementTheme.Dark;
+                Menu.RequestedTheme = ElementTheme.Dark;    
             }
         }
 
@@ -171,7 +182,7 @@ namespace NextPlayerUWP.Views
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("GoToNowPlaying");
+                System.Diagnostics.Debug.WriteLine("Shell GoToNowPlaying");
                 Menu.NavigationService.Navigate(App.Pages.NowPlaying);
             }
         }

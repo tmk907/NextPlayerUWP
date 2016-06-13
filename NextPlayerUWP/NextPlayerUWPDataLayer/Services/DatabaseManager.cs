@@ -87,6 +87,12 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<ImportedPlaylist>();
         }
 
+        public async Task<int> InsertSongAsync(SongData songData)
+        {
+            var newSong = CreateSongsTable(songData);
+            await connectionAsync.InsertAsync(newSong);
+            return newSong.SongId;
+        }
 
         public async Task InsertSongsAsync(IEnumerable<SongData> list)
         {
@@ -506,6 +512,16 @@ namespace NextPlayerUWPDataLayer.Services
             var l = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
             var i = l.FirstOrDefault();
             return new SongItem(i);
+        }
+
+        public async Task<SongItem> GetSongItemIfExistAsync(string path)
+        {
+            var l = await connectionAsync.Table<SongsTable>().Where(s => s.Path.Equals(path)).ToListAsync();
+            if (l.Count == 0) return null;
+            else
+            {
+                return new SongItem(l.FirstOrDefault());
+            }
         }
 
         public List<NowPlayingSong> GetNowPlayingSongs()

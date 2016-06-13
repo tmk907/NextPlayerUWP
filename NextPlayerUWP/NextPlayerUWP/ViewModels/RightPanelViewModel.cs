@@ -102,29 +102,15 @@ namespace NextPlayerUWP.ViewModels
                 var items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
                 {
+                    MediaImport mi = new MediaImport();
+                    bool first = true;
                     foreach (var file in items)
                     {
                         var storageFile = file as Windows.Storage.StorageFile;
                         string type = storageFile.FileType.ToLower();
-                        if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
-                            type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
-                            type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4")
+                        if (MediaImport.IsAudioFile(type))
                         {
-                            SongItem newSong = new SongItem();
-                            newSong.Path = storageFile.Path;
-                            Windows.Storage.FileProperties.MusicProperties mp = await storageFile.Properties.GetMusicPropertiesAsync();
-                            newSong.Title = mp.Title;
-                            if (newSong.Title == "")
-                            {
-                                newSong.Title = file.Name;
-                            }
-                            newSong.Album = mp.Album;
-                            newSong.AlbumArtist = mp.AlbumArtist;
-                            newSong.Artist = mp.Artist;
-                            newSong.Duration = mp.Duration;
-                            //if max songId in DB is less than 10 000 000 => it's OK
-                            // 23 59 59 999 -- 235 959 999     min value 01 00 00 000 -- 10 000 000
-                            newSong.SongId = (DateTime.Now.Millisecond + DateTime.Now.Second * 1000 + DateTime.Now.Minute * 100000 + (DateTime.Now.Hour + 1) * 10000000);// + DateTime.Now.Day * 1000000);
+                            SongItem newSong = await mi.OpenSingleFileAsync(storageFile);
 
                             if (action.Equals(AppConstants.ActionAddToNowPlaying))
                             {
@@ -136,8 +122,18 @@ namespace NextPlayerUWP.ViewModels
                             }
                             else if (action.Equals(AppConstants.ActionPlayNow))//!
                             {
-
+                                if (first)
+                                {
+                                    await NowPlayingPlaylistManager.Current.NewPlaylist(newSong);
+                                    ApplicationSettingsHelper.SaveSongIndex(0);
+                                    PlaybackManager.Current.PlayNew();
+                                }
+                                else
+                                {
+                                    await NowPlayingPlaylistManager.Current.Add(newSong);
+                                }
                             }
+                            first = false;
                         }
                     }
                 }

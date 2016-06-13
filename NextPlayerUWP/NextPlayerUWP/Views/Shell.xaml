@@ -272,8 +272,6 @@
                         <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
                     </VisualState.Setters>
                 </VisualState>
-                
-                
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
@@ -288,7 +286,6 @@
         <controls:HamburgerMenu x:Name="Menu" 
                                 Grid.Row="0" Grid.Column="0"
                                 OpenCloseMode="Swipe"
-                                
                                 HamburgerBackground="{ThemeResource SystemChromeMediumColor}"
                                 HamburgerForeground="{ThemeResource SystemBaseHighColor}"
                                 NavAreaBackground="{ThemeResource SystemChromeLowColor}"

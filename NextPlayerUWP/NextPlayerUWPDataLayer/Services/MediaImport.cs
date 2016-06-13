@@ -47,6 +47,25 @@ namespace NextPlayerUWPDataLayer.Services
         private List<string> importedPlaylistPaths;
         private List<ImportedPlaylist> importedPlaylists;
 
+        public static bool IsAudioFile(string type)
+        {
+            if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
+                type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
+                type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4" ||
+                type == ".ogg" || type == ".ape" || type == ".wv" || type == ".opus" ||
+                type == ".ac3")
+            {
+                return true;
+            }
+            else return false;
+        }
+
+        public static bool IsPlaylistFile(string type)
+        {
+            if (type == ".m3u" || type == ".m3u8" || type == ".wpl" || type == ".pls") return true;
+            else return false;
+        }
+
         private async Task AddFilesFromFolder(StorageFolder folder)
         {
             var files = await folder.GetFilesAsync();
@@ -402,6 +421,23 @@ namespace NextPlayerUWPDataLayer.Services
             return song;
         }
 
+        public async Task<SongItem> OpenSingleFileAsync(StorageFile file)
+        {
+            string type = file.FileType.ToLower();
+            if (IsAudioFile(type))
+            {
+                var song = await DatabaseManager.Current.GetSongItemIfExistAsync(file.Path);
+                if (song == null)
+                {
+                    var songData = await CreateSongFromFile(file);
+                    int id = await DatabaseManager.Current.InsertSongAsync(songData);
+                    song = await DatabaseManager.Current.GetSongItemAsync(id);
+                }
+                return song;
+            }
+            return new SongItem();
+        }
+
         private void SendToast()
         {
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
@@ -476,8 +512,6 @@ namespace NextPlayerUWPDataLayer.Services
             }
             return iplaylist;
         }
-
-        
 
         private async Task<ImportedPlaylist> ParseWPLPlaylist(StorageFile file, string folderPath)
         {

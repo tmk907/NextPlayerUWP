@@ -681,4 +681,10 @@
   <data name="AppBarButtonShuffleAll.Label" xml:space="preserve">
     <value>Shuffle all</value>
   </data>
+  <data name="AppBarButtonQueue.Label" xml:space="preserve">
+    <value>Queue</value>
+  </data>
+  <data name="AppBarButtonLyrics.Label" xml:space="preserve">
+    <value>Letra</value>
+  </data>
 </root>

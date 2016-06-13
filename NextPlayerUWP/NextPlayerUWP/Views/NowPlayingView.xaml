@@ -296,11 +296,18 @@
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720">
             <AppBarButton
-                x:Uid="Queue"
+                x:Uid="AppBarButtonQueue"
                 Icon="List"
                 Label="Queue"
                 Click="{x:Bind ViewModel.GoToNowPlayingPlaylist}"
                 />
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton
+                x:Uid="AppBarButtonLyrics"
+                Label="Lyrics"
+                Click="{x:Bind ViewModel.GoToLyrics}"
+                />
+            </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
