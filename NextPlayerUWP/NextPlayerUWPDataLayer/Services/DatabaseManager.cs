@@ -1557,6 +1557,34 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<ImportedPlaylistsTable>();
         }
 
+        public void UpdateToVersion3()
+        {
+            string PlayCount = "Play Count";
+            string FilePath = "File Path";
+            string DateAdded = "Last Added";
+            string LastPlayed = "Last Played";
+            var query1 = connection.Table<SmartPlaylistEntryTable>().ToList();
+            foreach(var item in query1)
+            {
+                if (item.Item == PlayCount)
+                {
+                    connection.Execute("UPDATE SmartPlaylistEntryTable SET Item = ? WHERE Id = ?", SPUtility.Item.PlayCount, item.Id);
+                }
+                else if (item.Item == FilePath)
+                {
+                    connection.Execute("UPDATE SmartPlaylistEntryTable SET Item = ? WHERE Id = ?", SPUtility.Item.FilePath, item.Id);
+                }
+                else if (item.Item == DateAdded)
+                {
+                    connection.Execute("UPDATE SmartPlaylistEntryTable SET Item = ? WHERE Id = ?", SPUtility.Item.DateAdded, item.Id);
+                }
+                else if (item.Item == LastPlayed)
+                {
+                    connection.Execute("UPDATE SmartPlaylistEntryTable SET Item = ? WHERE Id = ?", SPUtility.Item.LastPlayed, item.Id);
+                }
+            } 
+        }
+
         public bool DBCorrection()
         {
             bool recreate = false;

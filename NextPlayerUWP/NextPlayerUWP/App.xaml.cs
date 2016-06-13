@@ -67,13 +67,30 @@ namespace NextPlayerUWP
 
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
 
-            if (IsFirstRun())
+            object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
+            if (null == o)
             {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
                 isFirstRun = true;
+            }
+            else
+            {
+                isFirstRun = false;
+            }
+
+            if (isFirstRun)
+            {
                 FirstRunSetup();
 
-                var deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-                HockeyClient.Current.TrackEvent("New instalation: " + deviceFamily);
+                try
+                {
+                    string deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
+                    HockeyClient.Current.TrackEvent("New instalation: " + deviceFamily);
+                }
+                catch (Exception)
+                {
+                    HockeyClient.Current.TrackEvent("New instalation: Unknown");
+                }
             }
             else
             {
@@ -99,7 +116,7 @@ namespace NextPlayerUWP
         {
             Logger.Save("App_UnhandledException " + e.Exception);
             Logger.SaveToFile();
-            HockeyClient.Current.TrackEvent("App_UnhandledException " + e.Exception);
+            HockeyClient.Current.TrackEvent("App_UnhandledException " + e.Exception.Message);
         }
 
         public enum Pages
@@ -199,19 +216,25 @@ namespace NextPlayerUWP
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-            //Logger.Save("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-            //Logger.SaveToFile();
+
             await SongCoverManager.Instance.Initialize();
+
             if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                 args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
             {
                 await TileManager.ManageSecondaryTileImages();
-                if (!IsFirstRun())
+                if (!isFirstRun)
                 {
                     Debug.WriteLine("before albumArtFinder.StartLooking");
                     albumArtFinder.StartLooking();
                     Debug.WriteLine("after albumArtFinder.StartLooking");
                 }
+            }
+
+            if (isFirstRun)
+            {
+                await NavigationService.NavigateAsync(Pages.Settings);
+                return;
             }
 
             switch (DetermineStartCause(args))
@@ -313,8 +336,7 @@ namespace NextPlayerUWP
         public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)
         {
             runOnStartAsync = true;
-            Logger.Save("OnPrelaunchAsync " + DateTime.Now);
-            Logger.SaveToFile();
+            
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (o == null) return Task.CompletedTask;
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
@@ -327,21 +349,8 @@ namespace NextPlayerUWP
                 Logger.Save("OnPrelaunchAsync " + ex);
                 Logger.SaveToFile();
             }
-            return Task.CompletedTask;
-        }
 
-        private bool IsFirstRun()
-        {
-            object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
-            if (null == o)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Task.CompletedTask;
         }
 
         public static Action OnNewTilePinned { get; set; }
@@ -458,6 +467,11 @@ namespace NextPlayerUWP
                 }
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
             }
+            //if (version.ToString() == "3")
+            //{
+            //    DatabaseManager.Current.UpdateToVersion3();
+            //    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 4);
+            //}
         }
 
         private void UpdateApp()
