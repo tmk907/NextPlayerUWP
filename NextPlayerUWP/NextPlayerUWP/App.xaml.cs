@@ -235,7 +235,11 @@ namespace NextPlayerUWP
                     Debug.WriteLine("after albumArtFinder.StartLooking");
                 }
             }
-
+            if (isFirstRun)
+            {
+                await NavigationService.NavigateAsync(Pages.Settings);
+                return;
+            }
             var fileArgs = args as FileActivatedEventArgs;
             if (fileArgs != null && fileArgs.Files.Any())
             {
