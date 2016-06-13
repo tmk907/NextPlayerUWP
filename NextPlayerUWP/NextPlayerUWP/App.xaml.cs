@@ -34,12 +34,14 @@ namespace NextPlayerUWP
         {
             AppThemeChanged?.Invoke(isLight);
         }
-        
+
+        private const int dbVersion = 3;
 
         public static bool IsLightThemeOn = false;
         private static AlbumArtFinder albumArtFinder;
 
         private bool isFirstRun = false;
+        
 
         public App()
         {
@@ -358,7 +360,7 @@ namespace NextPlayerUWP
         private void FirstRunSetup()
         {
             DatabaseManager.Current.CreateDatabase();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, dbVersion);
             CreateDefaultSmartPlaylists();
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
