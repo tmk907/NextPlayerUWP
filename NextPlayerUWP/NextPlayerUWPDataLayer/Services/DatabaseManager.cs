@@ -624,6 +624,17 @@ namespace NextPlayerUWPDataLayer.Services
             return songs;
         }
 
+        public async Task<List<SongItem>> GetSongItemsForPlaylistAsync(IEnumerable<string> paths)
+        {
+            List<SongItem> songs = new List<SongItem>();
+            var query = await connectionAsync.Table<SongsTable>().Where(s => paths.Contains(s.Path)).ToListAsync();
+            foreach(var song in query)
+            {
+                songs.Add(new SongItem(song));
+            }
+            return songs;
+        }
+
         public async Task<ObservableCollection<SongItem>> GetSongItemsFromAlbumAsync(string album, string albumArtist)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
@@ -1408,6 +1419,29 @@ namespace NextPlayerUWPDataLayer.Services
 
         #endregion
 
+        public async Task<string> GetAccessToken(string path)
+        {
+            var list = await connectionAsync.Table<FutureAccessTokensTable>().Where(f => f.FilePath.Equals(path)).ToListAsync();
+            if (list.Count == 0) return null;
+            else return list.FirstOrDefault().Token;
+        }
+
+        public async Task SaveAccessToken(string path, string token, bool isFile)
+        {
+            var list = await connectionAsync.Table<FutureAccessTokensTable>().ToListAsync();
+            if (list.Count == 999)
+            {
+                var item = list.FirstOrDefault();
+                await connectionAsync.DeleteAsync(item);
+            }
+            FutureAccessTokensTable fatt = new FutureAccessTokensTable()
+            {
+                FilePath = path,
+                IsFile = isFile,
+                Token = token,
+            };
+            await connectionAsync.InsertAsync(fatt);
+        }
         private static SongsTable CreateCopy(SongsTable s)
         {
             return new SongsTable()
@@ -1571,6 +1605,11 @@ namespace NextPlayerUWPDataLayer.Services
             connection.Execute("ALTER TABLE NowPlayingTable ADD COLUMN SourceType INTEGER");
             connection.Execute("UPDATE NowPlayingTable SET SourceType = 1");
             connection.CreateTable<ImportedPlaylistsTable>();
+        }
+
+        public void UpdateToVersion3()
+        {
+            connection.CreateTable<FutureAccessTokensTable>();
         }
 
         //public void UpdateToVersion3()

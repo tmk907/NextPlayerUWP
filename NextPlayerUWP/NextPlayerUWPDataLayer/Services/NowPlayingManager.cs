@@ -71,6 +71,9 @@ namespace NextPlayerUWPDataLayer.Services
                 case MusicSource.RadioJamendo:
                     await LoadRadio(path);
                     break;
+                case MusicSource.LocalNotLibrary:
+                    await LoadFromFutureAccessList(path);
+                    break;
                 default:
                     break;
             }
@@ -126,6 +129,40 @@ namespace NextPlayerUWPDataLayer.Services
             }
             catch (Exception ex)
 	        {
+                if (!paused)
+                {
+                    Pause();
+                }
+            }
+        }
+
+        private async Task LoadFromFutureAccessList(string path)
+        {
+            try
+            {
+                string token = await FutureAccessHelper.GetTokenFromPath(path);
+                if (token != null)
+                {
+                    var file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
+                    NowPlayingSong song = playlist.GetCurrentSong();
+                    string type = song.Path.Substring(song.Path.LastIndexOf('.'));
+                    if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
+                        type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
+                        type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4")
+                    {
+                        mediaPlayer.AutoPlay = false;
+                        mediaPlayer.SetFileSource(file);
+                    }
+                    else
+                    {
+                        ValueSet message = new ValueSet();
+                        message.Add("ffmpeg2", song.Path);
+                        BackgroundMediaPlayer.SendMessageToBackground(message);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
                 if (!paused)
                 {
                     Pause();
@@ -224,7 +261,7 @@ namespace NextPlayerUWPDataLayer.Services
         private async Task StopSongEvent(NowPlayingSong song, TimeSpan songDuration)
         {
             songPlayed = DateTime.Now - songsStart + songPlayed;
-            if (WasSongPlayed(songDuration) && song.SourceType == MusicSource.LocalFile)
+            if (WasSongPlayed(songDuration) && (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotLibrary))
             {
                 await UpdateSongStatistics(song.SongId, songDuration);
                 if (songDuration >TimeSpan.FromSeconds(30) && lastFmCache.AreCredentialsSet())

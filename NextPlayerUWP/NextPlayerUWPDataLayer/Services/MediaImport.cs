@@ -424,18 +424,61 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task<SongItem> OpenSingleFileAsync(StorageFile file)
         {
             string type = file.FileType.ToLower();
+            SongItem song = new SongItem();
             if (IsAudioFile(type))
             {
-                var song = await DatabaseManager.Current.GetSongItemIfExistAsync(file.Path);
+                song = await DatabaseManager.Current.GetSongItemIfExistAsync(file.Path);
                 if (song == null)
                 {
                     var songData = await CreateSongFromFile(file);
+                    songData.IsAvailable = 0;
                     int id = await DatabaseManager.Current.InsertSongAsync(songData);
                     song = await DatabaseManager.Current.GetSongItemAsync(id);
+                    string token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                    
+                    await FutureAccessHelper.SaveToken(file.Path, token);
                 }
-                return song;
+                song.SourceType = Enums.MusicSource.LocalNotLibrary;
             }
-            return new SongItem();
+            return song;
+        }
+
+        public async Task<IEnumerable<SongItem>> OpenPlaylistFileAsync(StorageFile file)
+        {
+            List<SongItem> songs = new List<SongItem>();
+            string type = file.FileType.ToLower();
+
+            if (IsPlaylistFile(type))
+            {
+                string folderPath = Path.GetDirectoryName(file.Path);
+                var f = await file.GetParentAsync();
+                ImportedPlaylist playlist = new ImportedPlaylist();
+                if (file.Path != folderPath)
+                {
+
+                }
+                if (type == ".m3u")
+                {
+                    playlist = await ParseM3UPlaylist(file, folderPath);
+                }
+                else if (type == ".m3u8")
+                {
+                    playlist = await ParseM3UPlaylist(file, folderPath);
+                }
+                else if (type == ".wpl")
+                {
+                    playlist = await ParseWPLPlaylist(file, folderPath);
+                }
+                else if (type == ".pls")
+                {
+                    playlist = await ParsePLSPlaylist(file, folderPath);
+                }
+                if (playlist.paths.Count > 0)
+                {
+                    songs = await DatabaseManager.Current.GetSongItemsForPlaylistAsync(playlist.paths);
+                }
+            }
+            return songs;
         }
 
         private void SendToast()
@@ -482,6 +525,7 @@ namespace NextPlayerUWPDataLayer.Services
             ImportedPlaylist iplaylist = new ImportedPlaylist();
             iplaylist.name = file.DisplayName;
             iplaylist.path = file.Path;
+            //string folderPath = Path.GetDirectoryName(file.Path);
             using (var stream = await file.OpenStreamForReadAsync())
             {
                 StreamReader streamReader = new StreamReader(stream);
@@ -579,9 +623,9 @@ namespace NextPlayerUWPDataLayer.Services
             if (iplaylist.paths.Count > 0)
             {
                 string folderPath = Path.GetDirectoryName(iplaylist.path);
-                var songs = await DatabaseManager.Current.GetSongItemsFromFolderAsync(folderPath);
-                var res = songs.Where(s => iplaylist.paths.Contains(s.Path));
-                if (res.Count() == 0)
+                var songs = await DatabaseManager.Current.GetSongItemsForPlaylistAsync(iplaylist.paths);
+                //var res = songs.Where(s => iplaylist.paths.Contains(s.Path));
+                if (songs.Count() == 0)
                 {
                     DatabaseManager.Current.InsertImportedPlaylist(iplaylist.name, iplaylist.path, -1);
                 }
@@ -590,7 +634,7 @@ namespace NextPlayerUWPDataLayer.Services
                     int plainId = DatabaseManager.Current.InsertPlainPlaylist(iplaylist.name);
                     int id = DatabaseManager.Current.InsertImportedPlaylist(iplaylist.name, iplaylist.path, plainId);
                     int place = 0;
-                    foreach(var r in res)
+                    foreach(var r in songs)
                     {
                         await DatabaseManager.Current.InsertPlainPlaylistEntryAsync(plainId, r.SongId, place);
                         place++;

@@ -106,34 +106,41 @@ namespace NextPlayerUWP.ViewModels
                     bool first = true;
                     foreach (var file in items)
                     {
-                        var storageFile = file as Windows.Storage.StorageFile;
-                        string type = storageFile.FileType.ToLower();
-                        if (MediaImport.IsAudioFile(type))
+                        if (typeof(Windows.Storage.StorageFile) == file.GetType())
                         {
-                            SongItem newSong = await mi.OpenSingleFileAsync(storageFile);
+                            var storageFile = file as Windows.Storage.StorageFile;
+                            string type = storageFile.FileType.ToLower();
+                            if (MediaImport.IsAudioFile(type))
+                            {
+                                SongItem newSong = await mi.OpenSingleFileAsync(storageFile);
 
-                            if (action.Equals(AppConstants.ActionAddToNowPlaying))
-                            {
-                                await NowPlayingPlaylistManager.Current.Add(newSong);
-                            }
-                            else if (action.Equals(AppConstants.ActionPlayNext))
-                            {
-                                await NowPlayingPlaylistManager.Current.AddNext(newSong);
-                            }
-                            else if (action.Equals(AppConstants.ActionPlayNow))//!
-                            {
-                                if (first)
-                                {
-                                    await NowPlayingPlaylistManager.Current.NewPlaylist(newSong);
-                                    ApplicationSettingsHelper.SaveSongIndex(0);
-                                    PlaybackManager.Current.PlayNew();
-                                }
-                                else
+                                if (action.Equals(AppConstants.ActionAddToNowPlaying))
                                 {
                                     await NowPlayingPlaylistManager.Current.Add(newSong);
                                 }
+                                else if (action.Equals(AppConstants.ActionPlayNext))
+                                {
+                                    await NowPlayingPlaylistManager.Current.AddNext(newSong);
+                                }
+                                else if (action.Equals(AppConstants.ActionPlayNow))//!
+                                {
+                                    if (first)
+                                    {
+                                        await NowPlayingPlaylistManager.Current.NewPlaylist(newSong);
+                                        ApplicationSettingsHelper.SaveSongIndex(0);
+                                        PlaybackManager.Current.PlayNew();
+                                    }
+                                    else
+                                    {
+                                        await NowPlayingPlaylistManager.Current.Add(newSong);
+                                    }
+                                }
+                                first = false;
                             }
-                            first = false;
+                            else if (MediaImport.IsPlaylistFile(type))
+                            {
+                                //TODO
+                            }
                         }
                     }
                 }

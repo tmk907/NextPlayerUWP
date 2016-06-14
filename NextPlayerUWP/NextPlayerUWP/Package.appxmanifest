@@ -37,12 +37,34 @@
           </BackgroundTasks>
         </Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="next-player-fa-name">
-            <uap:DisplayName>Next-Player Music Files</uap:DisplayName>
-            <uap:InfoTip>Info tip music files</uap:InfoTip>
+          <uap:FileTypeAssociation Name="music">
             <uap:SupportedFileTypes>
               <uap:FileType>.mp3</uap:FileType>
+              <uap:FileType>.m4a</uap:FileType>
               <uap:FileType>.wma</uap:FileType>
+              <uap:FileType>.wav</uap:FileType>
+              <uap:FileType>.aac</uap:FileType>
+              <uap:FileType>.asf</uap:FileType>
+              <uap:FileType>.flac</uap:FileType>
+              <uap:FileType>.adt</uap:FileType>
+              <uap:FileType>.adts</uap:FileType>
+              <uap:FileType>.amr</uap:FileType>
+              <uap:FileType>.mp4</uap:FileType>
+              <uap:FileType>.ogg</uap:FileType>
+              <uap:FileType>.ape</uap:FileType>
+              <uap:FileType>.wv</uap:FileType>
+              <uap:FileType>.opus</uap:FileType>
+              <uap:FileType>.ac3</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="playlist">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.m3u</uap:FileType>
+              <uap:FileType>.m3u8</uap:FileType>
+              <uap:FileType>.wpl</uap:FileType>
+              <uap:FileType>.pls</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>

@@ -38,7 +38,7 @@ namespace NextPlayerUWP
             AppThemeChanged?.Invoke(isLight);
         }
 
-        private const int dbVersion = 3;
+        private const int dbVersion = 4;
 
         public static bool IsLightThemeOn = false;
         private static AlbumArtFinder albumArtFinder;
@@ -486,11 +486,11 @@ namespace NextPlayerUWP
                 }
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
             }
-            //if (version.ToString() == "3")
-            //{
-            //    DatabaseManager.Current.UpdateToVersion3();
-            //    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 4);
-            //}
+            if (version.ToString() == "3")
+            {
+                DatabaseManager.Current.UpdateToVersion3();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 4);
+            }
         }
 
         private void UpdateApp()
@@ -510,10 +510,21 @@ namespace NextPlayerUWP
         private async Task OpenFileAndPlay(StorageFile file)
         {
             MediaImport mi = new MediaImport();
-            SongItem si = await mi.OpenSingleFileAsync(file);
-            await NowPlayingPlaylistManager.Current.NewPlaylist(si);
-            ApplicationSettingsHelper.SaveSongIndex(0);
-            PlaybackManager.Current.PlayNew();
+            string type = file.FileType.ToLower();
+            if (MediaImport.IsAudioFile(type))
+            {
+                SongItem si = await mi.OpenSingleFileAsync(file);
+                await NowPlayingPlaylistManager.Current.NewPlaylist(si);
+                ApplicationSettingsHelper.SaveSongIndex(0);
+                PlaybackManager.Current.PlayNew();
+            }
+            else if (MediaImport.IsPlaylistFile(type))
+            {
+                var list = await mi.OpenPlaylistFileAsync(file);
+                await NowPlayingPlaylistManager.Current.NewPlaylist(list);
+                ApplicationSettingsHelper.SaveSongIndex(0);
+                PlaybackManager.Current.PlayNew();
+            }
         }
 
         private async Task OpenFilesAndAddToNowPlaying(IReadOnlyList<IStorageItem> files)

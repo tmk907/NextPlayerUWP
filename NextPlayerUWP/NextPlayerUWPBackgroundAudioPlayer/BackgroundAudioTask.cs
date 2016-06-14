@@ -214,7 +214,11 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                         break;
                     case "ffmpeg":
                         string path = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
-                        await OpenUsingFFmpeg(path);
+                        await OpenUsingFFmpeg(path,false);
+                        break;
+                    case "ffmpeg2":
+                        string path2 = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
+                        await OpenUsingFFmpeg(path2, true);
                         break;
                     case AppConstants.LfmLogin:
                         nowPlayingManager.RefreshLastFmCredentials();
@@ -225,11 +229,24 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
         private FFmpegInteropMSS FFmpegMSS;
 
-        private async Task OpenUsingFFmpeg(string path)
+        private async Task OpenUsingFFmpeg(string path, bool fromAccessList)
         {
             //path = @"D:\Muzyka\Jean Michel Jarre\Jean Michel Jarre - Aero [DTS]\11 - Aerology.ac3";
             //path = @"D:\Muzyka\Moja muzyka\jhg.ogg";
-            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+            StorageFile file;
+            if (fromAccessList)
+            {
+                string token = await FutureAccessHelper.GetTokenFromPath(path);
+                if (token != null)
+                {
+                    file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(path);
+                }
+                else return;
+            }
+            else
+            {
+                file = await StorageFile.GetFileFromPathAsync(path);
+            }
 
             IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
 

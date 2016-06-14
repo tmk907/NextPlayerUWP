@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -159,7 +160,7 @@ namespace NextPlayerUWP.ViewModels
         public async void RateSong(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            if (song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
+            if (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotLibrary)
             {
                 int rating = Int32.Parse(button.Tag.ToString());
                 Song.Rating = rating;
