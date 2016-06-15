@@ -273,11 +273,33 @@
     <None Include="NextPlayerUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.png" />
+    <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-16.png" />
+    <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-24.png" />
+    <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-256.png" />
+    <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-48.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-16.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-24.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-256.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-48.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledLogoExtensions.targetsize-16.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledLogoExtensions.targetsize-24.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledLogoExtensions.targetsize-256.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledLogoExtensions.targetsize-48.png" />
+    <Content Include="ScaledAppList.targetsize-256.png" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Assets\Albums\AlbumCoverTR.png" />
     <Content Include="Assets\Albums\AlbumCoverTRnG.png" />
     <Content Include="Assets\Albums\AlbumCoverTRSmall.png" />
     <Content Include="Assets\Licenses.txt" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-16_altform-unplated.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-256_altform-unplated.png" />
     <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-100.png" />
     <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-125.png" />
     <Content Include="Assets\Visual Assets\SplashScreen\Splash3.scale-150.png" />
@@ -288,21 +310,17 @@
     <Content Include="Assets\Visual Assets\Square150\Medium3.scale-150.png" />
     <Content Include="Assets\Visual Assets\Square150\Medium3.scale-200.png" />
     <Content Include="Assets\Visual Assets\Square150\Medium3.scale-400.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-100.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-125.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-150.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-200.png" />
-    <Content Include="Assets\Visual Assets\Square44\Icon3.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-48_altform-unplated.png" />
     <Content Include="Assets\Visual Assets\Square71\Small3.scale-100.png" />
     <Content Include="Assets\Visual Assets\Square71\Small3.scale-125.png" />
     <Content Include="Assets\Visual Assets\Square71\Small3.scale-150.png" />
     <Content Include="Assets\Visual Assets\Square71\Small3.scale-200.png" />
     <Content Include="Assets\Visual Assets\Square71\Small3.scale-400.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-100.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-125.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-150.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-200.png" />
-    <Content Include="Assets\Visual Assets\StoreLogo\Store3.scale-400.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3Tile.scale-100.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3Tile.scale-125.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3Tile.scale-150.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3Tile.scale-200.png" />
+    <Content Include="Assets\Visual Assets\StoreLogo\Store3Tile.scale-400.png" />
     <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-100.png" />
     <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-125.png" />
     <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-150.png" />
@@ -446,6 +464,9 @@
     </SDKReference>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
+    <SDKReference Include="WindowsMobile, Version=10.0.10586.0">
+      <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>

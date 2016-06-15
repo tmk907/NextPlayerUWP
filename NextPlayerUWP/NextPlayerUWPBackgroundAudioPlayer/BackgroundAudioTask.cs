@@ -30,6 +30,8 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
+            //Stopwatch s1 = new Stopwatch();
+            //s1.Start();
             nowPlayingManager = new NowPlayingManager();
 
             smtc = BackgroundMediaPlayer.Current.SystemMediaTransportControls;
@@ -65,7 +67,8 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             myTileUpdater = new TileUpdater();
 
             deferral = taskInstance.GetDeferral(); // This must be retrieved prior to subscribing to events below which use it
-
+            //s1.Stop();
+            //Debug.WriteLine("backgroundaudio "+ s1.ElapsedMilliseconds);
             // Mark the background task as started to unblock SMTC Play operation (see related WaitOne on this signal)
             backgroundTaskStarted.Set();
 

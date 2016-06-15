@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="60490polApki.Next-Player" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="1.4.0.0" />
+  <Identity Name="60490polApki.Next-Player" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="1.4.1.0" />
   <mp:PhoneIdentity PhoneProductId="5709a693-517f-4619-9942-4d8a3e15c758" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Next-Player</DisplayName>
     <PublisherDisplayName>polApki</PublisherDisplayName>
-    <Logo>Assets\Visual Assets\StoreLogo\Store3.png</Logo>
+    <Logo>Assets\Visual Assets\StoreLogo\Store3Tile.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10586.0" MaxVersionTested="10.0.10586.0" />
@@ -15,14 +15,14 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="NextPlayerUWP.App">
-      <uap:VisualElements DisplayName="Next-Player" Square150x150Logo="Assets\Visual Assets\Square150\Medium3.png" Square44x44Logo="Assets\Visual Assets\Square44\Icon3.png" Description="Next-Player - music player for Windows 10." BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="Next-Player" Square150x150Logo="Assets\Visual Assets\Square150\Medium3.png" Square44x44Logo="Assets\Visual Assets\Square44\ScaledAppList.png" Description="Next-Player - music player for Windows 10." BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Visual Assets\Wide310\Wide3.png" Square71x71Logo="Assets\Visual Assets\Square71\Small3.png" ShortName="Next-Player">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
             <uap:ShowOn Tile="wide310x150Logo" />
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\Visual Assets\SplashScreen\Splash3.png" BackgroundColor="transparent" />
+        <uap:SplashScreen Image="Assets\Visual Assets\SplashScreen\Splash3.png" BackgroundColor="#0078D7" />
       </uap:VisualElements>
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="ScrobblerBG.BackgroundScrobbler">
@@ -38,6 +38,8 @@
         </Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="music">
+            <uap:Logo>Assets\Visual Assets\Icons\ScaledLogoExtensions.png</uap:Logo>
+            <uap:EditFlags OpenIsSafe="true" />
             <uap:SupportedFileTypes>
               <uap:FileType>.mp3</uap:FileType>
               <uap:FileType>.m4a</uap:FileType>
@@ -60,6 +62,8 @@
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="playlist">
+            <uap:Logo>Assets\Visual Assets\Icons\ScaledLogoExtensions.png</uap:Logo>
+            <uap:EditFlags OpenIsSafe="true" />
             <uap:SupportedFileTypes>
               <uap:FileType>.m3u</uap:FileType>
               <uap:FileType>.m3u8</uap:FileType>

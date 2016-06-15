@@ -142,26 +142,14 @@ namespace NextPlayerUWP.ViewModels
             {
                 ActionNr = 3;
             }
-            bool lockscreen = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
-            if (lockscreen)
-            {
-                PreventScreenLock = true;
-            }
-            else
-            {
-                PreventScreenLock = false;
-            }
+
+            PreventScreenLock = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
+            HideStatusBar = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
+
 
             //Personalization
-            bool islightthemeon = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
-            if (islightthemeon)
-            {
-                IsLightThemeOn = true;
-            }
-            else
-            {
-                IsLightThemeOn = false;
-            }
+            IsLightThemeOn = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+
             if (accentColors.Count == 0)
             {
                 ColorsHelper ch = new ColorsHelper();
@@ -324,13 +312,12 @@ namespace NextPlayerUWP.ViewModels
             set {
                 if (!initialization)
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
                     TimeSpan now = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
                     TimeSpan difference = TimeSpan.FromTicks(Time.Ticks - now.Ticks);
                     if (difference <= TimeSpan.Zero || !isTimerOn) return;
                     else
                     {
-                        SendMessage(AppConstants.SetTimer);
+                        ChangeTimer(true);
                     }
                 }
                 Set(ref time, value);
@@ -402,6 +389,26 @@ namespace NextPlayerUWP.ViewModels
                     HockeyProxy.TrackEvent("Prevent screen dimming off");
                 }
             }
+        }
+
+        private bool hideStatusBar = false;
+        public bool HideStatusBar
+        {
+            get { return hideStatusBar; }
+            set
+            {
+                if (value != hideStatusBar)
+                {
+                    ChangeStatusBarVisibility(value);
+                }
+                Set(ref hideStatusBar, value);
+            }
+        }
+
+        private async Task ChangeStatusBarVisibility(bool hide)
+        {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, hide);
+            await App.ChangeStatusBarVisibility(hide);
         }
 
         #endregion

@@ -66,6 +66,8 @@
                         <Setter Target="TimerStackPanel.Orientation" Value="Vertical"/>
                         <Setter Target="DragDropActionStackPanel.Visibility" Value="Collapsed"/>
                         <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="AddMusicFoldersStackPanel.Opacity" Value="0"/>
+                        <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -136,71 +138,73 @@
                             Margin="0,4,4,4"
                             MinWidth="128"/>
                 </StackPanel>
-                    <TextBlock x:Uid="TBPersonalize"
-                           Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,12,0,12"
-                           Text="Personalise"/>
-                    <StackPanel Orientation="Vertical" Margin="4">
-                        <TextBlock x:Uid="TBAppTheme"
-                           Style="{StaticResource BodyTextBlockStyle}"
-                           FontSize="17"
-                           Margin="4,4,4,4"
-                           Text="App theme:"/>
-                        <RadioButton x:Uid="RBLight"
-                                     Margin="4,0,4,0"
-                                     GroupName="AppThemeGroup"
-                                     Content="Light"
-                                     IsChecked="{x:Bind ViewModel.IsLightThemeOn, Mode=TwoWay, Converter={StaticResource BoolToNullableBoolConverter}}"/>
-                        <RadioButton x:Uid="RBDark"
-                                     Margin="4,0,4,0"
-                                     GroupName="AppThemeGroup"
-                                     Content="Dark"
-                                     IsChecked="{x:Bind ViewModel.IsDarkThemeOn, Mode=TwoWay, Converter={StaticResource BoolToNullableBoolConverter}}"/>
-                        <TextBlock x:Uid="TBAppAccentColor"
-                           Style="{StaticResource BodyTextBlockStyle}"
-                           FontSize="17"
-                           Margin="4,4,4,4"
-                           Text="App accent color:"/>
-                        <GridView ItemsSource="{x:Bind ViewModel.AccentColors}"
-                                  Margin="4,0,4,0"
-                                  SelectionChanged="{x:Bind ViewModel.ChangeAccentColor}">
-                            <GridView.ItemTemplate>
-                                <DataTemplate>
-                                    <Rectangle Width="36" Height="36" Fill="{Binding}"/>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                            <GridView.ItemContainerStyle>
-                                <Style TargetType="GridViewItem">
-                                    <Setter Property="Margin" Value="0"/>
-                                    <Setter Property="Padding" Value="0"/>
-                                </Style>
-                            </GridView.ItemContainerStyle>
-                            <GridView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsWrapGrid MaximumRowsOrColumns="6"
-                                                   GroupPadding="0"
-                                                   Margin="0"
-                                                   Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </GridView.ItemsPanel>
-                        </GridView>
-                    </StackPanel>
-                    <TextBlock x:Uid="TBTools"
+                <TextBlock x:Uid="TBPersonalize"
                         Style="{StaticResource TitleTextBlockStyle}" 
                         Margin="0,12,0,12"
-                        Text="Tools"/>
+                        Text="Personalise"/>
                 <StackPanel Orientation="Vertical" Margin="4">
-                        <TextBlock x:Uid="TBTimer"
-                           Style="{StaticResource BodyTextBlockStyle}"
-                           FontSize="17"
-                           Margin="4,4,4,4"
-                           Text="Timer:"/>
-                        <StackPanel x:Name="TimerStackPanel" Orientation="Horizontal">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"/>
-                            <TimePicker 
-                                Time="{x:Bind ViewModel.Time, Mode=TwoWay}"
-                                IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=OneWay}"/>
-                        </StackPanel>
+                    <TextBlock x:Uid="TBAppTheme"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="App theme:"/>
+                    <RadioButton x:Uid="RBLight"
+                                    Margin="8,0,4,0"
+                                    GroupName="AppThemeGroup"
+                                    Content="Light"
+                                    IsChecked="{x:Bind ViewModel.IsLightThemeOn, Mode=TwoWay, Converter={StaticResource BoolToNullableBoolConverter}}"/>
+                    <RadioButton x:Uid="RBDark"
+                                    Margin="8,0,4,0"
+                                    GroupName="AppThemeGroup"
+                                    Content="Dark"
+                                    IsChecked="{x:Bind ViewModel.IsDarkThemeOn, Mode=TwoWay, Converter={StaticResource BoolToNullableBoolConverter}}"/>
+                    <TextBlock x:Uid="TBAppAccentColor"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="App accent color:"/>
+                    <GridView ItemsSource="{x:Bind ViewModel.AccentColors}"
+                                Margin="4,0,4,0"
+                                SelectionChanged="{x:Bind ViewModel.ChangeAccentColor}">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <Rectangle Width="36" Height="36" Fill="{Binding}"/>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                        <GridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </GridView.ItemContainerStyle>
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid MaximumRowsOrColumns="6"
+                                                GroupPadding="0"
+                                                Margin="0"
+                                                Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                    </GridView>
+                </StackPanel>
+                <TextBlock x:Uid="TBTools"
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="Tools"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock x:Uid="TBTimer"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Timer:"/>
+                    <StackPanel x:Name="TimerStackPanel" 
+                            Orientation="Horizontal"
+                            Margin="8,0,0,0">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"/>
+                        <TimePicker 
+                            Time="{x:Bind ViewModel.Time, Mode=TwoWay}"
+                            IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=OneWay}"/>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="DragDropActionStackPanel"
                             Orientation="Vertical" 
@@ -232,9 +236,22 @@
                         FontSize="17"
                         Margin="4,4,4,4"
                         Text="Prevent screen from dimming"/>
-                    <StackPanel Orientation="Horizontal">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.PreventScreenLock, Mode=TwoWay}"
-                                />
+                    <StackPanel Orientation="Horizontal"
+                                Margin="8,0,0,0">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.PreventScreenLock, Mode=TwoWay}"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="4" 
+                            Visibility="Collapsed"
+                            x:Name="StatusBarVisibilityStackPanel">
+                    <TextBlock x:Uid="TBHideStatusBar"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Hide status bar"/>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="8,0,0,0">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.HideStatusBar, Mode=TwoWay}"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" 
@@ -260,46 +277,46 @@
                            Text="Please restart app to apply changes."/>
                     </StackPanel>
                 <TextBlock
-                           Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,12,0,12"
-                           Text="Last.fm"/>
-                    <StackPanel Orientation="Vertical" Margin="4">
-                        <TextBox Text="{x:Bind ViewModel.LastFmLogin, Mode=TwoWay}"
-                                 HorizontalAlignment="Left"
-                                 Margin="0,4,0,0"
-                                 Width="256"/>
-                        <PasswordBox Password="{x:Bind ViewModel.LastFmPassword, Mode=TwoWay}"
-                                 HorizontalAlignment="Left"
-                                 Margin="0,4,0,0"
-                                 Width="256"/>
-                        <Button x:Uid="ButtonLogin"
-                                Content="Login"
-                                Margin="0,8,0,0"
-                                MinWidth="128"
-                                Click="{x:Bind ViewModel.LastFmLogIn}"
-                                IsEnabled="{x:Bind ViewModel.IsLoginButtonEnabled, Mode=OneWay}"
-                                Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"/>
-                        <Button x:Uid="ButtonLogout"
-                                Content="Logout"
-                                MinWidth="128"
-                                Margin="0,8,0,0"
-                                Click="{x:Bind ViewModel.LastFmLogOut}"
-                                Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                        <TextBlock x:Uid="TBLoginError"
-                                   Text="Can't log in. Check your login and password and make sure you have internet connection"
-                                   TextWrapping="WrapWholeWords"
-                                   Margin="0,4,0,0"
-                                   Visibility="{x:Bind ViewModel.LastFmShowError, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                        <TextBlock x:Uid="TBAddSongToLoved"
-                            Style="{StaticResource BodyTextBlockStyle}"
-                            FontSize="17"
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="Last.fm"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBox Text="{x:Bind ViewModel.LastFmLogin, Mode=TwoWay}"
+                                HorizontalAlignment="Left"
+                                Margin="0,4,0,0"
+                                Width="256"/>
+                    <PasswordBox Password="{x:Bind ViewModel.LastFmPassword, Mode=TwoWay}"
+                                HorizontalAlignment="Left"
+                                Margin="0,4,0,0"
+                                Width="256"/>
+                    <Button x:Uid="ButtonLogin"
+                            Content="Login"
                             Margin="0,8,0,0"
-                            Text="Scrobble loved tracks"
+                            MinWidth="128"
+                            Click="{x:Bind ViewModel.LastFmLogIn}"
+                            IsEnabled="{x:Bind ViewModel.IsLoginButtonEnabled, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"/>
+                    <Button x:Uid="ButtonLogout"
+                            Content="Logout"
+                            MinWidth="128"
+                            Margin="0,8,0,0"
+                            Click="{x:Bind ViewModel.LastFmLogOut}"
                             Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.LastFmRateSongs, Mode=TwoWay}"
-                            Margin="0,4,0,0"
-                            Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                    </StackPanel>
+                    <TextBlock x:Uid="TBLoginError"
+                                Text="Can't log in. Check your login and password and make sure you have internet connection"
+                                TextWrapping="WrapWholeWords"
+                                Margin="0,4,0,0"
+                                Visibility="{x:Bind ViewModel.LastFmShowError, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                    <TextBlock x:Uid="TBAddSongToLoved"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="0,8,0,0"
+                        Text="Scrobble loved tracks"
+                        Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.LastFmRateSongs, Mode=TwoWay}"
+                        Margin="0,4,0,0"
+                        Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                </StackPanel>
                 <TextBlock x:Uid="TBAbout"
                            Style="{StaticResource TitleTextBlockStyle}" 
                            Margin="0,12,0,12"
@@ -333,7 +350,6 @@
                             MinWidth="128"
                             Click="{x:Bind ViewModel.Licenses}"/>
                 </StackPanel>
-                
             </StackPanel>
             </ScrollViewer>
         </Grid>

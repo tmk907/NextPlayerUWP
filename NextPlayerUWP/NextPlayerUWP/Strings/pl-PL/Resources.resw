@@ -304,7 +304,7 @@
     <value>Artyści</value>
   </data>
   <data name="PageHeaderFileInfo.Content" xml:space="preserve">
-    <value>File info</value>
+    <value>Szczegóły pliku</value>
   </data>
   <data name="PageHeaderFolders.Content" xml:space="preserve">
     <value>Foldery</value>
@@ -686,5 +686,8 @@
   </data>
   <data name="AppBarButtonLyrics.Label" xml:space="preserve">
     <value>Tekst</value>
+  </data>
+  <data name="TBHideStatusBar.Text" xml:space="preserve">
+    <value>Ukryj pasek stanu</value>
   </data>
 </root>

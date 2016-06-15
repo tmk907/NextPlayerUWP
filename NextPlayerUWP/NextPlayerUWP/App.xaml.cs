@@ -165,6 +165,9 @@ namespace NextPlayerUWP
 
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
+
+            await ChangeStatusBarVisibility();
+
             #region AddPageKeys
             var keys = PageKeys<Pages>();
             if (!keys.ContainsKey(Pages.AddToPlaylist))
@@ -248,7 +251,7 @@ namespace NextPlayerUWP
                 NavigationService.Navigate(Pages.NowPlayingPlaylist);
                 if (fileArgs.Files.Count > 1)
                 {
-                    await OpenFilesAndAddToNowPlaying(fileArgs.Files);
+                    await OpenFilesAndAddToNowPlaying(fileArgs.Files.Skip(1));
                 }
             }
             else
@@ -259,8 +262,8 @@ namespace NextPlayerUWP
                         LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
                         if (!eventArgs.TileId.Contains(AppConstants.TileId))
                         {
-                            Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
-                            Logger.SaveToFile();
+                            //Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
+                            //Logger.SaveToFile();
                             HockeyClient.Current.TrackEvent("event arg doesn't contain tileid");
                         }
                         Pages page = Pages.Playlists;
@@ -308,8 +311,8 @@ namespace NextPlayerUWP
                         }
                         else
                         {
-                            Logger.Save("OnStart primary ?");
-                            Logger.SaveToFile();
+                            //Logger.Save("OnStart primary ?");
+                            //Logger.SaveToFile();
                         }
                         break;
                     case AdditionalKinds.Toast:
@@ -320,11 +323,11 @@ namespace NextPlayerUWP
                     default:
                         //Logger.Save("OnStart default");
                         //Logger.SaveToFile();
-                        if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                            args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
-                        {
+                        //if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                        //    args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+                        //{
                             await NavigationService.NavigateAsync(Pages.Playlists);
-                        }
+                        //}
                         break;
                 }
             }
@@ -358,16 +361,8 @@ namespace NextPlayerUWP
             
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (o == null) return Task.CompletedTask;
+
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            try
-            {
-                //SongCoverManager.Instance.Initialize().Wait();
-            }
-            catch (Exception ex)
-            {
-                Logger.Save("OnPrelaunchAsync " + ex);
-                Logger.SaveToFile();
-            }
 
             return Task.CompletedTask;
         }
@@ -398,6 +393,7 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -469,6 +465,28 @@ namespace NextPlayerUWP
             ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
         }
 
+        public static async Task ChangeStatusBarVisibility()
+        {
+            bool hide = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
+            await ChangeStatusBarVisibility(hide);
+        }
+
+        public static async Task ChangeStatusBarVisibility(bool hide)
+        {
+            var statusbar = "Windows.UI.ViewManagement.StatusBar";
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent(statusbar))
+            {
+                if (hide)
+                {
+                    await Windows.UI.ViewManagement.StatusBar.GetForCurrentView().HideAsync();
+                }
+                else
+                {
+                    await Windows.UI.ViewManagement.StatusBar.GetForCurrentView().ShowAsync();
+                }
+            }
+        }
+
         private void UpdateDB()
         {
             object version = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DBVersion);
@@ -499,6 +517,10 @@ namespace NextPlayerUWP
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
             }
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
+            }
         }
 
         private async void RegisterBGScrobbler()
@@ -527,7 +549,7 @@ namespace NextPlayerUWP
             }
         }
 
-        private async Task OpenFilesAndAddToNowPlaying(IReadOnlyList<IStorageItem> files)
+        private async Task OpenFilesAndAddToNowPlaying(IEnumerable<IStorageItem> files)
         {
             MediaImport mi = new MediaImport();
             List<SongItem> list = new List<SongItem>();
@@ -538,5 +560,7 @@ namespace NextPlayerUWP
             }
             await NowPlayingPlaylistManager.Current.Add(list);
         }
+
+        
     }
 }

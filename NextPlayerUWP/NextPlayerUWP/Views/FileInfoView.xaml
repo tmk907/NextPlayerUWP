@@ -53,6 +53,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -320,6 +321,23 @@
                             Text="{Binding FileInfo.DateAdded, Converter={StaticResource DateTimeToStringConverter}}"
                             Style="{StaticResource ValueStyle}"
                             />
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                        Grid.Row="0"
+                        x:Uid="TBLyrics"
+                        Text="Lyrics"
+                        Style="{StaticResource DescriptionStyle}"
+                        />
+                    <TextBlock
+                        Grid.Row="1"
+                        Margin="0,8,0,0"
+                        Text="{Binding FileInfo.Tag.Lyrics}"
+                        Style="{StaticResource ValueStyle}"/>
                 </Grid>
             </Grid>
         </ScrollViewer>

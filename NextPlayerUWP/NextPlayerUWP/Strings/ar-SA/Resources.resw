@@ -687,4 +687,7 @@
   <data name="AppBarButtonQueue.Label" xml:space="preserve">
     <value>Queue</value>
   </data>
+  <data name="TBHideStatusBar.Text" xml:space="preserve">
+    <value>Hide status bar</value>
+  </data>
 </root>

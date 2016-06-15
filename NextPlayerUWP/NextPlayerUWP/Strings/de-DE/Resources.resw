@@ -687,4 +687,7 @@
   <data name="AppBarButtonLyrics.Label" xml:space="preserve">
     <value>Liedtext</value>
   </data>
+  <data name="TBHideStatusBar.Text" xml:space="preserve">
+    <value>Hide status bar</value>
+  </data>
 </root>

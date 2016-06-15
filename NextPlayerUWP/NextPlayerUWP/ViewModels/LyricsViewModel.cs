@@ -21,6 +21,7 @@ namespace NextPlayerUWP.ViewModels
         public LyricsViewModel()
         {
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         }
 
         private SongItem song;
@@ -39,6 +40,11 @@ namespace NextPlayerUWP.ViewModels
             lyricsWebview.NavigationStarting += webView1_NavigationStarting;
             lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
             lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
+            if (changelyrics)
+            {
+                changelyrics = false;
+                ChangeLyrics();
+            }
         }
 
 
@@ -144,11 +150,18 @@ namespace NextPlayerUWP.ViewModels
         }
 
         private WebView lyricsWebview;
+        //public WebView LyricsWebView
+        //{
+        //    get { return lyricsWebview; }
+        //    set { Set(ref lyricsWebview, value); }
+        //}
         private string address;
         private bool original = true;
         private Windows.ApplicationModel.Resources.ResourceLoader loader;
         private bool lyricsNotLoaded = false;
         private int cachedIndex = 0;
+
+        private bool changelyrics = false;
 
         //TODO sprawdzac z ustawien
         private bool autoLoadFromWeb = true;
@@ -157,20 +170,25 @@ namespace NextPlayerUWP.ViewModels
         {
             original = true;
 
+            WebVisibility = false;
+            StatusVisibility = false;
+
             //appBarSave.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            
+
             Title = song.Title;
             Artist = song.Artist;
             Lyrics = "";
             string dbLyrics = await DatabaseManager.Current.GetLyricsAsync(song.SongId);
-            WebVisibility = false;
+            
             if (string.IsNullOrEmpty(dbLyrics))
             {
-                if (autoLoadFromWeb)
+                if (lyricsWebview == null)
                 {
-                    lyricsWebview.Stop();
-                    await LoadLyricsFromWebsite();
+                    changelyrics = true;
+                    return;
                 }
+                lyricsWebview.Stop();
+                await LoadLyricsFromWebsite();
             }
             else
             {
@@ -252,13 +270,13 @@ namespace NextPlayerUWP.ViewModels
             return uri.ToString().Contains("lyrics.wikia.com");
         }
 
-        private void webView1_NavigationStarting(object sender, WebViewNavigationStartingEventArgs args)
+        public void webView1_NavigationStarting(object sender, WebViewNavigationStartingEventArgs args)
         {
             if (!IsAllowedUri(args.Uri))
                 args.Cancel = true;
         }
 
-        private void webView1_ContentLoading(WebView sender, WebViewContentLoadingEventArgs args)
+        public void webView1_ContentLoading(WebView sender, WebViewContentLoadingEventArgs args)
         {
             if (args.Uri != null)
             {
@@ -266,7 +284,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private void webView1_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+        public void webView1_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
             StatusVisibility = false;
             WebVisibility = true;
@@ -278,7 +296,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private void LyricsWebview_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        public void LyricsWebview_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             ShowProgressBar = false;
         }

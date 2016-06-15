@@ -22,27 +22,22 @@ namespace NextPlayerUWP.Common
         {
             get { return current; }
         }
+
         static NowPlayingPlaylistManager() { }
+
         private NowPlayingPlaylistManager()
         {
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
             songs.CollectionChanged += Songs_CollectionChanged;
-            //Init();
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
             PlaybackManager.StreamUpdated += PlaybackManager_StreamUpdated;
             App.SongUpdated += App_SongUpdated;
+            currentIndex = ApplicationSettingsHelper.ReadSongIndex();
         }
 
-        private async void Init()
-        {
-            songs = await DatabaseManager.Current.GetSongItemsFromNowPlayingAsync();
-            songs.CollectionChanged += Songs_CollectionChanged;
-            OnNPChanged();
-
-        }
+        private int currentIndex;
 
         public static event NPListChangedHandler NPListChanged;
-
         public static void OnNPChanged()
         {
             NPListChanged?.Invoke();
@@ -126,6 +121,7 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackManager_MediaPlayerTrackChanged(int index)
         {
+            currentIndex = index;
             int i = 0;
             foreach(var song in songs)
             {
@@ -366,9 +362,9 @@ namespace NextPlayerUWP.Common
 
         public SongItem GetCurrentPlaying()
         {
-            int index = ApplicationSettingsHelper.ReadSongIndex();
-            if (index < 0 || index > songs.Count - 1) return new SongItem();
-            return songs[index];
+            //int index = ApplicationSettingsHelper.ReadSongIndex();
+            if (currentIndex < 0 || currentIndex > songs.Count - 1) return new SongItem();
+            return songs[currentIndex];
         }
 
         public SongItem GetNextSong()

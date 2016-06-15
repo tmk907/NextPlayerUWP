@@ -137,5 +137,6 @@
         public const string ActionPlayNow = "ActionPlayNow";
 
         public const string DisableLockscreen = "DisableLockscreen";
+        public const string HideStatusBar = "HideStatusBar";
     }
 }

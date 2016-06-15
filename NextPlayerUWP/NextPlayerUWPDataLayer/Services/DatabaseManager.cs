@@ -69,6 +69,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<ArtistsTable>();
             connection.CreateTable<CachedScrobble>();
             connection.CreateTable<ImportedPlaylistsTable>();
+            connection.CreateTable<FutureAccessTokensTable>();
         }
 
         public void DeleteDatabase()
@@ -85,6 +86,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<ArtistsTable>();
             connection.DropTable<CachedScrobble>();
             connection.DropTable<ImportedPlaylist>();
+            connection.DropTable<FutureAccessTokensTable>();
         }
 
         public async Task<int> InsertSongAsync(SongData songData)
@@ -1426,14 +1428,18 @@ namespace NextPlayerUWPDataLayer.Services
             else return list.FirstOrDefault().Token;
         }
 
-        public async Task SaveAccessToken(string path, string token, bool isFile)
+        public async Task<string> DeleteAccessTokenAsync()
         {
             var list = await connectionAsync.Table<FutureAccessTokensTable>().ToListAsync();
-            if (list.Count == 999)
-            {
-                var item = list.FirstOrDefault();
-                await connectionAsync.DeleteAsync(item);
-            }
+            if (list.Count == 0) return null;
+            var item = list.FirstOrDefault();
+            string token = item.Token;
+            await connectionAsync.DeleteAsync(item);
+            return token;
+        }
+
+        public async Task SaveAccessToken(string path, string token, bool isFile)
+        {
             FutureAccessTokensTable fatt = new FutureAccessTokensTable()
             {
                 FilePath = path,

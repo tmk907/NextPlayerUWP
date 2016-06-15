@@ -4,14 +4,12 @@ using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using Windows.Storage;
 using NextPlayerUWPDataLayer.Enums;
 using Windows.System.Threading;
-using Windows.Media.Core;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -36,8 +34,11 @@ namespace NextPlayerUWPDataLayer.Services
 
         public NowPlayingManager()
         {
+            //Stopwatch s1 = new Stopwatch();
+            //s1.Start();
             playlist = new Playlist();
-            
+            //s1.Stop();
+            //Debug.WriteLine("NowPlayingManager 1 "+ s1.ElapsedMilliseconds);
             //ChangeRepeat();
             //ChangeShuffle();
 
@@ -53,7 +54,6 @@ namespace NextPlayerUWPDataLayer.Services
             mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             //mediaPlayer.CurrentStateChanged += mediaPlayer_CurrentStateChanged;
             mediaPlayer.MediaFailed += mediaPlayer_MediaFailed;
-
             jRadioData = new Jamendo.JamendoRadiosData();
             lastFmCache = new LastFmCache();
         }
@@ -85,7 +85,7 @@ namespace NextPlayerUWPDataLayer.Services
             try
             {
                 NowPlayingSong song = playlist.GetCurrentSong();
-                string type = song.Path.Substring(song.Path.LastIndexOf('.'));
+                string type = song.Path.Substring(song.Path.LastIndexOf('.')).ToLower();
                 if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
                     type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
                     type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4")
@@ -145,7 +145,7 @@ namespace NextPlayerUWPDataLayer.Services
                 {
                     var file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
                     NowPlayingSong song = playlist.GetCurrentSong();
-                    string type = song.Path.Substring(song.Path.LastIndexOf('.'));
+                    string type = song.Path.Substring(song.Path.LastIndexOf('.')).ToLower();
                     if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
                         type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
                         type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4")

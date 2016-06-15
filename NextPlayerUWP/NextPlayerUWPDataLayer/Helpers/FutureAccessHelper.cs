@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWPDataLayer.Services;
 using System.Threading.Tasks;
+using Windows.Storage.AccessCache;
 
 namespace NextPlayerUWPDataLayer.Helpers
 {
@@ -13,6 +14,11 @@ namespace NextPlayerUWPDataLayer.Helpers
 
         public static async Task SaveToken(string path, string token, bool isFile = true)
         {
+            if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= StorageApplicationPermissions.FutureAccessList.MaximumItemsAllowed)
+            {
+                string deletedToken = await DatabaseManager.Current.DeleteAccessTokenAsync();
+                StorageApplicationPermissions.FutureAccessList.Remove(deletedToken);
+            }
             await DatabaseManager.Current.SaveAccessToken(path, token, isFile);
         }
     }

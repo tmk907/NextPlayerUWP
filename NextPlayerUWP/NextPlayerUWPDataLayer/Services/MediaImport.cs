@@ -438,7 +438,8 @@ namespace NextPlayerUWPDataLayer.Services
                     
                     await FutureAccessHelper.SaveToken(file.Path, token);
                 }
-                song.SourceType = Enums.MusicSource.LocalNotLibrary;
+                
+                //song.SourceType = Enums.MusicSource.LocalNotLibrary;
             }
             return song;
         }
