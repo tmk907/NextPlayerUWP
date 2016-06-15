@@ -310,16 +310,16 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return time; }
             set {
-                if (!initialization)
+                    //TimeSpan now = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
+                    //TimeSpan difference = TimeSpan.FromTicks(value.Ticks - now.Ticks);
+                    //if (difference <= TimeSpan.Zero || !isTimerOn) return;
+                    //else
+                    //{
+                if (value != time)
                 {
-                    TimeSpan now = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
-                    TimeSpan difference = TimeSpan.FromTicks(Time.Ticks - now.Ticks);
-                    if (difference <= TimeSpan.Zero || !isTimerOn) return;
-                    else
-                    {
-                        ChangeTimer(true);
-                    }
+                    ChangeTimer(true);
                 }
+                //}
                 Set(ref time, value);
             }
         }
@@ -409,6 +409,7 @@ namespace NextPlayerUWP.ViewModels
         {
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, hide);
             await App.ChangeStatusBarVisibility(hide);
+            HockeyProxy.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
         }
 
         #endregion
@@ -685,30 +686,9 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
-        private bool IsMyBackgroundTaskRunning
-        {
-            get
-            {
-                object value = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundTaskState);
-                if (value == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    var state = EnumHelper.Parse<BackgroundTaskState>(value as string);
-                    bool isRunning = state == BackgroundTaskState.Running;
-                    return isRunning;
-                }
-            }
-        }
-
         private void SendMessage(string message)
         {
-            if (IsMyBackgroundTaskRunning)
-            {
-                PlaybackManager.Current.SendMessage(message, "");
-            }
+            PlaybackManager.Current.SendMessage(message, "");
         }
     }
 }

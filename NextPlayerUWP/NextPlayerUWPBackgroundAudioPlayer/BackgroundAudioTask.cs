@@ -458,6 +458,10 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             TimeSpan currentTime = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute) + TimeSpan.FromSeconds(DateTime.Now.Second);
 
             TimeSpan delay = TimeSpan.FromTicks(timerTicks - currentTime.Ticks);
+            if (delay < TimeSpan.Zero)
+            {
+                delay = delay + TimeSpan.FromHours(24);
+            }
             if (delay > TimeSpan.Zero)
             {
                 if (isTimerSet)
