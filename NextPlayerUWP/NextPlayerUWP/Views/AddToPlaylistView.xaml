@@ -75,7 +75,7 @@
                 </ContentDialog.Content>
             </ContentDialog>
             <ListView 
-                ItemsSource="{x:Bind ViewModel.Playlists}"
+                ItemsSource="{x:Bind ViewModel.Playlists, Mode=OneWay}"
                 ItemTemplate="{StaticResource PlaylistItemTemplate}"
                 SelectionMode="None"
                 IsItemClickEnabled="True"

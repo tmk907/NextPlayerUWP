@@ -271,7 +271,7 @@ namespace NextPlayerUWPDataLayer.Model
             lastPlayed = table.LastPlayed;
             playCount = (int)table.PlayCount;
             isPlaying = false;
-            sourceType = (table.IsAvailable > 0) ? MusicSource.LocalFile : MusicSource.LocalNotLibrary;
+            sourceType = (table.IsAvailable > 0) ? MusicSource.LocalFile : MusicSource.LocalNotMusicLibrary;
             coverPath = "";
         }
 

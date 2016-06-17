@@ -85,6 +85,7 @@ namespace NextPlayerUWP.Common
                     removedTime = DateTime.Now;
                     break;
                 case NotifyCollectionChangedAction.Add:
+                    if (songs.Count == 1) return;
                     if (DateTime.Now - removedTime > TimeSpan.FromSeconds(1))
                         return;
                     addIndex = e.NewStartingIndex;
@@ -115,7 +116,6 @@ namespace NextPlayerUWP.Common
             {
                 
             }
-            
             await NotifyChange();
         }
 
@@ -172,7 +172,6 @@ namespace NextPlayerUWP.Common
             {
                 songs.Add(song);
             }
-
             await NotifyChange();
         }
 

@@ -175,10 +175,11 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
-            positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             firstVisibleItemIndex = 0;
             if (listView.ItemsPanelRoot != null)
             {
+                positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
+
                 if (listView.ItemsPanelRoot.GetType() == typeof(ItemsStackPanel))
                 {
                     var isp = (ItemsStackPanel)listView.ItemsPanelRoot;

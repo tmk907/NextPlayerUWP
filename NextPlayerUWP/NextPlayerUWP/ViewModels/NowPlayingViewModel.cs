@@ -160,7 +160,7 @@ namespace NextPlayerUWP.ViewModels
         public async void RateSong(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            if (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotLibrary)
+            if (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotMusicLibrary)
             {
                 int rating = Int32.Parse(button.Tag.ToString());
                 Song.Rating = rating;

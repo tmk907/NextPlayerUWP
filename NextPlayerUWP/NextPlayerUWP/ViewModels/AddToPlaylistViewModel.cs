@@ -42,6 +42,7 @@ namespace NextPlayerUWP.ViewModels
             if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
             {
                 playlists = new ObservableCollection<PlaylistItem>();
+                name = "";
             }
             args.Cancel = false;
             await Task.CompletedTask;

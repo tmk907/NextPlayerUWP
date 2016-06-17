@@ -5,7 +5,7 @@
     "Microsoft.NETNative.Analyzer": "1.0.0",
     "Microsoft.OneDriveSDK": "1.1.47",
     "Newtonsoft.Json": "8.0.3",
-    "NotificationsExtensions.Win10": "14332.0.0",
+    "NotificationsExtensions.Win10": "14332.0.1",
     "sqlite-net-pcl": "1.1.1",
     "TagLib.Portable": "1.0.4",
     "WriteableBitmapEx": "1.5.0"

@@ -32,6 +32,6 @@
         LocalFile = 1,
         RadioJamendo = 2,
         OnlineFile = 3,
-        LocalNotLibrary = 4
+        LocalNotMusicLibrary = 4
     }
 }

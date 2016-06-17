@@ -394,6 +394,7 @@ namespace NextPlayerUWPDataLayer.Services
             var result = connection.Table<SongsTable>().ToList();
             foreach (var x in result)
             {
+
                 dict.Add(x.Path, new Tuple<int, int>(x.IsAvailable, x.SongId));
             }
             return dict;
@@ -553,7 +554,8 @@ namespace NextPlayerUWPDataLayer.Services
             ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
             foreach (var e in query)
             {
-                if ((MusicSource)e.SourceType == MusicSource.LocalFile)
+                var type = (MusicSource)e.SourceType;
+                if (type == MusicSource.LocalFile || type == MusicSource.LocalNotMusicLibrary)
                 {
                     if (e.SongId >= 10000000) //! TODO!!!
                     {
@@ -573,7 +575,7 @@ namespace NextPlayerUWPDataLayer.Services
                         list.Add(new SongItem(query2));
                     }
                 }
-                else if((MusicSource)e.SourceType == MusicSource.RadioJamendo)
+                else if(type == MusicSource.RadioJamendo)
                 {
                     SongItem s = new SongItem();
                     s.SourceType = MusicSource.RadioJamendo;
@@ -584,32 +586,6 @@ namespace NextPlayerUWPDataLayer.Services
                     s.CoverPath = e.ImagePath;
                     s.SongId = e.SongId;
                     list.Add(s);
-                }
-            }
-            return list;
-        }
-
-        public async Task<ObservableCollection<SongItem>> GetSongItemsFromNowPlayingAsync()
-        {
-            var query = await connectionAsync.Table<NowPlayingTable>().OrderBy(e => e.Position).ToListAsync();
-            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
-            foreach (var e in query)
-            {
-                if (e.SongId >= 10000000) //! TODO!!!
-                {
-                    SongItem s = new SongItem();
-                    s.SongId = e.SongId;
-                    s.Title = e.Title;
-                    s.Album = e.Album;
-                    s.Artist = e.Artist;
-                    s.Path = e.Path;
-                    s.SourceType = (MusicSource)e.SourceType;
-                    list.Add(s);
-                }
-                var query2 = await songsConnectionAsync.Where(x => x.SongId.Equals(e.SongId)).ToListAsync();
-                if (query2 != null && query2.Count > 0)
-                {
-                    list.Add(new SongItem(query2.FirstOrDefault()));
                 }
             }
             return list;
@@ -1613,39 +1589,6 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<ImportedPlaylistsTable>();
         }
 
-        public void UpdateToVersion3()
-        {
-            connection.CreateTable<FutureAccessTokensTable>();
-        }
-
-        //public void UpdateToVersion3()
-        //{
-        //    string PlayCount = "Play Count";
-        //    string FilePath = "File Path";
-        //    string DateAdded = "Last Added";
-        //    string LastPlayed = "Last Played";
-        //    var query1 = connection.Table<SmartPlaylistEntryTable>().ToList();
-        //    foreach(var item in query1)
-        //    {
-        //        if (item.Item == PlayCount)
-        //        {
-        //            connection.Execute("UPDATE SmartPlaylistEntryTable SET Item = ? WHERE Id = ?", SPUtility.Item.PlayCount, item.Id);
-        //        }
-        //        else if (item.Item == FilePath)
-        //        {
-        //            connection.Execute("UPDATE SmartPlaylistEntryTable SET Item = ? WHERE Id = ?", SPUtility.Item.FilePath, item.Id);
-        //        }
-        //        else if (item.Item == DateAdded)
-        //        {
-        //            connection.Execute("UPDATE SmartPlaylistEntryTable SET Item = ? WHERE Id = ?", SPUtility.Item.DateAdded, item.Id);
-        //        }
-        //        else if (item.Item == LastPlayed)
-        //        {
-        //            connection.Execute("UPDATE SmartPlaylistEntryTable SET Item = ? WHERE Id = ?", SPUtility.Item.LastPlayed, item.Id);
-        //        }
-        //    } 
-        //}
-
         public bool DBCorrection()
         {
             bool recreate = false;
@@ -1657,7 +1600,7 @@ namespace NextPlayerUWPDataLayer.Services
                     connection.Execute("UPDATE GenresTable SET SongsNumber = ? WHERE GenreId = ?", list.FirstOrDefault().SongsNumber, list.FirstOrDefault().GenreId);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 recreate = true;
             }
@@ -1678,10 +1621,17 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 DeleteDatabase();
                 CreateDatabase();
-                Diagnostics.Logger.Save("Recreate db");
-                Diagnostics.Logger.SaveToFile();
+                //Diagnostics.Logger.Save("Recreate db");
+                //Diagnostics.Logger.SaveToFile();
             }
             return recreate;
         }
+
+        public void UpdateToVersion4()
+        {
+            connection.CreateTable<FutureAccessTokensTable>();
+        }
+
+       
     }
 }

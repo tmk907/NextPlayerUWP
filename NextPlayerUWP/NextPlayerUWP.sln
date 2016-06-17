@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextPlayerUWPBackgroundAudi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrobblerBG", "ScrobblerBG\ScrobblerBG.csproj", "{C02FC104-10F6-4388-8072-C8390D990281}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template10 (Library)", "D:\Github\Template10-master\Template10 (Library)\Template10 (Library).csproj", "{AC3E4F10-6615-4E16-BB0F-104760C92B95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,22 @@ Global
 		{C02FC104-10F6-4388-8072-C8390D990281}.Release|x64.Build.0 = Release|x64
 		{C02FC104-10F6-4388-8072-C8390D990281}.Release|x86.ActiveCfg = Release|x86
 		{C02FC104-10F6-4388-8072-C8390D990281}.Release|x86.Build.0 = Release|x86
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Debug|ARM.ActiveCfg = Debug|ARM
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Debug|ARM.Build.0 = Debug|ARM
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Debug|x64.ActiveCfg = Debug|x64
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Debug|x64.Build.0 = Debug|x64
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Debug|x86.ActiveCfg = Debug|x86
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Debug|x86.Build.0 = Debug|x86
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Release|ARM.ActiveCfg = Release|ARM
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Release|ARM.Build.0 = Release|ARM
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Release|x64.ActiveCfg = Release|x64
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Release|x64.Build.0 = Release|x64
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Release|x86.ActiveCfg = Release|x86
+		{AC3E4F10-6615-4E16-BB0F-104760C92B95}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

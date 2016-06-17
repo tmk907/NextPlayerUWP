@@ -71,7 +71,7 @@ namespace NextPlayerUWPDataLayer.Services
                 case MusicSource.RadioJamendo:
                     await LoadRadio(path);
                     break;
-                case MusicSource.LocalNotLibrary:
+                case MusicSource.LocalNotMusicLibrary:
                     await LoadFromFutureAccessList(path);
                     break;
                 default:
@@ -261,7 +261,7 @@ namespace NextPlayerUWPDataLayer.Services
         private async Task StopSongEvent(NowPlayingSong song, TimeSpan songDuration)
         {
             songPlayed = DateTime.Now - songsStart + songPlayed;
-            if (WasSongPlayed(songDuration) && (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotLibrary))
+            if (WasSongPlayed(songDuration) && (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotMusicLibrary))
             {
                 await UpdateSongStatistics(song.SongId, songDuration);
                 if (songDuration >TimeSpan.FromSeconds(30) && lastFmCache.AreCredentialsSet())
