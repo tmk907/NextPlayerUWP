@@ -240,7 +240,7 @@ namespace NextPlayerUWP.Common
 
             var startResult = Template10.Common.DispatcherWrapper.Current().DispatchAsync(() =>
             {
-                bool result = backgroundAudioTaskStarted.WaitOne(4000);
+                bool result = backgroundAudioTaskStarted.WaitOne(3000);
                 //Send message to initiate playback
                 if (result == true)
                 {

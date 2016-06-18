@@ -343,7 +343,7 @@ namespace NextPlayerUWP
 
         public override async void OnResuming(object s, object e, AppExecutionState previousExecutionState)
         {
-            Logger.SaveInSettings("OnResuming");
+            //Logger.SaveInSettings("OnResuming");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Active));
             if (previousExecutionState == AppExecutionState.Terminated)
             {

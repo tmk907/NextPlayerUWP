@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Template10.Controls"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     DataContext="{Binding Source={StaticResource Locator}, Path=AddToPlaylistVM}"
     mc:Ignorable="d">
@@ -21,9 +22,7 @@
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <TextBlock 
                     VerticalAlignment="Center"
-                    Text="{x:Bind Name}" 
-                    FontSize="20"
-                    />
+                    Text="{x:Bind Name}"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -74,9 +73,11 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
-            <ListView 
+            <mycontrols:AlternatingRowListView 
                 ItemsSource="{x:Bind ViewModel.Playlists, Mode=OneWay}"
                 ItemTemplate="{StaticResource PlaylistItemTemplate}"
+                EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                 SelectionMode="None"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked}">
@@ -93,7 +94,7 @@
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListView.ItemContainerStyle>
-            </ListView>
+            </mycontrols:AlternatingRowListView>
         </Grid>
     </Grid>
 </Page>

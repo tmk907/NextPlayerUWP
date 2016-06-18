@@ -1181,8 +1181,9 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void DeletePlainPlaylistEntry(int primaryId)
         {
-            connection.Delete<PlainPlaylistEntryTable>(primaryId);
+            connection.Delete<PlainPlaylistEntryTable>(primaryId);           
         }
+
         public async Task DeletePlainPlaylistAsync(int playlistId)
         {
             var items = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(playlistId)).ToListAsync();
@@ -1190,6 +1191,16 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 DeletePlainPlaylistEntry(item.Id);
             }
+
+            var list2 = connection.Table<ImportedPlaylistsTable>().Where(s => s.PlainPlaylistId == playlistId).ToList();
+            if (list2.Count > 0)
+            {
+                foreach (var item in list2)
+                {
+                    connection.Delete(item);
+                }
+            }
+
             var list = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId.Equals(playlistId)).ToListAsync();
             var playlist = list.FirstOrDefault();
             await connectionAsync.DeleteAsync(playlist);
