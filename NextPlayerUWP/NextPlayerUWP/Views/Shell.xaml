@@ -381,6 +381,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition x:Name="VolumeColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="SliderColumn" Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
@@ -557,6 +558,42 @@
                            HorizontalAlignment="Right"
                            Margin="0,0,8,0"
                            Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
+            </Grid>
+            <Grid Grid.Column="2" x:Name="VolumeGrid">
+                <Button Style="{StaticResource BottomPlayerButtonStyle}"
+                        x:Name="VolumeButton"
+                        DoubleTapped="{x:Bind BPViewModel.MuteVolume}"
+                        Width="48" 
+                        Height="60">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <SymbolIcon Symbol="Volume"
+                                            Foreground="White"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                                <!--<TextBlock Text="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
+                                        Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
+                                        FontSize="18" 
+                                        VerticalAlignment="Center" 
+                                        HorizontalAlignment="Center" 
+                                        FontFamily="Segoe MDL2 Assets"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                    <Button.Flyout>
+                        <Flyout Placement="Bottom">
+                            <Slider
+                                Orientation="Vertical"
+                                
+                                Minimum="0"
+                                Maximum="100"
+                                Height="200"
+                                Width="20"
+                                Value="{Binding Volume, Mode=TwoWay}"/>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
             </Grid>
         </Grid>
         <UserControl Grid.Row="0" Grid.Column="1">

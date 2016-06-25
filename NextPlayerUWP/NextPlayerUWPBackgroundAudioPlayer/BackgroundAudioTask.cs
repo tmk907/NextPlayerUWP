@@ -53,6 +53,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
             BackgroundMediaPlayer.Current.CurrentStateChanged += Current_CurrentStateChanged;
             BackgroundMediaPlayer.MessageReceivedFromForeground += BackgroundMediaPlayer_MessageReceivedFromForeground;
+            BackgroundMediaPlayer.Current.Volume = ((int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100)) / 100.0;
 
             if (foregroundAppState != AppState.Suspended) SendMessage(AppConstants.BackgroundTaskStarted);
 
@@ -226,6 +227,11 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                     case AppConstants.LfmLogin:
                         nowPlayingManager.RefreshLastFmCredentials();
                         break;
+                    case AppConstants.Volume:
+                        ChangeVolume((double)(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value));
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -338,6 +344,11 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             {
                 myTileUpdater.UpdateAppTileBG(title, artist, AppConstants.AppLogoMedium);
             }
+        }
+
+        private void ChangeVolume(double volume)
+        {
+            BackgroundMediaPlayer.Current.Volume = volume;
         }
 
         void smtc_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)

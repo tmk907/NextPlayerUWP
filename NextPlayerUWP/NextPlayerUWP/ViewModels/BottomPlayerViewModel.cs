@@ -29,6 +29,7 @@ namespace NextPlayerUWP.ViewModels
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             CoverUri = SongCoverManager.Instance.GetFirst();
+            Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
             //App.Current.Resuming += Current_Resuming;
             //App.Current.Suspending += Current_Suspending;
         }
@@ -46,6 +47,7 @@ namespace NextPlayerUWP.ViewModels
             System.Diagnostics.Debug.WriteLine("BottomPlayerVM Suspending");
             StopTimer();
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, volume);
         }
 
         private void Current_Resuming(object sender, object e)
@@ -134,6 +136,21 @@ namespace NextPlayerUWP.ViewModels
             get { return coverUri; }
             set { Set(ref coverUri, value); }
         }
+
+        private int volume = 50;
+        public int Volume
+        {
+            get { return volume; }
+            set
+            {
+                if (volume != value)
+                {
+                    PlaybackManager.Current.SendMessage(AppConstants.Volume, volume / 100.0);
+                }
+                Set(ref volume, value);
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -163,6 +180,20 @@ namespace NextPlayerUWP.ViewModels
         {
             RepeatMode = Repeat.Change();
             PlaybackManager.Current.SendMessage(AppConstants.Repeat, "");
+        }
+
+        private bool isMuted = false;
+        public void MuteVolume()
+        {
+            isMuted = !isMuted;
+            if (isMuted)
+            {
+                PlaybackManager.Current.SendMessage(AppConstants.Volume, 0.0);
+            }
+            else
+            {
+                PlaybackManager.Current.SendMessage(AppConstants.Volume, 1.0);
+            }
         }
 
         #endregion

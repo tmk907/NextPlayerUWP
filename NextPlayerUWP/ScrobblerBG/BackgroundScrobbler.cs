@@ -12,9 +12,8 @@ namespace ScrobblerBG
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled);
-
             _deferral =  taskInstance.GetDeferral();
+            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled);
             _taskInstance = taskInstance;
             await SendScrobbles();
             System.Diagnostics.Debug.WriteLine("ScrobblerBG run");

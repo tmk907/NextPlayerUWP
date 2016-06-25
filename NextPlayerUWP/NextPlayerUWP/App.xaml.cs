@@ -111,7 +111,7 @@ namespace NextPlayerUWP
 
             }
             albumArtFinder = new AlbumArtFinder();
-            RegisterBGScrobbler();
+            
             this.UnhandledException += App_UnhandledException;
         }
 
@@ -233,11 +233,15 @@ namespace NextPlayerUWP
                     Debug.WriteLine("after albumArtFinder.StartLooking");
                 }
             }
+
             if (isFirstRun)
             {
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
             }
+
+            await RegisterBGScrobbler();
+
             var fileArgs = args as FileActivatedEventArgs;
             if (fileArgs != null && fileArgs.Files.Any())
             {
@@ -260,7 +264,7 @@ namespace NextPlayerUWP
                         {
                             //Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
                             //Logger.SaveToFile();
-                            HockeyClient.Current.TrackEvent("event arg doesn't contain tileid");
+                            HockeyProxy.TrackEventException("event arg doesn't contain tileid");
                         }
                         Pages page = Pages.Playlists;
                         string parameter = eventArgs.Arguments;
@@ -291,6 +295,9 @@ namespace NextPlayerUWP
                             case MusicItemTypes.song:
                                 //page = Pages.NowPlaying; ?
                                 break;
+                            case MusicItemTypes.unknown:
+                                HockeyProxy.TrackEventException("MusicItemTypes.unknown");
+                                break;
                             default:
                                 break;
                         }
@@ -301,20 +308,17 @@ namespace NextPlayerUWP
                         if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                             args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                         {
-                            //Logger.Save("OnStart primary navigate");
-                            //Logger.SaveToFile();
                             await NavigationService.NavigateAsync(Pages.Playlists);
                         }
                         else
                         {
-                            //Logger.Save("OnStart primary ?");
-                            //Logger.SaveToFile();
+                            Logger.SaveInSettings("Onstart from Primary " + args.PreviousExecutionState);
+                            await NavigationService.NavigateAsync(Pages.Playlists);
                         }
                         break;
                     case AdditionalKinds.Toast:
                         var toastargs = args as ToastNotificationActivatedEventArgs;
-
-                        await NavigationService.NavigateAsync(Pages.Playlists);
+                        await NavigationService.NavigateAsync(Pages.Settings);
                         break;
                     default:
                         //Logger.Save("OnStart default");
@@ -520,7 +524,7 @@ namespace NextPlayerUWP
             }
         }
 
-        private async void RegisterBGScrobbler()
+        private async Task RegisterBGScrobbler()
         {
             await BackgroundTaskHelper.CheckAppVersion();
             await BackgroundTaskHelper.RegisterBackgroundTasks();

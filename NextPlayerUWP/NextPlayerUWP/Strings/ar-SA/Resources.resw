@@ -160,7 +160,7 @@
     <value>المؤلف</value>
   </data>
   <data name="Connecting" xml:space="preserve">
-    <value>ربط</value>
+    <value>جار الاتصال</value>
   </data>
   <data name="ConnectionError" xml:space="preserve">
     <value>خطأ في الاتصال</value>
@@ -574,37 +574,37 @@
     <value>أغاني جديدة:</value>
   </data>
   <data name="ButtonAdd.Content" xml:space="preserve">
-    <value>Add</value>
+    <value>إضافة</value>
   </data>
   <data name="AlbumArtist" xml:space="preserve">
     <value>فنان الألبوم</value>
   </data>
   <data name="And" xml:space="preserve">
-    <value>And</value>
+    <value>و</value>
   </data>
   <data name="Contains" xml:space="preserve">
-    <value>Contains</value>
+    <value>يحتوي</value>
   </data>
   <data name="MostRecentlyAdded" xml:space="preserve">
-    <value>Date added (newest first)</value>
+    <value>تاريخ الإضافة (الأجدد أولاً)</value>
   </data>
   <data name="LeastRecentlyAdded" xml:space="preserve">
-    <value>Date added (oldest first)</value>
+    <value>تاريخ الإضافة (الأقدم أولاً)</value>
   </data>
   <data name="MostRecentlyPlayed" xml:space="preserve">
-    <value>Date played (newest first)</value>
+    <value>تاريخ التشغيل (الأجدد أولاً)</value>
   </data>
   <data name="LeastRecentlyPlayed" xml:space="preserve">
-    <value>Date played (oldest first)</value>
+    <value>تاريخ التشغيل (الأقدم أولاً)</value>
   </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>حذف</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
-    <value>Does not contain</value>
+    <value>لا يحتوي على</value>
   </data>
   <data name="EndsWith" xml:space="preserve">
-    <value>Ends with</value>
+    <value>ينتهي مع</value>
   </data>
   <data name="FilePath" xml:space="preserve">
     <value>مسار الملف</value>
@@ -619,19 +619,19 @@
     <value>آخر تشغيل</value>
   </data>
   <data name="IsLess" xml:space="preserve">
-    <value>Is less</value>
+    <value>أقل</value>
   </data>
   <data name="IsNot" xml:space="preserve">
-    <value>Is not</value>
+    <value>ليس</value>
   </data>
   <data name="IsGreater" xml:space="preserve">
-    <value>Is greater</value>
+    <value>أكبر</value>
   </data>
   <data name="IsEqual" xml:space="preserve">
-    <value>Is equal</value>
+    <value>يساوي</value>
   </data>
   <data name="TBMaxSongsNumber.Text" xml:space="preserve">
-    <value>Max number of songs</value>
+    <value>أقصى عدد من الأغاني</value>
   </data>
   <data name="TBName.Text" xml:space="preserve">
     <value>اسم</value>
@@ -643,25 +643,25 @@
     <value>New smart playlist</value>
   </data>
   <data name="Or" xml:space="preserve">
-    <value>Or</value>
+    <value>أو</value>
   </data>
   <data name="PlayCount" xml:space="preserve">
     <value>مرات التشغيل</value>
   </data>
   <data name="MostOftenPlayed" xml:space="preserve">
-    <value>Play count (lowest first)</value>
+    <value>مرات التشغيل (الأقل أولاً)</value>
   </data>
   <data name="LeastOftenPlayed" xml:space="preserve">
-    <value>Play count (highest first)</value>
+    <value>مرات التشغيل (الأكثر أولاً)</value>
   </data>
   <data name="TBErrorSmartPlaylist.Text" xml:space="preserve">
     <value>Please fill all fields correctly.</value>
   </data>
   <data name="LowestRating" xml:space="preserve">
-    <value>Rating (highest first)</value>
+    <value>التقييم (الأعلى أولاً)</value>
   </data>
   <data name="HighestRating" xml:space="preserve">
-    <value>Rating (lowest first)</value>
+    <value>التقييم (الأدنى أولاً)</value>
   </data>
   <data name="SongCount" xml:space="preserve">
     <value>عدد الأغاني</value>
@@ -679,7 +679,7 @@
     <value>إضافة تاريخ</value>
   </data>
   <data name="AppBarButtonShuffleAll.Label" xml:space="preserve">
-    <value>Shuffle all</value>
+    <value>خلط الكل</value>
   </data>
   <data name="AppBarButtonLyrics.Label" xml:space="preserve">
     <value>الكلمات</value>

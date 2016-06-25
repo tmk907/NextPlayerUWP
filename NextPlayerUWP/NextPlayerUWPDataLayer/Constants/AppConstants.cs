@@ -64,6 +64,7 @@
         public const string ChangeRate = "changerate";
         public const string UpdateUVC = "updateuvc";
         public const string StreamUpdated = "streamupdated";
+        public const string Volume = "volume";
 
         //Timer
         public const string TimerOn = "TimerOn";
