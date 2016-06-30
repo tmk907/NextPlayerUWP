@@ -20,6 +20,8 @@
     </Page.Transitions>
     <Page.Resources>
         <MenuFlyout x:Key="ContextMenuPlain">
+            <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
@@ -43,6 +45,8 @@
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
         <MenuFlyout x:Key="ContextMenuList">
+            <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 

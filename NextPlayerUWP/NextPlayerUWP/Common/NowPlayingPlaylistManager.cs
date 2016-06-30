@@ -150,7 +150,8 @@ namespace NextPlayerUWP.Common
                     list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
-                    list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);
+                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+                    list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory, subFolders);
                     break;
                 case MusicItemTypes.genre:
                     list = await DatabaseManager.Current.GetSongItemsFromGenreAsync(((GenreItem)item).GenreParam);
@@ -197,7 +198,8 @@ namespace NextPlayerUWP.Common
                     list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
-                    list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);
+                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+                    list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory, subFolders);
                     break;
                 case MusicItemTypes.genre:
                     list = await DatabaseManager.Current.GetSongItemsFromGenreAsync(((GenreItem)item).Genre);
@@ -276,7 +278,8 @@ namespace NextPlayerUWP.Common
                     list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
-                    list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory);
+                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+                    list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory, subFolders);
                     break;
                 case MusicItemTypes.genre:
                     list = await DatabaseManager.Current.GetSongItemsFromGenreAsync(((GenreItem)item).Genre);

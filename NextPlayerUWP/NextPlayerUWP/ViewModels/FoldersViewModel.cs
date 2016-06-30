@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -8,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Template10.Services.NavigationService;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -32,6 +35,13 @@ namespace NextPlayerUWP.ViewModels
             SortItems(null, null);
         }
 
+        private string folderName = "";
+        public string FolderName
+        {
+            get { return folderName; }
+            set { Set(ref folderName, value); }
+        }
+
         private ObservableCollection<FolderItem> folders = new ObservableCollection<FolderItem>();
         public ObservableCollection<FolderItem> Folders
         {
@@ -39,23 +49,102 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref folders, value); }
         }
 
+        private ObservableCollection<MusicItem> items = new ObservableCollection<MusicItem>();
+        public ObservableCollection<MusicItem> Items
+        {
+            get { return items; }
+            set { Set(ref items, value); }
+        }
+
         protected override async Task LoadData()
         {
-            if (folders.Count == 0)
-            {
+            bool subfolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+            FolderName = directory ?? "";
+            //if (folders.Count == 0)
+            //{
                 Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-                SortItems(null, null);
+                //SortItems(null, null);
+            //}
+            if (folders.Count > 0)
+            {
+                if (directory == null)
+                {
+                    string dir = "!";
+                    List<string> roots = new List<string>();
+                    //var f1 = folders.OrderBy(f => f.Directory).FirstOrDefault();
+                    foreach(var f1 in folders.OrderBy(f => f.Directory))
+                    {
+                        if (!f1.Directory.StartsWith(dir))
+                        {
+                            if (subfolders) f1.SongsNumber = folders.Where(f => f.Directory.StartsWith(f1.Directory)).Sum(g => g.SongsNumber);
+                            Items.Add(f1);
+                            dir = f1.Directory;
+                            roots.Add(dir);
+                        }
+                    }
+                }
+                else
+                {
+                    int numberOfSeparators = directory.Count(c=>c.Equals('\\')) + 1;
+                    var f2 = folders.Where(f => (f.Directory.StartsWith(directory+@"\") && f.Directory.Count(c => c.Equals('\\')) == numberOfSeparators));
+                    foreach(var f3 in f2)
+                    {
+                        if (subfolders) f3.SongsNumber = folders.Where(f => f.Directory.StartsWith(f3.Directory)).Sum(g => g.SongsNumber);
+                        Items.Add(f3);
+                    }
+                    var s1 = await DatabaseManager.Current.GetSongItemsFromFolderAsync(directory);
+                    foreach (var s in s1)
+                    {
+                        Items.Add(s);
+                    }
+                }
             }
         }
 
+        string directory;
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             sortAfterOnNavigated = true;
+            
+            directory = parameter as string;
         }
 
-        public void ItemClicked(object sender, ItemClickEventArgs e)
+        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
-            NavigationService.Navigate(App.Pages.Playlist, ((FolderItem)e.ClickedItem).GetParameter());
+            items = new ObservableCollection<MusicItem>();
+
+            await base.OnNavigatingFromAsync(args);
+        }
+
+        public async void ItemClicked(object sender, ItemClickEventArgs e)
+        {
+            if (typeof(SongItem) == e.ClickedItem.GetType())
+            {
+                await SongClicked(((SongItem)e.ClickedItem).SongId);
+            }
+            else if (typeof(FolderItem) == e.ClickedItem.GetType())
+            {
+                NavigationService.Navigate(App.Pages.Folders, ((FolderItem)e.ClickedItem).Directory);
+            }
+        }
+
+        private async Task SongClicked(int songid)
+        {
+            int index = 0;
+            int i = 0;
+            List<SongItem> songs = new List<SongItem>();
+            foreach (var item in items.Where(s=>s.GetType() == typeof(SongItem)))
+            {
+                if (typeof(SongItem) == item.GetType())
+                {
+                    songs.Add((SongItem)item);
+                    if (((SongItem)item).SongId == songid) index = i;
+                    i++;
+                }
+            }
+            await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
+            ApplicationSettingsHelper.SaveSongIndex(index);
+            PlaybackManager.Current.PlayNew();
         }
 
         private bool sortAfterOnNavigated = false;

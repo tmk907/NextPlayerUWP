@@ -222,25 +222,11 @@ namespace NextPlayerUWP
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
             await SongCoverManager.Instance.Initialize();
 
-            if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
-            {
-                await TileManager.ManageSecondaryTileImages();
-                if (!isFirstRun)
-                {
-                    Debug.WriteLine("before albumArtFinder.StartLooking");
-                    albumArtFinder.StartLooking();
-                    Debug.WriteLine("after albumArtFinder.StartLooking");
-                }
-            }
-
             if (isFirstRun)
             {
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
             }
-
-            await RegisterBGScrobbler();
 
             var fileArgs = args as FileActivatedEventArgs;
             if (fileArgs != null && fileArgs.Files.Any())
@@ -331,6 +317,20 @@ namespace NextPlayerUWP
                         break;
                 }
             }
+
+            
+            if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+            {
+                await RegisterBGScrobbler();
+                await TileManager.ManageSecondaryTileImages();
+                if (!isFirstRun)
+                {
+                    Debug.WriteLine("before albumArtFinder.StartLooking");
+                    albumArtFinder.StartLooking();
+                    Debug.WriteLine("after albumArtFinder.StartLooking");
+                }
+            }
         }
         
         public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
@@ -395,6 +395,8 @@ namespace NextPlayerUWP
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, false);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -432,6 +434,14 @@ namespace NextPlayerUWP
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar) == null)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, false);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PlaylistsFolder) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
             }
         }
 

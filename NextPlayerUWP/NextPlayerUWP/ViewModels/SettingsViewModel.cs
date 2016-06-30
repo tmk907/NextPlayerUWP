@@ -145,7 +145,7 @@ namespace NextPlayerUWP.ViewModels
 
             PreventScreenLock = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
             HideStatusBar = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
-
+            IncludeSubFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
 
             //Personalization
             IsLightThemeOn = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
@@ -175,6 +175,7 @@ namespace NextPlayerUWP.ViewModels
                     MusicLibraryFolders.Add(new MusicFolder() { Name = f.DisplayName, Path = f.Path });
                 }
             }
+            PlaylistsFolder = (string)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PlaylistsFolder);
 
             //Last.fm
             string login = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string;
@@ -239,6 +240,19 @@ namespace NextPlayerUWP.ViewModels
                 await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
                 MediaImport.OnMediaImported("FolderRemoved");
             }
+        }
+
+        private string playlistsFolder;
+        public string PlaylistsFolder
+        {
+            get { return playlistsFolder; }
+            set { Set(ref playlistsFolder, value); }
+        }
+
+        public async void ChoosePlaylistsFolder()
+        {
+            //save access token
+            //save path in settings
         }
 
         #endregion
@@ -410,6 +424,20 @@ namespace NextPlayerUWP.ViewModels
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, hide);
             await App.ChangeStatusBarVisibility(hide);
             HockeyProxy.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
+        }
+
+        private bool includeSubFolders = false;
+        public bool IncludeSubFolders
+        {
+            get { return includeSubFolders; }
+            set
+            {
+                if (value != includeSubFolders)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, value);
+                }
+                Set(ref includeSubFolders, value);
+            }
         }
 
         #endregion

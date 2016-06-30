@@ -130,6 +130,7 @@
     <Compile Include="Common\Test2.cs" />
     <Compile Include="Common\TileManager.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
+    <Compile Include="Controls\FolderDataTemplateSelector.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
       <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
     </Compile>
@@ -144,6 +145,7 @@
     <Compile Include="Converters\DateTimeToString.cs" />
     <Compile Include="Converters\GetListView.cs" />
     <Compile Include="Converters\IntToBitrate.cs" />
+    <Compile Include="Converters\IntToDouble.cs" />
     <Compile Include="Converters\IntToRatingStar.cs" />
     <Compile Include="Converters\IntToSongs.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
@@ -159,6 +161,7 @@
     <Compile Include="Converters\SongItemConverter.cs" />
     <Compile Include="Converters\ThumbToolTipValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
+    <Compile Include="Converters\VolumeSymbolConverter.cs" />
     <Compile Include="Converters\YearConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemContainerStyleConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemWidthConverter.cs" />

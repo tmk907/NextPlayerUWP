@@ -18,17 +18,10 @@ namespace NextPlayerUWP.Common
     public delegate void MediaPlayerCloseHandler();
     public delegate void StreamUpdatedHandler(NowPlayingSong song);
 
-    public sealed class PlaybackManager
+    public class PlaybackManager
     {
-        private static readonly PlaybackManager current = new PlaybackManager();
-        public static PlaybackManager Current
-        {
-            get
-            {
-                return current;
-            }
-        }
-        static PlaybackManager() { }
+        private static PlaybackManager instance;
+
         private PlaybackManager()
         {
             backgroundAudioTaskStarted = new AutoResetEvent(false);
@@ -46,6 +39,44 @@ namespace NextPlayerUWP.Common
             //App.Current.Resuming += Current_Resuming;
             //App.Current.Suspending += Current_Suspending;
         }
+
+        public static PlaybackManager Current
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new PlaybackManager();
+                }
+                return instance;
+            }
+        }
+        //private static readonly PlaybackManager current = new PlaybackManager();
+        //public static PlaybackManager Current
+        //{
+        //    get
+        //    {
+        //        return current;
+        //    }
+        //}
+        //static PlaybackManager() { }
+        //private PlaybackManager()
+        //{
+        //    backgroundAudioTaskStarted = new AutoResetEvent(false);
+        //    if (IsMyBackgroundTaskRunning)
+        //    {
+        //        try
+        //        {
+        //            AddMediaPlayerEventHandlers();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            HockeyProxy.TrackEvent("PlaybackManager constructor AddMediaPlayerEventHandlers " + ex.Message);
+        //        }
+        //    }
+        //    //App.Current.Resuming += Current_Resuming;
+        //    //App.Current.Suspending += Current_Suspending;
+        //}
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {

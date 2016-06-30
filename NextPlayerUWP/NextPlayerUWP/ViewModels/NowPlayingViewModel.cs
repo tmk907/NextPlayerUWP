@@ -126,6 +126,29 @@ namespace NextPlayerUWP.ViewModels
             get { return coverUri; }
             set { Set(ref coverUri, value); }
         }
+
+        private int volume = 100;
+        public int Volume
+        {
+            get { return volume; }
+            set
+            {
+                if (volume != value)
+                {
+                    //if (value == 0) isMuted = true;
+                    //else isMuted = false;
+                    PlaybackManager.Current.SendMessage(AppConstants.Volume, value / 100.0);
+                }
+                Set(ref volume, value);
+            }
+        }
+
+        private bool isVolumeControlVisible = false;
+        public bool IsVolumeControlVisible
+        {
+            get { return isVolumeControlVisible; }
+            set { Set(ref isVolumeControlVisible, value); }
+        }
         #endregion
 
         #region Commands
@@ -167,6 +190,11 @@ namespace NextPlayerUWP.ViewModels
                 await lastFmCache.CacheTrackLove(song.Artist, song.Title, rating);
                 await DatabaseManager.Current.UpdateRatingAsync(song.SongId, song.Rating).ConfigureAwait(false);
             }
+        }
+
+        public void ShowVolumeControl()
+        {
+            IsVolumeControlVisible = !IsVolumeControlVisible;
         }
 
         #endregion

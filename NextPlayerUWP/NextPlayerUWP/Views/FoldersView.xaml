@@ -19,7 +19,7 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
-        <MenuFlyout x:Key="ContextMenu">
+        <MenuFlyout x:Key="ContextMenuFolder">
             <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
                             Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
@@ -32,6 +32,29 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+        </MenuFlyout>
+        <MenuFlyout x:Key="ContextMenuFile">
+            <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
+                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
+                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
@@ -53,20 +76,25 @@
         <DataTemplate x:Key="FolderItemTemplateDesktop" x:DataType="data:FolderItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="6*" MinWidth="250"/>
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="*" MinWidth="30"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
+                <SymbolIcon Grid.Column="0"
+                    Symbol="Copy"
+                    Width="44"
+                    Height="44"/>
+                <TextBlock Grid.Column="1"
                     Text="{x:Bind Folder}"
                     Style="{StaticResource SongItemStyleLeft}"/>
-                <TextBlock Grid.Column="1"
+                <TextBlock Grid.Column="2"
                     Text="{x:Bind Directory}"
                     Style="{StaticResource SongItemStyleCenter}"/>
                 <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
-                <TextBlock Grid.Column="2"
+                <TextBlock Grid.Column="3"
                     Text="{x:Bind SongsNumber}"
                     Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
@@ -74,6 +102,7 @@
         <DataTemplate x:Key="FolderItemTemplateMobile" x:DataType="data:FolderItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="8*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
@@ -81,16 +110,20 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0"
+                <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
+                    Symbol="Copy"
+                    Width="44"
+                    Height="44"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
                     Text="{x:Bind Folder}"
                     Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="0" Grid.Row="1"
+                <TextBlock Grid.Column="1" Grid.Row="1"
                     Text="{x:Bind Directory}"
                     Style="{StaticResource SongItemStyleBottom}"/>
                 <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
-                <TextBlock Grid.Column="1" Grid.RowSpan="2"
+                <TextBlock Grid.Column="2" Grid.RowSpan="2"
                     Text="{x:Bind SongsNumber}"
                     Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
@@ -98,21 +131,121 @@
         <DataTemplate x:Key="FolderItemTemplateMobileWide" x:DataType="data:FolderItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="6*" MinWidth="250"/>
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="*" MinWidth="30"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
+                <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
+                    Symbol="Copy"
+                    Width="44"
+                    Height="44"/>
+                <TextBlock Grid.Column="1"
                     Text="{x:Bind Folder}"
                     Style="{StaticResource SongItemStyleLeft}"/>
-                <TextBlock Grid.Column="1"
+                <TextBlock Grid.Column="2"
                     Text="{x:Bind Directory}"
                     Style="{StaticResource SongItemStyleCenter}"/>
                 <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
-                <TextBlock Grid.Column="2"
+                <TextBlock Grid.Column="3"
                     Text="{x:Bind SongsNumber}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorDesktop"
+            FileTemplate="{StaticResource FileItemTemplateDesktop}"
+            FolderTemplate="{StaticResource FolderItemTemplateDesktop}">
+        </mycontrols:FolderDataTemplateSelector>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobile"
+            FileTemplate="{StaticResource FileItemTemplateMobile}"
+            FolderTemplate="{StaticResource FolderItemTemplateMobile}">
+        </mycontrols:FolderDataTemplateSelector>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobileWide"
+            FileTemplate="{StaticResource FileItemTemplateMobileWide}"
+            FolderTemplate="{StaticResource FolderItemTemplateMobileWide}">
+        </mycontrols:FolderDataTemplateSelector>
+        <DataTemplate x:Key="FileItemTemplateDesktop" x:DataType="data:SongItem">
+            <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44"/>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <SymbolIcon Grid.Column="0"
+                    Symbol="Audio"
+                    Width="44"
+                    Height="44"/>
+                <TextBlock Grid.Column="1" 
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleLeft}"/>
+                <TextBlock Grid.Column="2" 
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleCenter}"/>
+                <TextBlock Grid.Column="3" 
+                    Text="{x:Bind Album}"
+                    Style="{StaticResource SongItemStyleCenter}"/>
+                <TextBlock Grid.Column="4" 
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="FileItemTemplateMobile" x:DataType="data:SongItem">
+            <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44"/>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
+                    Symbol="Audio"
+                    Width="44"
+                    Height="44"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleTop}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleBottom}"/>
+                <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="FileItemTemplateMobileWide" x:DataType="data:SongItem">
+            <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44"/>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
+                    Symbol="Audio"
+                    Width="44"
+                    Height="44"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleTop}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleBottom}"/>
+                <TextBlock Grid.Column="2" Grid.Row="1"
+                    Text="{x:Bind Album}"
+                    Style="{StaticResource SongItemStyleBottom}"/>
+                <TextBlock Grid.Column="3" Grid.RowSpan="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
         </DataTemplate>
@@ -129,7 +262,7 @@
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="FoldersListView.ItemTemplate" Value="{StaticResource FolderItemTemplateMobileWide}"/>
+                        <Setter Target="FoldersListView.ItemTemplateSelector" Value="{StaticResource FolderDataTemplateSelectorMobileWide}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
                     </VisualState.Setters>
@@ -142,7 +275,7 @@
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="FoldersListView.ItemTemplate" Value="{StaticResource FolderItemTemplateMobile}"/>
+                        <Setter Target="FoldersListView.ItemTemplateSelector" Value="{StaticResource FolderDataTemplateSelectorMobile}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
                     </VisualState.Setters>
@@ -152,7 +285,7 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="FoldersListView.ItemTemplate" Value="{StaticResource FolderItemTemplateDesktop}"/>
+                        <Setter Target="FoldersListView.ItemTemplateSelector" Value="{StaticResource FolderDataTemplateSelectorDesktop}"/>
                         <Setter Target="Column1.Width" Value="*"/>
                         <Setter Target="Column3Search.Width" Value="200"/>
                     </VisualState.Setters>
@@ -185,6 +318,13 @@
                     <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
                     <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock 
+                        Text="{x:Bind ViewModel.FolderName, Mode=OneWay}" 
+                        Margin="16"
+                        FontSize="17" 
+                        TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
                 <AutoSuggestBox  Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
@@ -217,12 +357,12 @@
                 <mycontrols:AlternatingRowListView x:Name="FoldersListView"
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                    ItemsSource="{Binding Folders}"
-                    ItemTemplate="{StaticResource FolderItemTemplateDesktop}"
+                    ItemsSource="{Binding Items}"
+                    ItemTemplateSelector="{StaticResource FolderDataTemplateSelectorDesktop}"
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     Margin="12,4,0,0"
-                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}"
                     SelectionMode="None"
                     CanDragItems="True"
                     DragItemsStarting="{x:Bind ViewModel.DragStarting}">

@@ -690,4 +690,16 @@
   <data name="TBHideStatusBar.Text" xml:space="preserve">
     <value>Ukryj pasek stanu</value>
   </data>
+  <data name="TBIncludeSubFolders.Text" xml:space="preserve">
+    <value>Odtwarzaj folder i podfoldery</value>
+  </data>
+  <data name="ButtonChoosePlaylistsFolder.Content" xml:space="preserve">
+    <value>Wybierz</value>
+  </data>
+  <data name="TBChooseFolderForPlaylists.Text" xml:space="preserve">
+    <value>Zapisz playlisty utworzone w Next-Player w folderze</value>
+  </data>
+  <data name="MFIPlay.Text" xml:space="preserve">
+    <value>Odtwórz</value>
+  </data>
 </root>

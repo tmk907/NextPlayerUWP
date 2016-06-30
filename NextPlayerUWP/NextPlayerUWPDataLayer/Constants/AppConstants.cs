@@ -139,5 +139,7 @@
 
         public const string DisableLockscreen = "DisableLockscreen";
         public const string HideStatusBar = "HideStatusBar";
+        public const string IncludeSubFolders = "IncludeSubFolders";
+        public const string PlaylistsFolder = "PlaylistsFolder";
     }
 }

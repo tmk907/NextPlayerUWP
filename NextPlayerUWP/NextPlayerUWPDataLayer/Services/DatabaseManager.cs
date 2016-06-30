@@ -648,14 +648,26 @@ namespace NextPlayerUWPDataLayer.Services
             return songs;
         }
 
-        public async Task<ObservableCollection<SongItem>> GetSongItemsFromFolderAsync(string directory)
+        public async Task<ObservableCollection<SongItem>> GetSongItemsFromFolderAsync(string directory, bool includeSubFolders = false)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var result = await songsConnectionAsync.Where(f=>f.DirectoryName.Equals(directory)).OrderBy(s => s.Title).ToListAsync();
-            foreach (var item in result)
+            if (includeSubFolders)
             {
-                songs.Add(new SongItem(item));
+                var result = await songsConnectionAsync.Where(f => f.DirectoryName.StartsWith(directory)).ToListAsync();
+                foreach (var item in result.OrderBy(i => i.DirectoryName).ThenBy(j => j.Title))
+                {
+                    songs.Add(new SongItem(item));
+                }
             }
+            else
+            {
+                var result = await songsConnectionAsync.Where(f => f.DirectoryName.Equals(directory)).OrderBy(s => s.Title).ToListAsync();
+                foreach (var item in result)
+                {
+                    songs.Add(new SongItem(item));
+                }
+            }
+            
             return songs;
         }
 

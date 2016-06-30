@@ -30,14 +30,14 @@ namespace NextPlayerUWP.ViewModels
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             CoverUri = SongCoverManager.Instance.GetFirst();
             Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
-            //App.Current.Resuming += Current_Resuming;
-            //App.Current.Suspending += Current_Suspending;
+            App.Current.Resuming += Current_Resuming;
+            App.Current.Suspending += Current_Suspending;
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
-            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Suspending");
-            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+            //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Suspending");
+            //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
@@ -52,8 +52,8 @@ namespace NextPlayerUWP.ViewModels
 
         private void Current_Resuming(object sender, object e)
         {
-            NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Resuming");
-            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+            //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Resuming");
+            //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
@@ -63,6 +63,7 @@ namespace NextPlayerUWP.ViewModels
             System.Diagnostics.Debug.WriteLine("BottomPlayerVM Resuming");
             StartTimer();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
+            Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
         }
 
         #region Properties
@@ -137,7 +138,7 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref coverUri, value); }
         }
 
-        private int volume = 50;
+        private int volume = 100;
         public int Volume
         {
             get { return volume; }
@@ -145,11 +146,16 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (volume != value)
                 {
-                    PlaybackManager.Current.SendMessage(AppConstants.Volume, volume / 100.0);
+                    if (value == 0) isMuted = true;
+                    else isMuted = false;
+                    PlaybackManager.Current.SendMessage(AppConstants.Volume, value / 100.0);
                 }
                 Set(ref volume, value);
             }
         }
+
+        private bool isMuted = false;
+        private int prevVolume = 100;
 
         #endregion
 
@@ -181,18 +187,17 @@ namespace NextPlayerUWP.ViewModels
             RepeatMode = Repeat.Change();
             PlaybackManager.Current.SendMessage(AppConstants.Repeat, "");
         }
-
-        private bool isMuted = false;
+        
         public void MuteVolume()
         {
-            isMuted = !isMuted;
             if (isMuted)
             {
-                PlaybackManager.Current.SendMessage(AppConstants.Volume, 0.0);
+                Volume = prevVolume;
             }
             else
             {
-                PlaybackManager.Current.SendMessage(AppConstants.Volume, 1.0);
+                prevVolume = volume;
+                Volume = 0;
             }
         }
 
@@ -281,6 +286,7 @@ namespace NextPlayerUWP.ViewModels
             {
 
             }
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, volume);
             await Task.CompletedTask;
         }
 

@@ -48,6 +48,7 @@ namespace NextPlayerUWP.ViewModels
         }
 
         #region Commands
+
         public async void PlayNow(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;

@@ -207,6 +207,202 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="VolumeSliderStyle" TargetType="Slider">
+            <Setter Property="Background" Value="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" />
+            <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}" />
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="ManipulationMode" Value="None" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Margin="{TemplateBinding Padding}">
+                            <Grid.Resources>
+                                <Style TargetType="Thumb" x:Key="SliderThumbStyle">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Background" Value="{ThemeResource SystemControlForegroundAccentBrush}" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse x:Name="EllipseThumb" Fill="{TemplateBinding Background}" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalThumb"
+                                           Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HeaderContentPresenter"
+                                           Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalDecreaseRect"
+                                           Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalTrackRect"
+                                           Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb"
+                                           Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalThumb"
+                                           Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LeftTickBar"
+                                           Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RightTickBar"
+                                           Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalTrackRect"
+                                           Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalThumb"
+                                           Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeAltLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="HeaderContentPresenter"
+                                x:DeferLoadStrategy="Lazy"
+                                Visibility="Collapsed"
+                                Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                Margin="{ThemeResource SliderHeaderThemeMargin}"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                FontWeight="{ThemeResource SliderHeaderThemeFontWeight}"
+                                TextWrapping="Wrap" />
+                            <Grid x:Name="SliderContainer" Background="Transparent" Grid.Row="1" Control.IsTemplateFocusTarget="True">
+                                <Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="18" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="18" />
+                                    </Grid.ColumnDefinitions>
+                                    <Rectangle x:Name="VerticalTrackRect"
+                                        Fill="{TemplateBinding Background}"
+                                        Width="{ThemeResource SliderTrackThemeHeight}"
+                                        Grid.Column="1"
+                                        Grid.RowSpan="3" />
+                                    <Rectangle x:Name="VerticalDecreaseRect"
+                                        Fill="{TemplateBinding Foreground}"
+                                        Grid.Column="1"
+                                        Grid.Row="2" />
+                                    <TickBar x:Name="LeftTickBar"
+                                        Visibility="Collapsed"
+                                        Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                        Width="{ThemeResource SliderOutsideTickBarThemeHeight}"
+                                        HorizontalAlignment="Right"
+                                        Margin="0,0,4,0"
+                                        Grid.RowSpan="3" />
+                                    <TickBar x:Name="VerticalInlineTickBar"
+                                        Visibility="Collapsed"
+                                        Fill="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                        Width="{ThemeResource SliderTrackThemeHeight}"
+                                        Grid.Column="1"
+                                        Grid.RowSpan="3" />
+                                    <TickBar x:Name="RightTickBar"
+                                        Visibility="Collapsed"
+                                        Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                        Width="{ThemeResource SliderOutsideTickBarThemeHeight}"
+                                        HorizontalAlignment="Left"
+                                        Margin="4,0,0,0"
+                                        Grid.Column="2"
+                                        Grid.RowSpan="3" />
+                                    <Thumb x:Name="VerticalThumb"
+                                        Background="{ThemeResource SystemControlForegroundAccentBrush}"
+                                        Style="{StaticResource SliderThumbStyle}"
+                                        DataContext="{TemplateBinding Value}"
+                                        Width="16"
+                                        Height="16"
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        AutomationProperties.AccessibilityView="Raw"/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="VolumeFlyoutStyle" TargetType="FlyoutPresenter">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundChromeHighBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource FlyoutBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="12,8,12,8"/>
+            <Setter Property="MinWidth" Value="{ThemeResource FlyoutThemeMinHeight}"/>
+            <Setter Property="MaxWidth" Value="{ThemeResource FlyoutThemeMaxWidth}"/>
+            <Setter Property="MinHeight" Value="{ThemeResource FlyoutThemeMinWidth}"/>
+            <Setter Property="MaxHeight" Value="{ThemeResource FlyoutThemeMaxHeight}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="FlyoutPresenter">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer x:Name="ScrollViewer"
+                                ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}"
+                                HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                                VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                AutomationProperties.AccessibilityView="Raw">
+                                <ContentPresenter Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    ContentTransitions="{TemplateBinding ContentTransitions}"
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     <Grid x:Uid="ShellGrid">
         <VisualStateManager.VisualStateGroups>
@@ -221,6 +417,7 @@
                         <Setter Target="SliderGrid.Opacity" Value="0" />
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed"/>
+                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
                 <!--VisualState to be triggered when window width is >=720 effective pixels.-->
@@ -237,6 +434,7 @@
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
                         <Setter Target="SliderGrid.Opacity" Value="1" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -253,6 +451,7 @@
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
                         <Setter Target="SliderGrid.Opacity" Value="1" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -269,6 +468,7 @@
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
                         <Setter Target="SliderGrid.Opacity" Value="0" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -320,11 +520,12 @@
                 </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:FoldersView"  >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Grid Width="48" Height="48">
+                        <!--<Grid Width="48" Height="48">
                             <Viewbox Height="20">
                                 <TextBlock Text="&#xE16F;" FontFamily="Segoe MDL2 Assets"/>
                             </Viewbox>
-                        </Grid>
+                        </Grid>-->
+                        <SymbolIcon Symbol="Copy" Width="48" Height="48" />
                         <TextBlock x:Uid="TBFolders" Text="Folders" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
@@ -562,35 +763,34 @@
             <Grid Grid.Column="2" x:Name="VolumeGrid">
                 <Button Style="{StaticResource BottomPlayerButtonStyle}"
                         x:Name="VolumeButton"
-                        DoubleTapped="{x:Bind BPViewModel.MuteVolume}"
+                        RightTapped="{x:Bind BPViewModel.MuteVolume}"
                         Width="48" 
                         Height="60">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Grid>
-                                <SymbolIcon Symbol="Volume"
+                                <SymbolIcon Symbol="{Binding Volume, Converter={StaticResource VolumeSymbolConverter}}"
                                             Foreground="White"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"/>
-                                <!--<TextBlock Text="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
-                                        Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
-                                        FontSize="18" 
-                                        VerticalAlignment="Center" 
-                                        HorizontalAlignment="Center" 
-                                        FontFamily="Segoe MDL2 Assets"/>-->
                             </Grid>
                         </DataTemplate>
                     </Button.ContentTemplate>
                     <Button.Flyout>
-                        <Flyout Placement="Bottom">
+                        <Flyout Placement="Bottom" FlyoutPresenterStyle="{StaticResource VolumeFlyoutStyle}">
+                            <Flyout.Content>
                             <Slider
                                 Orientation="Vertical"
-                                
                                 Minimum="0"
                                 Maximum="100"
                                 Height="200"
-                                Width="20"
-                                Value="{Binding Volume, Mode=TwoWay}"/>
+                                Width="36"
+                                StepFrequency="1.0"
+                                Value="{Binding Volume, Mode=TwoWay}"
+                                Style="{StaticResource VolumeSliderStyle}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Stretch"/>
+                            </Flyout.Content>
                         </Flyout>
                     </Button.Flyout>
                 </Button>

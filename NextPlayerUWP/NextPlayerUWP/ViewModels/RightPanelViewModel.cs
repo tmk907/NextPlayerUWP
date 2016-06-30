@@ -30,12 +30,6 @@ namespace NextPlayerUWP.ViewModels
             UpdatePlaylist();
         }
 
-        private async Task DelayedUpdatePlaylist()
-        {
-            await Task.Delay(200);
-            UpdatePlaylist();
-        }
-
         private int selectedPivotIndex = 0;
         public int SelectedPivotIndex
         {

@@ -125,7 +125,9 @@
             <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>
             <converters:YearConverter x:Key="YearConverter"/>
             <converters:ZoomedOutItemWidthConverter x:Key="ZoomedOutItemWidthConverter"/>
-            
+            <converters:VolumeSymbolConverter x:Key="VolumeSymbolConverter"/>
+            <converters:IntToDouble x:Key="IntToDoubleConverter"/>
+
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
                 <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"
                      Height="84"
@@ -199,6 +201,15 @@
                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                 <Setter Property="Margin" Value="0,0,12,0"/>
                 <Setter Property="Padding" Value="8,0,8,0"/>
+            </Style>
+
+            <Style x:Key="ListViewItemContainerStyle4b" TargetType="ListViewItem">
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                <Setter Property="Margin" Value="0,0,12,0"/>
+                <Setter Property="Padding" Value="0,0,8,0"/>
             </Style>
 
             <Style x:Key="AlbumsListViewItemContainerStyle" TargetType="ListViewItem">
