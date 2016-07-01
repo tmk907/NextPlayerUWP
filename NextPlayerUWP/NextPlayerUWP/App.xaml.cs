@@ -64,16 +64,7 @@ namespace NextPlayerUWP
 
             if (isFirstRun)
             {
-                FirstRunSetup();
-                try
-                {
-                    string deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-                    HockeyClient.Current.TrackEvent("New instalation: " + deviceFamily);
-                }
-                catch (Exception)
-                {
-                    HockeyClient.Current.TrackEvent("New instalation: Unknown");
-                }
+                FirstRunSetup();                
             }
             else
             {
@@ -224,6 +215,16 @@ namespace NextPlayerUWP
 
             if (isFirstRun)
             {
+                try
+                {
+                    string deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
+                    HockeyClient.Current.TrackEvent("New instalation: " + deviceFamily);
+                }
+                catch (Exception)
+                {
+                    HockeyClient.Current.TrackEvent("New instalation: Unknown");
+                }
+                isFirstRun = false;
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
             }
@@ -397,6 +398,7 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, false);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -442,6 +444,10 @@ namespace NextPlayerUWP
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PlaylistsFolder) == null)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
             }
         }
 

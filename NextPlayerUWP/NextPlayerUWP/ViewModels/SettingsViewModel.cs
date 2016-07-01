@@ -175,7 +175,8 @@ namespace NextPlayerUWP.ViewModels
                     MusicLibraryFolders.Add(new MusicFolder() { Name = f.DisplayName, Path = f.Path });
                 }
             }
-            PlaylistsFolder = (string)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PlaylistsFolder);
+            PlaylistsFolder = Windows.Storage.KnownFolders.Playlists.Path;
+            AutoSavePlaylists = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
 
             //Last.fm
             string login = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string;
@@ -249,10 +250,33 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref playlistsFolder, value); }
         }
 
-        public async void ChoosePlaylistsFolder()
+        private bool autoSavePlaylists;
+        public bool AutoSavePlaylists
         {
-            //save access token
-            //save path in settings
+            get { return autoSavePlaylists; }
+            set
+            {
+                if (value != autoSavePlaylists && !initialization)
+                {
+                    if (value) SavePlaylists();
+                    else DeletePlaylists();
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, value);
+                    HockeyProxy.TrackEvent("AutoSavePlaylists " + value);
+                }
+                Set(ref autoSavePlaylists, value);
+            }
+        }
+
+        public async Task SavePlaylists()
+        {
+            PlaylistExporter pe = new PlaylistExporter();
+            await pe.SaveAllPlaylists().ConfigureAwait(false);
+        }
+
+        public async Task DeletePlaylists()
+        {
+            PlaylistExporter pe = new PlaylistExporter();
+            await pe.DeleteAllPlaylists().ConfigureAwait(false);
         }
 
         #endregion
@@ -423,7 +447,10 @@ namespace NextPlayerUWP.ViewModels
         {
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, hide);
             await App.ChangeStatusBarVisibility(hide);
-            HockeyProxy.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
+            if (!initialization)
+            {
+                HockeyProxy.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
+            }
         }
 
         private bool includeSubFolders = false;
@@ -434,7 +461,11 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (value != includeSubFolders)
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, value);
+                    if (!initialization)
+                    {
+                        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, value);
+                        HockeyProxy.TrackEvent("IncludeSubFolders " + includeSubFolders);
+                    }
                 }
                 Set(ref includeSubFolders, value);
             }

@@ -79,6 +79,8 @@ namespace NextPlayerUWP.ViewModels
                 default:
                     break;
             }
+            PlaylistExporter pe = new PlaylistExporter();
+            await pe.AutoSavePlaylist(p);
             NavigationService.GoBack();
         }
 

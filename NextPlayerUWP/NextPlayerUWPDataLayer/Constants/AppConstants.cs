@@ -141,5 +141,6 @@
         public const string HideStatusBar = "HideStatusBar";
         public const string IncludeSubFolders = "IncludeSubFolders";
         public const string PlaylistsFolder = "PlaylistsFolder";
+        public const string AutoSavePlaylists = "AutoSavePlaylists";
     }
 }

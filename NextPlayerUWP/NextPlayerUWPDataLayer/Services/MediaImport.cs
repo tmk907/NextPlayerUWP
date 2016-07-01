@@ -66,6 +66,36 @@ namespace NextPlayerUWPDataLayer.Services
             else return false;
         }
 
+        private async Task AddPlaylistsFromPlaylistsFolder()
+        {
+            bool add = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
+            if (!add) return;
+            try
+            {
+                var playlistsFolder = await KnownFolders.Playlists.GetFolderAsync("Next-Player");
+                var files = await playlistsFolder.GetFilesAsync();
+                foreach(var file in files)
+                {
+                    if (file.FileType == ".m3u")
+                    {
+                        if (!importedPlaylistPaths.Contains(file.Path))
+                        {
+                            var ip = await ParseM3UPlaylist(file, playlistsFolder.Path);
+                            importedPlaylists.Add(ip);
+                        }
+                    }
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
         private async Task AddFilesFromFolder(StorageFolder folder)
         {
             var files = await folder.GetFilesAsync();
@@ -188,6 +218,8 @@ namespace NextPlayerUWPDataLayer.Services
             }
 
             await DatabaseManager.Current.UpdateTables();
+
+            await AddPlaylistsFromPlaylistsFolder();
 
             foreach(var ip in importedPlaylists)
             {

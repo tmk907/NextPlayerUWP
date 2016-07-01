@@ -349,7 +349,7 @@
                     <Slider
                     StepFrequency="1.0"
                     Maximum="100"
-                    Margin="12,0,12,0"
+                    Margin="60,0,60,0"
                     Value="{x:Bind ViewModel.Volume, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center" 

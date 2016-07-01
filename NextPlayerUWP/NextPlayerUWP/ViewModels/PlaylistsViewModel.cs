@@ -90,7 +90,9 @@ namespace NextPlayerUWP.ViewModels
             else
             {
                 Playlists.Remove(p);
-                await DatabaseManager.Current.DeletePlainPlaylistAsync(p.Id);
+                PlaylistExporter pe = new PlaylistExporter();
+                await pe.DeletePlaylist(p).ConfigureAwait(false);
+                await DatabaseManager.Current.DeletePlainPlaylistAsync(p.Id).ConfigureAwait(false);
             }
         }
 
@@ -110,6 +112,8 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             await DatabaseManager.Current.UpdatePlaylistName(editPlaylist.Id, editPlaylist.Name);
+            PlaylistExporter pe = new PlaylistExporter();
+            await pe.ChangePlaylistName(editPlaylist).ConfigureAwait(false);
             //await LoadData();
         }
 

@@ -139,6 +139,21 @@
                             MinWidth="128"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock x:Uid="TBAutoSavePlaylists"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Automatically save playlists in"/>
+                        <TextBlock
+                        Text="{x:Bind ViewModel.PlaylistsFolder}"
+                        Margin="4"
+                        Style="{StaticResource BodyTextBlockStyle}"/>
+                        <StackPanel Orientation="Horizontal"
+                                Margin="8,0,0,0">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.AutoSavePlaylists, Mode=TwoWay}"/>
+                    </StackPanel>
+                </StackPanel>
+                <!--<StackPanel Orientation="Vertical" Margin="4">
                     <TextBlock x:Uid="TBChooseFolderForPlaylists"
                         Style="{StaticResource BodyTextBlockStyle}"
                         FontSize="17"
@@ -154,7 +169,7 @@
                                 MinWidth="128"
                                 Click="{x:Bind ViewModel.ChoosePlaylistsFolder}"/>
                     </StackPanel>
-                </StackPanel>
+                </StackPanel>-->
                 <TextBlock x:Uid="TBPersonalize"
                         Style="{StaticResource TitleTextBlockStyle}" 
                         Margin="0,12,0,12"

@@ -986,6 +986,22 @@ namespace NextPlayerUWPDataLayer.Services
             return list;
         }
 
+        public async Task<List<ImportedPlaylistsTable>> GetImportedPlaylists()
+        {
+            List<ImportedPlaylistsTable> list = await connectionAsync.Table<ImportedPlaylistsTable>().ToListAsync();
+            return list;
+        }
+
+        public async Task UpdateImportedPlaylist(ImportedPlaylistsTable table)
+        {
+            await connectionAsync.UpdateAsync(table);
+        }
+
+        public async Task DeleteImportedPlaylist(ImportedPlaylistsTable table)
+        {
+            await connectionAsync.DeleteAsync(table);
+        }
+
         #endregion
 
         public async Task AddToPlaylist(int playlistId, System.Linq.Expressions.Expression<Func<SongsTable, bool>> condition, Func<SongsTable,object> sort)
@@ -1199,10 +1215,12 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task DeletePlainPlaylistAsync(int playlistId)
         {
             var items = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(playlistId)).ToListAsync();
-            foreach (var item in items)
-            {
-                DeletePlainPlaylistEntry(item.Id);
-            }
+            //foreach (var item in items)
+            //{
+            //    DeletePlainPlaylistEntry(item.Id);
+            //}
+
+            await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlistId);
 
             var list2 = connection.Table<ImportedPlaylistsTable>().Where(s => s.PlainPlaylistId == playlistId).ToList();
             if (list2.Count > 0)
