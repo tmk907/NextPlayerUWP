@@ -56,11 +56,6 @@ namespace NextPlayerUWPDataLayer.Services
 
             TileBindingContentAdaptive mediumBindingContent = new TileBindingContentAdaptive()
             {
-                PeekImage = new TilePeekImage()
-                {
-                    Source = coverUri
-                },
-
                 Children =
                 {
                     new AdaptiveText()
@@ -76,6 +71,11 @@ namespace NextPlayerUWPDataLayer.Services
                         HintWrap = true,
                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                     }
+                },
+
+                PeekImage = new TilePeekImage()
+                {
+                    Source = coverUri,
                 }
             };
 

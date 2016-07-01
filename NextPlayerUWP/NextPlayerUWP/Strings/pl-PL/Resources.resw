@@ -691,7 +691,7 @@
     <value>Ukryj pasek stanu</value>
   </data>
   <data name="TBIncludeSubFolders.Text" xml:space="preserve">
-    <value>Odtwarzaj folder i podfoldery</value>
+    <value>Odtwarzaj folder razem z podfolderami</value>
   </data>
   <data name="ButtonChoosePlaylistsFolder.Content" xml:space="preserve">
     <value>Wybierz</value>
@@ -701,5 +701,8 @@
   </data>
   <data name="MFIPlay.Text" xml:space="preserve">
     <value>Odtwórz</value>
+  </data>
+  <data name="TBAutoSavePlaylists.Text" xml:space="preserve">
+    <value>Automatycznie zapisuj playlisty w</value>
   </data>
 </root>

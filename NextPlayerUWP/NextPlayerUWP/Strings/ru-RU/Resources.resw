@@ -691,7 +691,7 @@
     <value>Hide status bar</value>
   </data>
   <data name="TBIncludeSubFolders.Text" xml:space="preserve">
-    <value>Play folder and subfolders</value>
+    <value>Play folder with subfolders</value>
   </data>
   <data name="ButtonChoosePlaylistsFolder.Content" xml:space="preserve">
     <value>Choose</value>
@@ -701,5 +701,8 @@
   </data>
   <data name="MFIPlay.Text" xml:space="preserve">
     <value>Играть</value>
+  </data>
+  <data name="TBAutoSavePlaylists.Text" xml:space="preserve">
+    <value>Automatically save playlists in</value>
   </data>
 </root>

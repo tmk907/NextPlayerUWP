@@ -434,7 +434,7 @@
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
                         <Setter Target="SliderGrid.Opacity" Value="1" />
-                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>

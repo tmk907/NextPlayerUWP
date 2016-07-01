@@ -165,7 +165,7 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task DeletePlaylist(PlaylistItem playlist)
         {
             bool autoSave = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
-            if (!autoSave) return;
+            //if (!autoSave) return;
             var list = await DatabaseManager.Current.GetImportedPlaylists();
             var imported = list.SingleOrDefault(p => p.PlainPlaylistId.Equals(playlist.Id));
             if (imported != null)

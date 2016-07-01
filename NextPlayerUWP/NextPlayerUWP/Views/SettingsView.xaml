@@ -145,7 +145,7 @@
                         Margin="4,4,4,4"
                         Text="Automatically save playlists in"/>
                         <TextBlock
-                        Text="{x:Bind ViewModel.PlaylistsFolder}"
+                        Text="{x:Bind ViewModel.PlaylistsFolder, Mode=TwoWay}"
                         Margin="4"
                         Style="{StaticResource BodyTextBlockStyle}"/>
                         <StackPanel Orientation="Horizontal"
