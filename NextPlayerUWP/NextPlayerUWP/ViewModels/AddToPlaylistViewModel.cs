@@ -8,6 +8,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -62,7 +64,15 @@ namespace NextPlayerUWP.ViewModels
                     await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.Artists.Equals(value), s => s.Title);
                     break;
                 case MusicItemTypes.folder:
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(value), s => s.Title);
+                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+                    if (subFolders)
+                    {
+                        await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.StartsWith(value), s => s.Title);
+                    }
+                    else
+                    {
+                        await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(value), s => s.Title);
+                    }
                     break;
                 case MusicItemTypes.genre:
                     await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.Genres.Equals(value), s => s.Title);

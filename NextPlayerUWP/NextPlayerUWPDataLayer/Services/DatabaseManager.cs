@@ -605,11 +605,39 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task<List<SongItem>> GetSongItemsForPlaylistAsync(IEnumerable<string> paths)
         {
             List<SongItem> songs = new List<SongItem>();
-            var query = await connectionAsync.Table<SongsTable>().Where(s => paths.Contains(s.Path)).ToListAsync();
-            foreach(var song in query)
-            {
-                songs.Add(new SongItem(song));
+            //http://stackoverflow.com/questions/12832483/is-there-another-way-to-take-n-at-a-time-than-a-for-loop
+
+            const int N = 512;
+            string[] array = new string[N];               // Temporary array of N items.
+            int i = 0;
+            foreach (var path in paths)
+            {         // Just one iterator.
+                array[i++] = path;              // Store a reference to this item.
+                if (i == N)
+                {                // When we have N items,
+                    var query = await connectionAsync.Table<SongsTable>().Where(s => array.Contains(s.Path)).ToListAsync();
+                    foreach (var songPath in array)
+                    {
+                        var song = query.FirstOrDefault(s => s.Path.Equals(songPath));
+                        if (song!=null) songs.Add(new SongItem(song));
+                    }
+
+                    i = 0;                   // and reset the array index.
+                }
             }
+
+            // remaining items
+            if (i > 0)
+            {
+                var array2 = array.Take(i);
+                var query = await connectionAsync.Table<SongsTable>().Where(s => array2.Contains(s.Path)).ToListAsync();
+                foreach (var path in array2)
+                {
+                    var song = query.FirstOrDefault(s => s.Path.Equals(path));
+                    if (song != null) songs.Add(new SongItem(song));
+                }
+            }
+
             return songs;
         }
 
