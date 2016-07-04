@@ -43,7 +43,16 @@ namespace NextPlayerUWP
         private static AlbumArtFinder albumArtFinder;
 
         private bool isFirstRun = false;
-        
+
+        private static PlaybackManager playbackManager;
+        public static PlaybackManager PlaybackManager
+        {
+            get
+            {
+                if (playbackManager == null) playbackManager = new PlaybackManager();
+                return playbackManager;
+            }
+        }
 
         public App()
         {
@@ -215,15 +224,15 @@ namespace NextPlayerUWP
 
             if (isFirstRun)
             {
-                try
-                {
-                    string deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-                    HockeyClient.Current.TrackEvent("New instalation: " + deviceFamily);
-                }
-                catch (Exception)
-                {
-                    HockeyClient.Current.TrackEvent("New instalation: Unknown");
-                }
+                //try
+                //{
+                //    string deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
+                //    HockeyClient.Current.TrackEvent("New instalation: " + deviceFamily);
+                //}
+                //catch (Exception)
+                //{
+                //    HockeyClient.Current.TrackEvent("New instalation: Unknown");
+                //}
                 isFirstRun = false;
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
@@ -251,6 +260,7 @@ namespace NextPlayerUWP
                         {
                             //Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
                             //Logger.SaveToFile();
+                            Debug.WriteLine("OnStartAsync event arg doesn't contain tileid");
                             HockeyProxy.TrackEventException("event arg doesn't contain tileid");
                         }
                         Pages page = Pages.Playlists;
@@ -295,11 +305,13 @@ namespace NextPlayerUWP
                         if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                             args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                         {
+                            Debug.WriteLine("OnStartAsync Primary closed");
                             await NavigationService.NavigateAsync(Pages.Playlists);
                         }
                         else
                         {
-                            Logger.SaveInSettings("Onstart from Primary " + args.PreviousExecutionState);
+                            Debug.WriteLine("OnStartAsync Primary not closed");
+                            //Logger.SaveInSettings("Onstart from Primary " + args.PreviousExecutionState);
                             await NavigationService.NavigateAsync(Pages.Playlists);
                         }
                         break;
@@ -308,6 +320,7 @@ namespace NextPlayerUWP
                         await NavigationService.NavigateAsync(Pages.Settings);
                         break;
                     default:
+                        Debug.WriteLine("OnStartAsync default");
                         //Logger.Save("OnStart default");
                         //Logger.SaveToFile();
                         //if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
@@ -474,11 +487,6 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
         }
 
-        public void ChangeTelemetry(bool enable)
-        {
-            //TODO
-        }
-
         private async Task SendLogs()
         {
             try
@@ -555,14 +563,14 @@ namespace NextPlayerUWP
                 SongItem si = await mi.OpenSingleFileAsync(file);
                 ApplicationSettingsHelper.SaveSongIndex(0);
                 await NowPlayingPlaylistManager.Current.NewPlaylist(si);
-                PlaybackManager.Current.PlayNew();
+                App.PlaybackManager.PlayNew();
             }
             else if (MediaImport.IsPlaylistFile(type))
             {
                 var list = await mi.OpenPlaylistFileAsync(file);
                 ApplicationSettingsHelper.SaveSongIndex(0);
                 await NowPlayingPlaylistManager.Current.NewPlaylist(list);
-                PlaybackManager.Current.PlayNew();
+                App.PlaybackManager.PlayNew();
             }
         }
 

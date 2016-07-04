@@ -20,7 +20,7 @@ namespace NextPlayerUWP.ViewModels
             ShuffleMode = Shuffle.CurrentState();
             _timer = new DispatcherTimer();
             SetupTimer();
-            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
+            ChangePlayButtonContent(App.PlaybackManager.PlayerState);
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
             PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
@@ -148,7 +148,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     if (value == 0) isMuted = true;
                     else isMuted = false;
-                    PlaybackManager.Current.SendMessage(AppConstants.Volume, value / 100.0);
+                    App.PlaybackManager.SendMessage(AppConstants.Volume, value / 100.0);
                 }
                 Set(ref volume, value);
             }
@@ -163,29 +163,29 @@ namespace NextPlayerUWP.ViewModels
 
         public void Play()
         {
-            PlaybackManager.Current.Play();
+            App.PlaybackManager.Play();
         }
 
         public void Previous()
         {
-            PlaybackManager.Current.Previous();
+            App.PlaybackManager.Previous();
         }
 
         public void Next()
         {
-            PlaybackManager.Current.Next();
+            App.PlaybackManager.Next();
         }
 
         public void ShuffleCommand()
         {
             ShuffleMode = Shuffle.Change();
-            PlaybackManager.Current.SendMessage(AppConstants.Shuffle, "");
+            App.PlaybackManager.SendMessage(AppConstants.Shuffle, "");
         }
 
         public void RepeatCommand()
         {
             RepeatMode = Repeat.Change();
-            PlaybackManager.Current.SendMessage(AppConstants.Repeat, "");
+            App.PlaybackManager.SendMessage(AppConstants.Repeat, "");
         }
         
         public void MuteVolume()
@@ -267,7 +267,7 @@ namespace NextPlayerUWP.ViewModels
             StartTimer();
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             CoverUri = SongCoverManager.Instance.GetCurrent();
-            ChangePlayButtonContent(PlaybackManager.Current.PlayerState);
+            ChangePlayButtonContent(App.PlaybackManager.PlayerState);
             await Task.CompletedTask;
         }
 
@@ -307,7 +307,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (!sliderpressed)
             {
-                position = PlaybackManager.Current.CurrentPlayer.Position;
+                position = App.PlaybackManager.CurrentPlayer.Position;
                 SliderValue = position.TotalSeconds;
                 CurrentTime = position;
             }

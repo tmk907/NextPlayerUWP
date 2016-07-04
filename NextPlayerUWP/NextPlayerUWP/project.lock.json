@@ -11,7 +11,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1-build17552": {
+      "HockeySDK.Core/4.1.1": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -19,9 +19,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1-build17552": {
+      "HockeySDK.UWP/4.1.1": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1-build17552"
+          "HockeySDK.Core": "4.1.1"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -401,25 +401,25 @@
           "lib/windows81/GalaSoft.MvvmLight.dll": {}
         }
       },
-      "Newtonsoft.Json/8.0.3": {
+      "Newtonsoft.Json/9.0.1": {
         "compile": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "NotificationsExtensions.Win10/14332.0.1": {
+      "NotificationsExtensions.Win10/14332.0.0": {
         "compile": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         },
         "runtime": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         }
       },
-      "sqlite-net-pcl/1.1.1": {
+      "sqlite-net-pcl/1.1.2": {
         "dependencies": {
-          "SQLitePCL.raw": "0.8.6"
+          "SQLitePCL.bundle_green": "0.9.2"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -428,7 +428,36 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.raw/0.8.6": {
+      "SQLitePCL.bundle_green/0.9.2": {
+        "dependencies": {
+          "SQLitePCL.native.sqlite3.v140": "0.9.2",
+          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
+          "SQLitePCL.raw": "0.9.2"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        }
+      },
+      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
+      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Text.Encoding": "4.0.10"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        }
+      },
+      "SQLitePCL.raw/0.9.2": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -2007,7 +2036,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1-build17552": {
+      "HockeySDK.Core/4.1.1": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -2015,9 +2044,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1-build17552": {
+      "HockeySDK.UWP/4.1.1": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1-build17552"
+          "HockeySDK.Core": "4.1.1"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -2347,20 +2376,20 @@
           "lib/windows81/GalaSoft.MvvmLight.dll": {}
         }
       },
-      "Newtonsoft.Json/8.0.3": {
+      "Newtonsoft.Json/9.0.1": {
         "compile": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "NotificationsExtensions.Win10/14332.0.1": {
+      "NotificationsExtensions.Win10/14332.0.0": {
         "compile": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         },
         "runtime": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         }
       },
       "runtime.any.System.Private.DataContractSerialization/4.1.0": {
@@ -2413,9 +2442,9 @@
           "runtimes/win8-arm/native/mscorrc.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.1": {
+      "sqlite-net-pcl/1.1.2": {
         "dependencies": {
-          "SQLitePCL.raw": "0.8.6"
+          "SQLitePCL.bundle_green": "0.9.2"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -2424,7 +2453,36 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.raw/0.8.6": {
+      "SQLitePCL.bundle_green/0.9.2": {
+        "dependencies": {
+          "SQLitePCL.native.sqlite3.v140": "0.9.2",
+          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
+          "SQLitePCL.raw": "0.9.2"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        }
+      },
+      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
+      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Text.Encoding": "4.0.10"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        }
+      },
+      "SQLitePCL.raw/0.9.2": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -3864,7 +3922,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1-build17552": {
+      "HockeySDK.Core/4.1.1": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -3872,9 +3930,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1-build17552": {
+      "HockeySDK.UWP/4.1.1": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1-build17552"
+          "HockeySDK.Core": "4.1.1"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -4201,20 +4259,20 @@
           "lib/windows81/GalaSoft.MvvmLight.dll": {}
         }
       },
-      "Newtonsoft.Json/8.0.3": {
+      "Newtonsoft.Json/9.0.1": {
         "compile": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "NotificationsExtensions.Win10/14332.0.1": {
+      "NotificationsExtensions.Win10/14332.0.0": {
         "compile": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         },
         "runtime": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         }
       },
       "runtime.aot.System.Private.DataContractSerialization/4.1.0": {
@@ -4248,9 +4306,9 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.1": {
+      "sqlite-net-pcl/1.1.2": {
         "dependencies": {
-          "SQLitePCL.raw": "0.8.6"
+          "SQLitePCL.bundle_green": "0.9.2"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -4259,7 +4317,36 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.raw/0.8.6": {
+      "SQLitePCL.bundle_green/0.9.2": {
+        "dependencies": {
+          "SQLitePCL.native.sqlite3.v140": "0.9.2",
+          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
+          "SQLitePCL.raw": "0.9.2"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        }
+      },
+      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
+      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Text.Encoding": "4.0.10"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        }
+      },
+      "SQLitePCL.raw/0.9.2": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -5679,7 +5766,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1-build17552": {
+      "HockeySDK.Core/4.1.1": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -5687,9 +5774,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1-build17552": {
+      "HockeySDK.UWP/4.1.1": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1-build17552"
+          "HockeySDK.Core": "4.1.1"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -6024,20 +6111,20 @@
           "lib/windows81/GalaSoft.MvvmLight.dll": {}
         }
       },
-      "Newtonsoft.Json/8.0.3": {
+      "Newtonsoft.Json/9.0.1": {
         "compile": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "NotificationsExtensions.Win10/14332.0.1": {
+      "NotificationsExtensions.Win10/14332.0.0": {
         "compile": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         },
         "runtime": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         }
       },
       "runtime.any.System.Private.DataContractSerialization/4.1.0": {
@@ -6093,9 +6180,9 @@
           "runtimes/win7-x64/native/mscorrc.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.1": {
+      "sqlite-net-pcl/1.1.2": {
         "dependencies": {
-          "SQLitePCL.raw": "0.8.6"
+          "SQLitePCL.bundle_green": "0.9.2"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -6104,7 +6191,36 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.raw/0.8.6": {
+      "SQLitePCL.bundle_green/0.9.2": {
+        "dependencies": {
+          "SQLitePCL.native.sqlite3.v140": "0.9.2",
+          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
+          "SQLitePCL.raw": "0.9.2"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        }
+      },
+      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
+      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Text.Encoding": "4.0.10"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        }
+      },
+      "SQLitePCL.raw/0.9.2": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -7544,7 +7660,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1-build17552": {
+      "HockeySDK.Core/4.1.1": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -7552,9 +7668,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1-build17552": {
+      "HockeySDK.UWP/4.1.1": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1-build17552"
+          "HockeySDK.Core": "4.1.1"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -7881,20 +7997,20 @@
           "lib/windows81/GalaSoft.MvvmLight.dll": {}
         }
       },
-      "Newtonsoft.Json/8.0.3": {
+      "Newtonsoft.Json/9.0.1": {
         "compile": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "NotificationsExtensions.Win10/14332.0.1": {
+      "NotificationsExtensions.Win10/14332.0.0": {
         "compile": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         },
         "runtime": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         }
       },
       "runtime.aot.System.Private.DataContractSerialization/4.1.0": {
@@ -7928,9 +8044,9 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.1": {
+      "sqlite-net-pcl/1.1.2": {
         "dependencies": {
-          "SQLitePCL.raw": "0.8.6"
+          "SQLitePCL.bundle_green": "0.9.2"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -7939,7 +8055,36 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.raw/0.8.6": {
+      "SQLitePCL.bundle_green/0.9.2": {
+        "dependencies": {
+          "SQLitePCL.native.sqlite3.v140": "0.9.2",
+          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
+          "SQLitePCL.raw": "0.9.2"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        }
+      },
+      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
+      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Text.Encoding": "4.0.10"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        }
+      },
+      "SQLitePCL.raw/0.9.2": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -9359,7 +9504,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1-build17552": {
+      "HockeySDK.Core/4.1.1": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -9367,9 +9512,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1-build17552": {
+      "HockeySDK.UWP/4.1.1": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1-build17552"
+          "HockeySDK.Core": "4.1.1"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -9704,20 +9849,20 @@
           "lib/windows81/GalaSoft.MvvmLight.dll": {}
         }
       },
-      "Newtonsoft.Json/8.0.3": {
+      "Newtonsoft.Json/9.0.1": {
         "compile": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "NotificationsExtensions.Win10/14332.0.1": {
+      "NotificationsExtensions.Win10/14332.0.0": {
         "compile": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         },
         "runtime": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         }
       },
       "runtime.any.System.Private.DataContractSerialization/4.1.0": {
@@ -9773,9 +9918,9 @@
           "runtimes/win7-x86/native/mscorrc.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.1": {
+      "sqlite-net-pcl/1.1.2": {
         "dependencies": {
-          "SQLitePCL.raw": "0.8.6"
+          "SQLitePCL.bundle_green": "0.9.2"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -9784,7 +9929,36 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.raw/0.8.6": {
+      "SQLitePCL.bundle_green/0.9.2": {
+        "dependencies": {
+          "SQLitePCL.native.sqlite3.v140": "0.9.2",
+          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
+          "SQLitePCL.raw": "0.9.2"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        }
+      },
+      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
+      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Text.Encoding": "4.0.10"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        }
+      },
+      "SQLitePCL.raw/0.9.2": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -11224,7 +11398,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1-build17552": {
+      "HockeySDK.Core/4.1.1": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -11232,9 +11406,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1-build17552": {
+      "HockeySDK.UWP/4.1.1": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1-build17552"
+          "HockeySDK.Core": "4.1.1"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -11561,20 +11735,20 @@
           "lib/windows81/GalaSoft.MvvmLight.dll": {}
         }
       },
-      "Newtonsoft.Json/8.0.3": {
+      "Newtonsoft.Json/9.0.1": {
         "compile": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "NotificationsExtensions.Win10/14332.0.1": {
+      "NotificationsExtensions.Win10/14332.0.0": {
         "compile": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         },
         "runtime": {
-          "lib/Windows/NotificationsExtensions.winmd": {}
+          "lib/uap10.0/NotificationsExtensions.winmd": {}
         }
       },
       "runtime.aot.System.Private.DataContractSerialization/4.1.0": {
@@ -11608,9 +11782,9 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.1": {
+      "sqlite-net-pcl/1.1.2": {
         "dependencies": {
-          "SQLitePCL.raw": "0.8.6"
+          "SQLitePCL.bundle_green": "0.9.2"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -11619,7 +11793,36 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.raw/0.8.6": {
+      "SQLitePCL.bundle_green/0.9.2": {
+        "dependencies": {
+          "SQLitePCL.native.sqlite3.v140": "0.9.2",
+          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
+          "SQLitePCL.raw": "0.9.2"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCL.batteries.dll": {}
+        }
+      },
+      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
+      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Text.Encoding": "4.0.10"
+        },
+        "compile": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
+        }
+      },
+      "SQLitePCL.raw/0.9.2": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -13047,11 +13250,11 @@
         "package/services/metadata/core-properties/99be0c88b2fd41c8b07c42071005ee47.psmdcp"
       ]
     },
-    "HockeySDK.Core/4.1.1-build17552": {
-      "sha512": "Qg/h7UL6ondCeETG5AZQUPwnF9RayrmyiC5E5uXMe91O9PaYiSTYZNnOO+w0dHS6pkLqndDBVoHGmvkPVpLtKA==",
+    "HockeySDK.Core/4.1.1": {
+      "sha512": "UwthaWI68CHqsT+nYghACdHoZW4q8DN7o55HjS3LZKvBINOEbO2zuzS3viuKnRoqK9XR7IOvcK2/y+xyoPgJDA==",
       "type": "package",
       "files": [
-        "HockeySDK.Core.4.1.1-build17552.nupkg.sha512",
+        "HockeySDK.Core.4.1.1.nupkg.sha512",
         "HockeySDK.Core.nuspec",
         "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll",
         "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll.CodeAnalysisLog.xml",
@@ -13059,11 +13262,11 @@
         "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.XML"
       ]
     },
-    "HockeySDK.UWP/4.1.1-build17552": {
-      "sha512": "JRe4fHc5FEf+Z/CbkgCgMdF4NTnhqnqoHc+XogzeynywhAxUyWN/0FfS6X11vtbiGK3d785RkYpBACd1YFCMfw==",
+    "HockeySDK.UWP/4.1.1": {
+      "sha512": "2i3ngjLaTV82wp3IdHXv28yV6jDlZr8Fl1mD44OlJLaGfEJkic5txOt+xCgh6NWCm24QpXCjQMl1s2u5lm6ZEQ==",
       "type": "package",
       "files": [
-        "HockeySDK.UWP.4.1.1-build17552.nupkg.sha512",
+        "HockeySDK.UWP.4.1.1.nupkg.sha512",
         "HockeySDK.UWP.nuspec",
         "lib/uap10.0/Microsoft.HockeyApp.Kit.dll",
         "lib/uap10.0/Microsoft.HockeyApp.Kit.dll.CodeAnalysisLog.xml",
@@ -14075,11 +14278,11 @@
         "lib/xamarin.ios10/GalaSoft.MvvmLight.pdb"
       ]
     },
-    "Newtonsoft.Json/8.0.3": {
-      "sha512": "KGsYQdS2zLH+H8x2cZaSI7e+YZ4SFIbyy1YJQYl6GYBWjf5o4H1A68nxyq+WTyVSOJQ4GqS/DiPE+UseUizgMg==",
+    "Newtonsoft.Json/9.0.1": {
+      "sha512": "U82mHQSKaIk+lpSVCbWYKNavmNH1i5xrExDEquU1i6I5pV6UMOqRnJRSlKO3cMPfcpp0RgDY+8jUXHdQ4IfXvw==",
       "type": "package",
       "files": [
-        "Newtonsoft.Json.8.0.3.nupkg.sha512",
+        "Newtonsoft.Json.9.0.1.nupkg.sha512",
         "Newtonsoft.Json.nuspec",
         "lib/net20/Newtonsoft.Json.dll",
         "lib/net20/Newtonsoft.Json.xml",
@@ -14089,37 +14292,32 @@
         "lib/net40/Newtonsoft.Json.xml",
         "lib/net45/Newtonsoft.Json.dll",
         "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
         "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.dll",
         "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.xml",
-        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll",
-        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.xml",
+        "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.xml",
         "tools/install.ps1"
       ]
     },
-    "NotificationsExtensions.Win10/14332.0.1": {
-      "sha512": "lw7O9/Whadt1aO1qtVVQzbwCaW3KvdOG8F6u3XE5Rn5i5BWSJFetUAkMzlw5/JF8zQk+2DCi3WFHtZzHzxypqA==",
+    "NotificationsExtensions.Win10/14332.0.0": {
+      "sha512": "CIzo4poYFVeHmF+O1RSwytqUgU49DOq8QIWcaTWyDgmrEkw2qRyXR7k2LzxybicrCaNlTQuCNMJ+mjNbACrWnA==",
       "type": "package",
       "files": [
-        "NotificationsExtensions.Win10.14332.0.1.nupkg.sha512",
+        "NotificationsExtensions.Win10.14332.0.0.nupkg.sha512",
         "NotificationsExtensions.Win10.nuspec",
-        "build/Windows/NotificationsExtensions.Win10.targets",
-        "build/native/NotificationsExtensions.Win10.targets",
-        "lib/Windows/NotificationsExtensions.pdb",
-        "lib/Windows/NotificationsExtensions.pri",
-        "lib/Windows/NotificationsExtensions.winmd",
-        "lib/Windows/NotificationsExtensions.winmd.xml",
-        "lib/Windows/NotificationsExtensions.xml",
         "lib/dotnet/NotificationsExtensions.Win10.NETCore.XML",
         "lib/dotnet/NotificationsExtensions.Win10.NETCore.dll",
         "lib/dotnet/NotificationsExtensions.Win10.NETCore.pdb",
-        "lib/native/NotificationsExtensions.pdb",
-        "lib/native/NotificationsExtensions.pri",
-        "lib/native/NotificationsExtensions.winmd",
-        "lib/native/NotificationsExtensions.winmd.xml",
-        "lib/native/NotificationsExtensions.xml",
         "lib/portable-net45+sl50+win+wpa81+wp80/NotificationsExtensions.Win10.Portable.XML",
         "lib/portable-net45+sl50+win+wpa81+wp80/NotificationsExtensions.Win10.Portable.dll",
-        "lib/portable-net45+sl50+win+wpa81+wp80/NotificationsExtensions.Win10.Portable.pdb"
+        "lib/portable-net45+sl50+win+wpa81+wp80/NotificationsExtensions.Win10.Portable.pdb",
+        "lib/uap10.0/NotificationsExtensions.pdb",
+        "lib/uap10.0/NotificationsExtensions.pri",
+        "lib/uap10.0/NotificationsExtensions.winmd",
+        "lib/uap10.0/NotificationsExtensions.winmd.xml",
+        "lib/uap10.0/NotificationsExtensions.xml"
       ]
     },
     "runtime.any.System.Private.DataContractSerialization/4.1.0": {
@@ -14205,78 +14403,61 @@
         "runtimes/win8-arm/native/mscorrc.dll"
       ]
     },
-    "sqlite-net-pcl/1.1.1": {
-      "sha512": "MmFKwtN3SuqMcuBkqY5ynhphNvP9EDOUPJaPgJHiQypDUcz19TbLfJ4MiDBknwrWy/AHZHIyWjMKINqiIEp5Jw==",
+    "sqlite-net-pcl/1.1.2": {
+      "sha512": "pN7deFk+OGQBsFK3xRuEV7mMhX1UjOuGMGhpJg9cSkC0DGZwlbdGXYdB9kov6sAZO41Td92lJxSN36IjhTWMTQ==",
       "type": "package",
       "files": [
         "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll",
         "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll.mdb",
-        "sqlite-net-pcl.1.1.1.nupkg.sha512",
+        "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.xml",
+        "sqlite-net-pcl.1.1.2.nupkg.sha512",
         "sqlite-net-pcl.nuspec"
       ]
     },
-    "SQLitePCL.raw/0.8.6": {
-      "sha512": "KTPjkmtwoQBfNE5E44bwWdTqjnSs9hJPeqbX7dPKlmhng2YYJqbm1EpdUdB6BdFxvBzTO9WeveEMYQiNDKWqFg==",
+    "SQLitePCL.bundle_green/0.9.2": {
+      "sha512": "1JW/bzoRuZRaF/IvOAgOf7UT9H3jHwireRhjUAlKsftGYeF7uV4WFNwFwevciHmC6q1yz5uvw3GWTA2ec35C7A==",
       "type": "package",
       "files": [
-        "SQLitePCL.raw.0.8.6.nupkg.sha512",
+        "SQLitePCL.bundle_green.0.9.2.nupkg.sha512",
+        "SQLitePCL.bundle_green.nuspec",
+        "lib/MonoAndroid/SQLitePCL.batteries.dll",
+        "lib/net45/SQLitePCL.batteries.dll",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLitePCL.batteries.dll",
+        "lib/uap10.0/SQLitePCL.batteries.dll",
+        "lib/win81/SQLitePCL.batteries.dll",
+        "lib/wpa81/SQLitePCL.batteries.dll"
+      ]
+    },
+    "SQLitePCL.native.sqlite3.v140/0.9.2": {
+      "sha512": "QqPO5GDWiQ5NpZwP5szwx1w4sm5u5bc6bpzPUBLoam9+Up4qQhLTZa+YAS5w3Dhq1vIdbHC/fG2GBbF2iIxV2g==",
+      "type": "package",
+      "files": [
+        "SQLitePCL.native.sqlite3.v140.0.9.2.nupkg.sha512",
+        "SQLitePCL.native.sqlite3.v140.nuspec",
+        "build/SQLitePCL.native.sqlite3.v140.targets",
+        "build/native/sqlite3/v140/arm/esqlite3.dll",
+        "build/native/sqlite3/v140/x64/esqlite3.dll",
+        "build/native/sqlite3/v140/x86/esqlite3.dll"
+      ]
+    },
+    "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
+      "sha512": "u2L2a6LF9mqn7q8hBTh263JoMM6K1YXtjnRf9K/eFfPMTr/UX6ye4boOG3KL2BYY8N8Nn6zznShs56T0MJfRCA==",
+      "type": "package",
+      "files": [
+        "SQLitePCL.plugin.sqlite3.uap10.0.0.9.2.nupkg.sha512",
+        "SQLitePCL.plugin.sqlite3.uap10.0.nuspec",
+        "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll"
+      ]
+    },
+    "SQLitePCL.raw/0.9.2": {
+      "sha512": "C6rPoSZcBGuBiiGXvxECliEhtSWt9PT6gEwWaJhiz26WJcSqqWGmJaIzbjyEjQj09W80/sBzZZ9YqYbNmybuLw==",
+      "type": "package",
+      "files": [
+        "SQLitePCL.raw.0.9.2.nupkg.sha512",
         "SQLitePCL.raw.nuspec",
-        "build/MonoAndroid/SQLitePCL.raw.targets",
-        "build/MonoAndroid/pinvoke_packaged_sqlcipher/anycpu/SQLitePCL.raw.dll",
-        "build/MonoAndroid/pinvoke_packaged_sqlite3/anycpu/SQLitePCL.raw.dll",
-        "build/MonoAndroid/pinvoke_sqlite3/anycpu/SQLitePCL.raw.dll",
-        "build/Xamarin.Mac20/SQLitePCL.raw.targets",
-        "build/Xamarin.Mac20/pinvoke_packaged_sqlcipher/anycpu/SQLitePCL.raw.dll",
-        "build/Xamarin.Mac20/pinvoke_packaged_sqlite3/anycpu/SQLitePCL.raw.dll",
-        "build/Xamarin.Mac20/pinvoke_sqlite3/anycpu/SQLitePCL.raw.dll",
-        "build/Xamarin.iOS10/SQLitePCL.raw.targets",
-        "build/Xamarin.iOS10/pinvoke_packaged_sqlcipher/anycpu/SQLitePCL.raw.dll",
-        "build/Xamarin.iOS10/pinvoke_packaged_sqlite3/anycpu/SQLitePCL.raw.dll",
-        "build/Xamarin.iOS10/pinvoke_sqlite3/anycpu/SQLitePCL.raw.dll",
-        "build/native/sqlite3_dynamic/mac/libpackaged_sqlite3.dylib",
-        "build/native/sqlite3_dynamic/v110/arm/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v110/x64/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v110/x86/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v110_wp80/arm/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v110_wp80/x86/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v110_xp/x64/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v110_xp/x86/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v120/arm/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v120/x64/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v120/x86/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v120_wp81/arm/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v120_wp81/x86/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v140/arm/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v140/x64/sqlite3.dll",
-        "build/native/sqlite3_dynamic/v140/x86/sqlite3.dll",
-        "build/net35/SQLitePCL.raw.targets",
-        "build/net40/SQLitePCL.raw.targets",
-        "build/net45/SQLitePCL.raw.targets",
-        "build/net45/pinvoke_packaged_sqlite3/anycpu/SQLitePCL.raw.dll",
-        "build/uap10.0/SQLitePCL.raw.targets",
-        "build/win8/SQLitePCL.raw.targets",
-        "build/win81/SQLitePCL.raw.targets",
-        "build/wp8/SQLitePCL.raw.targets",
-        "build/wp8/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.dll",
-        "build/wp8/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.winmd",
-        "build/wp8/cppinterop_sqlite3_dynamic/arm/SQLitePCL.raw.dll",
-        "build/wp8/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.dll",
-        "build/wp8/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.winmd",
-        "build/wp8/cppinterop_sqlite3_dynamic/x86/SQLitePCL.raw.dll",
-        "build/wp81/SQLitePCL.raw.targets",
-        "build/wp81/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.dll",
-        "build/wp81/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.pri",
-        "build/wp81/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.winmd",
-        "build/wp81/cppinterop_sqlite3_dynamic/arm/SQLitePCL.raw.dll",
-        "build/wp81/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.dll",
-        "build/wp81/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.pri",
-        "build/wp81/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.winmd",
-        "build/wp81/cppinterop_sqlite3_dynamic/x86/SQLitePCL.raw.dll",
-        "build/wpa81/SQLitePCL.raw.targets",
-        "lib/MonoAndroid/_._",
+        "lib/MonoAndroid/SQLitePCL.raw.dll",
         "lib/MonoTouch/SQLitePCL.raw.dll",
-        "lib/Xamarin.Mac20/_._",
-        "lib/Xamarin.iOS10/_._",
+        "lib/Xamarin.iOS10/SQLitePCL.raw.dll",
         "lib/net35/SQLitePCL.raw.dll",
         "lib/net40/SQLitePCL.raw.dll",
         "lib/net45/SQLitePCL.raw.dll",
@@ -14291,8 +14472,6 @@
         "lib/win8/SQLitePCL.raw.pri",
         "lib/win81/SQLitePCL.raw.dll",
         "lib/win81/SQLitePCL.raw.pri",
-        "lib/wp8/_._",
-        "lib/wp81/_._",
         "lib/wpa81/SQLitePCL.raw.dll",
         "lib/wpa81/SQLitePCL.raw.pri"
       ]
@@ -17167,7 +17346,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "HockeySDK.UWP >= 4.1.1-build17552",
+      "HockeySDK.UWP >= 4.1.1",
       "Microsoft.ApplicationInsights >= 1.2.3",
       "Microsoft.ApplicationInsights.PersistenceChannel >= 1.2.3",
       "Microsoft.ApplicationInsights.WindowsApps >= 1.1.1",

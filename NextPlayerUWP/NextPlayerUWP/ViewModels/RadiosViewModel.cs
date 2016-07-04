@@ -46,7 +46,7 @@ namespace NextPlayerUWP.ViewModels
             var item = (RadioItem)e.ClickedItem;
             await NowPlayingPlaylistManager.Current.NewPlaylist(item);
             ApplicationSettingsHelper.SaveSongIndex(0);
-            PlaybackManager.Current.PlayNew();
+            App.PlaybackManager.PlayNew();
         }
 
 
@@ -79,7 +79,7 @@ namespace NextPlayerUWP.ViewModels
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.NewPlaylist(item);
             ApplicationSettingsHelper.SaveSongIndex(0);
-            PlaybackManager.Current.PlayNew();
+            App.PlaybackManager.PlayNew();
         }
 
         public async void PlayNext(object sender, RoutedEventArgs e)

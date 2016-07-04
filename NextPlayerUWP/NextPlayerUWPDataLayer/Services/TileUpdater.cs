@@ -1,9 +1,9 @@
 ﻿using System;
-using NotificationsExtensions.Tiles;
 using NextPlayerUWPDataLayer.Constants;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 using NotificationsExtensions;
+using NotificationsExtensions.Tiles;
 
 namespace NextPlayerUWPDataLayer.Services
 {

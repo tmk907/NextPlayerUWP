@@ -125,7 +125,7 @@ namespace NextPlayerUWP.Views
         {
             BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             viewModel.sliderpressed = false;
-            Common.PlaybackManager.Current.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
+            App.PlaybackManager.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
             //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
         }
 
@@ -134,7 +134,7 @@ namespace NextPlayerUWP.Views
             BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             if (!viewModel.sliderpressed)
             {
-                Common.PlaybackManager.Current.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
+                App.PlaybackManager.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
                 //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
             }
         }

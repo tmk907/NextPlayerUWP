@@ -43,7 +43,7 @@ namespace NextPlayerUWP.Views
         void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
             ViewModel.sliderpressed = false;
-            Common.PlaybackManager.Current.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
+            App.PlaybackManager.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
             //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
         }
 
@@ -51,7 +51,7 @@ namespace NextPlayerUWP.Views
         {
             if (!ViewModel.sliderpressed)
             {
-                Common.PlaybackManager.Current.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
+                App.PlaybackManager.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
                 //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
             }
         }

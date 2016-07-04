@@ -197,7 +197,7 @@ namespace NextPlayerUWP.ViewModels
                 index++;
             }
             ApplicationSettingsHelper.SaveSongIndex(index);
-            PlaybackManager.Current.PlayNew();
+            App.PlaybackManager.PlayNew();
         }
 
         public async void Delete(object sender, RoutedEventArgs e)

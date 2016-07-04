@@ -4,9 +4,9 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
     "Microsoft.NETNative.Analyzer": "1.0.0",
     "Microsoft.OneDriveSDK": "1.1.47",
-    "Newtonsoft.Json": "8.0.3",
-    "NotificationsExtensions.Win10": "14332.0.1",
-    "sqlite-net-pcl": "1.1.1",
+    "Newtonsoft.Json": "9.0.1",
+    "NotificationsExtensions.Win10": "14332.0.0",
+    "sqlite-net-pcl": "1.1.2",
     "TagLib.Portable": "1.0.4",
     "WriteableBitmapEx": "1.5.0"
   },

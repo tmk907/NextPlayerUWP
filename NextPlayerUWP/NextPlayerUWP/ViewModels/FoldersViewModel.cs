@@ -144,7 +144,7 @@ namespace NextPlayerUWP.ViewModels
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
             ApplicationSettingsHelper.SaveSongIndex(index);
-            PlaybackManager.Current.PlayNew();
+            App.PlaybackManager.PlayNew();
         }
 
         private bool sortAfterOnNavigated = false;

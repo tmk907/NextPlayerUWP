@@ -747,7 +747,7 @@ namespace NextPlayerUWP.ViewModels
 
         private void SendMessage(string message)
         {
-            PlaybackManager.Current.SendMessage(message, "");
+            App.PlaybackManager.SendMessage(message, "");
         }
     }
 }

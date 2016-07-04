@@ -122,7 +122,7 @@ namespace NextPlayerUWP.ViewModels
                                     {
                                         await NowPlayingPlaylistManager.Current.NewPlaylist(newSong);
                                         ApplicationSettingsHelper.SaveSongIndex(0);
-                                        PlaybackManager.Current.PlayNew();
+                                        App.PlaybackManager.PlayNew();
                                     }
                                     else
                                     {
@@ -153,7 +153,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     await NowPlayingPlaylistManager.Current.NewPlaylist((MusicItem)item);
                     ApplicationSettingsHelper.SaveSongIndex(0);
-                    PlaybackManager.Current.PlayNew();
+                    App.PlaybackManager.PlayNew();
                 }
             }
         }
@@ -286,7 +286,7 @@ namespace NextPlayerUWP.ViewModels
                 index++;
             }
             ApplicationSettingsHelper.SaveSongIndex(index);
-            PlaybackManager.Current.PlayNew();
+            App.PlaybackManager.PlayNew();
         }
 
         public async void Delete(object sender, RoutedEventArgs e)

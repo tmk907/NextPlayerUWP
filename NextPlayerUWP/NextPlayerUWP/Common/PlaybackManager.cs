@@ -20,9 +20,9 @@ namespace NextPlayerUWP.Common
 
     public class PlaybackManager
     {
-        private static PlaybackManager instance;
+        //private static PlaybackManager instance;
 
-        private PlaybackManager()
+        public  PlaybackManager()
         {
             backgroundAudioTaskStarted = new AutoResetEvent(false);
             if (IsMyBackgroundTaskRunning)
@@ -40,17 +40,17 @@ namespace NextPlayerUWP.Common
             //App.Current.Suspending += Current_Suspending;
         }
 
-        public static PlaybackManager Current
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new PlaybackManager();
-                }
-                return instance;
-            }
-        }
+        //public static PlaybackManager Current
+        //{
+        //    get
+        //    {
+        //        if (instance == null)
+        //        {
+        //            instance = new PlaybackManager();
+        //        }
+        //        return instance;
+        //    }
+        //}
         //private static readonly PlaybackManager current = new PlaybackManager();
         //public static PlaybackManager Current
         //{
@@ -83,7 +83,7 @@ namespace NextPlayerUWP.Common
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Suspending " );
             if (IsMyBackgroundTaskRunning)
             {
-                PlaybackManager.Current.SendMessageBG(AppConstants.AppState, AppConstants.AppSuspended);
+                App.PlaybackManager.SendMessageBG(AppConstants.AppState, AppConstants.AppSuspended);
                 RemoveMediaPlayerEventHandlers();
                 //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Suspending removed");
             }
@@ -103,7 +103,7 @@ namespace NextPlayerUWP.Common
                 {
                     HockeyProxy.TrackEvent("PlaybackManager Resuming AddMediaPlayerEventHandlers " + ex.Message);
                 }
-                PlaybackManager.Current.SendMessageBG(AppConstants.AppState, AppConstants.AppResumed);
+                App.PlaybackManager.SendMessageBG(AppConstants.AppState, AppConstants.AppResumed);
                 //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Resuming added");
             }
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
