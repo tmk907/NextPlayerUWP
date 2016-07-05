@@ -11,7 +11,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1": {
+      "HockeySDK.Core/4.1.1-build17552": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -19,9 +19,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1": {
+      "HockeySDK.UWP/4.1.1-build17552": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1"
+          "HockeySDK.Core": "4.1.1-build17552"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -417,9 +417,9 @@
           "lib/uap10.0/NotificationsExtensions.winmd": {}
         }
       },
-      "sqlite-net-pcl/1.1.2": {
+      "sqlite-net-pcl/1.1.1": {
         "dependencies": {
-          "SQLitePCL.bundle_green": "0.9.2"
+          "SQLitePCL.raw": "0.8.6"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -428,36 +428,7 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.bundle_green/0.9.2": {
-        "dependencies": {
-          "SQLitePCL.native.sqlite3.v140": "0.9.2",
-          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
-          "SQLitePCL.raw": "0.9.2"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        }
-      },
-      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
-      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
-        "dependencies": {
-          "System.Collections": "4.0.10",
-          "System.Collections.Concurrent": "4.0.10",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.InteropServices": "4.0.20",
-          "System.Text.Encoding": "4.0.10"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        }
-      },
-      "SQLitePCL.raw/0.9.2": {
+      "SQLitePCL.raw/0.8.6": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -2036,7 +2007,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1": {
+      "HockeySDK.Core/4.1.1-build17552": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -2044,9 +2015,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1": {
+      "HockeySDK.UWP/4.1.1-build17552": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1"
+          "HockeySDK.Core": "4.1.1-build17552"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -2442,9 +2413,9 @@
           "runtimes/win8-arm/native/mscorrc.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.2": {
+      "sqlite-net-pcl/1.1.1": {
         "dependencies": {
-          "SQLitePCL.bundle_green": "0.9.2"
+          "SQLitePCL.raw": "0.8.6"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -2453,36 +2424,7 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.bundle_green/0.9.2": {
-        "dependencies": {
-          "SQLitePCL.native.sqlite3.v140": "0.9.2",
-          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
-          "SQLitePCL.raw": "0.9.2"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        }
-      },
-      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
-      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
-        "dependencies": {
-          "System.Collections": "4.0.10",
-          "System.Collections.Concurrent": "4.0.10",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.InteropServices": "4.0.20",
-          "System.Text.Encoding": "4.0.10"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        }
-      },
-      "SQLitePCL.raw/0.9.2": {
+      "SQLitePCL.raw/0.8.6": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -3922,7 +3864,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1": {
+      "HockeySDK.Core/4.1.1-build17552": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -3930,9 +3872,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1": {
+      "HockeySDK.UWP/4.1.1-build17552": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1"
+          "HockeySDK.Core": "4.1.1-build17552"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -4306,9 +4248,9 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.2": {
+      "sqlite-net-pcl/1.1.1": {
         "dependencies": {
-          "SQLitePCL.bundle_green": "0.9.2"
+          "SQLitePCL.raw": "0.8.6"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -4317,36 +4259,7 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.bundle_green/0.9.2": {
-        "dependencies": {
-          "SQLitePCL.native.sqlite3.v140": "0.9.2",
-          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
-          "SQLitePCL.raw": "0.9.2"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        }
-      },
-      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
-      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
-        "dependencies": {
-          "System.Collections": "4.0.10",
-          "System.Collections.Concurrent": "4.0.10",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.InteropServices": "4.0.20",
-          "System.Text.Encoding": "4.0.10"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        }
-      },
-      "SQLitePCL.raw/0.9.2": {
+      "SQLitePCL.raw/0.8.6": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -5766,7 +5679,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1": {
+      "HockeySDK.Core/4.1.1-build17552": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -5774,9 +5687,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1": {
+      "HockeySDK.UWP/4.1.1-build17552": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1"
+          "HockeySDK.Core": "4.1.1-build17552"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -6180,9 +6093,9 @@
           "runtimes/win7-x64/native/mscorrc.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.2": {
+      "sqlite-net-pcl/1.1.1": {
         "dependencies": {
-          "SQLitePCL.bundle_green": "0.9.2"
+          "SQLitePCL.raw": "0.8.6"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -6191,36 +6104,7 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.bundle_green/0.9.2": {
-        "dependencies": {
-          "SQLitePCL.native.sqlite3.v140": "0.9.2",
-          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
-          "SQLitePCL.raw": "0.9.2"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        }
-      },
-      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
-      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
-        "dependencies": {
-          "System.Collections": "4.0.10",
-          "System.Collections.Concurrent": "4.0.10",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.InteropServices": "4.0.20",
-          "System.Text.Encoding": "4.0.10"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        }
-      },
-      "SQLitePCL.raw/0.9.2": {
+      "SQLitePCL.raw/0.8.6": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -7660,7 +7544,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1": {
+      "HockeySDK.Core/4.1.1-build17552": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -7668,9 +7552,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1": {
+      "HockeySDK.UWP/4.1.1-build17552": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1"
+          "HockeySDK.Core": "4.1.1-build17552"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -8044,9 +7928,9 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.2": {
+      "sqlite-net-pcl/1.1.1": {
         "dependencies": {
-          "SQLitePCL.bundle_green": "0.9.2"
+          "SQLitePCL.raw": "0.8.6"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -8055,36 +7939,7 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.bundle_green/0.9.2": {
-        "dependencies": {
-          "SQLitePCL.native.sqlite3.v140": "0.9.2",
-          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
-          "SQLitePCL.raw": "0.9.2"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        }
-      },
-      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
-      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
-        "dependencies": {
-          "System.Collections": "4.0.10",
-          "System.Collections.Concurrent": "4.0.10",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.InteropServices": "4.0.20",
-          "System.Text.Encoding": "4.0.10"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        }
-      },
-      "SQLitePCL.raw/0.9.2": {
+      "SQLitePCL.raw/0.8.6": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -9504,7 +9359,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1": {
+      "HockeySDK.Core/4.1.1-build17552": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -9512,9 +9367,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1": {
+      "HockeySDK.UWP/4.1.1-build17552": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1"
+          "HockeySDK.Core": "4.1.1-build17552"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -9918,9 +9773,9 @@
           "runtimes/win7-x86/native/mscorrc.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.2": {
+      "sqlite-net-pcl/1.1.1": {
         "dependencies": {
-          "SQLitePCL.bundle_green": "0.9.2"
+          "SQLitePCL.raw": "0.8.6"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -9929,36 +9784,7 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.bundle_green/0.9.2": {
-        "dependencies": {
-          "SQLitePCL.native.sqlite3.v140": "0.9.2",
-          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
-          "SQLitePCL.raw": "0.9.2"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        }
-      },
-      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
-      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
-        "dependencies": {
-          "System.Collections": "4.0.10",
-          "System.Collections.Concurrent": "4.0.10",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.InteropServices": "4.0.20",
-          "System.Text.Encoding": "4.0.10"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        }
-      },
-      "SQLitePCL.raw/0.9.2": {
+      "SQLitePCL.raw/0.8.6": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -11398,7 +11224,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "HockeySDK.Core/4.1.1": {
+      "HockeySDK.Core/4.1.1-build17552": {
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         },
@@ -11406,9 +11232,9 @@
           "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll": {}
         }
       },
-      "HockeySDK.UWP/4.1.1": {
+      "HockeySDK.UWP/4.1.1-build17552": {
         "dependencies": {
-          "HockeySDK.Core": "4.1.1"
+          "HockeySDK.Core": "4.1.1-build17552"
         },
         "compile": {
           "lib/uap10.0/Microsoft.HockeyApp.Kit.dll": {}
@@ -11782,9 +11608,9 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "sqlite-net-pcl/1.1.2": {
+      "sqlite-net-pcl/1.1.1": {
         "dependencies": {
-          "SQLitePCL.bundle_green": "0.9.2"
+          "SQLitePCL.raw": "0.8.6"
         },
         "compile": {
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
@@ -11793,36 +11619,7 @@
           "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll": {}
         }
       },
-      "SQLitePCL.bundle_green/0.9.2": {
-        "dependencies": {
-          "SQLitePCL.native.sqlite3.v140": "0.9.2",
-          "SQLitePCL.plugin.sqlite3.uap10.0": "0.9.2",
-          "SQLitePCL.raw": "0.9.2"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCL.batteries.dll": {}
-        }
-      },
-      "SQLitePCL.native.sqlite3.v140/0.9.2": {},
-      "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
-        "dependencies": {
-          "System.Collections": "4.0.10",
-          "System.Collections.Concurrent": "4.0.10",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.InteropServices": "4.0.20",
-          "System.Text.Encoding": "4.0.10"
-        },
-        "compile": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll": {}
-        }
-      },
-      "SQLitePCL.raw/0.9.2": {
+      "SQLitePCL.raw/0.8.6": {
         "dependencies": {
           "System.Collections": "4.0.10",
           "System.Collections.Concurrent": "4.0.10",
@@ -13250,11 +13047,11 @@
         "package/services/metadata/core-properties/99be0c88b2fd41c8b07c42071005ee47.psmdcp"
       ]
     },
-    "HockeySDK.Core/4.1.1": {
-      "sha512": "UwthaWI68CHqsT+nYghACdHoZW4q8DN7o55HjS3LZKvBINOEbO2zuzS3viuKnRoqK9XR7IOvcK2/y+xyoPgJDA==",
+    "HockeySDK.Core/4.1.1-build17552": {
+      "sha512": "Qg/h7UL6ondCeETG5AZQUPwnF9RayrmyiC5E5uXMe91O9PaYiSTYZNnOO+w0dHS6pkLqndDBVoHGmvkPVpLtKA==",
       "type": "package",
       "files": [
-        "HockeySDK.Core.4.1.1.nupkg.sha512",
+        "HockeySDK.Core.4.1.1-build17552.nupkg.sha512",
         "HockeySDK.Core.nuspec",
         "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll",
         "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.Core45.dll.CodeAnalysisLog.xml",
@@ -13262,11 +13059,11 @@
         "lib/portable-net45+win8+wp8+wpa81+win81+uap10.0/Microsoft.HockeyApp.XML"
       ]
     },
-    "HockeySDK.UWP/4.1.1": {
-      "sha512": "2i3ngjLaTV82wp3IdHXv28yV6jDlZr8Fl1mD44OlJLaGfEJkic5txOt+xCgh6NWCm24QpXCjQMl1s2u5lm6ZEQ==",
+    "HockeySDK.UWP/4.1.1-build17552": {
+      "sha512": "JRe4fHc5FEf+Z/CbkgCgMdF4NTnhqnqoHc+XogzeynywhAxUyWN/0FfS6X11vtbiGK3d785RkYpBACd1YFCMfw==",
       "type": "package",
       "files": [
-        "HockeySDK.UWP.4.1.1.nupkg.sha512",
+        "HockeySDK.UWP.4.1.1-build17552.nupkg.sha512",
         "HockeySDK.UWP.nuspec",
         "lib/uap10.0/Microsoft.HockeyApp.Kit.dll",
         "lib/uap10.0/Microsoft.HockeyApp.Kit.dll.CodeAnalysisLog.xml",
@@ -14403,61 +14200,78 @@
         "runtimes/win8-arm/native/mscorrc.dll"
       ]
     },
-    "sqlite-net-pcl/1.1.2": {
-      "sha512": "pN7deFk+OGQBsFK3xRuEV7mMhX1UjOuGMGhpJg9cSkC0DGZwlbdGXYdB9kov6sAZO41Td92lJxSN36IjhTWMTQ==",
+    "sqlite-net-pcl/1.1.1": {
+      "sha512": "MmFKwtN3SuqMcuBkqY5ynhphNvP9EDOUPJaPgJHiQypDUcz19TbLfJ4MiDBknwrWy/AHZHIyWjMKINqiIEp5Jw==",
       "type": "package",
       "files": [
         "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll",
         "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.dll.mdb",
-        "lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLite-net.xml",
-        "sqlite-net-pcl.1.1.2.nupkg.sha512",
+        "sqlite-net-pcl.1.1.1.nupkg.sha512",
         "sqlite-net-pcl.nuspec"
       ]
     },
-    "SQLitePCL.bundle_green/0.9.2": {
-      "sha512": "1JW/bzoRuZRaF/IvOAgOf7UT9H3jHwireRhjUAlKsftGYeF7uV4WFNwFwevciHmC6q1yz5uvw3GWTA2ec35C7A==",
+    "SQLitePCL.raw/0.8.6": {
+      "sha512": "KTPjkmtwoQBfNE5E44bwWdTqjnSs9hJPeqbX7dPKlmhng2YYJqbm1EpdUdB6BdFxvBzTO9WeveEMYQiNDKWqFg==",
       "type": "package",
       "files": [
-        "SQLitePCL.bundle_green.0.9.2.nupkg.sha512",
-        "SQLitePCL.bundle_green.nuspec",
-        "lib/MonoAndroid/SQLitePCL.batteries.dll",
-        "lib/net45/SQLitePCL.batteries.dll",
-        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/SQLitePCL.batteries.dll",
-        "lib/uap10.0/SQLitePCL.batteries.dll",
-        "lib/win81/SQLitePCL.batteries.dll",
-        "lib/wpa81/SQLitePCL.batteries.dll"
-      ]
-    },
-    "SQLitePCL.native.sqlite3.v140/0.9.2": {
-      "sha512": "QqPO5GDWiQ5NpZwP5szwx1w4sm5u5bc6bpzPUBLoam9+Up4qQhLTZa+YAS5w3Dhq1vIdbHC/fG2GBbF2iIxV2g==",
-      "type": "package",
-      "files": [
-        "SQLitePCL.native.sqlite3.v140.0.9.2.nupkg.sha512",
-        "SQLitePCL.native.sqlite3.v140.nuspec",
-        "build/SQLitePCL.native.sqlite3.v140.targets",
-        "build/native/sqlite3/v140/arm/esqlite3.dll",
-        "build/native/sqlite3/v140/x64/esqlite3.dll",
-        "build/native/sqlite3/v140/x86/esqlite3.dll"
-      ]
-    },
-    "SQLitePCL.plugin.sqlite3.uap10.0/0.9.2": {
-      "sha512": "u2L2a6LF9mqn7q8hBTh263JoMM6K1YXtjnRf9K/eFfPMTr/UX6ye4boOG3KL2BYY8N8Nn6zznShs56T0MJfRCA==",
-      "type": "package",
-      "files": [
-        "SQLitePCL.plugin.sqlite3.uap10.0.0.9.2.nupkg.sha512",
-        "SQLitePCL.plugin.sqlite3.uap10.0.nuspec",
-        "lib/uap10.0/SQLitePCLPlugin_esqlite3.dll"
-      ]
-    },
-    "SQLitePCL.raw/0.9.2": {
-      "sha512": "C6rPoSZcBGuBiiGXvxECliEhtSWt9PT6gEwWaJhiz26WJcSqqWGmJaIzbjyEjQj09W80/sBzZZ9YqYbNmybuLw==",
-      "type": "package",
-      "files": [
-        "SQLitePCL.raw.0.9.2.nupkg.sha512",
+        "SQLitePCL.raw.0.8.6.nupkg.sha512",
         "SQLitePCL.raw.nuspec",
-        "lib/MonoAndroid/SQLitePCL.raw.dll",
+        "build/MonoAndroid/SQLitePCL.raw.targets",
+        "build/MonoAndroid/pinvoke_packaged_sqlcipher/anycpu/SQLitePCL.raw.dll",
+        "build/MonoAndroid/pinvoke_packaged_sqlite3/anycpu/SQLitePCL.raw.dll",
+        "build/MonoAndroid/pinvoke_sqlite3/anycpu/SQLitePCL.raw.dll",
+        "build/Xamarin.Mac20/SQLitePCL.raw.targets",
+        "build/Xamarin.Mac20/pinvoke_packaged_sqlcipher/anycpu/SQLitePCL.raw.dll",
+        "build/Xamarin.Mac20/pinvoke_packaged_sqlite3/anycpu/SQLitePCL.raw.dll",
+        "build/Xamarin.Mac20/pinvoke_sqlite3/anycpu/SQLitePCL.raw.dll",
+        "build/Xamarin.iOS10/SQLitePCL.raw.targets",
+        "build/Xamarin.iOS10/pinvoke_packaged_sqlcipher/anycpu/SQLitePCL.raw.dll",
+        "build/Xamarin.iOS10/pinvoke_packaged_sqlite3/anycpu/SQLitePCL.raw.dll",
+        "build/Xamarin.iOS10/pinvoke_sqlite3/anycpu/SQLitePCL.raw.dll",
+        "build/native/sqlite3_dynamic/mac/libpackaged_sqlite3.dylib",
+        "build/native/sqlite3_dynamic/v110/arm/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v110/x64/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v110/x86/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v110_wp80/arm/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v110_wp80/x86/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v110_xp/x64/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v110_xp/x86/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v120/arm/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v120/x64/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v120/x86/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v120_wp81/arm/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v120_wp81/x86/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v140/arm/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v140/x64/sqlite3.dll",
+        "build/native/sqlite3_dynamic/v140/x86/sqlite3.dll",
+        "build/net35/SQLitePCL.raw.targets",
+        "build/net40/SQLitePCL.raw.targets",
+        "build/net45/SQLitePCL.raw.targets",
+        "build/net45/pinvoke_packaged_sqlite3/anycpu/SQLitePCL.raw.dll",
+        "build/uap10.0/SQLitePCL.raw.targets",
+        "build/win8/SQLitePCL.raw.targets",
+        "build/win81/SQLitePCL.raw.targets",
+        "build/wp8/SQLitePCL.raw.targets",
+        "build/wp8/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.dll",
+        "build/wp8/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.winmd",
+        "build/wp8/cppinterop_sqlite3_dynamic/arm/SQLitePCL.raw.dll",
+        "build/wp8/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.dll",
+        "build/wp8/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.winmd",
+        "build/wp8/cppinterop_sqlite3_dynamic/x86/SQLitePCL.raw.dll",
+        "build/wp81/SQLitePCL.raw.targets",
+        "build/wp81/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.dll",
+        "build/wp81/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.pri",
+        "build/wp81/cppinterop_sqlite3_dynamic/arm/SQLitePCL.cppinterop.winmd",
+        "build/wp81/cppinterop_sqlite3_dynamic/arm/SQLitePCL.raw.dll",
+        "build/wp81/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.dll",
+        "build/wp81/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.pri",
+        "build/wp81/cppinterop_sqlite3_dynamic/x86/SQLitePCL.cppinterop.winmd",
+        "build/wp81/cppinterop_sqlite3_dynamic/x86/SQLitePCL.raw.dll",
+        "build/wpa81/SQLitePCL.raw.targets",
+        "lib/MonoAndroid/_._",
         "lib/MonoTouch/SQLitePCL.raw.dll",
-        "lib/Xamarin.iOS10/SQLitePCL.raw.dll",
+        "lib/Xamarin.Mac20/_._",
+        "lib/Xamarin.iOS10/_._",
         "lib/net35/SQLitePCL.raw.dll",
         "lib/net40/SQLitePCL.raw.dll",
         "lib/net45/SQLitePCL.raw.dll",
@@ -14472,6 +14286,8 @@
         "lib/win8/SQLitePCL.raw.pri",
         "lib/win81/SQLitePCL.raw.dll",
         "lib/win81/SQLitePCL.raw.pri",
+        "lib/wp8/_._",
+        "lib/wp81/_._",
         "lib/wpa81/SQLitePCL.raw.dll",
         "lib/wpa81/SQLitePCL.raw.pri"
       ]
@@ -17346,7 +17162,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "HockeySDK.UWP >= 4.1.1",
+      "HockeySDK.UWP >= 4.1.1-build17552",
       "Microsoft.ApplicationInsights >= 1.2.3",
       "Microsoft.ApplicationInsights.PersistenceChannel >= 1.2.3",
       "Microsoft.ApplicationInsights.WindowsApps >= 1.1.1",

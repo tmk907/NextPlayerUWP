@@ -43,6 +43,7 @@ namespace NextPlayerUWP.Common
         static SongCoverManager() { }
         private SongCoverManager()
         {
+            System.Diagnostics.Debug.WriteLine("SongCoverManager ctor");
             cachedUris = new Dictionary<int, Uri>(cacheCapacity);
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
             PlaybackManager.StreamUpdated += PlaybackManager_StreamUpdated;

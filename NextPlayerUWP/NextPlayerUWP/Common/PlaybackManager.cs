@@ -33,7 +33,7 @@ namespace NextPlayerUWP.Common
                 }
                 catch (Exception ex)
                 {
-                    HockeyProxy.TrackEvent("PlaybackManager constructor AddMediaPlayerEventHandlers " + ex.Message);
+                    TelemetryAdapter.TrackEvent("PlaybackManager constructor AddMediaPlayerEventHandlers " + ex.Message);
                 }
             }
             //App.Current.Resuming += Current_Resuming;
@@ -101,7 +101,7 @@ namespace NextPlayerUWP.Common
                 }
                 catch (Exception ex)
                 {
-                    HockeyProxy.TrackEvent("PlaybackManager Resuming AddMediaPlayerEventHandlers " + ex.Message);
+                    TelemetryAdapter.TrackEvent("PlaybackManager Resuming AddMediaPlayerEventHandlers " + ex.Message);
                 }
                 App.PlaybackManager.SendMessageBG(AppConstants.AppState, AppConstants.AppResumed);
                 //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Resuming added");
@@ -218,9 +218,9 @@ namespace NextPlayerUWP.Common
                             }
                             catch (Exception ex2)
                             {
-                                HockeyProxy.TrackEvent("ShutdownBGPlayer dont work" + ex2.Message);
+                                TelemetryAdapter.TrackEvent("ShutdownBGPlayer dont work" + ex2.Message);
                             }
-                            if (success) HockeyProxy.TrackEvent("ShutdownBGPlayer works");
+                            if (success) TelemetryAdapter.TrackEvent("ShutdownBGPlayer works");
                             throw;
                         }
                     }
@@ -314,12 +314,12 @@ namespace NextPlayerUWP.Common
                 if (ex.HResult == RPC_S_SERVER_UNAVAILABLE)
                 {
                     // do nothing
-                    HockeyProxy.TrackEventException("RemoveMediaPlayerEventHandlers " + ex.Message + Environment.NewLine + ex.StackTrace);
+                    TelemetryAdapter.TrackEventException("RemoveMediaPlayerEventHandlers " + ex.Message + Environment.NewLine + ex.StackTrace);
                 }
                 else
                 {
                     //throw;
-                    HockeyProxy.TrackEventException("RemoveMediaPlayerEventHandlers else" + ex.Message + Environment.NewLine + ex.StackTrace);
+                    TelemetryAdapter.TrackEventException("RemoveMediaPlayerEventHandlers else" + ex.Message + Environment.NewLine + ex.StackTrace);
                 }
             }
         }
@@ -345,7 +345,7 @@ namespace NextPlayerUWP.Common
                 else
                 {
                     //throw;
-                    HockeyProxy.TrackEventException("AddMediaPlayerEventHandlers else " + ex.Message + Environment.NewLine + ex.StackTrace);
+                    TelemetryAdapter.TrackEventException("AddMediaPlayerEventHandlers else " + ex.Message + Environment.NewLine + ex.StackTrace);
                 }
             }
         }

@@ -98,6 +98,7 @@ namespace NextPlayerUWP
             else
             {
                 RequestedTheme = ApplicationTheme.Light;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
             }
 
             SplashFactory = (e) => new Views.Splash(e);
@@ -162,7 +163,15 @@ namespace NextPlayerUWP
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
 
-            await ChangeStatusBarVisibility();
+            try
+            {
+                await ChangeStatusBarVisibility();
+            }
+            catch (Exception ex)
+            {
+                Logger.SaveInSettings("OnInitializeAsync ChangeStatusBarVisibility " + ex);
+                //throw;
+            }
 
             #region AddPageKeys
             var keys = PageKeys<Pages>();
@@ -205,16 +214,22 @@ namespace NextPlayerUWP
             if (!keys.ContainsKey(Pages.TagsEditor))
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
             #endregion
-            
-            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated || 
-                args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser || 
-                args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+
+            try
             {
-                DisplayRequestHelper drh = new DisplayRequestHelper();
-                drh.ActivateIfEnabled();
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated ||
+                        args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                        args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+                {
+                    DisplayRequestHelper drh = new DisplayRequestHelper();
+                    drh.ActivateIfEnabled();
+                }
             }
-            
-            await Task.CompletedTask;
+            catch (Exception ex)
+            {
+                Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
+                //throw;
+            }
         }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
@@ -261,7 +276,7 @@ namespace NextPlayerUWP
                             //Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
                             //Logger.SaveToFile();
                             Debug.WriteLine("OnStartAsync event arg doesn't contain tileid");
-                            HockeyProxy.TrackEventException("event arg doesn't contain tileid");
+                            TelemetryAdapter.TrackEventException("event arg doesn't contain tileid");
                         }
                         Pages page = Pages.Playlists;
                         string parameter = eventArgs.Arguments;
@@ -293,29 +308,31 @@ namespace NextPlayerUWP
                                 //page = Pages.NowPlaying; ?
                                 break;
                             case MusicItemTypes.unknown:
-                                HockeyProxy.TrackEventException("MusicItemTypes.unknown");
+                                TelemetryAdapter.TrackEventException("MusicItemTypes.unknown");
                                 break;
                             default:
                                 break;
                         }
-                        HockeyProxy.TrackEvent("LaunchFromSecondaryTile " + type.ToString());
+                        TelemetryAdapter.TrackEvent("LaunchFromSecondaryTile " + type.ToString());
                         await NavigationService.NavigateAsync(page, parameter);
                         break;
                     case AdditionalKinds.Primary:
                         if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                            args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+                            args.PreviousExecutionState == ApplicationExecutionState.NotRunning || 
+                            args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                         {
                             Debug.WriteLine("OnStartAsync Primary closed");
-                            await NavigationService.NavigateAsync(Pages.Playlists);
+                            await NavigationService.NavigateAsync(Pages.Artists);
                         }
                         else
                         {
                             Debug.WriteLine("OnStartAsync Primary not closed");
                             //Logger.SaveInSettings("Onstart from Primary " + args.PreviousExecutionState);
-                            await NavigationService.NavigateAsync(Pages.Playlists);
+                            //await NavigationService.NavigateAsync(Pages.Playlists);
                         }
                         break;
                     case AdditionalKinds.Toast:
+                        Debug.WriteLine("OnStartAsync Toast");
                         var toastargs = args as ToastNotificationActivatedEventArgs;
                         await NavigationService.NavigateAsync(Pages.Settings);
                         break;
@@ -326,7 +343,7 @@ namespace NextPlayerUWP
                         //if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                         //    args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                         //{
-                            await NavigationService.NavigateAsync(Pages.Playlists);
+                            await NavigationService.NavigateAsync(Pages.Genres);
                         //}
                         break;
                 }
@@ -423,6 +440,7 @@ namespace NextPlayerUWP
             {
                 DatabaseManager.Current.UpdateToVersion2();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
+                version = "2";
             }
             if (version.ToString() == "2")
             {
@@ -432,11 +450,13 @@ namespace NextPlayerUWP
                     CreateDefaultSmartPlaylists();
                 }
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
+                version = "3";
             }
             if (version.ToString() == "3")
             {
                 DatabaseManager.Current.UpdateToVersion4();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 4);
+                version = "4";
             }
         }
 
@@ -578,12 +598,27 @@ namespace NextPlayerUWP
         {
             MediaImport mi = new MediaImport();
             List<SongItem> list = new List<SongItem>();
+            int i = 0;
+            const int size = 4;
             foreach(var file in files)
             {
                 var si = await mi.OpenSingleFileAsync(file as StorageFile);
                 list.Add(si);
+                if (i == size)
+                {
+                    await NowPlayingPlaylistManager.Current.Add(list);
+                    list.Clear();
+                    i = 0;
+                }
+                else
+                {
+                    i++;
+                }
             }
-            await NowPlayingPlaylistManager.Current.Add(list);
+            if (list.Count > 0)
+            {
+                await NowPlayingPlaylistManager.Current.Add(list);
+            }
         }
     }
 }

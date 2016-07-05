@@ -37,7 +37,7 @@ namespace NextPlayerUWP.Common
             }
             catch (Exception ex)
             {
-                HockeyProxy.TrackEvent("BGScrobbler registration failed");
+                TelemetryAdapter.TrackEvent("BGScrobbler registration failed");
             }
         }
 

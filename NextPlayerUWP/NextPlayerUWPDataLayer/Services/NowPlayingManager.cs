@@ -97,7 +97,7 @@ namespace NextPlayerUWPDataLayer.Services
                 else
                 {
                     ValueSet message = new ValueSet();
-                    message.Add("ffmpeg", song.Path);
+                    message.Add("ffmpeg-db", song.Path);
                     BackgroundMediaPlayer.SendMessageToBackground(message);
                 }
             }
@@ -156,7 +156,7 @@ namespace NextPlayerUWPDataLayer.Services
                     else
                     {
                         ValueSet message = new ValueSet();
-                        message.Add("ffmpeg2", song.Path);
+                        message.Add("ffmpeg-accesslist", song.Path);
                         BackgroundMediaPlayer.SendMessageToBackground(message);
                     }
                 }

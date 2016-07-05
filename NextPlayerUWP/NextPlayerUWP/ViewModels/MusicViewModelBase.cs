@@ -163,7 +163,12 @@ namespace NextPlayerUWP.ViewModels
                 System.Diagnostics.Debug.WriteLine("OnNavigatedToAsync LoadAndScroll()");
                 await LoadAndScroll();
             }
-            await Task.CompletedTask;
+
+
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackEvent("Navigated to " + this.GetType());
+            }
         }
 
         virtual public bool RestoreListPosition(NavigationMode mode)

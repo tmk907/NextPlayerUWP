@@ -39,6 +39,10 @@ namespace NextPlayerUWP.ViewModels
             }
             await UpdatePlayingNow();
             Updating = false;
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackEvent("Navigated to " + this.GetType());
+            }
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)

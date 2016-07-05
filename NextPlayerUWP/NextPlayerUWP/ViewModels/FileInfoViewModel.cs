@@ -26,7 +26,7 @@ namespace NextPlayerUWP.ViewModels
                 FileInfo = await DatabaseManager.Current.GetSongDataAsync(songId);
                 await AddFileSize();
             }
-            HockeyProxy.TrackEvent("Page: File Info");
+            TelemetryAdapter.TrackEvent("Page: File Info");
         }
 
         private async Task AddFileSize()

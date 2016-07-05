@@ -89,7 +89,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                 // immediately set not running
                 backgroundTaskStarted.Reset();
 
-                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("OnCanceled" + "\n" + reason + "\n" + sender.SuspendedCount);
+                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("OnCanceled" + "\n" + reason + "\n" + sender?.SuspendedCount);
                 NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFileBG();
 
                 // save state
@@ -216,11 +216,11 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                             //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                         }
                         break;
-                    case "ffmpeg":
+                    case "ffmpeg-db":
                         string path = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
                         await OpenUsingFFmpeg(path,false);
                         break;
-                    case "ffmpeg2":
+                    case "ffmpeg-accesslist":
                         string path2 = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
                         await OpenUsingFFmpeg(path2, true);
                         break;
@@ -250,7 +250,12 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                 {
                     file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(path);
                 }
-                else return;
+                else
+                {
+                    BackgroundMediaPlayer.Current.Pause();
+                    await Next();
+                    return;
+                }
             }
             else
             {
@@ -368,13 +373,13 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                     // Wait for task to start. 
                     // Once started, this stays signaled until shutdown so it won't wait
                     // again unless it needs to.
-                    bool result = backgroundTaskStarted.WaitOne(3000);
-                    if (!result)
-                    {
-                        NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("smtc_ButtonPressed Background Task didnt initialize in time");
-                        NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFileBG();
-                        throw new Exception("Background Task didnt initialize in time");
-                    }
+                    //bool result = backgroundTaskStarted.WaitOne(3000);
+                    //if (!result)
+                    //{
+                    //    NextPlayerUWPDataLayer.Diagnostics.Logger.SaveBG("smtc_ButtonPressed Background Task didnt initialize in time");
+                    //    NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFileBG();
+                    //    throw new Exception("Background Task didnt initialize in time");
+                    //}
                     Play();
                     break;
                 case SystemMediaTransportControlsButton.Pause:
@@ -437,7 +442,10 @@ namespace NextPlayerUWPBackgroundAudioPlayer
         private void ShutdownPlayer()
         {
             shutdown = true;
-            BackgroundMediaPlayer.Shutdown();
+            BackgroundMediaPlayer.Current.Pause();
+            BackgroundMediaPlayer.Current.Position = TimeSpan.Zero;
+            //this.OnCanceled(null, BackgroundTaskCancellationReason.Abort);
+            //BackgroundMediaPlayer.Shutdown();
         }
 
         private void SendMessage(string message, string content = "")
@@ -486,9 +494,9 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
         private void TimerCallback(ThreadPoolTimer timer)
         {
-            ShutdownPlayer();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             TimerCancel();
+            ShutdownPlayer();
         }
 
         private void TimerCancel()

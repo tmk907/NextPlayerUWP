@@ -215,7 +215,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (listView == null)
             {
-                HockeyProxy.TrackEvent("ScrollAfterTrackChanged listview == null");
+                TelemetryAdapter.TrackEvent("ScrollAfterTrackChanged listview == null");
                 return;
             }
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
@@ -451,7 +451,7 @@ namespace NextPlayerUWP.ViewModels
                 original = false;
                 Lyrics = dbLyrics;
             }
-            HockeyProxy.TrackEvent("ChangeLyrics()");
+            TelemetryAdapter.TrackEvent("ChangeLyrics()");
         }
 
         private async Task LoadLyricsFromWebsite()

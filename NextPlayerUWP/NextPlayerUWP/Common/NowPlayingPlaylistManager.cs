@@ -415,7 +415,7 @@ namespace NextPlayerUWP.Common
                 }
                 catch(Exception ex)
                 {
-                    HockeyProxy.TrackEvent("NPPM SendMessage" + ex.Message);
+                    TelemetryAdapter.TrackEvent("NPPM SendMessage" + ex.Message);
                 }
             }
         }

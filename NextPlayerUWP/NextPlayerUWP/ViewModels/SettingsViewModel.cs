@@ -108,15 +108,7 @@ namespace NextPlayerUWP.ViewModels
 
             // Tools
             var tt = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
-            var to = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn);
-            if (to == null)
-            {
-                IsTimerOn = false;
-            }
-            else
-            {
-                IsTimerOn = (bool)to;
-            }
+            var IsTimerOn = (bool)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn)??false);
             Time = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             if (isTimerOn)
             {
@@ -124,11 +116,12 @@ namespace NextPlayerUWP.ViewModels
                 {
                     Time = TimeSpan.FromTicks((long)tt);
                 }
+                else
+                {
+                    IsTimerOn = false;
+                }
             }
-            else
-            {
-                IsTimerOn = false;
-            }
+            
             string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterDropItem) as string;
             if (action.Equals(AppConstants.ActionPlayNow))
             {
@@ -212,7 +205,7 @@ namespace NextPlayerUWP.ViewModels
             IsUpdating = true;
             await Task.Run(() => m.UpdateDatabase(progress));
             IsUpdating = false;
-            HockeyProxy.TrackEvent("Library updated");
+            TelemetryAdapter.TrackEvent("Library updated");
         }
 
         public async void AddFolder()
@@ -261,7 +254,7 @@ namespace NextPlayerUWP.ViewModels
                     if (value) SavePlaylists();
                     else DeletePlaylists();
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, value);
-                    HockeyProxy.TrackEvent("AutoSavePlaylists " + value);
+                    TelemetryAdapter.TrackEvent("AutoSavePlaylists " + value);
                 }
                 Set(ref autoSavePlaylists, value);
             }
@@ -303,7 +296,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 ActionNr = 1;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionPlayNow);
-                HockeyProxy.TrackEvent("After Drop Item " + AppConstants.ActionPlayNow);
+                TelemetryAdapter.TrackEvent("After Drop Item " + AppConstants.ActionPlayNow);
             }
         }
 
@@ -314,7 +307,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 ActionNr = 2;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionPlayNext);
-                HockeyProxy.TrackEvent("After Drop Item " + AppConstants.ActionPlayNext);
+                TelemetryAdapter.TrackEvent("After Drop Item " + AppConstants.ActionPlayNext);
             }
         }
 
@@ -325,7 +318,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 ActionNr = 3;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
-                HockeyProxy.TrackEvent("After Drop Item " + AppConstants.ActionAddToNowPlaying);
+                TelemetryAdapter.TrackEvent("After Drop Item " + AppConstants.ActionAddToNowPlaying);
             }
         }
 
@@ -337,7 +330,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (value != isTimerOn)
                 {
-                    ChangeTimer(value);
+                    ChangeTimer(value, time);
                 }
                 Set(ref isTimerOn, value);
             }
@@ -347,51 +340,31 @@ namespace NextPlayerUWP.ViewModels
         public TimeSpan Time
         {
             get { return time; }
-            set {
-                    //TimeSpan now = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
-                    //TimeSpan difference = TimeSpan.FromTicks(value.Ticks - now.Ticks);
-                    //if (difference <= TimeSpan.Zero || !isTimerOn) return;
-                    //else
-                    //{
+            set
+            {
                 if (value != time)
                 {
-                    ChangeTimer(true);
+                    ChangeTimer(true, value);
                 }
-                //}
                 Set(ref time, value);
             }
         }
 
-        public void ChangeTimer(bool isOn)
+        public void ChangeTimer(bool isOn, TimeSpan time)
         {
             if (!initialization)
             {
                 if (isOn)
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, time.Ticks);
                     SendMessage(AppConstants.SetTimer);
-                    HockeyProxy.TrackEvent("Timer on");
+                    TelemetryAdapter.TrackEvent("Timer on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
                     SendMessage(AppConstants.CancelTimer);
-                }
-            }
-        }
-
-        public void TimeChanged(object sender, TimePickerValueChangedEventArgs e)
-        {
-            if (!initialization)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, Time.Ticks);
-                TimeSpan now = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
-                TimeSpan difference = TimeSpan.FromTicks(Time.Ticks - now.Ticks);
-                if (difference <= TimeSpan.Zero) return;
-                else
-                {
-                    SendMessage(AppConstants.SetTimer);
                 }
             }
         }
@@ -418,13 +391,13 @@ namespace NextPlayerUWP.ViewModels
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, true);
                     displayRequestHelper.ActivateDisplay();
-                    HockeyProxy.TrackEvent("Prevent screen dimming on");
+                    TelemetryAdapter.TrackEvent("Prevent screen dimming on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
                     displayRequestHelper.ReleaseDisplay();
-                    HockeyProxy.TrackEvent("Prevent screen dimming off");
+                    TelemetryAdapter.TrackEvent("Prevent screen dimming off");
                 }
             }
         }
@@ -449,7 +422,7 @@ namespace NextPlayerUWP.ViewModels
             await App.ChangeStatusBarVisibility(hide);
             if (!initialization)
             {
-                HockeyProxy.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
+                TelemetryAdapter.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
             }
         }
 
@@ -464,7 +437,7 @@ namespace NextPlayerUWP.ViewModels
                     if (!initialization)
                     {
                         ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, value);
-                        HockeyProxy.TrackEvent("IncludeSubFolders " + includeSubFolders);
+                        TelemetryAdapter.TrackEvent("IncludeSubFolders " + includeSubFolders);
                     }
                 }
                 Set(ref includeSubFolders, value);
@@ -608,7 +581,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void RateApp()
         {
-            HockeyProxy.TrackEvent("Rate app button");
+            TelemetryAdapter.TrackEvent("Rate app button");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsReviewed, -1);
             var uri = new Uri("ms-windows-store://review/?ProductId=" + AppConstants.ProductId);
             await Launcher.LaunchUriAsync(uri);
@@ -616,7 +589,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void LeaveFeedback()
         {
-            HockeyProxy.TrackEvent("Leave feedback button");
+            TelemetryAdapter.TrackEvent("Leave feedback button");
             await Microsoft.Services.Store.Engagement.Feedback.LaunchFeedbackAsync();
         }
 
@@ -632,7 +605,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void Licenses()
         {
-            HockeyProxy.TrackEvent("View Licenses");
+            TelemetryAdapter.TrackEvent("View Licenses");
             NavigationService.Navigate(App.Pages.Licenses);
         }
 
@@ -696,12 +669,12 @@ namespace NextPlayerUWP.ViewModels
                 if (isOn)
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
-                    HockeyProxy.TrackEvent("Last.fm rate songs on");
+                    TelemetryAdapter.TrackEvent("Last.fm rate songs on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, false);
-                    HockeyProxy.TrackEvent("Lat.fm rate songs off");
+                    TelemetryAdapter.TrackEvent("Lat.fm rate songs off");
                 }
             }
         }
@@ -717,7 +690,7 @@ namespace NextPlayerUWP.ViewModels
 
                 LastFmShowError = false;
                 LastFmPassword = "";
-                HockeyProxy.TrackEvent("LastFm log in");
+                TelemetryAdapter.TrackEvent("LastFm log in");
             }
             else
             {
@@ -740,7 +713,7 @@ namespace NextPlayerUWP.ViewModels
 
             IsLastFmLoggedIn = false;
 
-            HockeyProxy.TrackEvent("LastFm log out");
+            TelemetryAdapter.TrackEvent("LastFm log out");
         }
 
         #endregion

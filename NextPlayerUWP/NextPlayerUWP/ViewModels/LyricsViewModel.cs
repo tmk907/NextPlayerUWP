@@ -195,7 +195,7 @@ namespace NextPlayerUWP.ViewModels
                 original = false;
                 Lyrics = dbLyrics;
             }
-            HockeyProxy.TrackEvent("ChangeLyrics()");
+            TelemetryAdapter.TrackEvent("ChangeLyrics()");
         }
 
         private async Task LoadLyricsFromWebsite()
