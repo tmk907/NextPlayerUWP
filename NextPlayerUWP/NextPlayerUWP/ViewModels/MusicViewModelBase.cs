@@ -44,8 +44,16 @@ namespace NextPlayerUWP.ViewModels
         public ComboBoxItemValue SelectedComboBoxItem
         {
             get { return selectedComboBoxItem; }
-            set { Set(ref selectedComboBoxItem, value); }
+            set
+            {
+                bool different = value != selectedComboBoxItem;
+                Set(ref selectedComboBoxItem, value);
+                //System.Diagnostics.Debug.WriteLine("SelectedComboBoxItem {0}, {1}", different, value);
+                if (different && value != null) SortMusicItems();
+            }
         }
+
+        protected virtual void SortMusicItems() { }
 
         #region Commands
 

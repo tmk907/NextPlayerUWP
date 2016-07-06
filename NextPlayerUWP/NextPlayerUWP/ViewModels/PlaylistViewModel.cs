@@ -96,17 +96,27 @@ namespace NextPlayerUWP.ViewModels
                         break;
                 }
             }
+            SortMusicItems();
         }
 
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            sortAfterOnNavigated = true;
             if (parameter != null)
             {
                 type = MusicItem.ParseType(parameter as string);
+                if (!choosenSorting.ContainsKey(type.ToString()))
+                {
+                    choosenSorting.Add(type.ToString(), selectedComboBoxItem.Option);
+                }
+                else
+                {
+                    SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(c => c.Option.Equals(choosenSorting[type.ToString()]));
+                }
                 firstParam = MusicItem.SplitParameter(parameter as string)[1];
             }
         }
+
+        Dictionary<string, string> choosenSorting = new Dictionary<string, string>();
 
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
@@ -114,6 +124,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 playlist = new ObservableCollection<SongItem>();
                 pageTitle = "";
+                choosenSorting[type.ToString()] = selectedComboBoxItem.Option;
             }
             await base.OnNavigatingFromAsync(args);
         }
@@ -174,16 +185,11 @@ namespace NextPlayerUWP.ViewModels
             Playlist.RemoveAt(i);
             await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(item.SongId);
         }
-        private bool sortAfterOnNavigated = false;
-        public void SortItems(object sender, SelectionChangedEventArgs e)
+
+        protected override void SortMusicItems()
         {
-            if (sortAfterOnNavigated)
-            {
-                sortAfterOnNavigated = false;
-                return;
-            }
-            ComboBoxItemValue value = SelectedComboBoxItem;
-            switch (value.Option)
+            string option = selectedComboBoxItem.Option;
+            switch (option)
             {
                 case SortNames.Title:
                     Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");

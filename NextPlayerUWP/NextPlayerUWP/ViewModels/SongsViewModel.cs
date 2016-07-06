@@ -164,13 +164,13 @@ namespace NextPlayerUWP.ViewModels
         private async Task ReloadData()
         {
             Songs = await DatabaseManager.Current.GetSongItemsAsync();
-            SortItems(null, null);
+            SortMusicItems();
         }
 
-        public void SortItems(object sender, SelectionChangedEventArgs e)
+        protected override void SortMusicItems()
         {
-            ComboBoxItemValue value = SelectedComboBoxItem;
-            switch (value.Option)
+            string option = selectedComboBoxItem.Option;
+            switch (option)
             {
                 case SortNames.Title:
                     Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");

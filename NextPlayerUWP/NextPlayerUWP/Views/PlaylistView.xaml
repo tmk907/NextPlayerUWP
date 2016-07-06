@@ -237,8 +237,8 @@
                             BorderThickness="0" 
                             Width="Auto" 
                             VerticalAlignment="Center"
-                            SelectionChanged="{x:Bind ViewModel.SortItems}"
                             DisplayMemberPath="Label"
+                            SelectedValuePath="Option"
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
                             ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
                             />
