@@ -33,11 +33,18 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref pageTitle, value); }
         }
 
-        protected ObservableCollection<ComboBoxItemValue> comboboxValues = new ObservableCollection<ComboBoxItemValue>();
+        protected ObservableCollection<ComboBoxItemValue> comboBoxItemValues = new ObservableCollection<ComboBoxItemValue>();
         public ObservableCollection<ComboBoxItemValue> ComboBoxItemValues
         {
-            get { return comboboxValues; }
-            set { Set(ref comboboxValues, value); }
+            get { return comboBoxItemValues; }
+            set
+            {
+                if (value!= comboBoxItemValues)
+                {
+                    comboBoxItemValues = value;
+                }
+                //Set(ref comboBoxItemValues, value);
+            }
         }
 
         protected ComboBoxItemValue selectedComboBoxItem;
@@ -48,7 +55,6 @@ namespace NextPlayerUWP.ViewModels
             {
                 bool different = value != selectedComboBoxItem;
                 Set(ref selectedComboBoxItem, value);
-                //System.Diagnostics.Debug.WriteLine("SelectedComboBoxItem {0}, {1}", different, value);
                 if (different && value != null) SortMusicItems();
             }
         }

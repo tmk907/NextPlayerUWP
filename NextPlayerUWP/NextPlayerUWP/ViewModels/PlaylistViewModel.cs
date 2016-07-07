@@ -21,7 +21,7 @@ namespace NextPlayerUWP.ViewModels
         {
             SortNames si = new SortNames(MusicItemTypes.song);
             ComboBoxItemValues = si.GetSortNames();
-            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            //SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 playlist = new ObservableCollection<SongItem>();
@@ -106,6 +106,7 @@ namespace NextPlayerUWP.ViewModels
                 type = MusicItem.ParseType(parameter as string);
                 if (!choosenSorting.ContainsKey(type.ToString()))
                 {
+                    SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
                     choosenSorting.Add(type.ToString(), selectedComboBoxItem.Option);
                 }
                 else

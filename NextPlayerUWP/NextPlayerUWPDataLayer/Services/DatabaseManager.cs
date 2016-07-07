@@ -1364,12 +1364,23 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.ExecuteAsync("UPDATE PlainPlaylistsTable SET Name = ? WHERE PlainPlaylistId = ?", name, id);
         }
 
-        /// <summary>
-        /// Updates PlayCount and LastPlayed
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task UpdateSongStatistics(int id)
+        public async Task UpdateSmartPlaylist(int id, string name, int songsNumber, string sorting)
+        {
+            var playlist = await connectionAsync.Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).FirstOrDefaultAsync();
+            if (playlist == null) return;
+            playlist.Name = name;
+            playlist.SongsNumber = songsNumber;
+            playlist.SortBy = sorting;
+            await connectionAsync.UpdateAsync(playlist);
+        }
+
+
+    /// <summary>
+    /// Updates PlayCount and LastPlayed
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task UpdateSongStatistics(int id)
         {
             var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
             if (list.Count == 0) return;

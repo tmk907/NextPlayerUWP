@@ -46,7 +46,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            sortAfterOnNavigated = true;
+            //SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
         }
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
@@ -64,8 +64,6 @@ namespace NextPlayerUWP.ViewModels
             Genres = await DatabaseManager.Current.GetGenreItemsAsync();
             SortMusicItems();
         }
-
-        private bool sortAfterOnNavigated = false;
 
         protected override void SortMusicItems()
         {
@@ -89,34 +87,6 @@ namespace NextPlayerUWP.ViewModels
                     break;
             }
         }
-
-        //public void SortItems(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (sortAfterOnNavigated)
-        //    {
-        //        sortAfterOnNavigated = false;
-        //        return;
-        //    }
-        //    ComboBoxItemValue value = SelectedComboBoxItem;
-        //    switch (value.Option)
-        //    {
-        //        case SortNames.Genre:
-        //            Sort(s => s.Genre, t => (t.Genre == "") ? "" : t.Genre[0].ToString().ToLower(), "Genre");
-        //            break;
-        //        case SortNames.Duration:
-        //            Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "Genre");
-        //            break;
-        //        case SortNames.SongCount:
-        //            Sort(s => s.SongsNumber, t => t.SongsNumber, "Genre");
-        //            break;
-        //        case SortNames.LastAdded:
-        //            Sort(s => s.LastAdded.Ticks * -1, t => String.Format("{0:d}", t.LastAdded), "Genre");
-        //            break;
-        //        default:
-        //            Sort(s => s.Genre, t => (t.Genre == "") ? "" : t.Genre[0].ToString().ToLower(), "Genre");
-        //            break;
-        //    }
-        //}
 
         private void Sort(Func<GenreItem, object> orderSelector, Func<GenreItem, object> groupSelector, string propertyName)
         {

@@ -16,69 +16,6 @@ using NextPlayerUWPDataLayer.Model;
 
 namespace NextPlayerUWP.ViewModels
 {
-    //public class PlaylistRule : Template10.Mvvm.BindableBase
-    //{
-    //    private ResourceLoader loader;
-    //    public PlaylistRule(ResourceLoader resLoader)
-    //    {
-    //        loader = resLoader;
-    //        Items = new List<ComboBoxItemValue>();
-    //        foreach (var k in typeof(SPUtility.Item).GetRuntimeFields())
-    //        {
-    //            object o = k.GetValue(null);
-    //            if (o is string)
-    //            {
-    //                Items.Add(new ComboBoxItemValue(loader.GetString(o as string), o as string));
-    //            }
-    //        }
-    //    }
-
-    //    public List<ComboBoxItemValue> Items { get; }
-
-    //    public string selectedItem = "";
-    //    public string SelectedItem
-    //    {
-    //        get { return selectedItem; }
-    //        set { Set(ref selectedItem, value); }
-    //    }
-
-    //    public string selectedComparison = "";
-    //    public string SelectedComparison
-    //    {
-    //        get { return selectedComparison; }
-    //        set { Set(ref selectedComparison, value); }
-    //    }
-
-    //    public string value = "";
-    //    public string Value
-    //    {
-    //        get { return value; }
-    //        set { Set(ref value, value); }
-    //    }
-
-    //    public string selectedBoolOperator = "";
-    //    public string SelectedBoolOperator
-    //    {
-    //        get { return selectedBoolOperator; }
-    //        set { Set(ref selectedBoolOperator, value); }
-    //    }
-
-    //    private bool isDatePickerVisible = false;
-    //    public bool IsDatePickerVisible
-    //    {
-    //        get { return isDatePickerVisible; }
-    //        set { Set(ref isDatePickerVisible, value); }
-    //    }
-
-    //    private bool isTimesUnitsVisible = false;
-    //    public bool IsTimesUnitsVisible
-    //    {
-    //        get { return isTimesUnitsVisible; }
-    //        set { Set(ref isTimesUnitsVisible, value); }
-    //    }
-
-    //}
-
     public class NewSmartPlaylistViewModel : Template10.Mvvm.ViewModelBase
     {
         ResourceLoader resLoader;
@@ -195,6 +132,7 @@ namespace NextPlayerUWP.ViewModels
                 }
                 else
                 {
+                    await DatabaseManager.Current.UpdateSmartPlaylist(id, playlistName, songsNumber, selectedSortRule.Option);
                     await DatabaseManager.Current.DeleteSmartPlaylistEntries(id);
                 }
 
@@ -280,7 +218,7 @@ namespace NextPlayerUWP.ViewModels
                 switch (type)
                 {
                     case SPUtility.ItemType.Date:
-                        pr.SelectedDate = new DateTime(Int32.Parse(rule.Value));
+                        pr.SelectedDate = new DateTime(Convert.ToInt64(rule.Value));
                         break;
                     case SPUtility.ItemType.Number:
                         pr.UserInput = rule.Value;
@@ -289,7 +227,7 @@ namespace NextPlayerUWP.ViewModels
                         pr.UserInput = rule.Value;
                         break;
                     case SPUtility.ItemType.Time:
-                        pr.SelectedTime = new TimeSpan(Int32.Parse(rule.Value));
+                        pr.SelectedTime = new TimeSpan(Convert.ToInt64(rule.Value));
                         break;
                     default:
                         break;
@@ -297,7 +235,7 @@ namespace NextPlayerUWP.ViewModels
 
                 PlaylistRules.Add(pr);
             }
-            PlaylistRules.FirstOrDefault().SelectedBoolOperator = PlaylistRules.FirstOrDefault().BoolOperators.LastOrDefault().Option;
+            //PlaylistRules.FirstOrDefault().SelectedBoolOperator = PlaylistRules.FirstOrDefault().BoolOperators.LastOrDefault().Option;
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
