@@ -322,7 +322,7 @@ namespace NextPlayerUWP
                             args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                         {
                             Debug.WriteLine("OnStartAsync Primary closed");
-                            await NavigationService.NavigateAsync(Pages.Artists);
+                            await NavigationService.NavigateAsync(Pages.Playlists);
                         }
                         else
                         {
@@ -343,7 +343,7 @@ namespace NextPlayerUWP
                         //if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                         //    args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                         //{
-                            await NavigationService.NavigateAsync(Pages.Genres);
+                            await NavigationService.NavigateAsync(Pages.Playlists);
                         //}
                         break;
                 }
