@@ -36,8 +36,8 @@ namespace NextPlayerUWP.Common
                     TelemetryAdapter.TrackEvent("PlaybackManager constructor AddMediaPlayerEventHandlers " + ex.Message);
                 }
             }
-            //App.Current.Resuming += Current_Resuming;
-            //App.Current.Suspending += Current_Suspending;
+            App.Current.Resuming += Current_Resuming;
+            App.Current.Suspending += Current_Suspending;
         }
 
         //public static PlaybackManager Current
@@ -83,11 +83,11 @@ namespace NextPlayerUWP.Common
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Suspending " );
             if (IsMyBackgroundTaskRunning)
             {
-                App.PlaybackManager.SendMessageBG(AppConstants.AppState, AppConstants.AppSuspended);
+                SendMessageBG(AppConstants.AppState, AppConstants.AppSuspended);
                 RemoveMediaPlayerEventHandlers();
                 //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Suspending removed");
             }
-            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+            //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
         }
 
         private void Current_Resuming(object sender, object e)
@@ -95,6 +95,7 @@ namespace NextPlayerUWP.Common
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Resuming ");
             if (IsMyBackgroundTaskRunning)
             {
+                SendMessageBG(AppConstants.AppState, AppConstants.AppResumed);
                 try
                 {
                     AddMediaPlayerEventHandlers();
@@ -103,10 +104,9 @@ namespace NextPlayerUWP.Common
                 {
                     TelemetryAdapter.TrackEvent("PlaybackManager Resuming AddMediaPlayerEventHandlers " + ex.Message);
                 }
-                App.PlaybackManager.SendMessageBG(AppConstants.AppState, AppConstants.AppResumed);
                 //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Resuming added");
             }
-            NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+            //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
         }
         #region Events
         public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;
@@ -140,6 +140,7 @@ namespace NextPlayerUWP.Common
             StreamUpdated?.Invoke(song);
         }
         #endregion
+
         private AutoResetEvent backgroundAudioTaskStarted;
         const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA
 
@@ -360,7 +361,8 @@ namespace NextPlayerUWP.Common
             var currentState = sender.CurrentState; // cache outside of completion or you might get a different value
             Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
             {
-                UpdateTransportControls(currentState);
+                //UpdateTransportControls(currentState);
+                OnMediaPlayerStateChanged(currentState);
             });
         }
 
@@ -442,9 +444,11 @@ namespace NextPlayerUWP.Common
                 }
                 else if (MediaPlayerState.Closed == CurrentPlayer.CurrentState)
                 {
-                    SendMessage(AppConstants.Play);
+                    //SendMessage(AppConstants.Play);
+                    StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+                    //SendMessageBG(AppConstants.StartPlayback, CurrentSongIndex);
                     OnMediaPlayerTrackChanged(CurrentSongIndex);
-                    //StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+                    
                 }
             }
             else
@@ -486,6 +490,13 @@ namespace NextPlayerUWP.Common
             BackgroundMediaPlayer.SendMessageToBackground(value);
         }
 
+        private void SendMessageBG(string constants, object value)
+        {
+            var message = new ValueSet();
+            message.Add(constants, value);
+            BackgroundMediaPlayer.SendMessageToBackground(message);
+        }
+
         public void SendMessage(string constants, object value)
         {
             if (IsMyBackgroundTaskRunning)
@@ -494,13 +505,6 @@ namespace NextPlayerUWP.Common
                 message.Add(constants, value);
                 BackgroundMediaPlayer.SendMessageToBackground(message);
             }
-        }
-
-        private void SendMessageBG(string constants, object value)
-        {
-            var message = new ValueSet();
-            message.Add(constants, value);
-            BackgroundMediaPlayer.SendMessageToBackground(message);
         }
 
         public bool IsBackgroundTaskRunning()

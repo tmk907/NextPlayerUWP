@@ -184,5 +184,10 @@ namespace NextPlayerUWPDataLayer.Diagnostics
                 }
             }
         }
+
+        public static void ClearSettingsLogs()
+        {
+            ApplicationSettingsHelper.ReadResetSettingsValue("temperror");
+        }
     }
 }

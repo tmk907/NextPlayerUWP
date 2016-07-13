@@ -667,13 +667,16 @@ namespace NextPlayerUWPDataLayer.Services
                     int plainId = DatabaseManager.Current.InsertPlainPlaylist(iplaylist.name);
                     int id = DatabaseManager.Current.InsertImportedPlaylist(iplaylist.name, iplaylist.path, plainId);
                     int place = 0;
+                    List<Tuple<int, int>> list = new List<Tuple<int, int>>(); 
                     foreach(var r in songs)
                     {
-                        await DatabaseManager.Current.InsertPlainPlaylistEntryAsync(plainId, r.SongId, place);
+                        //await DatabaseManager.Current.InsertPlainPlaylistEntryAsync(plainId, r.SongId, place);
+                        list.Add(new Tuple<int, int>(r.SongId, place));
                         place++;
                     }
+                    await DatabaseManager.Current.InsertPlainPlaylistEntryAsync(plainId, list);
                 }
-                
+
             }
             else
             {

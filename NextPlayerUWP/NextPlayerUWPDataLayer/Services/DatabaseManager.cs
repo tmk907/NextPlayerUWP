@@ -31,14 +31,17 @@ namespace NextPlayerUWPDataLayer.Services
 
         private DatabaseManager()
         {
-            connectionAsync = new SQLiteAsyncConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName), true);
-            connection = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName), true);
+            connectionAsync = new SQLiteAsyncConnection(DBFilePath, true);
+            connection = new SQLiteConnection(DBFilePath, true);
             connection.BusyTimeout = TimeSpan.FromSeconds(5);
         }
 
         private SQLiteAsyncConnection connectionAsync;
         private SQLiteConnection connection;
         
+        public string OldDBFilePath { get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName); } }
+        public string DBFilePath { get { return Path.Combine(ApplicationData.Current.LocalCacheFolder.Path, AppConstants.DBFileName); } }
+
         private TableQuery<SongsTable> songsConnection
         {
             get
@@ -402,9 +405,10 @@ namespace NextPlayerUWPDataLayer.Services
 
         private static SongsTable CreateSongsTable(SongData song)
         {
-            string dir = Path.GetDirectoryName(song.Path);
-            string name = Path.GetFileName(dir);
-            if (name == "") name = dir;
+            //if (song.Path == c:\) (root directory) GetDirectoryName == null
+            string dir = Path.GetDirectoryName(song.Path) ?? song.Path; 
+            string folderName = Path.GetFileName(dir);
+            if (folderName == "") folderName = dir;
             return new SongsTable()
             {
                 Album = song.Tag.Album,
@@ -423,7 +427,7 @@ namespace NextPlayerUWPDataLayer.Services
                 FileSize = (long)song.FileSize,
                 FirstArtist = song.Tag.FirstArtist,
                 FirstComposer = song.Tag.FirstComposer,
-                FolderName = name,
+                FolderName = folderName,
                 Genres = song.Tag.Genres,
                 IsAvailable = song.IsAvailable,
                 LastPlayed = song.LastPlayed,
@@ -1098,9 +1102,15 @@ namespace NextPlayerUWPDataLayer.Services
                 Place = _place,
             };
 
-            await connectionAsync.InsertAsync(newEntry);
+            await connectionAsync.InsertAsync(newEntry);//error
         }
 
+        /// <summary>
+        /// InsertPlainPlaylistEntryAsync
+        /// </summary>
+        /// <param name="_playlistId"></param>
+        /// <param name="list">SongId,Place</param>
+        /// <returns></returns>
         public async Task InsertPlainPlaylistEntryAsync(int _playlistId, List<Tuple<int,int>> list)
         {
             List<PlainPlaylistEntryTable> l = new List<PlainPlaylistEntryTable>();
@@ -1285,7 +1295,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         #region Update
 
-        public async Task UpdateAlbumImagePath(AlbumItem album)
+        public async Task UpdateAlbumImagePath(AlbumItem album)//error
         {
             await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET ImagePath = ? WHERE AlbumId = ?", album.ImagePath, album.AlbumId);
         }
@@ -1389,7 +1399,7 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.ExecuteAsync("UPDATE SongsTable SET PlayCount = ?, LastPlayed = ? WHERE SongId = ?", playCount, lastPlayed, id);
         }
 
-        public async Task UpdateSongDurationAsync(int songId, TimeSpan duration)
+        public async Task UpdateSongDurationAsync(int songId, TimeSpan duration)//error
         {
             await connectionAsync.ExecuteAsync("UPDATE SongsTable SET Duration = ? WHERE SongId = ?", duration , songId);
         }

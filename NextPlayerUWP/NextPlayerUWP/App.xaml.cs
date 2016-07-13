@@ -102,7 +102,7 @@ namespace NextPlayerUWP
             }
 
             SplashFactory = (e) => new Views.Splash(e);
-            
+#if DEBUG
             try
             {
                 Logger.SaveFromSettingsToFile();
@@ -111,6 +111,9 @@ namespace NextPlayerUWP
             {
 
             }
+#else
+            Logger.ClearSettingsLogs();
+#endif
             albumArtFinder = new AlbumArtFinder();
             
             this.UnhandledException += App_UnhandledException;
@@ -158,7 +161,21 @@ namespace NextPlayerUWP
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
-            Debug.WriteLine("OnInitializeAsync");
+            Debug.WriteLine("OnInitializeAsync " + args.PreviousExecutionState + " " + DetermineStartCause(args));
+
+            if (!isFirstRun)
+            {
+                await PerformUpdate();
+            }
+
+            if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
+            {
+                await SongCoverManager.Instance.Initialize(true);
+            }
+            else
+            {
+                await SongCoverManager.Instance.Initialize();
+            }
 
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
@@ -169,7 +186,7 @@ namespace NextPlayerUWP
             }
             catch (Exception ex)
             {
-                Logger.SaveInSettings("OnInitializeAsync ChangeStatusBarVisibility " + ex);
+                //Logger.SaveInSettings("OnInitializeAsync ChangeStatusBarVisibility " + ex);
                 //throw;
             }
 
@@ -218,8 +235,8 @@ namespace NextPlayerUWP
             try
             {
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated ||
-                        args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                        args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+                    args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                    args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
                 {
                     DisplayRequestHelper drh = new DisplayRequestHelper();
                     drh.ActivateIfEnabled();
@@ -227,7 +244,7 @@ namespace NextPlayerUWP
             }
             catch (Exception ex)
             {
-                Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
+                //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
                 //throw;
             }
         }
@@ -235,19 +252,9 @@ namespace NextPlayerUWP
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-            await SongCoverManager.Instance.Initialize();
 
             if (isFirstRun)
             {
-                //try
-                //{
-                //    string deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-                //    HockeyClient.Current.TrackEvent("New instalation: " + deviceFamily);
-                //}
-                //catch (Exception)
-                //{
-                //    HockeyClient.Current.TrackEvent("New instalation: Unknown");
-                //}
                 isFirstRun = false;
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
@@ -376,14 +383,10 @@ namespace NextPlayerUWP
             return base.OnSuspendingAsync(s, e, prelaunch);
         }
 
-        public override async void OnResuming(object s, object e, AppExecutionState previousExecutionState)
+        public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
         {
-            //Logger.SaveInSettings("OnResuming");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Active));
-            if (previousExecutionState == AppExecutionState.Terminated)
-            {
-                await SongCoverManager.Instance.Initialize(true);
-            }
+            
             base.OnResuming(s, e, previousExecutionState);
         }
 
@@ -431,6 +434,42 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
 
             Debug.WriteLine("FirstRunSetup finished");
+        }
+
+        private void CreateDefaultSmartPlaylists()
+        {
+            int i;
+            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio dodane", 100, SPUtility.SortBy.MostRecentlyAdded);
+            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString(), SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioDodane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio odtwarzane", 100, SPUtility.SortBy.MostRecentlyPlayed);
+            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.LastPlayed, SPUtility.Comparison.IsGreater, DateTime.MinValue.Ticks.ToString(), SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioOdtwarzane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najczęściej odtwarzane", 100, SPUtility.SortBy.MostOftenPlayed);
+            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "0", SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajczesciejOdtwarzane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najlepiej oceniane", 100, SPUtility.SortBy.HighestRating);
+            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsGreater, "3", SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajlepiejOceniane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najrzadziej odtwarzane", 100, SPUtility.SortBy.LeastOftenPlayed);
+            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "-1", SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajrzadziejOdtwarzane, i);
+            i = DatabaseManager.Current.InsertSmartPlaylist("Najgorzej oceniane", 100, SPUtility.SortBy.LowestRating);
+            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4", SPUtility.Operator.Or);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
+        }
+
+        private async Task PerformUpdate()
+        {
+            if (null == ApplicationSettingsHelper.ReadSettingsValue("DatabaseMovedToLocalCacheFolder"))
+            {
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(AppConstants.DBFileName);
+                await file.CopyAsync(ApplicationData.Current.LocalCacheFolder);
+                await file.DeleteAsync();
+                ApplicationSettingsHelper.SaveSettingsValue("DatabaseMovedToLocalCacheFolder",true);
+            }
+            UpdateDB();
+            UpdateApp();
         }
 
         private void UpdateDB()
@@ -482,29 +521,6 @@ namespace NextPlayerUWP
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
             }
-        }
-
-        private void CreateDefaultSmartPlaylists()
-        {
-            int i;
-            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio dodane", 100, SPUtility.SortBy.MostRecentlyAdded);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString(), SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioDodane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio odtwarzane", 100, SPUtility.SortBy.MostRecentlyPlayed);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.LastPlayed, SPUtility.Comparison.IsGreater, DateTime.MinValue.Ticks.ToString(), SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najczęściej odtwarzane", 100, SPUtility.SortBy.MostOftenPlayed);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "0", SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajczesciejOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najlepiej oceniane", 100, SPUtility.SortBy.HighestRating);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsGreater, "3", SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajlepiejOceniane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najrzadziej odtwarzane", 100, SPUtility.SortBy.LeastOftenPlayed);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "-1", SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajrzadziejOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najgorzej oceniane", 100, SPUtility.SortBy.LowestRating);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4", SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
         }
 
         private async Task SendLogs()
