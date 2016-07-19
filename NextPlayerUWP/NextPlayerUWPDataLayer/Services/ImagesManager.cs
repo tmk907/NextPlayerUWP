@@ -270,22 +270,26 @@ namespace NextPlayerUWPDataLayer.Services
         /// <returns></returns>
         public static async Task<string> GetAlbumCoverPath(AlbumItem album)
         {
-            string imagePath;
+            string imagePath = AppConstants.AlbumCover;
             if (!album.IsImageSet)
             {
-                WriteableBitmap cover;
                 var songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam, album.AlbumArtist);
-                string songPath = songs.FirstOrDefault().Path;
-                cover = await CreateBitmap(songPath);
-
-                if (cover == null || cover.PixelHeight == 1)
+                var song = songs.FirstOrDefault(s => s.IsAlbumArtSet && s.CoverPath != AppConstants.AlbumCover);
+                if (song == null)
                 {
-                    imagePath = AppConstants.AlbumCover;
+                    foreach(var s in songs.Where(x => !x.IsAlbumArtSet))
+                    {
+                        await PrepareSongAlbumArt(s);
+                        if (s.CoverPath != AppConstants.AlbumCover)
+                        {
+                            imagePath = s.CoverPath;
+                            break;
+                        }
+                    }
                 }
                 else
                 {
-                    string p = await SaveCover(album.AlbumId.ToString(), "Albums", cover);
-                    imagePath = p;
+                    imagePath = song.CoverPath;
                 }
             }
             else
@@ -294,6 +298,22 @@ namespace NextPlayerUWPDataLayer.Services
             }
 
             return imagePath;
+        }
+
+        public static async Task PrepareSongAlbumArt(SongItem song)
+        {
+            var cover = await CreateBitmap(song.Path);
+
+            if (cover == null || cover.PixelHeight == 1)
+            {
+                song.CoverPath = AppConstants.AlbumCover;
+            }
+            else
+            {
+                string p = await SaveCover(song.SongId.ToString(), "Songs", cover);
+                song.CoverPath = p;
+            }
+            song.IsAlbumArtSet = true;
         }
 
         /// <summary>
@@ -358,11 +378,35 @@ namespace NextPlayerUWPDataLayer.Services
 
                         }
                     }
+                    if (bitmap.PixelHeight == 1)
+                    {
+                        try
+                        {
+                            var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);//, 300, Windows.Storage.FileProperties.ThumbnailOptions.ReturnOnlyIfCached);
+                            if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
+                            {
+                                using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                                {
+                                    bitmap = new WriteableBitmap((int)thumb.OriginalWidth, (int)thumb.OriginalHeight);
+                                    istream.Seek(0);
+                                    bitmap.SetSource(istream);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+
                 }
                 catch (Exception e)
                 {
 
                 }
+
+                
+
                 return bitmap;
             }
             catch (Exception ex)

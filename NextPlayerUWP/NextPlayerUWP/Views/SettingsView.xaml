@@ -88,8 +88,8 @@
 			VisualStateNarrowMinWidth="0"
 			VisualStateNormalMinWidth="720">
         </controls:PageHeader>
-        <Grid Grid.Column="0" Grid.Row="1" Margin="12,12,12,4">
-            <ScrollViewer>
+        <Grid Grid.Column="0" Grid.Row="1" Margin="12,12,0,4">
+            <ScrollViewer Padding="0,0,12,0">
                 <StackPanel Orientation="Vertical">
                 <TextBlock x:Uid="TBLibrary"
                            Style="{StaticResource TitleTextBlockStyle}" 

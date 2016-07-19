@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -23,6 +24,8 @@ namespace NextPlayerUWP.ViewModels
 
         public RightPanelViewModel()
         {
+            Logger.DebugWrite("RightPanelViewModel()", "");
+
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
             //App.SongUpdated += App_SongUpdated;
@@ -39,6 +42,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async void TrackChanged(int index)
         {
+            Logger.DebugWrite("RightPanelViewModel", $"TrackChanged {index}");
             if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
             ScrollAfterTrackChanged(index);
             //await Task.Run(() => ChangeLyrics(index));
@@ -174,11 +178,14 @@ namespace NextPlayerUWP.ViewModels
 
         private void UpdatePlaylist()
         {
+            Logger.DebugWrite("RightPanelViewModel", "UpdatePlaylist");
             Songs = NowPlayingPlaylistManager.Current.songs;
         }
 
         public async void OnLoaded(ListView p, WebView webView)
         {
+            Logger.DebugWrite("RightPanelViewModel", "OnLoaded");
+
             lyricsWebview = webView;
             lyricsWebview.ContentLoading += webView1_ContentLoading;
             lyricsWebview.NavigationStarting += webView1_NavigationStarting;
@@ -206,6 +213,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void OnUnLoaded()
         {
+            Logger.DebugWrite("RightPanelViewModel", "OnUnLoaded");
             positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
             firstVisibleIndex = isp.FirstVisibleIndex;
@@ -213,6 +221,8 @@ namespace NextPlayerUWP.ViewModels
 
         private void ScrollAfterTrackChanged(int index)
         {
+            Logger.DebugWrite("RightPanelViewModel", $"ScrollAfterTrackChanged {index}");
+
             if (listView == null)
             {
                 TelemetryAdapter.TrackEvent("ScrollAfterTrackChanged listview == null");

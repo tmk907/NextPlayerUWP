@@ -117,15 +117,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 string type = file.FileType.ToLower();
                 
-                if(type == ".m3u")
-                {
-                    if (!importedPlaylistPaths.Contains(file.Path))
-                    {
-                        var ip = await ParseM3UPlaylist(file, folder.Path);
-                        importedPlaylists.Add(ip);
-                    }
-                }
-                else if (type == ".m3u8")
+                if(type == ".m3u" || type == ".m3u8")
                 {
                     if (!importedPlaylistPaths.Contains(file.Path))
                     {
@@ -170,6 +162,8 @@ namespace NextPlayerUWPDataLayer.Services
                     else
                     {
                         SongData song = await CreateSongFromFile(file);
+                        //await ImagesManager.PrepareSongAlbumArt(song);
+
                         newSongs.Add(song);
                     }
                 }
@@ -183,7 +177,14 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
 
-            await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
+            try
+            {
+                await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             //if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count > 0)
             //{
@@ -241,7 +242,7 @@ namespace NextPlayerUWPDataLayer.Services
             song.LastPlayed = DateTime.MinValue;
             song.IsAvailable = 1;
             song.Tag.Rating = 0;
-            song.FileSize = 0;            
+            song.FileSize = 0;
 
             try
             {

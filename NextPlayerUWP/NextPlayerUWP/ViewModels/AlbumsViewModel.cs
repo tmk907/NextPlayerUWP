@@ -12,13 +12,6 @@ namespace NextPlayerUWP.ViewModels
 {
     public class AlbumsViewModel : MusicViewModelBase
     {
-        private delegate void StartLookingForCovers();
-        private event StartLookingForCovers StartLookingForCoversEvent;
-        private void OnDataLoaded()
-        {
-            StartLookingForCoversEvent?.Invoke();
-        }
-
         private bool isRunning = false;
 
         public AlbumsViewModel()
@@ -28,6 +21,7 @@ namespace NextPlayerUWP.ViewModels
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
+            AlbumArtFinder.AlbumArtUpdatedEvent += AlbumArtFinder_AlbumArtUpdatedEvent;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 albums = new ObservableCollection<AlbumItem>();
@@ -41,7 +35,18 @@ namespace NextPlayerUWP.ViewModels
                 albums.Add(new AlbumItem());
                 albums.Add(new AlbumItem());
             }
-            StartLookingForCoversEvent += StartLooking;
+        }
+
+        private void AlbumArtFinder_AlbumArtUpdatedEvent(string album, string albumArtPath)
+        {
+            if (album == "") return;
+            Dispatcher.Dispatch(() => 
+            {
+                var alb = Albums.FirstOrDefault(a => a.AlbumParam == album);
+                alb.ImagePath = albumArtPath;
+                alb.ImageUri = new Uri(albumArtPath);
+                alb.IsImageSet = true;
+            });
         }
 
         private ObservableCollection<AlbumItem> albums = new ObservableCollection<AlbumItem>();
@@ -84,8 +89,6 @@ namespace NextPlayerUWP.ViewModels
                 }
                 GroupedAlbums = gr;
             }
-
-            //OnDataLoaded();
         }
 
         private async void MediaImport_MediaImported(string s)
@@ -166,31 +169,6 @@ namespace NextPlayerUWP.ViewModels
                     group.Add(item);
                 }
                 GroupedAlbums.Add(group);
-            }
-        }
-
-        private async void StartLooking()
-        {
-            if (isRunning) return;
-            isRunning = true;
-            await Task.Run(() => FindAlbumArts());
-            isRunning = false;
-        }
-
-        private async Task FindAlbumArts()
-        {
-            foreach (AlbumItem album in albums)
-            {
-                if (!album.IsImageSet)
-                {
-                    await Dispatcher.DispatchAsync(async () => {
-                        string path = await ImagesManager.GetAlbumCoverPath(album);
-                        album.ImagePath = path;
-                        album.ImageUri = new Uri(path);
-                        album.IsImageSet = true;
-                    });
-                    await DatabaseManager.Current.UpdateAlbumImagePath(album);
-                }
             }
         }
 

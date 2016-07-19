@@ -24,6 +24,8 @@ namespace NextPlayerUWPDataLayer.Tables
         [Indexed]
         public int IsAvailable { get; set; }
 
+        public string AlbumArt { get; set; }
+
         //Tags
         [Indexed]
         public string Album { get; set; }

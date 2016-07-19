@@ -37,7 +37,7 @@ namespace NextPlayerUWP
             AppThemeChanged?.Invoke(isLight);
         }
 
-        private const int dbVersion = 4;
+        private const int dbVersion = 5;
 
         public static bool IsLightThemeOn = false;
         private static AlbumArtFinder albumArtFinder;
@@ -57,7 +57,6 @@ namespace NextPlayerUWP
         public App()
         {
             InitializeComponent();
-
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
 
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
@@ -247,6 +246,13 @@ namespace NextPlayerUWP
                 //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
                 //throw;
             }
+
+            if (!isFirstRun)
+            {
+                //Debug.WriteLine("before albumArtFinder.StartLooking");
+                albumArtFinder.StartLooking();
+                //Debug.WriteLine("after albumArtFinder.StartLooking");
+            }
         }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
@@ -361,13 +367,7 @@ namespace NextPlayerUWP
                 args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
             {
                 await RegisterBGScrobbler();
-                await TileManager.ManageSecondaryTileImages();
-                if (!isFirstRun)
-                {
-                    Debug.WriteLine("before albumArtFinder.StartLooking");
-                    albumArtFinder.StartLooking();
-                    Debug.WriteLine("after albumArtFinder.StartLooking");
-                }
+                await TileManager.ManageSecondaryTileImages();               
             }
         }
         
@@ -496,6 +496,12 @@ namespace NextPlayerUWP
                 DatabaseManager.Current.UpdateToVersion4();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 4);
                 version = "4";
+            }
+            if (version.ToString() == "4")
+            {
+                DatabaseManager.Current.UpdateToVersion5();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 5);
+                version = "5";
             }
         }
 

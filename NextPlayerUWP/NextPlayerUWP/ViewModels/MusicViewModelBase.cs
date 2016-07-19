@@ -341,5 +341,6 @@ namespace NextPlayerUWP.ViewModels
                 return span.ToString(@"d\.hh\:mm\:ss");
             }
         }
+
     }
 }

@@ -10,6 +10,7 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using NextPlayerUWPDataLayer.Enums;
 using Windows.System.Threading;
+using NextPlayerUWPDataLayer.Diagnostics;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -34,6 +35,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public NowPlayingManager()
         {
+            Logger.DebugWrite("NowPlayingManager", "");
             //Stopwatch s1 = new Stopwatch();
             //s1.Start();
             playlist = new Playlist();
@@ -565,6 +567,7 @@ namespace NextPlayerUWPDataLayer.Services
             repeat = Repeat.CurrentState();
             isPlaylistRepeated = false;
             isSongRepeated = false;
+            Logger.DebugWrite("Playlist()", "finished");
         }
 
         public Playlist(int index, bool shuffle, RepeatEnum repeat)

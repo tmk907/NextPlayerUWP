@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -16,6 +17,7 @@ namespace NextPlayerUWP.ViewModels
     {
         public BottomPlayerViewModel()
         {
+            Logger.DebugWrite("BottomPlayerViewModel()", "");
             RepeatMode = Repeat.CurrentState();
             ShuffleMode = Shuffle.CurrentState();
             _timer = new DispatcherTimer();
@@ -36,6 +38,7 @@ namespace NextPlayerUWP.ViewModels
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
+            Logger.DebugWrite("BottomPlayerViewModel()", "Suspending");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Suspending");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
@@ -52,6 +55,7 @@ namespace NextPlayerUWP.ViewModels
 
         private void Current_Resuming(object sender, object e)
         {
+            Logger.DebugWrite("BottomPlayerViewModel()", "Resuming");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Resuming");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
@@ -256,7 +260,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            System.Diagnostics.Debug.WriteLine("BottomPlayerVM OnNavigatedToAsync");
+            Logger.DebugWrite("BottomPlayerViewModel()", "OnNavigatedToAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedToAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
@@ -273,7 +277,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
-            System.Diagnostics.Debug.WriteLine("BottomPlayerVM OnNavigatedFromAsync");
+            Logger.DebugWrite("BottomPlayerViewModel()", "OnNavigatedFromAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedFromAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
             PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;

@@ -11,6 +11,7 @@ using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
+using NextPlayerUWPDataLayer.Diagnostics;
 
 namespace NextPlayerUWP.Common
 {
@@ -27,6 +28,7 @@ namespace NextPlayerUWP.Common
 
         private NowPlayingPlaylistManager()
         {
+            Logger.DebugWrite("NowPlayingPlaylistManager()", "");
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
             songs.CollectionChanged += Songs_CollectionChanged;
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
@@ -380,6 +382,7 @@ namespace NextPlayerUWP.Common
 
         private async Task NotifyChange()
         {
+            Logger.DebugWrite("NowPlayingPlaylistManager()", "NotifyChange");
             OnNPChanged();
             await SaveNowPlayingInDB();
             SendMessage(AppConstants.NowPlayingListChanged);

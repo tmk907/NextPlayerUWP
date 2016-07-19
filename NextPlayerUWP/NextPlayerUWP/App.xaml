@@ -4,6 +4,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="using:NextPlayerUWP.Converters"
+        xmlns:controls="using:Template10.Controls"
         >
     <Application.Resources>
         <ResourceDictionary>
@@ -43,6 +44,26 @@
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentHighBrush" Color="{StaticResource UserAccentColor}" Opacity="0.9" />
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="{StaticResource UserAccentColor}" Opacity="0.6" />
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource UserAccentColor}" Opacity="0.8" />
+                    <!--<Style TargetType="controls:HamburgerMenu" x:Key="HamburgerMenuStyle">
+                       
+
+
+                        <Setter Property="SecondarySeparator" Value="Gray" />
+
+                        <Setter Property="HamburgerBackground" Value="Silver" />
+                        <Setter Property="HamburgerForeground" Value="Black" />
+                        <Setter Property="NavAreaBackground" Value="#FFF2F2F2" />
+                        <Setter Property="NavButtonForeground" Value="Black" />
+                        <Setter Property="NavButtonBackground" Value="#FFF2F2F2" />
+                        <Setter Property="NavButtonHoverForeground" Value="Black" />
+                        <Setter Property="NavButtonHoverBackground" Value="#FFDADADA" />
+                        <Setter Property="NavButtonPressedForeground" Value="White" />
+                        <Setter Property="NavButtonPressedBackground" Value="LightSkyBlue" />
+                        <Setter Property="NavButtonCheckedForeground" Value="Black" />
+                        <Setter Property="NavButtonCheckedBackground" Value="{StaticResource NavButtonCheckedLightBackground}" />
+                        <Setter Property="NavButtonCheckedIndicatorBrush" Value="{StaticResource MenuIndicatorLightBrush}" />
+
+                    </Style>-->
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="Black"/>
@@ -157,6 +178,22 @@
                 </Border>
             </DataTemplate>
 
+            <Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
+                <Setter Property="HamburgerBackground" Value="{ThemeResource SystemChromeMediumColor}"/>
+                <Setter Property="HamburgerForeground" Value="{ThemeResource SystemBaseHighColor}"/>
+                <Setter Property="NavAreaBackground" Value="{ThemeResource SystemChromeLowColor}"/>
+                <Setter Property="NavButtonBackground" Value="{ThemeResource SystemChromeLowColor}"/>
+                <Setter Property="NavButtonForeground" Value="{ThemeResource SystemBaseHighColor}"/>
+                <Setter Property="SecondarySeparator" Value="{ThemeResource SystemChromeHighColor}"/>
+                <Setter Property="NavButtonHoverBackground" Value="{ThemeResource SystemChromeMediumColor}"/>
+                <Setter Property="NavButtonHoverForeground" Value="{ThemeResource SystemBaseHighColor}"/>
+                <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource SystemChromeHighColor}"/>
+                <Setter Property="NavButtonCheckedForeground" Value="{ThemeResource SystemBaseHighColor}"/>
+                <Setter Property="NavButtonPressedBackground" Value="{ThemeResource SystemChromeMediumColor}"/>
+                <Setter Property="NavButtonPressedForeground" Value="{ThemeResource SystemBaseHighColor}"/>
+                <Setter Property="PaneBorderThickness" Value="0"/>
+            </Style>
+            
             <Style x:Key="ZoomedOutItemContainerStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Stretch"/>

@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Enums;
+﻿using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Tables;
 using System;
 using System.ComponentModel;
@@ -215,6 +216,20 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
+        private bool isAlbumArtSet;
+        public bool IsAlbumArtSet
+        {
+            get { return isAlbumArtSet; }
+            set
+            {
+                if (value != isAlbumArtSet)
+                {
+                    isAlbumArtSet = value;
+                    onPropertyChanged(this, "IsAlbumArtSet");
+                }
+            }
+        }
+
         private MusicSource sourceType;
         public MusicSource SourceType
         {
@@ -250,6 +265,7 @@ namespace NextPlayerUWPDataLayer.Model
             isPlaying = false;
             sourceType = MusicSource.LocalFile;
             coverPath = "";
+            isAlbumArtSet = true;
         }
 
         public SongItem(SongsTable table)
@@ -272,12 +288,16 @@ namespace NextPlayerUWPDataLayer.Model
             playCount = (int)table.PlayCount;
             isPlaying = false;
             sourceType = (table.IsAvailable > 0) ? MusicSource.LocalFile : MusicSource.LocalNotMusicLibrary;
-            coverPath = "";
-        }
-
-        public void GenerateId()
-        {
-            songId = (DateTime.Now.Millisecond + DateTime.Now.Second * 1000 + DateTime.Now.Minute * 100000 + (DateTime.Now.Hour + 1) * 10000000);// + DateTime.Now.Day * 1000000);
+            if (String.IsNullOrEmpty(table.AlbumArt))
+            {
+                isAlbumArtSet = false;
+                coverPath = AppConstants.AlbumCover;
+            }
+            else
+            {
+                isAlbumArtSet = true;
+                coverPath = table.AlbumArt;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

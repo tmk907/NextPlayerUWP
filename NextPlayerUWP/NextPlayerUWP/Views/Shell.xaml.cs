@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Template10.Controls;
 using Template10.Services.NavigationService;
@@ -58,20 +59,22 @@ namespace NextPlayerUWP.Views
             Menu.NavigationService = navigationService;
             //HamburgerMenu.RefreshStyles(_settings.AppTheme, true);
             //HamburgerMenu.IsFullScreen = _settings.IsFullScreen;
-            //HamburgerMenu.HamburgerButtonVisibility = _settings.ShowHamburgerButton ? Visibility.Visible : Visibility.Collapsed;
+            HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
         }
 
         private void App_AppThemeChanged(bool isLight)
         {
             if (isLight)
             {
-                this.RequestedTheme = ElementTheme.Light;
-                Menu.RequestedTheme = ElementTheme.Light;
+                //this.RequestedTheme = ElementTheme.Light;
+                //Menu.RequestedTheme = ElementTheme.Light;
+                Menu.RefreshStyles(ApplicationTheme.Light, true);
             }
             else
             {
-                this.RequestedTheme = ElementTheme.Dark;
-                Menu.RequestedTheme = ElementTheme.Dark;    
+                //this.RequestedTheme = ElementTheme.Dark;
+                //Menu.RequestedTheme = ElementTheme.Dark;
+                Menu.RefreshStyles(ApplicationTheme.Dark, true);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using FFmpegInterop;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Services;
@@ -30,6 +31,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
+            Logger.DebugWrite("BackgroundAudioTask", "");
             //Stopwatch s1 = new Stopwatch();
             //s1.Start();
             nowPlayingManager = new NowPlayingManager();
@@ -136,6 +138,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             }
             else if (sender.CurrentState == MediaPlayerState.Closed)
             {
+                Logger.DebugWrite("BGAudio()", "CurrentStateChanged Closed");
                 smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             }
         }

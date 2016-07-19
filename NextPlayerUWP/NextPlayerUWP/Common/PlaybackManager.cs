@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -24,6 +25,7 @@ namespace NextPlayerUWP.Common
 
         public  PlaybackManager()
         {
+            Logger.DebugWrite("PlaybackManager()", "");
             backgroundAudioTaskStarted = new AutoResetEvent(false);
             if (IsMyBackgroundTaskRunning)
             {
@@ -80,6 +82,7 @@ namespace NextPlayerUWP.Common
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
+            Logger.DebugWrite("PlaybackManager", $"Current_Suspending() {IsMyBackgroundTaskRunning}");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Suspending " );
             if (IsMyBackgroundTaskRunning)
             {
@@ -92,6 +95,7 @@ namespace NextPlayerUWP.Common
 
         private void Current_Resuming(object sender, object e)
         {
+            Logger.DebugWrite("PlaybackManager", $"Current_Resuming() {IsMyBackgroundTaskRunning}");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Current_Resuming ");
             if (IsMyBackgroundTaskRunning)
             {
@@ -242,6 +246,7 @@ namespace NextPlayerUWP.Common
         /// </summary>
         private void ResetAfterLostBackground()
         {
+            Logger.DebugWrite("PlaybackManager", "ResetAfterLostBackground");
             BackgroundMediaPlayer.Shutdown();
             _isMyBackgroundTaskRunning = false;
             backgroundAudioTaskStarted.Reset();
@@ -268,6 +273,7 @@ namespace NextPlayerUWP.Common
 
         private void StartBackgroundAudioTask(string s, object o)
         {
+            Logger.DebugWrite("PlaybackManager", "StartBackgroundTask");
             AddMediaPlayerEventHandlers();
 
             var startResult = Template10.Common.DispatcherWrapper.Current().DispatchAsync(() =>
@@ -370,6 +376,7 @@ namespace NextPlayerUWP.Common
         {
             foreach (string key in e.Data.Keys)
             {
+                Logger.DebugWrite("PlaybackManager", $"MessageReceivedFromBackground {key}");
                 switch (key)
                 {
                     case AppConstants.SongIndex:
@@ -420,6 +427,7 @@ namespace NextPlayerUWP.Common
 
         public void Previous()
         {
+            Logger.DebugWrite("PlaybackManager", $"Previous {IsMyBackgroundTaskRunning}");
             if (IsMyBackgroundTaskRunning)
             {
                 SendMessage(AppConstants.SkipPrevious);
@@ -434,6 +442,7 @@ namespace NextPlayerUWP.Common
         {
             if (IsMyBackgroundTaskRunning)
             {
+                Logger.DebugWrite("PlaybackManager", $"Play {IsMyBackgroundTaskRunning} {CurrentPlayer.CurrentState}");
                 if (MediaPlayerState.Playing == CurrentPlayer.CurrentState)
                 {
                     SendMessage(AppConstants.Pause);
@@ -453,6 +462,7 @@ namespace NextPlayerUWP.Common
             }
             else
             {
+                Logger.DebugWrite("PlaybackManager", $"Play {IsMyBackgroundTaskRunning} {MediaPlayerState.Stopped}");
                 OnMediaPlayerTrackChanged(CurrentSongIndex);
                 StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
             }
@@ -460,6 +470,7 @@ namespace NextPlayerUWP.Common
 
         public void PlayNew()
         {
+            Logger.DebugWrite("PlaybackManager", $"PlayNew() {IsMyBackgroundTaskRunning}");
             OnMediaPlayerTrackChanged(CurrentSongIndex);
             if (IsMyBackgroundTaskRunning)
             {
@@ -473,6 +484,7 @@ namespace NextPlayerUWP.Common
 
         public void Next()
         {
+            Logger.DebugWrite("PlaybackManager", $"Next() {IsMyBackgroundTaskRunning}");
             if (IsMyBackgroundTaskRunning)
             {
                 SendMessage(AppConstants.SkipNext);
