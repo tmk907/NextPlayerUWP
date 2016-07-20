@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using NextPlayerUWPDataLayer.Constants;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace NextPlayerUWP.Common
 {
@@ -56,24 +57,43 @@ namespace NextPlayerUWP.Common
         {
             Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
             string path = AppConstants.AlbumCover;
+            int i = 0;
+            //ImagesManager.i1 = 0;
+            //ImagesManager.i2 = 0;
+            //long ist2 = 0;
+            List<Tuple<int, string>> data = new List<Tuple<int, string>>();
+            Stopwatch st = new Stopwatch();
+            st.Start();
             foreach (var group in songs.Where(s => !s.IsAlbumArtSet).GroupBy(s => s.Album))
             {
                 path = AppConstants.AlbumCover;
                 foreach (var song in group)
                 {
+                    i++;
                     await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
                     {
                         await ImagesManager.PrepareSongAlbumArt(song);
                     });
-                    await DatabaseManager.Current.UpdateSongImagePath(song).ConfigureAwait(false);
+                    data.Add(new Tuple<int, string>(song.SongId, song.CoverPath));
+                    
                     if (song.CoverPath != AppConstants.AlbumCover)
                     {
                         path = song.CoverPath;
                     }
                 }
-                OnAlbumArtUpdated(group.FirstOrDefault().Album, path);
+                if (group.Key != "") OnAlbumArtUpdated(group.FirstOrDefault().Album, path);
+                else
+                {
+
+                }
             }
-            await UpdateAlbumArts();
+           
+            await DatabaseManager.Current.UpdateSongImagePath(songs).ConfigureAwait(false);
+           
+            st.Stop();
+            Debug.WriteLine("Songs {0} Total {1}ms DB {2}ms", i, st.ElapsedMilliseconds, st2.ElapsedMilliseconds);
+            //Debug.WriteLine("Read {0}ms Save {1}ms", ImagesManager.i1, ImagesManager.i2);
+            //await UpdateAlbumArts();
             Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
         }
 

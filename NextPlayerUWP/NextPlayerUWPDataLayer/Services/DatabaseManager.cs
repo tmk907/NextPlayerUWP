@@ -88,7 +88,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<AlbumsTable>();
             connection.DropTable<ArtistsTable>();
             connection.DropTable<CachedScrobble>();
-            connection.DropTable<ImportedPlaylist>();
+            connection.DropTable<ImportedPlaylistsTable>();
             connection.DropTable<FutureAccessTokensTable>();
         }
 
@@ -398,6 +398,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 Album = song.Tag.Album,
                 AlbumArtist = song.Tag.AlbumArtist,
+                AlbumArt = song.AlbumArtPath ?? "",
                 Artists = song.Tag.Artists,
                 Bitrate = song.Bitrate,
                 Comment = song.Tag.Comment,
@@ -1294,9 +1295,27 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET ImagePath = ? WHERE AlbumId = ?", album.ImagePath, album.AlbumId);
         }
 
-        public async Task UpdateSongImagePath(SongItem song)
+        public void UpdateSongImagePath(SongItem song)
         {
-            await connectionAsync.ExecuteAsync("UPDATE SongsTable SET AlbumArt = ? WHERE SongId = ?", song.CoverPath, song.SongId);
+           connection.Execute("UPDATE SongsTable SET AlbumArt = ? WHERE SongId = ?", song.CoverPath, song.SongId);
+        }
+
+        public async Task UpdateSongImagePath(IEnumerable<SongItem> songs)
+        {
+            var q1 = await connectionAsync.Table<SongsTable>().ToListAsync();
+            foreach(var s in q1)
+            {
+                s.AlbumArt = songs.FirstOrDefault(f => f.SongId == s.SongId)?.Path ?? s.AlbumArt;
+            }
+            await connectionAsync.UpdateAllAsync(q1);
+        }
+
+        public async Task UpdateSongImagePath(List<Tuple<int,string>> data)
+        {
+            foreach(var t in data)
+            {
+                await connectionAsync.ExecuteAsync("UPDATE SongsTable SET AlbumArt = ? WHERE SongId = ?", t.Item2, t.Item1);
+            }
         }
 
         public async Task UpdateAlbumItem(AlbumItem album)
@@ -1578,6 +1597,7 @@ namespace NextPlayerUWPDataLayer.Services
             };
             SongData s = new SongData()
             {
+                AlbumArtPath = q.AlbumArt,
                 Bitrate = q.Bitrate,
                 DateAdded = q.DateAdded,
                 Duration = q.Duration,

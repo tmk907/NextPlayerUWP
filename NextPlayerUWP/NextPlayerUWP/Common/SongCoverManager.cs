@@ -164,7 +164,7 @@ namespace NextPlayerUWP.Common
 
         private async Task<Uri> CopyFromSongFileToCache(string path, int id)
         {
-            var image = await ImagesManager.CreateBitmap(path);
+            var image = await ImagesManager.GetAlbumArtBitmap(path);
             if (image.PixelWidth == 1)
             {
                 coverPath = DefaultCover;

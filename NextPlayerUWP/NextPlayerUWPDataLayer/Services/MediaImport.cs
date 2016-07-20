@@ -162,8 +162,6 @@ namespace NextPlayerUWPDataLayer.Services
                     else
                     {
                         SongData song = await CreateSongFromFile(file);
-                        //await ImagesManager.PrepareSongAlbumArt(song);
-
                         newSongs.Add(song);
                     }
                 }
