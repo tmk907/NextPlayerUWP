@@ -37,12 +37,11 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private void AlbumArtFinder_AlbumArtUpdatedEvent(string album, string albumArtPath)
+        private void AlbumArtFinder_AlbumArtUpdatedEvent(int albumId, string albumArtPath)
         {
-            if (album == "") return;
             Dispatcher.Dispatch(() => 
             {
-                var alb = Albums.FirstOrDefault(a => a.AlbumParam == album);
+                var alb = Albums.FirstOrDefault(a => a.AlbumId == albumId);
                 alb.ImagePath = albumArtPath;
                 alb.ImageUri = new Uri(albumArtPath);
                 alb.IsImageSet = true;

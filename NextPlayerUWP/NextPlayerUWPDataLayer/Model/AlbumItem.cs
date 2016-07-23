@@ -26,8 +26,8 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
-        private string artistParam;
-        public string ArtistParam { get { return artistParam; } }
+        //private string artistParam;
+        //public string ArtistParam { get { return artistParam; } }
         private string albumArtist;
         public string AlbumArtist
         {
@@ -135,7 +135,7 @@ namespace NextPlayerUWPDataLayer.Model
             albumId = -1;
             albumParam = "";
             album = "Unknown Album";
-            artistParam = "Unknown Artist";
+            //artistParam = "Unknown Artist";
             albumArtist = "Unknown Album artist";
             songsNumber = 0;
             duration = TimeSpan.Zero;
@@ -162,7 +162,7 @@ namespace NextPlayerUWPDataLayer.Model
                 album = albumParam;
             }
             albumArtist = table.AlbumArtist;
-            artistParam = null;
+            //artistParam = null;
             year = table.Year;
             if (table.ImagePath == "")
             {

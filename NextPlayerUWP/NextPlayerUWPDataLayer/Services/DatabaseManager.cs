@@ -94,11 +94,18 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task CleanFoldersTable(List<string> directories)
         {
-            var folders = await connectionAsync.Table<FoldersTable>().ToListAsync();
-            foreach(var folder in folders.Where(f => !directories.Contains(f.Directory)))
+            var allFolders = await connectionAsync.Table<FoldersTable>().ToListAsync();
+            var newFolders = allFolders.Where(f => directories.Contains(f.Directory)).ToList();
+            connection.RunInTransaction(() => 
             {
-                await connectionAsync.DeleteAsync(folder);
-            }
+                connection.DeleteAll<FoldersTable>();
+                connection.InsertAll(newFolders);
+            });
+
+            //foreach (var folder in folders.Where(f => !directories.Contains(f.Directory)))
+            //{
+            //await connectionAsync.DeleteAsync(folder);
+            //}
         }
 
         public async Task UpdateFolderAsync2(string directory, List<SongsTable> oldSongs, List<SongData> newSongs, IEnumerable<SongsTable> toNotAvailable, IEnumerable<SongsTable> changed)
@@ -907,6 +914,11 @@ namespace NextPlayerUWPDataLayer.Services
             return albums;
         }
 
+        public async Task<List<AlbumsTable>> GetAlbumsTable()
+        {
+            return await connectionAsync.Table<AlbumsTable>().ToListAsync();
+        }
+
         public async Task<AlbumItem> GetAlbumItemAsync(int id)
         {
             var result = await connectionAsync.Table<AlbumsTable>().Where(a => a.AlbumId.Equals(id)).ToListAsync();
@@ -1368,6 +1380,11 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task UpdateAlbumImagePath(AlbumItem album)//error
         {
             await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET ImagePath = ? WHERE AlbumId = ?", album.ImagePath, album.AlbumId);
+        }
+
+        public async Task UpdateAlbumsImagePath(IEnumerable<AlbumsTable> albums)//error
+        {
+            await connectionAsync.UpdateAllAsync(albums);
         }
 
         public void UpdateSongImagePath(SongItem song)
