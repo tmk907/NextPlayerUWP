@@ -1968,19 +1968,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Template10/1.1.11": {
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-          "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
-          "Newtonsoft.Json": "8.0.3"
-        },
-        "compile": {
-          "lib/uap10.0/Template10Library.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Template10Library.dll": {}
-        }
-      },
       "WindowsStateTriggers/1.1.0": {
         "compile": {
           "lib/uap10.0/WindowsStateTriggers.dll": {}
@@ -3825,19 +3812,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Template10/1.1.11": {
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-          "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
-          "Newtonsoft.Json": "8.0.3"
-        },
-        "compile": {
-          "lib/uap10.0/Template10Library.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Template10Library.dll": {}
-        }
-      },
       "WindowsStateTriggers/1.1.0": {
         "compile": {
           "lib/uap10.0/WindowsStateTriggers.dll": {}
@@ -5638,19 +5612,6 @@
         },
         "runtime": {
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
-        }
-      },
-      "Template10/1.1.11": {
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-          "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
-          "Newtonsoft.Json": "8.0.3"
-        },
-        "compile": {
-          "lib/uap10.0/Template10Library.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Template10Library.dll": {}
         }
       },
       "WindowsStateTriggers/1.1.0": {
@@ -7505,19 +7466,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Template10/1.1.11": {
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-          "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
-          "Newtonsoft.Json": "8.0.3"
-        },
-        "compile": {
-          "lib/uap10.0/Template10Library.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Template10Library.dll": {}
-        }
-      },
       "WindowsStateTriggers/1.1.0": {
         "compile": {
           "lib/uap10.0/WindowsStateTriggers.dll": {}
@@ -9318,19 +9266,6 @@
         },
         "runtime": {
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
-        }
-      },
-      "Template10/1.1.11": {
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-          "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
-          "Newtonsoft.Json": "8.0.3"
-        },
-        "compile": {
-          "lib/uap10.0/Template10Library.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Template10Library.dll": {}
         }
       },
       "WindowsStateTriggers/1.1.0": {
@@ -11185,19 +11120,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Template10/1.1.11": {
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-          "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
-          "Newtonsoft.Json": "8.0.3"
-        },
-        "compile": {
-          "lib/uap10.0/Template10Library.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Template10Library.dll": {}
-        }
-      },
       "WindowsStateTriggers/1.1.0": {
         "compile": {
           "lib/uap10.0/WindowsStateTriggers.dll": {}
@@ -12998,19 +12920,6 @@
         },
         "runtime": {
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
-        }
-      },
-      "Template10/1.1.11": {
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-          "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
-          "Newtonsoft.Json": "8.0.3"
-        },
-        "compile": {
-          "lib/uap10.0/Template10Library.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Template10Library.dll": {}
         }
       },
       "WindowsStateTriggers/1.1.0": {
@@ -17072,25 +16981,6 @@
         "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll"
       ]
     },
-    "Template10/1.1.11": {
-      "sha512": "xXPtDTGpSX/QV+r37AGR8oCcUaP2f4c2XD4dHE8T9dFVwq/o51ACWJW35zpSadTsDtwtBrNBMbcOZup5rTzcYA==",
-      "type": "package",
-      "files": [
-        "Template10.1.1.11.nupkg.sha512",
-        "Template10.nuspec",
-        "build/uap10.0/Template10.targets",
-        "lib/uap10.0/Template10Library.dll",
-        "lib/uap10.0/Template10Library.pri",
-        "lib/uap10.0/Template10Library/Controls/HamburgerMenu.xaml",
-        "lib/uap10.0/Template10Library/Properties/Template10Library.rd.xml",
-        "lib/uap10.0/Template10Library/Template10Library.xr.xml",
-        "lib/uap10.0/Template10Library/Themes/Generic.xaml",
-        "lib/uap10.0/Template10Library/Themes/HamburgerMenu.xaml",
-        "lib/uap10.0/Template10Library/Themes/ModalDialog.xaml",
-        "lib/uap10.0/Template10Library/Themes/PageHeader.xaml",
-        "lib/uap10.0/Template10Library/Themes/Resizer.xaml"
-      ]
-    },
     "WindowsStateTriggers/1.1.0": {
       "sha512": "63CKlow5uM8/WnhqX8dGMabUZlg3CKKdkao++BuXffTXqPfUyoMfI8vcc9qKcH1TL9dDEj7jWLAqcwkdObhIqQ==",
       "type": "package",
@@ -17169,7 +17059,6 @@
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0",
       "Microsoft.Net.Http >= 2.2.29",
       "MvvmLight >= 5.3.0",
-      "Template10 >= 1.1.11",
       "WindowsStateTriggers >= 1.1.0"
     ],
     "UAP,Version=v10.0": []

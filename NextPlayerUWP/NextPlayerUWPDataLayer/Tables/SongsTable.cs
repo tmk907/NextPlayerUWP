@@ -14,6 +14,10 @@ namespace NextPlayerUWPDataLayer.Tables
         public string FolderName { get; set; }
         public string Path { get; set; }
         public string DirectoryName { get; set; }
+        /// <summary>
+        /// UTC
+        /// </summary>
+        public DateTime DateModified { get; set; }
 
         public uint Bitrate { get; set; }
         public TimeSpan Duration { get; set; }

@@ -74,11 +74,6 @@ namespace NextPlayerUWP
             {
                 FirstRunSetup();                
             }
-            else
-            {
-                UpdateDB();
-                UpdateApp();
-            }
 
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
             if (t != null)
@@ -114,7 +109,7 @@ namespace NextPlayerUWP
             Logger.ClearSettingsLogs();
 #endif
             albumArtFinder = new AlbumArtFinder();
-            
+            //DatabaseManager.Current.resetdb();
             this.UnhandledException += App_UnhandledException;
         }
 
@@ -162,7 +157,7 @@ namespace NextPlayerUWP
         {
             Debug.WriteLine("OnInitializeAsync " + args.PreviousExecutionState + " " + DetermineStartCause(args));
 
-            if (!isFirstRun)
+            if (!isFirstRun && args.PreviousExecutionState != ApplicationExecutionState.Running && args.PreviousExecutionState != ApplicationExecutionState.Suspended)
             {
                 await PerformUpdate();
             }
@@ -253,6 +248,9 @@ namespace NextPlayerUWP
                 albumArtFinder.StartLooking();
                 //Debug.WriteLine("after albumArtFinder.StartLooking");
             }
+
+            //MediaImport m = new MediaImport();
+            //await Task.Run(() => m.UpdateModificationDates());
         }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)

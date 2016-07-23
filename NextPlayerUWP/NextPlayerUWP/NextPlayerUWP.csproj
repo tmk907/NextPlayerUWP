@@ -452,6 +452,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Documents\T10\2307\Template10 %28Library%29.csproj">
+      <Project>{ac3e4f10-6615-4e16-bb0f-104760c92b95}</Project>
+      <Name>Template10 %28Library%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NextPlayerUWPBackgroundAudioPlayer\NextPlayerUWPBackgroundAudioPlayer.csproj">
       <Project>{daaca509-1af5-476c-bed0-ab945229fc53}</Project>
       <Name>NextPlayerUWPBackgroundAudioPlayer</Name>

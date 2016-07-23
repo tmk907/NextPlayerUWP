@@ -44,6 +44,31 @@
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentHighBrush" Color="{StaticResource UserAccentColor}" Opacity="0.9" />
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="{StaticResource UserAccentColor}" Opacity="0.6" />
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource UserAccentColor}" Opacity="0.8" />
+
+                    <SolidColorBrush x:Key="HoverBrush" Color="#FF2B2B2B"/>
+                    
+                    <Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
+                        <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+                        <Setter Property="NavButtonBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+
+                        <Setter Property="AccentColor" Value="#FF1F1F1F"/>
+                        <Setter Property="HamburgerBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+                        <Setter Property="NavButtonHoverBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
+                        <Setter Property="NavButtonPressedBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
+
+                        <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                        <Setter Property="NavButtonCheckedIndicatorBrush" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+
+                        <Setter Property="NavButtonHoverForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                        <Setter Property="HamburgerForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                        <Setter Property="NavButtonForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                        <Setter Property="NavButtonCheckedForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                        <Setter Property="NavButtonPressedForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+
+                        <Setter Property="PaneBorderThickness" Value="0"/>
+                        <Setter Property="SecondarySeparator" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+                    </Style>
+                    
                     <!--<Style TargetType="controls:HamburgerMenu" x:Key="HamburgerMenuStyle">
                        
 
@@ -100,6 +125,33 @@
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentHighBrush" Color="{StaticResource UserAccentColor}" Opacity="0.7" />
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="{StaticResource UserAccentColor}" Opacity="0.4" />
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource UserAccentColor}" Opacity="0.6" />
+
+
+                    <SolidColorBrush x:Key="HoverBrush" Color="#FFD9D9D9"/>
+
+                    <Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
+                        <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+                        <Setter Property="NavButtonBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+
+                        <Setter Property="AccentColor" Value="#FFE6E6E6"/>
+                        <Setter Property="HamburgerBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+
+                        <Setter Property="NavButtonHoverBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
+                        <Setter Property="NavButtonPressedBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
+
+                        <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+                        <Setter Property="NavButtonCheckedIndicatorBrush" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+                        
+                        <Setter Property="NavButtonHoverForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                        <Setter Property="HamburgerForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                        <Setter Property="NavButtonForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                        <Setter Property="NavButtonCheckedForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                        <Setter Property="NavButtonPressedForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+
+                        <Setter Property="PaneBorderThickness" Value="0"/>
+                        <Setter Property="SecondarySeparator" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+                    </Style>
+
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:NextPlayerUWP.ViewModels" />
@@ -178,21 +230,26 @@
                 </Border>
             </DataTemplate>
 
-            <Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
-                <Setter Property="HamburgerBackground" Value="{ThemeResource SystemChromeMediumColor}"/>
-                <Setter Property="HamburgerForeground" Value="{ThemeResource SystemBaseHighColor}"/>
-                <Setter Property="NavAreaBackground" Value="{ThemeResource SystemChromeLowColor}"/>
-                <Setter Property="NavButtonBackground" Value="{ThemeResource SystemChromeLowColor}"/>
-                <Setter Property="NavButtonForeground" Value="{ThemeResource SystemBaseHighColor}"/>
-                <Setter Property="SecondarySeparator" Value="{ThemeResource SystemChromeHighColor}"/>
-                <Setter Property="NavButtonHoverBackground" Value="{ThemeResource SystemChromeMediumColor}"/>
-                <Setter Property="NavButtonHoverForeground" Value="{ThemeResource SystemBaseHighColor}"/>
-                <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource SystemChromeHighColor}"/>
-                <Setter Property="NavButtonCheckedForeground" Value="{ThemeResource SystemBaseHighColor}"/>
-                <Setter Property="NavButtonPressedBackground" Value="{ThemeResource SystemChromeMediumColor}"/>
-                <Setter Property="NavButtonPressedForeground" Value="{ThemeResource SystemBaseHighColor}"/>
+            <!--<Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
+                <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"/>
+                <Setter Property="NavButtonBackground" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"/>
+
+                <Setter Property="AccentColor" Value="Red"/>
+                <Setter Property="HamburgerBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+                <Setter Property="NavButtonHoverBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+                <Setter Property="NavButtonPressedBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+                
+                <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+                
+                <Setter Property="NavButtonHoverForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                <Setter Property="HamburgerForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                <Setter Property="NavButtonForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                <Setter Property="NavButtonCheckedForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                <Setter Property="NavButtonPressedForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                
                 <Setter Property="PaneBorderThickness" Value="0"/>
-            </Style>
+                <Setter Property="SecondarySeparator" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+            </Style>-->
             
             <Style x:Key="ZoomedOutItemContainerStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>

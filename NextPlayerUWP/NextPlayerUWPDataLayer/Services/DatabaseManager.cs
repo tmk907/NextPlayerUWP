@@ -92,7 +92,81 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<FutureAccessTokensTable>();
         }
 
-        
+        public async Task CleanFoldersTable(List<string> directories)
+        {
+            var folders = await connectionAsync.Table<FoldersTable>().ToListAsync();
+            foreach(var folder in folders.Where(f => !directories.Contains(f.Directory)))
+            {
+                await connectionAsync.DeleteAsync(folder);
+            }
+        }
+
+        public async Task UpdateFolderAsync2(string directory, List<SongsTable> oldSongs, List<SongData> newSongs, IEnumerable<SongsTable> toNotAvailable, IEnumerable<SongsTable> changed)
+        {
+            //Debug.WriteLine("UpdateFolderAsync2 {0} {1} {2} {3}", newSongs.Count, oldSongs.Count, toNotAvailable.Count(), changed.Count());
+            var folder = await connectionAsync.Table<FoldersTable>().Where(f => f.Directory.Equals(directory)).FirstOrDefaultAsync();
+            if (newSongs.Count == 0 && oldSongs.Count == 0)
+            {
+                if (null != folder)
+                {
+                    await connectionAsync.DeleteAsync(folder);
+                }
+                return;
+            }
+            
+            TimeSpan duration = TimeSpan.Zero;
+            DateTime lastAdded = DateTime.MinValue;
+            foreach (var song in oldSongs.Where( s=> s.IsAvailable == 1))
+            {
+                duration += song.Duration;
+                if (lastAdded < song.DateAdded) lastAdded = song.DateAdded;
+            }
+            foreach (var song in newSongs)
+            {
+                duration += song.Duration;
+                if (lastAdded < song.DateAdded) lastAdded = song.DateAdded;
+            }
+
+            if (null == folder)
+            {
+                await connectionAsync.InsertAsync(new FoldersTable()
+                {
+                    Directory = directory,
+                    Duration = duration,
+                    Folder = Path.GetFileName(directory),
+                    LastAdded = lastAdded,
+                    SongsNumber = newSongs.Count,
+                });
+            }
+            else
+            {
+                await connectionAsync.UpdateAllAsync(toNotAvailable);
+                await connectionAsync.UpdateAllAsync(changed);
+
+                if (newSongs.Count == 0 && !oldSongs.Exists(s => s.IsAvailable == 1))
+                {
+                    await connectionAsync.DeleteAsync(folder);
+                }
+                else
+                {
+                    int songsNumber = oldSongs.Where(s => s.IsAvailable == 1).Count() + newSongs.Count;
+                    if (folder.Duration != duration || folder.LastAdded != lastAdded || folder.SongsNumber != songsNumber)
+                    {
+                        folder.Duration = duration;
+                        folder.LastAdded = lastAdded;
+                        folder.SongsNumber = songsNumber;
+                        await connectionAsync.UpdateAsync(folder);
+                    }
+                }
+            }
+
+            List<SongsTable> list = new List<SongsTable>();
+            foreach (var item in newSongs)
+            {
+                list.Add(CreateSongsTable(item));
+            }
+            await connectionAsync.InsertAllAsync(list);
+        }
 
         public async Task UpdateFolderAsync(List<SongData> newSongs, List<int> toAvailable, List<int> oldAvailable, string directoryName)
         {
@@ -405,6 +479,7 @@ namespace NextPlayerUWPDataLayer.Services
                 Composers = song.Tag.Composers,
                 Conductor = song.Tag.Conductor,
                 DateAdded = song.DateAdded,
+                DateModified = song.DateModified,
                 DirectoryName = dir,
                 Duration = song.Duration,
                 Disc = song.Tag.Disc,
@@ -1305,7 +1380,7 @@ namespace NextPlayerUWPDataLayer.Services
             var q1 = await connectionAsync.Table<SongsTable>().ToListAsync();
             foreach(var s in q1)
             {
-                s.AlbumArt = songs.FirstOrDefault(f => f.SongId == s.SongId)?.Path ?? s.AlbumArt;
+                s.AlbumArt = songs.FirstOrDefault(f => f.SongId == s.SongId)?.CoverPath ?? s.AlbumArt;
             }
             await connectionAsync.UpdateAllAsync(q1);
         }
@@ -1543,12 +1618,14 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 Album = s.Album,
                 AlbumArtist = s.AlbumArtist,
+                AlbumArt = s.AlbumArt,
                 Artists = s.Artists,
                 Bitrate = s.Bitrate,
                 Comment = s.Comment,
                 Composers = s.Composers,
                 Conductor = s.Conductor,
                 DateAdded = s.DateAdded,
+                DateModified = s.DateModified,
                 DirectoryName = s.DirectoryName,
                 Disc = s.Disc,
                 DiscCount = s.DiscCount,
@@ -1600,6 +1677,7 @@ namespace NextPlayerUWPDataLayer.Services
                 AlbumArtPath = q.AlbumArt,
                 Bitrate = q.Bitrate,
                 DateAdded = q.DateAdded,
+                DateModified = q.DateModified,
                 Duration = q.Duration,
                 Filename = q.Filename,
                 FileSize = (ulong)q.FileSize,
@@ -1637,8 +1715,10 @@ namespace NextPlayerUWPDataLayer.Services
             };
             SongData s = new SongData()
             {
+                AlbumArtPath = "",
                 Bitrate = 0,
                 DateAdded = DateTime.Now,
+                DateModified = DateTime.UtcNow,
                 Duration = TimeSpan.Zero,
                 Filename = "",
                 FileSize = (ulong)0,
@@ -1748,8 +1828,23 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void UpdateToVersion5()
         {
-            connection.Execute("ALTER TABLE SongsTable ADD COLUMN AlbumArt VARCHAR");
+            connection.CreateTable<SongsTable>();
             connection.Execute("UPDATE SongsTable SET AlbumArt = ?", "");
+            connection.Execute("UPDATE SongsTable SET DateModified = ?", 0);
+        }
+        public async Task<List<SongsTable>> GetSongsTableAsync()
+        {
+            return await connectionAsync.Table<SongsTable>().ToListAsync();
+        }
+
+        public async Task<List<SongsTable>> GetSongsTableFromDirectory(string dir)
+        {
+            return await connectionAsync.Table<SongsTable>().Where(s => s.DirectoryName.Equals(dir)).ToListAsync();
+        }
+
+        public async Task UpdateSongsTableAsync(List<SongsTable> songs)
+        {
+            await connectionAsync.UpdateAllAsync(songs);
         }
     }
 }

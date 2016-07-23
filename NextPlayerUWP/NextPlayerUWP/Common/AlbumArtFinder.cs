@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NextPlayerUWPDataLayer.Constants;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace NextPlayerUWP.Common
 {
@@ -46,7 +47,7 @@ namespace NextPlayerUWP.Common
                 songs = await DatabaseManager.Current.GetSongItemsAsync();
             });
             isRunning = true;
-            await Task.Run(() => FindSongsAlbumArt());
+            //await Task.Run(() => FindSongsAlbumArt());
             songs.Clear();
             albums.Clear();
             isRunning = false;
@@ -64,15 +65,51 @@ namespace NextPlayerUWP.Common
             List<Tuple<int, string>> data = new List<Tuple<int, string>>();
             Stopwatch st = new Stopwatch();
             st.Start();
-            foreach (var group in songs.Where(s => !s.IsAlbumArtSet).GroupBy(s => s.Album))
+            foreach (var group in songs.Where(s => !s.IsAlbumArtSet).GroupBy(s => new { s.Album, s.AlbumArtist }))
             {
                 path = AppConstants.AlbumCover;
+                List<Tuple<WriteableBitmap, string>> albumArts = new List<Tuple<WriteableBitmap, string>>();
                 foreach (var song in group)
                 {
                     i++;
                     await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
                     {
-                        await ImagesManager.PrepareSongAlbumArt(song);
+                        var c = await ImagesManager.GetAlbumArtBitmap2(song.Path);
+                        if (c==null || c.PixelHeight == 1)
+                        {
+                            song.CoverPath = AppConstants.AlbumCover;
+                            song.IsAlbumArtSet = true;
+                        }
+                        else
+                        {
+                            if (albumArts.Count == 0)
+                            {
+                                string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", c);
+                                song.CoverPath = savedPath;
+                                song.IsAlbumArtSet = true;
+                                albumArts.Add(new Tuple<WriteableBitmap, string>(c, savedPath));
+                            }
+                            else
+                            {
+                                foreach (var tuple in albumArts)
+                                {
+                                    if (!ImagesManager.AreDifferent(tuple.Item1, c))
+                                    {
+                                        song.CoverPath = tuple.Item2;
+                                        song.IsAlbumArtSet = true;
+                                        break;
+                                    }
+                                }
+                                if (!song.IsAlbumArtSet)
+                                {
+                                    string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", c);
+                                    song.CoverPath = savedPath;
+                                    song.IsAlbumArtSet = true;
+                                    albumArts.Add(new Tuple<WriteableBitmap, string>(c, savedPath));
+                                }
+                            }
+                        }
+                        //await ImagesManager.SaveAlbumArtFromSong(song);
                     });
                     data.Add(new Tuple<int, string>(song.SongId, song.CoverPath));
                     
@@ -81,19 +118,14 @@ namespace NextPlayerUWP.Common
                         path = song.CoverPath;
                     }
                 }
-                if (group.Key != "") OnAlbumArtUpdated(group.FirstOrDefault().Album, path);
-                else
-                {
-
-                }
             }
            
             await DatabaseManager.Current.UpdateSongImagePath(songs).ConfigureAwait(false);
            
             st.Stop();
-            Debug.WriteLine("Songs {0} Total {1}ms DB {2}ms", i, st.ElapsedMilliseconds, st2.ElapsedMilliseconds);
+            Debug.WriteLine("Songs {0} Total {1}ms", i, st.ElapsedMilliseconds);
             //Debug.WriteLine("Read {0}ms Save {1}ms", ImagesManager.i1, ImagesManager.i2);
-            //await UpdateAlbumArts();
+            await UpdateAlbumArts();
             Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
         }
 

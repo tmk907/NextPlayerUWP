@@ -228,12 +228,31 @@ namespace NextPlayerUWPDataLayer.Services
                 using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+
+                    int width = image.PixelWidth;
+                    int height = image.PixelHeight;
+                    int max = 500;
+                    if (width > max)
+                    {
+                        if (width == height)
+                        {
+                            height = max;
+                        }
+                        else
+                        {
+                            height = height * max / width;
+                        }
+                        width = max;
+
+                        image = image.Resize(width, height, WriteableBitmapExtensions.Interpolation.Bilinear);
+                    }
+
                     var pixelStream = image.PixelBuffer.AsStream();
                     byte[] pixels = new byte[image.PixelBuffer.Length];
 
                     await pixelStream.ReadAsync(pixels, 0, pixels.Length);
 
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)image.PixelWidth, (uint)image.PixelHeight, 96, 96, pixels);
+                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)width, (uint)height, 96, 96, pixels);
 
                     await encoder.FlushAsync();
                 }
@@ -243,6 +262,16 @@ namespace NextPlayerUWPDataLayer.Services
                 //image exists and is opened in album view
             }
             return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
+        }
+
+        public async Task<string> SaveAlbumArt(string fileName, string folderName, WriteableBitmap image)
+        {
+            string path = "";
+
+            var hash = image.GetHashCode();
+            
+
+            return path;
         }
 
         /// <summary>
@@ -281,7 +310,7 @@ namespace NextPlayerUWPDataLayer.Services
                 {
                     foreach(var s in songs.Where(x => !x.IsAlbumArtSet))
                     {
-                        await PrepareSongAlbumArt(s);
+                        await SaveAlbumArtFromSong(s);
                         if (s.CoverPath != AppConstants.AlbumCover)
                         {
                             imagePath = s.CoverPath;
@@ -305,7 +334,55 @@ namespace NextPlayerUWPDataLayer.Services
         public static long i1 = 0;
         public static long i2 = 0;
 
-        public static async Task PrepareSongAlbumArt(SongItem song)
+        public static bool AreDifferent(WriteableBitmap b1, WriteableBitmap b2)
+        {
+            bool areDifferent = false;
+
+            if (b1 == null || b2 == null) return true;
+
+            if (b1.PixelHeight != b2.PixelHeight || b1.PixelWidth != b2.PixelWidth) return true;
+
+
+            byte[] b1bytes = b1.ToByteArray();
+            byte[] b2bytes = b2.ToByteArray();
+
+            if (b1bytes.Length != b2bytes.Length)
+            {
+                return true;
+            }
+
+            for (int n = 0; n <= b1bytes.Length - 1; n++)
+            {
+                if (b1bytes[n] != b2bytes[n])
+                {
+                    areDifferent = true;
+                    break;
+                }
+            }
+
+            //using (MemoryStream ms = new MemoryStream())
+            //{
+            //    using (var a = b1.PixelBuffer.AsStream())
+            //    {
+            //        a.CopyTo(ms);
+            //    }
+            //    string firstBitmap = Convert.ToBase64String(ms.ToArray());
+            //    ms.Position = 0;
+            //    //byte[] pixels2 = new byte[b2.PixelBuffer.Length];
+            //    //ms.Write(pixels2, 0, pixels2.Length);
+            //    using (var b = b1.PixelBuffer.AsStream())
+            //    {
+            //        b.CopyTo(ms);
+            //    }
+            //    string secondBitmap = Convert.ToBase64String(ms.ToArray());
+
+            //    areDifferent = !firstBitmap.Equals(secondBitmap);
+            //}
+
+            return areDifferent;
+        }
+
+        public static async Task SaveAlbumArtFromSong(SongItem song)
         {
             //Stopwatch s = new Stopwatch();
             //s.Start();
@@ -329,6 +406,21 @@ namespace NextPlayerUWPDataLayer.Services
             ////Debug.WriteLine("Prepare 1 {0} 2 {1}", b, s.ElapsedMilliseconds);
             //i2 += s.ElapsedMilliseconds;
             song.IsAlbumArtSet = true;
+        }
+
+        public static async Task SaveAlbumArtFromSong(SongData song)
+        {
+            var cover = await GetAlbumArtBitmap2(song.Path);
+
+            if (cover == null || cover.PixelHeight == 1)
+            {
+                song.AlbumArtPath = AppConstants.AlbumCover;
+            }
+            else
+            {
+                string p = await SaveCover(song.SongId.ToString(), "Songs", cover);
+                song.AlbumArtPath = p;
+            }
         }
 
         /// <summary>
@@ -416,7 +508,7 @@ namespace NextPlayerUWPDataLayer.Services
                         }
                     }
                 }
-                if (!set && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
+                if (!set && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && thumb.OriginalHeight > 100)
                 {
                     using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
                     {

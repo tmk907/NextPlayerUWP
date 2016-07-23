@@ -57,8 +57,16 @@ namespace NextPlayerUWP.Views
         public void SetNavigationService(INavigationService navigationService)
         {
             Menu.NavigationService = navigationService;
-            //HamburgerMenu.RefreshStyles(_settings.AppTheme, true);
-            //HamburgerMenu.IsFullScreen = _settings.IsFullScreen;
+            if (App.Current.RequestedTheme == ApplicationTheme.Light)
+            {
+                HamburgerMenu.RequestedTheme = ElementTheme.Light;
+            }
+            else
+            {
+                HamburgerMenu.RequestedTheme = ElementTheme.Dark;
+            }
+            HamburgerMenu.RefreshStyles(App.Current.RequestedTheme);
+            HamburgerMenu.IsFullScreen = false;
             HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
         }
 
@@ -66,15 +74,15 @@ namespace NextPlayerUWP.Views
         {
             if (isLight)
             {
-                //this.RequestedTheme = ElementTheme.Light;
-                //Menu.RequestedTheme = ElementTheme.Light;
-                Menu.RefreshStyles(ApplicationTheme.Light, true);
+                this.RequestedTheme = ElementTheme.Light;
+                HamburgerMenu.RequestedTheme = ElementTheme.Light;
+                HamburgerMenu.RefreshStyles(ApplicationTheme.Light);
             }
             else
             {
-                //this.RequestedTheme = ElementTheme.Dark;
-                //Menu.RequestedTheme = ElementTheme.Dark;
-                Menu.RefreshStyles(ApplicationTheme.Dark, true);
+                this.RequestedTheme = ElementTheme.Dark;
+                HamburgerMenu.RequestedTheme = ElementTheme.Dark;
+                HamburgerMenu.RefreshStyles(ApplicationTheme.Dark);
             }
         }
 

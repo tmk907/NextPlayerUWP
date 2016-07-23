@@ -196,6 +196,11 @@ namespace NextPlayerUWPDataLayer.Diagnostics
             System.Diagnostics.Debug.WriteLine("{0} {1} {2}", DateTime.Now.TimeOfDay, caller, data);
         }
 #endif
+        //public delegate Task abc();
+        //public static async Task MeasureTime(abc asd)
+        //{
+        //    await asd();
+        //}
 
     }
 }

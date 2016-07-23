@@ -14,7 +14,7 @@ namespace NextPlayerUWPDataLayer.Helpers
 
         public static async Task SaveToken(string path, string token, bool isFile = true)
         {
-            if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= StorageApplicationPermissions.FutureAccessList.MaximumItemsAllowed)
+            if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= StorageApplicationPermissions.FutureAccessList.MaximumItemsAllowed - 1)
             {
                 string deletedToken = await DatabaseManager.Current.DeleteAccessTokenAsync();
                 StorageApplicationPermissions.FutureAccessList.Remove(deletedToken);

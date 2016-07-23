@@ -41,23 +41,25 @@ namespace NextPlayerUWPDataLayer.Services
             MediaImported?.Invoke(s);
         }
 
+        private static readonly List<string> supportedAudioFormats = new List<string>()
+        {
+            ".mp3"  ,".m4a"  ,".wma",
+            ".wav"  ,".aac"  ,".asf"  ,".flac", 
+            ".adt"  ,".adts"  ,".amr"  ,".mp4", 
+            ".ogg"  ,".ape"  ,".wv"  ,".opus", 
+            ".ac3"
+        };
+
         private Dictionary<string, Tuple<int, int>> dbFiles;
         private int songsAdded;
         private IProgress<int> progress;
         private List<string> importedPlaylistPaths;
         private List<ImportedPlaylist> importedPlaylists;
+        private List<string> libraryDirectories;
 
         public static bool IsAudioFile(string type)
         {
-            if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
-                type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
-                type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4" ||
-                type == ".ogg" || type == ".ape" || type == ".wv" || type == ".opus" ||
-                type == ".ac3")
-            {
-                return true;
-            }
-            else return false;
+            return supportedAudioFormats.Contains(type);
         }
 
         public static bool IsPlaylistFile(string type)
@@ -93,6 +95,239 @@ namespace NextPlayerUWPDataLayer.Services
             catch (Exception)
             {
 
+            }
+        }
+
+        private async Task UpdateSongMusicProperties(Tables.SongsTable songTable, BasicProperties prop, StorageFile file)
+        {
+            songTable.FileSize = (long)prop.Size;
+            songTable.DateModified = prop.DateModified.UtcDateTime;
+            try
+            {
+                using (Stream fileStream = await file.OpenStreamForReadAsync())
+                {
+                    try
+                    {
+                        var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+                        try
+                        {
+                            Tag tags;
+                            if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Id3v2);
+                                if (songTable.Rating == 0)
+                                {
+                                    TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", false);
+                                    if (pop != null)
+                                    {
+                                        if (224 <= pop.Rating && pop.Rating <= 255) songTable.Rating = 5;
+                                        else if (160 <= pop.Rating && pop.Rating <= 223) songTable.Rating = 4;
+                                        else if (96 <= pop.Rating && pop.Rating <= 159) songTable.Rating = 3;
+                                        else if (32 <= pop.Rating && pop.Rating <= 95) songTable.Rating = 2;
+                                        else if (1 <= pop.Rating && pop.Rating <= 31) songTable.Rating = 1;
+                                    }
+                                }
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Id3v1);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Apple);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.FlacMetadata.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.FlacMetadata);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Asf.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Asf);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Ape.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Ape);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Xiph.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Xiph);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.None.ToString()))
+                            {
+                                tags = tagFile.GetTag(tagFile.TagTypes);
+                            }
+                            else
+                            {
+                                tags = tagFile.GetTag(tagFile.TagTypes);
+                            }
+
+                            if (!String.IsNullOrWhiteSpace(tags.Album)) songTable.Album = tags.Album;
+                            if (!String.IsNullOrWhiteSpace(tags.FirstAlbumArtist)) songTable.AlbumArtist = tags.FirstAlbumArtist;
+                            if (!String.IsNullOrWhiteSpace(tags.JoinedPerformers)) songTable.Artists = tags.JoinedPerformers;
+                            if (!String.IsNullOrWhiteSpace(tags.Comment)) songTable.Comment = tags.Comment;
+                            if (!String.IsNullOrWhiteSpace(tags.JoinedComposers)) songTable.Composers = tags.JoinedComposers;
+                            if (!String.IsNullOrWhiteSpace(tags.Conductor)) songTable.Conductor = tags.Conductor;
+                            songTable.Disc = (tags.Disc != 0) ? (int)tags.Disc : songTable.Disc;
+                            songTable.DiscCount = (tags.DiscCount != 0) ? (int)tags.DiscCount : songTable.DiscCount;
+                            if (!String.IsNullOrWhiteSpace(tags.FirstPerformer)) songTable.FirstArtist = tags.FirstPerformer;
+                            if (!String.IsNullOrWhiteSpace(tags.FirstComposer)) songTable.FirstComposer = tags.FirstComposer;
+                            if (!String.IsNullOrWhiteSpace(tags.JoinedGenres)) songTable.Genres = tags.JoinedGenres;
+                            if (!String.IsNullOrWhiteSpace(tags.Lyrics)) songTable.Lyrics = tags.Lyrics;
+                            if (!String.IsNullOrWhiteSpace(tags.Title)) songTable.Title = tags.Title;
+                            songTable.Track = (tags.Track != 0) ? (int)tags.Track : songTable.Track;
+                            songTable.TrackCount = (tags.TrackCount != 0) ? (int)tags.TrackCount : songTable.TrackCount;
+                            songTable.Year = (tags.Year != 0) ? (int)tags.Year : songTable.Year;
+
+                            MusicProperties musicProperties = await file.Properties.GetMusicPropertiesAsync();
+                            if (songTable.Track == 0 && musicProperties.TrackNumber != 0)
+                            {
+                                songTable.Track = (int)musicProperties.TrackNumber;
+                            }
+                            if (songTable.Year == 0 && musicProperties.Year != 0)
+                            {
+                                songTable.Year = (int)musicProperties.Year;
+                            }
+                            if (songTable.Rating == 0 && musicProperties.Rating != 0)
+                            {
+                                switch (musicProperties.Rating)
+                                {
+                                    case 99:
+                                        songTable.Rating = 5;
+                                        break;
+                                    case 75:
+                                        songTable.Rating = 4;
+                                        break;
+                                    case 50:
+                                        songTable.Rating = 3;
+                                        break;
+                                    case 25:
+                                        songTable.Rating = 2;
+                                        break;
+                                    case 1:
+                                        songTable.Rating = 1;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            if (file.FileType == ".wav")
+                            {
+                                if (musicProperties.Album != "" && musicProperties.Album != songTable.Album)
+                                {
+                                    songTable.Album = musicProperties.Album;
+                                }
+                                if (musicProperties.Title != "" && musicProperties.Title != songTable.Title)
+                                {
+                                    songTable.Title = musicProperties.Title;
+                                }
+                            }
+                        }
+                        catch (CorruptFileException e)
+                        {
+                            
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Logger.Save("CreateSongFromFile FileNotFound" + Environment.NewLine + ex.Message);
+                Logger.SaveToFile();
+            }
+            catch (Exception ex)
+            {
+                Logger.Save("CreateSongFromFile" + Environment.NewLine + ex.Message);
+                Logger.SaveToFile();
+            }
+        }
+
+        private async Task AddFilesFromFolder2(StorageFolder folder)
+        {
+            var files = await folder.GetFilesAsync();
+            List<SongData> newSongs = new List<SongData>();
+            var oldSongs = await DatabaseManager.Current.GetSongsTableFromDirectory(folder.Path);
+            List<int> availableChange = new List<int>();
+            List<int> availableNotChange = new List<int>();
+            libraryDirectories.Add(folder.Path);
+            foreach(var file in files)
+            {
+                string type = file.FileType.ToLower();
+
+                if (type == ".m3u" || type == ".m3u8")
+                {
+                    if (!importedPlaylistPaths.Contains(file.Path))
+                    {
+                        var ip = await ParseM3UPlaylist(file, folder.Path);
+                        importedPlaylists.Add(ip);
+                    }
+                }
+                else if (type == ".wpl")
+                {
+                    if (!importedPlaylistPaths.Contains(file.Path))
+                    {
+                        var ip = await ParseWPLPlaylist(file, folder.Path);
+                        importedPlaylists.Add(ip);
+                    }
+                }
+                else if (type == ".pls")
+                {
+                    if (!importedPlaylistPaths.Contains(file.Path))
+                    {
+                        var ip = await ParsePLSPlaylist(file, folder.Path);
+                        importedPlaylists.Add(ip);
+                    }
+                }
+                else if (IsAudioFile(type))
+                {
+                    var song = oldSongs.FirstOrDefault(s => s.Path.Equals(file.Path));
+                    if (null != song)
+                    {
+                        var prop = await file.GetBasicPropertiesAsync();
+                        if (song.DateModified.Ticks == 0)
+                        {
+                            song.DateModified = prop.DateModified.UtcDateTime;
+                            if (song.IsAvailable == 1) availableNotChange.Add(song.SongId);
+                            else availableChange.Add(song.SongId);
+                        }
+                        else if (song.DateModified < prop.DateModified.UtcDateTime)//file was modified
+                        {
+                            await UpdateSongMusicProperties(song, prop, file);
+                            availableChange.Add(song.SongId);
+                        }
+                        else
+                        {
+                            if (song.IsAvailable == 1) availableNotChange.Add(song.SongId);
+                            else availableChange.Add(song.SongId);
+                        }
+                        song.IsAvailable = 1;
+                    }
+                    else
+                    {
+                        var newSong = await CreateSongFromFile(file);
+                        newSongs.Add(newSong);
+                    }
+                }
+            }
+
+            var toNotAvailable = oldSongs.Where(s => s.IsAvailable == 1 && !availableChange.Contains(s.SongId) && !availableNotChange.Contains(s.SongId)).ToList();
+            foreach(var s in toNotAvailable)
+            {
+                s.IsAvailable = 0;
+            }
+            var toUpdate = oldSongs.Where(s => availableChange.Contains(s.SongId)).ToList();
+
+            await DatabaseManager.Current.UpdateFolderAsync2(folder.Path, oldSongs, newSongs, toNotAvailable, toUpdate);
+
+            songsAdded += newSongs.Count;// + oldSongs.Where(s => s.IsAvailable == 1).Count();
+            progress.Report(songsAdded);
+            var folders = await folder.GetFoldersAsync();
+            foreach (var f in folders)
+            {
+                await AddFilesFromFolder2(f);
             }
         }
 
@@ -204,18 +439,21 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task UpdateDatabase(IProgress<int> p)
         {
-            dbFiles = DatabaseManager.Current.GetFilePaths();
+            Stopwatch s = new Stopwatch();
+            s.Start();
+            //dbFiles = DatabaseManager.Current.GetFilePaths();
             songsAdded = 0;
             progress = p;
             importedPlaylistPaths = await DatabaseManager.Current.GetImportedPlaylistPathsAsync();
             importedPlaylists = new List<ImportedPlaylist>();
+            libraryDirectories = new List<string>();
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
             foreach (var folder in library.Folders)
             {
-                await AddFilesFromFolder(folder);
+                await AddFilesFromFolder2(folder);
             }
-
+            await DatabaseManager.Current.CleanFoldersTable(libraryDirectories);
             await DatabaseManager.Current.UpdateTables();
 
             await AddPlaylistsFromPlaylistsFolder();
@@ -225,9 +463,36 @@ namespace NextPlayerUWPDataLayer.Services
                 await SavePlaylist(ip);
             }
 
+            s.Stop();
+            if (songsAdded == 0) songsAdded = 1;
+            Debug.WriteLine("Library {0}ms {1} {2}ms", s.ElapsedMilliseconds, songsAdded, s.ElapsedMilliseconds / songsAdded);
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             OnMediaImported("Update");
             SendToast();
+        }
+
+        public async Task UpdateModificationDates()
+        {
+            Stopwatch s = new Stopwatch();
+            s.Start();
+            var songs = await DatabaseManager.Current.GetSongsTableAsync();
+            var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            foreach (var folder in library.Folders)
+            {
+                var files = await folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
+                foreach (var file in files)
+                {
+                    var song = songs.FirstOrDefault(f => f.Path.Equals(file.Path));
+                    if (song != null)
+                    {
+                        var prop = await file.GetBasicPropertiesAsync();
+                        song.DateModified = prop.DateModified.UtcDateTime;
+                    }
+                }
+            }
+            await DatabaseManager.Current.UpdateSongsTableAsync(songs);
+            s.Stop();
+            Debug.WriteLine("Dates {0}ms", s.ElapsedMilliseconds);
         }
 
         private async Task<SongData> CreateSongFromFile(StorageFile file)
@@ -241,6 +506,8 @@ namespace NextPlayerUWPDataLayer.Services
             song.IsAvailable = 1;
             song.Tag.Rating = 0;
             song.FileSize = 0;
+            var prop = await file.GetBasicPropertiesAsync();
+            song.DateModified = prop.DateModified.UtcDateTime;
 
             try
             {
@@ -462,6 +729,7 @@ namespace NextPlayerUWPDataLayer.Services
                 if (song == null)
                 {
                     var songData = await CreateSongFromFile(file);
+                    await ImagesManager.SaveAlbumArtFromSong(songData);
                     songData.IsAvailable = 0;
                     int id = await DatabaseManager.Current.InsertSongAsync(songData);
                     song = await DatabaseManager.Current.GetSongItemAsync(id);
@@ -469,8 +737,6 @@ namespace NextPlayerUWPDataLayer.Services
                     
                     await FutureAccessHelper.SaveToken(file.Path, token);
                 }
-                
-                //song.SourceType = Enums.MusicSource.LocalNotLibrary;
             }
             return song;
         }
