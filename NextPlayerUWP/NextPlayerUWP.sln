@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextPlayerUWPBackgroundAudi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrobblerBG", "ScrobblerBG\ScrobblerBG.csproj", "{C02FC104-10F6-4388-8072-C8390D990281}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template10 (Library)", "..\..\..\..\Documents\T10\2307\Template10 (Library).csproj", "{AC3E4F10-6615-4E16-BB0F-104760C92B95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template10 (Library)", "Template10\Template10 (Library).csproj", "{AC3E4F10-6615-4E16-BB0F-104760C92B95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -156,7 +156,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tomasz-walecki.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -172,5 +172,8 @@ Global
 		SccProjectUniqueName4 = ScrobblerBG\\ScrobblerBG.csproj
 		SccProjectName4 = ScrobblerBG
 		SccLocalPath4 = ScrobblerBG
+		SccProjectUniqueName5 = Template10\\Template10\u0020(Library).csproj
+		SccProjectName5 = Template10
+		SccLocalPath5 = Template10
 	EndGlobalSection
 EndGlobal
