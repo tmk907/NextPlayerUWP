@@ -13,6 +13,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using NextPlayerUWPDataLayer.Constants;
 using System.Diagnostics;
 using Windows.Storage.Search;
+using Windows.Security.Cryptography.Core;
+using Windows.Security.Cryptography;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -331,55 +333,12 @@ namespace NextPlayerUWPDataLayer.Services
             return imagePath;
         }
 
-        public static long i1 = 0;
-        public static long i2 = 0;
-
-        public static bool AreDifferent(WriteableBitmap b1, WriteableBitmap b2)
+        public static string GetHash(WriteableBitmap bmp)
         {
-            bool areDifferent = false;
-
-            if (b1 == null || b2 == null) return true;
-
-            if (b1.PixelHeight != b2.PixelHeight || b1.PixelWidth != b2.PixelWidth) return true;
-
-
-            byte[] b1bytes = b1.ToByteArray();
-            byte[] b2bytes = b2.ToByteArray();
-
-            if (b1bytes.Length != b2bytes.Length)
-            {
-                return true;
-            }
-
-            for (int n = 0; n <= b1bytes.Length - 1; n++)
-            {
-                if (b1bytes[n] != b2bytes[n])
-                {
-                    areDifferent = true;
-                    break;
-                }
-            }
-
-            //using (MemoryStream ms = new MemoryStream())
-            //{
-            //    using (var a = b1.PixelBuffer.AsStream())
-            //    {
-            //        a.CopyTo(ms);
-            //    }
-            //    string firstBitmap = Convert.ToBase64String(ms.ToArray());
-            //    ms.Position = 0;
-            //    //byte[] pixels2 = new byte[b2.PixelBuffer.Length];
-            //    //ms.Write(pixels2, 0, pixels2.Length);
-            //    using (var b = b1.PixelBuffer.AsStream())
-            //    {
-            //        b.CopyTo(ms);
-            //    }
-            //    string secondBitmap = Convert.ToBase64String(ms.ToArray());
-
-            //    areDifferent = !firstBitmap.Equals(secondBitmap);
-            //}
-
-            return areDifferent;
+            var alg = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
+            var hashed = alg.HashData(bmp.PixelBuffer);
+            var res = CryptographicBuffer.EncodeToHexString(hashed);
+            return res;
         }
 
         public static async Task SaveAlbumArtFromSong(SongItem song)
@@ -430,28 +389,30 @@ namespace NextPlayerUWPDataLayer.Services
         /// </summary>
         /// <param name="path">Path to file</param>
         /// <returns></returns>
-        public static async Task<WriteableBitmap> GetAlbumArtBitmap2(string path)
+        public static async Task<WriteableBitmap> GetAlbumArtBitmap2(string path, bool searchInThumbnail = false)
         {
             try 
             {
                 WriteableBitmap bitmap = new WriteableBitmap(1, 1);
                 StorageFile songFile = await StorageFile.GetFileFromPathAsync(path);
-                // <5ms
                 bool set = false;
+                // <5ms
                 var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
-                if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
+                if (searchInThumbnail)
                 {
-                    if (thumb.OriginalWidth > 200)
+                    if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
                     {
-                        using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                        if (thumb.OriginalWidth > 200)
                         {
-                            bitmap = new WriteableBitmap((int)thumb.OriginalWidth, (int)thumb.OriginalHeight);
-                            istream.Seek(0);
-                            bitmap.SetSource(istream);
+                            using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                            {
+                                bitmap = new WriteableBitmap((int)thumb.OriginalWidth, (int)thumb.OriginalHeight);
+                                istream.Seek(0);
+                                bitmap.SetSource(istream);
+                            }
+                            set = true;
                         }
-                        set = true;
-                        //return bitmap;
-                    }
+                    } 
                 }
                 if (!set)
                 {
@@ -472,7 +433,6 @@ namespace NextPlayerUWPDataLayer.Services
                                 }
                             }
                             set = true;
-                            //return bitmap;
                         }
                     }
                     catch (Exception ex)
@@ -489,16 +449,17 @@ namespace NextPlayerUWPDataLayer.Services
                             QueryOptions q = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { ".jpg", ".png", ".jpeg" });
                             var res = folder.CreateFileQueryWithOptions(q);
                             var files2 = await res.GetFilesAsync();
-                            if (files2.Count > 0)
+                            List<string> acceptedFileNames = new List<string>() { "cover", "album", "front", "albumart", "album art", "album-art" };
+                            var files3 = files2.Where(f => acceptedFileNames.Contains(f.DisplayName.ToLower()));
+                            if (files3.Count() > 0)
                             {
-                                using (IRandomAccessStream istream = await files2.FirstOrDefault().OpenAsync(FileAccessMode.Read))
+                                using (IRandomAccessStream istream = await files3.FirstOrDefault().OpenAsync(FileAccessMode.Read))
                                 {
                                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
                                     bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
                                     istream.Seek(0);
                                     await bitmap.SetSourceAsync(istream);
                                 }
-                                //return bitmap;
                                 set = true;
                             }
                         }
@@ -508,7 +469,7 @@ namespace NextPlayerUWPDataLayer.Services
                         }
                     }
                 }
-                if (!set && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && thumb.OriginalHeight > 100)
+                if (searchInThumbnail && !set && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && thumb.OriginalHeight > 100)
                 {
                     using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
                     {

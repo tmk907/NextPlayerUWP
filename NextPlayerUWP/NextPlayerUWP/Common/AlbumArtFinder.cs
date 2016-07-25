@@ -66,47 +66,32 @@ namespace NextPlayerUWP.Common
             foreach (var group in songs.Where(s => !s.IsAlbumArtSet).GroupBy(s => new { s.Album, s.AlbumArtist }))
             {
                 path = AppConstants.AlbumCover;
-                List<Tuple<WriteableBitmap, string>> albumArts = new List<Tuple<WriteableBitmap, string>>();
+                Dictionary<string, string> hashes = new Dictionary<string, string>();
                 foreach (var song in group)
                 {
                     i++;
                     await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
                     {
-                        var c = await ImagesManager.GetAlbumArtBitmap2(song.Path);
-                        if (c==null || c.PixelHeight == 1)
+                        var songAlbumArt = await ImagesManager.GetAlbumArtBitmap2(song.Path, true);
+                        if (songAlbumArt==null || songAlbumArt.PixelHeight == 1)
                         {
                             song.CoverPath = AppConstants.AlbumCover;
-                            song.IsAlbumArtSet = true;
                         }
                         else
                         {
-                            if (albumArts.Count == 0)
+                            var hash = ImagesManager.GetHash(songAlbumArt);
+                            if (hashes.ContainsKey(hash))
                             {
-                                string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", c);
-                                song.CoverPath = savedPath;
-                                song.IsAlbumArtSet = true;
-                                albumArts.Add(new Tuple<WriteableBitmap, string>(c, savedPath));
+                                song.CoverPath = hashes[hash];
                             }
                             else
                             {
-                                foreach (var tuple in albumArts)
-                                {
-                                    if (!ImagesManager.AreDifferent(tuple.Item1, c))
-                                    {
-                                        song.CoverPath = tuple.Item2;
-                                        song.IsAlbumArtSet = true;
-                                        break;
-                                    }
-                                }
-                                if (!song.IsAlbumArtSet)
-                                {
-                                    string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", c);
-                                    song.CoverPath = savedPath;
-                                    song.IsAlbumArtSet = true;
-                                    albumArts.Add(new Tuple<WriteableBitmap, string>(c, savedPath));
-                                }
+                                string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", songAlbumArt);
+                                song.CoverPath = savedPath;
+                                hashes.Add(hash,savedPath);
                             }
                         }
+                        song.IsAlbumArtSet = true;
                     });
                     data.Add(new Tuple<int, string>(song.SongId, song.CoverPath));
                     
@@ -114,13 +99,19 @@ namespace NextPlayerUWP.Common
                     {
                         path = song.CoverPath;
                     }
-                    var album = albums.FirstOrDefault(a => a.Album.Equals(group.Key.Album) && a.AlbumArtist.Equals(group.Key.AlbumArtist));
-                    if (album != null)
+                }
+                var album = albums.FirstOrDefault(a => a.Album.Equals(group.Key.Album) && a.AlbumArtist.Equals(group.Key.AlbumArtist));
+                if (album != null)
+                {
+                    if (album.Album == "")
+                    {
+                        album.ImagePath = AppConstants.AlbumCover;
+                    }
+                    else
                     {
                         album.ImagePath = path;
-                        OnAlbumArtUpdated(album.AlbumId, path);
                     }
-
+                    OnAlbumArtUpdated(album.AlbumId, path);
                 }
             }
             await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
@@ -131,7 +122,6 @@ namespace NextPlayerUWP.Common
 
             st.Stop();
             Debug.WriteLine("Songs {0} Total {1}ms", i, st.ElapsedMilliseconds);
-            //await UpdateAlbumArts();
             Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
         }
 

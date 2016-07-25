@@ -92,7 +92,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<FutureAccessTokensTable>();
         }
 
-        public async Task CleanFoldersTable(List<string> directories)
+        public async Task ChangeToNotAvaialble(List<string> directories)
         {
             var allFolders = await connectionAsync.Table<FoldersTable>().ToListAsync();
             var newFolders = allFolders.Where(f => directories.Contains(f.Directory)).ToList();
@@ -102,10 +102,35 @@ namespace NextPlayerUWPDataLayer.Services
                 connection.InsertAll(newFolders);
             });
 
-            //foreach (var folder in folders.Where(f => !directories.Contains(f.Directory)))
-            //{
-            //await connectionAsync.DeleteAsync(folder);
-            //}
+            const int N = 512;
+            string[] array = new string[N];               // Temporary array of N items.
+            int i = 0;
+            foreach (var directory in directories)
+            {         // Just one iterator.
+                array[i++] = directory;              // Store a reference to this item.
+                if (i == N)
+                {                // When we have N items,
+                    var query = await connectionAsync.Table<SongsTable>().Where(s => array.Contains(s.DirectoryName)).ToListAsync();
+                    foreach (var song in query)
+                    {
+                        song.IsAvailable = 0;
+                    }
+                    await connectionAsync.UpdateAllAsync(query);
+                    i = 0;                   // and reset the array index.
+                }
+            }
+
+            // remaining items
+            if (i > 0)
+            {
+                var array2 = array.Take(i);
+                var query = await connectionAsync.Table<SongsTable>().Where(s => array.Contains(s.DirectoryName)).ToListAsync();
+                foreach (var song in query)
+                {
+                    song.IsAvailable = 0;
+                }
+                await connectionAsync.UpdateAllAsync(query);
+            }
         }
 
         public async Task UpdateFolderAsync2(string directory, List<SongsTable> oldSongs, List<SongData> newSongs, IEnumerable<SongsTable> toNotAvailable, IEnumerable<SongsTable> changed)
@@ -1363,8 +1388,11 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task DeleteFolderAndSubFoldersAsync(string path)
         {
-            connection.Execute("UPDATE SongsTable SET IsAvailable = 0 WHERE DirectoryName LIKE ?", path + "%");
-            connection.Execute("DELETE FROM FoldersTable WHERE Directory LIKE ?", path + "%");
+            connection.RunInTransaction(() =>
+            {
+                connection.Execute("UPDATE SongsTable SET IsAvailable = 0 WHERE DirectoryName LIKE ?", path + "%");
+                connection.Execute("DELETE FROM FoldersTable WHERE Directory LIKE ?", path + "%");
+            });
             await UpdateTables();
         }
 

@@ -453,7 +453,8 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 await AddFilesFromFolder2(folder);
             }
-            await DatabaseManager.Current.CleanFoldersTable(libraryDirectories);
+            await DatabaseManager.Current.ChangeToNotAvaialble(libraryDirectories);
+
             await DatabaseManager.Current.UpdateTables();
 
             await AddPlaylistsFromPlaylistsFolder();

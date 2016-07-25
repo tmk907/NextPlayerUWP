@@ -64,7 +64,7 @@ namespace NextPlayerUWP.ViewModels
                     string path = await ImagesManager.GetAlbumCoverPath(album);
                     Album.ImagePath = path;
                     Album.ImageUri = new Uri(path);
-                    await DatabaseManager.Current.UpdateAlbumImagePath(album);
+                    //await DatabaseManager.Current.UpdateAlbumImagePath(album);
                 }
             }
         }
