@@ -17,20 +17,23 @@ namespace NextPlayerUWP.Common
         {
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
-                var statusbar = StatusBar.GetForCurrentView();
+                var statusBar = StatusBar.GetForCurrentView();
                 switch (theme)
                 {
                     case ElementTheme.Dark:
-                        statusbar.BackgroundColor = Colors.Black;
-                        statusbar.ForegroundColor = Colors.White;
+                        statusBar.BackgroundColor = Colors.Red;
+                        statusBar.BackgroundOpacity = 1;
+                        statusBar.ForegroundColor = Colors.Green;
                         break;
                     case ElementTheme.Light:
-                        statusbar.BackgroundColor = Colors.White;
-                        statusbar.ForegroundColor = Colors.Black;
+                        statusBar.BackgroundColor = Colors.Blue;
+                        statusBar.BackgroundOpacity = 1;
+                        statusBar.ForegroundColor = Colors.Yellow;
                         break;
                     default:
-                        statusbar.BackgroundColor = Colors.Black;
-                        statusbar.ForegroundColor = Colors.White;
+                        statusBar.BackgroundColor = Colors.Black;
+                        statusBar.BackgroundOpacity = 1;
+                        statusBar.ForegroundColor = Colors.White;
                         break;
                 }
             }
