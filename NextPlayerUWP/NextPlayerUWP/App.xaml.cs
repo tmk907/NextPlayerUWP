@@ -41,6 +41,14 @@ namespace NextPlayerUWP
 
         public static bool IsLightThemeOn = false;
         private static AlbumArtFinder albumArtFinder;
+        public static AlbumArtFinder AlbumArtFinder
+        {
+            get
+            {
+                if (albumArtFinder == null) albumArtFinder = new AlbumArtFinder();
+                return albumArtFinder;
+            }
+        }
 
         private bool isFirstRun = false;
 
@@ -108,7 +116,6 @@ namespace NextPlayerUWP
 #else
             Logger.ClearSettingsLogs();
 #endif
-            albumArtFinder = new AlbumArtFinder();
             //DatabaseManager.Current.resetdb();
             this.UnhandledException += App_UnhandledException;
         }
@@ -142,6 +149,8 @@ namespace NextPlayerUWP
             TagsEditor
         }
 
+        #region Template10 overrides
+
         public override UIElement CreateRootElement(IActivatedEventArgs e)
         {
             var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);
@@ -159,7 +168,7 @@ namespace NextPlayerUWP
 
             if (!isFirstRun && args.PreviousExecutionState != ApplicationExecutionState.Running && args.PreviousExecutionState != ApplicationExecutionState.Suspended)
             {
-                await PerformUpdate();
+                PerformUpdate();
             }
 
             if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
@@ -238,7 +247,7 @@ namespace NextPlayerUWP
 
             if (!isFirstRun)
             {
-                albumArtFinder.StartLooking();
+                AlbumArtFinder.StartLooking();
             }
         }
 
@@ -393,7 +402,11 @@ namespace NextPlayerUWP
             return Task.CompletedTask;
         }
 
+        #endregion
+
         public static Action OnNewTilePinned { get; set; }
+
+        #region Setup and update
 
         private void FirstRunSetup()
         {
@@ -450,7 +463,7 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
         }
 
-        private async Task PerformUpdate()
+        private void PerformUpdate()
         {
             UpdateDB();
             UpdateApp();
@@ -513,6 +526,8 @@ namespace NextPlayerUWP
             }
         }
 
+        #endregion
+
         private async Task SendLogs()
         {
             try
@@ -520,12 +535,12 @@ namespace NextPlayerUWP
                 string log = await Logger.Read();
                 if (!string.IsNullOrEmpty(log))
                 {
-                    HockeyClient.Current.TrackEvent("FG Error log:" + Environment.NewLine + log);
+                    
                 }
                 log = await Logger.ReadBG();
                 if (!string.IsNullOrEmpty(log))
                 {
-                    HockeyClient.Current.TrackEvent("BG error log:" + Environment.NewLine + log);
+                    
                 }
                 await Logger.ClearAll();
             }

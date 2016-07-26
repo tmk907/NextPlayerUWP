@@ -148,6 +148,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task UpdateFolderAsync2(string directory, List<SongsTable> oldSongs, List<SongData> newSongs, IEnumerable<SongsTable> toNotAvailable, IEnumerable<SongsTable> changed)
         {
+            //toNotAvailable i changed sa podzbiorami oldSongs
             //Debug.WriteLine("UpdateFolderAsync2 {0} {1} {2} {3}", newSongs.Count, oldSongs.Count, toNotAvailable.Count(), changed.Count());
             var folder = await connectionAsync.Table<FoldersTable>().Where(f => f.Directory.Equals(directory)).FirstOrDefaultAsync();
             if (newSongs.Count == 0 && oldSongs.Count == 0)
@@ -161,15 +162,18 @@ namespace NextPlayerUWPDataLayer.Services
             
             TimeSpan duration = TimeSpan.Zero;
             DateTime lastAdded = DateTime.MinValue;
+            int songsNumber = 0;
             foreach (var song in oldSongs.Where( s=> s.IsAvailable == 1))
             {
                 duration += song.Duration;
                 if (lastAdded < song.DateAdded) lastAdded = song.DateAdded;
+                songsNumber++;
             }
             foreach (var song in newSongs)
             {
                 duration += song.Duration;
                 if (lastAdded < song.DateAdded) lastAdded = song.DateAdded;
+                songsNumber++;
             }
 
             if (null == folder)
@@ -180,21 +184,17 @@ namespace NextPlayerUWPDataLayer.Services
                     Duration = duration,
                     Folder = Path.GetFileName(directory),
                     LastAdded = lastAdded,
-                    SongsNumber = newSongs.Count,
+                    SongsNumber = songsNumber,
                 });
             }
             else
             {
-                await connectionAsync.UpdateAllAsync(toNotAvailable);
-                await connectionAsync.UpdateAllAsync(changed);
-
                 if (newSongs.Count == 0 && !oldSongs.Exists(s => s.IsAvailable == 1))
                 {
                     await connectionAsync.DeleteAsync(folder);
                 }
                 else
                 {
-                    int songsNumber = oldSongs.Where(s => s.IsAvailable == 1).Count() + newSongs.Count;
                     if (folder.Duration != duration || folder.LastAdded != lastAdded || folder.SongsNumber != songsNumber)
                     {
                         folder.Duration = duration;
@@ -204,6 +204,9 @@ namespace NextPlayerUWPDataLayer.Services
                     }
                 }
             }
+
+            await connectionAsync.UpdateAllAsync(toNotAvailable);
+            await connectionAsync.UpdateAllAsync(changed);
 
             List<SongsTable> list = new List<SongsTable>();
             foreach (var item in newSongs)
@@ -478,21 +481,24 @@ namespace NextPlayerUWPDataLayer.Services
             //nowe wiersze beda mialy songcount>0, updatowane tez
             //wiersze stare nie updatowane beda mialy songscount == 0
             //przeszukac album, artist, genre z songscount==0 i usunac
-            var albums = await connectionAsync.Table<AlbumsTable>().Where(a => a.SongsNumber.Equals(0)).ToListAsync();
-            var artists = await connectionAsync.Table<ArtistsTable>().Where(a => a.SongsNumber.Equals(0)).ToListAsync();
-            var genres = await connectionAsync.Table<GenresTable>().Where(g => g.SongsNumber.Equals(0)).ToListAsync();
-            foreach (var album in albums)
+            var albums = await connectionAsync.Table<AlbumsTable>().Where(a => a.SongsNumber > 0).ToListAsync();
+            var artists = await connectionAsync.Table<ArtistsTable>().Where(a => a.SongsNumber > 0).ToListAsync();
+            var genres = await connectionAsync.Table<GenresTable>().Where(g => g.SongsNumber > 0).ToListAsync();
+            connection.RunInTransaction(() =>
             {
-                await connectionAsync.DeleteAsync(album);
-            }
-            foreach(var artist in artists)
+                connection.DeleteAll<AlbumsTable>();
+                connection.InsertAll(albums);
+            });
+            connection.RunInTransaction(() =>
             {
-                await connectionAsync.DeleteAsync(artist);
-            }
-            foreach(var genre in genres)
+                connection.DeleteAll<ArtistsTable>();
+                connection.InsertAll(artists);
+            });
+            connection.RunInTransaction(() =>
             {
-                await connectionAsync.DeleteAsync(genre);
-            }
+                connection.DeleteAll<GenresTable>();
+                connection.InsertAll(genres);
+            });
         }
 
         public Dictionary<string, Tuple<int, int>> GetFilePaths()
@@ -1438,7 +1444,7 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.UpdateAsync(album);
         }
 
-        public async Task UpdateAlbumsImagePath(IEnumerable<AlbumsTable> albums)//error
+        public async Task UpdateAlbumsTable(IEnumerable<AlbumsTable> albums)//error
         {
             await connectionAsync.UpdateAllAsync(albums);
         }

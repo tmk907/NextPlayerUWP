@@ -50,8 +50,8 @@ namespace NextPlayerUWPDataLayer.Services
             ".ac3"
         };
 
-        private Dictionary<string, Tuple<int, int>> dbFiles;
         private int songsAdded;
+        private int modifiedSongs;
         private IProgress<int> progress;
         private List<string> importedPlaylistPaths;
         private List<ImportedPlaylist> importedPlaylists;
@@ -245,7 +245,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        private async Task AddFilesFromFolder2(StorageFolder folder)
+        private async Task AddFilesFromFolder(StorageFolder folder)
         {
             var files = await folder.GetFilesAsync();
             List<SongData> newSongs = new List<SongData>();
@@ -290,6 +290,7 @@ namespace NextPlayerUWPDataLayer.Services
                         if (song.DateModified.Ticks == 0)
                         {
                             song.DateModified = prop.DateModified.UtcDateTime;
+                            song.FileSize = (long)prop.Size;
                             if (song.IsAvailable == 1) availableNotChange.Add(song.SongId);
                             else availableChange.Add(song.SongId);
                         }
@@ -297,6 +298,7 @@ namespace NextPlayerUWPDataLayer.Services
                         {
                             await UpdateSongMusicProperties(song, prop, file);
                             availableChange.Add(song.SongId);
+                            modifiedSongs++;
                         }
                         else
                         {
@@ -327,122 +329,17 @@ namespace NextPlayerUWPDataLayer.Services
             var folders = await folder.GetFoldersAsync();
             foreach (var f in folders)
             {
-                await AddFilesFromFolder2(f);
-            }
-        }
-
-        private async Task AddFilesFromFolder(StorageFolder folder)
-        {
-            var files = await folder.GetFilesAsync();
-            List<SongData> newSongs = new List<SongData>();
-            List<int> oldAvailable = new List<int>();
-            List<int> toAvailable = new List<int>();
-
-            Tuple<int, int> tuple;//(isAvailable, SongId)
-            //.qcp
-            //.m4r
-            //.3g2
-            //.3gp
-            //.wm
-            //.3gpp
-            //.3gp2
-            //.mpa
-            //.pya
-            foreach (var file in files)
-            {
-                string type = file.FileType.ToLower();
-                
-                if(type == ".m3u" || type == ".m3u8")
-                {
-                    if (!importedPlaylistPaths.Contains(file.Path))
-                    {
-                        var ip = await ParseM3UPlaylist(file, folder.Path);
-                        importedPlaylists.Add(ip);
-                    }
-                }
-                else if (type == ".wpl")
-                {
-                    if (!importedPlaylistPaths.Contains(file.Path))
-                    {
-                        var ip = await ParseWPLPlaylist(file, folder.Path);
-                        importedPlaylists.Add(ip);
-                    }
-                }
-                else if (type == ".pls")
-                {
-                    if (!importedPlaylistPaths.Contains(file.Path))
-                    {
-                        var ip = await ParsePLSPlaylist(file, folder.Path);
-                        importedPlaylists.Add(ip);
-                    }
-                }
-                else if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
-                    type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
-                    type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4" ||
-                    type == ".ogg" || type == ".ape" || type == ".wv" || type == ".opus" ||
-                    type == ".ac3")
-                {
-                    if (dbFiles.TryGetValue(file.Path, out tuple))
-                    {
-                        
-                        if (tuple.Item1 == 0) //not available in db
-                        {
-                            toAvailable.Add(tuple.Item2);
-                        }
-                        else //available in db
-                        {
-                            oldAvailable.Add(tuple.Item2);
-                        }
-                    }
-                    else
-                    {
-                        SongData song = await CreateSongFromFile(file);
-                        newSongs.Add(song);
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        string t = file.Path.Substring(file.Path.LastIndexOf('.') + 1);
-                    }
-                    catch (Exception ex) { }
-                }
-            }
-
-            try
-            {
-                await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-            //if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count > 0)
-            //{
-            //    await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
-            //}
-            //else
-            //{
-            //    await DatabaseManager.Current.UpdateFolderAsync(newSongs, toAvailable, oldAvailable, folder.Path);
-            //}
-
-            songsAdded += newSongs.Count + toAvailable.Count;
-            progress.Report(songsAdded);
-            var folders = await folder.GetFoldersAsync();
-            foreach (var f in folders)
-            {
                 await AddFilesFromFolder(f);
             }
         }
+
 
         public async Task UpdateDatabase(IProgress<int> p)
         {
             //Stopwatch s = new Stopwatch();
             //s.Start();
-            //dbFiles = DatabaseManager.Current.GetFilePaths();
             songsAdded = 0;
+            modifiedSongs = 0;
             progress = p;
             importedPlaylistPaths = await DatabaseManager.Current.GetImportedPlaylistPathsAsync();
             importedPlaylists = new List<ImportedPlaylist>();
@@ -451,7 +348,7 @@ namespace NextPlayerUWPDataLayer.Services
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
             foreach (var folder in library.Folders)
             {
-                await AddFilesFromFolder2(folder);
+                await AddFilesFromFolder(folder);
             }
             await DatabaseManager.Current.ChangeToNotAvaialble(libraryDirectories);
 
@@ -467,33 +364,10 @@ namespace NextPlayerUWPDataLayer.Services
             //s.Stop();
             //if (songsAdded == 0) songsAdded = 1;
             //Debug.WriteLine("Library {0}ms {1} {2}ms", s.ElapsedMilliseconds, songsAdded, s.ElapsedMilliseconds / songsAdded);
+            Debug.WriteLine("New songs: {0} updated songs: {1}", songsAdded, modifiedSongs);
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             OnMediaImported("Update");
             SendToast();
-        }
-
-        public async Task UpdateModificationDates()
-        {
-            Stopwatch s = new Stopwatch();
-            s.Start();
-            var songs = await DatabaseManager.Current.GetSongsTableAsync();
-            var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-            foreach (var folder in library.Folders)
-            {
-                var files = await folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-                foreach (var file in files)
-                {
-                    var song = songs.FirstOrDefault(f => f.Path.Equals(file.Path));
-                    if (song != null)
-                    {
-                        var prop = await file.GetBasicPropertiesAsync();
-                        song.DateModified = prop.DateModified.UtcDateTime;
-                    }
-                }
-            }
-            await DatabaseManager.Current.UpdateSongsTableAsync(songs);
-            s.Stop();
-            Debug.WriteLine("Dates {0}ms", s.ElapsedMilliseconds);
         }
 
         private async Task<SongData> CreateSongFromFile(StorageFile file)

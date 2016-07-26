@@ -30,7 +30,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (song != null) return song.CoverPath;
 
             song = songs.FirstOrDefault();
-            var bmp = await GetAlbumArtBitmap2(song.Path, true);
+            var bmp = await GetAlbumArtBitmap(song.Path, true);
             string name = "ms-appx:///Assets/AppImages/Logo/LogoTr.png";
 
             if (bmp != null)
@@ -111,7 +111,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public static async Task SaveAlbumArtFromSong(SongItem song)
         {
-            var cover = await GetAlbumArtBitmap2(song.Path);
+            var cover = await GetAlbumArtBitmap(song.Path);
 
             if (cover == null)
             {
@@ -128,7 +128,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public static async Task SaveAlbumArtFromSong(SongData song)
         {
-            var cover = await GetAlbumArtBitmap2(song.Path);
+            var cover = await GetAlbumArtBitmap(song.Path);
 
             if (cover == null)
             {
@@ -148,7 +148,7 @@ namespace NextPlayerUWPDataLayer.Services
         /// </summary>
         /// <param name="path">Path to file</param>
         /// <returns></returns>
-        public static async Task<WriteableBitmap> GetAlbumArtBitmap2(string path, bool searchInThumbnail = false)
+        public static async Task<WriteableBitmap> GetAlbumArtBitmap(string path, bool searchInThumbnail = false)
         {
             try 
             {

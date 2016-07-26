@@ -49,8 +49,8 @@ namespace NextPlayerUWP.Common
             });
             isRunning = true;
             await Task.Run(() => FindSongsAlbumArt());
-
             songs.Clear();
+            await Task.Run(() => UpdateAlbumsWithNoArt());
             albums.Clear();
             isRunning = false;
 
@@ -59,7 +59,7 @@ namespace NextPlayerUWP.Common
 
         private async Task FindSongsAlbumArt()
         {
-            Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
+            //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
             //Stopwatch st = new Stopwatch();
             //st.Start();
 
@@ -75,11 +75,40 @@ namespace NextPlayerUWP.Common
 
             //st.Stop();
             //Debug.WriteLine("FindSongsAlbumArt {0}ms", st.ElapsedMilliseconds);
-
-            Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
+            //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
         }
 
-        public static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumsTable album)
+        private async Task UpdateAlbumsWithNoArt()
+        {
+            await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
+            {
+                albums = await DatabaseManager.Current.GetAlbumsTable();
+            });
+            if (albums.Exists(a => a.ImagePath == ""))
+            {
+                var songs = await DatabaseManager.Current.GetSongItemsAsync();
+                var groups = songs.GroupBy(s => new { s.Album, s.AlbumArtist });
+                foreach (var album in albums.Where(a => a.ImagePath == ""))
+                {
+                    foreach(var song in groups.FirstOrDefault(g => g.Key.Album == album.Album && g.Key.AlbumArtist == album.AlbumArtist))
+                    {
+                        if (song.CoverPath != AppConstants.AlbumCover)
+                        {
+                            album.ImagePath = song.CoverPath;
+                            break;
+                        }
+                    }
+                    if (album.ImagePath == "") album.ImagePath = AppConstants.AlbumCover;
+                }
+            }
+            await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
+            {
+                await DatabaseManager.Current.UpdateAlbumsTable(albums);
+                MediaImport.OnMediaImported("AlbumsArt");
+            });
+        }
+
+        private static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumsTable album)
         {
             string path = AppConstants.AlbumCover;
             Dictionary<string, string> hashes = new Dictionary<string, string>();
@@ -87,7 +116,7 @@ namespace NextPlayerUWP.Common
             {
                 await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
                 {
-                    var songAlbumArt = await ImagesManager.GetAlbumArtBitmap2(song.Path, true);
+                    var songAlbumArt = await ImagesManager.GetAlbumArtBitmap(song.Path, true);
                     if (songAlbumArt == null)
                     {
                         song.AlbumArt = AppConstants.AlbumCover;
@@ -132,7 +161,7 @@ namespace NextPlayerUWP.Common
             });
         }
 
-        public static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumItem album)
+        private static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumItem album)
         {
             string path = AppConstants.AlbumCover;
             Dictionary<string, string> hashes = new Dictionary<string, string>();
@@ -140,7 +169,7 @@ namespace NextPlayerUWP.Common
             {
                 await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
                 {
-                    var songAlbumArt = await ImagesManager.GetAlbumArtBitmap2(song.Path, true);
+                    var songAlbumArt = await ImagesManager.GetAlbumArtBitmap(song.Path, true);
                     if (songAlbumArt == null)
                     {
                         song.AlbumArt = AppConstants.AlbumCover;

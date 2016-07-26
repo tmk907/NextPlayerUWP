@@ -190,12 +190,14 @@ namespace NextPlayerUWPDataLayer.Diagnostics
             ApplicationSettingsHelper.ReadResetSettingsValue("temperror");
         }
 
-#if DEBUG
+
         public static void DebugWrite(string caller, string data)
         {
+#if DEBUG
             System.Diagnostics.Debug.WriteLine("{0} {1} {2}", DateTime.Now.TimeOfDay, caller, data);
-        }
 #endif
+        }
+
         //public delegate Task abc();
         //public static async Task MeasureTime(abc asd)
         //{
