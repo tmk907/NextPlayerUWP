@@ -128,6 +128,7 @@
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="Common\TagsManager.cs" />
     <Compile Include="Common\Test2.cs" />
+    <Compile Include="Common\ThemeHelper.cs" />
     <Compile Include="Common\TileManager.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />

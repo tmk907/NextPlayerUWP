@@ -92,22 +92,35 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<FutureAccessTokensTable>();
         }
 
-        public async Task ChangeToNotAvaialble(List<string> directories)
+        public async Task ChangeToNotAvaialble(List<string> availableDirectories)
         {
             var allFolders = await connectionAsync.Table<FoldersTable>().ToListAsync();
-            var newFolders = allFolders.Where(f => directories.Contains(f.Directory)).ToList();
+            List<FoldersTable> notAvailable = new List<FoldersTable>();
+            List<FoldersTable> availableFolders = new List<FoldersTable>();
+            foreach (var folder in allFolders)
+            {
+                if (availableDirectories.Contains(folder.Directory))
+                {
+                    availableFolders.Add(folder);
+                }
+                else
+                {
+                    notAvailable.Add(folder);
+                }
+            }
+            //var availableFolders = allFolders.Where(f => availableDirectories.Contains(f.Directory)).ToList();
             connection.RunInTransaction(() => 
             {
                 connection.DeleteAll<FoldersTable>();
-                connection.InsertAll(newFolders);
+                connection.InsertAll(availableFolders);
             });
-
+            
             const int N = 512;
             string[] array = new string[N];               // Temporary array of N items.
             int i = 0;
-            foreach (var directory in directories)
+            foreach (var folder in notAvailable)
             {         // Just one iterator.
-                array[i++] = directory;              // Store a reference to this item.
+                array[i++] = folder.Directory;              // Store a reference to this item.
                 if (i == N)
                 {                // When we have N items,
                     var query = await connectionAsync.Table<SongsTable>().Where(s => array.Contains(s.DirectoryName)).ToListAsync();
@@ -655,6 +668,16 @@ namespace NextPlayerUWPDataLayer.Services
                 songs.Add(new SongItem(item));
             }
             return songs;
+        }
+
+        public async Task<List<SongsTable>> GetSongsWithoutAlbumArtAsync()
+        {
+           return await songsConnectionAsync.Where(s => s.AlbumArt == "").ToListAsync();
+        }
+
+        public async Task<List<SongsTable>> GetSongsFromAlbumItemAsync(AlbumItem album)
+        {
+            return await songsConnectionAsync.Where(s => s.Album.Equals(album.AlbumParam) && s.AlbumArtist.Equals(album.AlbumArtist)).ToListAsync();
         }
 
         public async Task<List<SongItem>> GetSongItemsForPlaylistAsync(IEnumerable<string> paths)
@@ -1410,6 +1433,11 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET ImagePath = ? WHERE AlbumId = ?", album.ImagePath, album.AlbumId);
         }
 
+        public async Task UpdateAlbumTableItemAsync(AlbumsTable album)
+        {
+            await connectionAsync.UpdateAsync(album);
+        }
+
         public async Task UpdateAlbumsImagePath(IEnumerable<AlbumsTable> albums)//error
         {
             await connectionAsync.UpdateAllAsync(albums);
@@ -1420,14 +1448,9 @@ namespace NextPlayerUWPDataLayer.Services
            connection.Execute("UPDATE SongsTable SET AlbumArt = ? WHERE SongId = ?", song.CoverPath, song.SongId);
         }
 
-        public async Task UpdateSongImagePath(IEnumerable<SongItem> songs)
+        public async Task UpdateSongsImagePath(IEnumerable<SongsTable> songs)
         {
-            var q1 = await connectionAsync.Table<SongsTable>().ToListAsync();
-            foreach(var s in q1)
-            {
-                s.AlbumArt = songs.FirstOrDefault(f => f.SongId == s.SongId)?.CoverPath ?? s.AlbumArt;
-            }
-            await connectionAsync.UpdateAllAsync(q1);
+            await connectionAsync.UpdateAllAsync(songs);
         }
 
         public async Task UpdateSongImagePath(List<Tuple<int,string>> data)

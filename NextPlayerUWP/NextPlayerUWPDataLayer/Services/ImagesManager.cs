@@ -233,21 +233,25 @@ namespace NextPlayerUWPDataLayer.Services
 
                     int width = image.PixelWidth;
                     int height = image.PixelHeight;
-                    int max = 500;
-                    if (width > max)
-                    {
-                        if (width == height)
-                        {
-                            height = max;
-                        }
-                        else
-                        {
-                            height = height * max / width;
-                        }
-                        width = max;
 
-                        image = image.Resize(width, height, WriteableBitmapExtensions.Interpolation.Bilinear);
-                    }
+                    //if (resize)
+                    //{
+                    //    int max = 500;
+                    //    if (width > max)
+                    //    {
+                    //        if (width == height)
+                    //        {
+                    //            height = max;
+                    //        }
+                    //        else
+                    //        {
+                    //            height = height * max / width;
+                    //        }
+                    //        width = max;
+
+                    //        image = image.Resize(width, height, WriteableBitmapExtensions.Interpolation.Bilinear);
+                    //    }
+                    //}
 
                     var pixelStream = image.PixelBuffer.AsStream();
                     byte[] pixels = new byte[image.PixelBuffer.Length];

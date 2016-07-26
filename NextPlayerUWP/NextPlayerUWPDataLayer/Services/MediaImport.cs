@@ -439,8 +439,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task UpdateDatabase(IProgress<int> p)
         {
-            Stopwatch s = new Stopwatch();
-            s.Start();
+            //Stopwatch s = new Stopwatch();
+            //s.Start();
             //dbFiles = DatabaseManager.Current.GetFilePaths();
             songsAdded = 0;
             progress = p;
@@ -464,9 +464,9 @@ namespace NextPlayerUWPDataLayer.Services
                 await SavePlaylist(ip);
             }
 
-            s.Stop();
-            if (songsAdded == 0) songsAdded = 1;
-            Debug.WriteLine("Library {0}ms {1} {2}ms", s.ElapsedMilliseconds, songsAdded, s.ElapsedMilliseconds / songsAdded);
+            //s.Stop();
+            //if (songsAdded == 0) songsAdded = 1;
+            //Debug.WriteLine("Library {0}ms {1} {2}ms", s.ElapsedMilliseconds, songsAdded, s.ElapsedMilliseconds / songsAdded);
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             OnMediaImported("Update");
             SendToast();

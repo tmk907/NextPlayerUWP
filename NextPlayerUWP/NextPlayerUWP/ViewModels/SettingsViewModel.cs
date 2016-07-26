@@ -483,38 +483,19 @@ namespace NextPlayerUWP.ViewModels
             {               
                 //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppTheme.Light);
                 App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
+                ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Light);
+                ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Light);
             }
             else
             {
                 App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Dark;
+                ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Dark);
+                ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Dark);
             }
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, isLightThemeOn);
 
-            App.OnAppThemChanged(isLightThemeOn);
-
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
-            {
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                if (titleBar != null)
-                {
-                    if (isLightThemeOn)
-                    {
-                        titleBar.BackgroundColor = Colors.White;
-                        titleBar.ButtonBackgroundColor = Colors.White;
-                        titleBar.ButtonForegroundColor = Colors.Black;
-                        titleBar.ForegroundColor = Colors.Black;
-                        //titleBar.ButtonHoverBackgroundColor = 
-                    }
-                    else
-                    {
-                        titleBar.BackgroundColor = Colors.Black;
-                        titleBar.ButtonBackgroundColor = Colors.Black;
-                        titleBar.ButtonForegroundColor = Colors.White;
-                        titleBar.ForegroundColor = Colors.White;
-                    }
-                }
-            }
+            App.OnAppThemeChanged(isLightThemeOn);
         }
 
         public void ChangeAccentColor(object sender, RoutedEventArgs e)

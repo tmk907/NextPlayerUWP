@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -25,8 +26,6 @@ namespace NextPlayerUWP.ViewModels
             UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
-            
-            CoverUri = SongCoverManager.Instance.GetFirst();
             lastFmCache = new LastFmCache();
         }
 
@@ -43,6 +42,14 @@ namespace NextPlayerUWP.ViewModels
         {
             if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
             CurrentSong = songs[index];
+            if (!CurrentSong.IsAlbumArtSet)
+            {
+
+            }
+            else
+            {
+                CoverUri = SongCoverManager.GetSongAlbumArtOrDefaultCover(CurrentSong);
+            }
             ScrollAfterTrackChanged(index);
         }
 

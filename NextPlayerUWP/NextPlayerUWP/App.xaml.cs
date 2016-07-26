@@ -32,7 +32,7 @@ namespace NextPlayerUWP
             SongUpdated?.Invoke(id);
         }
         public static event AppThemeChangedHandler AppThemeChanged;
-        public static void OnAppThemChanged(bool isLight)
+        public static void OnAppThemeChanged(bool isLight)
         {
             AppThemeChanged?.Invoke(isLight);
         }
@@ -183,6 +183,10 @@ namespace NextPlayerUWP
                 //Logger.SaveInSettings("OnInitializeAsync ChangeStatusBarVisibility " + ex);
                 //throw;
             }
+
+            bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+            ThemeHelper.ApplyThemeToStatusBar(isLightTheme);
+            ThemeHelper.ApplyThemeToTitleBar(isLightTheme);
 
             #region AddPageKeys
             var keys = PageKeys<Pages>();
@@ -406,6 +410,7 @@ namespace NextPlayerUWP
         {
             DatabaseManager.Current.CreateDatabase();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, dbVersion);
+            ApplicationSettingsHelper.SaveSettingsValue("DatabaseMovedToLocalCacheFolder", true);
             CreateDefaultSmartPlaylists();
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);

@@ -30,7 +30,14 @@ namespace NextPlayerUWP.ViewModels
             PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            CoverUri = SongCoverManager.Instance.GetFirst();
+            if (!song.IsAlbumArtSet)
+            {
+                CoverUri = SongCoverManager.Instance.GetCurrent();
+            }
+            else
+            {
+                CoverUri = SongCoverManager.GetSongAlbumArtOrDefaultCover(song);
+            }
             Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
@@ -221,7 +228,15 @@ namespace NextPlayerUWP.ViewModels
 
         private void ChangeSong(int index)
         {
-            Song = NowPlayingPlaylistManager.Current.GetSongItem(index);           
+            Song = NowPlayingPlaylistManager.Current.GetSongItem(index);
+            if (!song.IsAlbumArtSet)
+            {
+
+            }
+            else
+            {
+                CoverUri = SongCoverManager.GetSongAlbumArtOrDefaultCover(song);
+            }        
         }
 
         private void PlaybackManager_MediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)

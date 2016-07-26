@@ -61,8 +61,11 @@ namespace NextPlayerUWP.Common
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             //Uri uri = await CopyFromSongFileToCache(song.Path, song.SongId);
             //cachedUris.Add(song.SongId, uri);
-            Uri uri = await PrepareCover(song);
-            OnCoverUriPrepared(uri);
+            if (song.CoverPath == "")
+            {
+                Uri uri = await PrepareCover(song);
+                OnCoverUriPrepared(uri);
+            }
             initialized = true;
             System.Diagnostics.Debug.WriteLine("SCM Initialize end");
         }
@@ -78,8 +81,11 @@ namespace NextPlayerUWP.Common
         private async void PlaybackManager_MediaPlayerTrackChanged(int index)
         {
             var song = NowPlayingPlaylistManager.Current.GetSongItem(index);
-            var uri = await PrepareCover(song);
-            OnCoverUriPrepared(uri);
+            if (!song.IsAlbumArtSet)
+            {
+                var uri = await PrepareCover(song);
+                OnCoverUriPrepared(uri);
+            }
         }
 
         public Uri GetFirst()
@@ -99,6 +105,10 @@ namespace NextPlayerUWP.Common
         public Uri GetCurrent()
         {
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            if (song.IsAlbumArtSet)
+            {
+                return SongCoverManager.GetSongAlbumArtOrDefaultCover(song);
+            }
             int id = song.SongId * 10 + (int)song.SourceType;
             if (cachedUris.ContainsKey(id))
             {
@@ -164,8 +174,8 @@ namespace NextPlayerUWP.Common
 
         private async Task<Uri> CopyFromSongFileToCache(string path, int id)
         {
-            var image = await ImagesManager.GetAlbumArtBitmap(path);
-            if (image.PixelWidth == 1)
+            var image = await ImagesManager.GetAlbumArtBitmap2(path);
+            if (image == null || image.PixelWidth == 1)
             {
                 coverPath = DefaultCover;
             }
@@ -201,6 +211,11 @@ namespace NextPlayerUWP.Common
         private async Task DeleteAllCached()
         {
             await ApplicationData.Current.LocalFolder.CreateFolderAsync("CachedCovers", CreationCollisionOption.ReplaceExisting);
+        }
+
+        public static Uri GetSongAlbumArtOrDefaultCover(SongItem song)
+        {
+            return new Uri((song.CoverPath == AppConstants.AlbumCover) ? AppConstants.SongCoverBig : song.CoverPath);
         }
     }
 }

@@ -136,8 +136,8 @@
                         <Setter Property="AccentColor" Value="#FFE6E6E6"/>
                         <Setter Property="HamburgerBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
 
-                        <Setter Property="NavButtonHoverBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
-                        <Setter Property="NavButtonPressedBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
+                        <Setter Property="NavButtonHoverBackground" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+                        <Setter Property="NavButtonPressedBackground" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
 
                         <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
                         <Setter Property="NavButtonCheckedIndicatorBrush" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>

@@ -245,6 +245,14 @@ namespace NextPlayerUWP.ViewModels
         private void ChangeSong(int index)
         {
             Song = NowPlayingPlaylistManager.Current.GetSongItem(index);
+            if (!song.IsAlbumArtSet)
+            {
+
+            }
+            else
+            {
+                CoverUri = SongCoverManager.GetSongAlbumArtOrDefaultCover(song);
+            }
         }
 
         private void PlaybackManager_MediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)

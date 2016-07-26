@@ -61,10 +61,15 @@ namespace NextPlayerUWP.ViewModels
                 Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.Disc).ThenBy(t=>t.TrackNumber));
                 if (!album.IsImageSet)
                 {
-                    string path = await ImagesManager.GetAlbumCoverPath(album);
-                    Album.ImagePath = path;
-                    Album.ImageUri = new Uri(path);
-                    //await DatabaseManager.Current.UpdateAlbumImagePath(album);
+                    if (album.AlbumParam == "")
+                    {
+                        Album.ImagePath = AppConstants.AlbumCover;
+                        album.ImageUri = new Uri(album.ImagePath);
+                    }
+                    else
+                    {
+                        await AlbumArtFinder.UpdateAlbumArt(album);
+                    }
                 }
             }
         }
