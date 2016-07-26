@@ -39,8 +39,8 @@ namespace NextPlayerUWPDataLayer.Services
         private SQLiteAsyncConnection connectionAsync;
         private SQLiteConnection connection;
         
-        public string OldDBFilePath { get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName); } }
-        public string DBFilePath { get { return Path.Combine(ApplicationData.Current.LocalCacheFolder.Path, AppConstants.DBFileName); } }
+        //public string OldDBFilePath { get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName); } }
+        public string DBFilePath { get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName); } }
 
         private TableQuery<SongsTable> songsConnection
         {

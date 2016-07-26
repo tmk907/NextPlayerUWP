@@ -399,7 +399,6 @@ namespace NextPlayerUWP
         {
             DatabaseManager.Current.CreateDatabase();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, dbVersion);
-            ApplicationSettingsHelper.SaveSettingsValue("DatabaseMovedToLocalCacheFolder", true);
             CreateDefaultSmartPlaylists();
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
@@ -453,13 +452,6 @@ namespace NextPlayerUWP
 
         private async Task PerformUpdate()
         {
-            if (null == ApplicationSettingsHelper.ReadSettingsValue("DatabaseMovedToLocalCacheFolder"))
-            {
-                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(AppConstants.DBFileName);
-                await file.CopyAsync(ApplicationData.Current.LocalCacheFolder);
-                await file.DeleteAsync();
-                ApplicationSettingsHelper.SaveSettingsValue("DatabaseMovedToLocalCacheFolder",true);
-            }
             UpdateDB();
             UpdateApp();
         }
