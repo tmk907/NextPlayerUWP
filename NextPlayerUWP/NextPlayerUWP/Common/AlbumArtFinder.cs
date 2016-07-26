@@ -16,7 +16,7 @@ namespace NextPlayerUWP.Common
     public class AlbumArtFinder
     {
         public static event AlbumArtUpdatedHandler AlbumArtUpdatedEvent;
-        public void OnAlbumArtUpdated(int albumId, string albumArtPath)
+        public static void OnAlbumArtUpdated(int albumId, string albumArtPath)
         {
             AlbumArtUpdatedEvent?.Invoke(albumId, albumArtPath);
         }
@@ -88,7 +88,7 @@ namespace NextPlayerUWP.Common
                 await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
                 {
                     var songAlbumArt = await ImagesManager.GetAlbumArtBitmap2(song.Path, true);
-                    if (songAlbumArt == null || songAlbumArt.PixelHeight == 1)
+                    if (songAlbumArt == null)
                     {
                         song.AlbumArt = AppConstants.AlbumCover;
                     }
@@ -106,6 +106,7 @@ namespace NextPlayerUWP.Common
                             hashes.Add(hash, savedPath);
                         }
                     }
+                    songAlbumArt = null;
                 });
 
                 if (song.AlbumArt != AppConstants.AlbumCover)
@@ -140,7 +141,7 @@ namespace NextPlayerUWP.Common
                 await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
                 {
                     var songAlbumArt = await ImagesManager.GetAlbumArtBitmap2(song.Path, true);
-                    if (songAlbumArt == null || songAlbumArt.PixelHeight == 1)
+                    if (songAlbumArt == null)
                     {
                         song.AlbumArt = AppConstants.AlbumCover;
                     }
@@ -197,6 +198,7 @@ namespace NextPlayerUWP.Common
                 {
                     album.ImagePath = song.AlbumArt;
                 }
+                OnAlbumArtUpdated(album.AlbumId, album.ImagePath);
             }
             else
             {

@@ -251,7 +251,7 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                CoverUri = SongCoverManager.GetSongAlbumArtOrDefaultCover(song);
+                CoverUri = song.AlbumArtUri;
             }
         }
 

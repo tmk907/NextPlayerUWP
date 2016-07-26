@@ -21,14 +21,14 @@ namespace NextPlayerUWP.Common
                 switch (theme)
                 {
                     case ElementTheme.Dark:
-                        statusBar.BackgroundColor = Colors.Red;
+                        statusBar.BackgroundColor = Colors.Black;
                         statusBar.BackgroundOpacity = 1;
-                        statusBar.ForegroundColor = Colors.Green;
+                        statusBar.ForegroundColor = Colors.White;
                         break;
                     case ElementTheme.Light:
-                        statusBar.BackgroundColor = Colors.Blue;
+                        statusBar.BackgroundColor = Colors.White;
                         statusBar.BackgroundOpacity = 1;
-                        statusBar.ForegroundColor = Colors.Yellow;
+                        statusBar.ForegroundColor = Colors.Black;
                         break;
                     default:
                         statusBar.BackgroundColor = Colors.Black;

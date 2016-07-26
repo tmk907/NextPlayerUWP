@@ -43,7 +43,7 @@ namespace NextPlayerUWP.Common
         static SongCoverManager() { }
         private SongCoverManager()
         {
-            System.Diagnostics.Debug.WriteLine("SongCoverManager ctor");
+            System.Diagnostics.Debug.WriteLine("SongCoverManager()");
             cachedUris = new Dictionary<int, Uri>(cacheCapacity);
             PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
             PlaybackManager.StreamUpdated += PlaybackManager_StreamUpdated;
@@ -59,9 +59,7 @@ namespace NextPlayerUWP.Common
                 await DeleteAllCached();
             }
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            //Uri uri = await CopyFromSongFileToCache(song.Path, song.SongId);
-            //cachedUris.Add(song.SongId, uri);
-            if (song.CoverPath == "")
+            if (!song.IsAlbumArtSet)
             {
                 Uri uri = await PrepareCover(song);
                 OnCoverUriPrepared(uri);
@@ -88,26 +86,12 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        public Uri GetFirst()
-        {
-            if (cachedUris.Count > 0)
-            {
-                System.Diagnostics.Debug.WriteLine(this.GetType().Name + " GetFirst cached");
-                return cachedUris.FirstOrDefault().Value;
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine(this.GetType().Name + " GetFirst default");
-                return new Uri(DefaultCover);
-            }
-        }
-
         public Uri GetCurrent()
         {
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             if (song.IsAlbumArtSet)
             {
-                return SongCoverManager.GetSongAlbumArtOrDefaultCover(song);
+                return song.AlbumArtUri;
             }
             int id = song.SongId * 10 + (int)song.SourceType;
             if (cachedUris.ContainsKey(id))
@@ -135,7 +119,7 @@ namespace NextPlayerUWP.Common
             Uri newUri;
             if (song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
             {
-                newUri = await CopyFromSongFileToCache(song.Path, id);               
+                newUri = await CopyCoverFromSongFileToCacheFolder(song.Path, id);               
             }
             else if(song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.RadioJamendo)
             {
@@ -172,10 +156,10 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        private async Task<Uri> CopyFromSongFileToCache(string path, int id)
+        private async Task<Uri> CopyCoverFromSongFileToCacheFolder(string path, int id)
         {
             var image = await ImagesManager.GetAlbumArtBitmap2(path);
-            if (image == null || image.PixelWidth == 1)
+            if (image == null)
             {
                 coverPath = DefaultCover;
             }
@@ -211,11 +195,6 @@ namespace NextPlayerUWP.Common
         private async Task DeleteAllCached()
         {
             await ApplicationData.Current.LocalFolder.CreateFolderAsync("CachedCovers", CreationCollisionOption.ReplaceExisting);
-        }
-
-        public static Uri GetSongAlbumArtOrDefaultCover(SongItem song)
-        {
-            return new Uri((song.CoverPath == AppConstants.AlbumCover) ? AppConstants.SongCoverBig : song.CoverPath);
         }
     }
 }

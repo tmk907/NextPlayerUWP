@@ -241,7 +241,25 @@ namespace NextPlayerUWPDataLayer.Model
         public string CoverPath
         {
             get { return coverPath; }
-            set { coverPath = value; }
+            set
+            {
+                coverPath = value;
+                albumArtUri = null;
+                onPropertyChanged(this, "AlbumArtUri");
+            }
+        }
+
+        private Uri albumArtUri;
+        public Uri AlbumArtUri
+        {
+            get
+            {
+                if (albumArtUri == null)
+                {
+                    albumArtUri = new Uri((coverPath == AppConstants.AlbumCover) ? AppConstants.SongCoverBig : coverPath);
+                }
+                return albumArtUri;
+            }
         }
 
         public SongItem()
@@ -264,7 +282,7 @@ namespace NextPlayerUWPDataLayer.Model
             playCount = 0;
             isPlaying = false;
             sourceType = MusicSource.LocalFile;
-            coverPath = "";
+            coverPath = AppConstants.AlbumCover;
             isAlbumArtSet = true;
         }
 

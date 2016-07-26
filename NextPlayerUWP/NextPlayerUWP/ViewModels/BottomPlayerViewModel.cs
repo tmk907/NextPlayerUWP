@@ -36,7 +36,7 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                CoverUri = SongCoverManager.GetSongAlbumArtOrDefaultCover(song);
+                CoverUri = song.AlbumArtUri;
             }
             Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
             App.Current.Resuming += Current_Resuming;
@@ -235,7 +235,7 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                CoverUri = SongCoverManager.GetSongAlbumArtOrDefaultCover(song);
+                CoverUri = song.AlbumArtUri;
             }        
         }
 

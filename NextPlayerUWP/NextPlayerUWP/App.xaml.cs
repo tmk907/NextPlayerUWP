@@ -174,16 +174,7 @@ namespace NextPlayerUWP
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
 
-            try
-            {
-                await ChangeStatusBarVisibility();
-            }
-            catch (Exception ex)
-            {
-                //Logger.SaveInSettings("OnInitializeAsync ChangeStatusBarVisibility " + ex);
-                //throw;
-            }
-
+            await ChangeStatusBarVisibility();
             bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
             ThemeHelper.ApplyThemeToStatusBar(isLightTheme);
             ThemeHelper.ApplyThemeToTitleBar(isLightTheme);
@@ -243,18 +234,12 @@ namespace NextPlayerUWP
             catch (Exception ex)
             {
                 //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
-                //throw;
             }
 
             if (!isFirstRun)
             {
-                //Debug.WriteLine("before albumArtFinder.StartLooking");
                 albumArtFinder.StartLooking();
-                //Debug.WriteLine("after albumArtFinder.StartLooking");
             }
-
-            //MediaImport m = new MediaImport();
-            //await Task.Run(() => m.UpdateModificationDates());
         }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
@@ -266,6 +251,10 @@ namespace NextPlayerUWP
                 isFirstRun = false;
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
+            }
+            else
+            {
+                if (!PlaybackManager.IsBackgroundTaskRunning()) TileUpdater.ChangeAppTileToDefaultTransparent();
             }
 
             var fileArgs = args as FileActivatedEventArgs;
@@ -579,8 +568,7 @@ namespace NextPlayerUWP
 
         public static async Task ChangeStatusBarVisibility(bool hide)
         {
-            var statusbar = "Windows.UI.ViewManagement.StatusBar";
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent(statusbar))
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 if (hide)
                 {
