@@ -155,25 +155,4 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tomasz-walecki.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = NextPlayerUWP\\NextPlayerUWP.csproj
-		SccProjectName1 = NextPlayerUWP
-		SccLocalPath1 = NextPlayerUWP
-		SccProjectUniqueName2 = NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj
-		SccProjectName2 = NextPlayerUWPDataLayer
-		SccLocalPath2 = NextPlayerUWPDataLayer
-		SccProjectUniqueName3 = NextPlayerUWPBackgroundAudioPlayer\\NextPlayerUWPBackgroundAudioPlayer.csproj
-		SccProjectName3 = NextPlayerUWPBackgroundAudioPlayer
-		SccLocalPath3 = NextPlayerUWPBackgroundAudioPlayer
-		SccProjectUniqueName4 = ScrobblerBG\\ScrobblerBG.csproj
-		SccProjectName4 = ScrobblerBG
-		SccLocalPath4 = ScrobblerBG
-		SccProjectUniqueName5 = Template10\\Template10\u0020(Library).csproj
-		SccProjectName5 = Template10
-		SccLocalPath5 = Template10
-	EndGlobalSection
 EndGlobal
