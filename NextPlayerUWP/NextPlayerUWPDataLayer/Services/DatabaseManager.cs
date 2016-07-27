@@ -1267,7 +1267,7 @@ namespace NextPlayerUWPDataLayer.Services
                     Artist = item.Artist,
                     Album = item.Album,
                     Path = item.Path,
-                    ImagePath = "",
+                    ImagePath = item.CoverPath,
                     Position = i,
                     SongId = item.SongId,
                     SourceType = (int)item.SourceType,

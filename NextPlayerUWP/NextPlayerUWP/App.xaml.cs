@@ -40,6 +40,7 @@ namespace NextPlayerUWP
         private const int dbVersion = 5;
 
         public static bool IsLightThemeOn = false;
+
         private static AlbumArtFinder albumArtFinder;
         public static AlbumArtFinder AlbumArtFinder
         {
@@ -153,7 +154,7 @@ namespace NextPlayerUWP
 
         public override UIElement CreateRootElement(IActivatedEventArgs e)
         {
-            var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);
+            var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
             return new ModalDialog
             {
                 DisableBackButtonWhenModal = true,

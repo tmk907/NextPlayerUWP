@@ -90,15 +90,19 @@ namespace NextPlayerUWP.Common
                 var groups = songs.GroupBy(s => new { s.Album, s.AlbumArtist });
                 foreach (var album in albums.Where(a => a.ImagePath == ""))
                 {
-                    foreach(var song in groups.FirstOrDefault(g => g.Key.Album == album.Album && g.Key.AlbumArtist == album.AlbumArtist))
+                    if (album.Album == "") album.ImagePath = AppConstants.AlbumCover;
+                    else
                     {
-                        if (song.CoverPath != AppConstants.AlbumCover)
+                        foreach (var song in groups.FirstOrDefault(g => g.Key.Album == album.Album && g.Key.AlbumArtist == album.AlbumArtist))
                         {
-                            album.ImagePath = song.CoverPath;
-                            break;
+                            if (song.CoverPath != AppConstants.AlbumCover)
+                            {
+                                album.ImagePath = song.CoverPath;
+                                break;
+                            }
                         }
+                        if (album.ImagePath == "") album.ImagePath = AppConstants.AlbumCover;
                     }
-                    if (album.ImagePath == "") album.ImagePath = AppConstants.AlbumCover;
                 }
             }
             await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
@@ -151,7 +155,10 @@ namespace NextPlayerUWP.Common
                 }
                 else
                 {
-                    album.ImagePath = path;
+                    if (album.ImagePath == "" || album.ImagePath == AppConstants.AlbumCover || album.ImagePath.Contains("Albums"))
+                    {
+                        album.ImagePath = path;
+                    }
                 }               
             }
             await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
@@ -203,7 +210,10 @@ namespace NextPlayerUWP.Common
                 }
                 else
                 {
-                    album.ImagePath = path;
+                    if (album.ImagePath == "" || album.ImagePath == AppConstants.AlbumCover || album.ImagePath.Contains("Albums"))
+                    {
+                        album.ImagePath = path;
+                    }
                 }
             }
             await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>

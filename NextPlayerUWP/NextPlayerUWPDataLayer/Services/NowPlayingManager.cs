@@ -821,7 +821,7 @@ namespace NextPlayerUWPDataLayer.Services
                     song.Title = updatedSong.Title;
                     song.Artist = updatedSong.Artist;
                     song.Album = updatedSong.Album;
-                    //song.ImagePath = updatedSong.ImagePath;
+                    song.ImagePath = updatedSong.ImagePath;
                     //song.Path = updatedSong.Path;
                 }
             }

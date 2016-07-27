@@ -256,7 +256,14 @@ namespace NextPlayerUWPDataLayer.Model
             {
                 if (albumArtUri == null)
                 {
-                    albumArtUri = new Uri((coverPath == AppConstants.AlbumCover) ? AppConstants.SongCoverBig : coverPath);
+                    if (isAlbumArtSet)
+                    {
+                        albumArtUri = new Uri((coverPath == AppConstants.AlbumCover) ? AppConstants.SongCoverBig : coverPath);
+                    }
+                    else
+                    {
+                        albumArtUri = new Uri(AppConstants.SongCoverBig);
+                    }
                 }
                 return albumArtUri;
             }
