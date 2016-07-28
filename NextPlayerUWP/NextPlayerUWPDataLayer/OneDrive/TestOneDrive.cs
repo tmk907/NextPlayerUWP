@@ -33,8 +33,11 @@ namespace NextPlayerUWPDataLayer.OneDrive
             }
 
             await InitializeClient(ClientType.Consumer);
+            string id = await GetMusicFolderId();
+            if (String.IsNullOrEmpty(id)) return;
+            await GetFolderContent(id);
+            //IEnumerable<Item> items = item == null ? new List<Item>() : item.Children.CurrentPage.Where(child => child.Folder != null);
 
-            var drives = await oneDriveClient.Drives.Request().GetAsync();
             var root = await oneDriveClient.Drive.Root.Request().GetAsync();
             
             //var items = await oneDriveClient.Drive.Items.Request().GetAsync();
@@ -83,6 +86,20 @@ namespace NextPlayerUWPDataLayer.OneDrive
             }
         }
 
-       
+        private async Task<string> GetMusicFolderId()
+        {
+            var rootChildrens = await oneDriveClient.Drive.Root.Children.Request().GetAsync();
+            return rootChildrens.FirstOrDefault(i => i.SpecialFolder.Name.Equals("music"))?.Id;
+        }
+
+        private async Task GetFolderContent(string id)
+        {
+            var children = await oneDriveClient.Drive.Items[id].Children.Request().GetAsync();
+            foreach(var c in children)
+            {
+               
+            }
+        }
+
     }
 }
