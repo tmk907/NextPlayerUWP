@@ -10,10 +10,32 @@ using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.OneDrive
 {
-    public class TestOneDrive
+    public sealed class OneDriveManager
     {
+        private static readonly OneDriveManager instance = new OneDriveManager();
+
+        static OneDriveManager() { }
+
+        public static OneDriveManager Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
+        private OneDriveManager()
+        {
+            
+        }
+
         private readonly string[] scopes = new string[] { "onedrive.readonly", "wl.signin" };
         public IOneDriveClient oneDriveClient { get; set; }
+
+        public bool IsAuthenticated
+        {
+            get { return (oneDriveClient != null && oneDriveClient.IsAuthenticated); }
+        }
 
         public async Task Test()
         {
@@ -87,7 +109,7 @@ namespace NextPlayerUWPDataLayer.OneDrive
             }
         }
 
-        private async Task<string> GetMusicFolderId()
+        public async Task<string> GetMusicFolderId()
         {
             var rootChildrens = await oneDriveClient.Drive.Root.Children.Request().GetAsync();
             return rootChildrens.FirstOrDefault(i => i.SpecialFolder.Name.Equals("music"))?.Id;
@@ -109,17 +131,73 @@ namespace NextPlayerUWPDataLayer.OneDrive
             return si;
         }
 
-        private async Task GetFolderContent(string id)
+        private Dictionary<string, IChildrenCollectionPage> cache = new Dictionary<string, IChildrenCollectionPage>();
+
+        public async Task<List<SongItem>> GetSongItemsFromItem(string id)
         {
-            var children = await oneDriveClient.Drive.Items[id].Children.Request().GetAsync();
-            foreach(var c in children)
+            List<SongItem> songs = new List<SongItem>();
+            IChildrenCollectionPage children;
+            if (cache.ContainsKey(id))
             {
-                if (c.Audio != null)
+                children = cache[id];
+            }
+            else
+            {
+                children = await oneDriveClient.Drive.Items[id].Children.Request().GetAsync();
+                cache.Add(id, children);
+            }
+            foreach (var item in children)
+            {
+                if (item.Audio != null)
                 {
-                    
-                    //c.AdditionalData["@content.downloadUrl"];
+                    songs.Add(OneDriveItemToSongItem(item));
                 }
             }
+            return songs;
+        }
+
+        public async Task<List<OneDriveFolder>> GetFoldersFromItem(string id)
+        {
+            List<OneDriveFolder> folders = new List<OneDriveFolder>();
+            IChildrenCollectionPage children;
+            if (cache.ContainsKey(id))
+            {
+                children = cache[id];
+            }
+            else
+            {
+                children = await oneDriveClient.Drive.Items[id].Children.Request().GetAsync();
+                cache.Add(id, children);
+            }
+            foreach (var item in children)
+            {
+                if (item.Folder != null)
+                {
+                    folders.Add(new OneDriveFolder(item.Name, "", item.Folder.ChildCount ?? 0, item.Id));
+                }
+            }
+            return folders;
+        }
+
+        private static SongItem OneDriveItemToSongItem(Item item)
+        {
+            SongItem song = new SongItem();
+            song.Album = item?.Audio.Album ?? "";
+            song.AlbumArtist = item?.Audio.AlbumArtist ?? "";
+            song.Artist = item?.Audio.Artist ?? "";
+            song.Composer = item?.Audio.Composers ?? "";
+            //song.CoverPath = item?.Audio. ?? "";
+            //song.DateAdded = item.CreatedDateTime.Value.DateTime;
+            song.Disc = item?.Audio.Disc ?? 0;
+            song.Duration = (item?.Audio.Duration != null) ? TimeSpan.FromMilliseconds((double)item.Audio.Duration) : TimeSpan.Zero;
+            song.Genres = item?.Audio.Genre ?? "";
+            song.Path = item.AdditionalData["@content.downloadUrl"].ToString();
+            song.SourceType = Enums.MusicSource.OneDrive;
+            song.Title = String.IsNullOrEmpty(item?.Audio.Title) ? item.Name : item?.Audio.Title;
+            song.TrackNumber = item?.Audio.Track ?? 0;
+            song.Year = item?.Audio.Year ?? 0;
+            song.GenerateID();
+            return song;
         }
 
     }

@@ -325,6 +325,12 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
+        public void GenerateID()//zmienic
+        {
+            var d = DateTime.Now;
+            songId = d.Millisecond + 1000 * (d.Second + 60 * (d.Minute + 60 * d.Hour));
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void onPropertyChanged(object sender, string propertyName)

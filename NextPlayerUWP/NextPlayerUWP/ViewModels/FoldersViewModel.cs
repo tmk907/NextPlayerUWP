@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.OneDrive;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -62,7 +63,7 @@ namespace NextPlayerUWP.ViewModels
             FolderName = directory ?? "";
             //if (folders.Count == 0)
             //{
-                Folders = await DatabaseManager.Current.GetFolderItemsAsync();
+            Folders = await DatabaseManager.Current.GetFolderItemsAsync();
                 //SortItems(null, null);
             //}
             if (folders.Count > 0)
@@ -82,6 +83,7 @@ namespace NextPlayerUWP.ViewModels
                             roots.Add(dir);
                         }
                     }
+                    Items.Add(new FolderItem("OneDrive", ""));
                 }
                 else
                 {
@@ -124,7 +126,15 @@ namespace NextPlayerUWP.ViewModels
             }
             else if (typeof(FolderItem) == e.ClickedItem.GetType())
             {
-                NavigationService.Navigate(App.Pages.Folders, ((FolderItem)e.ClickedItem).Directory);
+                var folder = ((FolderItem)e.ClickedItem);
+                if (folder.Folder == "OneDrive" && folder.Directory == "")
+                {
+                    NavigationService.Navigate(App.Pages.OneDriveFolders);
+                }
+                else
+                {
+                    NavigationService.Navigate(App.Pages.Folders, folder.Directory);
+                }
             }
         }
 

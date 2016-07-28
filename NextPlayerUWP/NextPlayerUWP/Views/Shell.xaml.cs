@@ -43,9 +43,8 @@ namespace NextPlayerUWP.Views
 
         private async void test()
         {
-            NextPlayerUWPDataLayer.OneDrive.TestOneDrive tod = new NextPlayerUWPDataLayer.OneDrive.TestOneDrive();
-            await tod.Test();
-            var s = await tod.GetSongTest();
+            await NextPlayerUWPDataLayer.OneDrive.OneDriveManager.Instance.Test();
+            //var s = await tod.GetSongTest();
         }
 
 

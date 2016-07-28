@@ -6,11 +6,11 @@ namespace NextPlayerUWPDataLayer.Model
 {
     public class FolderItem : MusicItem, INotifyPropertyChanged
     {
-        private string folder;
+        protected string folder;
         public string Folder { get { return folder; } }
-        private string directory;
+        protected string directory;
         public string Directory { get { return directory; } }
-        private int songsNumber;
+        protected int songsNumber;
         public int SongsNumber
         {
             get
@@ -26,7 +26,7 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
-        private DateTime lastAdded;
+        protected DateTime lastAdded;
         public DateTime LastAdded
         {
             get { return lastAdded; }
@@ -56,6 +56,12 @@ namespace NextPlayerUWPDataLayer.Model
             lastAdded = table.LastAdded;
         }
 
+        public FolderItem(string folder, string directory)
+        {
+            this.folder = folder;
+            this.directory = directory;
+        }
+
         public override string ToString()
         {
             return "folder|" + directory;
@@ -63,7 +69,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void onPropertyChanged(object sender, string propertyName)
+        protected void onPropertyChanged(object sender, string propertyName)
         {
             if (this.PropertyChanged != null)
             {

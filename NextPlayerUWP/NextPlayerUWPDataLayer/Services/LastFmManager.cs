@@ -42,7 +42,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private string SessionKey = "";
 
-        private static readonly LastFmManager current = new LastFmManager();
+        //private static readonly LastFmManager current = new LastFmManager();
 
         //// Explicit static constructor to tell C# compiler
         //// not to mark type as beforefieldinit
