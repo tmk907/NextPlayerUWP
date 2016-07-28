@@ -1,7 +1,6 @@
 ﻿using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Template10.Controls;
 using Template10.Services.NavigationService;
@@ -46,6 +45,7 @@ namespace NextPlayerUWP.Views
         {
             NextPlayerUWPDataLayer.OneDrive.TestOneDrive tod = new NextPlayerUWPDataLayer.OneDrive.TestOneDrive();
             await tod.Test();
+            var s = await tod.GetSongTest();
         }
 
 
