@@ -39,7 +39,7 @@ namespace NextPlayerUWP.Views
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
             ReviewReminder();
-            //test();
+            test();
         }
 
         private async void test()
