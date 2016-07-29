@@ -38,12 +38,12 @@ namespace NextPlayerUWP.Views
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
             ReviewReminder();
-            test();
+            //test();
         }
 
         private async void test()
         {
-            await NextPlayerUWPDataLayer.OneDrive.OneDriveManager.Instance.Test();
+            //NextPlayerUWPDataLayer.OneDrive.OneDriveManager.Instance.Login();
             //var s = await tod.GetSongTest();
         }
 

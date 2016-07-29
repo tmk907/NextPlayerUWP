@@ -2,6 +2,7 @@
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.OneDrive;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -181,6 +182,8 @@ namespace NextPlayerUWP.ViewModels
             }
             LastFmRateSongs = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
             LastFmShowError = false;
+
+            IsOneDriveLoggedIn = OneDriveManager.Instance.IsAuthenticated;
 
             //About
             if (Microsoft.Services.Store.Engagement.Feedback.IsSupported)
@@ -699,6 +702,36 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
+        #region OneDrive
+
+        private bool isOneDriveLoggedIn = false;
+        public bool IsOneDriveLoggedIn
+        {
+            get { return isOneDriveLoggedIn; }
+            set { Set(ref isOneDriveLoggedIn, value); }
+        }
+
+        private bool isOneDriveLoginEnabled = true;
+        public bool IsOneDriveLoginEnabled
+        {
+            get { return isOneDriveLoginEnabled; }
+            set { Set(ref isOneDriveLoginEnabled, value); }
+        }
+
+        public async void OneDriveLogin()
+        {
+            IsOneDriveLoginEnabled = false;
+            IsOneDriveLoggedIn = await OneDriveManager.Instance.Login();
+            IsOneDriveLoginEnabled = true;
+        }
+
+        public async void OneDriveLogout()
+        {
+            await OneDriveManager.Instance.Logout();
+            IsOneDriveLoggedIn = false;
+        }
+
+        #endregion
         private void SendMessage(string message)
         {
             App.PlaybackManager.SendMessage(message, "");
