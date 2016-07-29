@@ -25,7 +25,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public override string GetParameter()
         {
-            return MusicItemTypes.onedrivefolder + separator + directory;
+            return MusicItemTypes.onedrivefolder + separator + Id;
         }
     }
 }

@@ -94,13 +94,17 @@ namespace NextPlayerUWP.Common
                     name = ((SongItem)item).Artist + " - " + ((SongItem)item).Title;
                     type = loader.GetString("Song");
                     break;
+                case MusicItemTypes.onedrivefolder:
+                    return;
+                default:
+                    return;
             }
 
             string displayName = AppConstants.AppName;
             string tileActivationArguments = parameter;
             Uri square150x150Logo = new Uri("ms-appx:///Assets/Visual Assets/Square150/Medium3.png");
 
-            SecondaryTile secondaryTile = new SecondaryTile(tileId, displayName, displayName, tileActivationArguments, TileOptions.ShowNameOnLogo, square150x150Logo);
+            SecondaryTile secondaryTile = new SecondaryTile(tileId, displayName, tileActivationArguments, square150x150Logo, TileSize.Square150x150);
             //SecondaryTile secondaryTile = new SecondaryTile(tileId,
             //                                    displayName,
             //                                    tileActivationArguments,

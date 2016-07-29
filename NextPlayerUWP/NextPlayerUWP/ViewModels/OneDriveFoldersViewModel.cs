@@ -45,9 +45,15 @@ namespace NextPlayerUWP.ViewModels
 
             if (id == "")
             {
-                FolderName = "OneDrive";
-                id = await OneDriveManager.Instance.GetMusicFolderId();
+                var f = await OneDriveManager.Instance.GetMusicFolder();
+                FolderName = f.Folder;
+                id = f.Id;
             }
+            //else if (await OneDriveManager.Instance.IsMusicFolderId(id))
+            //{
+            //    FolderName = f.Folder;
+
+            //}
             else
             {
                 foreach(var item in items)
@@ -87,7 +93,7 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
             items = new ObservableCollection<MusicItem>();
-            if (args.NavigationMode == NavigationMode.Back && FolderName != "OneDrive")
+            if (args.NavigationMode == NavigationMode.Back && FolderName != "OneDrive Music")
             {
                 FolderName.Substring(0,FolderName.LastIndexOf('\\'));
             }

@@ -26,9 +26,9 @@
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
                             Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
+            <!--<MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
-                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>-->
             <!--<MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>-->
@@ -50,9 +50,9 @@
                             Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
                             Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />-->
-            <MenuFlyoutSeparator/>
+            <!--<MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
-                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />-->
             <!--<MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>-->
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 

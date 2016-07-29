@@ -60,7 +60,19 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             displayRequestHelper = new DisplayRequestHelper();
+
+            OneDriveManager.AuthenticationChanged += OneDriveManager_AuthenticationChanged;
         }
+
+        private void OneDriveManager_AuthenticationChanged(bool isAuthenticated)
+        {
+            if (isAuthenticated)
+            {
+                IsOneDriveLoggedIn = true;
+            }
+        }
+
+
 
         DisplayRequestHelper displayRequestHelper;
         LastFmManager lastFmManager = null;
