@@ -50,7 +50,6 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                FolderName = "";
                 foreach(var item in items)
                 {
                     if (item.GetType() == typeof(OneDriveFolder))
@@ -88,7 +87,10 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
             items = new ObservableCollection<MusicItem>();
-
+            if (args.NavigationMode == NavigationMode.Back && FolderName != "OneDrive")
+            {
+                FolderName.Substring(0,FolderName.LastIndexOf('\\'));
+            }
             await base.OnNavigatingFromAsync(args);
         }
 
@@ -101,6 +103,7 @@ namespace NextPlayerUWP.ViewModels
             else if (typeof(OneDriveFolder) == e.ClickedItem.GetType())
             {
                 var folder = ((OneDriveFolder)e.ClickedItem);
+                FolderName += @"\" + folder.Folder;
                 NavigationService.Navigate(App.Pages.OneDriveFolders, folder.Id);
             }
         }

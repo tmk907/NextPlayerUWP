@@ -29,9 +29,9 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
+            <!--<MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
-                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
+                            Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>-->
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
@@ -42,19 +42,19 @@
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
                             Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
+            <!--<MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
-                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>-->
+            <!--<MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
                             Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
-                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
+                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />-->
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
-                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>-->
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
@@ -269,6 +269,7 @@
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
@@ -310,7 +311,16 @@
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
                 </StackPanel>-->
             </Grid>
-            <Grid Grid.Row="1">
+            <ProgressBar Grid.Row="1"
+                    Visibility="{x:Bind ViewModel.Loading, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"                    
+                    IsEnabled="{x:Bind ViewModel.Loading, Mode=OneWay}"
+                    Height="8"
+                    IsIndeterminate="True" 
+                    Foreground="{ThemeResource UserAccentBrush}"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"/>
+            <Grid Grid.Row="2">
                 <mycontrols:AlternatingRowListView x:Name="FoldersListView"
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"

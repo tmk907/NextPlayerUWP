@@ -11,7 +11,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.OneDrive;
 
 namespace NextPlayerUWP.ViewModels
 {

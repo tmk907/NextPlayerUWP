@@ -325,10 +325,11 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
-        public void GenerateID()//zmienic
+        public const int MaxId = 100000;
+        public void GenerateID()
         {
-            var d = DateTime.Now;
-            songId = d.Millisecond + 1000 * (d.Second + 60 * (d.Minute + 60 * d.Hour));
+            songId = path.GetHashCode();
+            if (songId < MaxId) songId += MaxId;//approximate max songId in DB
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
