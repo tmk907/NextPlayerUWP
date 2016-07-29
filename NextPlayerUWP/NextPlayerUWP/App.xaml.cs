@@ -70,8 +70,7 @@ namespace NextPlayerUWP
 
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (null == o)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
+            {               
                 isFirstRun = true;
             }
             else
@@ -81,7 +80,8 @@ namespace NextPlayerUWP
 
             if (isFirstRun)
             {
-                FirstRunSetup();                
+                FirstRunSetup();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
             }
 
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
