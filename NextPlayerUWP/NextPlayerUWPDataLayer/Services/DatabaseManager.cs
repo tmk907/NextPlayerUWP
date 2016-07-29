@@ -58,8 +58,13 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public void CreateDatabase()
+        public void CreateNewDatabase()
         {
+            try
+            {
+                DeleteDatabase();
+            }
+            catch (Exception) { }
             connection.CreateTable<PlainPlaylistsTable>();
             connection.CreateTable<PlainPlaylistEntryTable>();
             connection.CreateTable<SmartPlaylistsTable>();
@@ -1888,7 +1893,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (recreate)
             {
                 DeleteDatabase();
-                CreateDatabase();
+                CreateNewDatabase();
                 //Diagnostics.Logger.Save("Recreate db");
                 //Diagnostics.Logger.SaveToFile();
             }

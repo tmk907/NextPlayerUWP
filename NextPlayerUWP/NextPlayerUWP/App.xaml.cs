@@ -414,7 +414,7 @@ namespace NextPlayerUWP
 
         private void FirstRunSetup()
         {
-            DatabaseManager.Current.CreateDatabase();
+            DatabaseManager.Current.CreateNewDatabase();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, dbVersion);
             CreateDefaultSmartPlaylists();
 
