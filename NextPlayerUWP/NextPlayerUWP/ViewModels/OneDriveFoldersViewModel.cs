@@ -30,6 +30,8 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref items, value); }
         }
 
+        private OneDriveFolder currentFolder;
+
         private bool loading = false;
         public bool Loading
         {
@@ -42,18 +44,12 @@ namespace NextPlayerUWP.ViewModels
         protected override async Task LoadData()
         {
             Loading = true;
-
+            currentFolder = null;
             if (id == "")
             {
-                var f = await OneDriveManager.Instance.GetMusicFolder();
-                FolderName = f.Folder;
-                id = f.Id;
+                currentFolder = await OneDriveManager.Instance.GetMusicFolder();
+                id = currentFolder.Id;
             }
-            //else if (await OneDriveManager.Instance.IsMusicFolderId(id))
-            //{
-            //    FolderName = f.Folder;
-
-            //}
             else
             {
                 foreach(var item in items)
@@ -62,14 +58,20 @@ namespace NextPlayerUWP.ViewModels
                     {
                         if (((OneDriveFolder)item).Id == id)
                         {
-                            FolderName = ((OneDriveFolder)item).Folder;
+                            currentFolder = (OneDriveFolder)item;
                             break;
                         }
                     }
                 }
             }
+            if (currentFolder == null)
+            {
+                currentFolder = await OneDriveManager.Instance.GetFolder(id);
+            }
 
-            var folders = await OneDriveManager.Instance.GetFoldersFromItem(id);
+            FolderName = currentFolder?.Folder ?? "";
+
+            var folders = await OneDriveManager.Instance.GetSubFoldersFromItem(id);
             var songs = await OneDriveManager.Instance.GetSongItemsFromItem(id);
             Items.Clear();
             foreach (var folder in folders)
@@ -93,9 +95,9 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
             items = new ObservableCollection<MusicItem>();
-            if (args.NavigationMode == NavigationMode.Back && FolderName != "OneDrive Music")
+            if (args.NavigationMode == NavigationMode.Back && FolderName != "OneDrive Music")//zmienic na spr parentid
             {
-                FolderName.Substring(0,FolderName.LastIndexOf('\\'));
+                //FolderName.Substring(0,FolderName.LastIndexOf('\\'));
             }
             await base.OnNavigatingFromAsync(args);
         }
