@@ -521,7 +521,7 @@ namespace NextPlayerUWPDataLayer.Services
         private static SongsTable CreateSongsTable(SongData song)
         {
             //if (song.Path == c:\) (root directory) GetDirectoryName == null
-            string dir = Path.GetDirectoryName(song.Path) ?? song.Path; 
+            string dir = (!String.IsNullOrWhiteSpace(song.Path)) ? Path.GetDirectoryName(song.Path) : "UnknownDirectory"; 
             string folderName = Path.GetFileName(dir);
             if (folderName == "") folderName = dir;
             return new SongsTable()
