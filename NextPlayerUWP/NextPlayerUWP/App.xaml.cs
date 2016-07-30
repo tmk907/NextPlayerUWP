@@ -70,8 +70,7 @@ namespace NextPlayerUWP
 
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (null == o)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
+            {               
                 isFirstRun = true;
             }
             else
@@ -81,7 +80,8 @@ namespace NextPlayerUWP
 
             if (isFirstRun)
             {
-                FirstRunSetup();                
+                FirstRunSetup();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
             }
 
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
@@ -142,6 +142,7 @@ namespace NextPlayerUWP
             NewSmartPlaylist,
             NowPlaying,
             NowPlayingPlaylist,
+            OneDriveFolders,
             Playlists,
             Playlist,
             Radios,
@@ -217,6 +218,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
             if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
                 keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
+            if (!keys.ContainsKey(Pages.OneDriveFolders))
+                keys.Add(Pages.OneDriveFolders, typeof(OneDriveFoldersView));
             if (!keys.ContainsKey(Pages.Playlists))
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
             if (!keys.ContainsKey(Pages.Playlist))
@@ -411,7 +414,7 @@ namespace NextPlayerUWP
 
         private void FirstRunSetup()
         {
-            DatabaseManager.Current.CreateDatabase();
+            DatabaseManager.Current.CreateNewDatabase();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, dbVersion);
             CreateDefaultSmartPlaylists();
 

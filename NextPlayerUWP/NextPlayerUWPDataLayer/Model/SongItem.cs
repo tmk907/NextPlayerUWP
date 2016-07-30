@@ -325,6 +325,13 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
+        public const int MaxId = 100000;
+        public void GenerateID()
+        {
+            songId = path.GetHashCode();
+            if (songId < MaxId) songId += MaxId;//approximate max songId in DB
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void onPropertyChanged(object sender, string propertyName)

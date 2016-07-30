@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.OneDrive;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -22,6 +23,19 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             MediaImport.MediaImported += MediaImport_MediaImported;
+            OneDriveManager.AuthenticationChanged += OneDriveManager_AuthenticationChanged;
+        }
+
+        private void OneDriveManager_AuthenticationChanged(bool isAuthenticated)
+        {
+            if (isAuthenticated)
+            {
+                AddOneDriveMainFolder();
+            }
+            else
+            {
+                RemoveOneDriveMainFolder();
+            }
         }
 
         private async void MediaImport_MediaImported(string s)
@@ -62,7 +76,7 @@ namespace NextPlayerUWP.ViewModels
             FolderName = directory ?? "";
             //if (folders.Count == 0)
             //{
-                Folders = await DatabaseManager.Current.GetFolderItemsAsync();
+            Folders = await DatabaseManager.Current.GetFolderItemsAsync();
                 //SortItems(null, null);
             //}
             if (folders.Count > 0)
@@ -82,6 +96,7 @@ namespace NextPlayerUWP.ViewModels
                             roots.Add(dir);
                         }
                     }
+                    await AddOneDriveMainFolder();
                 }
                 else
                 {
@@ -97,6 +112,27 @@ namespace NextPlayerUWP.ViewModels
                     {
                         Items.Add(s);
                     }
+                }
+            }
+        }
+
+        private async Task AddOneDriveMainFolder()
+        {
+            if (directory == null && OneDriveManager.Instance.IsAuthenticated)
+            {
+                var musicFolder = await OneDriveManager.Instance.GetMusicFolder();
+                Items.Add(musicFolder);
+            }
+        }
+
+        private void RemoveOneDriveMainFolder()
+        {
+            if (directory == null)
+            {
+                var folder = items.FirstOrDefault(f => f.GetType() == typeof(OneDriveFolder));
+                if (folder != null)
+                {
+                    Items.Remove(folder);
                 }
             }
         }
@@ -124,7 +160,13 @@ namespace NextPlayerUWP.ViewModels
             }
             else if (typeof(FolderItem) == e.ClickedItem.GetType())
             {
-                NavigationService.Navigate(App.Pages.Folders, ((FolderItem)e.ClickedItem).Directory);
+                var folder = (FolderItem)e.ClickedItem;
+                NavigationService.Navigate(App.Pages.Folders, folder.Directory);
+            }
+            else if (typeof(OneDriveFolder) == e.ClickedItem.GetType())
+            {
+                var folder = (OneDriveFolder)e.ClickedItem;
+                NavigationService.Navigate(App.Pages.OneDriveFolders, folder.Id);
             }
         }
 

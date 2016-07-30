@@ -360,10 +360,29 @@
                         Margin="0,4,0,0"
                         Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
                 </StackPanel>
+                <TextBlock
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="OneDrive"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <Button x:Uid="ButtonLogin"
+                    Content="Login"
+                    Margin="0,0,0,0"
+                    MinWidth="128"
+                    IsEnabled="{x:Bind ViewModel.IsOneDriveLoginEnabled, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.IsOneDriveLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                    Click="{x:Bind ViewModel.OneDriveLogin}"/>
+                    <Button x:Uid="ButtonLogout"
+                    Content="Logout"
+                    MinWidth="128"
+                    Margin="0,8,0,0"
+                    Visibility="{x:Bind ViewModel.IsOneDriveLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                    Click="{x:Bind ViewModel.OneDriveLogout}"/>
+                </StackPanel>
                 <TextBlock x:Uid="TBAbout"
-                           Style="{StaticResource TitleTextBlockStyle}" 
-                           Margin="0,12,0,12"
-                           Text="About"/>
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="About"/>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <StackPanel Orientation="Horizontal" Margin="0,0,4,8">
                         <TextBlock 

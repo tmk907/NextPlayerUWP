@@ -76,6 +76,9 @@ namespace NextPlayerUWPDataLayer.Services
                 case MusicSource.LocalNotMusicLibrary:
                     await LoadFromFutureAccessList(path);
                     break;
+                case MusicSource.OneDrive:
+                    LoadFromOneDrive(path);
+                    break;
                 default:
                     break;
             }
@@ -111,6 +114,22 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
             //Diagnostics.Logger.SaveInSettings("LoadFile2");
+        }
+
+        private void LoadFromOneDrive(string path)
+        {
+            try
+            {
+                mediaPlayer.AutoPlay = false;
+                mediaPlayer.SetUriSource(new Uri(path));
+            }
+            catch (Exception ex)
+            {
+                if (!paused)
+                {
+                    Pause();
+                }
+            }
         }
 
         private async Task LoadRadio(string path)

@@ -179,7 +179,7 @@ namespace NextPlayerUWP.ViewModels
             artists = tagsData.Artists;
             genres = tagsData.Genres;
             albumArtist = tagsData.AlbumArtist;
-            TelemetryAdapter.TrackEvent("Page: Tags Editor");
+            TelemetryAdapter.TrackPageView("Page: Tags Editor");
         }
     }
 }

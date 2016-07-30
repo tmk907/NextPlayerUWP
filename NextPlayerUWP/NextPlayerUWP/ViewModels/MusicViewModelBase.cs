@@ -97,7 +97,8 @@ namespace NextPlayerUWP.ViewModels
 
         public async void Pin(object sender, RoutedEventArgs e)
         {
-            await TileManager.CreateTile((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await TileManager.CreateTile(item);
         }
 
         public void EditTags(object sender, RoutedEventArgs e)

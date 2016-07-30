@@ -8,11 +8,12 @@ namespace NextPlayerUWPDataLayer.Model
         artist,
         folder,
         genre,
+        nowplayinglist,
+        onedrivefolder,
         plainplaylist,
+        radio,
         smartplaylist,
         song,
-        nowplayinglist,
-        radio,
         unknown
     }
     public abstract class MusicItem
