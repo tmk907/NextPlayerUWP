@@ -145,7 +145,7 @@
             <ProgressBar Grid.Row="1"
                 Height="8"
                 IsIndeterminate="True" 
-                Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
+                Foreground="{ThemeResource UserAccentBrush}"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"

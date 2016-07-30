@@ -23,10 +23,17 @@ namespace NextPlayerUWP.ViewModels
             if (parameter != null)
             {
                 int songId = Int32.Parse(MusicItem.SplitParameter(parameter as string)[1]);
-                FileInfo = await DatabaseManager.Current.GetSongDataAsync(songId);
-                await AddFileSize();
+                if (songId > SongItem.MaxId)
+                {
+
+                }
+                else
+                {
+                    FileInfo = await DatabaseManager.Current.GetSongDataAsync(songId);
+                    await AddFileSize();
+                }
             }
-            TelemetryAdapter.TrackEvent("Page: File Info");
+            TelemetryAdapter.TrackPageView("Page: File Info");
         }
 
         private async Task AddFileSize()
@@ -34,7 +41,8 @@ namespace NextPlayerUWP.ViewModels
             try
             {
                 Windows.Storage.IStorageFile file = await Windows.Storage.StorageFile.GetFileFromPathAsync(fileInfo.Path);
-                FileInfo.FileSize = file.OpenAsync(Windows.Storage.FileAccessMode.Read).AsTask().Result.Size;
+                var prop = await file.GetBasicPropertiesAsync();
+                FileInfo.FileSize = prop.Size;
             }
             catch (Exception ex)
             {

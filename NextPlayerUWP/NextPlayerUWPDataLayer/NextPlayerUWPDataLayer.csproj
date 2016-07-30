@@ -144,6 +144,7 @@
     <Compile Include="Model\NowPlayingListItem.cs" />
     <Compile Include="Model\NowPlayingSong.cs" />
     <Compile Include="Model\ObservableRangeCollection.cs" />
+    <Compile Include="Model\OneDriveFolder.cs" />
     <Compile Include="Model\PlaylistItem.cs" />
     <Compile Include="Model\RadioItem.cs" />
     <Compile Include="Model\SCSong.cs" />
@@ -151,7 +152,7 @@
     <Compile Include="Model\SongData.cs" />
     <Compile Include="Model\SongItem.cs" />
     <Compile Include="Model\TrackStream.cs" />
-    <Compile Include="OneDrive\TestOneDrive.cs" />
+    <Compile Include="OneDrive\OneDriveManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\ImagesManager.cs" />

@@ -58,8 +58,13 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public void CreateDatabase()
+        public void CreateNewDatabase()
         {
+            try
+            {
+                DeleteDatabase();
+            }
+            catch (Exception) { }
             connection.CreateTable<PlainPlaylistsTable>();
             connection.CreateTable<PlainPlaylistEntryTable>();
             connection.CreateTable<SmartPlaylistsTable>();
@@ -516,7 +521,7 @@ namespace NextPlayerUWPDataLayer.Services
         private static SongsTable CreateSongsTable(SongData song)
         {
             //if (song.Path == c:\) (root directory) GetDirectoryName == null
-            string dir = Path.GetDirectoryName(song.Path) ?? song.Path; 
+            string dir = (!String.IsNullOrWhiteSpace(song.Path)) ? Path.GetDirectoryName(song.Path) : "UnknownDirectory"; 
             string folderName = Path.GetFileName(dir);
             if (folderName == "") folderName = dir;
             return new SongsTable()
@@ -1888,7 +1893,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (recreate)
             {
                 DeleteDatabase();
-                CreateDatabase();
+                CreateNewDatabase();
                 //Diagnostics.Logger.Save("Recreate db");
                 //Diagnostics.Logger.SaveToFile();
             }

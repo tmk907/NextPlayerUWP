@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using NextPlayerUWPDataLayer.Diagnostics;
+using NextPlayerUWPDataLayer.OneDrive;
 
 namespace NextPlayerUWP.Common
 {
@@ -141,7 +142,7 @@ namespace NextPlayerUWP.Common
 
         public async Task Add(MusicItem item)
         {
-            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
+            IEnumerable<SongItem> list = new ObservableCollection<SongItem>();
             switch (MusicItem.ParseType(item.GetParameter()))
             {
                 case MusicItemTypes.album:
@@ -168,7 +169,10 @@ namespace NextPlayerUWP.Common
                     songs.Add((SongItem)item);
                     break;
                 case MusicItemTypes.radio:
-                    list.Add(((RadioItem)item).ToSongItem());
+                    songs.Add(((RadioItem)item).ToSongItem());
+                    break;
+                case MusicItemTypes.onedrivefolder:
+                    list = await OneDriveManager.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
                     break;
             }
             foreach (var song in list)
@@ -189,7 +193,7 @@ namespace NextPlayerUWP.Common
 
         public async Task AddNext(MusicItem item)
         {
-            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
+            IEnumerable<SongItem> list = new List<SongItem>();
             switch (MusicItem.ParseType(item.GetParameter()))
             {
                 case MusicItemTypes.album:
@@ -213,23 +217,16 @@ namespace NextPlayerUWP.Common
                     list = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(((PlaylistItem)item).Id);
                     break;
                 case MusicItemTypes.song:
-                    list.Add((SongItem)item);
+                    list = new List<SongItem>() { (SongItem)item };
                     break;
                 case MusicItemTypes.radio:
-                    list.Add(((RadioItem)item).ToSongItem());
+                    list = new List<SongItem>() { ((RadioItem)item).ToSongItem() };
+                    break;
+                case MusicItemTypes.onedrivefolder:
+                    list = await OneDriveManager.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
-            //ObservableCollection<SongItem> newsongs = new ObservableCollection<SongItem>(songs.Take(index + 1));
-            //foreach(var s in list)
-            //{
-            //    newsongs.Add(s);
-            //}
-            //foreach(var s in songs.Skip(index+1))
-            //{
-            //    newsongs.Add(s);
-            //}
-            //songs.Insert = newsongs;
             foreach(var n in list)
             {
                 index++;
@@ -269,7 +266,7 @@ namespace NextPlayerUWP.Common
 
         public async Task NewPlaylist(MusicItem item)
         {
-            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
+            IEnumerable<SongItem> list = new List<SongItem>();
             switch (MusicItem.ParseType(item.GetParameter()))
             {
                 case MusicItemTypes.album:
@@ -293,10 +290,13 @@ namespace NextPlayerUWP.Common
                     list = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(((PlaylistItem)item).Id);
                     break;
                 case MusicItemTypes.song:
-                    list.Add((SongItem)item);
+                    list = new List<SongItem>() { (SongItem)item };
                     break;
                 case MusicItemTypes.radio:
-                    list.Add(((RadioItem)item).ToSongItem());
+                    list = new List<SongItem>() { ((RadioItem)item).ToSongItem() };
+                    break;
+                case MusicItemTypes.onedrivefolder:
+                    list = await OneDriveManager.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
                     break;
             }
             songs.Clear();
