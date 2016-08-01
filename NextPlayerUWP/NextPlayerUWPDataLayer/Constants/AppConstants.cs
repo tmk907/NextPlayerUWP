@@ -127,6 +127,10 @@
         //urn:ietf:wg:oauth:2.0:oob
         //https://login.live.com/oauth20_desktop.srf
 
+        //Dropbox
+        public const string DropboxAppKey = "cyqbr26o2vtbo8z";
+        public const string DropboxAppSecret = "tlj5wna6iuuhfmm";
+
         //Jamendo
         public const string JamendoClientId = "8ed1da48";
         public const string JamendoClientSecret = "45994f52254ba988c15abee8967bbc84";

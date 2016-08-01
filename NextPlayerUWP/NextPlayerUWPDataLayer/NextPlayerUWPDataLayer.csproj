@@ -113,6 +113,9 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloudStorage\Dropbox\DropboxService.cs" />
+    <Compile Include="CloudStorage\GoogleDrive\GoogleDriveService.cs" />
+    <Compile Include="CloudStorage\pCloud\PCloudService.cs" />
     <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Diagnostic\Logger.cs" />
     <Compile Include="Enums\Enums.cs" />
@@ -152,7 +155,7 @@
     <Compile Include="Model\SongData.cs" />
     <Compile Include="Model\SongItem.cs" />
     <Compile Include="Model\TrackStream.cs" />
-    <Compile Include="OneDrive\OneDriveManager.cs" />
+    <Compile Include="CloudStorage\OneDrive\OneDriveService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\ImagesManager.cs" />

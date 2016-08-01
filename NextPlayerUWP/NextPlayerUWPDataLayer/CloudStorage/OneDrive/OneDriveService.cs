@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NextPlayerUWPDataLayer.OneDrive
+namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 {
     public delegate void AuthenticationChangeHandler(bool isAuthenticated);
 
-    public sealed class OneDriveManager
+    public sealed class OneDriveService
     {
         public static event AuthenticationChangeHandler AuthenticationChanged;
 
@@ -22,11 +22,11 @@ namespace NextPlayerUWPDataLayer.OneDrive
             AuthenticationChanged?.Invoke(isAuthenticated);
         }
 
-        private static readonly OneDriveManager instance = new OneDriveManager();
+        private static readonly OneDriveService instance = new OneDriveService();
 
-        static OneDriveManager() { }
+        static OneDriveService() { }
 
-        public static OneDriveManager Instance
+        public static OneDriveService Instance
         {
             get
             {
@@ -34,7 +34,7 @@ namespace NextPlayerUWPDataLayer.OneDrive
             }
         }
 
-        private OneDriveManager()
+        private OneDriveService()
         {
             Debug.WriteLine("OneDriveManager()");
             oneDriveClient = OneDriveClientExtensions.GetClientUsingWebAuthenticationBroker(AppConstants.OneDriveAppId, scopes);

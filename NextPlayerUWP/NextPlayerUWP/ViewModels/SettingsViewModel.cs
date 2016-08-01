@@ -2,7 +2,7 @@
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.OneDrive;
+using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -61,7 +61,7 @@ namespace NextPlayerUWP.ViewModels
             }
             displayRequestHelper = new DisplayRequestHelper();
 
-            OneDriveManager.AuthenticationChanged += OneDriveManager_AuthenticationChanged;
+            OneDriveService.AuthenticationChanged += OneDriveManager_AuthenticationChanged;
         }
 
         private void OneDriveManager_AuthenticationChanged(bool isAuthenticated)
@@ -195,7 +195,7 @@ namespace NextPlayerUWP.ViewModels
             LastFmRateSongs = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
             LastFmShowError = false;
 
-            IsOneDriveLoggedIn = OneDriveManager.Instance.IsAuthenticated;
+            IsOneDriveLoggedIn = OneDriveService.Instance.IsAuthenticated;
 
             //About
             if (Microsoft.Services.Store.Engagement.Feedback.IsSupported)
@@ -733,13 +733,13 @@ namespace NextPlayerUWP.ViewModels
         public async void OneDriveLogin()
         {
             IsOneDriveLoginEnabled = false;
-            IsOneDriveLoggedIn = await OneDriveManager.Instance.Login();
+            IsOneDriveLoggedIn = await OneDriveService.Instance.Login();
             IsOneDriveLoginEnabled = true;
         }
 
         public async void OneDriveLogout()
         {
-            await OneDriveManager.Instance.Logout();
+            await OneDriveService.Instance.Logout();
             IsOneDriveLoggedIn = false;
         }
 

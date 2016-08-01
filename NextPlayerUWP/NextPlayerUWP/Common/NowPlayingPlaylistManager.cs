@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using NextPlayerUWPDataLayer.Diagnostics;
-using NextPlayerUWPDataLayer.OneDrive;
+using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
 
 namespace NextPlayerUWP.Common
 {
@@ -172,7 +172,7 @@ namespace NextPlayerUWP.Common
                     songs.Add(((RadioItem)item).ToSongItem());
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    list = await OneDriveManager.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
+                    list = await OneDriveService.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
                     break;
             }
             foreach (var song in list)
@@ -223,7 +223,7 @@ namespace NextPlayerUWP.Common
                     list = new List<SongItem>() { ((RadioItem)item).ToSongItem() };
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    list = await OneDriveManager.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
+                    list = await OneDriveService.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
@@ -296,7 +296,7 @@ namespace NextPlayerUWP.Common
                     list = new List<SongItem>() { ((RadioItem)item).ToSongItem() };
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    list = await OneDriveManager.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
+                    list = await OneDriveService.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
                     break;
             }
             songs.Clear();

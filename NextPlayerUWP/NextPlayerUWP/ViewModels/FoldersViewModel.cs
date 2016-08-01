@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.OneDrive;
+using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -23,7 +23,7 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             MediaImport.MediaImported += MediaImport_MediaImported;
-            OneDriveManager.AuthenticationChanged += OneDriveManager_AuthenticationChanged;
+            OneDriveService.AuthenticationChanged += OneDriveManager_AuthenticationChanged;
         }
 
         private void OneDriveManager_AuthenticationChanged(bool isAuthenticated)
@@ -118,9 +118,9 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task AddOneDriveMainFolder()
         {
-            if (directory == null && OneDriveManager.Instance.IsAuthenticated)
+            if (directory == null && OneDriveService.Instance.IsAuthenticated)
             {
-                var musicFolder = await OneDriveManager.Instance.GetMusicFolder();
+                var musicFolder = await OneDriveService.Instance.GetMusicFolder();
                 Items.Add(musicFolder);
             }
         }

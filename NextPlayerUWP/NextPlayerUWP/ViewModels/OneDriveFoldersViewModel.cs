@@ -1,7 +1,7 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
-using NextPlayerUWPDataLayer.OneDrive;
+using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -47,7 +47,7 @@ namespace NextPlayerUWP.ViewModels
             currentFolder = null;
             if (id == "")
             {
-                currentFolder = await OneDriveManager.Instance.GetMusicFolder();
+                currentFolder = await OneDriveService.Instance.GetMusicFolder();
                 id = currentFolder.Id;
             }
             else
@@ -66,13 +66,13 @@ namespace NextPlayerUWP.ViewModels
             }
             if (currentFolder == null)
             {
-                currentFolder = await OneDriveManager.Instance.GetFolder(id);
+                currentFolder = await OneDriveService.Instance.GetFolder(id);
             }
 
             FolderName = currentFolder?.Folder ?? "";
 
-            var folders = await OneDriveManager.Instance.GetSubFoldersFromItem(id);
-            var songs = await OneDriveManager.Instance.GetSongItemsFromItem(id);
+            var folders = await OneDriveService.Instance.GetSubFoldersFromItem(id);
+            var songs = await OneDriveService.Instance.GetSongItemsFromItem(id);
             Items.Clear();
             foreach (var folder in folders)
             {

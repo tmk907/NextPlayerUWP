@@ -364,7 +364,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void RefreshLastFmCredentials()
         {
-            lastFmCache.RefreshCredentials();
+            lastFmCache.GetCredentialsFromSettings();
         }
 
         private void ScrobbleNowPlaying(NowPlayingSong song)
