@@ -1,0 +1,12 @@
+{
+"installed":
+	{
+		"client_id":"958984549072-t7lkdmpq50crclpt356js7egc1au3p8u.apps.googleusercontent.com",
+		"project_id":"poised-gateway-138823",
+		"auth_uri":"https://accounts.google.com/o/oauth2/auth",
+		"token_uri":"https://accounts.google.com/o/oauth2/token",
+		"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+		"client_secret":"kIPQh3zCiK-X7LsD1lmPBPAJ",
+		"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]
+	}
+}

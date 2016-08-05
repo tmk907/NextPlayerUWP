@@ -43,6 +43,7 @@ namespace NextPlayerUWP.Views
 
         private async void test()
         {
+            //await NextPlayerUWPDataLayer.CloudStorage.DropboxStorage.DropboxService.Instance.Authorize();
             //NextPlayerUWPDataLayer.OneDrive.OneDriveManager.Instance.Login();
             //var s = await tod.GetSongTest();
         }

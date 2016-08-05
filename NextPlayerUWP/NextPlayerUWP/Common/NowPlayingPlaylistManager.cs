@@ -172,7 +172,7 @@ namespace NextPlayerUWP.Common
                     songs.Add(((RadioItem)item).ToSongItem());
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    list = await OneDriveService.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
+                    //list = await OneDriveService.Instance.GetSongItemsFromItem(((CloudFolder)item).Id);
                     break;
             }
             foreach (var song in list)
@@ -223,7 +223,7 @@ namespace NextPlayerUWP.Common
                     list = new List<SongItem>() { ((RadioItem)item).ToSongItem() };
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    list = await OneDriveService.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
+                    //list = await OneDriveService.Instance.GetSongItemsFromItem(((CloudFolder)item).Id);
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
@@ -296,7 +296,7 @@ namespace NextPlayerUWP.Common
                     list = new List<SongItem>() { ((RadioItem)item).ToSongItem() };
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    list = await OneDriveService.Instance.GetSongItemsFromItem(((OneDriveFolder)item).Id);
+                    //list = await OneDriveService.Instance.GetSongItemsFromItem(((CloudFolder)item).Id);
                     break;
             }
             songs.Clear();

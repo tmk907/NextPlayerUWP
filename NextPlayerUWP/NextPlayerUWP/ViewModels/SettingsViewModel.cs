@@ -20,6 +20,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
+using NextPlayerUWPDataLayer.CloudStorage.GoogleDrive;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -60,19 +62,7 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             displayRequestHelper = new DisplayRequestHelper();
-
-            OneDriveService.AuthenticationChanged += OneDriveManager_AuthenticationChanged;
         }
-
-        private void OneDriveManager_AuthenticationChanged(bool isAuthenticated)
-        {
-            if (isAuthenticated)
-            {
-                IsOneDriveLoggedIn = true;
-            }
-        }
-
-
 
         DisplayRequestHelper displayRequestHelper;
         LastFmManager lastFmManager = null;
@@ -195,7 +185,8 @@ namespace NextPlayerUWP.ViewModels
             LastFmRateSongs = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
             LastFmShowError = false;
 
-            IsOneDriveLoggedIn = OneDriveService.Instance.IsAuthenticated;
+            //IsOneDriveLoggedIn = OneDriveService.Instance.IsAuthenticated;
+            //IsDropboxLoggedIn = DropboxService.Instance.IsAuthenticated;
 
             //About
             if (Microsoft.Services.Store.Engagement.Feedback.IsSupported)
@@ -733,17 +724,80 @@ namespace NextPlayerUWP.ViewModels
         public async void OneDriveLogin()
         {
             IsOneDriveLoginEnabled = false;
-            IsOneDriveLoggedIn = await OneDriveService.Instance.Login();
+            //IsOneDriveLoggedIn = await OneDriveService.Instance.Login();
             IsOneDriveLoginEnabled = true;
         }
 
         public async void OneDriveLogout()
         {
-            await OneDriveService.Instance.Logout();
+            //await OneDriveService.Instance.Logout();
             IsOneDriveLoggedIn = false;
         }
 
         #endregion
+
+        #region Dropbox
+
+        private bool isDropboxLoggedIn = false;
+        public bool IsDropboxLoggedIn
+        {
+            get { return isDropboxLoggedIn; }
+            set { Set(ref isDropboxLoggedIn, value); }
+        }
+
+        private bool isDropboxLoginEnabled = true;
+        public bool IsDropboxLoginEnabled
+        {
+            get { return isDropboxLoginEnabled; }
+            set { Set(ref isDropboxLoginEnabled, value); }
+        }
+
+        public async void DropboxLogin()
+        {
+            IsDropboxLoginEnabled = false;
+            //await DropboxService.Instance.Login();
+            IsDropboxLoginEnabled = true;
+        }
+
+        public async void DropboxLogout()
+        {
+            //await DropboxService.Instance.Logout();
+            IsDropboxLoggedIn = false;
+        }
+
+        #endregion
+
+        #region GoogleDrive
+
+        private bool isGoogleDriveLoggedIn = false;
+        public bool IsGoogleDriveLoggedIn
+        {
+            get { return isGoogleDriveLoggedIn; }
+            set { Set(ref isGoogleDriveLoggedIn, value); }
+        }
+
+        private bool isGoogleDriveLoginEnabled = true;
+        public bool IsGoogleDriveLoginEnabled
+        {
+            get { return isGoogleDriveLoginEnabled; }
+            set { Set(ref isGoogleDriveLoginEnabled, value); }
+        }
+
+        public async void GoogleDriveLogin()
+        {
+            IsGoogleDriveLoginEnabled = false;
+            //await GoogleDriveService.Instance.Login();
+            IsGoogleDriveLoginEnabled = true;
+        }
+
+        public async void GoogleDriveLogout()
+        {
+            //await GoogleDriveService.Instance.Logout();
+            IsGoogleDriveLoggedIn = false;
+        }
+
+        #endregion
+
         private void SendMessage(string message)
         {
             App.PlaybackManager.SendMessage(message, "");

@@ -10,14 +10,14 @@ namespace NextPlayerUWP.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class OneDriveFoldersView : Page
+    public sealed partial class CloudStorageFoldersView : Page
     {
-        public OneDriveFoldersViewModel ViewModel;
-        public OneDriveFoldersView()
+        public CloudStorageFoldersViewModel ViewModel;
+        public CloudStorageFoldersView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((OneDriveFoldersViewModel)DataContext).OnLoaded(FoldersListView); };
-            ViewModel = (OneDriveFoldersViewModel)DataContext;
+            this.Loaded += delegate { ((CloudStorageFoldersViewModel)DataContext).OnLoaded(FoldersListView); };
+            ViewModel = (CloudStorageFoldersViewModel)DataContext;
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

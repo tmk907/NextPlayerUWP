@@ -130,6 +130,11 @@
         //Dropbox
         public const string DropboxAppKey = "cyqbr26o2vtbo8z";
         public const string DropboxAppSecret = "tlj5wna6iuuhfmm";
+        public const string DropboxAuthToken = "DropboxAuthToken";
+
+        //Google Drive
+        public const string GoogleDriveClientId = "958984549072-t7lkdmpq50crclpt356js7egc1au3p8u.apps.googleusercontent.com";
+        public const string GoogleDriveAppSecret = "kIPQh3zCiK-X7LsD1lmPBPAJ";
 
         //Jamendo
         public const string JamendoClientId = "8ed1da48";

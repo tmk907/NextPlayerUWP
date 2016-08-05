@@ -110,11 +110,18 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="app.config" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloudStorage\CloudAccount.cs" />
+    <Compile Include="CloudStorage\CloudAccounts.cs" />
+    <Compile Include="Model\CloudRootFolder.cs" />
+    <Compile Include="CloudStorage\CloudStorageServiceFactory.cs" />
+    <Compile Include="CloudStorage\CloudStorageType.cs" />
     <Compile Include="CloudStorage\Dropbox\DropboxService.cs" />
     <Compile Include="CloudStorage\GoogleDrive\GoogleDriveService.cs" />
+    <Compile Include="CloudStorage\ICloudStorageService.cs" />
     <Compile Include="CloudStorage\pCloud\PCloudService.cs" />
     <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Diagnostic\Logger.cs" />
@@ -147,7 +154,7 @@
     <Compile Include="Model\NowPlayingListItem.cs" />
     <Compile Include="Model\NowPlayingSong.cs" />
     <Compile Include="Model\ObservableRangeCollection.cs" />
-    <Compile Include="Model\OneDriveFolder.cs" />
+    <Compile Include="Model\CloudFolder.cs" />
     <Compile Include="Model\PlaylistItem.cs" />
     <Compile Include="Model\RadioItem.cs" />
     <Compile Include="Model\SCSong.cs" />
@@ -219,6 +226,7 @@
     <Compile Include="Tables\AlbumsTable.cs" />
     <Compile Include="Tables\ArtistsTable.cs" />
     <Compile Include="Tables\CachedScrobble.cs" />
+    <Compile Include="Tables\CloudAccountsTable.cs" />
     <Compile Include="Tables\FoldersTable.cs" />
     <Compile Include="Tables\FutureAccessTokensTable.cs" />
     <Compile Include="Tables\GenresTable.cs" />

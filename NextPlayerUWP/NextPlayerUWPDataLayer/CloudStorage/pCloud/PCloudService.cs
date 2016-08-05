@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 {
-    public class PCloudService
+    public class PCloudService// : ICloudStorageService
     {
     }
 }
