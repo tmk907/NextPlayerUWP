@@ -139,7 +139,7 @@ namespace NextPlayerUWP.ViewModels
             else if (typeof(CloudRootFolder) == e.ClickedItem.GetType())
             {
                 var folder = (CloudRootFolder)e.ClickedItem;
-                NavigationService.Navigate(App.Pages.CloudStorageFolders, CloudRootFolder.ToParameter(folder.UserId, folder.Type));
+                NavigationService.Navigate(App.Pages.CloudStorageFolders, CloudRootFolder.ToParameter(folder.UserId, folder.CloudType));
             }
         }
 

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using NextPlayerUWPDataLayer.Diagnostics;
-using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
+using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.Common
 {
@@ -172,7 +172,11 @@ namespace NextPlayerUWP.Common
                     songs.Add(((RadioItem)item).ToSongItem());
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    //list = await OneDriveService.Instance.GetSongItemsFromItem(((CloudFolder)item).Id);
+                case MusicItemTypes.dropboxfolder:
+                    var folder = (CloudFolder)item;
+                    var factory = new CloudStorageServiceFactory();
+                    var service = factory.GetService(folder.CloudType, folder.UserId);
+                    list = await service.GetSongItems(folder.Id);
                     break;
             }
             foreach (var song in list)
@@ -223,7 +227,11 @@ namespace NextPlayerUWP.Common
                     list = new List<SongItem>() { ((RadioItem)item).ToSongItem() };
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    //list = await OneDriveService.Instance.GetSongItemsFromItem(((CloudFolder)item).Id);
+                case MusicItemTypes.dropboxfolder:
+                    var folder = (CloudFolder)item;
+                    var factory = new CloudStorageServiceFactory();
+                    var service = factory.GetService(folder.CloudType, folder.UserId);
+                    list = await service.GetSongItems(folder.Id);
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
@@ -235,11 +243,11 @@ namespace NextPlayerUWP.Common
             await NotifyChange();
         }
 
-        public async Task AddNext(IEnumerable<SongItem> songs)
-        {
-            //await SaveNowPlayingInDB();
+        //public async Task AddNext(IEnumerable<SongItem> songs)
+        //{
+        //    //await SaveNowPlayingInDB();
 
-        }
+        //}
 
         public async Task Delete(SongItem song)
         {
@@ -296,7 +304,11 @@ namespace NextPlayerUWP.Common
                     list = new List<SongItem>() { ((RadioItem)item).ToSongItem() };
                     break;
                 case MusicItemTypes.onedrivefolder:
-                    //list = await OneDriveService.Instance.GetSongItemsFromItem(((CloudFolder)item).Id);
+                case MusicItemTypes.dropboxfolder:
+                    var folder = (CloudFolder)item;
+                    var factory = new CloudStorageServiceFactory();
+                    var service = factory.GetService(folder.CloudType, folder.UserId);
+                    list = await service.GetSongItems(folder.Id);
                     break;
             }
             songs.Clear();

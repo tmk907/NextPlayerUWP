@@ -187,23 +187,23 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             return "";
         }
 
-        public async Task<CloudFolder> GetFolder(string id)
+        public async Task<CloudFolder> GetFolder(string path)
         {
-            Debug.WriteLine("DropboxService GetFolder({0})", id);
+            Debug.WriteLine("DropboxService GetFolder({0})", path);
             if (!IsAuthenticated) return null;
             //if (cachedFolders.ContainsKey(id))
             //{
             //    return cachedFolders[id];
             //}
-            if (id == "")
+            if (path == "")
             {
-                return new CloudFolder("Dropbox", "", 0, "", null, MusicItemTypes.dropboxfolder);
+                return new CloudFolder("Dropbox", "", 0, "", null, CloudStorageType.Dropbox, userId);
             }
             try
             {
-                var item = await dropboxClient.Files.GetMetadataAsync(id);
+                var item = await dropboxClient.Files.GetMetadataAsync(path);
                 if (item == null) return null;
-                CloudFolder folder = new CloudFolder(item.Name, "", 0, item.PathLower, System.IO.Path.GetDirectoryName(item.PathLower), MusicItemTypes.dropboxfolder);
+                CloudFolder folder = new CloudFolder(item.Name, item.PathDisplay, 0, item.PathLower, (path == "") ? "" : System.IO.Path.GetDirectoryName(item.PathLower), CloudStorageType.Dropbox, userId);
                 //cachedFolders.Add(item.Id, folder);
                 return folder;
             }
@@ -213,35 +213,38 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             }
         }
 
-        public async Task<List<SongItem>> GetSongItems(string id)
+        public async Task<List<SongItem>> GetSongItems(string path)
         {
             List<SongItem> songs = new List<SongItem>();
             if (!IsAuthenticated) return songs;
-            var args = new Dropbox.Api.Files.ListFolderArg("", false, true, false, false);
+            var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
             var result = await dropboxClient.Files.ListFolderAsync(args);
             foreach (var item in result.Entries.Where(i=>i.IsFile))
             {
                 var f = item.AsFile;
-                SongItem s = new SongItem();
-                s.SourceType = Enums.MusicSource.Dropbox;
-                s.Title = f.Name;
-                s.Path = f.PathLower;
-                s.GenerateID();
-                songs.Add(s);
+                if (f.Name.ToLower().EndsWith(".mp3") || f.Name.ToLower().EndsWith(".m4a"))
+                {
+                    SongItem s = new SongItem();
+                    s.SourceType = Enums.MusicSource.Dropbox;
+                    s.Title = f.Name;
+                    s.Path = await GetTemporaryLink(f.PathLower);
+                    s.GenerateID();
+                    songs.Add(s);
+                }
             }
             return songs;
         }
 
-        public async Task<List<CloudFolder>> GetSubFolders(string id)
+        public async Task<List<CloudFolder>> GetSubFolders(string path)
         {
             List<CloudFolder> folders = new List<CloudFolder>();
             if (!IsAuthenticated) return folders;
-            var args = new Dropbox.Api.Files.ListFolderArg("", false, true, false, false);
+            var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
             var result = await dropboxClient.Files.ListFolderAsync(args);
             foreach (var item in result.Entries.Where(i => i.IsFolder))
             {
                 var f = item.AsFolder;
-                folders.Add(new CloudFolder(f.Name, f.PathLower, 0, f.Id, id, MusicItemTypes.dropboxfolder));
+                folders.Add(new CloudFolder(f.Name, f.PathDisplay, 0, f.PathLower, (path == "") ? "" : System.IO.Path.GetDirectoryName(path), CloudStorageType.Dropbox, userId));
             }
             return folders;
         }

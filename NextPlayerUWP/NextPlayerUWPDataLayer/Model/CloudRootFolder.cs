@@ -6,12 +6,20 @@ namespace NextPlayerUWPDataLayer.Model
     public class CloudRootFolder : FolderItem
     {
         public string UserId { get; set; }
-        public CloudStorageType Type { get; set; }
+        public CloudStorageType CloudType { get; set; }
+
+        public CloudRootFolder()
+        {
+            folder = "";
+            UserId = "";
+            CloudType = CloudStorageType.Unknown;
+        }
+
         public CloudRootFolder(string name, string userId, CloudStorageType type)
         {
             folder = name;
             UserId = userId;
-            Type = type;
+            CloudType = type;
         }
 
         public static string ToParameter(string userId, CloudStorageType type)

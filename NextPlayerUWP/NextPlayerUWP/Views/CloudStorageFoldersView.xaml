@@ -263,7 +263,7 @@
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
-                Content="Cloud" 
+                Content="{x:Bind ViewModel.PageHeader, Mode=OneWay}" 
                 VisualStateNarrowMinWidth="0"
                 VisualStateNormalMinWidth="720"/>
         <Grid Grid.Column="0" Grid.Row="1">

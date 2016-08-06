@@ -16,6 +16,13 @@ namespace NextPlayerUWP.ViewModels
 {
     public class CloudStorageFoldersViewModel : MusicViewModelBase
     {
+        private string pageHeader = "";
+        public string PageHeader
+        {
+            get { return pageHeader; }
+            set { Set(ref pageHeader, value); }
+        }
+
         private string folderName = "";
         public string FolderName
         {
@@ -78,6 +85,24 @@ namespace NextPlayerUWP.ViewModels
             {
                 string userId = CloudRootFolder.ParameterToUserId(param);
                 var type = CloudRootFolder.ParameterToType(param);
+                switch (type)
+                {
+                    case CloudStorageType.Dropbox:
+                        PageHeader = "Dropbox";
+                        break;
+                    case CloudStorageType.GoogleDrive:
+                        PageHeader = "Google Drive";
+                        break;
+                    case CloudStorageType.OneDrive:
+                        PageHeader = "OneDrive";
+                        break;
+                    case CloudStorageType.pCloud:
+                        PageHeader = "pCloud";
+                        break;
+                    default:
+                        PageHeader = "Unknown Cloud Storage";
+                        break;
+                }
                 CloudStorageServiceFactory factory = new CloudStorageServiceFactory();
                 service = factory.GetService(type, userId);
                 folderId = null;
