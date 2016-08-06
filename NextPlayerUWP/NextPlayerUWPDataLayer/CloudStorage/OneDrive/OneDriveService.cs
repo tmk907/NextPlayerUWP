@@ -24,6 +24,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         public OneDriveService()
         {
             Debug.WriteLine("OneDriveManager()");
+            oneDriveClient = OneDriveClientExtensions.GetClientUsingWebAuthenticationBroker(AppConstants.OneDriveAppId, scopes);
         }
 
         public OneDriveService(string UserId)
@@ -40,7 +41,6 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
         private readonly string[] scopes = new string[] { "onedrive.readonly", "wl.signin", "wl.offline_access" };
         private string refreshToken;
-        private const string tokenName = "OneDriveToken";
 
         public bool IsAuthenticated
         {
@@ -52,6 +52,10 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             Debug.WriteLine("OneDriveManager LoginSilently()");
             bool isLoggedIn = false;
             refreshToken = await GetSavedToken();
+            if (IsAuthenticated)
+            {
+
+            }
             if (!String.IsNullOrEmpty(refreshToken))
             {
                 try
@@ -77,7 +81,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         {
             Debug.WriteLine("OneDriveManager Login()");
             bool isLoggedIn = false;
-            if (!oneDriveClient.IsAuthenticated)
+            if (!IsAuthenticated)
             {
                 try
                 {
@@ -85,7 +89,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                     {
                         var session = await oneDriveClient.AuthenticateAsync();
                         refreshToken = session.RefreshToken;
-                        await SaveToken(refreshToken);
+                        //await SaveToken(refreshToken);
                     }
                     else
                     {
@@ -93,10 +97,17 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                         if (refreshToken != oneDriveClient.AuthenticationProvider?.CurrentAccountSession?.RefreshToken)
                         {
                             refreshToken = oneDriveClient.AuthenticationProvider?.CurrentAccountSession?.RefreshToken;
-                            await SaveToken(refreshToken);
+                            //await SaveToken(refreshToken);
                         }
                     }
                     isLoggedIn = true;
+                    if (userId == null)
+                    {
+                        userId = oneDriveClient.AuthenticationProvider.CurrentAccountSession.UserId;
+                        string username = await GetUsername();
+                        await CloudAccounts.Instance.AddAccount(userId, CloudStorageType.OneDrive, username);
+                    }
+                    await SaveToken(refreshToken);
                 }
                 catch (OneDriveException ex)
                 {
@@ -116,12 +127,17 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             return isLoggedIn;
         }
 
+        public bool Check(string userId, CloudStorageType type)
+        {
+            return (type == CloudStorageType.OneDrive) && userId == this.userId;
+        }
+
         public async Task Logout()
         {
             Debug.WriteLine("OneDriveManager Logout()");
             await oneDriveClient.SignOutAsync();
             OnAuthenticationChanged(false);
-            await SaveToken(null);
+            await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.OneDrive);
         }
 
         private async Task SaveToken(string refreshToken)
@@ -134,6 +150,35 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         {
             Debug.WriteLine("OneDriveManager GetSavedToken()");
             return await DatabaseManager.Current.GetCloudAccountTokenAsync(userId);
+        }
+
+        public async Task<CloudAccount> GetAccountInfo()
+        {
+            if (userId == null) return null;
+            return CloudAccounts.Instance.GetAccount(userId);
+        }
+
+        private async Task<string> GetUsername()
+        {
+            var accessToken = oneDriveClient.AuthenticationProvider.CurrentAccountSession.AccessToken;
+            string username = "";
+            var uri = new Uri($"https://apis.live.net/v5.0/me?access_token={accessToken}");
+            var httpClient = new System.Net.Http.HttpClient();
+            try
+            {
+                var result = await httpClient.GetAsync(uri);
+                string jsonUserInfo = await result.Content.ReadAsStringAsync();
+                if (jsonUserInfo != null)
+                {
+                    var json = Newtonsoft.Json.Linq.JObject.Parse(jsonUserInfo);
+                    username = json["name"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return username;
         }
 
         #endregion
@@ -158,12 +203,6 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             cache = new Dictionary<string, IChildrenCollectionPage>();
             cachedFolders = new Dictionary<string, CloudFolder>();
             musicFolderId = null;
-        }
-
-        public CloudRootFolder GetRootFolder()
-        {
-            var ac = CloudAccounts.Instance.GetAccount(userId);
-            return new CloudRootFolder(ac.UserName, userId, CloudStorageType.OneDrive);
         }
 
         public async Task<string> GetRootFolderId()

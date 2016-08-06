@@ -27,18 +27,25 @@ namespace NextPlayerUWPDataLayer.CloudStorage
 
         private List<CloudAccount> accounts;
 
-        public async Task<CloudAccount> AddAccount(string userId, CloudStorageType type)
+        public async Task<CloudAccount> AddAccount(string userId, CloudStorageType type, string username)
         {
-            int id = await DatabaseManager.Current.AddCloudAccountAsync(userId, type);
-            CloudAccount ca = new CloudAccount(id, userId, type);
+            int id = await DatabaseManager.Current.AddCloudAccountAsync(userId, type, username);
+            CloudAccount ca = new CloudAccount(id, userId, type, username);
             accounts.Add(ca);
             return ca;
         }
 
         public async Task DeleteAccount(CloudAccount account)
         {
+            if (account == null) return;
             await DatabaseManager.Current.DeleteCloudAccountAsync(account);
             accounts.Remove(account);
+        }
+
+        public async Task DeleteAccount(string userId, CloudStorageType type)
+        {
+            var account = accounts.FirstOrDefault(a => a.UserId.Equals(userId) && a.Type.Equals(type));
+            await DeleteAccount(account);
         }
 
         public List<CloudAccount> GetAllAccounts()

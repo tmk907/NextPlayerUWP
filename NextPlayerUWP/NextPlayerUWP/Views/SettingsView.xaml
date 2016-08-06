@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Template10.Controls"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:data="using:NextPlayerUWP.ViewModels"
     xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=SettingsVM}"
     mc:Ignorable="d">
@@ -52,6 +52,24 @@
                         <SymbolIcon Symbol="Cancel"/>
                     </Button.Content>
                 </Button>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="CloudAccountTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="128" Width="Auto"/>
+                    <ColumnDefinition MinWidth="128" Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" 
+                    Text="{Binding Username}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
+                <Button Grid.Column="1"
+                        x:Uid="ButtonLogout"
+                        Click="ViewModel.CloudStorageLogout"
+                        Tag="{Binding}"
+                        Content="Logout"
+                        VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -365,40 +383,34 @@
                     Margin="0,12,0,12"
                     Text="OneDrive"/>
                 <StackPanel Orientation="Vertical" Margin="4">
-                    <Button x:Uid="ButtonLogin"
-                    Content="Login"
-                    Margin="0,0,0,0"
-                    MinWidth="128"
-                    IsEnabled="{x:Bind ViewModel.IsOneDriveLoginEnabled, Mode=OneWay}"
-                    Visibility="{x:Bind ViewModel.IsOneDriveLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
-                    Click="{x:Bind ViewModel.OneDriveLogin}"/>
-                    <Button x:Uid="ButtonLogout"
-                    Content="Logout"
-                    MinWidth="128"
-                    Margin="0,8,0,0"
-                    Visibility="{x:Bind ViewModel.IsOneDriveLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                    Click="{x:Bind ViewModel.OneDriveLogout}"/>
+                    <ListView Margin="0,4,4,4"
+                        ItemsSource="{x:Bind ViewModel.OneDriveAccounts, Mode=OneWay}"
+                        ItemTemplate="{StaticResource CloudAccountTemplate}">
+                    </ListView>
+                    <Button x:Uid="ButtonAddAccount"
+                        Content="Add account"
+                        Margin="0,0,0,0"
+                        MinWidth="128"
+                        IsEnabled="{x:Bind ViewModel.IsOneDriveLoginEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.AddOneDriveAccount}"/>
                 </StackPanel>
                     <TextBlock
-                    Style="{StaticResource TitleTextBlockStyle}" 
-                    Margin="0,12,0,12"
-                    Text="Dropbox"/>
+                        Style="{StaticResource TitleTextBlockStyle}" 
+                        Margin="0,12,0,12"
+                        Text="Dropbox"/>
                     <StackPanel Orientation="Vertical" Margin="4">
-                        <Button x:Uid="ButtonLogin"
-                            Content="Login"
+                        <ListView Margin="0,4,4,4"
+                            ItemsSource="{x:Bind ViewModel.DropboxAccounts, Mode=OneWay}"
+                            ItemTemplate="{StaticResource CloudAccountTemplate}">
+                        </ListView>
+                        <Button x:Uid="ButtonAddAccount"
+                            Content="Add account"
                             Margin="0,0,0,0"
                             MinWidth="128"
                             IsEnabled="{x:Bind ViewModel.IsDropboxLoginEnabled, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.IsDropboxLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"    
-                            Click="{x:Bind ViewModel.DropboxLogin}"/>
-                        <Button x:Uid="ButtonLogout"
-                            Content="Logout"
-                            MinWidth="128"
-                            Margin="0,8,0,0"
-                            Visibility="{x:Bind ViewModel.IsDropboxLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                            Click="{x:Bind ViewModel.DropboxLogout}"/>
+                            Click="{x:Bind ViewModel.AddDropboxAccount}"/>
                     </StackPanel>
-                    <TextBlock
+                    <!--<TextBlock
                     Style="{StaticResource TitleTextBlockStyle}" 
                     Margin="0,12,0,12"
                     Text="Google Drive"/>
@@ -416,7 +428,7 @@
                             Margin="0,8,0,0"
                             Visibility="{x:Bind ViewModel.IsGoogleDriveLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                             Click="{x:Bind ViewModel.GoogleDriveLogout}"/>
-                    </StackPanel>
+                    </StackPanel>-->
                     <TextBlock x:Uid="TBAbout"
                         Style="{StaticResource TitleTextBlockStyle}" 
                         Margin="0,12,0,12"

@@ -9,10 +9,11 @@ using Dropbox.Api;
 using NextPlayerUWPDataLayer.Constants;
 using Windows.Security.Authentication.Web;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Services;
 
 namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 {
-    public sealed class DropboxService// : ICloudStorageService
+    public class DropboxService : ICloudStorageService
     {
         public static event AuthenticationChangeHandler AuthenticationChanged;
 
@@ -21,50 +22,21 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             AuthenticationChanged?.Invoke(isAuthenticated);
         }
 
-        private static readonly DropboxService instance = new DropboxService();
-
-        static DropboxService() { }
-
-        public static DropboxService Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
-
-        private DropboxService()
+        public DropboxService()
         {
             Debug.WriteLine("DropboxService()");
-            if (AuthToken != null)
-            {
-                dropboxClient = new DropboxClient(AuthToken);
-                OnAuthenticationChanged(true);
-            }
+        }
+
+        public DropboxService(string userId)
+        {
+            Debug.WriteLine("DropboxService({0})", userId);
+            this.userId = userId;
         }
 
         private DropboxClient dropboxClient;
-        private string authToken;
-        private string AuthToken
-        {
-            get
-            {
-                if (authToken == null)
-                {
-                    authToken = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DropboxAuthToken) as string;
-                }
-                return authToken;
-            }
-            set
-            {
-                if (authToken != value)
-                {
-                    authToken = value;
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DropboxAuthToken, authToken);
-                }
-            }
-        }
+        private string refreshToken;
         private static readonly Uri redirectUri = new Uri("http://localhost/next-player/dropbox/authorize");
+        private string userId;
 
         private async Task Authorize()
         {
@@ -86,8 +58,8 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             {
                 case WebAuthenticationStatus.Success:                    
                     var response = DropboxOAuth2Helper.ParseTokenFragment(new Uri(result.ResponseData));
-                        AuthToken = response.AccessToken;
-                        dropboxClient = new DropboxClient(AuthToken);
+                        refreshToken = response.AccessToken;
+                        dropboxClient = new DropboxClient(refreshToken);
                     break;
                 case WebAuthenticationStatus.ErrorHttp:
                     throw new OAuthException(result.ResponseErrorDetail);
@@ -137,9 +109,17 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         {
             get
             {
-                if (dropboxClient == null || AuthToken == null) return false;
+                if (dropboxClient == null || refreshToken == null) return false;
                 else return true;
             }
+        }
+
+        public async Task<bool> LoginSilently()
+        {
+            Debug.WriteLine("DropboxService LoginSilently()");
+            refreshToken = await GetSavedToken();
+            dropboxClient = new DropboxClient(refreshToken);
+            return IsAuthenticated;
         }
 
         public async Task<bool> Login()
@@ -149,13 +129,22 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             bool isLoggedIn = false;
             if (IsAuthenticated)
             {
-                dropboxClient = new DropboxClient(AuthToken);
+                dropboxClient = new DropboxClient(refreshToken);
                 isLoggedIn = true;
             }
             else
             {
                 await Authorize();
                 isLoggedIn = IsAuthenticated;
+
+                if (IsAuthenticated && userId == null)
+                {
+                    var account = await dropboxClient.Users.GetCurrentAccountAsync();
+                    userId = account.AccountId;
+                    string username = account.Name.DisplayName;
+                    await CloudAccounts.Instance.AddAccount(userId, CloudStorageType.Dropbox, username);
+                    await SaveToken(refreshToken);
+                }
             }
             OnAuthenticationChanged(isLoggedIn);
             return isLoggedIn;
@@ -165,39 +154,80 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         {
             Debug.WriteLine("DropboxService Logout()");
             OnAuthenticationChanged(false);
-            AuthToken = null;
+            refreshToken = null;
             await dropboxClient.Auth.TokenRevokeAsync();
+            await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.Dropbox);
+        }
+
+        private async Task SaveToken(string refreshToken)
+        {
+            Debug.WriteLine("DropboxService SaveToken()");
+            await DatabaseManager.Current.SaveCloudAccountTokenAsync(userId, refreshToken);
+        }
+
+        private async Task<string> GetSavedToken()
+        {
+            Debug.WriteLine("DropboxService GetSavedToken()");
+            return await DatabaseManager.Current.GetCloudAccountTokenAsync(userId);
+        }
+
+        public async Task<CloudAccount> GetAccountInfo()
+        {
+            if (userId == null) return null;
+            return CloudAccounts.Instance.GetAccount(userId);
+        }
+
+        public bool Check(string userId, CloudStorageType type)
+        {
+            return (type == CloudStorageType.Dropbox) && userId == this.userId;
+        }
+
+        public async Task<string> GetRootFolderId()
+        {
+            return "";
         }
 
         public async Task<CloudFolder> GetFolder(string id)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<CloudFolder> GetRootFolder()
-        {
+            Debug.WriteLine("DropboxService GetFolder({0})", id);
             if (!IsAuthenticated) return null;
-            return new CloudFolder("Dropbox", "", 0, "", null, MusicItemTypes.dropboxfolder);
+            //if (cachedFolders.ContainsKey(id))
+            //{
+            //    return cachedFolders[id];
+            //}
+            if (id == "")
+            {
+                return new CloudFolder("Dropbox", "", 0, "", null, MusicItemTypes.dropboxfolder);
+            }
+            try
+            {
+                var item = await dropboxClient.Files.GetMetadataAsync(id);
+                if (item == null) return null;
+                CloudFolder folder = new CloudFolder(item.Name, "", 0, item.PathLower, System.IO.Path.GetDirectoryName(item.PathLower), MusicItemTypes.dropboxfolder);
+                //cachedFolders.Add(item.Id, folder);
+                return folder;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
-        public async Task<List<SongItem>> GetSongItemsFromItem(string id)
+        public async Task<List<SongItem>> GetSongItems(string id)
         {
             List<SongItem> songs = new List<SongItem>();
             if (!IsAuthenticated) return songs;
             var args = new Dropbox.Api.Files.ListFolderArg("", false, true, false, false);
             var result = await dropboxClient.Files.ListFolderAsync(args);
-            foreach (var item in result.Entries)
+            foreach (var item in result.Entries.Where(i=>i.IsFile))
             {
-                if (item.IsFile)
-                {
-                    var f = item.AsFile;
-                    SongItem s = new SongItem();
-                    s.SourceType = Enums.MusicSource.Dropbox;
-                    s.Title = f.Name;
-                    s.Path = f.PathLower;
-                    s.GenerateID();
-                    songs.Add(s);
-                }
+                var f = item.AsFile;
+                SongItem s = new SongItem();
+                s.SourceType = Enums.MusicSource.Dropbox;
+                s.Title = f.Name;
+                s.Path = f.PathLower;
+                s.GenerateID();
+                songs.Add(s);
             }
             return songs;
         }
@@ -208,13 +238,10 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             if (!IsAuthenticated) return folders;
             var args = new Dropbox.Api.Files.ListFolderArg("", false, true, false, false);
             var result = await dropboxClient.Files.ListFolderAsync(args);
-            foreach (var item in result.Entries)
+            foreach (var item in result.Entries.Where(i => i.IsFolder))
             {
-                if (item.IsFolder)
-                {
-                    var f = item.AsFolder;
-                    folders.Add(new CloudFolder(f.Name, f.PathLower, 0, f.Id, id, MusicItemTypes.dropboxfolder));
-                }
+                var f = item.AsFolder;
+                folders.Add(new CloudFolder(f.Name, f.PathLower, 0, f.Id, id, MusicItemTypes.dropboxfolder));
             }
             return folders;
         }

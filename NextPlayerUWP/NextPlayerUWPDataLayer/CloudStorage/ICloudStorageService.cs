@@ -11,12 +11,14 @@ namespace NextPlayerUWPDataLayer.CloudStorage
         Task<bool> Login();
         Task<bool> LoginSilently();
         Task Logout();
+        Task<CloudAccount> GetAccountInfo();
 
         //CloudRootFolder GetRootFolder();
         Task<string> GetRootFolderId();
         Task<CloudFolder> GetFolder(string id);
         Task<List<CloudFolder>> GetSubFolders(string id);
         Task<List<SongItem>> GetSongItems(string id);
-        
+
+        bool Check(string userId, CloudStorageType type);
     }
 }

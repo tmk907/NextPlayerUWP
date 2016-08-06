@@ -1700,13 +1700,14 @@ namespace NextPlayerUWPDataLayer.Services
 
         #region CloudStorageAccounts
 
-        public async Task<int> AddCloudAccountAsync(string userId, CloudStorageType type)
+        public async Task<int> AddCloudAccountAsync(string userId, CloudStorageType type, string username)
         {
             CloudAccountsTable item = new CloudAccountsTable()
             {
                 Token = "",
                 Type = (int)type,
                 UserId = userId,
+                UserName = username
             };
             await connectionAsync.InsertAsync(item);
             return item.Id;
@@ -1731,7 +1732,7 @@ namespace NextPlayerUWPDataLayer.Services
             List<CloudAccount> list = new List<CloudAccount>();
             foreach(var item in query)
             {
-                list.Add(new CloudAccount(item.Id, item.UserId, (CloudStorageType)item.Type));
+                list.Add(new CloudAccount(item.Id, item.UserId, (CloudStorageType)item.Type, item.UserName));
             }
             return list;
         }
@@ -1742,7 +1743,7 @@ namespace NextPlayerUWPDataLayer.Services
             List<CloudAccount> list = new List<CloudAccount>();
             foreach (var item in query)
             {
-                list.Add(new CloudAccount(item.Id, item.UserId, (CloudStorageType)item.Type));
+                list.Add(new CloudAccount(item.Id, item.UserId, (CloudStorageType)item.Type, item.UserName));
             }
             return list;
         }

@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
 using NextPlayerUWPDataLayer.CloudStorage.GoogleDrive;
+using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -184,6 +185,9 @@ namespace NextPlayerUWP.ViewModels
             }
             LastFmRateSongs = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
             LastFmShowError = false;
+
+            OneDriveAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.OneDrive));
+            DropboxAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.Dropbox));
 
             //IsOneDriveLoggedIn = OneDriveService.Instance.IsAuthenticated;
             //IsDropboxLoggedIn = DropboxService.Instance.IsAuthenticated;
@@ -705,6 +709,82 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
+        private ObservableCollection<CloudAccount> oneDriveAccounts = new ObservableCollection<CloudAccount>();
+        public ObservableCollection<CloudAccount> OneDriveAccounts
+        {
+            get { return oneDriveAccounts; }
+            set { Set(ref oneDriveAccounts, value); }
+        }
+
+        private bool isOneDriveLoginEnabled = true;
+        public bool IsOneDriveLoginEnabled
+        {
+            get { return isOneDriveLoginEnabled; }
+            set { Set(ref isOneDriveLoginEnabled, value); }
+        }
+
+        public async void AddOneDriveAccount()
+        {
+            IsOneDriveLoginEnabled = false;
+            var cf = new CloudStorageServiceFactory();
+            var service = cf.GetService(CloudStorageType.OneDrive);
+            var isLoggedIn = await service.Login();
+            if (isLoggedIn)
+            {
+                var info = await service.GetAccountInfo();
+                if (info!=null) OneDriveAccounts.Add(info);
+            }
+            IsOneDriveLoginEnabled = true;
+        }
+
+        private ObservableCollection<CloudAccount> dropboxAccounts = new ObservableCollection<CloudAccount>();
+        public ObservableCollection<CloudAccount> DropboxAccounts
+        {
+            get { return dropboxAccounts; }
+            set { Set(ref dropboxAccounts, value); }
+        }
+
+        private bool isDropboxLoginEnabled = true;
+        public bool IsDropboxLoginEnabled
+        {
+            get { return isDropboxLoginEnabled; }
+            set { Set(ref isDropboxLoginEnabled, value); }
+        }
+
+        public async void AddDropboxAccount()
+        {
+            IsDropboxLoginEnabled = false;
+            var cf = new CloudStorageServiceFactory();
+            var service = cf.GetService(CloudStorageType.Dropbox);
+            var isLoggedIn = await service.Login();
+            if (isLoggedIn)
+            {
+                var info = await service.GetAccountInfo();
+                if (info != null) DropboxAccounts.Add(info);
+            }
+            IsDropboxLoginEnabled = true;
+        }
+
+        public async void CloudStorageLogout(object sender, RoutedEventArgs e)
+        {
+            CloudAccount account = (CloudAccount)((Button)sender).Tag;
+            var cf = new CloudStorageServiceFactory();
+            var service = cf.GetService(account.Type, account.UserId);
+            await service.LoginSilently();
+            await service.Logout();
+            switch (account.Type)
+            {
+                case CloudStorageType.Dropbox:
+                    DropboxAccounts.Remove(account);
+                    break;
+                case CloudStorageType.OneDrive:
+                    OneDriveAccounts.Remove(account);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         #region OneDrive
 
         private bool isOneDriveLoggedIn = false;
@@ -714,12 +794,7 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref isOneDriveLoggedIn, value); }
         }
 
-        private bool isOneDriveLoginEnabled = true;
-        public bool IsOneDriveLoginEnabled
-        {
-            get { return isOneDriveLoginEnabled; }
-            set { Set(ref isOneDriveLoginEnabled, value); }
-        }
+        
 
         public async void OneDriveLogin()
         {
@@ -745,12 +820,7 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref isDropboxLoggedIn, value); }
         }
 
-        private bool isDropboxLoginEnabled = true;
-        public bool IsDropboxLoginEnabled
-        {
-            get { return isDropboxLoginEnabled; }
-            set { Set(ref isDropboxLoginEnabled, value); }
-        }
+        
 
         public async void DropboxLogin()
         {

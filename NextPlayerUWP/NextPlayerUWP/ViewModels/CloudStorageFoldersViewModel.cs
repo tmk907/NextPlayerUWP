@@ -48,12 +48,13 @@ namespace NextPlayerUWP.ViewModels
             currentFolder = null;
             if (folderId == null)
             {
+                await service.LoginSilently();
                 folderId = await service.GetRootFolderId();
             }
 
             currentFolder = await service.GetFolder(folderId);
 
-            FolderName = currentFolder.Folder ?? "";
+            FolderName = currentFolder?.Folder ?? "";
 
             var folders = await service.GetSubFolders(folderId);
             var songs = await service.GetSongItems(folderId);

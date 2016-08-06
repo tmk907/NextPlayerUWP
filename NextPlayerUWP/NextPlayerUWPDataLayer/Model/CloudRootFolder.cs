@@ -22,13 +22,13 @@ namespace NextPlayerUWPDataLayer.Model
         public static CloudStorageType ParameterToType(string param)
         {
             var s = param.Split(new string[] { "%%%" }, StringSplitOptions.RemoveEmptyEntries);
-            return (CloudStorageType)Int32.Parse(s[2]);
+            return (CloudStorageType)Int32.Parse(s[1]);
         }
 
         public static string ParameterToUserId(string param)
         {
             var s = param.Split(new string[] { "%%%" }, StringSplitOptions.RemoveEmptyEntries);
-            return s[4];
+            return s[2];
         }
 
         public static bool IsCloudRootFolderParameter(string param)
