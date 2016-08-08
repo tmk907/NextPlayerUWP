@@ -98,7 +98,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="Assets\doc\client_id.json" />
     <None Include="NextPlayerUWP_StoreKey.pfx" />
     <None Include="project.json" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
@@ -491,6 +490,7 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Assets\doc\" />
     <Folder Include="Assets\Visual Assets\Square310\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
