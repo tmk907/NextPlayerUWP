@@ -143,7 +143,6 @@ namespace NextPlayerUWP
             NewSmartPlaylist,
             NowPlaying,
             NowPlayingPlaylist,
-            OneDriveFolders,
             Playlists,
             Playlist,
             Radios,
@@ -221,8 +220,6 @@ namespace NextPlayerUWP
                 keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
             if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
                 keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
-            if (!keys.ContainsKey(Pages.OneDriveFolders))
-                keys.Add(Pages.OneDriveFolders, typeof(OneDriveFoldersView));
             if (!keys.ContainsKey(Pages.Playlists))
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
             if (!keys.ContainsKey(Pages.Playlist))
