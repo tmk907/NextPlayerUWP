@@ -55,7 +55,13 @@ namespace NextPlayerUWP.ViewModels
             currentFolder = null;
             if (folderId == null)
             {
-                await service.LoginSilently();
+                var loggedIn = await service.LoginSilently();
+                if (!loggedIn)
+                {
+                    Items.Clear();
+                    Loading = false;
+                    return;
+                }
                 folderId = await service.GetRootFolderId();
                 if (folderId == null)
                 {
