@@ -15,13 +15,6 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 {
     public class DropboxService : ICloudStorageService
     {
-        public static event AuthenticationChangeHandler AuthenticationChanged;
-
-        public static void OnAuthenticationChanged(bool isAuthenticated)
-        {
-            AuthenticationChanged?.Invoke(isAuthenticated);
-        }
-
         public DropboxService()
         {
             Debug.WriteLine("DropboxService()");
@@ -142,18 +135,23 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
                     var account = await dropboxClient.Users.GetCurrentAccountAsync();
                     userId = account.AccountId;
                     string username = account.Name.DisplayName;
-                    await CloudAccounts.Instance.AddAccount(userId, CloudStorageType.Dropbox, username);
+                    if (!CloudAccounts.Instance.Exists(userId, CloudStorageType.Dropbox))
+                    {
+                        await CloudAccounts.Instance.AddAccount(userId, CloudStorageType.Dropbox, username);
+                    }
+                    else
+                    {
+                        return false;
+                    }
                     await SaveToken(refreshToken);
                 }
             }
-            OnAuthenticationChanged(isLoggedIn);
             return isLoggedIn;
         }
 
         public async Task Logout()
         {
             Debug.WriteLine("DropboxService Logout()");
-            OnAuthenticationChanged(false);
             refreshToken = null;
             await dropboxClient.Auth.TokenRevokeAsync();
             await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.Dropbox);

@@ -57,6 +57,12 @@ namespace NextPlayerUWP.ViewModels
             {
                 await service.LoginSilently();
                 folderId = await service.GetRootFolderId();
+                if (folderId == null)
+                {
+                    Items.Clear();
+                    Loading = false;
+                    return;
+                }
             }
 
             currentFolder = await service.GetFolder(folderId);
@@ -83,6 +89,7 @@ namespace NextPlayerUWP.ViewModels
             string param = parameter as string ?? "";
             if (CloudRootFolder.IsCloudRootFolderParameter(param))
             {
+                Items.Clear();
                 string userId = CloudRootFolder.ParameterToUserId(param);
                 var type = CloudRootFolder.ParameterToType(param);
                 switch (type)
