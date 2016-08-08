@@ -1,7 +1,7 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
-using NextPlayerUWPDataLayer.OneDrive;
+using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,7 +30,7 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref items, value); }
         }
 
-        private OneDriveFolder currentFolder;
+        private CloudFolder currentFolder;
 
         private bool loading = false;
         public bool Loading
@@ -44,44 +44,44 @@ namespace NextPlayerUWP.ViewModels
         protected override async Task LoadData()
         {
             Loading = true;
-            currentFolder = null;
-            if (id == "")
-            {
-                currentFolder = await OneDriveManager.Instance.GetMusicFolder();
-                id = currentFolder.Id;
-            }
-            else
-            {
-                foreach(var item in items)
-                {
-                    if (item.GetType() == typeof(OneDriveFolder))
-                    {
-                        if (((OneDriveFolder)item).Id == id)
-                        {
-                            currentFolder = (OneDriveFolder)item;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (currentFolder == null)
-            {
-                currentFolder = await OneDriveManager.Instance.GetFolder(id);
-            }
+            //currentFolder = null;
+            //if (id == "")
+            //{
+            //    currentFolder = await OneDriveService.Instance.GetMusicFolder();
+            //    id = currentFolder.Id;
+            //}
+            //else
+            //{
+            //    foreach(var item in items)
+            //    {
+            //        if (item.GetType() == typeof(CloudFolder))
+            //        {
+            //            if (((CloudFolder)item).Id == id)
+            //            {
+            //                currentFolder = (CloudFolder)item;
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
+            //if (currentFolder == null)
+            //{
+            //    currentFolder = await OneDriveService.Instance.GetFolder(id);
+            //}
 
-            FolderName = currentFolder?.Folder ?? "";
+            //FolderName = currentFolder?.Folder ?? "";
 
-            var folders = await OneDriveManager.Instance.GetSubFoldersFromItem(id);
-            var songs = await OneDriveManager.Instance.GetSongItemsFromItem(id);
-            Items.Clear();
-            foreach (var folder in folders)
-            {
-                Items.Add(folder);
-            }
-            foreach (var song in songs)
-            {
-                Items.Add(song);
-            }
+            //var folders = await OneDriveService.Instance.GetSubFolders(id);
+            //var songs = await OneDriveService.Instance.GetSongItemsFromItem(id);
+            //Items.Clear();
+            //foreach (var folder in folders)
+            //{
+            //    Items.Add(folder);
+            //}
+            //foreach (var song in songs)
+            //{
+            //    Items.Add(song);
+            //}
 
             Loading = false;
         }
@@ -108,9 +108,9 @@ namespace NextPlayerUWP.ViewModels
             {
                 await SongClicked(((SongItem)e.ClickedItem).SongId);
             }
-            else if (typeof(OneDriveFolder) == e.ClickedItem.GetType())
+            else if (typeof(CloudFolder) == e.ClickedItem.GetType())
             {
-                var folder = ((OneDriveFolder)e.ClickedItem);
+                var folder = ((CloudFolder)e.ClickedItem);
                 //FolderName += @"\" + folder.Folder;
                 NavigationService.Navigate(App.Pages.OneDriveFolders, folder.Id);
             }

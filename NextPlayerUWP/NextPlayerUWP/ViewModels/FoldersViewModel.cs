@@ -11,7 +11,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.OneDrive;
+using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
+using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
+using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -23,19 +25,6 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             MediaImport.MediaImported += MediaImport_MediaImported;
-            OneDriveManager.AuthenticationChanged += OneDriveManager_AuthenticationChanged;
-        }
-
-        private void OneDriveManager_AuthenticationChanged(bool isAuthenticated)
-        {
-            if (isAuthenticated)
-            {
-                AddOneDriveMainFolder();
-            }
-            else
-            {
-                RemoveOneDriveMainFolder();
-            }
         }
 
         private async void MediaImport_MediaImported(string s)
@@ -96,7 +85,12 @@ namespace NextPlayerUWP.ViewModels
                             roots.Add(dir);
                         }
                     }
-                    await AddOneDriveMainFolder();
+                    CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
+                    var items = await fact.GetAllRootFolders();
+                    foreach(var item in items)
+                    {
+                        Items.Add(item);
+                    }
                 }
                 else
                 {
@@ -112,27 +106,6 @@ namespace NextPlayerUWP.ViewModels
                     {
                         Items.Add(s);
                     }
-                }
-            }
-        }
-
-        private async Task AddOneDriveMainFolder()
-        {
-            if (directory == null && OneDriveManager.Instance.IsAuthenticated)
-            {
-                var musicFolder = await OneDriveManager.Instance.GetMusicFolder();
-                Items.Add(musicFolder);
-            }
-        }
-
-        private void RemoveOneDriveMainFolder()
-        {
-            if (directory == null)
-            {
-                var folder = items.FirstOrDefault(f => f.GetType() == typeof(OneDriveFolder));
-                if (folder != null)
-                {
-                    Items.Remove(folder);
                 }
             }
         }
@@ -163,10 +136,10 @@ namespace NextPlayerUWP.ViewModels
                 var folder = (FolderItem)e.ClickedItem;
                 NavigationService.Navigate(App.Pages.Folders, folder.Directory);
             }
-            else if (typeof(OneDriveFolder) == e.ClickedItem.GetType())
+            else if (typeof(CloudRootFolder) == e.ClickedItem.GetType())
             {
-                var folder = (OneDriveFolder)e.ClickedItem;
-                NavigationService.Navigate(App.Pages.OneDriveFolders, folder.Id);
+                var folder = (CloudRootFolder)e.ClickedItem;
+                NavigationService.Navigate(App.Pages.CloudStorageFolders, CloudRootFolder.ToParameter(folder.UserId, folder.CloudType));
             }
         }
 

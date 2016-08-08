@@ -33,7 +33,7 @@ namespace NextPlayerUWPDataLayer.Services
             Password = "";
         }
 
-        public void RefreshCredentials()
+        public void GetCredentialsFromSettings()
         {
             Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) ?? String.Empty).ToString();
             Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) ?? String.Empty).ToString();
@@ -41,7 +41,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task CacheTrackScrobble(TrackScrobble scrobble)
         {
-            RefreshCredentials();
+            GetCredentialsFromSettings();
             if (AreCredentialsSet())
             {
                 await DatabaseManager.Current.CacheTrackScrobbleAsync("track.scrobble", scrobble.Artist, scrobble.Track, scrobble.Timestamp);
@@ -69,7 +69,7 @@ namespace NextPlayerUWPDataLayer.Services
             bool rate = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
             if (rate)
             {
-                RefreshCredentials();
+                GetCredentialsFromSettings();
                 if (AreCredentialsSet())
                 {
                     int min = (int)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLove);

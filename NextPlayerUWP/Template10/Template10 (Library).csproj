@@ -124,9 +124,6 @@
     <None Include="Nuget\Template10.targets" />
     <None Include="Nuget\Init.ps1" /> -->
     <None Include="project.json" />
-    <None Include="Nuget\Template10Library.nuspec">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="..\template10.snk">
       <Link>template10.snk</Link>
     </None>

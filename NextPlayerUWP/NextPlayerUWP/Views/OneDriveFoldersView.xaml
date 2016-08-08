@@ -154,18 +154,6 @@
                     Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
         </DataTemplate>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorDesktop"
-            FileTemplate="{StaticResource FileItemTemplateDesktop}"
-            FolderTemplate="{StaticResource FolderItemTemplateDesktop}">
-        </mycontrols:FolderDataTemplateSelector>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobile"
-            FileTemplate="{StaticResource FileItemTemplateMobile}"
-            FolderTemplate="{StaticResource FolderItemTemplateMobile}">
-        </mycontrols:FolderDataTemplateSelector>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobileWide"
-            FileTemplate="{StaticResource FileItemTemplateMobileWide}"
-            FolderTemplate="{StaticResource FolderItemTemplateMobileWide}">
-        </mycontrols:FolderDataTemplateSelector>
         <DataTemplate x:Key="FileItemTemplateDesktop" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
@@ -249,6 +237,18 @@
                     Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
         </DataTemplate>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorDesktop"
+            FileTemplate="{StaticResource FileItemTemplateDesktop}"
+            FolderTemplate="{StaticResource FolderItemTemplateDesktop}">
+        </mycontrols:FolderDataTemplateSelector>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobile"
+            FileTemplate="{StaticResource FileItemTemplateMobile}"
+            FolderTemplate="{StaticResource FolderItemTemplateMobile}">
+        </mycontrols:FolderDataTemplateSelector>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobileWide"
+            FileTemplate="{StaticResource FileItemTemplateMobileWide}"
+            FolderTemplate="{StaticResource FolderItemTemplateMobileWide}">
+        </mycontrols:FolderDataTemplateSelector>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
