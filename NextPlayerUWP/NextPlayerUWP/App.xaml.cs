@@ -17,6 +17,7 @@ using Template10.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP
@@ -63,9 +64,16 @@ namespace NextPlayerUWP
             }
         }
 
+        bool _isInBackgroundMode = false;
+
         public App()
         {
             InitializeComponent();
+            this.EnteredBackground += App_EnteredBackground;
+            this.LeavingBackground += App_LeavingBackground;
+            Windows.System.MemoryManager.AppMemoryUsageLimitChanging += MemoryManager_AppMemoryUsageLimitChanging;
+            Windows.System.MemoryManager.AppMemoryUsageIncreased += MemoryManager_AppMemoryUsageIncreased;
+
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
 
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
@@ -119,6 +127,50 @@ namespace NextPlayerUWP
 #endif
             //DatabaseManager.Current.resetdb();
             this.UnhandledException += App_UnhandledException;
+        }
+
+        private void MemoryManager_AppMemoryUsageIncreased(object sender, object e)
+        {
+            var level = MemoryManager.AppMemoryUsageLevel;
+
+            if (level == AppMemoryUsageLevel.OverLimit || level == AppMemoryUsageLevel.High)
+            {
+                ReduceMemoryUsage(MemoryManager.AppMemoryUsageLimit);
+            }
+        }
+
+        private void MemoryManager_AppMemoryUsageLimitChanging(object sender, Windows.System.AppMemoryUsageLimitChangingEventArgs e)
+        {
+            if (MemoryManager.AppMemoryUsage >= e.NewLimit)
+            {
+                ReduceMemoryUsage(e.NewLimit);
+            }
+        }
+
+        public void ReduceMemoryUsage(ulong limit)
+        {
+            if (_isInBackgroundMode && Window.Current.Content != null)
+            {
+
+                Window.Current.Content = null;
+                GC.Collect();
+            }
+        }
+
+        private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        {
+            _isInBackgroundMode = false;
+
+            // Reastore view content if it was previously unloaded.
+            if (Window.Current.Content == null)
+            {
+                //CreateRootFrame(ApplicationExecutionStat.Running, string.Empty);
+            }
+        }
+
+        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        {
+            _isInBackgroundMode = true;
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
