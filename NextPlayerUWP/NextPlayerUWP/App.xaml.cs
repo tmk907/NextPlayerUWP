@@ -37,7 +37,7 @@ namespace NextPlayerUWP
             AppThemeChanged?.Invoke(isLight);
         }
 
-        private const int dbVersion = 5;
+        private const int dbVersion = 6;
 
         public static bool IsLightThemeOn = false;
 
@@ -134,6 +134,7 @@ namespace NextPlayerUWP
             Album,
             Artists,
             Artist,
+            CloudStorageFolders,
             Genres,
             FileInfo,
             Folders,
@@ -142,7 +143,6 @@ namespace NextPlayerUWP
             NewSmartPlaylist,
             NowPlaying,
             NowPlayingPlaylist,
-            OneDriveFolders,
             Playlists,
             Playlist,
             Radios,
@@ -202,6 +202,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Artists, typeof(ArtistsView));
             if (!keys.ContainsKey(Pages.Artist))
                 keys.Add(Pages.Artist, typeof(ArtistView));
+            if (!keys.ContainsKey(Pages.CloudStorageFolders))
+                keys.Add(Pages.CloudStorageFolders, typeof(CloudStorageFoldersView));
             if (!keys.ContainsKey(Pages.FileInfo))
                 keys.Add(Pages.FileInfo, typeof(FileInfoView));
             if (!keys.ContainsKey(Pages.Folders))
@@ -218,8 +220,6 @@ namespace NextPlayerUWP
                 keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
             if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
                 keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
-            if (!keys.ContainsKey(Pages.OneDriveFolders))
-                keys.Add(Pages.OneDriveFolders, typeof(OneDriveFoldersView));
             if (!keys.ContainsKey(Pages.Playlists))
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
             if (!keys.ContainsKey(Pages.Playlist))
@@ -504,6 +504,13 @@ namespace NextPlayerUWP
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 5);
                 version = "5";
             }
+            if (version.ToString() == "5")
+            {
+                DatabaseManager.Current.UpdateToVersion6();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 6);
+                version = "6";
+            }
+            // change  private const int dbVersion
         }
 
         private void UpdateApp()

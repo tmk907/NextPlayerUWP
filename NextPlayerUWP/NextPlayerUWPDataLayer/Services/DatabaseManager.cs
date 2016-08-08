@@ -12,6 +12,7 @@ using NextPlayerUWPDataLayer.Model;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
+using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -78,6 +79,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<CachedScrobble>();
             connection.CreateTable<ImportedPlaylistsTable>();
             connection.CreateTable<FutureAccessTokensTable>();
+            connection.CreateTable<CloudAccountsTable>();
         }
 
         public void DeleteDatabase()
@@ -95,6 +97,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<CachedScrobble>();
             connection.DropTable<ImportedPlaylistsTable>();
             connection.DropTable<FutureAccessTokensTable>();
+            connection.DropTable<CloudAccountsTable>();
         }
 
         public async Task ChangeToNotAvaialble(List<string> availableDirectories)
@@ -1663,6 +1666,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         #endregion
 
+        #region FutureAccessTokens
+
         public async Task<string> GetAccessToken(string path)
         {
             var list = await connectionAsync.Table<FutureAccessTokensTable>().Where(f => f.FilePath.Equals(path)).ToListAsync();
@@ -1690,6 +1695,89 @@ namespace NextPlayerUWPDataLayer.Services
             };
             await connectionAsync.InsertAsync(fatt);
         }
+
+        #endregion
+
+        #region CloudStorageAccounts
+
+        public async Task<int> AddCloudAccountAsync(string userId, CloudStorageType type, string username)
+        {
+            CloudAccountsTable item = new CloudAccountsTable()
+            {
+                Token = "",
+                Type = (int)type,
+                UserId = userId,
+                UserName = username
+            };
+            await connectionAsync.InsertAsync(item);
+            return item.Id;
+        }
+
+        public async Task DeleteCloudAccountAsync(CloudAccount account)
+        {
+            var item = await connectionAsync.Table<CloudAccountsTable>().Where(a => a.Id.Equals(account.DBId)).ToListAsync();
+            if (item.Count == 1)
+            {
+                await connectionAsync.DeleteAsync(item.FirstOrDefault());
+            }
+            else
+            {
+                //TODO error
+            }
+        }
+
+        public async Task<List<CloudAccount>> GetAllCloudAccountsAsync()
+        {
+            var query = await connectionAsync.Table<CloudAccountsTable>().ToListAsync();
+            List<CloudAccount> list = new List<CloudAccount>();
+            foreach(var item in query)
+            {
+                list.Add(new CloudAccount(item.Id, item.UserId, (CloudStorageType)item.Type, item.UserName));
+            }
+            return list;
+        }
+
+        public List<CloudAccount> GetAllCloudAccounts()
+        {
+            var query = connection.Table<CloudAccountsTable>().ToList();
+            List<CloudAccount> list = new List<CloudAccount>();
+            foreach (var item in query)
+            {
+                list.Add(new CloudAccount(item.Id, item.UserId, (CloudStorageType)item.Type, item.UserName));
+            }
+            return list;
+        }
+
+        public async Task SaveCloudAccountTokenAsync(string userId, string token)
+        {
+            var items = await connectionAsync.Table<CloudAccountsTable>().Where(a => a.UserId.Equals(userId)).ToListAsync();
+            if (items.Count == 1)
+            {
+                var item = items.FirstOrDefault();
+                item.Token = token;
+                await connectionAsync.UpdateAsync(item);
+            }
+            else
+            {
+                //TODO error
+            }
+        }
+
+        public async Task<string> GetCloudAccountTokenAsync(string userId)
+        {
+            var items = await connectionAsync.Table<CloudAccountsTable>().Where(a => a.UserId.Equals(userId)).ToListAsync();
+            if (items.Count == 1)
+            {
+                return items.FirstOrDefault().Token;
+            }
+            else
+            {
+                //TODO error
+                return null;
+            }
+        }
+
+        #endregion
 
         private static SongsTable CreateCopy(SongsTable s)
         {
@@ -1911,6 +1999,12 @@ namespace NextPlayerUWPDataLayer.Services
             connection.Execute("UPDATE SongsTable SET AlbumArt = ?", "");
             connection.Execute("UPDATE SongsTable SET DateModified = ?", 0);
         }
+
+        public void UpdateToVersion6()
+        {
+            connection.CreateTable<CloudAccountsTable>();
+        }
+
         public async Task<List<SongsTable>> GetSongsTableAsync()
         {
             return await connectionAsync.Table<SongsTable>().ToListAsync();

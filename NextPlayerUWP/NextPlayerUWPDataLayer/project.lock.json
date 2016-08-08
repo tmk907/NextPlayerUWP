@@ -3,6 +3,18 @@
   "version": 2,
   "targets": {
     "UAP,Version=v10.0": {
+      "Dropbox.Api/3.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "7.0.1"
+        },
+        "compile": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        }
+      },
       "Microsoft.Bcl/1.1.10": {
         "type": "package",
         "dependencies": {
@@ -2004,6 +2016,18 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
+      "Dropbox.Api/3.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "7.0.1"
+        },
+        "compile": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        }
+      },
       "Microsoft.Bcl/1.1.10": {
         "type": "package",
         "dependencies": {
@@ -3871,6 +3895,18 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
+      "Dropbox.Api/3.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "7.0.1"
+        },
+        "compile": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        }
+      },
       "Microsoft.Bcl/1.1.10": {
         "type": "package",
         "dependencies": {
@@ -5695,6 +5731,18 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
+      "Dropbox.Api/3.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "7.0.1"
+        },
+        "compile": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        }
+      },
       "Microsoft.Bcl/1.1.10": {
         "type": "package",
         "dependencies": {
@@ -7571,6 +7619,18 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
+      "Dropbox.Api/3.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "7.0.1"
+        },
+        "compile": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        }
+      },
       "Microsoft.Bcl/1.1.10": {
         "type": "package",
         "dependencies": {
@@ -9395,6 +9455,18 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
+      "Dropbox.Api/3.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "7.0.1"
+        },
+        "compile": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        }
+      },
       "Microsoft.Bcl/1.1.10": {
         "type": "package",
         "dependencies": {
@@ -11271,6 +11343,18 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
+      "Dropbox.Api/3.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "7.0.1"
+        },
+        "compile": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll": {}
+        }
+      },
       "Microsoft.Bcl/1.1.10": {
         "type": "package",
         "dependencies": {
@@ -13096,6 +13180,20 @@
     }
   },
   "libraries": {
+    "Dropbox.Api/3.5.0": {
+      "sha512": "QStAPWU72BaANZiau11FsR++zu4C3zjKBFXMqbhfewlr4hE+61SNix/u7rEWnqXApgrxMrZs85aWad5XceRXOw==",
+      "type": "package",
+      "files": [
+        "Dropbox.Api.3.5.0.nupkg.sha512",
+        "Dropbox.Api.nuspec",
+        "lib/net45/Dropbox.Api.dll",
+        "lib/net45/Dropbox.Api.xml",
+        "lib/portable-net40+sl5+wp80+win8+wpa81/Dropbox.Api.dll",
+        "lib/portable-net40+sl5+wp80+win8+wpa81/Dropbox.Api.xml",
+        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.dll",
+        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Dropbox.Api.xml"
+      ]
+    },
     "Microsoft.Bcl/1.1.10": {
       "sha512": "+tTqoh/M1pyL8El3qLy30EcwnAtyvFoDZJtdG9Cbg/WdFbh4N8kyrq198XHuEL7lnJbeD0DRO8jcX5IIOh05cQ==",
       "type": "package",
@@ -16953,6 +17051,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "Dropbox.Api >= 3.5.0",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0",
       "Microsoft.NETNative.Analyzer >= 1.0.0",
       "Microsoft.Net.Http >= 2.2.29",

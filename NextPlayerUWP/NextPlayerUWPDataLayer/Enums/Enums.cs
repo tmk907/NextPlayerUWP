@@ -33,6 +33,9 @@
         RadioJamendo = 2,
         OnlineFile = 3,
         LocalNotMusicLibrary = 4,
-        OneDrive = 5
+        OneDrive = 5,
+        Dropbox = 6,
+        GoogleDrive = 7,
+        PCloud = 8,
     }
 }

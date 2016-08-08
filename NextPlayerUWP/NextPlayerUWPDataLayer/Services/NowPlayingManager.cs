@@ -79,6 +79,9 @@ namespace NextPlayerUWPDataLayer.Services
                 case MusicSource.OneDrive:
                     LoadFromOneDrive(path);
                     break;
+                case MusicSource.Dropbox:
+                    LoadFromDropbox(path);
+                    break;
                 default:
                     break;
             }
@@ -117,6 +120,22 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         private void LoadFromOneDrive(string path)
+        {
+            try
+            {
+                mediaPlayer.AutoPlay = false;
+                mediaPlayer.SetUriSource(new Uri(path));
+            }
+            catch (Exception ex)
+            {
+                if (!paused)
+                {
+                    Pause();
+                }
+            }
+        }
+
+        private void LoadFromDropbox(string path)
         {
             try
             {
@@ -364,7 +383,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void RefreshLastFmCredentials()
         {
-            lastFmCache.RefreshCredentials();
+            lastFmCache.GetCredentialsFromSettings();
         }
 
         private void ScrobbleNowPlaying(NowPlayingSong song)

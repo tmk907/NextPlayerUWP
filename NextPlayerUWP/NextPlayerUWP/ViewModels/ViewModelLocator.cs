@@ -15,6 +15,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<ArtistsViewModel>();
             SimpleIoc.Default.Register<ArtistViewModel>();
             SimpleIoc.Default.Register<BottomPlayerViewModel>();
+            SimpleIoc.Default.Register<CloudStorageFoldersViewModel>();
             SimpleIoc.Default.Register<FileInfoViewModel>();
             SimpleIoc.Default.Register<FoldersViewModel>();
             SimpleIoc.Default.Register<GenresViewModel>();
@@ -22,7 +23,6 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<NewSmartPlaylistViewModel>();          
             SimpleIoc.Default.Register<NowPlayingViewModel>();
             SimpleIoc.Default.Register<NowPlayingPlaylistViewModel>();
-            SimpleIoc.Default.Register<OneDriveFoldersViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
             SimpleIoc.Default.Register<PlaylistViewModel>();
             SimpleIoc.Default.Register<RadiosViewModel>();
@@ -39,6 +39,7 @@ namespace NextPlayerUWP.ViewModels
         public ArtistsViewModel ArtistsVM => ServiceLocator.Current.GetInstance<ArtistsViewModel>();
         public ArtistViewModel ArtistVM => ServiceLocator.Current.GetInstance<ArtistViewModel>();
         public BottomPlayerViewModel BottomPlayerVM => ServiceLocator.Current.GetInstance<BottomPlayerViewModel>();
+        public CloudStorageFoldersViewModel CloudStorageFoldersVM => ServiceLocator.Current.GetInstance<CloudStorageFoldersViewModel>();
         public FileInfoViewModel FileInfoVM => ServiceLocator.Current.GetInstance<FileInfoViewModel>();
         public FoldersViewModel FoldersVM => ServiceLocator.Current.GetInstance<FoldersViewModel>();
         public GenresViewModel GenresVM => ServiceLocator.Current.GetInstance<GenresViewModel>();
@@ -46,7 +47,6 @@ namespace NextPlayerUWP.ViewModels
         public NewSmartPlaylistViewModel NewSmartPlaylistVM => ServiceLocator.Current.GetInstance<NewSmartPlaylistViewModel>();
         public NowPlayingViewModel NowPlayingVM => ServiceLocator.Current.GetInstance<NowPlayingViewModel>();
         public NowPlayingPlaylistViewModel NowPlayingPlaylistVM => ServiceLocator.Current.GetInstance<NowPlayingPlaylistViewModel>();
-        public OneDriveFoldersViewModel OneDriveFoldersVM => ServiceLocator.Current.GetInstance<OneDriveFoldersViewModel>();
         public PlaylistViewModel PlaylistVM => ServiceLocator.Current.GetInstance<PlaylistViewModel>();
         public PlaylistsViewModel PlaylistsVM => ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
         public RadiosViewModel RadiosVM => ServiceLocator.Current.GetInstance<RadiosViewModel>();

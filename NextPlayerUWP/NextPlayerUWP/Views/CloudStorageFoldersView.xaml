@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="NextPlayerUWP.Views.OneDriveFoldersView"
+    x:Class="NextPlayerUWP.Views.CloudStorageFoldersView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:NextPlayerUWP.Views"
@@ -9,7 +9,7 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
-    DataContext="{Binding Source={StaticResource Locator}, Path=OneDriveFoldersVM}"
+    DataContext="{Binding Source={StaticResource Locator}, Path=CloudStorageFoldersVM}"
     mc:Ignorable="d">
     <Page.Transitions>
         <TransitionCollection>
@@ -154,18 +154,6 @@
                     Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
         </DataTemplate>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorDesktop"
-            FileTemplate="{StaticResource FileItemTemplateDesktop}"
-            FolderTemplate="{StaticResource FolderItemTemplateDesktop}">
-        </mycontrols:FolderDataTemplateSelector>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobile"
-            FileTemplate="{StaticResource FileItemTemplateMobile}"
-            FolderTemplate="{StaticResource FolderItemTemplateMobile}">
-        </mycontrols:FolderDataTemplateSelector>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobileWide"
-            FileTemplate="{StaticResource FileItemTemplateMobileWide}"
-            FolderTemplate="{StaticResource FolderItemTemplateMobileWide}">
-        </mycontrols:FolderDataTemplateSelector>
         <DataTemplate x:Key="FileItemTemplateDesktop" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
@@ -249,6 +237,19 @@
                     Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
         </DataTemplate>
+
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorDesktop"
+            FileTemplate="{StaticResource FileItemTemplateDesktop}"
+            FolderTemplate="{StaticResource FolderItemTemplateDesktop}">
+        </mycontrols:FolderDataTemplateSelector>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobile"
+            FileTemplate="{StaticResource FileItemTemplateMobile}"
+            FolderTemplate="{StaticResource FolderItemTemplateMobile}">
+        </mycontrols:FolderDataTemplateSelector>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobileWide"
+            FileTemplate="{StaticResource FileItemTemplateMobileWide}"
+            FolderTemplate="{StaticResource FolderItemTemplateMobileWide}">
+        </mycontrols:FolderDataTemplateSelector>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -262,8 +263,7 @@
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderOneDrive"
-                Content="OneDrive" 
+                Content="{x:Bind ViewModel.PageHeader, Mode=OneWay}" 
                 VisualStateNarrowMinWidth="0"
                 VisualStateNormalMinWidth="720"/>
         <Grid Grid.Column="0" Grid.Row="1">
@@ -341,5 +341,6 @@
                 </mycontrols:AlternatingRowListView>
             </Grid>
         </Grid>
+       
     </Grid>
 </Page>

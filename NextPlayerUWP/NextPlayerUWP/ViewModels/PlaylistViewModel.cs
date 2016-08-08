@@ -184,6 +184,9 @@ namespace NextPlayerUWP.ViewModels
                 i++;
             }
             Playlist.RemoveAt(i);
+            var p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
+            PlaylistExporter pe = new PlaylistExporter();
+            await pe.AutoSavePlaylist(p);
             await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(item.SongId);
         }
 
