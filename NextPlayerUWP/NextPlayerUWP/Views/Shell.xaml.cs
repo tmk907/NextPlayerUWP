@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using System;
 using System.Threading.Tasks;
@@ -43,9 +44,8 @@ namespace NextPlayerUWP.Views
 
         private async void test()
         {
-            //await NextPlayerUWPDataLayer.CloudStorage.DropboxStorage.DropboxService.Instance.Authorize();
-            //NextPlayerUWPDataLayer.OneDrive.OneDriveManager.Instance.Login();
-            //var s = await tod.GetSongTest();
+            //await PlaybackService.Instance.LoadSongsFromDB();
+            //PlaybackService.Instance.Play();
         }
 
 
@@ -136,7 +136,7 @@ namespace NextPlayerUWP.Views
         {
             BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             viewModel.sliderpressed = false;
-            App.PlaybackManager.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
+            PlaybackService.Instance.Position = TimeSpan.FromSeconds(timeslider.Value);
             //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
         }
 
@@ -145,7 +145,7 @@ namespace NextPlayerUWP.Views
             BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             if (!viewModel.sliderpressed)
             {
-                App.PlaybackManager.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
+                PlaybackService.Instance.Position = TimeSpan.FromSeconds(e.NewValue);
                 //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
             }
         }

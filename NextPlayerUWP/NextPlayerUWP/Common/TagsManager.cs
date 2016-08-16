@@ -57,7 +57,7 @@ namespace NextPlayerUWP.Common
             if (current.SongId == songData.SongId)
             {
                 SaveTagsLater(songData.SongId);
-                PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
+                PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
             }
             else
             {
@@ -97,9 +97,9 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        private static async void PlaybackManager_MediaPlayerTrackChanged(int index)
+        private static async void PlaybackService_MediaPlayerTrackChanged(int index)
         {
-            PlaybackManager.MediaPlayerTrackChanged -= PlaybackManager_MediaPlayerTrackChanged;
+            PlaybackService.MediaPlayerTrackChanged -= PlaybackService_MediaPlayerTrackChanged;
             await SaveCached();
         }
 

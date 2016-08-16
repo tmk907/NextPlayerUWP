@@ -25,7 +25,7 @@ namespace NextPlayerUWP.ViewModels
         {
             UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-            PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             lastFmCache = new LastFmCache();
         }
 
@@ -40,17 +40,20 @@ namespace NextPlayerUWP.ViewModels
 
         private void TrackChanged(int index)
         {
-            if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
-            CurrentSong = songs[index];
-            if (!CurrentSong.IsAlbumArtSet)
+            Dispatcher.Dispatch(() =>
             {
+                if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
+                CurrentSong = songs[index];
+                if (!CurrentSong.IsAlbumArtSet)
+                {
 
-            }
-            else
-            {
-                CoverUri = CurrentSong.AlbumArtUri;
-            }
-            ScrollAfterTrackChanged(index);
+                }
+                else
+                {
+                    CoverUri = CurrentSong.AlbumArtUri;
+                }
+                ScrollAfterTrackChanged(index);
+            });
         }
 
         private void NPListChanged()
@@ -204,7 +207,7 @@ namespace NextPlayerUWP.ViewModels
                 index++;
             }
             ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            PlaybackService.Instance.PlayNew();
         }
 
         public async void Delete(object sender, RoutedEventArgs e)

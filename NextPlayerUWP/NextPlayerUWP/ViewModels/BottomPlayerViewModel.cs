@@ -7,6 +7,7 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Template10.Common;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
@@ -22,12 +23,10 @@ namespace NextPlayerUWP.ViewModels
             ShuffleMode = Shuffle.CurrentState();
             _timer = new DispatcherTimer();
             SetupTimer();
-            ChangePlayButtonContent(App.PlaybackManager.PlayerState);
-            PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
-            PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
-            PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
-            PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
-            PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
+            ChangePlayButtonContent(PlaybackService.Instance.PlayerState);
+            PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
+            PlaybackService.MediaPlayerTrackChanged += ChangeSong;
+            PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             if (!song.IsAlbumArtSet)
@@ -48,11 +47,9 @@ namespace NextPlayerUWP.ViewModels
             Logger.DebugWrite("BottomPlayerViewModel()", "Suspending");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Suspending");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
-            PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
-            PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
-            PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
-            PlaybackManager.MediaPlayerMediaClosed -= PlaybackManager_MediaPlayerMediaClosed;
-            PlaybackManager.MediaPlayerPositionChanged -= PlaybackManager_MediaPlayerPositionChanged;
+            PlaybackService.MediaPlayerStateChanged -= ChangePlayButtonContent;
+            PlaybackService.MediaPlayerTrackChanged -= ChangeSong;
+            PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             System.Diagnostics.Debug.WriteLine("BottomPlayerVM Suspending");
             StopTimer();
@@ -65,11 +62,9 @@ namespace NextPlayerUWP.ViewModels
             Logger.DebugWrite("BottomPlayerViewModel()", "Resuming");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Resuming");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
-            PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
-            PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
-            PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
-            PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
-            PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
+            PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
+            PlaybackService.MediaPlayerTrackChanged += ChangeSong;
+            PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             System.Diagnostics.Debug.WriteLine("BottomPlayerVM Resuming");
             StartTimer();
@@ -159,7 +154,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     if (value == 0) isMuted = true;
                     else isMuted = false;
-                    App.PlaybackManager.SendMessage(AppConstants.Volume, value / 100.0);
+                    PlaybackService.Instance.ChangeVolume(volume);
                 }
                 Set(ref volume, value);
             }
@@ -174,29 +169,29 @@ namespace NextPlayerUWP.ViewModels
 
         public void Play()
         {
-            App.PlaybackManager.Play();
+            PlaybackService.Instance.TogglePlayPause();
         }
 
         public void Previous()
         {
-            App.PlaybackManager.Previous();
+            PlaybackService.Instance.Previous();
         }
 
         public void Next()
         {
-            App.PlaybackManager.Next();
+            PlaybackService.Instance.Next();
         }
 
         public void ShuffleCommand()
         {
             ShuffleMode = Shuffle.Change();
-            App.PlaybackManager.SendMessage(AppConstants.Shuffle, "");
+            PlaybackService.Instance.Shuffle();
         }
 
         public void RepeatCommand()
         {
             RepeatMode = Repeat.Change();
-            App.PlaybackManager.SendMessage(AppConstants.Repeat, "");
+            PlaybackService.Instance.ChangeRepeat();
         }
         
         public void MuteVolume()
@@ -214,48 +209,58 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
-        private void ChangePlayButtonContent(MediaPlayerState state)
+        private void ChangePlayButtonContent(MediaPlaybackState state)
         {
-            if (state== MediaPlayerState.Playing)
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
-                PlayButtonContent = "\uE769";
-            }
-            else
-            {
-                PlayButtonContent = "\uE768";
-            }
+                if (state == MediaPlaybackState.Playing)
+                {
+                    PlayButtonContent = "\uE769";
+                }
+                else
+                {
+                    PlayButtonContent = "\uE768";
+                }
+            });
         }
 
         private void ChangeSong(int index)
         {
-            Song = NowPlayingPlaylistManager.Current.GetSongItem(index);
-            if (!song.IsAlbumArtSet)
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
+                Song = NowPlayingPlaylistManager.Current.GetSongItem(index);
+                if (!song.IsAlbumArtSet)
+                {
 
-            }
-            else
-            {
-                CoverUri = song.AlbumArtUri;
-            }        
+                }
+                else
+                {
+                    CoverUri = song.AlbumArtUri;
+                }
+            });
         }
 
-        private void PlaybackManager_MediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)
+        private void PlaybackService_MediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)
         {
             CurrentTime = position;
             SliderValue = position.TotalSeconds;
             //TimeEnd = duration;
         }
 
-        private async void PlaybackManager_MediaPlayerMediaOpened(TimeSpan duration)
+        private async void PlaybackService_MediaPlayerMediaOpened(TimeSpan duration)
         {
-            if (!_timer.IsEnabled)
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
-                StartTimer();
-            }
-            CurrentTime = TimeSpan.Zero;
-            TimeEnd = duration;
-            SliderValue = 0.0;
-            SliderMaxValue = (int)Math.Round(duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+                if (!_timer.IsEnabled)
+                {
+                    StartTimer();
+                }
+                CurrentTime = TimeSpan.Zero;
+                TimeEnd = duration;
+                SliderValue = 0.0;
+                SliderMaxValue = (int)Math.Round(duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+            });
+            
             if (song.Duration == TimeSpan.Zero && song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
             {
                 song.Duration = timeEnd;
@@ -263,7 +268,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private void PlaybackManager_MediaPlayerMediaClosed()
+        private void PlaybackService_MediaPlayerMediaClosed()
         {
             StopTimer();
         }
@@ -278,15 +283,13 @@ namespace NextPlayerUWP.ViewModels
             Logger.DebugWrite("BottomPlayerViewModel()", "OnNavigatedToAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedToAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
-            PlaybackManager.MediaPlayerStateChanged += ChangePlayButtonContent;
-            PlaybackManager.MediaPlayerTrackChanged += ChangeSong;
-            PlaybackManager.MediaPlayerMediaOpened += PlaybackManager_MediaPlayerMediaOpened;
-            PlaybackManager.MediaPlayerMediaClosed += PlaybackManager_MediaPlayerMediaClosed;
-            PlaybackManager.MediaPlayerPositionChanged += PlaybackManager_MediaPlayerPositionChanged;
+            PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
+            PlaybackService.MediaPlayerTrackChanged += ChangeSong;
+            PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             StartTimer();
             Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             CoverUri = SongCoverManager.Instance.GetCurrent();
-            ChangePlayButtonContent(App.PlaybackManager.PlayerState);
+            ChangePlayButtonContent(PlaybackService.Instance.PlayerState);
             await Task.CompletedTask;
         }
 
@@ -295,11 +298,9 @@ namespace NextPlayerUWP.ViewModels
             Logger.DebugWrite("BottomPlayerViewModel()", "OnNavigatedFromAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM OnNavigatedFromAsync");
             NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
-            PlaybackManager.MediaPlayerStateChanged -= ChangePlayButtonContent;
-            PlaybackManager.MediaPlayerTrackChanged -= ChangeSong;
-            PlaybackManager.MediaPlayerMediaOpened -= PlaybackManager_MediaPlayerMediaOpened;
-            PlaybackManager.MediaPlayerMediaClosed -= PlaybackManager_MediaPlayerMediaClosed;
-            PlaybackManager.MediaPlayerPositionChanged -= PlaybackManager_MediaPlayerPositionChanged;
+            PlaybackService.MediaPlayerStateChanged -= ChangePlayButtonContent;
+            PlaybackService.MediaPlayerTrackChanged -= ChangeSong;
+            PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
             StopTimer();
             if (suspending)
             {
@@ -326,7 +327,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (!sliderpressed)
             {
-                position = App.PlaybackManager.CurrentPlayer.Position;
+                position = PlaybackService.Instance.Position;
                 SliderValue = position.TotalSeconds;
                 CurrentTime = position;
             }

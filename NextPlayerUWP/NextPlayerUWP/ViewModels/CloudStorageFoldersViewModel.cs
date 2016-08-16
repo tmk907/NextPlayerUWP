@@ -166,7 +166,7 @@ namespace NextPlayerUWP.ViewModels
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
             ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            PlaybackService.Instance.PlayNew();
         }
     }
 }

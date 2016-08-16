@@ -132,7 +132,7 @@ namespace NextPlayerUWP.ViewModels
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(groupedSongs);
             ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            PlaybackService.Instance.PlayNew();
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
@@ -158,7 +158,7 @@ namespace NextPlayerUWP.ViewModels
 
             await NowPlayingPlaylistManager.Current.NewPlaylist(list);
             ApplicationSettingsHelper.SaveSongIndex(0);
-            App.PlaybackManager.PlayNew();
+            PlaybackService.Instance.PlayNew();
         }
 
         private async Task ReloadData()

@@ -45,8 +45,8 @@ namespace NextPlayerUWP.Common
         {
             System.Diagnostics.Debug.WriteLine("SongCoverManager()");
             cachedUris = new Dictionary<int, Uri>(cacheCapacity);
-            PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
-            PlaybackManager.StreamUpdated += PlaybackManager_StreamUpdated;
+            PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
+            PlaybackService.StreamUpdated += PlaybackService_StreamUpdated;
             initialized = false;
         }
 
@@ -68,7 +68,7 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("SCM Initialize end");
         }
 
-        private void PlaybackManager_StreamUpdated(NowPlayingSong song)
+        private void PlaybackService_StreamUpdated(NowPlayingSong song)
         {
             Uri uri = PrepareCoverUri(song.ImagePath);
             int id = song.SongId * 10 + (int)song.SourceType;
@@ -76,7 +76,7 @@ namespace NextPlayerUWP.Common
             OnCoverUriPrepared(uri);
         }
 
-        private async void PlaybackManager_MediaPlayerTrackChanged(int index)
+        private async void PlaybackService_MediaPlayerTrackChanged(int index)
         {
             var song = NowPlayingPlaylistManager.Current.GetSongItem(index);
             if (!song.IsAlbumArtSet)

@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Template10.Common;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Json;
 using Windows.Foundation;
@@ -27,7 +28,7 @@ namespace NextPlayerUWP.ViewModels
             Logger.DebugWrite("RightPanelViewModel()", "");
 
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-            PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             //App.SongUpdated += App_SongUpdated;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             UpdatePlaylist();
@@ -43,10 +44,13 @@ namespace NextPlayerUWP.ViewModels
         private async void TrackChanged(int index)
         {
             Logger.DebugWrite("RightPanelViewModel", $"TrackChanged {index}");
-            if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
-            ScrollAfterTrackChanged(index);
-            //await Task.Run(() => ChangeLyrics(index));
-            await ChangeLyrics(index);
+            await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
+            {
+                if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
+                ScrollAfterTrackChanged(index);
+                //await Task.Run(() => ChangeLyrics(index));
+                await ChangeLyrics(index);
+            });
         }
 
         public void DragOver(object sender, DragEventArgs e)
@@ -126,7 +130,7 @@ namespace NextPlayerUWP.ViewModels
                                     {
                                         await NowPlayingPlaylistManager.Current.NewPlaylist(newSong);
                                         ApplicationSettingsHelper.SaveSongIndex(0);
-                                        App.PlaybackManager.PlayNew();
+                                        PlaybackService.Instance.PlayNew();
                                     }
                                     else
                                     {
@@ -157,7 +161,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     await NowPlayingPlaylistManager.Current.NewPlaylist((MusicItem)item);
                     ApplicationSettingsHelper.SaveSongIndex(0);
-                    App.PlaybackManager.PlayNew();
+                    PlaybackService.Instance.PlayNew();
                 }
             }
         }
@@ -296,7 +300,7 @@ namespace NextPlayerUWP.ViewModels
                 index++;
             }
             ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            PlaybackService.Instance.PlayNew();
         }
 
         public async void Delete(object sender, RoutedEventArgs e)

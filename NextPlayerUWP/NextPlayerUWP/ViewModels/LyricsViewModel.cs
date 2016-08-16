@@ -26,11 +26,14 @@ namespace NextPlayerUWP.ViewModels
 
         private SongItem song;
 
-        private void TrackChanged(int index)
+        private async void TrackChanged(int index)
         {
             int prevId = song.SongId;
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            if (song.SongId != prevId) ChangeLyrics();
+            await Dispatcher.DispatchAsync(async () =>
+            {
+                if (song.SongId != prevId) await ChangeLyrics();
+            });
         }
 
         public void OnLoaded(WebView webView)
@@ -50,7 +53,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
-            PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             if (suspensionState.ContainsKey(nameof(song.SongId)))
             {
                 int id = (int)suspensionState[nameof(song.SongId)];
@@ -82,7 +85,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
-            PlaybackManager.MediaPlayerTrackChanged -= TrackChanged;
+            PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
             if (suspending)
             {
                 suspensionState[nameof(song.SongId)] = song.SongId;

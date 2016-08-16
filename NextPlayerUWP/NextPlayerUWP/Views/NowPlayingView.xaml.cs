@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using System;
 using Windows.Foundation;
@@ -43,7 +44,7 @@ namespace NextPlayerUWP.Views
         void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
             ViewModel.sliderpressed = false;
-            App.PlaybackManager.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
+            PlaybackService.Instance.Position = TimeSpan.FromSeconds(timeslider.Value);
             //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
         }
 
@@ -51,7 +52,7 @@ namespace NextPlayerUWP.Views
         {
             if (!ViewModel.sliderpressed)
             {
-                App.PlaybackManager.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
+                PlaybackService.Instance.Position = TimeSpan.FromSeconds(e.NewValue);
                 //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
             }
         }

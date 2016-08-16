@@ -368,13 +368,13 @@ namespace NextPlayerUWP.ViewModels
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, time.Ticks);
-                    SendMessage(AppConstants.SetTimer);
+                    PlaybackService.Instance.SetTimer();
                     TelemetryAdapter.TrackEvent("Timer on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
-                    SendMessage(AppConstants.CancelTimer);
+                    PlaybackService.Instance.CancelTimer();
                 }
             }
         }
@@ -867,10 +867,5 @@ namespace NextPlayerUWP.ViewModels
         }
 
         #endregion
-
-        private void SendMessage(string message)
-        {
-            App.PlaybackManager.SendMessage(message, "");
-        }
     }
 }

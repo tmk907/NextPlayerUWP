@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
-using Windows.Media.Playback;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.CloudStorage;
 
@@ -31,9 +30,10 @@ namespace NextPlayerUWP.Common
         {
             Logger.DebugWrite("NowPlayingPlaylistManager()", "");
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
+            PlaybackService.Instance.NewPlaylists(songs);
             songs.CollectionChanged += Songs_CollectionChanged;
-            PlaybackManager.MediaPlayerTrackChanged += PlaybackManager_MediaPlayerTrackChanged;
-            PlaybackManager.StreamUpdated += PlaybackManager_StreamUpdated;
+            PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
+            PlaybackService.StreamUpdated += PlaybackService_StreamUpdated;
             App.SongUpdated += App_SongUpdated;
             currentIndex = ApplicationSettingsHelper.ReadSongIndex();
         }
@@ -46,7 +46,7 @@ namespace NextPlayerUWP.Common
             NPListChanged?.Invoke();
         }
 
-        private void PlaybackManager_StreamUpdated(NowPlayingSong updatedSong)
+        private void PlaybackService_StreamUpdated(NowPlayingSong updatedSong)
         {
             SongItem si = songs.Where(s => (s.SongId.Equals(updatedSong.SongId) && s.SourceType.Equals(updatedSong.SourceType))).FirstOrDefault();
             if (si != null)
@@ -122,22 +122,30 @@ namespace NextPlayerUWP.Common
             await NotifyChange();
         }
 
-        private void PlaybackManager_MediaPlayerTrackChanged(int index)
+        private void PlaybackService_MediaPlayerTrackChanged(int index)
         {
             currentIndex = index;
-            int i = 0;
-            foreach(var song in songs)
-            {
-                if (i != index)
-                {
-                    song.IsPlaying = false;
-                }
-                else
-                {
-                    song.IsPlaying = true;
-                }
-                i++;
-            }
+            //var dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher;
+            //if (dispatcher != null)
+            //{
+            //    await dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            //    {
+            //        
+            //        int i = 0;
+            //        foreach (var song in songs)
+            //        {
+            //            if (i != index)
+            //            {
+            //                song.IsPlaying = false;
+            //            }
+            //            else
+            //            {
+            //                song.IsPlaying = true;
+            //            }
+            //            i++;
+            //        }
+            //    });
+            //}
         }
 
         public async Task Add(MusicItem item)
@@ -336,7 +344,7 @@ namespace NextPlayerUWP.Common
                     song.Genres = updatedSong.Tag.Genres;
 
                     await DatabaseManager.Current.UpdateNowPlayingSong(updatedSong);
-                    SendMessage(AppConstants.NowPlayingListRefresh);
+                    //!!SendMessage(AppConstants.NowPlayingListRefresh);
                     break;
                 }
             }
@@ -397,42 +405,8 @@ namespace NextPlayerUWP.Common
             Logger.DebugWrite("NowPlayingPlaylistManager()", "NotifyChange");
             OnNPChanged();
             await SaveNowPlayingInDB();
-            SendMessage(AppConstants.NowPlayingListChanged);
-        }
-
-        private bool IsMyBackgroundTaskRunning
-        {
-            get
-            {
-                object value = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundTaskState);
-                if (value == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    var state = EnumHelper.Parse<BackgroundTaskState>(value as string);
-                    bool isRunning = state == BackgroundTaskState.Running;
-                    return isRunning;
-                }
-            }
-        }
-
-        private void SendMessage(string message)
-        {
-            if (IsMyBackgroundTaskRunning)
-            {
-                var value = new ValueSet();
-                value.Add(message, "");
-                try
-                {
-                    BackgroundMediaPlayer.SendMessageToBackground(value);
-                }
-                catch(Exception ex)
-                {
-                    TelemetryAdapter.TrackEvent("NPPM SendMessage" + ex.Message);
-                }
-            }
+            //SendMessage(AppConstants.NowPlayingListChanged);
+            await PlaybackService.Instance.NewPlaylists(songs);
         }
     }
 }
