@@ -30,7 +30,6 @@ namespace NextPlayerUWP.Common
         {
             Logger.DebugWrite("NowPlayingPlaylistManager()", "");
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
-            PlaybackService.Instance.NewPlaylists(songs);
             songs.CollectionChanged += Songs_CollectionChanged;
             PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
             PlaybackService.StreamUpdated += PlaybackService_StreamUpdated;
@@ -360,6 +359,39 @@ namespace NextPlayerUWP.Common
             await NotifyChange();
         }
 
+        private static Random rng = new Random();
+        private int[] ar;
+        public async Task ShufflePlaylist()
+        {
+            ar = new int[songs.Count];
+            int n = songs.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                SongItem value = songs[k];
+                songs[k] = songs[n];
+                songs[n] = value;
+                ar[n] = k;
+            }
+            await NotifyChange();
+
+        }
+
+        public async Task UnShufflePlaylist()
+        {
+            int n = 0;
+            while (n < songs.Count - 1)
+            {
+                n++;
+                int k = ar[n];
+                SongItem value = songs[k];
+                songs[k] = songs[n];
+                songs[n] = value;
+            }
+            await NotifyChange();
+        }
+
         public async Task NewPlaylist(ObservableCollection<GroupList> grouped)
         {
             songs.Clear();
@@ -406,7 +438,7 @@ namespace NextPlayerUWP.Common
             OnNPChanged();
             await SaveNowPlayingInDB();
             //SendMessage(AppConstants.NowPlayingListChanged);
-            await PlaybackService.Instance.NewPlaylists(songs);
+            //await PlaybackService.Instance.NewPlaylists(songs);
         }
     }
 }

@@ -700,16 +700,14 @@ namespace NextPlayerUWP
             if (MediaImport.IsAudioFile(type))
             {
                 SongItem si = await mi.OpenSingleFileAsync(file);
-                ApplicationSettingsHelper.SaveSongIndex(0);
                 await NowPlayingPlaylistManager.Current.NewPlaylist(si);
-                PlaybackService.Instance.PlayNew();
+                await PlaybackService.Instance.PlayNewList(0);
             }
             else if (MediaImport.IsPlaylistFile(type))
             {
                 var list = await mi.OpenPlaylistFileAsync(file);
-                ApplicationSettingsHelper.SaveSongIndex(0);
                 await NowPlayingPlaylistManager.Current.NewPlaylist(list);
-                PlaybackService.Instance.PlayNew();
+                await PlaybackService.Instance.PlayNewList(0);
             }
         }
 

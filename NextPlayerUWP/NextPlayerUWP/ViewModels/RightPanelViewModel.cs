@@ -129,8 +129,7 @@ namespace NextPlayerUWP.ViewModels
                                     if (first)
                                     {
                                         await NowPlayingPlaylistManager.Current.NewPlaylist(newSong);
-                                        ApplicationSettingsHelper.SaveSongIndex(0);
-                                        PlaybackService.Instance.PlayNew();
+                                        await PlaybackService.Instance.PlayNewList(0);
                                     }
                                     else
                                     {
@@ -160,8 +159,7 @@ namespace NextPlayerUWP.ViewModels
                 else if (action.Equals(AppConstants.ActionPlayNow))
                 {
                     await NowPlayingPlaylistManager.Current.NewPlaylist((MusicItem)item);
-                    ApplicationSettingsHelper.SaveSongIndex(0);
-                    PlaybackService.Instance.PlayNew();
+                    await PlaybackService.Instance.PlayNewList(0);
                 }
             }
         }
@@ -291,7 +289,7 @@ namespace NextPlayerUWP.ViewModels
 
         #region Commands
 
-        public void ItemClicked(object sender, ItemClickEventArgs e)
+        public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
             int index = 0;
             foreach (var s in songs)
@@ -299,8 +297,7 @@ namespace NextPlayerUWP.ViewModels
                 if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
                 index++;
             }
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            PlaybackService.Instance.PlayNew();
+            await PlaybackService.Instance.JumpTo(index);
         }
 
         public async void Delete(object sender, RoutedEventArgs e)

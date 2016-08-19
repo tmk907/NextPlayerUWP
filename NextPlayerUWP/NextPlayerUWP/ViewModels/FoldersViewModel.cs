@@ -158,8 +158,7 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            PlaybackService.Instance.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
         }
 
         private bool sortAfterOnNavigated = false;

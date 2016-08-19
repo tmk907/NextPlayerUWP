@@ -144,8 +144,7 @@ namespace NextPlayerUWP.ViewModels
                 index++;
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            PlaybackService.Instance.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
@@ -170,8 +169,7 @@ namespace NextPlayerUWP.ViewModels
             }
 
             await NowPlayingPlaylistManager.Current.NewPlaylist(list);
-            ApplicationSettingsHelper.SaveSongIndex(0);
-            PlaybackService.Instance.PlayNew();
+            await PlaybackService.Instance.PlayNewList(0);
         }
 
         public async void DeleteFromPlaylist(object sender, RoutedEventArgs e)

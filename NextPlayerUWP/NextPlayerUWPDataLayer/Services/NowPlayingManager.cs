@@ -608,18 +608,6 @@ namespace NextPlayerUWPDataLayer.Services
             Logger.DebugWrite("Playlist()", "finished");
         }
 
-        public Playlist(int index, bool shuffle, RepeatEnum repeat)
-        {
-            lastPlayed = new Queue<int>();
-            LoadSongsFromDB();
-            currentIndex = index;
-            previousIndex = -1;
-            this.shuffle = shuffle;
-            this.repeat = repeat;
-            isPlaylistRepeated = false;
-            isSongRepeated = false;
-        }
-
         public bool IsFirst()
         {
             return currentIndex == 0;

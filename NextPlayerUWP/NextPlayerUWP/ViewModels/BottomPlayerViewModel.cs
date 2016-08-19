@@ -172,20 +172,20 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.Instance.TogglePlayPause();
         }
 
-        public void Previous()
+        public async void Previous()
         {
-            PlaybackService.Instance.Previous();
+            await PlaybackService.Instance.Previous();
         }
 
-        public void Next()
+        public async void Next()
         {
-            PlaybackService.Instance.Next();
+            await PlaybackService.Instance.Next();
         }
 
         public void ShuffleCommand()
         {
             ShuffleMode = Shuffle.Change();
-            PlaybackService.Instance.Shuffle();
+            PlaybackService.Instance.ChangeShuffle();
         }
 
         public void RepeatCommand()
@@ -247,8 +247,10 @@ namespace NextPlayerUWP.ViewModels
             //TimeEnd = duration;
         }
 
-        private async void PlaybackService_MediaPlayerMediaOpened(TimeSpan duration)
+        private async void PlaybackService_MediaPlayerMediaOpened()
         {
+            await Task.Delay(200);
+            var duration = PlaybackService.Instance.Duration;
             WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
                 if (!_timer.IsEnabled)

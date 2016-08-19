@@ -147,8 +147,7 @@ namespace NextPlayerUWP.ViewModels
                 if (found) break;
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(albums);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            PlaybackService.Instance.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
@@ -173,8 +172,7 @@ namespace NextPlayerUWP.ViewModels
             }
 
             await NowPlayingPlaylistManager.Current.NewPlaylist(list);
-            ApplicationSettingsHelper.SaveSongIndex(0);
-            PlaybackService.Instance.PlayNew();
+            await PlaybackService.Instance.PlayNewList(0);
         }
 
         public async void ImageTapped(object sender, TappedRoutedEventArgs e)

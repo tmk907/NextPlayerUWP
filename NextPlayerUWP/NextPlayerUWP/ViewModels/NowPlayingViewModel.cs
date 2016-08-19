@@ -6,6 +6,7 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Template10.Common;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -152,20 +153,20 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.Instance.TogglePlayPause();
         }
 
-        public void Previous()
+        public async void Previous()
         {
-            PlaybackService.Instance.Previous();
+            await PlaybackService.Instance.Previous();
         }
 
-        public void Next()
+        public async void Next()
         {
-            PlaybackService.Instance.Next();
+            await PlaybackService.Instance.Next();
         }
 
         public void ShuffleCommand()
         {
             ShuffleMode = Shuffle.Change();
-            PlaybackService.Instance.Shuffle();
+            PlaybackService.Instance.ChangeShuffle();
         }
 
         public void RepeatCommand()
@@ -262,9 +263,11 @@ namespace NextPlayerUWP.ViewModels
             //TimeEnd = duration;
         }
 
-        private void PlaybackService_MediaPlayerMediaOpened(TimeSpan duration)
+        private async void PlaybackService_MediaPlayerMediaOpened()
         {
-            Dispatcher.Dispatch(() =>
+            await Task.Delay(200);
+            var duration = PlaybackService.Instance.Duration;
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
                 if (!_timer.IsEnabled)
                 {
