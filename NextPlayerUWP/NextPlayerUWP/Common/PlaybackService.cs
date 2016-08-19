@@ -15,6 +15,7 @@ using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.Foundation;
 
 namespace NextPlayerUWP.Common
 {
@@ -22,6 +23,25 @@ namespace NextPlayerUWP.Common
     public delegate void MediaPlayerTrackChangeHandler(int index);
     public delegate void MediaPlayerMediaOpenHandler();
     public delegate void StreamUpdatedHandler(NowPlayingSong song);
+
+    public class MyStreamReference : IRandomAccessStreamReference
+    {
+        private string path;
+
+        public MyStreamReference(string path)
+        {
+            this.path = path;
+        }
+
+        // private async helper task that is necessary if you need to use await.
+        private async Task<IRandomAccessStreamWithContentType> Open()
+            => await (await StorageFile.GetFileFromPathAsync(path)).OpenReadAsync();
+
+        IAsyncOperation<IRandomAccessStreamWithContentType> IRandomAccessStreamReference.OpenReadAsync()
+        {
+            return Open().AsAsyncOperation();
+        }
+    }
 
     public class PlaybackService
     {
@@ -96,10 +116,9 @@ namespace NextPlayerUWP.Common
 
         }
 
-        #region Events
-
         private async void MediaList_CurrentItemChanged(MediaPlaybackList sender, CurrentMediaPlaybackItemChangedEventArgs args)
         {
+            System.Diagnostics.Debug.WriteLine("MediaList_CurrentItemChanged {0} {1}", args.OldItem?.Source?.CustomProperties["index"] ?? "null", args.NewItem?.Source?.CustomProperties["index"] ?? "null");
             if (!command)//song finished
             {
                 if (args.NewItem != null && args.OldItem != null)
@@ -109,10 +128,10 @@ namespace NextPlayerUWP.Common
             }
             command = false;
         }
-
-        private async void Player_MediaEnded(MediaPlayer sender, object args)
+        #region Events
+        private void Player_MediaEnded(MediaPlayer sender, object args)
         {
-            //await Next(false);
+            System.Diagnostics.Debug.WriteLine("Player_MediaEnded"); 
         }
 
         private async void CommandManager_PreviousReceived(MediaPlaybackCommandManager sender, MediaPlaybackCommandManagerPreviousReceivedEventArgs args)
@@ -133,11 +152,11 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-            OnMediaPlayerStateChanged(sender.PlaybackState);
+            var state = sender.PlaybackState;
+            System.Diagnostics.Debug.WriteLine("PlaybackSession_PlaybackStateChanged {0}", state);
+            OnMediaPlayerStateChanged(state);
         }
 
-
-        
         public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;
         public void OnMediaPlayerStateChanged(MediaPlaybackState state)
         {
@@ -212,213 +231,7 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        public async Task JumpTo(int startIndex)
-        {
-            System.Diagnostics.Debug.WriteLine("JumpTo {0}", startIndex);
-            command = true;
-            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
-            Player.Pause();
-            CurrentSongIndex = startIndex;
-            foreach (var item in mediaList.Items)
-            {
-                item.Source.Reset();
-            }
-            mediaList.Items.Clear();
-            if (NowPlayingPlaylistManager.Current.songs.Count <= maxSongsNumber)
-            {
-                for (int i = 0; i < NowPlayingPlaylistManager.Current.songs.Count; i++)
-                {
-                    var song = NowPlayingPlaylistManager.Current.songs[i];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties["index"] = i;
-                    mediaList.Items.Add(playbackItem);
-                }
-            }
-            else
-            {
-                int index = 0;
-                int diff = maxSongsNumber / 2;
-                for (int i = startIndex - diff; i < startIndex - diff + maxSongsNumber; i++)
-                {
-                    if (i < 0)
-                    {
-                        index = i + NowPlayingPlaylistManager.Current.songs.Count;
-                    }
-                    else if (i >= NowPlayingPlaylistManager.Current.songs.Count)
-                    {
-                        index = i - NowPlayingPlaylistManager.Current.songs.Count;
-                    }
-                    else
-                    {
-                        index = i;
-                    }
-
-                    var song = NowPlayingPlaylistManager.Current.songs[index];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties["index"] = index;
-                    mediaList.Items.Add(playbackItem);
-                }
-            }
-            mediaList.StartingItem = mediaList.Items[playingSongIndex];
-            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
-            Player.Source = mediaList;
-
-            Player.Play();
-            OnMediaPlayerMediaOpened();
-        }
-
-        public async Task PlayNewList(int startIndex)
-        {
-            System.Diagnostics.Debug.WriteLine("PlayNewList {0}", startIndex);
-            command = true;
-            shuffle = false;
-            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
-            Player.Pause();
-            CurrentSongIndex = startIndex;
-            foreach(var item in mediaList.Items)
-            {
-                item.Source.Reset();
-            }
-            mediaList.Items.Clear();
-
-            //foreach(var song in NowPlayingPlaylistManager.Current.songs)
-            //{
-            //    var pi = await PreparePlaybackItem(song);
-            //    mediaList.Items.Add(pi);
-            //}
-
-            if (NowPlayingPlaylistManager.Current.songs.Count <= maxSongsNumber)
-            {
-                for (int i = 0; i < NowPlayingPlaylistManager.Current.songs.Count; i++)
-                {
-                    var song = NowPlayingPlaylistManager.Current.songs[i];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties["index"] = i;
-                    mediaList.Items.Add(playbackItem);
-                }
-            }
-            else
-            {
-                int index = 0;
-                int diff = maxSongsNumber / 2;
-                for (int i = startIndex - diff; i < startIndex - diff + maxSongsNumber; i++)
-                {
-                    if (i < 0)
-                    {
-                        index = i + NowPlayingPlaylistManager.Current.songs.Count;
-                    }
-                    else if (i >= NowPlayingPlaylistManager.Current.songs.Count)
-                    {
-                        index = i - NowPlayingPlaylistManager.Current.songs.Count;
-                    }
-                    else
-                    {
-                        index = i;
-                    }
-
-                    var song = NowPlayingPlaylistManager.Current.songs[index];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties["index"] = index;
-                    mediaList.Items.Add(playbackItem);
-                }
-            }
-            mediaList.StartingItem = mediaList.Items[playingSongIndex];
-            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
-            Player.Source = mediaList;
-
-            Player.Play();
-            OnMediaPlayerMediaOpened();
-        }
-
-        private async Task UpdateMediaList(bool prev = false)
-        {
-            System.Diagnostics.Debug.WriteLine("UpdateMediaList");
-            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
-            if (mediaList.Items.Count == maxSongsNumber)
-            {
-                if (prev)
-                {
-                    mediaList.Items[maxSongsNumber - 1].Source.Reset();
-                    mediaList.Items.RemoveAt(maxSongsNumber - 1);
-
-                    int index = (int)mediaList.Items[0].Source.CustomProperties["index"];
-                    if (index == 0)
-                    {
-                        index = NowPlayingPlaylistManager.Current.songs.Count - 1;
-                    }
-                    else
-                    {
-                        index--;
-                    }
-                    var song = NowPlayingPlaylistManager.Current.songs[index];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties["index"] = index;
-                    
-                    mediaList.Items.Insert(0, playbackItem);
-                    //foreach (var item in mediaList.Items)
-                    //{
-                    //    System.Diagnostics.Debug.WriteLine("Item index{0}", item.Source.CustomProperties["index"]);
-                    //}
-
-                }
-                else
-                {
-                    mediaList.Items[0].Source.Reset();
-                    mediaList.Items.RemoveAt(0);
-                    int index = (int)mediaList.Items[mediaList.Items.Count - 1].Source.CustomProperties["index"];
-                    if (index == NowPlayingPlaylistManager.Current.songs.Count - 1)
-                    {
-                        index = 0;
-                    }
-                    else
-                    {
-                        index++;
-                    }
-                    var song = NowPlayingPlaylistManager.Current.songs[index];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties["index"] = index;
-                    mediaList.Items.Add(playbackItem);
-                    //foreach (var item in mediaList.Items)
-                    //{
-                    //    System.Diagnostics.Debug.WriteLine("Item index{0}", item.Source.CustomProperties["index"]);
-                    //}
-                }
-            }
-            else
-            {
-
-            }
-            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
-        }
-
-        private static async Task<MediaPlaybackItem> PreparePlaybackItem(SongItem song)
-        {
-            switch (song.SourceType)
-            {
-                case MusicSource.LocalFile:
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                    var source = MediaSource.CreateFromStorageFile(file);
-                    var playbackItem = new MediaPlaybackItem(source);
-                    var displayProperties = playbackItem.GetDisplayProperties();
-                    displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-                    displayProperties.MusicProperties.Artist = song.Artist;
-                    displayProperties.MusicProperties.AlbumTitle = song.Album;
-                    displayProperties.MusicProperties.Title = song.Title;
-                    try
-                    {
-                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
-                    }
-                    catch
-                    {
-                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-                    }
-                    playbackItem.ApplyDisplayProperties(displayProperties);
-                    source.CustomProperties["songid"] = song.SongId;
-                    return playbackItem;
-                default:
-                    return null;
-            }
-        }
+        
 
         public void Play()
         {
@@ -433,7 +246,7 @@ namespace NextPlayerUWP.Common
         private bool command = false;
         public async Task Next(bool userChoice = true)
         {
-            command = true;
+            //command = true;
             System.Diagnostics.Debug.WriteLine("Next");
             
             if (repeat == RepeatEnum.NoRepeat)
@@ -642,6 +455,216 @@ namespace NextPlayerUWP.Common
             //{
             //    myTileUpdater.UpdateAppTileBG(displayProperties.MusicProperties.Title, displayProperties.MusicProperties.Artist, AppConstants.AppLogoMedium);
             //}
+        }
+
+        public async Task JumpTo(int startIndex)
+        {
+            System.Diagnostics.Debug.WriteLine("JumpTo {0}", startIndex);
+            command = true;
+            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
+            Player.Pause();
+            Player.Source = null;
+            CurrentSongIndex = startIndex;
+            foreach (var item in mediaList.Items)
+            {
+                item.Source.Reset();
+            }
+            mediaList.Items.Clear();
+
+            if (NowPlayingPlaylistManager.Current.songs.Count <= maxSongsNumber)
+            {
+                for (int i = 0; i < NowPlayingPlaylistManager.Current.songs.Count; i++)
+                {
+                    var song = NowPlayingPlaylistManager.Current.songs[i];
+                    var playbackItem = await PreparePlaybackItem(song);
+                    playbackItem.Source.CustomProperties["index"] = i;
+                    mediaList.Items.Add(playbackItem);
+                }
+            }
+            else
+            {
+                int index = 0;
+                int diff = maxSongsNumber / 2;
+                for (int i = startIndex - diff; i < startIndex - diff + maxSongsNumber; i++)
+                {
+                    if (i < 0)
+                    {
+                        index = i + NowPlayingPlaylistManager.Current.songs.Count;
+                    }
+                    else if (i >= NowPlayingPlaylistManager.Current.songs.Count)
+                    {
+                        index = i - NowPlayingPlaylistManager.Current.songs.Count;
+                    }
+                    else
+                    {
+                        index = i;
+                    }
+
+                    var song = NowPlayingPlaylistManager.Current.songs[index];
+                    var playbackItem = await PreparePlaybackItem(song);
+                    playbackItem.Source.CustomProperties["index"] = index;
+                    mediaList.Items.Add(playbackItem);
+                }
+            }
+            mediaList.StartingItem = mediaList.Items[playingSongIndex];
+            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
+            Player.Source = mediaList;
+
+            Player.Play();
+            OnMediaPlayerMediaOpened();
+        }
+
+        public async Task PlayNewList(int startIndex)
+        {
+            System.Diagnostics.Debug.WriteLine("PlayNewList {0}", startIndex);
+            command = true;
+            shuffle = false;
+            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
+            Player.Pause();
+            CurrentSongIndex = startIndex;
+            foreach (var item in mediaList.Items)
+            {
+                item.Source.Reset();
+            }
+            mediaList.Items.Clear();
+
+            //foreach(var song in NowPlayingPlaylistManager.Current.songs)
+            //{
+            //    var pi = await PreparePlaybackItem(song);
+            //    mediaList.Items.Add(pi);
+            //}
+
+            if (NowPlayingPlaylistManager.Current.songs.Count <= maxSongsNumber)
+            {
+                for (int i = 0; i < NowPlayingPlaylistManager.Current.songs.Count; i++)
+                {
+                    var song = NowPlayingPlaylistManager.Current.songs[i];
+                    var playbackItem = await PreparePlaybackItem(song);
+                    playbackItem.Source.CustomProperties["index"] = i;
+                    mediaList.Items.Add(playbackItem);
+                }
+            }
+            else
+            {
+                int index = 0;
+                int diff = maxSongsNumber / 2;
+                for (int i = startIndex - diff; i < startIndex - diff + maxSongsNumber; i++)
+                {
+                    if (i < 0)
+                    {
+                        index = i + NowPlayingPlaylistManager.Current.songs.Count;
+                    }
+                    else if (i >= NowPlayingPlaylistManager.Current.songs.Count)
+                    {
+                        index = i - NowPlayingPlaylistManager.Current.songs.Count;
+                    }
+                    else
+                    {
+                        index = i;
+                    }
+
+                    var song = NowPlayingPlaylistManager.Current.songs[index];
+                    var playbackItem = await PreparePlaybackItem(song);
+                    playbackItem.Source.CustomProperties["index"] = index;
+                    mediaList.Items.Add(playbackItem);
+                }
+            }
+            mediaList.StartingItem = mediaList.Items[playingSongIndex];
+            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
+            Player.Source = mediaList;
+
+            Player.Play();
+            OnMediaPlayerMediaOpened();
+        }
+
+        private async Task UpdateMediaList(bool prev = false)
+        {
+            System.Diagnostics.Debug.WriteLine("UpdateMediaList");
+            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
+            if (mediaList.Items.Count == maxSongsNumber)
+            {
+                if (prev)
+                {
+                    mediaList.Items[maxSongsNumber - 1].Source.Reset();
+                    mediaList.Items.RemoveAt(maxSongsNumber - 1);
+
+                    int index = (int)mediaList.Items[0].Source.CustomProperties["index"];
+                    if (index == 0)
+                    {
+                        index = NowPlayingPlaylistManager.Current.songs.Count - 1;
+                    }
+                    else
+                    {
+                        index--;
+                    }
+                    var song = NowPlayingPlaylistManager.Current.songs[index];
+                    var playbackItem = await PreparePlaybackItem(song);
+                    playbackItem.Source.CustomProperties["index"] = index;
+
+                    mediaList.Items.Insert(0, playbackItem);
+                    //foreach (var item in mediaList.Items)
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine("Item index{0}", item.Source.CustomProperties["index"]);
+                    //}
+
+                }
+                else
+                {
+                    mediaList.Items[0].Source.Reset();
+                    mediaList.Items.RemoveAt(0);
+                    int index = (int)mediaList.Items[mediaList.Items.Count - 1].Source.CustomProperties["index"];
+                    if (index == NowPlayingPlaylistManager.Current.songs.Count - 1)
+                    {
+                        index = 0;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                    var song = NowPlayingPlaylistManager.Current.songs[index];
+                    var playbackItem = await PreparePlaybackItem(song);
+                    playbackItem.Source.CustomProperties["index"] = index;
+                    mediaList.Items.Add(playbackItem);
+                    //foreach (var item in mediaList.Items)
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine("Item index{0}", item.Source.CustomProperties["index"]);
+                    //}
+                }
+            }
+            else
+            {
+
+            }
+            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
+        }
+
+        private static async Task<MediaPlaybackItem> PreparePlaybackItem(SongItem song)
+        {
+            switch (song.SourceType)
+            {
+                case MusicSource.LocalFile:
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+                    var source = MediaSource.CreateFromStorageFile(file);
+                    var playbackItem = new MediaPlaybackItem(source);
+                    var displayProperties = playbackItem.GetDisplayProperties();
+                    displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
+                    displayProperties.MusicProperties.Artist = song.Artist;
+                    displayProperties.MusicProperties.AlbumTitle = song.Album;
+                    displayProperties.MusicProperties.Title = song.Title;
+                    try
+                    {
+                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
+                    }
+                    catch
+                    {
+                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
+                    }
+                    playbackItem.ApplyDisplayProperties(displayProperties);
+                    source.CustomProperties["songid"] = song.SongId;
+                    return playbackItem;
+                default:
+                    return null;
+            }
         }
     }
 }
