@@ -323,7 +323,7 @@ namespace NextPlayerUWP.Common
             {
                 songs.Add(song);
             }
-            await NotifyChange();
+            await NotifyChange(true);
         }
 
         public async Task UpdateSong(SongData updatedSong)
@@ -356,7 +356,7 @@ namespace NextPlayerUWP.Common
             {
                 songs.Add(song);
             }
-            await NotifyChange();
+            await NotifyChange(true);
         }
 
         private static Random rng = new Random();
@@ -402,7 +402,7 @@ namespace NextPlayerUWP.Common
                     songs.Add(song);
                 }
             }
-            await NotifyChange();
+            await NotifyChange(true);
         }
 
         private async Task SaveNowPlayingInDB()
@@ -432,10 +432,14 @@ namespace NextPlayerUWP.Common
             return songs[index];
         }
 
-        private async Task NotifyChange()
+        private async Task NotifyChange(bool newPlaylist = false)
         {
             Logger.DebugWrite("NowPlayingPlaylistManager()", "NotifyChange");
             OnNPChanged();
+            if (!newPlaylist)
+            {
+                await PlaybackService.Instance.UpdateMediaListWithoutPausing();
+            }
             await SaveNowPlayingInDB();
             //SendMessage(AppConstants.NowPlayingListChanged);
             //await PlaybackService.Instance.NewPlaylists(songs);

@@ -327,13 +327,13 @@
                                Height="{Binding Size.Height, ElementName=SizePanel}" 
                                Fill="{StaticResource UserAccentBrush}"/>
                     <Image Grid.Column="0" Grid.Row="0"
-                    x:Name="CoverImage" 
-                    VerticalAlignment="Bottom" 
-                    HorizontalAlignment="Center"
-                    PointerPressed="{x:Bind ViewModel.Image_Pressed}"
-                    PointerReleased="{x:Bind ViewModel.Image_Released}"
-                    PointerExited="{x:Bind ViewModel.Image_Exited}"
-                    DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}">
+                        x:Name="CoverImage" 
+                        VerticalAlignment="Bottom" 
+                        HorizontalAlignment="Center"
+                        PointerPressed="{x:Bind ViewModel.Image_Pressed}"
+                        PointerReleased="{x:Bind ViewModel.Image_Released}"
+                        PointerExited="{x:Bind ViewModel.Image_Exited}"
+                        DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}">
                         <Image.Source>
                             <BitmapImage DecodePixelHeight="{Binding Size.Height, ElementName=SizePanel}" 
                                         DecodePixelWidth="{Binding Size.Height, ElementName=SizePanel}"
@@ -347,13 +347,13 @@
                 <StackPanel
                     Visibility="{x:Bind ViewModel.IsVolumeControlVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <Slider
-                    StepFrequency="1.0"
-                    Maximum="100"
-                    Margin="60,0,60,0"
-                    Value="{x:Bind ViewModel.Volume, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center" 
-                    Style="{StaticResource TimeSliderStyle}"/>
+                        StepFrequency="1.0"
+                        Maximum="100"
+                        Margin="60,0,60,0"
+                        Value="{x:Bind ViewModel.Volume, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center" 
+                        Style="{StaticResource TimeSliderStyle}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" 
                             Visibility="{x:Bind ViewModel.IsVolumeControlVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">

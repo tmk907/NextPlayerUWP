@@ -40,6 +40,7 @@ namespace NextPlayerUWP.ViewModels
             Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
+            PlaybackService.Instance.Initialize();
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -182,10 +183,10 @@ namespace NextPlayerUWP.ViewModels
             await PlaybackService.Instance.Next();
         }
 
-        public void ShuffleCommand()
+        public async void ShuffleCommand()
         {
             ShuffleMode = Shuffle.Change();
-            PlaybackService.Instance.ChangeShuffle();
+            await PlaybackService.Instance.ChangeShuffle();
         }
 
         public void RepeatCommand()
