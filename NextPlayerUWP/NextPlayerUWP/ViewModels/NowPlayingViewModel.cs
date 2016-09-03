@@ -162,20 +162,20 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.Instance.TogglePlayPause();
         }
 
-        public async void Previous()
+        public void Previous()
         {
-            await PlaybackService.Instance.Previous();
+            PlaybackService.Instance.Previous();
         }
 
-        public async void Next()
+        public void Next()
         {
-            await PlaybackService.Instance.Next();
+            PlaybackService.Instance.Next();
         }
 
-        public void ShuffleCommand()
+        public async void ShuffleCommand()
         {
             ShuffleMode = Shuffle.Change();
-            PlaybackService.Instance.ChangeShuffle();
+            await PlaybackService.Instance.ChangeShuffle();
         }
 
         public void RepeatCommand()

@@ -380,16 +380,19 @@ namespace NextPlayerUWP.Common
 
         public async Task UnShufflePlaylist()
         {
-            int n = 0;
-            while (n < songs.Count - 1)
+            if (ar.Length == songs.Count)
             {
-                n++;
-                int k = ar[n];
-                SongItem value = songs[k];
-                songs[k] = songs[n];
-                songs[n] = value;
+                int n = 0;
+                while (n < songs.Count - 1)
+                {
+                    n++;
+                    int k = ar[n];
+                    SongItem value = songs[k];
+                    songs[k] = songs[n];
+                    songs[n] = value;
+                }
+                await NotifyChange();
             }
-            await NotifyChange();
         }
 
         public async Task NewPlaylist(ObservableCollection<GroupList> grouped)

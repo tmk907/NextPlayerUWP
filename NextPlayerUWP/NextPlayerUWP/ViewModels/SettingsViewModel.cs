@@ -193,7 +193,7 @@ namespace NextPlayerUWP.ViewModels
             //IsDropboxLoggedIn = DropboxService.Instance.IsAuthenticated;
 
             //About
-            if (Microsoft.Services.Store.Engagement.Feedback.IsSupported)
+            if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
             {
                 FeedbackVisibility = true;
             }
@@ -581,7 +581,8 @@ namespace NextPlayerUWP.ViewModels
         public async void LeaveFeedback()
         {
             TelemetryAdapter.TrackEvent("Leave feedback button");
-            await Microsoft.Services.Store.Engagement.Feedback.LaunchFeedbackAsync();
+            var launcher =  Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+            await launcher.LaunchAsync();
         }
 
         public async void SendEmail()

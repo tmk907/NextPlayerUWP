@@ -40,7 +40,7 @@ namespace NextPlayerUWP.ViewModels
             Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
-            PlaybackService.Instance.Initialize();
+            PlaybackService.Instance.Initialize(WindowWrapper.Current().Dispatcher);
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -173,14 +173,14 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.Instance.TogglePlayPause();
         }
 
-        public async void Previous()
+        public void Previous()
         {
-            await PlaybackService.Instance.Previous();
+            PlaybackService.Instance.Previous();
         }
 
-        public async void Next()
+        public void Next()
         {
-            await PlaybackService.Instance.Next();
+            PlaybackService.Instance.Next();
         }
 
         public async void ShuffleCommand()
@@ -252,6 +252,10 @@ namespace NextPlayerUWP.ViewModels
         {
             await Task.Delay(200);
             var duration = PlaybackService.Instance.Duration;
+            if (duration == TimeSpan.MaxValue)
+            {
+                duration = TimeSpan.Zero;
+            }
             WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
                 if (!_timer.IsEnabled)
