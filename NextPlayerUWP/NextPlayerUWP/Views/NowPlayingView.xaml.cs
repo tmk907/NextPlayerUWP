@@ -56,7 +56,7 @@ namespace NextPlayerUWP.Views
                 //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
             }
         }
-        #endregion
+        #endregion  
     }
 
     public class SizeNotifyPanel : ContentPresenter

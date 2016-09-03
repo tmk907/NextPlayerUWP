@@ -426,9 +426,18 @@ namespace NextPlayerUWP.Common
         public SongItem GetNextSong()
         {
             int index = ApplicationSettingsHelper.ReadSongIndex();
-            if (index < 0 || index > songs.Count - 1) return new SongItem();
+            if (index < 0 || index > songs.Count - 1 || songs.Count == 1) return null;
             index++;
             if (index == songs.Count) index = 0;
+            return songs[index];
+        }
+
+        public SongItem GetPreviousSong()
+        {
+            int index = ApplicationSettingsHelper.ReadSongIndex();
+            if (index < 0 || index > songs.Count - 1 || songs.Count == 1) return null;
+            index--;
+            if (index == -1) index = songs.Count - 1;
             return songs[index];
         }
 

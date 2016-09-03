@@ -326,11 +326,36 @@
                                Width="{Binding Size.Height, ElementName=SizePanel}" 
                                Height="{Binding Size.Height, ElementName=SizePanel}" 
                                Fill="{StaticResource UserAccentBrush}"/>
+                    <!--<FlipView
+                        Grid.Column="0" Grid.Row="0"
+                        VerticalAlignment="Bottom"
+                        Width="{Binding Size.Height, ElementName=SizePanel}" 
+                        Height="{Binding Size.Height, ElementName=SizePanel}" 
+                        HorizontalAlignment="Center"
+                        ItemsSource="{x:Bind ViewModel.AlbumArts, Mode=OneWay}"
+                        SelectionChanged="{x:Bind ViewModel.FlipViewSelectionChanged}"
+                        SelectedIndex="{x:Bind ViewModel.FlipIndex, Mode=TwoWay}"
+                    >
+                        <FlipView.ItemTemplate>
+                            <DataTemplate>
+                                <Image>
+                                    <Image.Source>
+                                        <BitmapImage 
+                                            DecodePixelHeight="{Binding Size.Height, ElementName=SizePanel}" 
+                                            DecodePixelWidth="{Binding Size.Height, ElementName=SizePanel}"
+                                            DecodePixelType="Logical"
+                                            UriSource="{Binding}"/>
+                                    </Image.Source>
+                                </Image>
+                            </DataTemplate>
+                        </FlipView.ItemTemplate>
+                    </FlipView>-->
                     <Image Grid.Column="0" Grid.Row="0"
                         x:Name="CoverImage" 
                         VerticalAlignment="Bottom" 
                         HorizontalAlignment="Center"
                         PointerPressed="{x:Bind ViewModel.Image_Pressed}"
+                        
                         PointerReleased="{x:Bind ViewModel.Image_Released}"
                         PointerExited="{x:Bind ViewModel.Image_Exited}"
                         DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}">
@@ -340,6 +365,10 @@
                                         DecodePixelType="Logical"
                                         UriSource="{Binding CoverUri}"/>
                         </Image.Source>
+                        <!--<Image.RenderTransform>
+                        PointerMoved="{x:Bind ViewModel.CoverImage_PointerMoved}"
+                            <TranslateTransform X="{x:Bind ViewModel.IMGX, Mode=OneWay}" Y="{x:Bind ViewModel.IMGY, Mode=OneWay}" />
+                        </Image.RenderTransform>-->
                     </Image>
                 </Grid>
             </local:SizeNotifyPanel>

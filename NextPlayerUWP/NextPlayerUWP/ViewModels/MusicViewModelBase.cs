@@ -314,11 +314,11 @@ namespace NextPlayerUWP.ViewModels
             }).AsAsyncOperation();           
         }
 
-        public void DragStarting(object sender, DragItemsStartingEventArgs args)
+        public void DragStarting(object sender, DragItemsStartingEventArgs e)
         {
-            args.Data.RequestedOperation = DataPackageOperation.Copy;
-            object item = args.Items.FirstOrDefault();
-            args.Data.Properties.Add(item.GetType().ToString(), item);
+            e.Data.RequestedOperation = DataPackageOperation.Copy;
+            object item = e.Items.FirstOrDefault();
+            e.Data.Properties.Add(item.GetType().ToString(), item);
         }
 
         private string TimeSpanFormat(TimeSpan span)

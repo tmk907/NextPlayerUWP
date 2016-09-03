@@ -121,6 +121,7 @@ namespace NextPlayerUWP.Common
         public async Task Initialize()
         {
             await LoadNewPlaylistItems(CurrentSongIndex);
+            Player.Source = mediaList;
             canPlay = true;
         }
 
@@ -199,8 +200,8 @@ namespace NextPlayerUWP.Common
             }
             set
             {
-                OnMediaPlayerTrackChanged(value);
                 ApplicationSettingsHelper.SaveSongIndex(value);
+                OnMediaPlayerTrackChanged(value);
             }
         }
 
@@ -544,15 +545,19 @@ namespace NextPlayerUWP.Common
         public async Task UpdateMediaListWithoutPausing()
         {
             mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
-            
+            uint j = mediaList.CurrentItemIndex;
+            if (mediaList.CurrentItemIndex > mediaList.Items.Count)
+            {
+                j = (uint)mediaList.Items.IndexOf(mediaList.StartingItem);
+            }
             for (int i = 0; i < mediaList.Items.Count; i++)
             {
-                if (i != mediaList.CurrentItemIndex)
+                if (i != j)
                 {
                     mediaList.Items[i].Source.Reset();
                 }
             }
-            uint j = mediaList.CurrentItemIndex;
+            
             while (j > 0)
             {
                 mediaList.Items.RemoveAt(0);
@@ -652,8 +657,8 @@ namespace NextPlayerUWP.Common
             if (startPlaying)
             {
                 Player.Play();
+                OnMediaPlayerMediaOpened();
             }
-            OnMediaPlayerMediaOpened();
         }
 
         private async Task UpdateMediaList(bool prev = false)
