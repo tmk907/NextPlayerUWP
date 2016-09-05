@@ -436,18 +436,6 @@ namespace NextPlayerUWP.Common
             return songs[currentIndex];
         }
 
-        public void UpdateCurrentPlaying(string album, string artist, string title, string coverPath)
-        {
-            dispatcher.Dispatch(() =>
-            {
-                var song = GetCurrentPlaying();
-                song.Album = album;
-                song.Artist = artist;
-                song.CoverPath = coverPath;
-                song.Title = title;
-            });
-        }
-
         public SongItem GetNextSong()
         {
             int index = ApplicationSettingsHelper.ReadSongIndex();

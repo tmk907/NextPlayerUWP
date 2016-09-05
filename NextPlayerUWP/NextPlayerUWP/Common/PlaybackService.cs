@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Constants;
+﻿using FFmpegInterop;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
@@ -120,13 +121,6 @@ namespace NextPlayerUWP.Common
 
         private const string propertyIndex = "index";
         private const string propertySongId = "songid";
-
-        private bool IsTypeDefaultSupported(string type)
-        {
-            return (type == ".mp3" || type == ".m4a" || type == ".wma" ||
-                    type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
-                    type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4");
-        }
         
         /// <summary>
         /// The data model of the active playlist. An application might
@@ -194,6 +188,13 @@ namespace NextPlayerUWP.Common
                 song.Source.Reset();
             }
             playbackItemQueue.Clear();
+        }
+
+        private static bool IsTypeDefaultSupported(string type)
+        {
+            return (type == ".mp3" || type == ".m4a" || type == ".wma" ||
+                    type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
+                    type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4");
         }
 
         private void MediaList_CurrentItemChanged(MediaPlaybackList sender, CurrentMediaPlaybackItemChangedEventArgs args)
@@ -893,49 +894,63 @@ namespace NextPlayerUWP.Common
             switch (song.SourceType)
             {
                 case MusicSource.LocalFile:
-                    MyStreamReference msr = new MyStreamReference(song.Path);
-                    var source = MediaSource.CreateFromStreamReference(msr, "");
-                    //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                    //var source = MediaSource.CreateFromStorageFile(file);
-                    var playbackItem = new MediaPlaybackItem(source);
-                    playbackItem.Source.OpenOperationCompleted += Source_OpenOperationCompleted;
-                    var displayProperties = playbackItem.GetDisplayProperties();
-                    displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-                    displayProperties.MusicProperties.Artist = song.Artist;
-                    displayProperties.MusicProperties.AlbumTitle = song.Album;
-                    displayProperties.MusicProperties.Title = song.Title;
-                    try
+                    if (IsTypeDefaultSupported(song.Path.Substring(song.Path.LastIndexOf('.'))))
                     {
-                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
+                        MyStreamReference msr = new MyStreamReference(song.Path);
+                        var source = MediaSource.CreateFromStreamReference(msr, "");
+                        //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+                        //var source = MediaSource.CreateFromStorageFile(file);
+                        var playbackItem = new MediaPlaybackItem(source);
+                        playbackItem.Source.OpenOperationCompleted += Source_OpenOperationCompleted;
+                        var displayProperties = playbackItem.GetDisplayProperties();
+                        displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
+                        displayProperties.MusicProperties.Artist = song.Artist;
+                        displayProperties.MusicProperties.AlbumTitle = song.Album;
+                        displayProperties.MusicProperties.Title = song.Title;
+                        try
+                        {
+                            displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
+                        }
+                        catch
+                        {
+                            displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
+                        }
+                        playbackItem.ApplyDisplayProperties(displayProperties);
+                        source.CustomProperties[propertySongId] = song.SongId;
+                        return playbackItem;
                     }
-                    catch
+                    else
                     {
-                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
+                        return await PreparePlaybackItemFFmpeg(song, false);
                     }
-                    playbackItem.ApplyDisplayProperties(displayProperties);
-                    source.CustomProperties[propertySongId] = song.SongId;
-                    return playbackItem;
                 case MusicSource.LocalNotMusicLibrary:
-                    MyStreamReferenceFAL msrfal = new MyStreamReferenceFAL(song.Path);
-                    var source2 = MediaSource.CreateFromStreamReference(msrfal, "");
-                    var playbackItem2 = new MediaPlaybackItem(source2);
-                    playbackItem2.Source.OpenOperationCompleted += Source_OpenOperationCompleted;
-                    var displayProperties2 = playbackItem2.GetDisplayProperties();
-                    displayProperties2.Type = Windows.Media.MediaPlaybackType.Music;
-                    displayProperties2.MusicProperties.Artist = song.Artist;
-                    displayProperties2.MusicProperties.AlbumTitle = song.Album;
-                    displayProperties2.MusicProperties.Title = song.Title;
-                    try
+                    if (IsTypeDefaultSupported(song.Path.Substring(song.Path.LastIndexOf('.'))))
                     {
-                        displayProperties2.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
+                        MyStreamReferenceFAL msrfal = new MyStreamReferenceFAL(song.Path);
+                        var source2 = MediaSource.CreateFromStreamReference(msrfal, "");
+                        var playbackItem2 = new MediaPlaybackItem(source2);
+                        playbackItem2.Source.OpenOperationCompleted += Source_OpenOperationCompleted;
+                        var displayProperties2 = playbackItem2.GetDisplayProperties();
+                        displayProperties2.Type = Windows.Media.MediaPlaybackType.Music;
+                        displayProperties2.MusicProperties.Artist = song.Artist;
+                        displayProperties2.MusicProperties.AlbumTitle = song.Album;
+                        displayProperties2.MusicProperties.Title = song.Title;
+                        try
+                        {
+                            displayProperties2.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
+                        }
+                        catch
+                        {
+                            displayProperties2.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
+                        }
+                        playbackItem2.ApplyDisplayProperties(displayProperties2);
+                        source2.CustomProperties[propertySongId] = song.SongId;
+                        return playbackItem2;
                     }
-                    catch
+                    else
                     {
-                        displayProperties2.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
+                        return await PreparePlaybackItemFFmpeg(song, false);
                     }
-                    playbackItem2.ApplyDisplayProperties(displayProperties2);
-                    source2.CustomProperties[propertySongId] = song.SongId;
-                    return playbackItem2;
                 case MusicSource.RadioJamendo:
                     if ("" == song.Path)
                     {
@@ -1084,11 +1099,11 @@ namespace NextPlayerUWP.Common
                     displ.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
                 }
                 mediaList.CurrentItem.ApplyDisplayProperties(displ);
-               
+
                 NowPlayingSong s = new NowPlayingSong()
                 {
                     Album = stream.Album,
-                    Artist = stream.Artist,
+                    Artist = stream.Artist + " - " + stream.Title,
                     ImagePath = stream.CoverUri,
                     Path = song.Path,
                     Position = CurrentSongIndex,
@@ -1096,8 +1111,6 @@ namespace NextPlayerUWP.Common
                     SourceType = MusicSource.RadioJamendo,
                     Title = song.Title,
                 };
-
-                //NowPlayingPlaylistManager.Current.UpdateCurrentPlaying(stream.Album, stream.Artist, song.Title, stream.CoverUri);
 
                 OnStreamUpdated(s);
 
@@ -1107,67 +1120,67 @@ namespace NextPlayerUWP.Common
         }
 
 
-        //private static async Task<MediaPlaybackItem> PreparePlaybackItemFFmpeg(SongItem song, bool fromAccessList = false)
-        //{
-        //    //path = @"D:\Muzyka\Jean Michel Jarre\Jean Michel Jarre - Aero [DTS]\11 - Aerology.ac3";
-        //    //path = @"D:\Muzyka\Moja muzyka\jhg.ogg";
-        //    StorageFile file;
-        //    if (fromAccessList)
-        //    {
-        //        string token = await FutureAccessHelper.GetTokenFromPath(song.Path);
-        //        if (token != null)
-        //        {
-        //            file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(song.Path);
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        file = await StorageFile.GetFileFromPathAsync(song.Path);
-        //    }
+        private static async Task<MediaPlaybackItem> PreparePlaybackItemFFmpeg(SongItem song, bool fromAccessList = false)
+        {
+            //path = @"D:\Muzyka\Jean Michel Jarre\Jean Michel Jarre - Aero [DTS]\11 - Aerology.ac3";
+            //path = @"D:\Muzyka\Moja muzyka\jhg.ogg";
+            StorageFile file;
+            if (fromAccessList)
+            {
+                string token = await FutureAccessHelper.GetTokenFromPath(song.Path);
+                if (token != null)
+                {
+                    file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(song.Path);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                file = await StorageFile.GetFileFromPathAsync(song.Path);
+            }
 
-        //    IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
+            IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
+            FFmpegInteropMSS FFmpegMSS;
 
-        //    try
-        //    {
-        //        // Instantiate FFmpegInteropMSS using the opened local file stream
-        //        FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
-        //        MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
+            try
+            {
+                // Instantiate FFmpegInteropMSS using the opened local file stream
+                FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
+                MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
 
-        //        if (mss != null)
-        //        {
-        //            MyStreamReference msr = new MyStreamReference(song.Path);
-        //            var source = MediaSource.CreateFromStreamReference(msr, "");
-        //            //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-        //            //var source = MediaSource.CreateFromStorageFile(file);
-        //            var playbackItem = new MediaPlaybackItem(source);
-        //            var displayProperties = playbackItem.GetDisplayProperties();
-        //            displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-        //            displayProperties.MusicProperties.Artist = song.Artist;
-        //            displayProperties.MusicProperties.AlbumTitle = song.Album;
-        //            displayProperties.MusicProperties.Title = song.Title;
-        //            try
-        //            {
-        //                displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
-        //            }
-        //            catch
-        //            {
-        //                displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-        //            }
-        //            playbackItem.ApplyDisplayProperties(displayProperties);
-        //            source.CustomProperties[propertySongId] = song.SongId;
-        //            return playbackItem;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
+                if (mss != null)
+                {
+                    var source = MediaSource.CreateFromMediaStreamSource(mss);
+                    //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+                    //var source = MediaSource.CreateFromStorageFile(file);
+                    var playbackItem = new MediaPlaybackItem(source);
+                    var displayProperties = playbackItem.GetDisplayProperties();
+                    displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
+                    displayProperties.MusicProperties.Artist = song.Artist;
+                    displayProperties.MusicProperties.AlbumTitle = song.Album;
+                    displayProperties.MusicProperties.Title = song.Title;
+                    try
+                    {
+                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
+                    }
+                    catch
+                    {
+                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
+                    }
+                    playbackItem.ApplyDisplayProperties(displayProperties);
+                    source.CustomProperties[propertySongId] = song.SongId;
+                    return playbackItem;
+                }
+            }
+            catch (Exception ex)
+            {
 
-        //    }
-        //    return null;
-        //}
+            }
+            return null;
+        }
 
         #endregion
     }

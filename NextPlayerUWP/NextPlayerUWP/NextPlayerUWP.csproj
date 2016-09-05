@@ -480,6 +480,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FFmpegInterop, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FFmpegInterop\$(PlatformTarget)\FFmpegInterop.winmd</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Store Engagement SDK</Name>
     </SDKReference>
