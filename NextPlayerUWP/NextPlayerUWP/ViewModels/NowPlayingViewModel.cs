@@ -344,7 +344,10 @@ namespace NextPlayerUWP.ViewModels
 
         public void ChangeCoverUri(Uri cacheUri)
         {
-            CoverUri = cacheUri;          
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            {
+                CoverUri = cacheUri;
+            });        
         }
 
         #region Slider Timer

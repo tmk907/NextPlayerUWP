@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.CloudStorage;
+using Template10.Common;
 
 namespace NextPlayerUWP.Common
 {
@@ -37,6 +38,12 @@ namespace NextPlayerUWP.Common
             currentIndex = ApplicationSettingsHelper.ReadSongIndex();
         }
 
+        private DispatcherWrapper dispatcher;
+        public void SetDispatcher(DispatcherWrapper dispatcher)
+        {
+            this.dispatcher = dispatcher;
+        }
+
         private int currentIndex;
 
         public static event NPListChangedHandler NPListChanged;
@@ -47,18 +54,21 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackService_StreamUpdated(NowPlayingSong updatedSong)
         {
-            SongItem si = songs.Where(s => (s.SongId.Equals(updatedSong.SongId) && s.SourceType.Equals(updatedSong.SourceType))).FirstOrDefault();
-            if (si != null)
+            dispatcher.Dispatch(() =>
             {
-                int i = songs.IndexOf(si);
-                var temp = songs[i];
-                temp.Album = updatedSong.Album;
-                temp.Artist = updatedSong.Artist;
-                temp.Title = updatedSong.Title;
-                temp.CoverPath = updatedSong.ImagePath;
-                songs[i] = temp;
-                OnNPChanged();
-            }
+                SongItem si = songs.Where(s => (s.SongId.Equals(updatedSong.SongId) && s.SourceType.Equals(updatedSong.SourceType))).FirstOrDefault();
+                if (si != null)
+                {
+                    int i = songs.IndexOf(si);
+                    var temp = songs[i];
+                    temp.Album = updatedSong.Album;
+                    temp.Artist = updatedSong.Artist;
+                    temp.Title = updatedSong.Title;
+                    temp.CoverPath = updatedSong.ImagePath;
+                    songs[i] = temp;
+                    OnNPChanged();
+                }
+            });
         }
 
         private async void App_SongUpdated(int id)
@@ -424,6 +434,18 @@ namespace NextPlayerUWP.Common
             //int index = ApplicationSettingsHelper.ReadSongIndex();
             if (currentIndex < 0 || currentIndex > songs.Count - 1) return new SongItem();
             return songs[currentIndex];
+        }
+
+        public void UpdateCurrentPlaying(string album, string artist, string title, string coverPath)
+        {
+            dispatcher.Dispatch(() =>
+            {
+                var song = GetCurrentPlaying();
+                song.Album = album;
+                song.Artist = artist;
+                song.CoverPath = coverPath;
+                song.Title = title;
+            });
         }
 
         public SongItem GetNextSong()

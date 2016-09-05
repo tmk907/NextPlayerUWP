@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Template10.Common;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -281,7 +282,10 @@ namespace NextPlayerUWP.ViewModels
 
         public void ChangeCoverUri(Uri cacheUri)
         {
-            CoverUri = cacheUri;
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            {
+                CoverUri = cacheUri;
+            });
         }
     }
 }

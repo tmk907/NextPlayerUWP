@@ -40,7 +40,8 @@ namespace NextPlayerUWP.ViewModels
             Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
-            PlaybackService.Instance.Initialize(WindowWrapper.Current().Dispatcher);
+            NowPlayingPlaylistManager.Current.SetDispatcher(WindowWrapper.Current().Dispatcher);
+            PlaybackService.Instance.Initialize();
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -282,7 +283,10 @@ namespace NextPlayerUWP.ViewModels
 
         public void ChangeCoverUri(Uri cacheUri)
         {
-            CoverUri = cacheUri;
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            {
+                CoverUri = cacheUri;
+            });
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)

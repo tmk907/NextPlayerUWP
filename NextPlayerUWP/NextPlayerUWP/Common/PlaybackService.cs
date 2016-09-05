@@ -17,7 +17,6 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.Foundation;
 using Windows.System.Threading;
-using Template10.Common;
 
 namespace NextPlayerUWP.Common
 {
@@ -160,10 +159,8 @@ namespace NextPlayerUWP.Common
             lastFmCache = new LastFmCache();
         }
 
-        DispatcherWrapper dispatcher;
-        public async Task Initialize(DispatcherWrapper dispatcher)
+        public async Task Initialize()
         {
-            this.dispatcher = dispatcher;
             await LoadAll(CurrentSongIndex);
             //await LoadNewPlaylistItems(CurrentSongIndex);
             Player.Source = mediaList;
@@ -950,7 +947,7 @@ namespace NextPlayerUWP.Common
                     }
                     var jamendoSource = MediaSource.CreateFromUri(new Uri(song.Path));
                     var jamendoPlaybackItem = new MediaPlaybackItem(jamendoSource);
-                    jamendoPlaybackItem.Source.OpenOperationCompleted += StreamSource_OpenOperationCompleted;
+                    jamendoPlaybackItem.Source.OpenOperationCompleted += RadioSource_OpenOperationCompleted;
                     var jamendoDisplayProperties = jamendoPlaybackItem.GetDisplayProperties();
                     jamendoDisplayProperties.Type = Windows.Media.MediaPlaybackType.Music;
                     jamendoDisplayProperties.MusicProperties.Artist = song.Artist;
@@ -1022,12 +1019,11 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        private static void StreamSource_OpenOperationCompleted(MediaSource sender, MediaSourceOpenOperationCompletedEventArgs args)
+        private static void RadioSource_OpenOperationCompleted(MediaSource sender, MediaSourceOpenOperationCompletedEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("UpdateMediaList {0}", sender.IsOpen);
             if (sender.IsOpen)
             {
-                Instance.OnMediaPlayerMediaOpened();
                 Instance.SetTimer(500);
             }
         }
@@ -1076,13 +1072,6 @@ namespace NextPlayerUWP.Common
                 if (stream == null) return;
                 var radio = jRadioData.GetRadioItemFromStream(stream);
 
-                dispatcher.Dispatch(() =>
-                {
-                    song.Album = stream.Album;
-                    song.Artist = stream.Artist;
-                    song.CoverPath = stream.CoverUri;
-                });
-
                 var displ = mediaList.CurrentItem.GetDisplayProperties();
                 displ.MusicProperties.AlbumTitle = stream.Album;
                 displ.MusicProperties.Artist = stream.Artist;
@@ -1098,16 +1087,19 @@ namespace NextPlayerUWP.Common
                
                 NowPlayingSong s = new NowPlayingSong()
                 {
-                    Album = song.Album,
-                    Artist = song.Artist,
-                    ImagePath = song.CoverPath,
+                    Album = stream.Album,
+                    Artist = stream.Artist,
+                    ImagePath = stream.CoverUri,
                     Path = song.Path,
                     Position = CurrentSongIndex,
                     SongId = song.SongId,
                     SourceType = MusicSource.RadioJamendo,
                     Title = song.Title,
                 };
-                dispatcher.Dispatch(() => OnStreamUpdated(s));
+
+                //NowPlayingPlaylistManager.Current.UpdateCurrentPlaying(stream.Album, stream.Artist, song.Title, stream.CoverUri);
+
+                OnStreamUpdated(s);
 
                 int ms = jRadioData.GetRemainingSeconds(stream);
                 SetTimer(ms);
