@@ -1,5 +1,4 @@
-﻿using FFmpegInterop;
-using NextPlayerUWPDataLayer.Constants;
+﻿using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
@@ -11,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Media.Audio;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -97,7 +95,7 @@ namespace NextPlayerUWP.Common
         public MediaPlayer Player { get; private set; }
 
         TimeSpan startPosition;
-        private DateTime songsStart;
+        private DateTime songStartedAt;
         private TimeSpan songPlayed;
 
         private bool paused;
@@ -151,12 +149,14 @@ namespace NextPlayerUWP.Common
 
             jRadioData = new JamendoRadiosData();
             lastFmCache = new LastFmCache();
+
+            songPlayed = TimeSpan.Zero;
+            songStartedAt = DateTime.Now;
         }
 
         public async Task Initialize()
         {
             await LoadAll(CurrentSongIndex);
-            //await LoadNewPlaylistItems(CurrentSongIndex);
             Player.Source = mediaList;
             canPlay = true;
         }
@@ -190,7 +190,7 @@ namespace NextPlayerUWP.Common
             playbackItemQueue.Clear();
         }
 
-        private static bool IsTypeDefaultSupported(string type)
+        public static bool IsTypeDefaultSupported(string type)
         {
             return (type == ".mp3" || type == ".m4a" || type == ".wma" ||
                     type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
@@ -213,23 +213,23 @@ namespace NextPlayerUWP.Common
         #region Events
         private void Player_MediaEnded(MediaPlayer sender, object args)
         {
-            System.Diagnostics.Debug.WriteLine("Player_MediaEnded"); 
+            System.Diagnostics.Debug.WriteLine("Player_MediaEnded {0}", sender.PlaybackSession.PlaybackState);
+            songPlayed = DateTime.Now - songStartedAt + songPlayed;
+            ScrobbleTrack();
+            songStartedAt = DateTime.Now;
+            songPlayed = TimeSpan.Zero;
         }
 
         private void CommandManager_PreviousReceived(MediaPlaybackCommandManager sender, MediaPlaybackCommandManagerPreviousReceivedEventArgs args)
         {
-            //var deferral = args.GetDeferral();
             args.Handled = true;
             Previous();
-            //deferral.Complete();
         }
 
         private void CommandManager_NextReceived(MediaPlaybackCommandManager sender, MediaPlaybackCommandManagerNextReceivedEventArgs args)
         {
-            //var deferral = args.GetDeferral();
             args.Handled = true;
             Next();
-            //deferral.Complete();
         }
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
@@ -320,6 +320,7 @@ namespace NextPlayerUWP.Common
         {
             if (canPlay)
             {
+                songStartedAt = DateTime.Now;
                 Player.Play();
             }
         }
@@ -327,6 +328,7 @@ namespace NextPlayerUWP.Common
         public void Pause()
         {
             Player.Pause();
+            songPlayed = DateTime.Now - songStartedAt + songPlayed;
         }
 
         private bool command = false;
@@ -334,7 +336,12 @@ namespace NextPlayerUWP.Common
         {
             command = true;
             System.Diagnostics.Debug.WriteLine("Next");
-            
+
+            songPlayed = DateTime.Now - songStartedAt + songPlayed;
+            ScrobbleTrack();
+            songStartedAt = DateTime.Now;
+            songPlayed = TimeSpan.Zero;
+
             if (repeat == RepeatEnum.NoRepeat)
             {
                 if (IsLast)
@@ -468,6 +475,12 @@ namespace NextPlayerUWP.Common
         {
             System.Diagnostics.Debug.WriteLine("Previous");
             command = true;
+
+            songPlayed = DateTime.Now - songStartedAt + songPlayed;
+            ScrobbleTrack();
+            songStartedAt = DateTime.Now;
+            songPlayed = TimeSpan.Zero;
+
             var session = Player.PlaybackSession;
             if (session.Position > timePreviousOrBeggining)
             {
@@ -594,55 +607,9 @@ namespace NextPlayerUWP.Common
             mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
             foreach (var item in mediaList.Items)
             {
-                //item.Source.Reset();
                 item.Source.OpenOperationCompleted -= Source_OpenOperationCompleted;
             }
             mediaList.Items.Clear();
-        }
-
-        private async Task LoadNewPlaylistItems(int startIndex)
-        {
-            ClearMediaList();
-            mediaList = new MediaPlaybackList();
-            
-            if (NowPlayingPlaylistManager.Current.songs.Count <= maxSongsNumber)
-            {
-                for (int i = 0; i < NowPlayingPlaylistManager.Current.songs.Count; i++)
-                {
-                    var song = NowPlayingPlaylistManager.Current.songs[i];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties[propertyIndex] = i;
-                    mediaList.Items.Add(playbackItem);
-                }
-            }
-            else
-            {
-                int index = 0;
-                int diff = maxSongsNumber / 2;
-                for (int i = startIndex - diff; i < startIndex - diff + maxSongsNumber; i++)
-                {
-                    if (i < 0)
-                    {
-                        index = i + NowPlayingPlaylistManager.Current.songs.Count;
-                    }
-                    else if (i >= NowPlayingPlaylistManager.Current.songs.Count)
-                    {
-                        index = i - NowPlayingPlaylistManager.Current.songs.Count;
-                    }
-                    else
-                    {
-                        index = i;
-                    }
-
-                    var song = NowPlayingPlaylistManager.Current.songs[index];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties[propertyIndex] = index;
-                    mediaList.Items.Add(playbackItem);
-                }
-            }
-            mediaList.StartingItem = mediaList.Items.FirstOrDefault(i => i.Source.CustomProperties[propertyIndex].Equals(startIndex));
-            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
-
         }
 
         private async Task LoadAll(int startIndex)
@@ -708,105 +675,18 @@ namespace NextPlayerUWP.Common
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
         }
 
-        public async Task UpdateMediaListWithoutPausing2()
-        {
-            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
-            uint j = mediaList.CurrentItemIndex;
-            if (mediaList.CurrentItemIndex > mediaList.Items.Count)
-            {
-                j = (uint)mediaList.Items.IndexOf(mediaList.StartingItem);
-            }
-            for (int i = 0; i < mediaList.Items.Count; i++)
-            {
-                if (i != j)
-                {
-                    mediaList.Items[i].Source.Reset();
-                }
-            }
-            
-            while (j > 0)
-            {
-                mediaList.Items.RemoveAt(0);
-                j--;
-            }
-            while (mediaList.Items.Count > 1)
-            {
-                mediaList.Items.RemoveAt(1);
-            }
-
-            var currentIndex = CurrentSongIndex;
-            var count = NowPlayingPlaylistManager.Current.songs.Count;
-            if (count <= maxSongsNumber)
-            {
-                for(int i = 0; i < count; i++)
-                {
-                    if (i != currentIndex)
-                    {
-                        var song = NowPlayingPlaylistManager.Current.songs[i];
-                        var playbackItem = await PreparePlaybackItem(song);
-                        playbackItem.Source.CustomProperties[propertyIndex] = i;
-                        mediaList.Items.Insert(i, playbackItem);
-                    }
-                    else
-                    {
-                        mediaList.Items[i].Source.CustomProperties[propertyIndex] = i;
-                    }
-                }
-            }
-            else
-            {
-                int nowPlayingPlaylistIndex = 0;
-                int diff = maxSongsNumber / 2;
-                j = 0;
-                for (int i = currentIndex - diff; i < currentIndex - diff + maxSongsNumber; i++)
-                {
-                    if (j != 2)
-                    {
-                        if (i < 0)
-                        {
-                            nowPlayingPlaylistIndex = i + count;
-                        }
-                        else if (i >= NowPlayingPlaylistManager.Current.songs.Count)
-                        {
-                            nowPlayingPlaylistIndex = i - count;
-                        }
-                        else
-                        {
-                            nowPlayingPlaylistIndex = i;
-                        }
-                        var song = NowPlayingPlaylistManager.Current.songs[nowPlayingPlaylistIndex];
-                        var playbackItem = await PreparePlaybackItem(song);
-                        playbackItem.Source.CustomProperties[propertyIndex] = nowPlayingPlaylistIndex;
-                        mediaList.Items.Insert((int)j, playbackItem);
-                    }
-                    j++;
-                }
-            }
-            //bool isok = true;
-            //for(int i= 0;i< mediaList.Items.Count;i++)
-            //{
-            //    //System.Diagnostics.Debug.WriteLine("3 Item {0} {1}", mediaList.Items[i].Source.CustomProperties[propertyIndex], mediaList.Items[i].Source.CustomProperties[propertySongId]);
-            //    //System.Diagnostics.Debug.WriteLine("1 Item {0} {1}", i, NowPlayingPlaylistManager.Current.songs[i].SongId);
-            //    int k = (int)mediaList.Items[i].Source.CustomProperties[propertyIndex];
-            //    if (NowPlayingPlaylistManager.Current.songs[k].SongId != (int)mediaList.Items[i].Source.CustomProperties[propertySongId])
-            //    {
-            //        isok = false;
-            //    }
-            //}
-            //if (!isok) System.Diagnostics.Debug.WriteLine("!!!!!!!!!");
-            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
-        }
-
         public void JumpTo(int startIndex)
         {
             System.Diagnostics.Debug.WriteLine("JumpTo {0}", startIndex);
             command = true;
+
+            songPlayed = DateTime.Now - songStartedAt + songPlayed;
+            ScrobbleTrack();
+            songStartedAt = DateTime.Now;
+            songPlayed = TimeSpan.Zero;
+
             mediaList.MoveTo((uint)startIndex);
-            //Player.Pause();
-            //Player.Source = null;
             CurrentSongIndex = startIndex;
-            //await LoadNewPlaylistItems(startIndex);
-            //Player.Source = mediaList;
             Player.Play();
             OnMediaPlayerMediaOpened();
         }
@@ -817,6 +697,12 @@ namespace NextPlayerUWP.Common
             command = true;
             shuffle = false;
             Player.Pause();
+
+            songPlayed = DateTime.Now - songStartedAt + songPlayed;
+            ScrobbleTrack();
+            songStartedAt = DateTime.Now;
+            songPlayed = TimeSpan.Zero;
+
             Player.Source = null;
             CurrentSongIndex = startIndex;
             await LoadAll(startIndex);
@@ -826,67 +712,6 @@ namespace NextPlayerUWP.Common
                 Player.Play();
                 OnMediaPlayerMediaOpened();
             }
-        }
-
-        private async Task UpdateMediaList(bool prev = false)
-        {
-            System.Diagnostics.Debug.WriteLine("UpdateMediaList");
-            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
-            if (mediaList.Items.Count == maxSongsNumber)
-            {
-                if (prev)
-                {
-                    mediaList.Items[maxSongsNumber - 1].Source.Reset();
-                    mediaList.Items.RemoveAt(maxSongsNumber - 1);
-
-                    int index = (int)mediaList.Items[0].Source.CustomProperties[propertyIndex];
-                    if (index == 0)
-                    {
-                        index = NowPlayingPlaylistManager.Current.songs.Count - 1;
-                    }
-                    else
-                    {
-                        index--;
-                    }
-                    var song = NowPlayingPlaylistManager.Current.songs[index];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties[propertyIndex] = index;
-
-                    mediaList.Items.Insert(0, playbackItem);
-                    //foreach (var item in mediaList.Items)
-                    //{
-                    //    System.Diagnostics.Debug.WriteLine("Item index{0}", item.Source.CustomProperties[propertyIndex]);
-                    //}
-
-                }
-                else
-                {
-                    mediaList.Items[0].Source.Reset();
-                    mediaList.Items.RemoveAt(0);
-                    int index = (int)mediaList.Items[mediaList.Items.Count - 1].Source.CustomProperties[propertyIndex];
-                    if (index == NowPlayingPlaylistManager.Current.songs.Count - 1)
-                    {
-                        index = 0;
-                    }
-                    else
-                    {
-                        index++;
-                    }
-                    var song = NowPlayingPlaylistManager.Current.songs[index];
-                    var playbackItem = await PreparePlaybackItem(song);
-                    playbackItem.Source.CustomProperties[propertyIndex] = index;
-                    mediaList.Items.Add(playbackItem);
-                    //foreach (var item in mediaList.Items)
-                    //{
-                    //    System.Diagnostics.Debug.WriteLine("Item index{0}", item.Source.CustomProperties[propertyIndex]);
-                    //}
-                }
-            }
-            else
-            {
-
-            }
-            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
         }
 
         private static async Task<MediaPlaybackItem> PreparePlaybackItem(SongItem song)
@@ -986,6 +811,54 @@ namespace NextPlayerUWP.Common
                 int ms = jRadioData.GetRemainingSeconds(stream);
                 SetTimer(ms);
             }
+        }
+
+        private void ScrobbleTrack()
+        {
+            System.Diagnostics.Debug.WriteLine("ScrobbleTrack started at:{0} played:{1}", songStartedAt, songPlayed);
+
+
+            //if (CanFlagSongAsPlayed(songPlayed) && (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotMusicLibrary))
+            //{
+            //    await UpdateSongStatistics(song.SongId, songDuration);
+            //    if (mediaList.CurrentItem.Source.Duration > TimeSpan.FromSeconds(30) && lastFmCache.AreCredentialsSet())
+            //    {
+            //        await CacheTrackScrobble(song);
+            //    }
+            //}
+        }
+
+        private async Task CacheTrackScrobble(int index)
+        {
+            var song = NowPlayingPlaylistManager.Current.songs[index];
+            int seconds = 0;
+            try
+            {
+                DateTime start = DateTime.UtcNow - songPlayed;
+                seconds = (int)start.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            }
+            catch (Exception ex)
+            {
+                //Diagnostics.Logger.SaveBG("Scrobble paused " + songPlayed + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
+                //Diagnostics.Logger.SaveToFileBG();
+                return;
+            }
+            string artist = song.Artist;
+            string track = song.Title;
+            string timestamp = seconds.ToString();
+            TrackScrobble scrobble = new TrackScrobble()
+            {
+                Artist = artist,
+                Track = track,
+                Timestamp = timestamp
+            };
+            await lastFmCache.CacheTrackScrobble(scrobble);
+            System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track + " " + songPlayed);
+        }
+
+        private bool CanFlagSongAsPlayed(TimeSpan totalTimePlayed)
+        {
+            return (songPlayed.TotalSeconds >= totalTimePlayed.TotalSeconds * 0.5 || songPlayed.TotalSeconds >= 4 * 60);
         }
 
         #endregion

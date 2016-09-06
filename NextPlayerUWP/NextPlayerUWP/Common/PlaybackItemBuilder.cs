@@ -17,13 +17,6 @@ namespace NextPlayerUWP.Common
         private const string propertyIndex = "index";
         private const string propertySongId = "songid";
 
-        private static bool IsTypeDefaultSupported(string type)
-        {
-            return (type == ".mp3" || type == ".m4a" || type == ".wma" ||
-                    type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
-                    type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4");
-        }
-
         public static async Task<MediaPlaybackItem> PreparePlaybackItem(SongItem song)
         {
             MediaPlaybackItem mpi;
@@ -31,7 +24,7 @@ namespace NextPlayerUWP.Common
             switch (song.SourceType)
             {
                 case MusicSource.LocalFile:
-                    if (IsTypeDefaultSupported(song.Path.Substring(song.Path.LastIndexOf('.'))))
+                    if (PlaybackService.IsTypeDefaultSupported(song.Path.Substring(song.Path.LastIndexOf('.'))))
                     {
                         mpi = PrepareFromLocalFile(song);
                     }
@@ -41,7 +34,7 @@ namespace NextPlayerUWP.Common
                     }
                     break;
                 case MusicSource.LocalNotMusicLibrary:
-                    if (IsTypeDefaultSupported(song.Path.Substring(song.Path.LastIndexOf('.'))))
+                    if (PlaybackService.IsTypeDefaultSupported(song.Path.Substring(song.Path.LastIndexOf('.'))))
                     {
                         mpi = PrepareFromFutureAccessList(song);
                     }
@@ -70,24 +63,9 @@ namespace NextPlayerUWP.Common
         {
             MyStreamReference msr = new MyStreamReference(song.Path);
             var source = MediaSource.CreateFromStreamReference(msr, "");
-            //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-            //var source = MediaSource.CreateFromStorageFile(file);
             var playbackItem = new MediaPlaybackItem(source);
             playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-            var displayProperties = playbackItem.GetDisplayProperties();
-            displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-            displayProperties.MusicProperties.Artist = song.Artist;
-            displayProperties.MusicProperties.AlbumTitle = song.Album;
-            displayProperties.MusicProperties.Title = song.Title;
-            try
-            {
-                displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
-            }
-            catch
-            {
-                displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-            }
-            playbackItem.ApplyDisplayProperties(displayProperties);
+            UpdateDisplayProperties(playbackItem, song);
             source.CustomProperties[propertySongId] = song.SongId;
             return playbackItem;
         }
@@ -110,20 +88,7 @@ namespace NextPlayerUWP.Common
                     //var source = MediaSource.CreateFromStorageFile(file);
                     var playbackItem = new MediaPlaybackItem(source);
                     playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-                    var displayProperties = playbackItem.GetDisplayProperties();
-                    displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-                    displayProperties.MusicProperties.Artist = song.Artist;
-                    displayProperties.MusicProperties.AlbumTitle = song.Album;
-                    displayProperties.MusicProperties.Title = song.Title;
-                    try
-                    {
-                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
-                    }
-                    catch
-                    {
-                        displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-                    }
-                    playbackItem.ApplyDisplayProperties(displayProperties);
+                    UpdateDisplayProperties(playbackItem, song);
                     source.CustomProperties[propertySongId] = song.SongId;
                     return playbackItem;
                 }
@@ -138,25 +103,12 @@ namespace NextPlayerUWP.Common
         private static MediaPlaybackItem PrepareFromFutureAccessList(SongItem song)
         {
             MyStreamReferenceFAL msrfal = new MyStreamReferenceFAL(song.Path);
-            var source2 = MediaSource.CreateFromStreamReference(msrfal, "");
-            var playbackItem2 = new MediaPlaybackItem(source2);
-            playbackItem2.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-            var displayProperties2 = playbackItem2.GetDisplayProperties();
-            displayProperties2.Type = Windows.Media.MediaPlaybackType.Music;
-            displayProperties2.MusicProperties.Artist = song.Artist;
-            displayProperties2.MusicProperties.AlbumTitle = song.Album;
-            displayProperties2.MusicProperties.Title = song.Title;
-            try
-            {
-                displayProperties2.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
-            }
-            catch
-            {
-                displayProperties2.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-            }
-            playbackItem2.ApplyDisplayProperties(displayProperties2);
-            source2.CustomProperties[propertySongId] = song.SongId;
-            return playbackItem2;
+            var source = MediaSource.CreateFromStreamReference(msrfal, "");
+            var playbackItem = new MediaPlaybackItem(source);
+            playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+            UpdateDisplayProperties(playbackItem, song);
+            source.CustomProperties[propertySongId] = song.SongId;
+            return playbackItem;
         }
 
         private static async Task<MediaPlaybackItem> PrepareFromFutureAccessListFFmpeg(SongItem song)
@@ -180,20 +132,7 @@ namespace NextPlayerUWP.Common
                         //var source = MediaSource.CreateFromStorageFile(file);
                         var playbackItem = new MediaPlaybackItem(source);
                         playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-                        var displayProperties = playbackItem.GetDisplayProperties();
-                        displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-                        displayProperties.MusicProperties.Artist = song.Artist;
-                        displayProperties.MusicProperties.AlbumTitle = song.Album;
-                        displayProperties.MusicProperties.Title = song.Title;
-                        try
-                        {
-                            displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
-                        }
-                        catch
-                        {
-                            displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-                        }
-                        playbackItem.ApplyDisplayProperties(displayProperties);
+                        UpdateDisplayProperties(playbackItem, song);
                         source.CustomProperties[propertySongId] = song.SongId;
                         return playbackItem;
                     }
@@ -219,20 +158,7 @@ namespace NextPlayerUWP.Common
             var jamendoSource = MediaSource.CreateFromUri(new Uri(song.Path));
             var jamendoPlaybackItem = new MediaPlaybackItem(jamendoSource);
             jamendoPlaybackItem.Source.OpenOperationCompleted += PlaybackService.RadioSource_OpenOperationCompleted;
-            var jamendoDisplayProperties = jamendoPlaybackItem.GetDisplayProperties();
-            jamendoDisplayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-            jamendoDisplayProperties.MusicProperties.Artist = song.Artist;
-            jamendoDisplayProperties.MusicProperties.AlbumTitle = song.Album;
-            jamendoDisplayProperties.MusicProperties.Title = song.Title;
-            try
-            {
-                jamendoDisplayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
-            }
-            catch
-            {
-                jamendoDisplayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-            }
-            jamendoPlaybackItem.ApplyDisplayProperties(jamendoDisplayProperties);
+            UpdateDisplayProperties(jamendoPlaybackItem, song);
             jamendoSource.CustomProperties[propertySongId] = song.SongId;
             return jamendoPlaybackItem;
         }
@@ -242,20 +168,7 @@ namespace NextPlayerUWP.Common
             var dropboxSource = MediaSource.CreateFromUri(new Uri(song.Path));
             var dropboxPlaybackItem = new MediaPlaybackItem(dropboxSource);
             dropboxPlaybackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-            var dropboxDisplayProperties = dropboxPlaybackItem.GetDisplayProperties();
-            dropboxDisplayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-            dropboxDisplayProperties.MusicProperties.Artist = song.Artist;
-            dropboxDisplayProperties.MusicProperties.AlbumTitle = song.Album;
-            dropboxDisplayProperties.MusicProperties.Title = song.Title;
-            try
-            {
-                dropboxDisplayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
-            }
-            catch
-            {
-                dropboxDisplayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-            }
-            dropboxPlaybackItem.ApplyDisplayProperties(dropboxDisplayProperties);
+            UpdateDisplayProperties(dropboxPlaybackItem, song);
             dropboxSource.CustomProperties[propertySongId] = song.SongId;
             return dropboxPlaybackItem;
         }
@@ -265,22 +178,27 @@ namespace NextPlayerUWP.Common
             var oneDriveSource = MediaSource.CreateFromUri(new Uri(song.Path));
             var oneDrivePlaybackItem = new MediaPlaybackItem(oneDriveSource);
             oneDrivePlaybackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-            var oneDriveDisplayProperties = oneDrivePlaybackItem.GetDisplayProperties();
-            oneDriveDisplayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-            oneDriveDisplayProperties.MusicProperties.Artist = song.Artist;
-            oneDriveDisplayProperties.MusicProperties.AlbumTitle = song.Album;
-            oneDriveDisplayProperties.MusicProperties.Title = song.Title;
+            UpdateDisplayProperties(oneDrivePlaybackItem, song);
+            oneDriveSource.CustomProperties[propertySongId] = song.SongId;
+            return oneDrivePlaybackItem;
+        }
+
+        private static void UpdateDisplayProperties(MediaPlaybackItem playbackItem, SongItem song)
+        {
+            var displayProperties = playbackItem.GetDisplayProperties();
+            displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
+            displayProperties.MusicProperties.Artist = song.Artist;
+            displayProperties.MusicProperties.AlbumTitle = song.Album;
+            displayProperties.MusicProperties.Title = song.Title;
             try
             {
-                oneDriveDisplayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
+                displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);
             }
             catch
             {
-                oneDriveDisplayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
+                displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
             }
-            oneDrivePlaybackItem.ApplyDisplayProperties(oneDriveDisplayProperties);
-            oneDriveSource.CustomProperties[propertySongId] = song.SongId;
-            return oneDrivePlaybackItem;
+            playbackItem.ApplyDisplayProperties(displayProperties);
         }
     }
 }

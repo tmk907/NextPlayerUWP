@@ -134,27 +134,25 @@ namespace NextPlayerUWP.Common
         private void PlaybackService_MediaPlayerTrackChanged(int index)
         {
             currentIndex = index;
-            //var dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher;
-            //if (dispatcher != null)
-            //{
-            //    await dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            //    {
-            //        
-            //        int i = 0;
-            //        foreach (var song in songs)
-            //        {
-            //            if (i != index)
-            //            {
-            //                song.IsPlaying = false;
-            //            }
-            //            else
-            //            {
-            //                song.IsPlaying = true;
-            //            }
-            //            i++;
-            //        }
-            //    });
-            //}
+            int i = 0;
+            foreach (var song in songs)
+            {
+                if (i != index && song.IsPlaying)
+                {
+                    dispatcher.Dispatch(() =>
+                    {
+                        song.IsPlaying = false;
+                    });
+                }
+                else if (i == index)
+                {
+                    dispatcher.Dispatch(() =>
+                    {
+                        song.IsPlaying = true;
+                    });
+                }
+                i++;
+            }
         }
 
         public async Task Add(MusicItem item)
