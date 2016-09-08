@@ -48,7 +48,7 @@ namespace NextPlayerUWP.Common
                 songs = await DatabaseManager.Current.GetSongsWithoutAlbumArtAsync();
             });
             isRunning = true;
-            await Task.Run(() => FindSongsAlbumArt());
+            await Task.Run(() => FindAlbumArtOfEverySong());
             songs.Clear();
             await Task.Run(() => UpdateAlbumsWithNoArt());
             albums.Clear();
@@ -57,13 +57,14 @@ namespace NextPlayerUWP.Common
             Logger.DebugWrite("AlbumArtFinder", "StartLooking finished");
         }
 
-        private async Task FindSongsAlbumArt()
+        private async Task FindAlbumArtOfEverySong()
         {
             //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
             //Stopwatch st = new Stopwatch();
             //st.Start();
 
-            foreach (var group in songs.GroupBy(s => new { s.Album, s.AlbumArtist }))
+            //First find album arts of albums, where Album or AlbumArtist is known. These album arts are shown in AlbumsView list.
+            foreach (var group in songs.Where(a => !(a.Album == "" && a.AlbumArtist == "")).GroupBy(s => new { s.Album, s.AlbumArtist }))
             {
                 var album = albums.FirstOrDefault(a => a.Album.Equals(group.Key.Album) && a.AlbumArtist.Equals(group.Key.AlbumArtist));
                 await UpdateAlbum(group, album);
@@ -72,7 +73,17 @@ namespace NextPlayerUWP.Common
                     OnAlbumArtUpdated(album.AlbumId, album.ImagePath);
                 }
             }
-
+            var groupUnknown = songs.Where(a => a.Album == "" && a.AlbumArtist == "").GroupBy(s => new { s.Album, s.AlbumArtist }).FirstOrDefault();
+            if (groupUnknown != null)
+            {
+                var albumUnknown = albums.FirstOrDefault(a => a.Album.Equals("") && a.AlbumArtist.Equals(""));
+                await UpdateAlbum(groupUnknown, albumUnknown);
+                if (albumUnknown != null)
+                {
+                    OnAlbumArtUpdated(albumUnknown.AlbumId, albumUnknown.ImagePath);
+                }
+            }
+            
             //st.Stop();
             //Debug.WriteLine("FindSongsAlbumArt {0}ms", st.ElapsedMilliseconds);
             //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");

@@ -675,7 +675,7 @@ namespace NextPlayerUWP.Common
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
         }
 
-        public void JumpTo(int startIndex)
+        public void JumpTo(int startIndex)//nie zmienia stanu na playing!!
         {
             System.Diagnostics.Debug.WriteLine("JumpTo {0}", startIndex);
             command = true;

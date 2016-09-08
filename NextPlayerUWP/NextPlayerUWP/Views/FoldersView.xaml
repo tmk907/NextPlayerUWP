@@ -325,7 +325,7 @@
                         FontSize="17" 
                         TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
-                <!--<AutoSuggestBox  Grid.Column="2" 
+                <AutoSuggestBox  Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
@@ -336,11 +336,11 @@
                     SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
                     <AutoSuggestBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Folder}"/>
+                            <TextBlock Text="{Binding Title}"/>
                         </DataTemplate>
                     </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>-->
-                <!--<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                </AutoSuggestBox>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
                             BorderThickness="0" 
@@ -349,7 +349,7 @@
                             ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
                             DisplayMemberPath="Label"
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
-                </StackPanel>-->
+                </StackPanel>
             </Grid>
             <Grid Grid.Row="1">
                 <mycontrols:AlternatingRowListView x:Name="FoldersListView"
