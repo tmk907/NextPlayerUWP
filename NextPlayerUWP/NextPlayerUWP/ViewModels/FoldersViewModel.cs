@@ -11,8 +11,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
-using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
 using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
@@ -21,7 +19,7 @@ namespace NextPlayerUWP.ViewModels
     {
         public FoldersViewModel()
         {
-            SortNames si = new SortNames(MusicItemTypes.folder);
+            SortNames si = new SortNames(MusicItemTypes.song);
             ComboBoxItemValues = si.GetSortNames();
             SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
             MediaImport.MediaImported += MediaImport_MediaImported;
@@ -35,7 +33,7 @@ namespace NextPlayerUWP.ViewModels
         private async Task ReloadData()
         {
             Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-            SortItems(null, null);
+            SortMusicItems();
         }
 
         private string folderName = "";
@@ -108,13 +106,12 @@ namespace NextPlayerUWP.ViewModels
                     }
                 }
             }
+            SortMusicItems();
         }
 
         string directory;
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        {
-            sortAfterOnNavigated = true;
-            
+        {   
             directory = parameter as string;
         }
 
@@ -148,7 +145,7 @@ namespace NextPlayerUWP.ViewModels
             int index = 0;
             int i = 0;
             List<SongItem> songs = new List<SongItem>();
-            foreach (var item in items.Where(s=>s.GetType() == typeof(SongItem)))
+            foreach (var item in items.Where(s => s.GetType() == typeof(SongItem)))
             {
                 if (typeof(SongItem) == item.GetType())
                 {
@@ -158,46 +155,67 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
         }
 
-        private bool sortAfterOnNavigated = false;
-        public void SortItems(object sender, SelectionChangedEventArgs e)
+        protected override void SortMusicItems()
         {
-            if (sortAfterOnNavigated)
+            string option = selectedComboBoxItem.Option;
+            switch (option)
             {
-                sortAfterOnNavigated = false;
-                return;
-            }
-            ComboBoxItemValue value = SelectedComboBoxItem;
-            switch (value.Option)
-            {
-                case SortNames.FolderName:
-                    Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
+                case SortNames.Title:
+                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
                     break;
-                case SortNames.Directory:
-                    Sort(s => s.Directory, t => (t.Directory == "") ? "" : t.Directory[0].ToString().ToLower(), "Folder");
+                case SortNames.Album:
+                    Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
                     break;
-                //case SortNames.Duration:
-                //    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId");
-                //    break;
-                case SortNames.SongCount:
-                    Sort(s => s.SongsNumber, t => t.SongsNumber, "Folder");
+                case SortNames.Artist:
+                    Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
+                    break;
+                case SortNames.AlbumArtist:
+                    Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
+                    break;
+                case SortNames.Year:
+                    Sort(s => s.Year, t => t.Year, "SongId");
+                    break;
+                case SortNames.Duration:
+                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "SongId");
+                    break;
+                case SortNames.Rating:
+                    Sort(s => s.Rating, t => t.Rating, "SongId");
+                    break;
+                case SortNames.Composer:
+                    Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
                     break;
                 case SortNames.LastAdded:
-                    Sort(s => s.LastAdded.Ticks, t => String.Format("{0:d}", t.LastAdded), "Folder");
+                    Sort(s => s.DateAdded.Ticks, t => String.Format("{0:d}", t.DateAdded), "SongId");
+                    break;
+                case SortNames.LastPlayed:
+                    Sort(s => s.LastPlayed.Ticks, t => String.Format("{0:d}", t.LastPlayed), "SongId");
+                    break;
+                case SortNames.PlayCount:
+                    Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
+                    break;
+                case SortNames.TrackNumber:
+                    Sort(s => s.TrackNumber, s => s.TrackNumber, "SongId");
                     break;
                 default:
-                    Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
+                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
                     break;
             }
         }
 
-        private void Sort(Func<FolderItem, object> orderSelector, Func<FolderItem, object> groupSelector, string propertyName)
+        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem, object> groupSelector, string propertyName)
         {
-            var query = folders.OrderBy(orderSelector);
-            Folders = new ObservableCollection<FolderItem>(query);
+            var folderItems = items.Where(i => i.GetType() != typeof(SongItem));
+            
+            var sortedSongs = items.OfType<SongItem>().OrderBy(orderSelector);
+
+            Items = new ObservableCollection<MusicItem>(folderItems);
+            foreach(var song in sortedSongs)
+            {
+                Items.Add(song);
+            }
         }
 
         public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -205,46 +223,52 @@ namespace NextPlayerUWP.ViewModels
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
                 string query = sender.Text.ToLower();
-                var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(query)).OrderBy(f => f.Folder);
-                var m2 = folders.Where(f => f.Folder.ToLower().Contains(query));
-                var m3 = folders.Where(f => f.Directory.ToLower().Contains(query));
-                var result = matchingFolders.Concat(m2).Concat(m3).Distinct();
-                sender.ItemsSource = result.ToList();
+                var matchingSongs = items.OfType<SongItem>().Where(s => s.Title.ToLower().StartsWith(query));
+                var m2 = items.OfType<SongItem>().Where(s => s.Title.ToLower().Contains(query));
+                var m3 = items.OfType<SongItem>().Where(s => (s.Album.ToLower().Contains(query) || s.Artist.ToLower().Contains(query)));
+                var m4 = matchingSongs.Concat(m2).Concat(m3).Distinct();
+                sender.ItemsSource = m4.ToList();
             }
+            //if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            //{
+            //    string query = sender.Text.ToLower();
+            //    var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(query)).OrderBy(f => f.Folder);
+            //    var m2 = folders.Where(f => f.Folder.ToLower().Contains(query));
+            //    var m3 = folders.Where(f => f.Directory.ToLower().Contains(query));
+            //    var result = matchingFolders.Concat(m2).Concat(m3).Distinct();
+            //    sender.ItemsSource = result.ToList();
+            //}
         }
 
         public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            int index;
+            int id;
             if (args.ChosenSuggestion != null)
             {
-                index = folders.IndexOf((FolderItem)args.ChosenSuggestion);
+                id = ((SongItem)args.ChosenSuggestion).SongId;
             }
             else
             {
-                var list = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(s => s.Folder).ToList();
+                var list = items.OfType<SongItem>().Where(s => s.Title.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Title).ToList();
                 if (list.Count == 0) return;
-                index = 0;
-                bool find = false;
-                foreach (var g in folders)
+                id = list.FirstOrDefault().SongId;
+            }
+            int index = 0;
+            foreach (var item in items)
+            {
+                if (item.GetType() == typeof(SongItem) &&  ((SongItem)item).SongId == id)
                 {
-                    if (g.Folder.Equals(list.FirstOrDefault().Folder))
-                    {
-                        find = true;
-                        break;
-                    }
-                    index++;
+                    break;
                 }
-                if (!find) return;
-                sender.ItemsSource = list;
+                index++;
             }
             listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            var item = args.SelectedItem as FolderItem;
-            sender.Text = item.Folder;
+            var song = args.SelectedItem as SongItem;
+            sender.Text = song.Title;
         }
     }
 }
