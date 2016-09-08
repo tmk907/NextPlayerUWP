@@ -207,7 +207,7 @@ namespace NextPlayerUWP.ViewModels
 
         private void Sort(Func<SongItem, object> orderSelector, Func<SongItem, object> groupSelector, string propertyName)
         {
-            var folderItems = items.Where(i => i.GetType() == typeof(FolderItem));
+            var folderItems = items.Where(i => i.GetType() != typeof(SongItem));
             
             var sortedSongs = items.OfType<SongItem>().OrderBy(orderSelector);
 

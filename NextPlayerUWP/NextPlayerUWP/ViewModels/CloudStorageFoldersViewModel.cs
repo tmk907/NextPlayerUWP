@@ -16,6 +16,13 @@ namespace NextPlayerUWP.ViewModels
 {
     public class CloudStorageFoldersViewModel : MusicViewModelBase
     {
+        public CloudStorageFoldersViewModel()
+        {
+            SortNames si = new SortNames(MusicItemTypes.song);
+            ComboBoxItemValues = si.GetSortNames();
+            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+        }
+
         private string pageHeader = "";
         public string PageHeader
         {
@@ -86,7 +93,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 Items.Add(song);
             }
-
+            SortMusicItems();
             Loading = false;
         }
 
@@ -166,6 +173,111 @@ namespace NextPlayerUWP.ViewModels
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
             await PlaybackService.Instance.PlayNewList(index);
+        }
+
+        protected override void SortMusicItems()
+        {
+            string option = selectedComboBoxItem.Option;
+            switch (option)
+            {
+                case SortNames.Title:
+                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
+                    break;
+                case SortNames.Album:
+                    Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
+                    break;
+                case SortNames.Artist:
+                    Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
+                    break;
+                case SortNames.AlbumArtist:
+                    Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
+                    break;
+                case SortNames.Year:
+                    Sort(s => s.Year, t => t.Year, "SongId");
+                    break;
+                case SortNames.Duration:
+                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "SongId");
+                    break;
+                case SortNames.Rating:
+                    Sort(s => s.Rating, t => t.Rating, "SongId");
+                    break;
+                case SortNames.Composer:
+                    Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
+                    break;
+                case SortNames.LastAdded:
+                    Sort(s => s.DateAdded.Ticks, t => String.Format("{0:d}", t.DateAdded), "SongId");
+                    break;
+                case SortNames.LastPlayed:
+                    Sort(s => s.LastPlayed.Ticks, t => String.Format("{0:d}", t.LastPlayed), "SongId");
+                    break;
+                case SortNames.PlayCount:
+                    Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
+                    break;
+                case SortNames.TrackNumber:
+                    Sort(s => s.TrackNumber, s => s.TrackNumber, "SongId");
+                    break;
+                default:
+                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
+                    break;
+            }
+        }
+
+        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem, object> groupSelector, string propertyName)
+        {
+            var folderItems = items.Where(i => i.GetType() == typeof(CloudFolder));
+
+            var sortedSongs = items.OfType<SongItem>().OrderBy(orderSelector);
+
+            Items = new ObservableCollection<MusicItem>(folderItems);
+            foreach (var song in sortedSongs)
+            {
+                Items.Add(song);
+            }
+        }
+
+
+        public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                string query = sender.Text.ToLower();
+                var matchingSongs = items.OfType<SongItem>().Where(s => s.Title.ToLower().StartsWith(query));
+                var m2 = items.OfType<SongItem>().Where(s => s.Title.ToLower().Contains(query));
+                var m3 = items.OfType<SongItem>().Where(s => (s.Album.ToLower().Contains(query) || s.Artist.ToLower().Contains(query)));
+                var m4 = matchingSongs.Concat(m2).Concat(m3).Distinct();
+                sender.ItemsSource = m4.ToList();
+            }
+        }
+
+        public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            int id;
+            if (args.ChosenSuggestion != null)
+            {
+                id = ((SongItem)args.ChosenSuggestion).SongId;
+            }
+            else
+            {
+                var list = items.OfType<SongItem>().Where(s => s.Title.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Title).ToList();
+                if (list.Count == 0) return;
+                id = list.FirstOrDefault().SongId;
+            }
+            int index = 0;
+            foreach (var item in items)
+            {
+                if (item.GetType() == typeof(SongItem) && ((SongItem)item).SongId == id)
+                {
+                    break;
+                }
+                index++;
+            }
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+        }
+
+        public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var song = args.SelectedItem as SongItem;
+            sender.Text = song.Title;
         }
     }
 }
