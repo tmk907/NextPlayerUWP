@@ -60,15 +60,19 @@ namespace NextPlayerUWPDataLayer.CloudStorage
             {
                 case CloudStorageType.Dropbox:
                     service = new DropboxStorage.DropboxService(userId);
+                    services.Add(service);
                     break;
                 //case CloudStorageType.GoogleDrive:
                 //    service = new GoogleDrive.GoogleDriveService(userId);
+                //    services.Add(service);
                 //    break;
                 case CloudStorageType.OneDrive:
                     service = new OneDrive.OneDriveService(userId);
+                    services.Add(service);
                     break;
                 //case CloudStorageType.pCloud:
                 //    service = new pCloud.PCloudService(userId);
+                //    services.Add(service);
                 //    break;
                 default:
                     service = null;

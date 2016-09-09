@@ -7,12 +7,12 @@
         public int DBId { get; set; }
         public CloudStorageType Type { get; set; }
 
-        public CloudAccount(int DBId, string UserId, CloudStorageType Type, string UserName)
+        public CloudAccount(int DBId, string UserId, CloudStorageType Type, string Username)
         {
             this.DBId = DBId;
             this.UserId = UserId;
             this.Type = Type;
-            this.Username = UserName;
+            this.Username = Username;
         }
     }
 }
