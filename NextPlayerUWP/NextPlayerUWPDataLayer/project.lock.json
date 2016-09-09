@@ -57,7 +57,19 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+      "Microsoft.Graph.Core/1.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
         "type": "package",
         "compile": {
           "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
@@ -301,21 +313,33 @@
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
       },
-      "Microsoft.OneDriveSDK/1.1.47": {
+      "Microsoft.OneDriveSDK/2.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Microsoft.Graph.Core": "1.1.1",
           "Newtonsoft.Json": "6.0.2"
         },
         "compile": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         },
         "runtime": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
+        }
+      },
+      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        },
+        "runtime": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -2333,7 +2357,19 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+      "Microsoft.Graph.Core/1.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
         "type": "package",
         "compile": {
           "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
@@ -2524,21 +2560,33 @@
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
       },
-      "Microsoft.OneDriveSDK/1.1.47": {
+      "Microsoft.OneDriveSDK/2.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Microsoft.Graph.Core": "1.1.1",
           "Newtonsoft.Json": "6.0.2"
         },
         "compile": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         },
         "runtime": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
+        }
+      },
+      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        },
+        "runtime": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -4717,7 +4765,19 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+      "Microsoft.Graph.Core/1.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
         "type": "package",
         "compile": {
           "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
@@ -4909,21 +4969,33 @@
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
       },
-      "Microsoft.OneDriveSDK/1.1.47": {
+      "Microsoft.OneDriveSDK/2.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Microsoft.Graph.Core": "1.1.1",
           "Newtonsoft.Json": "6.0.2"
         },
         "compile": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         },
         "runtime": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
+        }
+      },
+      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        },
+        "runtime": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -7140,7 +7212,19 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+      "Microsoft.Graph.Core/1.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
         "type": "package",
         "compile": {
           "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
@@ -7334,21 +7418,33 @@
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
       },
-      "Microsoft.OneDriveSDK/1.1.47": {
+      "Microsoft.OneDriveSDK/2.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Microsoft.Graph.Core": "1.1.1",
           "Newtonsoft.Json": "6.0.2"
         },
         "compile": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         },
         "runtime": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
+        }
+      },
+      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        },
+        "runtime": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -9533,7 +9629,19 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+      "Microsoft.Graph.Core/1.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
         "type": "package",
         "compile": {
           "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
@@ -9728,21 +9836,33 @@
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
       },
-      "Microsoft.OneDriveSDK/1.1.47": {
+      "Microsoft.OneDriveSDK/2.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Microsoft.Graph.Core": "1.1.1",
           "Newtonsoft.Json": "6.0.2"
         },
         "compile": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         },
         "runtime": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
+        }
+      },
+      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        },
+        "runtime": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -11965,7 +12085,19 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+      "Microsoft.Graph.Core/1.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
         "type": "package",
         "compile": {
           "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
@@ -12159,21 +12291,33 @@
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
       },
-      "Microsoft.OneDriveSDK/1.1.47": {
+      "Microsoft.OneDriveSDK/2.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Microsoft.Graph.Core": "1.1.1",
           "Newtonsoft.Json": "6.0.2"
         },
         "compile": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         },
         "runtime": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
+        }
+      },
+      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        },
+        "runtime": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -14358,7 +14502,19 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
+      "Microsoft.Graph.Core/1.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
         "type": "package",
         "compile": {
           "lib/netcore45/Microsoft.IdentityModel.Clients.ActiveDirectory.winmd": {}
@@ -14553,21 +14709,33 @@
       "Microsoft.NETNative.Analyzer/1.0.0": {
         "type": "package"
       },
-      "Microsoft.OneDriveSDK/1.1.47": {
+      "Microsoft.OneDriveSDK/2.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.21.301221612",
+          "Microsoft.Graph.Core": "1.1.1",
           "Newtonsoft.Json": "6.0.2"
         },
         "compile": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         },
         "runtime": {
-          "lib/win81/OneDriveSdk.WinRT.dll": {},
-          "lib/win81/OneDriveSdk.WinStore.dll": {},
-          "lib/win81/OneDriveSdk.dll": {}
+          "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
+        }
+      },
+      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
+          "Newtonsoft.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        },
+        "runtime": {
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
+          "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -16914,11 +17082,20 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "Microsoft.IdentityModel.Clients.ActiveDirectory/2.21.301221612": {
-      "sha512": "Wxcp3XhZGRRyUgB8JIMMZJCAzSDCXpU63Ly76ywbbP0bh4CGGa915fiAxfYRj2layGA1MDc84tpRpHQCYKWFmw==",
+    "Microsoft.Graph.Core/1.1.1": {
+      "sha512": "s+cB1G1z3Fk+GIwgpx1PRsINyZklgUdWvtnAbxqwUMAqNy76WQJiAm+6DXVpIDDBXGdFoDAZGytnQ2Qah9r07Q==",
       "type": "package",
       "files": [
-        "Microsoft.IdentityModel.Clients.ActiveDirectory.2.21.301221612.nupkg.sha512",
+        "Microsoft.Graph.Core.1.1.1.nupkg.sha512",
+        "Microsoft.Graph.Core.nuspec",
+        "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll"
+      ]
+    },
+    "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
+      "sha512": "mDOzGImSD32AD7JIqLBwFFfkRbTPybSyFILn+zKgPFAWJCw88/EkGLijnJFv+BJbE/wvYDmV7dcLuhZ8zi6n3Q==",
+      "type": "package",
+      "files": [
+        "Microsoft.IdentityModel.Clients.ActiveDirectory.2.22.302111727.nupkg.sha512",
         "Microsoft.IdentityModel.Clients.ActiveDirectory.nuspec",
         "lib/net45/Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll",
         "lib/net45/Microsoft.IdentityModel.Clients.ActiveDirectory.XML",
@@ -17166,20 +17343,25 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Microsoft.OneDriveSDK/1.1.47": {
-      "sha512": "qwSDJGoTt9CkUE7sFXpYr7n9wSHHXFoR9OpV9VuTKLEfR4AdeBwKLcupFDZH7nefjezuUmDURfcgIIM7e/LdjQ==",
+    "Microsoft.OneDriveSDK/2.0.0": {
+      "sha512": "x9arqbkykhstIl7GVPC8GlinhMFUWxKSoy1gZSo8OpE5UUlh9Y7jKX33BxUGLm5uZpbj6Svcneo5TANWx7mOxw==",
       "type": "package",
       "files": [
-        "Microsoft.OneDriveSDK.1.1.47.nupkg.sha512",
+        "Microsoft.OneDriveSDK.2.0.0.nupkg.sha512",
         "Microsoft.OneDriveSDK.nuspec",
-        "lib/net451/OneDriveSdk.WindowsForms.dll",
-        "lib/net451/OneDriveSdk.dll",
-        "lib/portable-net45+netcore45+wpa81+win8/OneDriveSdk.dll",
-        "lib/portable-win81+wpa81/OneDriveSdk.WinStore.dll",
-        "lib/portable-win81+wpa81/OneDriveSdk.dll",
-        "lib/win81/OneDriveSdk.WinRT.dll",
-        "lib/win81/OneDriveSdk.WinStore.dll",
-        "lib/win81/OneDriveSdk.dll"
+        "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll"
+      ]
+    },
+    "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "sha512": "Ok7XhGrfhlYrqEGfdcLvE0t4CJ+vGxTUzipzeCBh7fu6+10Mtr3psh7fDPHott+Rm9ncMzW2VcALN29QLTGX0Q==",
+      "type": "package",
+      "files": [
+        "Microsoft.OneDriveSDK.Authentication.1.0.3.nupkg.sha512",
+        "Microsoft.OneDriveSDK.Authentication.nuspec",
+        "lib/net451/Microsoft.OneDrive.Sdk.Authentication.Desktop.dll",
+        "lib/portable-win81+wpa81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll",
+        "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll",
+        "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll"
       ]
     },
     "Microsoft.VisualBasic/10.0.1": {
@@ -23158,7 +23340,8 @@
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.2.2",
       "Microsoft.NETNative.Analyzer >= 1.0.0",
       "Microsoft.Net.Http >= 2.2.29",
-      "Microsoft.OneDriveSDK >= 1.1.47",
+      "Microsoft.OneDriveSDK >= 2.0.0",
+      "Microsoft.OneDriveSDK.Authentication >= 1.0.3",
       "Newtonsoft.Json >= 9.0.1",
       "NotificationsExtensions.Win10 >= 14332.0.0",
       "TagLib.Portable >= 1.0.4",

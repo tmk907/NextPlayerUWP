@@ -1,4 +1,5 @@
 ﻿using Microsoft.OneDrive.Sdk;
+using Microsoft.OneDrive.Sdk.Authentication;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -16,17 +17,21 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         public OneDriveService()
         {
             Debug.WriteLine("OneDriveService()");
-            oneDriveClient = OneDriveClientExtensions.GetClientUsingWebAuthenticationBroker(AppConstants.OneDriveAppId, scopes);
+            msaAuthenticationProvider = new MsaAuthenticationProvider(AppConstants.OneDriveAppId, "https://login.live.com/oauth20_desktop.srf", scopes);
+            oneDriveClient = new OneDriveClient("https://api.onedrive.com/v1.0", msaAuthenticationProvider);
+
         }
 
         public OneDriveService(string UserId)
         {
             Debug.WriteLine("OneDriveService({0})", UserId);
             userId = UserId;
-            oneDriveClient = OneDriveClientExtensions.GetClientUsingWebAuthenticationBroker(AppConstants.OneDriveAppId, scopes);                       
+            msaAuthenticationProvider = new MsaAuthenticationProvider(AppConstants.OneDriveAppId, "https://login.live.com/oauth20_desktop.srf", scopes);
+            oneDriveClient = new OneDriveClient("https://api.onedrive.com/v1.0", msaAuthenticationProvider);
         }
 
         private IOneDriveClient oneDriveClient { get; set; }
+        private MsaAuthenticationProvider msaAuthenticationProvider { get; set; }
         private string userId;
 
         #region Authentication
@@ -36,7 +41,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
         public bool IsAuthenticated
         {
-            get { return (oneDriveClient.IsAuthenticated); }
+            get { return (((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).IsAuthenticated); }
         }
 
         public async Task<bool> LoginSilently()
@@ -46,22 +51,30 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             refreshToken = await GetSavedToken();
             if (IsAuthenticated)
             {
-
+                return true;
             }
             if (!String.IsNullOrEmpty(refreshToken))
             {
                 try
                 {
-                    oneDriveClient = await OneDriveClient.GetSilentlyAuthenticatedMicrosoftAccountClient(AppConstants.OneDriveAppId, "", scopes, refreshToken);
+                    //    oneDriveClient = await OneDriveClient.GetSilentlyAuthenticatedMicrosoftAccountClient(AppConstants.OneDriveAppId, "", scopes, refreshToken);
+
+                    AccountSession session = new AccountSession();
+                    session.ClientId = AppConstants.OneDriveAppId;
+                    session.RefreshToken = refreshToken;
+                    //var msaAuthenticationProvider = new MsaAuthenticationProvider(AppConstants.OneDriveAppId, "https://login.live.com/oauth20_desktop.srf", scopes);
+                    //oneDriveClient = new OneDriveClient(msaAuthenticationProvider);
+                    msaAuthenticationProvider.CurrentAccountSession = session;
+                    await msaAuthenticationProvider.AuthenticateUserAsync();
                     isLoggedIn = true;
                 }
-                catch (OneDriveException ex)
+                catch (Microsoft.Graph.ServiceException ex)
                 {
                     if (!ex.IsMatch(OneDriveErrorCode.ServiceNotAvailable.ToString()) &&
                         !ex.IsMatch(OneDriveErrorCode.Timeout.ToString()))
                     {
                         refreshToken = null;
-                        oneDriveClient = OneDriveClientExtensions.GetClientUsingWebAuthenticationBroker(AppConstants.OneDriveAppId, scopes);
+                        //oneDriveClient = OneDriveClientExtensions.GetClientUsingWebAuthenticationBroker(AppConstants.OneDriveAppId, scopes);
                     }
                 }
             }
@@ -76,25 +89,22 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             {
                 try
                 {
+                    await msaAuthenticationProvider.AuthenticateUserAsync();
                     if (refreshToken == null)
                     {
-                        var session = await oneDriveClient.AuthenticateAsync();
-                        refreshToken = session.RefreshToken;
-                        //await SaveToken(refreshToken);
+                        refreshToken = (((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession).RefreshToken;
                     }
                     else
                     {
-                        await oneDriveClient.AuthenticateAsync();
-                        if (refreshToken != oneDriveClient.AuthenticationProvider?.CurrentAccountSession?.RefreshToken)
+                        if (refreshToken != (((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession).RefreshToken)
                         {
-                            refreshToken = oneDriveClient.AuthenticationProvider?.CurrentAccountSession?.RefreshToken;
-                            //await SaveToken(refreshToken);
+                            refreshToken = (((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession).RefreshToken;
                         }
                     }
                     isLoggedIn = true;
                     if (userId == null)
                     {
-                        userId = oneDriveClient.AuthenticationProvider.CurrentAccountSession.UserId;
+                        userId = ((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession.UserId;
                         string username = await GetUsername();
                         if (!CloudAccounts.Instance.Exists(userId, CloudStorageType.OneDrive))
                         {
@@ -107,13 +117,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                     }
                     await SaveToken(refreshToken);
                 }
-                catch (OneDriveException ex)
+                catch (Microsoft.Graph.ServiceException ex)
                 {
                     if (!ex.IsMatch(OneDriveErrorCode.ServiceNotAvailable.ToString()) &&
-                    !ex.IsMatch(OneDriveErrorCode.Timeout.ToString()))
+                        !ex.IsMatch(OneDriveErrorCode.Timeout.ToString()))
                     {
                         refreshToken = null;
-                        oneDriveClient = OneDriveClientExtensions.GetClientUsingWebAuthenticationBroker(AppConstants.OneDriveAppId, scopes);
+                        //oneDriveClient = OneDriveClientExtensions.GetClientUsingWebAuthenticationBroker(AppConstants.OneDriveAppId, scopes);
                     }
                 }
             }
@@ -132,7 +142,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         public async Task Logout()
         {
             Debug.WriteLine("OneDriveService Logout()");
-            await oneDriveClient.SignOutAsync();
+            await msaAuthenticationProvider.SignOutAsync();
             await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.OneDrive);
         }
 
@@ -156,7 +166,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
         private async Task<string> GetUsername()
         {
-            var accessToken = oneDriveClient.AuthenticationProvider.CurrentAccountSession.AccessToken;
+            var accessToken = ((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession.AccessToken;
             string username = "";
             var uri = new Uri($"https://apis.live.net/v5.0/me?access_token={accessToken}");
             var httpClient = new System.Net.Http.HttpClient();
@@ -190,13 +200,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             }
             return musicFolderId == id;
         }
-        private Dictionary<string, IChildrenCollectionPage> cache = new Dictionary<string, IChildrenCollectionPage>();
+        private Dictionary<string, IItemChildrenCollectionPage> cache = new Dictionary<string, IItemChildrenCollectionPage>();
         private Dictionary<string, CloudFolder> cachedFolders = new Dictionary<string, CloudFolder>();
 
         public void ClearCache()
         {
             Debug.WriteLine("OneDriveService ClearCache()");
-            cache = new Dictionary<string, IChildrenCollectionPage>();
+            cache = new Dictionary<string, IItemChildrenCollectionPage>();
             cachedFolders = new Dictionary<string, CloudFolder>();
             musicFolderId = null;
         }
@@ -224,7 +234,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 cachedFolders.Add(musicFolderId, folder);
                 return folder;
             }
-            catch (OneDriveException ex)
+            catch (Microsoft.Graph.ServiceException ex)
             {
                 return null;
             }
@@ -236,7 +246,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             List<SongItem> songs = new List<SongItem>();
             if (!IsAuthenticated) return songs;
 
-            IChildrenCollectionPage children;
+            IItemChildrenCollectionPage children;
             if (cache.ContainsKey(id))
             {
                 children = cache[id];
@@ -248,7 +258,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                     children = await oneDriveClient.Drive.Items[id].Children.Request().GetAsync();
                     cache.Add(id, children);
                 }
-                catch (OneDriveException ex)
+                catch (Microsoft.Graph.ServiceException ex)
                 {
                     return songs;
                 }
@@ -279,7 +289,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 cachedFolders.Add(item.Id, folder);
                 return folder;
             }
-            catch (OneDriveException ex)
+            catch (Microsoft.Graph.ServiceException ex)
             {
                 return null;
             }
@@ -291,7 +301,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             List<CloudFolder> folders = new List<CloudFolder>();
             if (!IsAuthenticated) return folders;
 
-            IChildrenCollectionPage children;
+            IItemChildrenCollectionPage children;
             if (cache.ContainsKey(id))
             {
                 children = cache[id];
@@ -303,7 +313,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                     children = await oneDriveClient.Drive.Items[id].Children.Request().GetAsync();
                     cache.Add(id, children);
                 }
-                catch (OneDriveException ex)
+                catch (Microsoft.Graph.ServiceException ex)
                 {
                     return folders;
                 }
