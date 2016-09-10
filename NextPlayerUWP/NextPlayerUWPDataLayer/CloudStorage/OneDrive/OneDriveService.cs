@@ -263,13 +263,15 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                     return songs;
                 }
             }
+            List<SongData> songData = new List<SongData>();
             foreach (var item in children)
             {
                 if (item.Audio != null)
                 {
-                    songs.Add(OneDriveItemToSongItem(item));
+                    songData.Add(CreateSongData(item, userId));
                 }
             }
+            songs = await DatabaseManager.Current.InsertCloudItems(songData, Enums.MusicSource.OneDrive);
             return songs;
         }
 
@@ -328,24 +330,41 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             return folders;
         }
 
-        private static SongItem OneDriveItemToSongItem(Item item)
+        private static SongData CreateSongData(Item item, string userId)
         {
-            SongItem song = new SongItem();
-            song.Album = item?.Audio.Album ?? "";
-            song.AlbumArtist = item?.Audio.AlbumArtist ?? "";
-            song.Artist = item?.Audio.Artist ?? "";
-            song.Composer = item?.Audio.Composers ?? "";
-            //song.CoverPath = item?.Audio. ?? "";
-            //song.DateAdded = item.CreatedDateTime.Value.DateTime;
-            song.Disc = item?.Audio.Disc ?? 0;
-            song.Duration = (item?.Audio.Duration != null) ? TimeSpan.FromMilliseconds((double)item.Audio.Duration) : TimeSpan.Zero;
-            song.Genres = item?.Audio.Genre ?? "";
-            song.Path = item.AdditionalData["@content.downloadUrl"].ToString();
-            song.SourceType = Enums.MusicSource.OneDrive;
-            song.Title = String.IsNullOrEmpty(item?.Audio.Title) ? item.Name : item?.Audio.Title;
-            song.TrackNumber = item?.Audio.Track ?? 0;
-            song.Year = item?.Audio.Year ?? 0;
-            song.GenerateID();
+            SongData song = new SongData();
+            //song.AlbumArtPath = 
+            song.Bitrate = (uint)(item?.Audio.Bitrate ?? 0);
+            song.CloudUserId = userId;
+            song.DateAdded = DateTime.Now;
+            song.DateModified = (item.LastModifiedDateTime.HasValue) ? item.LastModifiedDateTime.Value.UtcDateTime : DateTime.UtcNow;
+            song.Duration = TimeSpan.Zero;
+            song.Filename = item.Name;
+            song.FileSize = (ulong)(item.Size ?? 0);
+            song.IsAvailable = 0;
+            song.LastPlayed = DateTime.MinValue;
+            song.MusicSourceType = (int)Enums.MusicSource.OneDrive;
+            song.Path = item.Id;
+            song.PlayCount = 0;
+           
+            song.Tag.Album = item?.Audio.Album ?? "";
+            song.Tag.AlbumArtist = item?.Audio.AlbumArtist ?? "";
+            song.Tag.Artists = item?.Audio.Artist ?? "";
+            song.Tag.Comment = "";
+            song.Tag.Composers = item?.Audio.Composers ?? "";
+            song.Tag.Conductor = "";
+            song.Tag.Disc = item?.Audio.Disc ?? 0;
+            song.Tag.DiscCount = item?.Audio.DiscCount ?? 0;
+            song.Tag.FirstArtist = item?.Audio.Artist ?? "";
+            song.Tag.FirstComposer = item?.Audio.Composers ?? "";
+            song.Tag.Genres = item?.Audio.Genre ?? "";
+            song.Tag.Lyrics = "";
+            song.Tag.Rating = 0;
+            song.Tag.Title = String.IsNullOrEmpty(item?.Audio.Title) ? item.Name : item.Audio.Title;
+            song.Tag.Track = item?.Audio.Track ?? 0;
+            song.Tag.TrackCount = item?.Audio.TrackCount ?? 0;
+            song.Tag.Year = item?.Audio.Year ?? 0;
+
             return song;
         }
     }

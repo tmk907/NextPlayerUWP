@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="NextPlayerUWPDataLayer.Model.Tags">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAEBEAQAEAAQAIAAAACABAAAAEAIEQASEAAAAA=</HashCode>
+      <FileName>Model\Tags.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NextPlayerUWPDataLayer.Model.SongItem" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ZCAUAgYgRAIjAEYAAwJCkAACg5QACAMMYQgASGEAAEo=</HashCode>
+      <FileName>Model\SongItem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NextPlayerUWPDataLayer.Model.SongData">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAgAAAjQANAIAAAAAQAAAAABAAAASAAAIAAAgA=</HashCode>
+      <FileName>Model\SongData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

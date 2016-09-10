@@ -50,7 +50,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public bool IsContentPathExpired()
         {
-            if (contentPath == null || DateTime.Now > contentPathExpiresAt) return true;
+            if (contentPath == null || contentPathExpiresAt == null || DateTime.Now > contentPathExpiresAt) return true;
             else return false;
         }
 
@@ -358,7 +358,12 @@ namespace NextPlayerUWPDataLayer.Model
                 isAlbumArtSet = true;
                 coverPath = table.AlbumArt;
             }
-            if ()
+            contentPathUpdatedAt = DateTime.Now;
+            if (table.MusicSourceType == (int)MusicSource.LocalFile)
+            {
+                contentPath = path;
+                contentPathExpiresAt = DateTime.MaxValue;
+            }
         }
 
         public const int MaxId = 100000;

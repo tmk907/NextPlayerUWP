@@ -154,7 +154,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task UpdateFolderAsync2(string directory, List<SongsTable> oldSongs, List<SongData> newSongs, IEnumerable<SongsTable> toNotAvailable, IEnumerable<SongsTable> changed)
+        public async Task UpdateFolderAsync(string directory, List<SongsTable> oldSongs, List<SongData> newSongs, IEnumerable<SongsTable> toNotAvailable, IEnumerable<SongsTable> changed)
         {
             //toNotAvailable i changed sa podzbiorami oldSongs
             //Debug.WriteLine("UpdateFolderAsync2 {0} {1} {2} {3}", newSongs.Count, oldSongs.Count, toNotAvailable.Count(), changed.Count());
@@ -216,79 +216,6 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.UpdateAllAsync(toNotAvailable);
             await connectionAsync.UpdateAllAsync(changed);
 
-            List<SongsTable> list = new List<SongsTable>();
-            foreach (var item in newSongs)
-            {
-                list.Add(CreateSongsTable(item));
-            }
-            await connectionAsync.InsertAllAsync(list);
-        }
-
-        public async Task UpdateFolderAsync(List<SongData> newSongs, List<int> toAvailable, List<int> oldAvailable, string directoryName)
-        {
-            var old = await connectionAsync.Table<SongsTable>().Where(s => s.DirectoryName.Equals(directoryName)).ToListAsync();
-
-            var notAvailable = old.Select(s => s.SongId).Except(toAvailable).Except(oldAvailable);
-            foreach(var id in notAvailable)
-            {
-                connection.Execute("UPDATE SongsTable SET IsAvailable = 0 WHERE SongId = ?", id);
-            }
-
-            if (newSongs.Count == 0 && toAvailable.Count == 0 && oldAvailable.Count == 0)
-            {
-                //delete folder
-                connection.Execute("DELETE FROM FoldersTable WHERE Directory = ?", directoryName);
-                return;
-            }
-
-            if(newSongs.Count == 0 && toAvailable.Count == 0)//&& oldAvailable == 0
-            {
-                return;
-            }
-
-            foreach (var id in toAvailable)
-            {
-                connection.Execute("UPDATE SongsTable SET IsAvailable = 1 WHERE SongId = ?", id);
-            }
-
-            //Caculate duration of songs in database
-            var queryOldAvailableSongs = old.Where(s => (toAvailable.Contains(s.SongId) || oldAvailable.Contains(s.SongId)));
-            TimeSpan oldAvailableSongsDuration = TimeSpan.Zero;
-            foreach(var item in queryOldAvailableSongs)
-            {
-                oldAvailableSongsDuration += item.Duration;
-            }
-            //Calculate duration of new songs and date of last added
-            TimeSpan newDuration = TimeSpan.Zero;
-            DateTime lastAdded = DateTime.MinValue;
-            foreach (var item in newSongs)
-            {
-                if (lastAdded.Ticks < item.DateAdded.Ticks) lastAdded = item.DateAdded;
-                newDuration += item.Duration;
-            }
-
-            //Update folder informations or create new entry
-            var query2 = await connectionAsync.Table<FoldersTable>().Where(f => f.Directory.Equals(directoryName)).ToListAsync();
-            if (query2.Count == 1)
-            {
-                connection.Execute("UPDATE FoldersTable SET SongsNumber = ?, Duration = ? WHERE FolderId = ?", newSongs.Count + toAvailable.Count + oldAvailable.Count, oldAvailableSongsDuration + newDuration, query2.FirstOrDefault().FolderId);
-            }
-            else
-            { 
-                if (newSongs.Count > 0)
-                {
-                    await connectionAsync.InsertAsync(new FoldersTable()
-                    {
-                        Directory = directoryName,
-                        Duration = newDuration,
-                        Folder = Path.GetFileName(directoryName),
-                        LastAdded = lastAdded,
-                        SongsNumber = newSongs.Count,
-                    });
-                }
-            }
-
-            //Add new songs to database
             List<SongsTable> list = new List<SongsTable>();
             foreach (var item in newSongs)
             {
@@ -1350,6 +1277,42 @@ namespace NextPlayerUWPDataLayer.Services
                 PlainPlaylistId = plainId
             };
             return connection.Insert(p);
+        }
+
+        public async Task<List<SongItem>> InsertCloudItems(IEnumerable<SongData> songsdata, MusicSource type)
+        {
+            var indb = await connectionAsync.Table<SongsTable>().Where(s => s.MusicSourceType == (int)type).ToListAsync();
+            List<SongItem> songs = new List<SongItem>();
+            List<SongsTable> newSongs = new List<SongsTable>();
+            List<SongsTable> updatedSongs = new List<SongsTable>();
+
+            foreach (var song in songsdata)
+            {
+                var q = indb.FirstOrDefault(s => s.Path == song.Path);
+                if (q == null)
+                {
+                    newSongs.Add(CreateSongsTable(song));
+                }
+                else
+                {
+                    if (q.DateModified != song.DateModified)
+                    {
+
+                    }
+                }
+            }
+            if (newSongs.Count > 0)
+            {
+                await connectionAsync.InsertAllAsync(newSongs);
+            }
+            indb = await connectionAsync.Table<SongsTable>().Where(s => s.MusicSourceType == (int)type).ToListAsync();
+            var paths = songsdata.Select(s => s.Path);
+            var fromDatabase = indb.Where(s => paths.Contains(s.Path));
+            foreach(var song in fromDatabase)
+            {
+                songs.Add(new SongItem(song));
+            }
+            return songs;
         }
 
         #endregion

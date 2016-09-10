@@ -322,7 +322,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
             var toUpdate = oldSongs.Where(s => availableChange.Contains(s.SongId)).ToList();
 
-            await DatabaseManager.Current.UpdateFolderAsync2(folder.Path, oldSongs, newSongs, toNotAvailable, toUpdate);
+            await DatabaseManager.Current.UpdateFolderAsync(folder.Path, oldSongs, newSongs, toNotAvailable, toUpdate);
 
             songsAdded += newSongs.Count;// + oldSongs.Where(s => s.IsAvailable == 1).Count();
             progress.Report(songsAdded);

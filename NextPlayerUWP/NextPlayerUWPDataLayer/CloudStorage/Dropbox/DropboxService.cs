@@ -232,20 +232,19 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
                 result = await dropboxClient.Files.ListFolderAsync(args);
                 cache.Add(path, result);
             }
-            
+            List<SongData> songData = new List<SongData>();
+
             foreach (var item in result.Entries.Where(i=>i.IsFile))
             {
-                var f = item.AsFile;
-                if (f.Name.ToLower().EndsWith(".mp3") || f.Name.ToLower().EndsWith(".m4a"))
+                var itemAsFile = item.AsFile;
+                if (itemAsFile.Name.ToLower().EndsWith(".mp3") || itemAsFile.Name.ToLower().EndsWith(".m4a"))
                 {
-                    SongItem s = new SongItem();
-                    s.SourceType = Enums.MusicSource.Dropbox;
-                    s.Title = f.Name;
-                    s.Path = await GetTemporaryLink(f.PathLower);
-                    s.GenerateID();
-                    songs.Add(s);
+                    songData.Add(CreateSongData(itemAsFile, userId));
                 }
             }
+
+            songs = await DatabaseManager.Current.InsertCloudItems(songData, Enums.MusicSource.Dropbox);
+
             return songs;
         }
 
@@ -279,6 +278,44 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             if (!IsAuthenticated) return null;
             var link = await dropboxClient.Files.GetTemporaryLinkAsync(path);
             return link.Link;
+        }
+
+        private static SongData CreateSongData(Dropbox.Api.Files.FileMetadata item, string userId)
+        {
+            SongData song = new SongData();
+            //song.AlbumArtPath = 
+            song.Bitrate = 0;
+            song.CloudUserId = userId;
+            song.DateAdded = DateTime.Now;
+            song.DateModified = item.ServerModified;
+            song.Duration = TimeSpan.Zero;
+            song.Filename = item.Name;
+            song.FileSize = item.Size;
+            song.IsAvailable = 0;
+            song.LastPlayed = DateTime.MinValue;
+            song.MusicSourceType = (int)Enums.MusicSource.Dropbox;
+            song.Path = item.Id;
+            song.PlayCount = 0;
+
+            song.Tag.Album = "";
+            song.Tag.AlbumArtist = "";
+            song.Tag.Artists = "";
+            song.Tag.Comment = "";
+            song.Tag.Composers = "";
+            song.Tag.Conductor = "";
+            song.Tag.Disc = 0;
+            song.Tag.DiscCount = 0;
+            song.Tag.FirstArtist = "";
+            song.Tag.FirstComposer = "";
+            song.Tag.Genres = "";
+            song.Tag.Lyrics = "";
+            song.Tag.Rating = 0;
+            song.Tag.Title = item.Name;
+            song.Tag.Track = 0;
+            song.Tag.TrackCount = 0;
+            song.Tag.Year = 0;
+
+            return song;
         }
     }
 }
