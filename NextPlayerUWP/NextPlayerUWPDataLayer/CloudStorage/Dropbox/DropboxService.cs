@@ -180,6 +180,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             return (type == CloudStorageType.Dropbox) && userId == this.userId;
         }
 
+
+        private Dictionary<string, Dropbox.Api.Files.ListFolderResult> cache = new Dictionary<string, Dropbox.Api.Files.ListFolderResult>();
+        private Dictionary<string, CloudFolder> cachedFolders = new Dictionary<string, CloudFolder>();
+
+
         public async Task<string> GetRootFolderId()
         {
             return "";
@@ -189,10 +194,10 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         {
             Debug.WriteLine("DropboxService GetFolder({0})", path);
             if (!IsAuthenticated) return null;
-            //if (cachedFolders.ContainsKey(id))
-            //{
-            //    return cachedFolders[id];
-            //}
+            if (cachedFolders.ContainsKey(path))
+            {
+                return cachedFolders[path];
+            }
             if (path == "")
             {
                 return new CloudFolder("Dropbox", "", 0, "", null, CloudStorageType.Dropbox, userId);
@@ -202,7 +207,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
                 var item = await dropboxClient.Files.GetMetadataAsync(path);
                 if (item == null) return null;
                 CloudFolder folder = new CloudFolder(item.Name, item.PathDisplay, 0, item.PathLower, (path == "") ? "" : System.IO.Path.GetDirectoryName(item.PathLower), CloudStorageType.Dropbox, userId);
-                //cachedFolders.Add(item.Id, folder);
+                cachedFolders.Add(path, folder);
                 return folder;
             }
             catch (Exception ex)
@@ -215,8 +220,19 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         {
             List<SongItem> songs = new List<SongItem>();
             if (!IsAuthenticated) return songs;
-            var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
-            var result = await dropboxClient.Files.ListFolderAsync(args);
+
+            Dropbox.Api.Files.ListFolderResult result;
+            if (cache.ContainsKey(path))
+            {
+                result = cache[path];
+            }
+            else
+            {
+                var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
+                result = await dropboxClient.Files.ListFolderAsync(args);
+                cache.Add(path, result);
+            }
+            
             foreach (var item in result.Entries.Where(i=>i.IsFile))
             {
                 var f = item.AsFile;
@@ -237,8 +253,18 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         {
             List<CloudFolder> folders = new List<CloudFolder>();
             if (!IsAuthenticated) return folders;
-            var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
-            var result = await dropboxClient.Files.ListFolderAsync(args);
+
+            Dropbox.Api.Files.ListFolderResult result;
+            if (cache.ContainsKey(path))
+            {
+                result = cache[path];
+            }
+            else
+            {
+                var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
+                result = await dropboxClient.Files.ListFolderAsync(args);
+                cache.Add(path, result);
+            }
             foreach (var item in result.Entries.Where(i => i.IsFolder))
             {
                 var f = item.AsFolder;

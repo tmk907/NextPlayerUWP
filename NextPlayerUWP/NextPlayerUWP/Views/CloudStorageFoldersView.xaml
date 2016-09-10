@@ -74,12 +74,12 @@
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
         <DataTemplate x:Key="FolderItemTemplateDesktop" x:DataType="data:FolderItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewFolderItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="6*" MinWidth="250"/>
                     <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="*" MinWidth="30"/>
+                    <!--<ColumnDefinition Width="*" MinWidth="30"/>-->
                 </Grid.ColumnDefinitions>
                 <SymbolIcon Grid.Column="0"
                     Symbol="Copy"
@@ -94,17 +94,17 @@
                 <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
-                <TextBlock Grid.Column="3"
+                <!--<TextBlock Grid.Column="3"
                     Text="{x:Bind SongsNumber}"
-                    Style="{StaticResource SongItemStyleRight}"/>
+                    Style="{StaticResource SongItemStyleRight}"/>-->
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FolderItemTemplateMobile" x:DataType="data:FolderItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewFolderItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <!--<ColumnDefinition Width="2*"/>-->
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -123,18 +123,18 @@
                 <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
-                <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                <!--<TextBlock Grid.Column="2" Grid.RowSpan="2"
                     Text="{x:Bind SongsNumber}"
-                    Style="{StaticResource SongItemStyleRight}"/>
+                    Style="{StaticResource SongItemStyleRight}"/>-->
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FolderItemTemplateMobileWide" x:DataType="data:FolderItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewFolderItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="6*" MinWidth="250"/>
                     <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="*" MinWidth="30"/>
+                    <!--<ColumnDefinition Width="*" MinWidth="30"/>-->
                 </Grid.ColumnDefinitions>
                 <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
                     Symbol="Copy"
@@ -149,13 +149,13 @@
                 <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
-                <TextBlock Grid.Column="3"
+                <!--<TextBlock Grid.Column="3"
                     Text="{x:Bind SongsNumber}"
-                    Style="{StaticResource SongItemStyleRight}"/>
+                    Style="{StaticResource SongItemStyleRight}"/>-->
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FileItemTemplateDesktop" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewSongItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="8*"/>
@@ -182,7 +182,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FileItemTemplateMobile" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewSongItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="8*"/>
@@ -208,7 +208,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FileItemTemplateMobileWide" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
+            <Grid RightTapped="ListViewSongItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44"/>
                     <ColumnDefinition Width="8*"/>

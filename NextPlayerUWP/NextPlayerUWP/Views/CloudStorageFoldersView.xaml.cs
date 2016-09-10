@@ -20,15 +20,15 @@ namespace NextPlayerUWP.Views
             ViewModel = (CloudStorageFoldersViewModel)DataContext;
         }
 
-        private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        private void ListViewFolderItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            //FrameworkElement senderElement = sender as FrameworkElement;
-            //var menu = this.Resources["ContextMenuFolder"] as MenuFlyout;
-            //var position = e.GetPosition(senderElement);
-            //menu.ShowAt(senderElement, position);
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenuFolder"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
         }
 
-        private void ListViewItem2_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        private void ListViewSongItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
             var menu = this.Resources["ContextMenuFile"] as MenuFlyout;

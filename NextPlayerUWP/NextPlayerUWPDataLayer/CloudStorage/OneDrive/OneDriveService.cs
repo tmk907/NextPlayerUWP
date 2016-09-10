@@ -240,23 +240,23 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             }
         }
 
-        public async Task<List<SongItem>> GetSongItems(string id)
+        public async Task<List<SongItem>> GetSongItems(string folderId)
         {
-            Debug.WriteLine("OneDriveService GetSongItems({0})", id);
+            Debug.WriteLine("OneDriveService GetSongItems {0}", folderId);
             List<SongItem> songs = new List<SongItem>();
             if (!IsAuthenticated) return songs;
 
             IItemChildrenCollectionPage children;
-            if (cache.ContainsKey(id))
+            if (cache.ContainsKey(folderId))
             {
-                children = cache[id];
+                children = cache[folderId];
             }
             else
             {
                 try
                 {
-                    children = await oneDriveClient.Drive.Items[id].Children.Request().GetAsync();
-                    cache.Add(id, children);
+                    children = await oneDriveClient.Drive.Items[folderId].Children.Request().GetAsync();
+                    cache.Add(folderId, children);
                 }
                 catch (Microsoft.Graph.ServiceException ex)
                 {
@@ -275,7 +275,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
         public async Task<CloudFolder> GetFolder(string id)
         {
-            Debug.WriteLine("OneDriveService GetFolder({0})", id);
+            Debug.WriteLine("OneDriveService GetFolder {0}", id);
             if (!IsAuthenticated) return null;
             if (cachedFolders.ContainsKey(id))
             {
@@ -295,23 +295,23 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             }
         }
 
-        public async Task<List<CloudFolder>> GetSubFolders(string id)
+        public async Task<List<CloudFolder>> GetSubFolders(string folderId)
         {
-            Debug.WriteLine("OneDriveService GetSubFoldersFromItem({0})", id);
+            Debug.WriteLine("OneDriveService GetSubFoldersFromItem {0}", folderId);
             List<CloudFolder> folders = new List<CloudFolder>();
             if (!IsAuthenticated) return folders;
 
             IItemChildrenCollectionPage children;
-            if (cache.ContainsKey(id))
+            if (cache.ContainsKey(folderId))
             {
-                children = cache[id];
+                children = cache[folderId];
             }
             else
             {
                 try
                 {
-                    children = await oneDriveClient.Drive.Items[id].Children.Request().GetAsync();
-                    cache.Add(id, children);
+                    children = await oneDriveClient.Drive.Items[folderId].Children.Request().GetAsync();
+                    cache.Add(folderId, children);
                 }
                 catch (Microsoft.Graph.ServiceException ex)
                 {
@@ -322,7 +322,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             {
                 if (item.Folder != null)
                 {
-                    folders.Add(new CloudFolder(item.Name, "", item.Folder.ChildCount ?? 0, item.Id, id, CloudStorageType.OneDrive, userId));
+                    folders.Add(new CloudFolder(item.Name, "", item.Folder.ChildCount ?? 0, item.Id, folderId, CloudStorageType.OneDrive, userId));
                 }
             }
             return folders;

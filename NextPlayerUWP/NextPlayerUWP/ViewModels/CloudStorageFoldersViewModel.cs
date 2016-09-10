@@ -58,6 +58,7 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
+            FolderName = "";
             Loading = true;
             currentFolder = null;
             if (folderId == null)

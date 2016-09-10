@@ -43,6 +43,33 @@ namespace NextPlayerUWPDataLayer.Model
         public TimeSpan Duration { get { return duration; } set { duration = value; } }
         private string path;
         public string Path { get { return path; } set { path = value; } }
+
+        //private string contentPath;
+        //public string ContentPath
+        //{
+        //    get
+        //    {
+        //        if (contentPath == null)
+        //        {
+
+        //            switch (sourceType)
+        //            {
+        //                case MusicSource.LocalFile:
+        //                    contentPath = Path;
+        //                    break;
+        //                case MusicSource.LocalNotMusicLibrary:
+        //                    contentPath = Path;//!!
+        //                    break;
+        //                case MusicSource.RadioJamendo:
+        //                    contentPath = "";
+        //                    break;
+        //                case MusicSource.Dropbox:
+        //                    CloudStorage.CloudStorageServiceFactory cssf = new CloudStorage.CloudStorageServiceFactory();
+        //                    cssf.
+        //            }
+        //        }
+        //    }
+
         private int rating;
         public int Rating
         {

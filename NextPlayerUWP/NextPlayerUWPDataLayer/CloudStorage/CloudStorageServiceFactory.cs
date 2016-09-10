@@ -9,7 +9,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage
 {
     public class CloudStorageServiceFactory
     {
-        private List<ICloudStorageService> services = new List<ICloudStorageService>();
+        private static List<ICloudStorageService> services = new List<ICloudStorageService>();
 
         public async Task<List<CloudRootFolder>> GetAllRootFolders()
         {
