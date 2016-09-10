@@ -534,6 +534,7 @@ namespace NextPlayerUWPDataLayer.Services
                 AlbumArt = song.AlbumArtPath ?? "",
                 Artists = song.Tag.Artists,
                 Bitrate = song.Bitrate,
+                CloudUserId = song.CloudUserId,
                 Comment = song.Tag.Comment,
                 Composers = song.Tag.Composers,
                 Conductor = song.Tag.Conductor,
@@ -552,6 +553,7 @@ namespace NextPlayerUWPDataLayer.Services
                 IsAvailable = song.IsAvailable,
                 LastPlayed = song.LastPlayed,
                 Lyrics = song.Tag.Lyrics,
+                MusicSourceType = song.MusicSourceType,
                 Path = song.Path,
                 PlayCount = song.PlayCount,
                 Rating = song.Tag.Rating,
@@ -1788,6 +1790,7 @@ namespace NextPlayerUWPDataLayer.Services
                 AlbumArt = s.AlbumArt,
                 Artists = s.Artists,
                 Bitrate = s.Bitrate,
+                CloudUserId = s.CloudUserId,
                 Comment = s.Comment,
                 Composers = s.Composers,
                 Conductor = s.Conductor,
@@ -1806,6 +1809,7 @@ namespace NextPlayerUWPDataLayer.Services
                 IsAvailable = s.IsAvailable,
                 LastPlayed = s.LastPlayed,
                 Lyrics = s.Lyrics,
+                MusicSourceType = s.MusicSourceType,
                 Path = s.Path,
                 PlayCount = s.PlayCount,
                 Rating = s.Rating,
@@ -1843,6 +1847,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 AlbumArtPath = q.AlbumArt,
                 Bitrate = q.Bitrate,
+                CloudUserId = q.CloudUserId,
                 DateAdded = q.DateAdded,
                 DateModified = q.DateModified,
                 Duration = q.Duration,
@@ -1850,6 +1855,7 @@ namespace NextPlayerUWPDataLayer.Services
                 FileSize = (ulong)q.FileSize,
                 IsAvailable = q.IsAvailable,
                 LastPlayed = q.LastPlayed,
+                MusicSourceType = q.MusicSourceType,
                 Path = q.Path,
                 PlayCount = q.PlayCount,
                 SongId = q.SongId,
@@ -1884,6 +1890,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 AlbumArtPath = "",
                 Bitrate = 0,
+                CloudUserId = "",
                 DateAdded = DateTime.Now,
                 DateModified = DateTime.UtcNow,
                 Duration = TimeSpan.Zero,
@@ -1891,6 +1898,7 @@ namespace NextPlayerUWPDataLayer.Services
                 FileSize = (ulong)0,
                 IsAvailable = 0,
                 LastPlayed = DateTime.Now,
+                MusicSourceType = 0,
                 Path = "",
                 PlayCount = 0,
                 SongId = -2,
@@ -2003,6 +2011,13 @@ namespace NextPlayerUWPDataLayer.Services
         public void UpdateToVersion6()
         {
             connection.CreateTable<CloudAccountsTable>();
+        }
+
+        public void UpdateToVersion7()
+        {
+            connection.CreateTable<SongsTable>();
+            connection.Execute("UPDATE SongsTable SET MusicSourceType = ?", 1);
+            connection.Execute("UPDATE SongsTable SET CloudUserId = ?", "");
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()

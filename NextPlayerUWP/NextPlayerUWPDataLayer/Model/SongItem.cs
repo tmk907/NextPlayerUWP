@@ -20,7 +20,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != album)
                 {
                     album = value;
-                    onPropertyChanged(this, "Album");
+                    onPropertyChanged(this, nameof(Album));
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != artist)
                 {
                     artist = value;
-                    onPropertyChanged(this, "Artist");
+                    onPropertyChanged(this, nameof(Artist));
                 }
             }
         }
@@ -44,31 +44,39 @@ namespace NextPlayerUWPDataLayer.Model
         private string path;
         public string Path { get { return path; } set { path = value; } }
 
-        //private string contentPath;
-        //public string ContentPath
-        //{
-        //    get
-        //    {
-        //        if (contentPath == null)
-        //        {
 
-        //            switch (sourceType)
-        //            {
-        //                case MusicSource.LocalFile:
-        //                    contentPath = Path;
-        //                    break;
-        //                case MusicSource.LocalNotMusicLibrary:
-        //                    contentPath = Path;//!!
-        //                    break;
-        //                case MusicSource.RadioJamendo:
-        //                    contentPath = "";
-        //                    break;
-        //                case MusicSource.Dropbox:
-        //                    CloudStorage.CloudStorageServiceFactory cssf = new CloudStorage.CloudStorageServiceFactory();
-        //                    cssf.
-        //            }
-        //        }
-        //    }
+        private DateTime contentPathUpdatedAt;
+        private DateTime contentPathExpiresAt;
+
+        public bool IsContentPathExpired()
+        {
+            if (contentPath == null || DateTime.Now > contentPathExpiresAt) return true;
+            else return false;
+        }
+
+        public void UpdateContentPath(string newContentPath, DateTime expiresAt)
+        {
+            ContentPath = newContentPath;
+            contentPathExpiresAt = expiresAt;
+            contentPathUpdatedAt = DateTime.Now;
+        }
+
+        private string contentPath;
+        public string ContentPath
+        {
+            get
+            {
+                return contentPath;
+            }
+            set
+            {
+                if (value != contentPath)
+                {
+                    contentPath = value;
+                    onPropertyChanged(this, nameof(ContentPath));
+                }
+            }
+        }
 
         private int rating;
         public int Rating
@@ -82,7 +90,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != rating)
                 {
                     rating = value;
-                    onPropertyChanged(this, "Rating");
+                    onPropertyChanged(this, nameof(Rating));
                 }
             }
         }
@@ -100,7 +108,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != title)
                 {
                     title = value;
-                    onPropertyChanged(this, "Title");
+                    onPropertyChanged(this, nameof(Title));
                 }
             }
         }
@@ -116,7 +124,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != disc)
                 {
                     disc = value;
-                    onPropertyChanged(this, "Disc");
+                    onPropertyChanged(this, nameof(Disc));
                 }
             }
         }
@@ -132,7 +140,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != trackNumber)
                 {
                     trackNumber = value;
-                    onPropertyChanged(this, "TrackNumber");
+                    onPropertyChanged(this, nameof(TrackNumber));
                 }
             }
         }
@@ -148,7 +156,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != composer)
                 {
                     composer = value;
-                    onPropertyChanged(this, "Composer");
+                    onPropertyChanged(this, nameof(Composer));
                 }
             }
         }
@@ -164,7 +172,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != year)
                 {
                     year = value;
-                    onPropertyChanged(this, "Year");
+                    onPropertyChanged(this, nameof(Year));
                 }
             }
         }
@@ -179,7 +187,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != lastPlayed)
                 {
                     lastPlayed = value;
-                    onPropertyChanged(this, "LastPlayed");
+                    onPropertyChanged(this, nameof(LastPlayed));
                 }
             }
         }
@@ -192,7 +200,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if(value != playCount)
                 {
                     playCount = value;
-                    onPropertyChanged(this, "PlayCount");
+                    onPropertyChanged(this, nameof(PlayCount));
                 }
             }
         }
@@ -205,7 +213,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != genres)
                 {
                     genres = value;
-                    onPropertyChanged(this, "Genres");
+                    onPropertyChanged(this, nameof(Genres));
                 }
             }
         }
@@ -218,7 +226,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != albumArtist)
                 {
                     albumArtist = value;
-                    onPropertyChanged(this, "AlbumArtist");
+                    onPropertyChanged(this, AlbumArtist);
                 }
             }
         }
@@ -231,7 +239,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != isPlaying)
                 {
                     isPlaying = value;
-                    onPropertyChanged(this, "IsPlaying");
+                    onPropertyChanged(this, nameof(isPlaying));
                 }
             }
         }
@@ -252,7 +260,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != isAlbumArtSet)
                 {
                     isAlbumArtSet = value;
-                    onPropertyChanged(this, "IsAlbumArtSet");
+                    onPropertyChanged(this, nameof(IsAlbumArtSet));
                 }
             }
         }
@@ -272,7 +280,7 @@ namespace NextPlayerUWPDataLayer.Model
             {
                 coverPath = value;
                 albumArtUri = null;
-                onPropertyChanged(this, "AlbumArtUri");
+                onPropertyChanged(this, nameof(AlbumArtUri));
             }
         }
 
@@ -350,6 +358,7 @@ namespace NextPlayerUWPDataLayer.Model
                 isAlbumArtSet = true;
                 coverPath = table.AlbumArt;
             }
+            if ()
         }
 
         public const int MaxId = 100000;

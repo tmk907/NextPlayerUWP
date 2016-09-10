@@ -373,12 +373,14 @@ namespace NextPlayerUWPDataLayer.Services
         private async Task<SongData> CreateSongFromFile(StorageFile file)
         {
             SongData song = new SongData();
+            song.CloudUserId = "";
             song.DateAdded = DateTime.Now;
             song.Filename = file.Name;
             song.Path = file.Path;
             song.PlayCount = 0;
             song.LastPlayed = DateTime.MinValue;
             song.IsAvailable = 1;
+            song.MusicSourceType = (int)Enums.MusicSource.LocalFile;
             song.Tag.Rating = 0;
             song.FileSize = 0;
             var prop = await file.GetBasicPropertiesAsync();

@@ -22,6 +22,8 @@ namespace NextPlayerUWPDataLayer.Model
         public Tags Tag { get; set; }
 
         public string AlbumArtPath { get; set; }
+        public int MusicSourceType { get; set; }
+        public string CloudUserId { get; set; }
 
         public void AddTag(Tags t)
         {
