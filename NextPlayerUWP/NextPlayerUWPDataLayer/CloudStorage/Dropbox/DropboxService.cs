@@ -193,6 +193,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         public async Task<CloudFolder> GetFolder(string path)
         {
             Debug.WriteLine("DropboxService GetFolder({0})", path);
+            await LoginSilently();
             if (!IsAuthenticated) return null;
             if (cachedFolders.ContainsKey(path))
             {
@@ -219,6 +220,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         public async Task<List<SongItem>> GetSongItems(string path)
         {
             List<SongItem> songs = new List<SongItem>();
+            await LoginSilently();
             if (!IsAuthenticated) return songs;
 
             Dropbox.Api.Files.ListFolderResult result;
@@ -251,6 +253,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         public async Task<List<CloudFolder>> GetSubFolders(string path)
         {
             List<CloudFolder> folders = new List<CloudFolder>();
+            await LoginSilently();
             if (!IsAuthenticated) return folders;
 
             Dropbox.Api.Files.ListFolderResult result;
@@ -275,6 +278,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         //Expire in 4 hours
         public async Task<string> GetDownloadLink(string path)
         {
+            await LoginSilently();
             if (!IsAuthenticated) return null;
             var link = await dropboxClient.Files.GetTemporaryLinkAsync(path);
             return link.Link;

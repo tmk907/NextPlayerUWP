@@ -47,12 +47,12 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         public async Task<bool> LoginSilently()
         {
             Debug.WriteLine("OneDriveService LoginSilently()");
-            bool isLoggedIn = false;
-            refreshToken = await GetSavedToken();
             if (IsAuthenticated)
             {
                 return true;
             }
+            bool isLoggedIn = false;
+            refreshToken = await GetSavedToken();
             if (!String.IsNullOrEmpty(refreshToken))
             {
                 try
@@ -220,6 +220,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         private async Task<CloudFolder> GetMusicFolder()
         {
             Debug.WriteLine("OneDriveService GetMusicFolder()");
+            await LoginSilently();
             if (!IsAuthenticated) return null;
             try
             {
@@ -244,6 +245,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         {
             Debug.WriteLine("OneDriveService GetSongItems {0}", folderId);
             List<SongItem> songs = new List<SongItem>();
+            await LoginSilently();
             if (!IsAuthenticated) return songs;
 
             IItemChildrenCollectionPage children;
@@ -278,6 +280,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         public async Task<CloudFolder> GetFolder(string id)
         {
             Debug.WriteLine("OneDriveService GetFolder {0}", id);
+            await LoginSilently();
             if (!IsAuthenticated) return null;
             if (cachedFolders.ContainsKey(id))
             {
@@ -301,6 +304,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         {
             Debug.WriteLine("OneDriveService GetSubFoldersFromItem {0}", folderId);
             List<CloudFolder> folders = new List<CloudFolder>();
+            await LoginSilently();
             if (!IsAuthenticated) return folders;
 
             IItemChildrenCollectionPage children;
@@ -333,6 +337,8 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
         public async Task<string> GetDownloadLink(string fileId)
         {
+            await LoginSilently();
+            if (!IsAuthenticated) return null;
             var item = await oneDriveClient.Drive.Items[fileId].Request().GetAsync();
             return item.AdditionalData["@content.downloadUrl"].ToString();
         }

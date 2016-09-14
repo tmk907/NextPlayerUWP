@@ -369,10 +369,11 @@ namespace NextPlayerUWP.Common
 
         private static Random rng = new Random();
         private int[] ar;
-        public async Task ShufflePlaylist()
+        public async Task<int> ShufflePlaylist()
         {
             ar = new int[songs.Count];
             int n = songs.Count;
+            int newCurrentIndex = currentIndex;
             while (n > 1)
             {
                 n--;
@@ -381,13 +382,17 @@ namespace NextPlayerUWP.Common
                 songs[k] = songs[n];
                 songs[n] = value;
                 ar[n] = k;
+                if (k == newCurrentIndex) newCurrentIndex = n;
+                else if (n == newCurrentIndex) newCurrentIndex = k;
             }
-            await NotifyChange();
-
+            OnNPChanged();
+            await SaveNowPlayingInDB();
+            return newCurrentIndex;
         }
 
-        public async Task UnShufflePlaylist()
+        public async Task<int> UnShufflePlaylist()
         {
+            int newCurrentIndex = currentIndex;
             if (ar.Length == songs.Count)
             {
                 int n = 0;
@@ -398,9 +403,13 @@ namespace NextPlayerUWP.Common
                     SongItem value = songs[k];
                     songs[k] = songs[n];
                     songs[n] = value;
+                    if (k == newCurrentIndex) newCurrentIndex = n;
+                    else if (n == newCurrentIndex) newCurrentIndex = k;
                 }
-                await NotifyChange();
+                OnNPChanged();
+                await SaveNowPlayingInDB();
             }
+            return newCurrentIndex;
         }
 
         public async Task NewPlaylist(ObservableCollection<GroupList> grouped)
@@ -464,5 +473,7 @@ namespace NextPlayerUWP.Common
             //SendMessage(AppConstants.NowPlayingListChanged);
             //await PlaybackService.Instance.NewPlaylists(songs);
         }
+
+
     }
 }

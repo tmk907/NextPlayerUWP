@@ -289,7 +289,7 @@ namespace NextPlayerUWP.ViewModels
 
         #region Commands
 
-        public void ItemClicked(object sender, ItemClickEventArgs e)
+        public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
             int index = 0;
             foreach (var s in songs)
@@ -297,7 +297,7 @@ namespace NextPlayerUWP.ViewModels
                 if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
                 index++;
             }
-            PlaybackService.Instance.JumpTo(index);
+            await PlaybackService.Instance.JumpTo(index);
         }
 
         public async void Delete(object sender, RoutedEventArgs e)
