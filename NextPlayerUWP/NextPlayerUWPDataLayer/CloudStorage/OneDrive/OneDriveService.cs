@@ -330,6 +330,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             return folders;
         }
 
+
+        public async Task<string> GetDownloadLink(string fileId)
+        {
+            var item = await oneDriveClient.Drive.Items[fileId].Request().GetAsync();
+            return item.AdditionalData["@content.downloadUrl"].ToString();
+        }
+
         private static SongData CreateSongData(Item item, string userId)
         {
             SongData song = new SongData();

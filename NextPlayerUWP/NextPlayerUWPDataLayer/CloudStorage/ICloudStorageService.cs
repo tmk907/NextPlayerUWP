@@ -18,6 +18,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage
         Task<CloudFolder> GetFolder(string id);
         Task<List<CloudFolder>> GetSubFolders(string id);
         Task<List<SongItem>> GetSongItems(string id);
+        Task<string> GetDownloadLink(string id);
 
         bool Check(string userId, CloudStorageType type);
     }

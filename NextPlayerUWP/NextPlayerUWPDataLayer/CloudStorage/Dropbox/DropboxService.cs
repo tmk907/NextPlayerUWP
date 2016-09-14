@@ -273,7 +273,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         }
 
         //Expire in 4 hours
-        public async Task<string> GetTemporaryLink(string path)
+        public async Task<string> GetDownloadLink(string path)
         {
             if (!IsAuthenticated) return null;
             var link = await dropboxClient.Files.GetTemporaryLinkAsync(path);

@@ -78,6 +78,8 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
+        public string CloudUserId { get; set; }
+
         private int rating;
         public int Rating
         {
@@ -347,7 +349,15 @@ namespace NextPlayerUWPDataLayer.Model
             lastPlayed = table.LastPlayed;
             playCount = (int)table.PlayCount;
             isPlaying = false;
-            sourceType = (table.IsAvailable > 0) ? MusicSource.LocalFile : MusicSource.LocalNotMusicLibrary;
+            if ((MusicSource)table.MusicSourceType == MusicSource.LocalFile)
+            {
+                sourceType = (table.IsAvailable > 0) ? MusicSource.LocalFile : MusicSource.LocalNotMusicLibrary;
+            }
+            else
+            {
+                sourceType = (MusicSource)table.MusicSourceType;
+            }
+           
             if (String.IsNullOrEmpty(table.AlbumArt))
             {
                 isAlbumArtSet = false;
@@ -364,6 +374,12 @@ namespace NextPlayerUWPDataLayer.Model
                 contentPath = path;
                 contentPathExpiresAt = DateTime.MaxValue;
             }
+            //else if (table.MusicSourceType == (int)MusicSource.OneDrive)
+            //{
+            //    contentPath = table.ContentPath;
+            //    contentPathExpiresAt = DateTime.MaxValue;
+            //}
+            CloudUserId = table.CloudUserId;
         }
 
         public const int MaxId = 100000;

@@ -576,14 +576,51 @@ namespace NextPlayerUWP.Common
             Player.AudioBalance = 0;
         }
 
-        public void SetTimer()
-        {
 
+        ThreadPoolTimer playbackTimer = null;
+        bool isPlaybackTimerSet = false;
+
+        public void SetPlaybackTimer()
+        {
+            var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
+            long timerTicks = 0;
+            if (t != null)
+            {
+                timerTicks = (long)t;
+            }
+
+            TimeSpan currentTime = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute) + TimeSpan.FromSeconds(DateTime.Now.Second);
+
+            TimeSpan delay = TimeSpan.FromTicks(timerTicks - currentTime.Ticks);
+            if (delay < TimeSpan.Zero)
+            {
+                delay = delay + TimeSpan.FromHours(24);
+            }
+            if (delay > TimeSpan.Zero)
+            {
+                if (isPlaybackTimerSet)
+                {
+                    CancelPlaybackTimer();
+                }
+                playbackTimer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(PlaybackTimerCallback), delay);
+                isPlaybackTimerSet = true;
+            }
         }
 
-        public void CancelTimer()
+        private void PlaybackTimerCallback(ThreadPoolTimer timer)
         {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+            CancelPlaybackTimer();
+            Pause();
+        }
 
+        public void CancelPlaybackTimer()
+        {
+            isPlaybackTimerSet = false;
+            if (playbackTimer != null)
+            {
+                playbackTimer.Cancel();
+            }
         }
 
         public void UpdateTile()
@@ -719,12 +756,31 @@ namespace NextPlayerUWP.Common
             return await PlaybackItemBuilder.PreparePlaybackItem(song);
         }
 
-        public static void Source_OpenOperationCompleted(MediaSource sender, MediaSourceOpenOperationCompletedEventArgs args)
+        public static async void Source_OpenOperationCompleted(MediaSource sender, MediaSourceOpenOperationCompletedEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("UpdateMediaList {0}", sender.IsOpen);
             if (sender.IsOpen)
             {
                 Instance.OnMediaPlayerMediaOpened();
+            }
+            else
+            {
+                //Instance.Player.Pause();
+                //NextPlayerUWPDataLayer.CloudStorage.CloudStorageServiceFactory cssf = new NextPlayerUWPDataLayer.CloudStorage.CloudStorageServiceFactory();
+                //var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+                //var service = cssf.GetService(NextPlayerUWPDataLayer.CloudStorage.CloudStorageType.Dropbox, song.CloudUserId);
+                //var link = await service.GetDownloadLink(song.Path);
+                //var dropboxSource = MediaSource.CreateFromUri(new Uri(link));
+                //var dropboxPlaybackItem = new MediaPlaybackItem(dropboxSource);
+                //dropboxPlaybackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+                ////UpdateDisplayProperties(dropboxPlaybackItem, song);
+                //Instance.mediaList.CurrentItemChanged -= Instance.MediaList_CurrentItemChanged;
+                //dropboxSource.CustomProperties[propertySongId] = song.SongId;
+                //Instance.mediaList.Items.Insert((int)Instance.mediaList.CurrentItemIndex + 1, dropboxPlaybackItem);
+                //Instance.mediaList.Items.RemoveAt((int)Instance.mediaList.CurrentItemIndex);
+                //Instance.mediaList.CurrentItemChanged += Instance.MediaList_CurrentItemChanged;
+                //Instance.Player.Play();
+
             }
         }
 

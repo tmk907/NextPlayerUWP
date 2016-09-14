@@ -368,13 +368,13 @@ namespace NextPlayerUWP.ViewModels
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, time.Ticks);
-                    PlaybackService.Instance.SetTimer();
+                    PlaybackService.Instance.SetPlaybackTimer();
                     TelemetryAdapter.TrackEvent("Timer on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
-                    PlaybackService.Instance.CancelTimer();
+                    PlaybackService.Instance.CancelPlaybackTimer();
                 }
             }
         }
@@ -710,6 +710,29 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
+
+        public async void CloudStorageLogout(object sender, RoutedEventArgs e)
+        {
+            CloudAccount account = (CloudAccount)((Button)sender).Tag;
+            var cf = new CloudStorageServiceFactory();
+            var service = cf.GetService(account.Type, account.UserId);
+            await service.LoginSilently();
+            await service.Logout();
+            switch (account.Type)
+            {
+                case CloudStorageType.Dropbox:
+                    DropboxAccounts.Remove(account);
+                    break;
+                case CloudStorageType.OneDrive:
+                    OneDriveAccounts.Remove(account);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        #region OneDrive
+
         private ObservableCollection<CloudAccount> oneDriveAccounts = new ObservableCollection<CloudAccount>();
         public ObservableCollection<CloudAccount> OneDriveAccounts
         {
@@ -733,10 +756,14 @@ namespace NextPlayerUWP.ViewModels
             if (isLoggedIn)
             {
                 var info = await service.GetAccountInfo();
-                if (info!=null) OneDriveAccounts.Add(info);
+                if (info != null) OneDriveAccounts.Add(info);
             }
             IsOneDriveLoginEnabled = true;
         }
+
+        #endregion
+
+        #region Dropbox
 
         private ObservableCollection<CloudAccount> dropboxAccounts = new ObservableCollection<CloudAccount>();
         public ObservableCollection<CloudAccount> DropboxAccounts
@@ -764,76 +791,6 @@ namespace NextPlayerUWP.ViewModels
                 if (info != null) DropboxAccounts.Add(info);
             }
             IsDropboxLoginEnabled = true;
-        }
-
-        public async void CloudStorageLogout(object sender, RoutedEventArgs e)
-        {
-            CloudAccount account = (CloudAccount)((Button)sender).Tag;
-            var cf = new CloudStorageServiceFactory();
-            var service = cf.GetService(account.Type, account.UserId);
-            await service.LoginSilently();
-            await service.Logout();
-            switch (account.Type)
-            {
-                case CloudStorageType.Dropbox:
-                    DropboxAccounts.Remove(account);
-                    break;
-                case CloudStorageType.OneDrive:
-                    OneDriveAccounts.Remove(account);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        #region OneDrive
-
-        private bool isOneDriveLoggedIn = false;
-        public bool IsOneDriveLoggedIn
-        {
-            get { return isOneDriveLoggedIn; }
-            set { Set(ref isOneDriveLoggedIn, value); }
-        }
-
-        
-
-        public async void OneDriveLogin()
-        {
-            IsOneDriveLoginEnabled = false;
-            //IsOneDriveLoggedIn = await OneDriveService.Instance.Login();
-            IsOneDriveLoginEnabled = true;
-        }
-
-        public async void OneDriveLogout()
-        {
-            //await OneDriveService.Instance.Logout();
-            IsOneDriveLoggedIn = false;
-        }
-
-        #endregion
-
-        #region Dropbox
-
-        private bool isDropboxLoggedIn = false;
-        public bool IsDropboxLoggedIn
-        {
-            get { return isDropboxLoggedIn; }
-            set { Set(ref isDropboxLoggedIn, value); }
-        }
-
-        
-
-        public async void DropboxLogin()
-        {
-            IsDropboxLoginEnabled = false;
-            //await DropboxService.Instance.Login();
-            IsDropboxLoginEnabled = true;
-        }
-
-        public async void DropboxLogout()
-        {
-            //await DropboxService.Instance.Logout();
-            IsDropboxLoggedIn = false;
         }
 
         #endregion

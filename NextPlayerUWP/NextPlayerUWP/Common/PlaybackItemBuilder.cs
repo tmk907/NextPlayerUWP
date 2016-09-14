@@ -1,4 +1,6 @@
 ﻿using FFmpegInterop;
+using NextPlayerUWPDataLayer.CloudStorage;
+using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
@@ -47,10 +49,10 @@ namespace NextPlayerUWP.Common
                     mpi = await PrepareFromJamendo(song);
                     break;
                 case MusicSource.Dropbox:
-                    mpi = PrepareFromDropbox(song);
+                    mpi = await PrepareFromDropbox(song);
                     break;
                 case MusicSource.OneDrive:
-                    mpi = PrepareFromOneDrive(song);
+                    mpi = await PrepareFromOneDrive(song);
                     break;
                 default:
                     mpi = null;
@@ -61,7 +63,7 @@ namespace NextPlayerUWP.Common
 
         private static MediaPlaybackItem PrepareFromLocalFile(SongItem song)
         {
-            MyStreamReference msr = new MyStreamReference(song.Path);
+            MyStreamReference msr = new MyStreamReference(song.ContentPath);
             var source = MediaSource.CreateFromStreamReference(msr, "");
             var playbackItem = new MediaPlaybackItem(source);
             playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
@@ -163,9 +165,16 @@ namespace NextPlayerUWP.Common
             return jamendoPlaybackItem;
         }
 
-        private static MediaPlaybackItem PrepareFromDropbox(SongItem song)
+        private static async Task<MediaPlaybackItem> PrepareFromDropbox(SongItem song)
         {
-            var dropboxSource = MediaSource.CreateFromUri(new Uri(song.Path));
+            if (song.IsContentPathExpired())
+            {
+                CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
+                var service = cssf.GetService(CloudStorageType.Dropbox, song.CloudUserId);
+                var link = await service.GetDownloadLink(song.Path);
+                song.UpdateContentPath(link, DateTime.Now.AddHours(4));
+            }
+            var dropboxSource = MediaSource.CreateFromUri(new Uri(song.ContentPath));
             var dropboxPlaybackItem = new MediaPlaybackItem(dropboxSource);
             dropboxPlaybackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
             UpdateDisplayProperties(dropboxPlaybackItem, song);
@@ -173,9 +182,16 @@ namespace NextPlayerUWP.Common
             return dropboxPlaybackItem;
         }
 
-        private static MediaPlaybackItem PrepareFromOneDrive(SongItem song)
+        private static async Task<MediaPlaybackItem> PrepareFromOneDrive(SongItem song)
         {
-            var oneDriveSource = MediaSource.CreateFromUri(new Uri(song.Path));
+            if (song.IsContentPathExpired())
+            {
+                CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
+                var service = cssf.GetService(CloudStorageType.OneDrive, song.CloudUserId);
+                var link = await service.GetDownloadLink(song.Path);
+                song.UpdateContentPath(link, DateTime.Now.AddHours(100));
+            }
+            var oneDriveSource = MediaSource.CreateFromUri(new Uri(song.ContentPath));
             var oneDrivePlaybackItem = new MediaPlaybackItem(oneDriveSource);
             oneDrivePlaybackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
             UpdateDisplayProperties(oneDrivePlaybackItem, song);
