@@ -134,6 +134,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             return isLoggedIn;
         }
 
+        public async Task<bool> Login(string login, string password)
+        {
+            return false;
+        }
+
         public bool Check(string userId, CloudStorageType type)
         {
             return (type == CloudStorageType.OneDrive) && userId == this.userId;

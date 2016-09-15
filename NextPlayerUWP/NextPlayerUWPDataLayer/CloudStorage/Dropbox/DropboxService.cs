@@ -22,7 +22,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 
         public DropboxService(string userId)
         {
-            Debug.WriteLine("DropboxService({0})", userId);
+            Debug.WriteLine("DropboxService() {0}", userId);
             this.userId = userId;
         }
 
@@ -147,6 +147,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
                 }
             }
             return isLoggedIn;
+        }
+
+        public async Task<bool> Login(string login, string password)
+        {
+            return false;
         }
 
         public async Task Logout()

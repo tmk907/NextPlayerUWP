@@ -9,6 +9,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage
     public interface ICloudStorageService
     {
         Task<bool> Login();
+        Task<bool> Login(string login, string password);
         Task<bool> LoginSilently();
         Task Logout();
         Task<CloudAccount> GetAccountInfo();
