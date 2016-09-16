@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.pCloud.Model
 {
@@ -41,5 +37,41 @@ namespace NextPlayerUWPDataLayer.pCloud.Model
 
         [JsonProperty("fileid")]
         public int FileId { get; set; }
+
+        [JsonProperty("deletedfileid")]
+        public string DeletedFileId { get; set; }
+
+        [JsonProperty("created")]
+        public string Created { get; set; }
+
+        [JsonProperty("modified")]
+        public string Modified { get; set; }
+
+        [JsonProperty("icon")]
+        public string Icon { get; set; }
+
+        [JsonProperty("category")]
+        public int Category { get; set; }
+
+        [JsonProperty("thumb")]
+        public bool Thumb { get; set; }
+
+        [JsonProperty("size")]
+        public int Size { get; set; }
+
+        [JsonProperty("contenttype")]
+        public string ContentType { get; set; }
+
+        [JsonProperty("hash")]
+        public string hash { get; set; }
+
+        [JsonProperty("contents")]
+        public IList<BaseMetadata> Contents { get; set; }
+
+        [JsonProperty("isdeleted")]
+        public string IsDeleted { get; set; }
+
+        [JsonProperty("path")]
+        public string Path { get; set; }
     }
 }

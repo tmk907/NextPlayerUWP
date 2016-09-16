@@ -8,6 +8,7 @@ using System.Diagnostics;
 using NextPlayerUWPDataLayer.pCloud;
 using Windows.Security.Authentication.Web;
 using NextPlayerUWPDataLayer.Services;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 {
@@ -16,22 +17,24 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
         public PCloudService()
         {
             Debug.WriteLine("PCloudService()");
+            pCloudClient = new PCloudClient();
         }
 
         public PCloudService(string userId)
         {
             Debug.WriteLine("PCloudService() {0}", userId);
             this.userId = userId;
+            pCloudClient = new PCloudClient();
         }
 
         private PCloudClient pCloudClient;
         private string refreshToken;
         private string userId;
-        private static readonly Uri redirectUri = new Uri("http://localhost/next-player/dropbox/authorize");
+        private static readonly Uri redirectUri = new Uri("http://localhost/next-player/pcloud/authorize");
 
         private async Task Authorize()
         {
-            var authUri = pCloudClient.GetAuthorizeUri(OAuthResponseType.Token, AppConstants.DropboxAppKey, redirectUri);
+            var authUri = pCloudClient.GetAuthorizeUri(AppConstants.PCloudClientId, AuthFlow.Token, redirectUri);
             try
             {
                 var result = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, authUri, redirectUri);
@@ -48,16 +51,17 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             switch (result.ResponseStatus)
             {
                 case WebAuthenticationStatus.Success:
-                    var response = DropboxOAuth2Helper.ParseTokenFragment(new Uri(result.ResponseData));
+                    var response = pCloudClient.ParseTokenFlowResponse(result.ResponseData);
                     refreshToken = response.AccessToken;
                     pCloudClient = new PCloudClient(refreshToken);
                     break;
                 case WebAuthenticationStatus.ErrorHttp:
-                    throw new OAuthException(result.ResponseErrorDetail);
+                    //throw new OAuthException(result.ResponseErrorDetail);
 
                 case WebAuthenticationStatus.UserCancel:
                 default:
-                    throw new OAuthUserCancelledException();
+                    //throw new OAuthUserCancelledException();
+                    break;
             }
         }
 

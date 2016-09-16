@@ -6,7 +6,21 @@ using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.pCloud.Requests
 {
-    class Collection
+    public class Collection
     {
+        private Downloader downloader;
+        private string authToken;
+        private readonly string BaseUrl = "https://api.pcloud.com";
+
+        public Collection(string authToken)
+        {
+            this.authToken = authToken;
+            this.downloader = new Downloader();
+        }
+
+        public void SetDownloader(Downloader downloader)
+        {
+            this.downloader = downloader;
+        }
     }
 }

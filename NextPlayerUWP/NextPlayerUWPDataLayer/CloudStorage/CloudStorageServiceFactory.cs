@@ -39,9 +39,9 @@ namespace NextPlayerUWPDataLayer.CloudStorage
                 case CloudStorageType.OneDrive:
                     service = new OneDrive.OneDriveService();
                     break;
-                //case CloudStorageType.pCloud:
-                //    service = new pCloud.PCloudService(userId);
-                //    break;
+                case CloudStorageType.pCloud:
+                    service = new pCloud.PCloudService();
+                    break;
                 default:
                     service = null;
                     break;
@@ -70,10 +70,10 @@ namespace NextPlayerUWPDataLayer.CloudStorage
                     service = new OneDrive.OneDriveService(userId);
                     services.Add(service);
                     break;
-                //case CloudStorageType.pCloud:
-                //    service = new pCloud.PCloudService(userId);
-                //    services.Add(service);
-                //    break;
+                case CloudStorageType.pCloud:
+                    service = new pCloud.PCloudService(userId);
+                    services.Add(service);
+                    break;
                 default:
                     service = null;
                     break;

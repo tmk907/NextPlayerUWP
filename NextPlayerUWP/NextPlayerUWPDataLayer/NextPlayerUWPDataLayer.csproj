@@ -166,6 +166,7 @@
     <Compile Include="Model\TrackStream.cs" />
     <Compile Include="CloudStorage\OneDrive\OneDriveService.cs" />
     <Compile Include="pCloud\Downloader.cs" />
+    <Compile Include="pCloud\Model\AudioMetadata.cs" />
     <Compile Include="pCloud\Model\BaseMetadata.cs" />
     <Compile Include="pCloud\Model\BaseResponse.cs" />
     <Compile Include="pCloud\Model\CurrentServerResponse.cs" />
@@ -173,10 +174,12 @@
     <Compile Include="pCloud\Model\ErrorResponse.cs" />
     <Compile Include="pCloud\Model\GetStreamingLinkResponse.cs" />
     <Compile Include="pCloud\Model\GetIPResponse.cs" />
+    <Compile Include="pCloud\Model\ImageMetadata.cs" />
     <Compile Include="pCloud\Model\ListTokensResponse.cs" />
     <Compile Include="pCloud\Model\LogoutResponse.cs" />
     <Compile Include="pCloud\Model\Token.cs" />
     <Compile Include="pCloud\Model\UserInfoResponse.cs" />
+    <Compile Include="pCloud\Model\VideoMetadata.cs" />
     <Compile Include="pCloud\PCloudClient.cs" />
     <Compile Include="pCloud\Requests\Auth.cs" />
     <Compile Include="pCloud\Requests\Collection.cs" />

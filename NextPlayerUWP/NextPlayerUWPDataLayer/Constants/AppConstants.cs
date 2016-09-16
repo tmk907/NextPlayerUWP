@@ -136,6 +136,10 @@
         public const string GoogleDriveClientId = "958984549072-t7lkdmpq50crclpt356js7egc1au3p8u.apps.googleusercontent.com";
         public const string GoogleDriveAppSecret = "kIPQh3zCiK-X7LsD1lmPBPAJ";
 
+        //pCloud
+        public const string PCloudClientId = "5hl070QJ9KY";
+        public const string PCloudAppSecret = "zt17mban1oQj8iq25n5wNbtIuhuV";
+
         //Jamendo
         public const string JamendoClientId = "8ed1da48";
         public const string JamendoClientSecret = "45994f52254ba988c15abee8967bbc84";
