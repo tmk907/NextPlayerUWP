@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace NextPlayerUWPDataLayer.pCloud.Model
@@ -7,6 +8,9 @@ namespace NextPlayerUWPDataLayer.pCloud.Model
     {
         [JsonProperty("parentfolderid")]
         public int ParentFolderId { get; set; }
+
+        [JsonProperty("isfolder")]
+        public bool IsFolder { get; set; }
 
         [JsonProperty("ismine")]
         public bool IsMine { get; set; }
@@ -30,22 +34,22 @@ namespace NextPlayerUWPDataLayer.pCloud.Model
         public string Name { get; set; }
 
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("folderid")]
-        public int FolderId { get; set; }
+        public long FolderId { get; set; }
 
         [JsonProperty("fileid")]
-        public int FileId { get; set; }
+        public long FileId { get; set; }
 
         [JsonProperty("deletedfileid")]
         public string DeletedFileId { get; set; }
 
         [JsonProperty("created")]
-        public string Created { get; set; }
+        public DateTime Created { get; set; }
 
         [JsonProperty("modified")]
-        public string Modified { get; set; }
+        public DateTime Modified { get; set; }
 
         [JsonProperty("icon")]
         public string Icon { get; set; }
@@ -63,7 +67,7 @@ namespace NextPlayerUWPDataLayer.pCloud.Model
         public string ContentType { get; set; }
 
         [JsonProperty("hash")]
-        public string hash { get; set; }
+        public string Hash { get; set; }
 
         [JsonProperty("contents")]
         public IList<BaseMetadata> Contents { get; set; }

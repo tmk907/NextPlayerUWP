@@ -58,9 +58,9 @@ namespace NextPlayerUWPDataLayer.CloudStorage
             return list;
         }
 
-        public CloudAccount GetAccount(string userId)
+        public CloudAccount GetAccount(string userId, CloudStorageType type)
         {
-            return accounts.FirstOrDefault(a => a.UserId.Equals(userId));
+            return accounts.FirstOrDefault(a => a.UserId.Equals(userId) && a.Type.Equals(type));
         }
 
         public List<CloudAccount> GetAccountsByType(CloudStorageType type)

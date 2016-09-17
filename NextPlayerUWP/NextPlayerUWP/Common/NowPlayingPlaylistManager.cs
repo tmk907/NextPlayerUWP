@@ -188,6 +188,7 @@ namespace NextPlayerUWP.Common
                     break;
                 case MusicItemTypes.onedrivefolder:
                 case MusicItemTypes.dropboxfolder:
+                case MusicItemTypes.pcloudfolder:
                     var folder = (CloudFolder)item;
                     var factory = new CloudStorageServiceFactory();
                     var service = factory.GetService(folder.CloudType, folder.UserId);
@@ -243,6 +244,7 @@ namespace NextPlayerUWP.Common
                     break;
                 case MusicItemTypes.onedrivefolder:
                 case MusicItemTypes.dropboxfolder:
+                case MusicItemTypes.pcloudfolder:
                     var folder = (CloudFolder)item;
                     var factory = new CloudStorageServiceFactory();
                     var service = factory.GetService(folder.CloudType, folder.UserId);
@@ -320,6 +322,7 @@ namespace NextPlayerUWP.Common
                     break;
                 case MusicItemTypes.onedrivefolder:
                 case MusicItemTypes.dropboxfolder:
+                case MusicItemTypes.pcloudfolder:
                     var folder = (CloudFolder)item;
                     var factory = new CloudStorageServiceFactory();
                     var service = factory.GetService(folder.CloudType, folder.UserId);

@@ -6,7 +6,7 @@ namespace NextPlayerUWPDataLayer.pCloud.Model
     public class Token
     {
         [JsonProperty("tokenid")]
-        public int Tokenid { get; set; }
+        public long Tokenid { get; set; }
 
         [JsonProperty("device")]
         public string Device { get; set; }

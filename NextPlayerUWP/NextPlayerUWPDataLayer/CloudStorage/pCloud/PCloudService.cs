@@ -28,7 +28,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
         }
 
         private PCloudClient pCloudClient;
-        private string refreshToken;
+        private string accessToken;
         private string userId;
         private static readonly Uri redirectUri = new Uri("http://localhost/next-player/pcloud/authorize");
 
@@ -52,8 +52,8 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             {
                 case WebAuthenticationStatus.Success:
                     var response = pCloudClient.ParseTokenFlowResponse(result.ResponseData);
-                    refreshToken = response.AccessToken;
-                    pCloudClient = new PCloudClient(refreshToken);
+                    accessToken = response.AccessToken;
+                    pCloudClient = new PCloudClient(AuthType.AccessToken, accessToken);
                     break;
                 case WebAuthenticationStatus.ErrorHttp:
                     //throw new OAuthException(result.ResponseErrorDetail);
@@ -69,7 +69,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
         {
             get
             {
-                if (pCloudClient == null || refreshToken == null) return false;
+                if (pCloudClient == null || accessToken == null) return false;
                 else return true;
             }
         }
@@ -81,7 +81,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             bool isLoggedIn = false;
             if (IsAuthenticated)
             {
-                pCloudClient = new PCloudClient(refreshToken);
+                pCloudClient = new PCloudClient(AuthType.AccessToken, accessToken);
                 isLoggedIn = true;
             }
             else
@@ -94,15 +94,15 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
                     var account = await pCloudClient.General.UserInfo();
                     userId = account.UserId.ToString();
                     string username = account.Email;
-                    if (!CloudAccounts.Instance.Exists(userId, CloudStorageType.Dropbox))
+                    if (!CloudAccounts.Instance.Exists(userId, CloudStorageType.pCloud))
                     {
-                        await CloudAccounts.Instance.AddAccount(userId, CloudStorageType.Dropbox, username);
+                        await CloudAccounts.Instance.AddAccount(userId, CloudStorageType.pCloud, username);
                     }
                     else
                     {
                         return false;
                     }
-                    await SaveToken(refreshToken);
+                    await SaveToken(accessToken);
                 }
             }
             return isLoggedIn;
@@ -116,17 +116,21 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
         public async Task<bool> LoginSilently()
         {
             Debug.WriteLine("PCloudService LoginSilently()");
-            refreshToken = await GetSavedToken();
-            pCloudClient = new PCloudClient(refreshToken);
+            if (IsAuthenticated)
+            {
+                return true;
+            }
+            accessToken = await GetSavedToken();
+            pCloudClient = new PCloudClient(AuthType.AccessToken, accessToken);
             return IsAuthenticated;
         }
 
         public async Task Logout()
         {
             Debug.WriteLine("PCloudService Logout()");
-            refreshToken = null;
-            await pCloudClient.Auth.Logout();
-            await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.Dropbox);
+            accessToken = null;
+            //await pCloudClient.Auth.Logout();
+            await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.pCloud);
         }
 
         private async Task SaveToken(string refreshToken)
@@ -144,23 +148,56 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 
         public bool Check(string userId, CloudStorageType type)
         {
-            return (type == CloudStorageType.Dropbox) && userId == this.userId;
+            return (type == CloudStorageType.pCloud) && userId == this.userId;
         }
 
         public async Task<CloudAccount> GetAccountInfo()
         {
             if (userId == null) return null;
-            return CloudAccounts.Instance.GetAccount(userId);
+            return CloudAccounts.Instance.GetAccount(userId, CloudStorageType.pCloud);
         }
 
-        public Task<string> GetDownloadLink(string id)
+        public async Task<string> GetDownloadLink(string fileId)
         {
-            throw new NotImplementedException();
+            await LoginSilently();
+            if (!IsAuthenticated) return null;
+            var linkResponse = await pCloudClient.Streaming.GetAudioLink(Int32.Parse(fileId));
+            var host = linkResponse.Hosts.FirstOrDefault();
+            if (host == null) return null;
+            var link = "https://" + host + linkResponse.Path;
+            return link;
         }
 
-        public Task<CloudFolder> GetFolder(string id)
+
+        private Dictionary<string, NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata> cache = new Dictionary<string, NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata>();
+        private Dictionary<string, CloudFolder> cachedFolders = new Dictionary<string, CloudFolder>();
+
+        public async Task<CloudFolder> GetFolder(string folderId)
         {
-            throw new NotImplementedException();
+            Debug.WriteLine("PCloudService GetFolder {0}", folderId);
+            await LoginSilently();
+            if (!IsAuthenticated) return null;
+            if (cachedFolders.ContainsKey(folderId))
+            {
+                return cachedFolders[folderId];
+            }
+            if (folderId == "0")
+            {
+                return new CloudFolder("pCloud", "", 0, "", null, CloudStorageType.pCloud, userId);
+            }
+            try
+            {
+                var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId), false, false, true, true);
+                var item = response.Metadata;
+                if (item == null) return null;
+                CloudFolder folder = new CloudFolder(item.Name, item.Path, 0, item.FolderId.ToString(), item.ParentFolderId.ToString(), CloudStorageType.pCloud, userId);
+                cachedFolders.Add(folderId, folder);
+                return folder;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public async Task<string> GetRootFolderId()
@@ -168,16 +205,102 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             return "0";
         }
 
-        public Task<List<SongItem>> GetSongItems(string id)
+        public async Task<List<SongItem>> GetSongItems(string folderId)
         {
-            throw new NotImplementedException();
+            List<SongItem> songs = new List<SongItem>();
+            await LoginSilently();
+            if (!IsAuthenticated) return songs;
+
+            NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata result;
+            if (cache.ContainsKey(folderId))
+            {
+                result = cache[folderId];
+            }
+            else
+            {
+                var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId));
+                result = response.Metadata;
+                cache.Add(folderId, result);
+            }
+            List<SongData> songData = new List<SongData>();
+
+            foreach (var item in result.Contents)
+            {
+                if (!item.IsFolder)
+                {
+                    if (item.Name.ToLower().EndsWith(".mp3") || item.Name.ToLower().EndsWith(".m4a"))
+                    songData.Add(CreateSongData(item, userId));
+                }
+            }
+
+            songs = await DatabaseManager.Current.InsertCloudItems(songData, Enums.MusicSource.PCloud);
+
+            return songs;
         }
 
-        public Task<List<CloudFolder>> GetSubFolders(string id)
+        public async Task<List<CloudFolder>> GetSubFolders(string folderId)
         {
-            throw new NotImplementedException();
+            List<CloudFolder> folders = new List<CloudFolder>();
+            await LoginSilently();
+            if (!IsAuthenticated) return folders;
+
+            NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata result;
+            if (cache.ContainsKey(folderId))
+            {
+                result = cache[folderId];
+            }
+            else
+            {
+                var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId));
+                result = response.Metadata;
+                cache.Add(folderId, result);
+            }
+            foreach (var item in result.Contents)
+            {
+                if (item.IsFolder)
+                {
+                    folders.Add(new CloudFolder(item.Name, item.Path, 0, item.FolderId.ToString(), item.ParentFolderId.ToString(), CloudStorageType.pCloud, userId));
+                }
+            }
+            return folders;
         }
 
-        
+        private static SongData CreateSongData(NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata item, string userId)
+        {
+            SongData song = new SongData();
+            //song.AlbumArtPath = 
+            song.Bitrate = 0;
+            song.CloudUserId = userId;
+            song.DateAdded = DateTime.Now;
+            song.DateModified = item.Modified;
+            song.Duration = TimeSpan.Zero;
+            song.Filename = item.Name;
+            song.FileSize = (ulong)item.Size;
+            song.IsAvailable = 0;
+            song.LastPlayed = DateTime.MinValue;
+            song.MusicSourceType = (int)Enums.MusicSource.PCloud;
+            song.Path = item.FileId.ToString();
+            song.PlayCount = 0;
+
+            song.Tag.Album = "";
+            song.Tag.AlbumArtist = "";
+            song.Tag.Artists = "";
+            song.Tag.Comment = "";
+            song.Tag.Composers = "";
+            song.Tag.Conductor = "";
+            song.Tag.Disc = 0;
+            song.Tag.DiscCount = 0;
+            song.Tag.FirstArtist = "";
+            song.Tag.FirstComposer = "";
+            song.Tag.Genres = "";
+            song.Tag.Lyrics = "";
+            song.Tag.Rating = 0;
+            song.Tag.Title = item.Name;
+            song.Tag.Track = 0;
+            song.Tag.TrackCount = 0;
+            song.Tag.Year = 0;
+
+            return song;
+        }
     }
 }

@@ -166,7 +166,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         public async Task<CloudAccount> GetAccountInfo()
         {
             if (userId == null) return null;
-            return CloudAccounts.Instance.GetAccount(userId);
+            return CloudAccounts.Instance.GetAccount(userId, CloudStorageType.OneDrive);
         }
 
         private async Task<string> GetUsername()

@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json;
 using NextPlayerUWPDataLayer.pCloud.Model;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.pCloud
@@ -17,7 +20,11 @@ namespace NextPlayerUWPDataLayer.pCloud
                 Uri uri = new Uri(url);
                 var httpResponse = await httpClient.GetAsync(uri);
                 httpResponse.EnsureSuccessStatusCode();
-                response = await httpResponse.Content.ReadAsStringAsync();
+                using (var reader = new StreamReader((await httpResponse.Content.ReadAsStreamAsync()), Encoding.UTF8))
+                {
+                    response = reader.ReadToEnd();
+                }
+
             }
             catch (Exception ex)
             {
@@ -36,7 +43,8 @@ namespace NextPlayerUWPDataLayer.pCloud
                 errResponse.Result = "-1";
                 //return errResponse;
             }
-            return JsonConvert.DeserializeObject<T>(response);
+            var json = JsonConvert.DeserializeObject<T>(response);
+            return json;
         }
     }
 }

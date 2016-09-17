@@ -110,6 +110,10 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         public async Task<bool> LoginSilently()
         {
             Debug.WriteLine("DropboxService LoginSilently()");
+            if (IsAuthenticated)
+            {
+                return true;
+            }
             refreshToken = await GetSavedToken();
             dropboxClient = new DropboxClient(refreshToken);
             return IsAuthenticated;
@@ -177,7 +181,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         public async Task<CloudAccount> GetAccountInfo()
         {
             if (userId == null) return null;
-            return CloudAccounts.Instance.GetAccount(userId);
+            return CloudAccounts.Instance.GetAccount(userId, CloudStorageType.Dropbox);
         }
 
         public bool Check(string userId, CloudStorageType type)
@@ -197,7 +201,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 
         public async Task<CloudFolder> GetFolder(string path)
         {
-            Debug.WriteLine("DropboxService GetFolder({0})", path);
+            Debug.WriteLine("DropboxService GetFolder() {0}", path);
             await LoginSilently();
             if (!IsAuthenticated) return null;
             if (cachedFolders.ContainsKey(path))

@@ -813,23 +813,8 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref isPCloudLoginEnabled, value); }
         }
 
-        private string pCloudLogin = "";
-        public string PCloudLogin
-        {
-            get { return pCloudLogin; }
-            set { Set(ref pCloudLogin, value); }
-        }
-
-        private string pCloudPassword = "";
-        public string PCloudPassword
-        {
-            get { return pCloudPassword; }
-            set { Set(ref pCloudPassword, value); }
-        }
-
         public async void AddPCloudAccount()
         {
-            //if (PCloudPassword != "" && PCloudLogin != "")
             IsPCloudLoginEnabled = false;
             var cf = new CloudStorageServiceFactory();
             var service = cf.GetService(CloudStorageType.pCloud);
@@ -839,9 +824,7 @@ namespace NextPlayerUWP.ViewModels
                 var info = await service.GetAccountInfo();
                 if (info != null) PCloudAccounts.Add(info);
                 TelemetryAdapter.TrackEvent("pCloud Login");
-                PCloudLogin = "";
             }
-            PCloudPassword = "";
             IsPCloudLoginEnabled = true;
         }
 

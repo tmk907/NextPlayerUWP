@@ -177,11 +177,13 @@
     <Compile Include="pCloud\Model\ImageMetadata.cs" />
     <Compile Include="pCloud\Model\ListTokensResponse.cs" />
     <Compile Include="pCloud\Model\LogoutResponse.cs" />
+    <Compile Include="pCloud\Model\MetadataResponse.cs" />
     <Compile Include="pCloud\Model\Token.cs" />
     <Compile Include="pCloud\Model\UserInfoResponse.cs" />
     <Compile Include="pCloud\Model\VideoMetadata.cs" />
     <Compile Include="pCloud\PCloudClient.cs" />
     <Compile Include="pCloud\Requests\Auth.cs" />
+    <Compile Include="pCloud\Requests\BaseRequest.cs" />
     <Compile Include="pCloud\Requests\Collection.cs" />
     <Compile Include="pCloud\Requests\Folder.cs" />
     <Compile Include="pCloud\Requests\General.cs" />

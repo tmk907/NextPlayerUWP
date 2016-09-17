@@ -172,33 +172,33 @@ namespace NextPlayerUWP.Common
 
         public async Task Initialize()
         {
-            CheckForGaplessPlaybackReady();
-            if (isGaplessPlaybackReady)
-            {
-                await LoadAll(CurrentSongIndex);
-                Player.Source = mediaList;
-            }
-            else
-            {
-                var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                if (song.IsContentPathExpired())
-                {
-                    canPlay = false;
-                    return;
-                }
-                else
-                {
-                    Player.Source = await PreparePlaybackItem(song);
-                }
-            }
+            //    CheckForGaplessPlaybackReady();
+            //    if (isGaplessPlaybackReady)
+            //    {
+            //        await LoadAll(CurrentSongIndex);
+            //        Player.Source = mediaList;
+            //    }
+            //    else
+            //    {
+            //        var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            //        if (song.IsContentPathExpired())
+            //        {
+            //            canPlay = false;
+            //            return;
+            //        }
+            //        else
+            //        {
+            //            Player.Source = await PreparePlaybackItem(song);
+            //        }
+            //    }
 
-            if (NowPlayingPlaylistManager.Current.songs.Count > 0)
-            {
-                Player.CommandManager.NextBehavior.EnablingRule = MediaCommandEnablingRule.Always;
-                Player.CommandManager.PreviousBehavior.EnablingRule = MediaCommandEnablingRule.Always;
-            }
+            //    if (NowPlayingPlaylistManager.Current.songs.Count > 0)
+            //    {
+            //        Player.CommandManager.NextBehavior.EnablingRule = MediaCommandEnablingRule.Always;
+            //        Player.CommandManager.PreviousBehavior.EnablingRule = MediaCommandEnablingRule.Always;
+            //    }
 
-            canPlay = true;
+            //    canPlay = true;
         }
 
         Queue<MediaPlaybackItem> playbackItemQueue = new Queue<MediaPlaybackItem>();

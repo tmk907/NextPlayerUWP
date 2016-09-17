@@ -7,10 +7,16 @@ using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.pCloud
 {
-    public class AuthFlow
+    public enum AuthFlow
     {
-        public static readonly string Code = "code";
-        public static readonly string Token = "token";
+        Code,
+        Token,
+    }
+
+    public enum AuthType
+    {
+        AccessToken,
+        AuthToken,
     }
 
     public class TokenFlowResponse
@@ -31,25 +37,44 @@ namespace NextPlayerUWPDataLayer.pCloud
 
     public class PCloudClient
     {
-        private string refreshToken;
-        private string authToken;
+        public string AccessToken { get; private set; }
+        public string AuthenticationToken { get; private set; }
+        public AuthType AuthType { get; private set; }
 
         public PCloudClient()
         {
 
         }
 
-        public PCloudClient(string refreshToken)
+        public PCloudClient(AuthType type, string accessToken)
         {
-            this.refreshToken = refreshToken;
+            AuthType = type;
+            this.AccessToken = accessToken;
         }
 
-        public void SetRefreshToken(string token)
+        public void SetAccessToken(string accessToken)
         {
-            authToken = refreshToken;
+            AuthType = AuthType.AccessToken;
+            this.AccessToken = accessToken;
+            if (general != null) General.SetAuth(AuthType.AccessToken, accessToken);
+            if (auth != null) Auth.SetAuth(AuthType.AccessToken, accessToken);
+            if (folder != null) Folder.SetAuth(AuthType.AccessToken, accessToken);
+            if (streaming != null) Streaming.SetAuth(AuthType.AccessToken, accessToken);
+            if (collection != null) Collection.SetAuth(AuthType.AccessToken, accessToken);
         }
 
-        public Uri GetAuthorizeUri(string clientId, string authFlow, Uri redirectUri = null, string state = null, bool forceReapprove = false)
+        public void SetAuthenticationToken(string authenticationToken)
+        {
+            AuthType = AuthType.AuthToken;
+            this.AuthenticationToken = authenticationToken;
+            if (general != null) General.SetAuth(AuthType.AuthToken, authenticationToken);
+            if (auth != null) Auth.SetAuth(AuthType.AuthToken, authenticationToken);
+            if (folder != null) Folder.SetAuth(AuthType.AuthToken, authenticationToken);
+            if (streaming != null) Streaming.SetAuth(AuthType.AuthToken, authenticationToken);
+            if (collection != null) Collection.SetAuth(AuthType.AuthToken, authenticationToken);
+        }
+
+        public Uri GetAuthorizeUri(string clientId, AuthFlow authFlow, Uri redirectUri = null, string state = null, bool forceReapprove = false)
         {
             if (redirectUri == null && authFlow == AuthFlow.Token)
             {
@@ -57,6 +82,7 @@ namespace NextPlayerUWPDataLayer.pCloud
             }
             string oauthUrl = "https://my.pcloud.com/oauth2";
             StringBuilder sb = new StringBuilder();
+            string authFlowValue = (authFlow == AuthFlow.Code) ? "code" : (authFlow == AuthFlow.Token) ? "token" : "";
             if (authFlow == AuthFlow.Token)
             {
                 sb.Append("&redirect_uri=");
@@ -78,7 +104,7 @@ namespace NextPlayerUWPDataLayer.pCloud
                 sb.Append(forceReapprove);
             }
             string optionalParams = sb.ToString();
-            var url = $"{oauthUrl}/authorize?client_id={clientId}&response_type={authFlow}{optionalParams}";
+            var url = $"{oauthUrl}/authorize?client_id={clientId}&response_type={authFlowValue}{optionalParams}";
             return new Uri(url);
         }
 
@@ -122,7 +148,8 @@ namespace NextPlayerUWPDataLayer.pCloud
             {
                 if (general == null)
                 {
-                    general = new General(authToken);
+                    general = new General();
+                    general.SetAuth(AuthType.AccessToken, AccessToken);
                 }
                 return general;
             }
@@ -135,7 +162,8 @@ namespace NextPlayerUWPDataLayer.pCloud
             {
                 if (auth == null)
                 {
-                    auth = new Auth(authToken);
+                    auth = new Auth();
+                    auth.SetAuth(AuthType.AccessToken, AccessToken);
                 }
                 return auth;
             }
@@ -148,7 +176,8 @@ namespace NextPlayerUWPDataLayer.pCloud
             {
                 if (folder == null)
                 {
-                    folder = new Folder(authToken);
+                    folder = new Folder();
+                    folder.SetAuth(AuthType.AccessToken, AccessToken);
                 }
                 return folder;
             }
@@ -161,7 +190,8 @@ namespace NextPlayerUWPDataLayer.pCloud
             {
                 if (streaming == null)
                 {
-                    streaming = new Streaming(authToken);
+                    streaming = new Streaming();
+                    streaming.SetAuth(AuthType.AccessToken, AccessToken);
                 }
                 return streaming;
             }
@@ -174,7 +204,8 @@ namespace NextPlayerUWPDataLayer.pCloud
             {
                 if (collection == null)
                 {
-                    collection = new Collection(authToken);
+                    collection = new Collection();
+                    collection.SetAuth(AuthType.AccessToken, AccessToken);
                 }
                 return collection;
             }

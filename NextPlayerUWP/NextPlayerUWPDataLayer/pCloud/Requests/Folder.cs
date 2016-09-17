@@ -1,30 +1,18 @@
 ﻿using NextPlayerUWPDataLayer.pCloud.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.pCloud.Requests
 {
-    public class Folder
+    public class Folder : BaseRequest
     {
-        private Downloader downloader;
-        private string authToken;
-        private readonly string BaseUrl = "https://api.pcloud.com";
-
-        public Folder(string authToken)
+        public Folder()
         {
-            this.authToken = authToken;
             this.downloader = new Downloader();
         }
 
-        public void SetDownloader(Downloader downloader)
-        {
-            this.downloader = downloader;
-        }
-
-        public async Task<BaseMetadata> ListFolder(int folderId, bool recursive = false, bool showdeleted = false, bool nofiles = false, bool noshares = false)
+        public async Task<MetadataResponse> ListFolder(int folderId, bool recursive = false, bool showdeleted = false, bool nofiles = false, bool noshares = false)
         {
             StringBuilder sb = new StringBuilder();
             if (recursive)
@@ -44,8 +32,8 @@ namespace NextPlayerUWPDataLayer.pCloud.Requests
                 sb.Append("&noshares=1");
             }
             var optionalParams = sb.ToString();
-            var url = $"{BaseUrl}/listfolder?auth={authToken}&folderid={folderId}{optionalParams}";
-            var response = await downloader.DownloadJsonAsync<BaseMetadata>(url);
+            var url = $"{BaseUrl}/listfolder?{authParam}={authToken}&folderid={folderId}{optionalParams}";
+            var response = await downloader.DownloadJsonAsync<MetadataResponse>(url);
             return response;
         }
     }

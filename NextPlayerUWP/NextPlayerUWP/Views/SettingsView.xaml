@@ -419,14 +419,6 @@
                             ItemsSource="{x:Bind ViewModel.PCloudAccounts, Mode=OneWay}"
                             ItemTemplate="{StaticResource CloudAccountTemplate}">
                         </ListView>
-                        <TextBox Text="{x:Bind ViewModel.PCloudLogin, Mode=TwoWay}"
-                                HorizontalAlignment="Left"
-                                Margin="0,4,0,0"
-                                Width="256"/>
-                        <PasswordBox Password="{x:Bind ViewModel.PCloudPassword, Mode=TwoWay}"
-                                HorizontalAlignment="Left"
-                                Margin="0,4,0,0"
-                                Width="256"/>
                         <Button x:Uid="ButtonAddAccount"
                             Content="Add account"
                             Margin="0,0,0,0"

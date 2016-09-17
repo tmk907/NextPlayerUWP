@@ -54,6 +54,9 @@ namespace NextPlayerUWP.Common
                 case MusicSource.OneDrive:
                     mpi = await PrepareFromOneDrive(song);
                     break;
+                case MusicSource.PCloud:
+                    mpi = await PrepareFromPCloud(song);
+                    break;
                 default:
                     mpi = null;
                     break;
@@ -197,6 +200,23 @@ namespace NextPlayerUWP.Common
             UpdateDisplayProperties(oneDrivePlaybackItem, song);
             oneDriveSource.CustomProperties[propertySongId] = song.SongId;
             return oneDrivePlaybackItem;
+        }
+
+        private static async Task<MediaPlaybackItem> PrepareFromPCloud(SongItem song)
+        {
+            if (song.IsContentPathExpired())
+            {
+                CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
+                var service = cssf.GetService(CloudStorageType.pCloud, song.CloudUserId);
+                var link = await service.GetDownloadLink(song.Path);
+                song.UpdateContentPath(link, DateTime.Now.AddHours(4));
+            }
+            var source = MediaSource.CreateFromUri(new Uri(song.ContentPath));
+            var playbackItem = new MediaPlaybackItem(source);
+            playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+            UpdateDisplayProperties(playbackItem, song);
+            source.CustomProperties[propertySongId] = song.SongId;
+            return playbackItem;
         }
 
         private static void UpdateDisplayProperties(MediaPlaybackItem playbackItem, SongItem song)

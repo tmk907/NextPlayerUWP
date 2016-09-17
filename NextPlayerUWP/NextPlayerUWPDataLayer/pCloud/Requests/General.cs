@@ -7,21 +7,11 @@ using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.pCloud.Requests
 {
-    public class General
+    public class General : BaseRequest
     {
-        private Downloader downloader;
-        private string authToken;
-        private readonly string BaseUrl = "https://api.pcloud.com";
-
-        public General(string authToken)
+        public General()
         {
-            this.authToken = authToken;
             this.downloader = new Downloader();
-        }
-
-        public void SetDownloader(Downloader downloader)
-        {
-            this.downloader = downloader;
         }
 
         public async Task<DigestResponse> GetDigest()
@@ -33,7 +23,7 @@ namespace NextPlayerUWPDataLayer.pCloud.Requests
 
         public async Task<UserInfoResponse> UserInfo()
         {
-            var url = $"{BaseUrl}/userinfo?auth={authToken}";
+            var url = $"{BaseUrl}/userinfo?{authParam}={authToken}";
             var response = await downloader.DownloadJsonAsync<UserInfoResponse>(url);
             return response;
         }

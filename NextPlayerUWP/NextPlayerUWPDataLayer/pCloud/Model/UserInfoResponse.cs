@@ -6,7 +6,7 @@ namespace NextPlayerUWPDataLayer.pCloud.Model
     public class UserInfoResponse : BaseResponse
     {
         [JsonProperty("userid")]
-        public int UserId { get; set; }
+        public long UserId { get; set; }
 
         [JsonProperty("email")]
         public string Email { get; set; }
@@ -24,10 +24,10 @@ namespace NextPlayerUWPDataLayer.pCloud.Model
         public bool Premium { get; set; }
 
         [JsonProperty("usedquota")]
-        public int Usedquota { get; set; }
+        public long Usedquota { get; set; }
 
         [JsonProperty("quota")]
-        public int Quota { get; set; }
+        public long Quota { get; set; }
     }
 
 }
