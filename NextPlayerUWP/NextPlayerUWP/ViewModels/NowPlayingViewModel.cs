@@ -322,10 +322,14 @@ namespace NextPlayerUWP.ViewModels
 
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
-            await Task.Delay(200);
-            var duration = PlaybackService.Instance.Duration;
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            await Task.Delay(400);
+            await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
             {
+                var duration = PlaybackService.Instance.Duration;
+                if (duration == TimeSpan.MaxValue)
+                {
+                    duration = TimeSpan.Zero;
+                }
                 if (!_timer.IsEnabled)
                 {
                     StartTimer();
@@ -334,6 +338,11 @@ namespace NextPlayerUWP.ViewModels
                 TimeEnd = duration;
                 SliderValue = 0.0;
                 SliderMaxValue = (int)Math.Round(duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+                if (song.Duration == TimeSpan.Zero && song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.Dropbox || song.SourceType == MusicSource.OneDrive || song.SourceType == MusicSource.PCloud)
+                {
+                    song.Duration = timeEnd;
+                    await DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd);//.ConfigureAwait(false);
+                }
             });
         }
 

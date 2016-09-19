@@ -159,6 +159,7 @@ namespace NextPlayerUWP.Common
 
         public async Task Initialize()
         {
+            System.Diagnostics.Debug.WriteLine("PlaybackService Initialize Start");
             await LoadAll(CurrentSongIndex);
             Player.Source = mediaList;
 
@@ -169,6 +170,7 @@ namespace NextPlayerUWP.Common
             }
 
             canPlay = true;
+            System.Diagnostics.Debug.WriteLine("PlaybackService Initialize End");
         }
 
         Queue<MediaPlaybackItem> playbackItemQueue = new Queue<MediaPlaybackItem>();
@@ -273,7 +275,7 @@ namespace NextPlayerUWP.Common
         public static event MediaPlayerMediaOpenHandler MediaPlayerMediaOpened;
         public void OnMediaPlayerMediaOpened()
         {
-            System.Diagnostics.Debug.WriteLine("OnMediaPlayerMediaOpened {0}", Player.PlaybackSession.PlaybackState);
+            System.Diagnostics.Debug.WriteLine("OnMediaPlayerMediaOpened {0} {1}", Player.PlaybackSession.PlaybackState, Player.PlaybackSession.NaturalDuration);
             
             MediaPlayerMediaOpened?.Invoke();
         }
@@ -345,6 +347,7 @@ namespace NextPlayerUWP.Common
             }
             else if(canPlay == false)
             {
+                System.Diagnostics.Debug.WriteLine("Play() canPlay == false");
                 LoadAndPlay();
             }
         }
