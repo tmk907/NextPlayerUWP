@@ -251,14 +251,14 @@ namespace NextPlayerUWP.ViewModels
 
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
-            await Task.Delay(200);
-            var duration = PlaybackService.Instance.Duration;
-            if (duration == TimeSpan.MaxValue)
-            {
-                duration = TimeSpan.Zero;
-            }
+            //await Task.Delay(200);
             WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
+                var duration = PlaybackService.Instance.Duration;
+                if (duration == TimeSpan.MaxValue)
+                {
+                    duration = TimeSpan.Zero;
+                }
                 if (!_timer.IsEnabled)
                 {
                     StartTimer();
@@ -272,7 +272,7 @@ namespace NextPlayerUWP.ViewModels
             if (song.Duration == TimeSpan.Zero && song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
             {
                 song.Duration = timeEnd;
-                await DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd).ConfigureAwait(false);
+                await DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd);//.ConfigureAwait(false);
             }
         }
 

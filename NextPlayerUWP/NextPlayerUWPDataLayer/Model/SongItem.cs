@@ -73,7 +73,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != contentPath)
                 {
                     contentPath = value;
-                    onPropertyChanged(this, nameof(ContentPath));
+                    //onPropertyChanged(this, nameof(ContentPath));
                 }
             }
         }

@@ -128,21 +128,8 @@ namespace NextPlayerUWP.Common
         //public MediaList CurrentPlaylist { get; set; }
 
         MediaPlaybackList mediaList;
-        private bool isGaplessPlaybackReady = false;
-        private void CheckForGaplessPlaybackReady()
-        {
-            int i = 0;
-            foreach (var song in NowPlayingPlaylistManager.Current.songs)
-            {
-                if (song.IsContentPathExpired())
-                {
-                    i++;
-                }
-                if (i == 5) break;
-            }
-            if (i == 5) isGaplessPlaybackReady = false;
-            else isGaplessPlaybackReady = true;
-        }
+
+        bool isGaplessPlaybackReady = true;
 
         public PlaybackService()
         {
@@ -172,33 +159,16 @@ namespace NextPlayerUWP.Common
 
         public async Task Initialize()
         {
-            //    CheckForGaplessPlaybackReady();
-            //    if (isGaplessPlaybackReady)
-            //    {
-            //        await LoadAll(CurrentSongIndex);
-            //        Player.Source = mediaList;
-            //    }
-            //    else
-            //    {
-            //        var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            //        if (song.IsContentPathExpired())
-            //        {
-            //            canPlay = false;
-            //            return;
-            //        }
-            //        else
-            //        {
-            //            Player.Source = await PreparePlaybackItem(song);
-            //        }
-            //    }
+            await LoadAll(CurrentSongIndex);
+            Player.Source = mediaList;
 
-            //    if (NowPlayingPlaylistManager.Current.songs.Count > 0)
-            //    {
-            //        Player.CommandManager.NextBehavior.EnablingRule = MediaCommandEnablingRule.Always;
-            //        Player.CommandManager.PreviousBehavior.EnablingRule = MediaCommandEnablingRule.Always;
-            //    }
+            if (NowPlayingPlaylistManager.Current.songs.Count > 0)
+            {
+                Player.CommandManager.NextBehavior.EnablingRule = MediaCommandEnablingRule.Always;
+                Player.CommandManager.PreviousBehavior.EnablingRule = MediaCommandEnablingRule.Always;
+            }
 
-            //    canPlay = true;
+            canPlay = true;
         }
 
         Queue<MediaPlaybackItem> playbackItemQueue = new Queue<MediaPlaybackItem>();
@@ -251,6 +221,7 @@ namespace NextPlayerUWP.Common
             command = false;
         }
         #region Events
+
         private async void Player_MediaEnded(MediaPlayer sender, object args)
         {
             System.Diagnostics.Debug.WriteLine("Player_MediaEnded {0}", sender.PlaybackSession.PlaybackState);
@@ -302,7 +273,8 @@ namespace NextPlayerUWP.Common
         public static event MediaPlayerMediaOpenHandler MediaPlayerMediaOpened;
         public void OnMediaPlayerMediaOpened()
         {
-            System.Diagnostics.Debug.WriteLine("OnMediaPlayerMediaOpened");
+            System.Diagnostics.Debug.WriteLine("OnMediaPlayerMediaOpened {0}", Player.PlaybackSession.PlaybackState);
+            
             MediaPlayerMediaOpened?.Invoke();
         }
         public static event StreamUpdatedHandler StreamUpdated;
@@ -379,6 +351,7 @@ namespace NextPlayerUWP.Common
 
         private async Task LoadAndPlay()
         {
+            System.Diagnostics.Debug.WriteLine("LoadAndPlay");
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             Player.Source = await PreparePlaybackItem(song);
             canPlay = true;
@@ -933,18 +906,10 @@ namespace NextPlayerUWP.Common
 
             Player.Source = null;
             CurrentSongIndex = startIndex;
-            CheckForGaplessPlaybackReady();
-            if (isGaplessPlaybackReady)
-            {
-                await LoadAll(startIndex);
-                Player.Source = mediaList;
-            }
-            else
-            {
-                var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                Player.Source = await PreparePlaybackItem(song);
-            }
-            
+
+            await LoadAll(startIndex);
+            Player.Source = mediaList;
+          
             if (startPlaying)
             {
                 Player.Play();
@@ -957,31 +922,12 @@ namespace NextPlayerUWP.Common
             return await PlaybackItemBuilder.PreparePlaybackItem(song);
         }
 
-        public static async void Source_OpenOperationCompleted(MediaSource sender, MediaSourceOpenOperationCompletedEventArgs args)
+        public static void Source_OpenOperationCompleted(MediaSource sender, MediaSourceOpenOperationCompletedEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("UpdateMediaList {0}", sender.IsOpen);
             if (sender.IsOpen)
             {
                 Instance.OnMediaPlayerMediaOpened();
-            }
-            else
-            {
-                //Instance.Player.Pause();
-                //NextPlayerUWPDataLayer.CloudStorage.CloudStorageServiceFactory cssf = new NextPlayerUWPDataLayer.CloudStorage.CloudStorageServiceFactory();
-                //var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                //var service = cssf.GetService(NextPlayerUWPDataLayer.CloudStorage.CloudStorageType.Dropbox, song.CloudUserId);
-                //var link = await service.GetDownloadLink(song.Path);
-                //var dropboxSource = MediaSource.CreateFromUri(new Uri(link));
-                //var dropboxPlaybackItem = new MediaPlaybackItem(dropboxSource);
-                //dropboxPlaybackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-                ////UpdateDisplayProperties(dropboxPlaybackItem, song);
-                //Instance.mediaList.CurrentItemChanged -= Instance.MediaList_CurrentItemChanged;
-                //dropboxSource.CustomProperties[propertySongId] = song.SongId;
-                //Instance.mediaList.Items.Insert((int)Instance.mediaList.CurrentItemIndex + 1, dropboxPlaybackItem);
-                //Instance.mediaList.Items.RemoveAt((int)Instance.mediaList.CurrentItemIndex);
-                //Instance.mediaList.CurrentItemChanged += Instance.MediaList_CurrentItemChanged;
-                //Instance.Player.Play();
-
             }
         }
 

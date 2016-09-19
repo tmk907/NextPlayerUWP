@@ -1,11 +1,11 @@
 ﻿using FFmpegInterop;
 using NextPlayerUWPDataLayer.CloudStorage;
-using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
@@ -49,13 +49,13 @@ namespace NextPlayerUWP.Common
                     mpi = await PrepareFromJamendo(song);
                     break;
                 case MusicSource.Dropbox:
-                    mpi = await PrepareFromDropbox(song);
+                    mpi = PrepareFromCloudStorage(song);
                     break;
                 case MusicSource.OneDrive:
-                    mpi = await PrepareFromOneDrive(song);
+                    mpi = PrepareFromCloudStorage(song);
                     break;
                 case MusicSource.PCloud:
-                    mpi = await PrepareFromPCloud(song);
+                    mpi = PrepareFromCloudStorage(song);
                     break;
                 default:
                     mpi = null;
@@ -168,55 +168,60 @@ namespace NextPlayerUWP.Common
             return jamendoPlaybackItem;
         }
 
-        private static async Task<MediaPlaybackItem> PrepareFromDropbox(SongItem song)
+        private static MediaPlaybackItem PrepareFromCloudStorage(SongItem song)
         {
-            if (song.IsContentPathExpired())
-            {
-                CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
-                var service = cssf.GetService(CloudStorageType.Dropbox, song.CloudUserId);
-                var link = await service.GetDownloadLink(song.Path);
-                song.UpdateContentPath(link, DateTime.Now.AddHours(4));
-            }
-            var dropboxSource = MediaSource.CreateFromUri(new Uri(song.ContentPath));
-            var dropboxPlaybackItem = new MediaPlaybackItem(dropboxSource);
-            dropboxPlaybackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-            UpdateDisplayProperties(dropboxPlaybackItem, song);
-            dropboxSource.CustomProperties[propertySongId] = song.SongId;
-            return dropboxPlaybackItem;
-        }
-
-        private static async Task<MediaPlaybackItem> PrepareFromOneDrive(SongItem song)
-        {
-            if (song.IsContentPathExpired())
-            {
-                CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
-                var service = cssf.GetService(CloudStorageType.OneDrive, song.CloudUserId);
-                var link = await service.GetDownloadLink(song.Path);
-                song.UpdateContentPath(link, DateTime.Now.AddHours(100));
-            }
-            var oneDriveSource = MediaSource.CreateFromUri(new Uri(song.ContentPath));
-            var oneDrivePlaybackItem = new MediaPlaybackItem(oneDriveSource);
-            oneDrivePlaybackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-            UpdateDisplayProperties(oneDrivePlaybackItem, song);
-            oneDriveSource.CustomProperties[propertySongId] = song.SongId;
-            return oneDrivePlaybackItem;
-        }
-
-        private static async Task<MediaPlaybackItem> PrepareFromPCloud(SongItem song)
-        {
-            if (song.IsContentPathExpired())
-            {
-                CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
-                var service = cssf.GetService(CloudStorageType.pCloud, song.CloudUserId);
-                var link = await service.GetDownloadLink(song.Path);
-                song.UpdateContentPath(link, DateTime.Now.AddHours(4));
-            }
-            var source = MediaSource.CreateFromUri(new Uri(song.ContentPath));
+            MediaBinder mb = new MediaBinder();
+            mb.Token = song.SongId.ToString();
+            mb.Binding += BindSource;
+               
+            var source = MediaSource.CreateFromMediaBinder(mb);
+            source.CustomProperties[propertySongId] = song.SongId;
             var playbackItem = new MediaPlaybackItem(source);
             playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
             UpdateDisplayProperties(playbackItem, song);
-            source.CustomProperties[propertySongId] = song.SongId;
+            
             return playbackItem;
+        }
+
+        private static async void BindSource(MediaBinder sender, MediaBindingEventArgs args)
+        {
+            var deferral = args.GetDeferral();
+            int id = Int32.Parse(args.MediaBinder.Token);
+            var song = NowPlayingPlaylistManager.Current.songs.FirstOrDefault(s => s.SongId == id);
+            await UpdateSongContentPath(song, song.SourceType);
+            args.SetUri(new Uri(song.ContentPath));
+
+            deferral.Complete();
+        }
+
+        private static async Task UpdateSongContentPath(SongItem song, MusicSource type)
+        {
+            if (song.IsContentPathExpired())
+            {
+                CloudStorageType cloudType;
+                switch (type)
+                {
+                    case MusicSource.Dropbox:
+                        cloudType = CloudStorageType.Dropbox;
+                        break;
+                    case MusicSource.GoogleDrive:
+                        cloudType = CloudStorageType.GoogleDrive;
+                        break;
+                    case MusicSource.OneDrive:
+                        cloudType = CloudStorageType.OneDrive;
+                        break;
+                    case MusicSource.PCloud:
+                        cloudType = CloudStorageType.pCloud;
+                        break;
+                    default:
+                        return;
+                }
+                CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
+                var service = cssf.GetService(cloudType, song.CloudUserId);
+                var link = await service.GetDownloadLink(song.Path);
+                var validForHours = (cloudType == CloudStorageType.OneDrive) ? 100 : (cloudType == CloudStorageType.Dropbox || cloudType == CloudStorageType.pCloud) ? 4 : 1;
+                song.UpdateContentPath(link, DateTime.Now.AddHours(validForHours));
+            }
         }
 
         private static void UpdateDisplayProperties(MediaPlaybackItem playbackItem, SongItem song)
