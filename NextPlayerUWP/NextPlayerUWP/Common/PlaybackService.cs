@@ -8,13 +8,10 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
-using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.Foundation;
 using Windows.System.Threading;
 
 namespace NextPlayerUWP.Common
@@ -23,54 +20,7 @@ namespace NextPlayerUWP.Common
     public delegate void MediaPlayerTrackChangeHandler(int index);
     public delegate void MediaPlayerMediaOpenHandler();
     public delegate void StreamUpdatedHandler(NowPlayingSong song);
-
-    public class MyStreamReference : IRandomAccessStreamReference
-    {
-        private string path;
-
-        public MyStreamReference(string path)
-        {
-            this.path = path;
-        }
-
-        // private async helper task that is necessary if you need to use await.
-        private async Task<IRandomAccessStreamWithContentType> Open()
-            => await (await StorageFile.GetFileFromPathAsync(path)).OpenReadAsync();
-
-        IAsyncOperation<IRandomAccessStreamWithContentType> IRandomAccessStreamReference.OpenReadAsync()
-        {
-            return Open().AsAsyncOperation();
-        }
-    }
-
-    public class MyStreamReferenceFAL : IRandomAccessStreamReference
-    {
-        private string path;
-
-        public MyStreamReferenceFAL(string path)
-        {
-            this.path = path;
-        }
-
-        // private async helper task that is necessary if you need to use await.
-        private async Task<IRandomAccessStreamWithContentType> Open()
-        {
-            string token = await FutureAccessHelper.GetTokenFromPath(path);
-            if (token != null)
-            {
-                var file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
-                return await file.OpenReadAsync();
-            }
-            return null;
-        }
-            //=> await (await StorageFile.GetFileFromPathAsync(path)).OpenReadAsync();
-
-        IAsyncOperation<IRandomAccessStreamWithContentType> IRandomAccessStreamReference.OpenReadAsync()
-        {
-            return Open().AsAsyncOperation();
-        }
-    }
-
+    
     public class PlaybackService
     {
         static PlaybackService instance;
@@ -108,14 +58,13 @@ namespace NextPlayerUWP.Common
 
         private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
 
-        private AppState foregroundAppState = AppState.Unknown;
         public JamendoRadiosData jRadioData;
         private LastFmCache lastFmCache;
 
         private const int maxSongsNumber = 5;
         private const int playingSongIndex = 2;
 
-        private bool? canPlay = null;
+        private bool canPlay = false;
 
         private const string propertyIndex = "index";
         private const string propertySongId = "songid";
@@ -142,7 +91,9 @@ namespace NextPlayerUWP.Common
             Player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             Player.CommandManager.NextReceived += CommandManager_NextReceived;
             Player.CommandManager.PreviousReceived += CommandManager_PreviousReceived;
-            
+            Player.CommandManager.NextBehavior.EnablingRule = MediaCommandEnablingRule.Always;
+            Player.CommandManager.PreviousBehavior.EnablingRule = MediaCommandEnablingRule.Always;
+
             mediaList = new MediaPlaybackList();
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
 
@@ -161,14 +112,8 @@ namespace NextPlayerUWP.Common
         {
             System.Diagnostics.Debug.WriteLine("PlaybackService Initialize Start");
             await LoadAll(CurrentSongIndex);
+            //System.Diagnostics.Debug.WriteLine("PlaybackService Initialize Loaded");
             Player.Source = mediaList;
-
-            if (NowPlayingPlaylistManager.Current.songs.Count > 0)
-            {
-                Player.CommandManager.NextBehavior.EnablingRule = MediaCommandEnablingRule.Always;
-                Player.CommandManager.PreviousBehavior.EnablingRule = MediaCommandEnablingRule.Always;
-            }
-
             canPlay = true;
             System.Diagnostics.Debug.WriteLine("PlaybackService Initialize End");
         }
@@ -231,10 +176,8 @@ namespace NextPlayerUWP.Common
             ScrobbleTrack();
             songStartedAt = DateTime.Now;
             songPlayed = TimeSpan.Zero;
-            if (!isGaplessPlaybackReady)
-            {
-                await Next(false);
-            }
+
+            await Next(false);
         }
 
         private async void CommandManager_PreviousReceived(MediaPlaybackCommandManager sender, MediaPlaybackCommandManagerPreviousReceivedEventArgs args)
@@ -255,15 +198,13 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-            var state = sender.PlaybackState;
-            System.Diagnostics.Debug.WriteLine("PlaybackSession_PlaybackStateChanged {0}", state);
-            OnMediaPlayerStateChanged(state);
+            OnMediaPlayerStateChanged(sender.PlaybackState);
         }
 
         public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;
         public void OnMediaPlayerStateChanged(MediaPlaybackState state)
         {
-            System.Diagnostics.Debug.WriteLine("OnMediaPlayerTrackChanged {0}", state);
+            System.Diagnostics.Debug.WriteLine("OnMediaPlayerStateChanged {0}", state);
             MediaPlayerStateChanged?.Invoke(state);
         }
         public static event MediaPlayerTrackChangeHandler MediaPlayerTrackChanged;
@@ -276,7 +217,6 @@ namespace NextPlayerUWP.Common
         public void OnMediaPlayerMediaOpened()
         {
             System.Diagnostics.Debug.WriteLine("OnMediaPlayerMediaOpened {0} {1}", Player.PlaybackSession.PlaybackState, Player.PlaybackSession.NaturalDuration);
-            
             MediaPlayerMediaOpened?.Invoke();
         }
         public static event StreamUpdatedHandler StreamUpdated;
@@ -348,20 +288,7 @@ namespace NextPlayerUWP.Common
             else if(canPlay == false)
             {
                 System.Diagnostics.Debug.WriteLine("Play() canPlay == false");
-                LoadAndPlay();
             }
-        }
-
-        private async Task LoadAndPlay()
-        {
-            System.Diagnostics.Debug.WriteLine("LoadAndPlay");
-            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            Player.Source = await PreparePlaybackItem(song);
-            canPlay = true;
-            songStartedAt = DateTime.Now;
-            Player.Play();
-            Player.CommandManager.NextBehavior.EnablingRule = MediaCommandEnablingRule.Always;
-            Player.CommandManager.PreviousBehavior.EnablingRule = MediaCommandEnablingRule.Always;
         }
 
         public void Pause()
@@ -387,108 +314,14 @@ namespace NextPlayerUWP.Common
                 {
                     if (userChoice)
                     {
-                        if (isGaplessPlaybackReady)
-                        {
-                            mediaList.MoveNext();
-                            CurrentSongIndex = 0;
-                        }
-                        else
-                        {
-                            CurrentSongIndex = 0;
-                            bool isPlaying = Player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing;
-                            Player.Source = null;
-                            Player.Pause();
-                            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                            Player.Source = await PreparePlaybackItem(song);
-                            if (isPlaying) Player.Play();
-                        }
+                        mediaList.MoveNext();
+                        CurrentSongIndex = 0;
                     }
                     else
                     {
                         if (mediaList.Items.Count > 1)
                         {
-                            if (isGaplessPlaybackReady)
-                            {
-                                mediaList.MovePrevious();
-                            }
-                            else
-                            {
-
-                            }
-                        }
-                        
-                        Player.Pause();
-                        Player.PlaybackSession.Position = TimeSpan.Zero;
-                    }
-                }
-                else
-                {
-                    if (userChoice)
-                    {
-                        if (isGaplessPlaybackReady)
-                        {
-                            mediaList.MoveNext();
-                            CurrentSongIndex++;
-                        }
-                        else
-                        {
-                            CurrentSongIndex++;
-                            bool isPlaying = Player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing;
-                            Player.Source = null;
-                            Player.Pause();
-                            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                            Player.Source = await PreparePlaybackItem(song);
-                            if (isPlaying) Player.Play();
-                        }
-                    }
-                    else
-                    {
-                        CurrentSongIndex++;
-                        if (!isGaplessPlaybackReady)
-                        {
-                            Player.Source = null;
-                            Player.Pause();
-                            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                            Player.Source = await PreparePlaybackItem(song);
-                            Player.Play();
-                        }
-                    }
-                }
-            }
-            else if (repeat == RepeatEnum.RepeatOnce)
-            {
-                if (IsLast)
-                {
-                    if (userChoice)
-                    {
-                        if (isGaplessPlaybackReady)
-                        {
-                            mediaList.MoveNext();
-                            CurrentSongIndex = 0;
-                        }
-                        else
-                        {
-                            CurrentSongIndex = 0;
-                            bool isPlaying = Player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing;
-                            Player.Source = null;
-                            Player.Pause();
-                            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                            Player.Source = await PreparePlaybackItem(song);
-                            if (isPlaying) Player.Play();
-                        }
-                    }
-                    else
-                    {
-                        if (mediaList.Items.Count > 1)
-                        {
-                            if (isGaplessPlaybackReady)
-                            {
-                                mediaList.MovePrevious();
-                            }
-                            else
-                            {
-
-                            }
+                            mediaList.MovePrevious();
                         }
                         
                         Player.Pause();
@@ -505,13 +338,37 @@ namespace NextPlayerUWP.Common
                     else
                     {
                         CurrentSongIndex++;
-                        bool isPlaying = Player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing;
-                        Player.Source = null;
-                        Player.Pause();
-                        var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                        Player.Source = await PreparePlaybackItem(song);
-                        if (isPlaying) Player.Play();
                     }
+                }
+            }
+            else if (repeat == RepeatEnum.RepeatOnce)
+            {
+                if (IsLast)
+                {
+                    if (userChoice)
+                    {
+                        mediaList.MoveNext();
+                        CurrentSongIndex = 0;
+                    }
+                    else
+                    {
+                        if (mediaList.Items.Count > 1)
+                        {
+                            mediaList.MovePrevious();
+                        }
+                        
+                        Player.Pause();
+                        Player.PlaybackSession.Position = TimeSpan.Zero;
+                    }
+                }
+                else
+                {
+                    if (userChoice)
+                    {
+                        mediaList.MoveNext();
+                    }
+                    //await UpdateMediaList(false);
+                    CurrentSongIndex++;
                 }
                 //if (isSongRepeated)
                 //{
@@ -563,6 +420,11 @@ namespace NextPlayerUWP.Common
             }
             else if (repeat == RepeatEnum.RepeatPlaylist)
             {
+                if (userChoice)
+                {
+                    mediaList.MoveNext();
+                }
+                //await UpdateMediaList();
                 if (IsLast)
                 {
                     CurrentSongIndex = 0;
@@ -571,36 +433,8 @@ namespace NextPlayerUWP.Common
                 {
                     CurrentSongIndex++;
                 }
-                if (userChoice)
-                {
-                    if (isGaplessPlaybackReady)
-                    {
-                        mediaList.MoveNext();
-
-                    }
-                    else
-                    {
-                        bool isPlaying = Player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing;
-                        Player.Source = null;
-                        Player.Pause();
-                        var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                        Player.Source = await PreparePlaybackItem(song);
-                        if (isPlaying) Player.Play();
-                    }
-                }
-                else
-                {
-                    if (!isGaplessPlaybackReady)
-                    {
-                        Player.Source = null;
-                        Player.Pause();
-                        var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                        Player.Source = await PreparePlaybackItem(song);
-                        Player.Play();
-                    }
-                }
             }
-            
+
             OnMediaPlayerMediaOpened();
         }
 
@@ -622,38 +456,17 @@ namespace NextPlayerUWP.Common
             else
             {
                 isSongRepeated = false;
-                
-                if (isGaplessPlaybackReady)
+
+                mediaList.MovePrevious();
+                //await UpdateMediaList(true);
+                if (CurrentSongIndex == 0)
                 {
-                    mediaList.MovePrevious();
-                    if (CurrentSongIndex == 0)
-                    {
-                        CurrentSongIndex = NowPlayingPlaylistManager.Current.songs.Count - 1;
-                    }
-                    else
-                    {
-                        CurrentSongIndex--;
-                    }
+                    CurrentSongIndex = NowPlayingPlaylistManager.Current.songs.Count - 1;
                 }
                 else
                 {
-                    if (CurrentSongIndex == 0)
-                    {
-                        CurrentSongIndex = NowPlayingPlaylistManager.Current.songs.Count - 1;
-                    }
-                    else
-                    {
-                        CurrentSongIndex--;
-                    }
-                    bool isPlaying = Player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing;
-                    Player.Source = null;
-                    Player.Pause();
-                    var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-                    Player.Source = await PreparePlaybackItem(song);
-                    if (isPlaying) Player.Play();
+                    CurrentSongIndex--;
                 }
-                //await UpdateMediaList(true);
-                
                 OnMediaPlayerMediaOpened();
             }
         }
@@ -706,6 +519,11 @@ namespace NextPlayerUWP.Common
                     break;
                 case MediaPlaybackState.Paused:
                     Play();
+                    break;
+                case MediaPlaybackState.Buffering:
+                    Pause();
+                    break;
+                case MediaPlaybackState.Opening:
                     break;
                 default:
                     try
@@ -808,13 +626,13 @@ namespace NextPlayerUWP.Common
         {
             ClearMediaList();
             mediaList = new MediaPlaybackList();
-            int ind = 0;
+            int index = 0;
             foreach(var song in NowPlayingPlaylistManager.Current.songs)
             {
                 var playbackItem = await PreparePlaybackItem(song);
-                playbackItem.Source.CustomProperties[propertyIndex] = ind;
+                playbackItem.Source.CustomProperties[propertyIndex] = index;
                 mediaList.Items.Add(playbackItem);
-                ind++;
+                index++;
             }
             mediaList.StartingItem = mediaList.Items.FirstOrDefault(i => i.Source.CustomProperties[propertyIndex].Equals(startIndex));
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
@@ -871,6 +689,7 @@ namespace NextPlayerUWP.Common
         public async  Task JumpTo(int startIndex)//nie zmienia stanu na playing!!
         {
             System.Diagnostics.Debug.WriteLine("JumpTo {0}", startIndex);
+            if (!canPlay) return;
             command = true;
 
             songPlayed = DateTime.Now - songStartedAt + songPlayed;
@@ -878,20 +697,14 @@ namespace NextPlayerUWP.Common
             songStartedAt = DateTime.Now;
             songPlayed = TimeSpan.Zero;
 
-            if (isGaplessPlaybackReady)
+            mediaList.MoveTo((uint)startIndex);
+            
+            if (Player.PlaybackSession.PlaybackState == MediaPlaybackState.Paused)
             {
-                mediaList.MoveTo((uint)startIndex);
-            }
-            else
-            {
-                Player.Pause();
-                Player.Source = null;
-                var song = NowPlayingPlaylistManager.Current.songs[startIndex];
-                Player.Source = await PreparePlaybackItem(song);
+                Play();
             }
             
             CurrentSongIndex = startIndex;
-            Player.Play();
             OnMediaPlayerMediaOpened();
         }
 

@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
+using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -41,7 +42,7 @@ namespace NextPlayerUWP.ViewModels
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
             NowPlayingPlaylistManager.Current.SetDispatcher(WindowWrapper.Current().Dispatcher);
-            PlaybackService.Instance.Initialize();
+            PlaybackService.Instance.Initialize().ConfigureAwait(false);
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -156,7 +157,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     if (value == 0) isMuted = true;
                     else isMuted = false;
-                    PlaybackService.Instance.ChangeVolume(volume);
+                    PlaybackService.Instance.ChangeVolume(value);
                 }
                 Set(ref volume, value);
             }
@@ -219,9 +220,13 @@ namespace NextPlayerUWP.ViewModels
                 {
                     PlayButtonContent = "\uE769";
                 }
-                else
+                else if (state == MediaPlaybackState.Paused)
                 {
                     PlayButtonContent = "\uE768";
+                }
+                else
+                {
+                    PlayButtonContent = "\uE767";
                 }
             });
         }
@@ -240,13 +245,6 @@ namespace NextPlayerUWP.ViewModels
                     CoverUri = song.AlbumArtUri;
                 }
             });
-        }
-
-        private void PlaybackService_MediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)
-        {
-            CurrentTime = position;
-            SliderValue = position.TotalSeconds;
-            //TimeEnd = duration;
         }
 
         private async void PlaybackService_MediaPlayerMediaOpened()

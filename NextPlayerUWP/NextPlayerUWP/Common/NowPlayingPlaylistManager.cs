@@ -29,7 +29,7 @@ namespace NextPlayerUWP.Common
 
         private NowPlayingPlaylistManager()
         {
-            Logger.DebugWrite("NowPlayingPlaylistManager()", "");
+            Logger.DebugWrite("NowPlayingPlaylistManager()","");
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
             songs.CollectionChanged += Songs_CollectionChanged;
             PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
@@ -73,13 +73,16 @@ namespace NextPlayerUWP.Common
 
         private async void App_SongUpdated(int id)
         {
-            SongItem si = songs.Where(s => s.SongId.Equals(id)).FirstOrDefault();
-            if (si != null)
+            await dispatcher.DispatchAsync(async () =>
             {
-                int i = songs.IndexOf(si);
-                songs[i] = await DatabaseManager.Current.GetSongItemAsync(id);
-                await NotifyChange();
-            }
+                SongItem si = songs.Where(s => s.SongId.Equals(id)).FirstOrDefault();
+                if (si != null)
+                {
+                    int i = songs.IndexOf(si);
+                    songs[i] = await DatabaseManager.Current.GetSongItemAsync(id);
+                    await NotifyChange();
+                }
+            });
         }
 
         public ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
