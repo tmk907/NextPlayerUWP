@@ -181,7 +181,7 @@ namespace NextPlayerUWP.ViewModels
         public void RepeatCommand()
         {
             RepeatMode = Repeat.Change();
-            PlaybackService.Instance.ChangeRepeat();
+            PlaybackService.Instance.ApplyRepeatState();
         }
 
         public async void RateSong(object sender, RoutedEventArgs e)

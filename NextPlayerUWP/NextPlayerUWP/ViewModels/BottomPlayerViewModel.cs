@@ -194,7 +194,7 @@ namespace NextPlayerUWP.ViewModels
         public void RepeatCommand()
         {
             RepeatMode = Repeat.Change();
-            PlaybackService.Instance.ChangeRepeat();
+            PlaybackService.Instance.ApplyRepeatState();
         }
         
         public void MuteVolume()

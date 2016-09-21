@@ -53,8 +53,6 @@ namespace NextPlayerUWP.Common
 
         bool shuffle;
         RepeatEnum repeat;
-        bool isPlaylistRepeated;
-        bool isSongRepeated;
 
         private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
 
@@ -98,8 +96,7 @@ namespace NextPlayerUWP.Common
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
 
             shuffle = Shuffle.CurrentState();
-            repeat = Repeat.CurrentState();
-            isSongRepeated = false;
+            ApplyRepeatState();
 
             jRadioData = new JamendoRadiosData();
             lastFmCache = new LastFmCache();
@@ -157,6 +154,13 @@ namespace NextPlayerUWP.Common
         private async void MediaList_CurrentItemChanged(MediaPlaybackList sender, CurrentMediaPlaybackItemChangedEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("MediaList_CurrentItemChanged {0} {1}", args.OldItem?.Source?.CustomProperties[propertyIndex] ?? "null", args.NewItem?.Source?.CustomProperties[propertyIndex] ?? "null");
+            if (repeat == RepeatEnum.RepeatPlaylist &&
+                args.NewItem != null && args.OldItem != null && 
+                (int)args.NewItem.Source.CustomProperties[propertyIndex] == 0 && 
+                (int)args.OldItem.Source.CustomProperties[propertyIndex] == sender.Items.Count)
+            {
+                CurrentSongIndex = 0;
+            }
             if (!command)//song finished
             {
                 if (args.NewItem != null && args.OldItem != null)
@@ -169,15 +173,13 @@ namespace NextPlayerUWP.Common
         }
         #region Events
 
-        private async void Player_MediaEnded(MediaPlayer sender, object args)
+        private void Player_MediaEnded(MediaPlayer sender, object args)
         {
             System.Diagnostics.Debug.WriteLine("Player_MediaEnded {0}", sender.PlaybackSession.PlaybackState);
             songPlayed = DateTime.Now - songStartedAt + songPlayed;
             ScrobbleTrack();
             songStartedAt = DateTime.Now;
             songPlayed = TimeSpan.Zero;
-
-            await Next(false);
         }
 
         private async void CommandManager_PreviousReceived(MediaPlaybackCommandManager sender, MediaPlaybackCommandManagerPreviousReceivedEventArgs args)
@@ -319,11 +321,6 @@ namespace NextPlayerUWP.Common
                     }
                     else
                     {
-                        if (mediaList.Items.Count > 1)
-                        {
-                            mediaList.MovePrevious();
-                        }
-                        
                         Player.Pause();
                         Player.PlaybackSession.Position = TimeSpan.Zero;
                     }
@@ -333,12 +330,8 @@ namespace NextPlayerUWP.Common
                     if (userChoice)
                     {
                         mediaList.MoveNext();
-                        CurrentSongIndex++;
                     }
-                    else
-                    {
-                        CurrentSongIndex++;
-                    }
+                    CurrentSongIndex++;
                 }
             }
             else if (repeat == RepeatEnum.RepeatOnce)
@@ -352,11 +345,6 @@ namespace NextPlayerUWP.Common
                     }
                     else
                     {
-                        if (mediaList.Items.Count > 1)
-                        {
-                            mediaList.MovePrevious();
-                        }
-                        
                         Player.Pause();
                         Player.PlaybackSession.Position = TimeSpan.Zero;
                     }
@@ -367,56 +355,8 @@ namespace NextPlayerUWP.Common
                     {
                         mediaList.MoveNext();
                     }
-                    //await UpdateMediaList(false);
                     CurrentSongIndex++;
                 }
-                //if (isSongRepeated)
-                //{
-                //    isSongRepeated = false;
-                //    if (IsLast)
-                //    {
-                //        if (userChoice)
-                //        {
-                //            mediaList.MoveNext();
-                //            await UpdateMediaList();
-                //            CurrentSongIndex = 0;
-                //        }
-                //        else
-                //        {
-                //            mediaList.MovePrevious();
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (userChoice)
-                //        {
-                //            mediaList.MoveNext();
-                //        }
-                //        await UpdateMediaList(false);
-                //        CurrentSongIndex++;
-                //    }
-                //}
-                //else
-                //{
-                //    if (userChoice)
-                //    {
-                //        mediaList.MoveNext();
-                //        await UpdateMediaList();
-                //        if (IsLast)
-                //        {
-                //            CurrentSongIndex = 0;
-                //        }
-                //        else
-                //        {
-                //            CurrentSongIndex++;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        mediaList.MovePrevious();
-                //        isSongRepeated = true;
-                //    }
-                //}
             }
             else if (repeat == RepeatEnum.RepeatPlaylist)
             {
@@ -424,7 +364,6 @@ namespace NextPlayerUWP.Common
                 {
                     mediaList.MoveNext();
                 }
-                //await UpdateMediaList();
                 if (IsLast)
                 {
                     CurrentSongIndex = 0;
@@ -455,10 +394,7 @@ namespace NextPlayerUWP.Common
             }
             else
             {
-                isSongRepeated = false;
-
                 mediaList.MovePrevious();
-                //await UpdateMediaList(true);
                 if (CurrentSongIndex == 0)
                 {
                     CurrentSongIndex = NowPlayingPlaylistManager.Current.songs.Count - 1;
@@ -486,19 +422,25 @@ namespace NextPlayerUWP.Common
             await UpdateMediaListWithoutPausing();
         }
 
-        public void ChangeRepeat()
+        public void ApplyRepeatState()
         {
             repeat = Repeat.CurrentState();
             if (repeat == RepeatEnum.RepeatOnce)
             {
                 Player.IsLoopingEnabled = true;
+                mediaList.AutoRepeatEnabled = false;
+            }
+            else if (repeat == RepeatEnum.RepeatPlaylist)
+            {
+                Player.IsLoopingEnabled = false;
+                mediaList.AutoRepeatEnabled = true;
             }
             else
             {
                 Player.IsLoopingEnabled = false;
+                mediaList.AutoRepeatEnabled = false;
             }
             System.Diagnostics.Debug.WriteLine("ChangeRepeat {0}", repeat);
-            isSongRepeated = false;
         }
 
         public void ChangeVolume(int volume)
@@ -625,7 +567,7 @@ namespace NextPlayerUWP.Common
         private async Task LoadAll(int startIndex)
         {
             ClearMediaList();
-            mediaList = new MediaPlaybackList();
+            //mediaList = new MediaPlaybackList();
             int index = 0;
             foreach(var song in NowPlayingPlaylistManager.Current.songs)
             {
