@@ -743,8 +743,9 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task<ObservableCollection<SongItem>> GetSongItemsFromPlainPlaylistAsync(int id)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var query = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM PlainPlaylistEntryTable INNER JOIN SongsTable ON PlainPlaylistEntryTable.SongId = SongsTable.SongId WHERE PlaylistId = ? AND SongsTable.IsAvailable = 1 ORDER BY PlainPlaylistEntryTable.Place", id);
-            var result = query.ToList();
+            var query = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM PlainPlaylistEntryTable INNER JOIN SongsTable ON PlainPlaylistEntryTable.SongId = SongsTable.SongId WHERE PlaylistId = ? ORDER BY PlainPlaylistEntryTable.Place", id);
+            var result = query.Where(s=>(s.IsAvailable == 1 && (s.MusicSourceType == (int)MusicSource.LocalFile || s.MusicSourceType == (int)MusicSource.LocalNotMusicLibrary)) ||
+                                         s.MusicSourceType == (int)MusicSource.OneDrive || s.MusicSourceType == (int)MusicSource.Dropbox || s.MusicSourceType == (int)MusicSource.PCloud || s.MusicSourceType == (int)MusicSource.GoogleDrive);
             foreach (var item in result)
             {
                 songs.Add(new SongItem(item));
