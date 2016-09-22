@@ -20,18 +20,18 @@ namespace NextPlayerUWPDataLayer.Model
             folder = name;
             UserId = userId;
             CloudType = type;
-            if (type == CloudStorageType.pCloud)
-            {
-                directory = "0";
-            }
-            else if (type == CloudStorageType.Dropbox)
-            {
-                directory = "";
-            }
-            else if (type == CloudStorageType.OneDrive)
-            {
-
-            }
+            //if (type == CloudStorageType.pCloud)
+            //{
+            //    directory = "0";
+            //}
+            //else if (type == CloudStorageType.Dropbox)
+            //{
+            //    directory = "";
+            //}
+            //else if (type == CloudStorageType.OneDrive)
+            //{
+            //    directory = "";
+            //}
         }
 
         public override string GetParameter()

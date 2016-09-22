@@ -10,6 +10,7 @@ using Template10.Services.NavigationService;
 using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -54,6 +55,8 @@ namespace NextPlayerUWP.ViewModels
         {
             PlaylistItem p = (PlaylistItem)e.ClickedItem;
             string value = values[1];
+            string userId;
+            string folderId;
             switch (type)
             {
                 case MusicItemTypes.album:
@@ -87,13 +90,26 @@ namespace NextPlayerUWP.ViewModels
 
                     break;
                 case MusicItemTypes.dropboxfolder:
-
+                    userId = values[1];
+                    folderId = (values.Length == 2) ? values[2] : "";
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicItemTypes.dropboxfolder), s => s.Title);
                     break;
                 case MusicItemTypes.onedrivefolder:
+                    userId = values[1];
+                    folderId = (values.Length == 2) ? values[2] : null;
+                    if (folderId == null)
+                    {
+                        CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
+                        var service = cssf.GetService(CloudStorageType.OneDrive, userId);
+                        folderId = await service.GetRootFolderId();
+                    }
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicItemTypes.onedrivefolder), s => s.Title);
 
                     break;
                 case MusicItemTypes.pcloudfolder:
-
+                    userId = values[1];
+                    folderId = (values.Length == 2) ? values[2] : "0";
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicItemTypes.pcloudfolder), s => s.Title);
                     break;
                 default:
                     break;
