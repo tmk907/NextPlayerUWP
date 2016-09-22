@@ -181,10 +181,10 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             {
                 return cachedFolders[folderId];
             }
-            if (folderId == "0")
-            {
-                return new CloudFolder("pCloud", "", 0, "", null, CloudStorageType.pCloud, userId);
-            }
+            //if (folderId == "0")
+            //{
+            //    return new CloudFolder("pCloud", "", 0, "", null, CloudStorageType.pCloud, userId);
+            //}
             try
             {
                 var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId), false, false, true, true);
@@ -202,6 +202,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 
         public async Task<string> GetRootFolderId()
         {
+            if (!cachedFolders.ContainsKey("0"))
+            {
+                var folder = await GetFolder("0");
+            }
+            
             return "0";
         }
 
@@ -223,13 +228,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
                 cache.Add(folderId, result);
             }
             List<SongData> songData = new List<SongData>();
-
+            var folder = cachedFolders[folderId];
             foreach (var item in result.Contents)
             {
                 if (!item.IsFolder)
                 {
                     if (item.Name.ToLower().EndsWith(".mp3") || item.Name.ToLower().EndsWith(".m4a"))
-                    songData.Add(CreateSongData(item, userId));
+                    songData.Add(CreateSongData(item, userId, folder));
                 }
             }
 
@@ -265,7 +270,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             return folders;
         }
 
-        private static SongData CreateSongData(NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata item, string userId)
+        private static SongData CreateSongData(NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata item, string userId, CloudFolder folder)
         {
             SongData song = new SongData();
             //song.AlbumArtPath = 
@@ -280,6 +285,8 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             song.LastPlayed = DateTime.MinValue;
             song.MusicSourceType = (int)Enums.MusicSource.PCloud;
             song.Path = item.FileId.ToString();
+            song.FolderName = folder.Folder;
+            song.DirectoryPath = folder.Id;
             song.PlayCount = 0;
 
             song.Tag.Album = "";

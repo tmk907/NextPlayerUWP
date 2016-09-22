@@ -19,7 +19,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage
             foreach(var acc in accounts)
             {
                 string name = CloudAccounts.GetAccountName(acc.Username, acc.Type);
-                list.Add(new CloudRootFolder(name, acc.UserId,acc.Type));
+                list.Add(new CloudRootFolder(name, acc.UserId, acc.Type));
             }
 
             return list;

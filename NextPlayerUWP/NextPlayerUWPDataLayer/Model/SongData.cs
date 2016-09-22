@@ -8,6 +8,8 @@ namespace NextPlayerUWPDataLayer.Model
         public string Filename { get; set; }
         public ulong FileSize { get; set; }
         public string Path { get; set; }
+        public string FolderName { get; set; }
+        public string DirectoryPath { get; set; }
         public DateTime DateModified { get; set; }
 
         public uint Bitrate { get; set; }

@@ -236,7 +236,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 var rootChildrens = await oneDriveClient.Drive.Root.Children.Request().GetAsync();
                 var item = rootChildrens.FirstOrDefault(i => i.SpecialFolder.Name.Equals("music"));
                 musicFolderId = item.Id;
-                CloudFolder folder = new CloudFolder("OneDrive Music", "OneDrive Music", item.Folder.ChildCount ?? 0, item.Id, "", CloudStorageType.OneDrive, userId);
+                CloudFolder folder = new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, item.ParentReference.Id, CloudStorageType.OneDrive, userId);
                 cachedFolders.Add(musicFolderId, folder);
                 return folder;
             }
@@ -271,11 +271,12 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 }
             }
             List<SongData> songData = new List<SongData>();
+            var folder = cachedFolders[folderId];
             foreach (var item in children)
             {
                 if (item.Audio != null)
                 {
-                    songData.Add(CreateSongData(item, userId));
+                    songData.Add(CreateSongData(item, userId, folder));
                 }
             }
             songs = await DatabaseManager.Current.InsertCloudItems(songData, Enums.MusicSource.OneDrive);
@@ -290,12 +291,12 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             if (cachedFolders.ContainsKey(id))
             {
                 return cachedFolders[id];
-            }
+            }           
             try
             {
                 var item = await oneDriveClient.Drive.Items[id].Request().GetAsync();
                 if (item == null) return null;
-                CloudFolder folder = new CloudFolder(item.Name, "", item.Folder.ChildCount ?? 0, item.Id, item.ParentReference.Id, CloudStorageType.OneDrive, userId);
+                CloudFolder folder = new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, item.ParentReference.Id, CloudStorageType.OneDrive, userId);
                 cachedFolders.Add(item.Id, folder);
                 return folder;
             }
@@ -333,7 +334,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             {
                 if (item.Folder != null)
                 {
-                    folders.Add(new CloudFolder(item.Name, "", item.Folder.ChildCount ?? 0, item.Id, folderId, CloudStorageType.OneDrive, userId));
+                    folders.Add(new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, folderId, CloudStorageType.OneDrive, userId));
                 }
             }
             return folders;
@@ -348,7 +349,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             return item.AdditionalData["@content.downloadUrl"].ToString();
         }
 
-        private static SongData CreateSongData(Item item, string userId)
+        private static SongData CreateSongData(Item item, string userId, CloudFolder folder)
         {
             SongData song = new SongData();
             //song.AlbumArtPath = 
@@ -363,6 +364,8 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             song.LastPlayed = DateTime.MinValue;
             song.MusicSourceType = (int)Enums.MusicSource.OneDrive;
             song.Path = item.Id;
+            song.FolderName = folder.Folder;
+            song.DirectoryPath = folder.Id;
             song.PlayCount = 0;
            
             song.Tag.Album = item?.Audio.Album ?? "";

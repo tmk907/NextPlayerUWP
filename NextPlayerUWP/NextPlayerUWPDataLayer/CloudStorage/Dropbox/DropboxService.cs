@@ -196,6 +196,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 
         public async Task<string> GetRootFolderId()
         {
+            if (!cachedFolders.ContainsKey(""))
+            {
+                var folder = new CloudFolder("Dropbox", "", 0, "", null, CloudStorageType.Dropbox, userId);
+                cachedFolders.Add("", folder);
+            }
             return "";
         }
 
@@ -244,13 +249,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
                 cache.Add(path, result);
             }
             List<SongData> songData = new List<SongData>();
-
+            var folder = cachedFolders[path];
             foreach (var item in result.Entries.Where(i=>i.IsFile))
             {
                 var itemAsFile = item.AsFile;
                 if (itemAsFile.Name.ToLower().EndsWith(".mp3") || itemAsFile.Name.ToLower().EndsWith(".m4a"))
                 {
-                    songData.Add(CreateSongData(itemAsFile, userId));
+                    songData.Add(CreateSongData(itemAsFile, userId, folder));
                 }
             }
 
@@ -293,7 +298,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             return link.Link;
         }
 
-        private static SongData CreateSongData(Dropbox.Api.Files.FileMetadata item, string userId)
+        private static SongData CreateSongData(Dropbox.Api.Files.FileMetadata item, string userId, CloudFolder folder)
         {
             SongData song = new SongData();
             //song.AlbumArtPath = 
@@ -308,6 +313,8 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             song.LastPlayed = DateTime.MinValue;
             song.MusicSourceType = (int)Enums.MusicSource.Dropbox;
             song.Path = item.Id;
+            song.FolderName = folder.Folder;
+            song.DirectoryPath = folder.Id;
             song.PlayCount = 0;
 
             song.Tag.Album = "";

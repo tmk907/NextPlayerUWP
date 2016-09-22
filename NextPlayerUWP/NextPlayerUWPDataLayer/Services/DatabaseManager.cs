@@ -451,9 +451,9 @@ namespace NextPlayerUWPDataLayer.Services
         private static SongsTable CreateSongsTable(SongData song)
         {
             //if (song.Path == c:\) (root directory) GetDirectoryName == null
-            string dir = (!String.IsNullOrWhiteSpace(song.Path)) ? Path.GetDirectoryName(song.Path) : "UnknownDirectory"; 
-            string folderName = Path.GetFileName(dir);
-            if (folderName == "") folderName = dir;
+
+            //string dir = (!String.IsNullOrWhiteSpace(song.Path)) ? Path.GetDirectoryName(song.Path) : "UnknownDirectory"; 
+            //string folderName = Path.GetFileName(dir);
             return new SongsTable()
             {
                 Album = song.Tag.Album,
@@ -467,7 +467,7 @@ namespace NextPlayerUWPDataLayer.Services
                 Conductor = song.Tag.Conductor,
                 DateAdded = song.DateAdded,
                 DateModified = song.DateModified,
-                DirectoryName = dir,
+                DirectoryName = song.DirectoryPath,
                 Duration = song.Duration,
                 Disc = song.Tag.Disc,
                 DiscCount = song.Tag.DiscCount,
@@ -475,7 +475,7 @@ namespace NextPlayerUWPDataLayer.Services
                 FileSize = (long)song.FileSize,
                 FirstArtist = song.Tag.FirstArtist,
                 FirstComposer = song.Tag.FirstComposer,
-                FolderName = folderName,
+                FolderName = song.FolderName,
                 Genres = song.Tag.Genres,
                 IsAvailable = song.IsAvailable,
                 LastPlayed = song.LastPlayed,
@@ -1089,7 +1089,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task AddToPlaylist(int playlistId, System.Linq.Expressions.Expression<Func<SongsTable, bool>> condition, Func<SongsTable, object> sort)
         {
-            var query = await songsConnectionAsync.Where(condition).ToListAsync();
+            var query = await connectionAsync.Table<SongsTable>().Where(condition).ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             var l = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToListAsync();
             int lastPosition = l.Count;
@@ -1812,10 +1812,12 @@ namespace NextPlayerUWPDataLayer.Services
                 Bitrate = q.Bitrate,
                 CloudUserId = q.CloudUserId,
                 DateAdded = q.DateAdded,
+                DirectoryPath = q.DirectoryName,
                 DateModified = q.DateModified,
                 Duration = q.Duration,
                 Filename = q.Filename,
                 FileSize = (ulong)q.FileSize,
+                FolderName = q.FolderName,
                 IsAvailable = q.IsAvailable,
                 LastPlayed = q.LastPlayed,
                 MusicSourceType = q.MusicSourceType,
@@ -1855,10 +1857,12 @@ namespace NextPlayerUWPDataLayer.Services
                 Bitrate = 0,
                 CloudUserId = "",
                 DateAdded = DateTime.Now,
+                DirectoryPath = "",
                 DateModified = DateTime.UtcNow,
                 Duration = TimeSpan.Zero,
                 Filename = "",
                 FileSize = (ulong)0,
+                FolderName = "",
                 IsAvailable = 0,
                 LastPlayed = DateTime.Now,
                 MusicSourceType = 0,

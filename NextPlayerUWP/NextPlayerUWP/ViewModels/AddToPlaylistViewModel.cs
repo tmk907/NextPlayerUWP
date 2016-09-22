@@ -86,7 +86,13 @@ namespace NextPlayerUWP.ViewModels
                 case MusicItemTypes.radio:
 
                     break;
+                case MusicItemTypes.dropboxfolder:
+
+                    break;
                 case MusicItemTypes.onedrivefolder:
+
+                    break;
+                case MusicItemTypes.pcloudfolder:
 
                     break;
                 default:
