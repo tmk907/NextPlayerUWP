@@ -192,10 +192,21 @@ namespace NextPlayerUWP.Common
                 case MusicItemTypes.onedrivefolder:
                 case MusicItemTypes.dropboxfolder:
                 case MusicItemTypes.pcloudfolder:
-                    var folder = (CloudFolder)item;
-                    var factory = new CloudStorageServiceFactory();
-                    var service = factory.GetService(folder.CloudType, folder.UserId);
-                    list = await service.GetSongItems(folder.Id);
+                    if (typeof(CloudRootFolder) == item.GetType())
+                    {
+                        var folder = (CloudRootFolder)item;
+                        var factory = new CloudStorageServiceFactory();
+                        var service = factory.GetService(folder.CloudType, folder.UserId);
+                        var id = await service.GetRootFolderId();
+                        list = await service.GetSongItems(id);
+                    }
+                    else
+                    {
+                        var folder = (CloudFolder)item;
+                        var factory = new CloudStorageServiceFactory();
+                        var service = factory.GetService(folder.CloudType, folder.UserId);
+                        list = await service.GetSongItems(folder.Id);
+                    }
                     break;
             }
             foreach (var song in list)
@@ -248,10 +259,21 @@ namespace NextPlayerUWP.Common
                 case MusicItemTypes.onedrivefolder:
                 case MusicItemTypes.dropboxfolder:
                 case MusicItemTypes.pcloudfolder:
-                    var folder = (CloudFolder)item;
-                    var factory = new CloudStorageServiceFactory();
-                    var service = factory.GetService(folder.CloudType, folder.UserId);
-                    list = await service.GetSongItems(folder.Id);
+                    if (typeof (CloudRootFolder) == item.GetType())
+                    {
+                        var folder = (CloudRootFolder)item;
+                        var factory = new CloudStorageServiceFactory();
+                        var service = factory.GetService(folder.CloudType, folder.UserId);
+                        var id = await service.GetRootFolderId();
+                        list = await service.GetSongItems(id);
+                    }
+                    else
+                    {
+                        var folder = (CloudFolder)item;
+                        var factory = new CloudStorageServiceFactory();
+                        var service = factory.GetService(folder.CloudType, folder.UserId);
+                        list = await service.GetSongItems(folder.Id);
+                    }
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
@@ -326,10 +348,21 @@ namespace NextPlayerUWP.Common
                 case MusicItemTypes.onedrivefolder:
                 case MusicItemTypes.dropboxfolder:
                 case MusicItemTypes.pcloudfolder:
-                    var folder = (CloudFolder)item;
-                    var factory = new CloudStorageServiceFactory();
-                    var service = factory.GetService(folder.CloudType, folder.UserId);
-                    list = await service.GetSongItems(folder.Id);
+                    if (typeof(CloudRootFolder) == item.GetType())
+                    {
+                        var folder = (CloudRootFolder)item;
+                        var factory = new CloudStorageServiceFactory();
+                        var service = factory.GetService(folder.CloudType, folder.UserId);
+                        var id = await service.GetRootFolderId();
+                        list = await service.GetSongItems(id);
+                    }
+                    else
+                    {
+                        var folder = (CloudFolder)item;
+                        var factory = new CloudStorageServiceFactory();
+                        var service = factory.GetService(folder.CloudType, folder.UserId);
+                        list = await service.GetSongItems(folder.Id);
+                    }
                     break;
             }
             songs.Clear();

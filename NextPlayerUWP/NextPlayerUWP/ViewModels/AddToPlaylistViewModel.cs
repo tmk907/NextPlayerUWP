@@ -11,6 +11,7 @@ using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.CloudStorage;
+using NextPlayerUWPDataLayer.Enums;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -28,6 +29,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return name; }
             set { Set(ref name, value); }
+        }
+
+        private bool loading = false;
+        public bool Loading
+        {
+            get { return loading; }
+            set { Set(ref loading, value); }
         }
 
         private MusicItemTypes type;
@@ -53,6 +61,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
+            Loading = true;
             PlaylistItem p = (PlaylistItem)e.ClickedItem;
             string value = values[1];
             string userId;
@@ -91,31 +100,39 @@ namespace NextPlayerUWP.ViewModels
                     break;
                 case MusicItemTypes.dropboxfolder:
                     userId = values[1];
-                    folderId = (values.Length == 2) ? values[2] : "";
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicItemTypes.dropboxfolder), s => s.Title);
+                    folderId = (values[2] != "") ? values[2] : "";
+                    CloudStorageServiceFactory cssfd = new CloudStorageServiceFactory();
+                    var serviced = cssfd.GetService(CloudStorageType.Dropbox, userId);
+                    await serviced.GetSongItems(folderId);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.Dropbox), s => s.Title);
                     break;
                 case MusicItemTypes.onedrivefolder:
                     userId = values[1];
-                    folderId = (values.Length == 2) ? values[2] : null;
+                    folderId = (values[2] != "") ? values[2] : null;
+                    CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
+                    var service = cssf.GetService(CloudStorageType.OneDrive, userId);
                     if (folderId == null)
                     {
-                        CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
-                        var service = cssf.GetService(CloudStorageType.OneDrive, userId);
                         folderId = await service.GetRootFolderId();
                     }
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicItemTypes.onedrivefolder), s => s.Title);
+                    await service.GetSongItems(folderId);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.OneDrive), s => s.Title);
 
                     break;
                 case MusicItemTypes.pcloudfolder:
                     userId = values[1];
-                    folderId = (values.Length == 2) ? values[2] : "0";
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicItemTypes.pcloudfolder), s => s.Title);
+                    folderId = (values[2] != "") ? values[2] : "0";
+                    CloudStorageServiceFactory cssfp = new CloudStorageServiceFactory();
+                    var servicep = cssfp.GetService(CloudStorageType.pCloud, userId);
+                    await servicep.GetSongItems(folderId);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.PCloud), s => s.Title);
                     break;
                 default:
                     break;
             }
             PlaylistExporter pe = new PlaylistExporter();
             await pe.AutoSavePlaylist(p);
+            Loading = false;
             NavigationService.GoBack();
         }
 

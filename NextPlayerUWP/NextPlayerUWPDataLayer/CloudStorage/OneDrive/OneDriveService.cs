@@ -4,6 +4,7 @@ using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
         public OneDriveService(string UserId)
         {
-            Debug.WriteLine("OneDriveService({0})", UserId);
+            Debug.WriteLine("OneDriveService() {0}", new object[] { UserId });
             userId = UserId;
             msaAuthenticationProvider = new MsaAuthenticationProvider(AppConstants.OneDriveAppId, "https://login.live.com/oauth20_desktop.srf", scopes);
             oneDriveClient = new OneDriveClient("https://api.onedrive.com/v1.0", msaAuthenticationProvider);
@@ -46,19 +47,17 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
         public async Task<bool> LoginSilently()
         {
-            Debug.WriteLine("OneDriveService LoginSilently()");
             if (IsAuthenticated)
             {
                 return true;
             }
+            Debug.WriteLine("OneDriveService LoginSilently()");
             bool isLoggedIn = false;
             refreshToken = await GetSavedToken();
             if (!String.IsNullOrEmpty(refreshToken))
             {
                 try
                 {
-                    //    oneDriveClient = await OneDriveClient.GetSilentlyAuthenticatedMicrosoftAccountClient(AppConstants.OneDriveAppId, "", scopes, refreshToken);
-
                     AccountSession session = new AccountSession();
                     session.ClientId = AppConstants.OneDriveAppId;
                     session.RefreshToken = refreshToken;
@@ -195,49 +194,43 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         #endregion
 
         private string musicFolderId;
-        public async Task<bool> IsMusicFolderId(string id)
-        {
-            if (musicFolderId == null)
-            {
-                var f = await GetMusicFolder();
-                if (f == null) return false;
-                musicFolderId = f.Id;
-            }
-            return musicFolderId == id;
-        }
-        private Dictionary<string, IItemChildrenCollectionPage> cache = new Dictionary<string, IItemChildrenCollectionPage>();
-        private Dictionary<string, CloudFolder> cachedFolders = new Dictionary<string, CloudFolder>();
+        private ConcurrentDictionary<string, Task<IItemChildrenCollectionPage>> cache = new ConcurrentDictionary<string, Task<IItemChildrenCollectionPage>>();
+        private ConcurrentDictionary<string, Task<CloudFolder>> cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
 
         public void ClearCache()
         {
             Debug.WriteLine("OneDriveService ClearCache()");
-            cache = new Dictionary<string, IItemChildrenCollectionPage>();
-            cachedFolders = new Dictionary<string, CloudFolder>();
+            cache = new ConcurrentDictionary<string, Task<IItemChildrenCollectionPage>>();
+            cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
             musicFolderId = null;
         }
 
         public async Task<string> GetRootFolderId()
         {
-            var f = await GetMusicFolder();
+            Debug.WriteLine("OneDriveService GetRootFolderId");
+            await LoginSilently();
+            if (!IsAuthenticated) return null;
+            if (musicFolderId == null)
+            {
+                var rootChildrens = await oneDriveClient.Drive.Root.Children.Request().GetAsync();
+                var item = rootChildrens.FirstOrDefault(i => i.SpecialFolder.Name.Equals("music"));
+                musicFolderId = item.Id;
+            }
+            var rootTask = cachedFolders.GetOrAdd(musicFolderId, GetRootMusicFolder);
+            var f = await rootTask;
             return f?.Id;
         }
 
-        private async Task<CloudFolder> GetMusicFolder()
+        private async Task<CloudFolder> GetRootMusicFolder(string musicFolderId)
         {
-            Debug.WriteLine("OneDriveService GetMusicFolder()");
+            Debug.WriteLine("OneDriveService GetRootMusicFolder {0}", new object[] { musicFolderId });
             await LoginSilently();
             if (!IsAuthenticated) return null;
             try
             {
-                if (musicFolderId != null && cachedFolders.ContainsKey(musicFolderId))
-                {
-                    return cachedFolders[musicFolderId];
-                }
                 var rootChildrens = await oneDriveClient.Drive.Root.Children.Request().GetAsync();
                 var item = rootChildrens.FirstOrDefault(i => i.SpecialFolder.Name.Equals("music"));
-                musicFolderId = item.Id;
                 CloudFolder folder = new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, item.ParentReference.Id, CloudStorageType.OneDrive, userId);
-                cachedFolders.Add(musicFolderId, folder);
                 return folder;
             }
             catch (Microsoft.Graph.ServiceException ex)
@@ -246,33 +239,48 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             }
         }
 
+        
+        public Task<CloudFolder> GetFolder(string folderId)
+        {
+            Debug.WriteLine("OneDriveService GetFolder {0}", new object[] { folderId });
+            return cachedFolders.GetOrAdd(folderId, GetFolderInternalAsync);
+        }
+
+        public async Task<List<CloudFolder>> GetSubFolders(string folderId)
+        {
+            Debug.WriteLine("OneDriveService GetSubFolders {0}", new object[] { folderId });
+
+            var contentTask = cache.GetOrAdd(folderId, GetFolderContentInternalAsync);
+            var content = await contentTask;
+
+            List<CloudFolder> folders = new List<CloudFolder>();
+
+            foreach (var item in content)
+            {
+                if (item.Folder != null)
+                {
+                    folders.Add(new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, folderId, CloudStorageType.OneDrive, userId));
+                }
+            }
+            return folders;
+        }
+
         public async Task<List<SongItem>> GetSongItems(string folderId)
         {
-            Debug.WriteLine("OneDriveService GetSongItems {0}", folderId);
-            List<SongItem> songs = new List<SongItem>();
-            await LoginSilently();
-            if (!IsAuthenticated) return songs;
+            Debug.WriteLine("OneDriveService GetSongItems {0}", new object[] { folderId });
 
-            IItemChildrenCollectionPage children;
-            if (cache.ContainsKey(folderId))
-            {
-                children = cache[folderId];
-            }
-            else
-            {
-                try
-                {
-                    children = await oneDriveClient.Drive.Items[folderId].Children.Request().GetAsync();
-                    cache.Add(folderId, children);
-                }
-                catch (Microsoft.Graph.ServiceException ex)
-                {
-                    return songs;
-                }
-            }
+            var contentTask = cache.GetOrAdd(folderId, GetFolderContentInternalAsync);
+            var folderTask = cachedFolders.GetOrAdd(folderId, GetFolderInternalAsync);
+
+            List<SongItem> songs = new List<SongItem>();
             List<SongData> songData = new List<SongData>();
-            var folder = cachedFolders[folderId];
-            foreach (var item in children)
+
+            var content = await contentTask;
+            var folder = await folderTask;
+
+            
+
+            foreach (var item in content)
             {
                 if (item.Audio != null)
                 {
@@ -283,21 +291,16 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             return songs;
         }
 
-        public async Task<CloudFolder> GetFolder(string id)
+        private async Task<CloudFolder> GetFolderInternalAsync(string folderId)
         {
-            Debug.WriteLine("OneDriveService GetFolder {0}", id);
+            Debug.WriteLine("OneDrive GetFolderInternalAsync() {0}", new object[] { folderId });
             await LoginSilently();
             if (!IsAuthenticated) return null;
-            if (cachedFolders.ContainsKey(id))
-            {
-                return cachedFolders[id];
-            }           
             try
             {
-                var item = await oneDriveClient.Drive.Items[id].Request().GetAsync();
+                var item = await oneDriveClient.Drive.Items[folderId].Request().GetAsync();
                 if (item == null) return null;
                 CloudFolder folder = new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, item.ParentReference.Id, CloudStorageType.OneDrive, userId);
-                cachedFolders.Add(item.Id, folder);
                 return folder;
             }
             catch (Microsoft.Graph.ServiceException ex)
@@ -306,40 +309,21 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             }
         }
 
-        public async Task<List<CloudFolder>> GetSubFolders(string folderId)
+        private async Task<IItemChildrenCollectionPage> GetFolderContentInternalAsync(string folderId)
         {
-            Debug.WriteLine("OneDriveService GetSubFoldersFromItem {0}", folderId);
-            List<CloudFolder> folders = new List<CloudFolder>();
+            Debug.WriteLine("OneDrive GetFolderContentInternalAsync() {0}", new object[] { folderId });
             await LoginSilently();
-            if (!IsAuthenticated) return folders;
-
-            IItemChildrenCollectionPage children;
-            if (cache.ContainsKey(folderId))
+            if (!IsAuthenticated) return null;
+            try
             {
-                children = cache[folderId];
+                var children = await oneDriveClient.Drive.Items[folderId].Children.Request().GetAsync();
+                return children;
             }
-            else
+            catch (Microsoft.Graph.ServiceException ex)
             {
-                try
-                {
-                    children = await oneDriveClient.Drive.Items[folderId].Children.Request().GetAsync();
-                    cache.Add(folderId, children);
-                }
-                catch (Microsoft.Graph.ServiceException ex)
-                {
-                    return folders;
-                }
+                return null;
             }
-            foreach (var item in children)
-            {
-                if (item.Folder != null)
-                {
-                    folders.Add(new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, folderId, CloudStorageType.OneDrive, userId));
-                }
-            }
-            return folders;
         }
-
 
         public async Task<string> GetDownloadLink(string fileId)
         {

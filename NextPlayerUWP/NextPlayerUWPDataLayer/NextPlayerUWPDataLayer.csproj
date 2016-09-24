@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="CloudStorage\CloudAccount.cs" />
     <Compile Include="CloudStorage\CloudAccounts.cs" />
+    <Compile Include="Helpers\AsyncLazy.cs" />
     <Compile Include="Model\CloudRootFolder.cs" />
     <Compile Include="CloudStorage\CloudStorageServiceFactory.cs" />
     <Compile Include="CloudStorage\CloudStorageType.cs" />

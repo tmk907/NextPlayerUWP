@@ -10,6 +10,7 @@ using NextPlayerUWPDataLayer.Constants;
 using Windows.Security.Authentication.Web;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Services;
+using System.Collections.Concurrent;
 
 namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 {
@@ -22,7 +23,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 
         public DropboxService(string userId)
         {
-            Debug.WriteLine("DropboxService() {0}", userId);
+            Debug.WriteLine("DropboxService() {0}", new object[] { userId });
             this.userId = userId;
         }
 
@@ -109,11 +110,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 
         public async Task<bool> LoginSilently()
         {
-            Debug.WriteLine("DropboxService LoginSilently()");
             if (IsAuthenticated)
             {
                 return true;
             }
+            Debug.WriteLine("DropboxService LoginSilently()");
             refreshToken = await GetSavedToken();
             dropboxClient = new DropboxClient(refreshToken);
             return IsAuthenticated;
@@ -190,67 +191,37 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         }
 
 
-        private Dictionary<string, Dropbox.Api.Files.ListFolderResult> cache = new Dictionary<string, Dropbox.Api.Files.ListFolderResult>();
-        private Dictionary<string, CloudFolder> cachedFolders = new Dictionary<string, CloudFolder>();
+        private ConcurrentDictionary<string, Task<Dropbox.Api.Files.ListFolderResult>> cache = new ConcurrentDictionary<string, Task<Dropbox.Api.Files.ListFolderResult>>();
+        private ConcurrentDictionary<string, Task<CloudFolder>> cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
 
 
         public async Task<string> GetRootFolderId()
         {
-            if (!cachedFolders.ContainsKey(""))
-            {
-                var folder = new CloudFolder("Dropbox", "", 0, "", null, CloudStorageType.Dropbox, userId);
-                cachedFolders.Add("", folder);
-            }
+            Debug.WriteLine("DropboxService GetRootFolderId()");
+            var f = cachedFolders.GetOrAdd("", GetFolderInternalAsync);
+            await f;
             return "";
         }
 
-        public async Task<CloudFolder> GetFolder(string path)
+        public Task<CloudFolder> GetFolder(string path)
         {
-            Debug.WriteLine("DropboxService GetFolder() {0}", path);
-            await LoginSilently();
-            if (!IsAuthenticated) return null;
-            if (cachedFolders.ContainsKey(path))
-            {
-                return cachedFolders[path];
-            }
-            if (path == "")
-            {
-                return new CloudFolder("Dropbox", "", 0, "", null, CloudStorageType.Dropbox, userId);
-            }
-            try
-            {
-                var item = await dropboxClient.Files.GetMetadataAsync(path);
-                if (item == null) return null;
-                CloudFolder folder = new CloudFolder(item.Name, item.PathDisplay, 0, item.PathLower, (path == "") ? "" : System.IO.Path.GetDirectoryName(item.PathLower), CloudStorageType.Dropbox, userId);
-                cachedFolders.Add(path, folder);
-                return folder;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            Debug.WriteLine("DropboxService GetFolder() {0}", new object[] { path });
+            return cachedFolders.GetOrAdd(path, GetFolderInternalAsync);
         }
 
         public async Task<List<SongItem>> GetSongItems(string path)
         {
-            List<SongItem> songs = new List<SongItem>();
-            await LoginSilently();
-            if (!IsAuthenticated) return songs;
+            Debug.WriteLine("DropboxService GetSongItems() {0}", new object[] { path });
+            var contentTask = cache.GetOrAdd(path, GetFolderContentInternalAsync);
+            var folderTask = cachedFolders.GetOrAdd(path, GetFolderInternalAsync);
 
-            Dropbox.Api.Files.ListFolderResult result;
-            if (cache.ContainsKey(path))
-            {
-                result = cache[path];
-            }
-            else
-            {
-                var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
-                result = await dropboxClient.Files.ListFolderAsync(args);
-                cache.Add(path, result);
-            }
+            var content = await contentTask;
+            var folder = await folderTask;
+
+            List<SongItem> songs = new List<SongItem>();
             List<SongData> songData = new List<SongData>();
-            var folder = cachedFolders[path];
-            foreach (var item in result.Entries.Where(i=>i.IsFile))
+
+            foreach (var item in content.Entries.Where(i=>i.IsFile))
             {
                 var itemAsFile = item.AsFile;
                 if (itemAsFile.Name.ToLower().EndsWith(".mp3") || itemAsFile.Name.ToLower().EndsWith(".m4a"))
@@ -266,27 +237,57 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 
         public async Task<List<CloudFolder>> GetSubFolders(string path)
         {
-            List<CloudFolder> folders = new List<CloudFolder>();
-            await LoginSilently();
-            if (!IsAuthenticated) return folders;
+            Debug.WriteLine("DropboxService GetSubFolders() {0}", new object[] { path });
+            var contentTask = cache.GetOrAdd(path, GetFolderContentInternalAsync);
+            var content = await contentTask;
 
-            Dropbox.Api.Files.ListFolderResult result;
-            if (cache.ContainsKey(path))
-            {
-                result = cache[path];
-            }
-            else
-            {
-                var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
-                result = await dropboxClient.Files.ListFolderAsync(args);
-                cache.Add(path, result);
-            }
-            foreach (var item in result.Entries.Where(i => i.IsFolder))
+            List<CloudFolder> folders = new List<CloudFolder>();
+
+            foreach (var item in content.Entries.Where(i => i.IsFolder))
             {
                 var f = item.AsFolder;
                 folders.Add(new CloudFolder(f.Name, f.PathDisplay, 0, f.PathLower, (path == "") ? "" : System.IO.Path.GetDirectoryName(path), CloudStorageType.Dropbox, userId));
             }
             return folders;
+        }
+
+        private async Task<CloudFolder> GetFolderInternalAsync(string path)
+        {
+            Debug.WriteLine("DropboxService GetFolderInternalAsync() {0}", new object[] { path });
+            await LoginSilently();
+            if (!IsAuthenticated) return null;
+            if (path == "")
+            {
+                return new CloudFolder("Dropbox", "", 0, "", null, CloudStorageType.Dropbox, userId);
+            }
+            try
+            {
+                var item = await dropboxClient.Files.GetMetadataAsync(path);
+                if (item == null) return null;
+                CloudFolder folder = new CloudFolder(item.Name, item.PathDisplay, 0, item.PathLower, (path == "") ? "" : System.IO.Path.GetDirectoryName(item.PathLower), CloudStorageType.Dropbox, userId);
+                return folder;
+            }
+            catch (Microsoft.Graph.ServiceException ex)
+            {
+                return null;
+            }
+        }
+
+        private async Task<Dropbox.Api.Files.ListFolderResult> GetFolderContentInternalAsync(string path)
+        {
+            Debug.WriteLine("DropboxService GetFolderContentInternalAsync() {0}", new object[] { path });
+            await LoginSilently();
+            if (!IsAuthenticated) return null;
+            try
+            {
+                var args = new Dropbox.Api.Files.ListFolderArg(path, false, true, false, false);
+                var result = await dropboxClient.Files.ListFolderAsync(args);
+                return result;
+            }
+            catch (Microsoft.Graph.ServiceException ex)
+            {
+                return null;
+            }
         }
 
         //Expire in 4 hours

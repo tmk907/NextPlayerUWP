@@ -9,6 +9,7 @@ using NextPlayerUWPDataLayer.pCloud;
 using Windows.Security.Authentication.Web;
 using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Constants;
+using System.Collections.Concurrent;
 
 namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 {
@@ -22,7 +23,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 
         public PCloudService(string userId)
         {
-            Debug.WriteLine("PCloudService() {0}", userId);
+            Debug.WriteLine("PCloudService() {0}", new object[] { userId });
             this.userId = userId;
             pCloudClient = new PCloudClient();
         }
@@ -76,8 +77,6 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 
         public async Task<bool> Login()
         {
-            Debug.WriteLine("PCloudService Login()");
-
             bool isLoggedIn = false;
             if (IsAuthenticated)
             {
@@ -86,6 +85,8 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             }
             else
             {
+                Debug.WriteLine("PCloudService Login()");
+
                 await Authorize();
                 isLoggedIn = IsAuthenticated;
 
@@ -169,67 +170,38 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
         }
 
 
-        private Dictionary<string, NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata> cache = new Dictionary<string, NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata>();
-        private Dictionary<string, CloudFolder> cachedFolders = new Dictionary<string, CloudFolder>();
-
-        public async Task<CloudFolder> GetFolder(string folderId)
-        {
-            Debug.WriteLine("PCloudService GetFolder {0}", folderId);
-            await LoginSilently();
-            if (!IsAuthenticated) return null;
-            if (cachedFolders.ContainsKey(folderId))
-            {
-                return cachedFolders[folderId];
-            }
-            //if (folderId == "0")
-            //{
-            //    return new CloudFolder("pCloud", "", 0, "", null, CloudStorageType.pCloud, userId);
-            //}
-            try
-            {
-                var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId), false, false, true, true);
-                var item = response.Metadata;
-                if (item == null) return null;
-                CloudFolder folder = new CloudFolder(item.Name, item.Path, 0, item.FolderId.ToString(), item.ParentFolderId.ToString(), CloudStorageType.pCloud, userId);
-                cachedFolders.Add(folderId, folder);
-                return folder;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
+        private ConcurrentDictionary<string, Task<NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata>> cache = new ConcurrentDictionary<string, Task<NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata>>();
+        private ConcurrentDictionary<string, Task<CloudFolder>> cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
 
         public async Task<string> GetRootFolderId()
         {
+            Debug.WriteLine("PCloudService GetRootFolderId");
             if (!cachedFolders.ContainsKey("0"))
             {
                 var folder = await GetFolder("0");
             }
-            
             return "0";
+        }
+
+        public Task<CloudFolder> GetFolder(string folderId)
+        {
+            Debug.WriteLine("PCloudService GetFolder {0}", new object[] { folderId });
+            return cachedFolders.GetOrAdd(folderId, GetFolderInternalAsync);
         }
 
         public async Task<List<SongItem>> GetSongItems(string folderId)
         {
-            List<SongItem> songs = new List<SongItem>();
-            await LoginSilently();
-            if (!IsAuthenticated) return songs;
+            Debug.WriteLine("PCloudService GetSongItems {0}", new object[] { folderId });
+            var contentTask = cache.GetOrAdd(folderId, GetFolderContentInternalAsync);
+            var folderTask = cachedFolders.GetOrAdd(folderId, GetFolderInternalAsync);
 
-            NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata result;
-            if (cache.ContainsKey(folderId))
-            {
-                result = cache[folderId];
-            }
-            else
-            {
-                var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId));
-                result = response.Metadata;
-                cache.Add(folderId, result);
-            }
+            var content = await contentTask;
+            var folder = await folderTask;
+
+            List<SongItem> songs = new List<SongItem>();
             List<SongData> songData = new List<SongData>();
-            var folder = cachedFolders[folderId];
-            foreach (var item in result.Contents)
+
+            foreach (var item in content.Contents)
             {
                 if (!item.IsFolder)
                 {
@@ -245,22 +217,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 
         public async Task<List<CloudFolder>> GetSubFolders(string folderId)
         {
-            List<CloudFolder> folders = new List<CloudFolder>();
-            await LoginSilently();
-            if (!IsAuthenticated) return folders;
+            Debug.WriteLine("PCloudService GetSubFolders {0}", new object[] { folderId });
 
-            NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata result;
-            if (cache.ContainsKey(folderId))
-            {
-                result = cache[folderId];
-            }
-            else
-            {
-                var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId));
-                result = response.Metadata;
-                cache.Add(folderId, result);
-            }
-            foreach (var item in result.Contents)
+            var contentTask = cache.GetOrAdd(folderId, GetFolderContentInternalAsync);
+            var content = await contentTask;
+
+            List<CloudFolder> folders = new List<CloudFolder>();
+            foreach (var item in content.Contents)
             {
                 if (item.IsFolder)
                 {
@@ -268,6 +231,42 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
                 }
             }
             return folders;
+        }
+
+        private async Task<CloudFolder> GetFolderInternalAsync(string folderId)
+        {
+            Debug.WriteLine("PCloudService GetFolderInternalAsync() {0}", new object[] { folderId });
+            await LoginSilently();
+            if (!IsAuthenticated) return null;
+            try
+            {
+                var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId), false, false, true, true);
+                var item = response.Metadata;
+                if (item == null) return null;
+                CloudFolder folder = new CloudFolder(item.Name, item.Path, 0, item.FolderId.ToString(), item.ParentFolderId.ToString(), CloudStorageType.pCloud, userId);
+                return folder;
+            }
+            catch (Microsoft.Graph.ServiceException ex)
+            {
+                return null;
+            }
+        }
+
+        private async Task<NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata> GetFolderContentInternalAsync(string folderId)
+        {
+            Debug.WriteLine("PCloudService GetFolderContentInternalAsync() {0}", new object[] { folderId });
+            await LoginSilently();
+            if (!IsAuthenticated) return null;
+            try
+            {
+                var response = await pCloudClient.Folder.ListFolder(Int32.Parse(folderId));
+                var result = response.Metadata;
+                return result;
+            }
+            catch (Microsoft.Graph.ServiceException ex)
+            {
+                return null;
+            }
         }
 
         private static SongData CreateSongData(NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata item, string userId, CloudFolder folder)
