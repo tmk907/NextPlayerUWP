@@ -134,7 +134,7 @@ namespace NextPlayerUWP.ViewModels
 
                 string folderPath = Path.GetDirectoryName(file.Path);
                 PlaylistExporter pe = new PlaylistExporter();
-                string content = await pe.ExportAsM3U(editPlaylist, relativePaths, folderPath);
+                string content = await pe.ToM3UContent(editPlaylist, relativePaths, folderPath);
 
                 await Windows.Storage.FileIO.WriteTextAsync(file, content);
                 // Let Windows know that we're finished changing the file so

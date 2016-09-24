@@ -13,7 +13,7 @@ namespace NextPlayerUWPDataLayer.Services
 {
     public class PlaylistExporter
     {
-        public async Task<string> ExportAsM3U(PlaylistItem playlist, bool relativePaths, string folderPath)
+        public async Task<string> ToM3UContent(PlaylistItem playlist, bool relativePaths, string folderPath)
         {
             ObservableCollection<SongItem> songs;
             if (playlist.IsSmart)
@@ -35,14 +35,21 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 foreach (var song in songs)
                 {
-                    string p = MakeRelativePath(folderPath, song.Path);
-                    if (!String.IsNullOrEmpty(p))
+                    if (song.SourceType == Enums.MusicSource.LocalFile || song.SourceType == Enums.MusicSource.LocalNotMusicLibrary)
                     {
-                        if (!p.StartsWith("..") && !p.StartsWith(Path.DirectorySeparatorChar.ToString()) && p.Contains(Path.DirectorySeparatorChar))
+                        string p = MakeRelativePath(folderPath, song.Path);
+                        if (!String.IsNullOrEmpty(p))
                         {
-                            sb.Append(Path.DirectorySeparatorChar);
+                            if (!p.StartsWith("..") && !p.StartsWith(Path.DirectorySeparatorChar.ToString()) && p.Contains(Path.DirectorySeparatorChar))
+                            {
+                                sb.Append(Path.DirectorySeparatorChar);
+                            }
+                            sb.AppendLine(p);
                         }
-                        sb.AppendLine(p);
+                    }
+                    else if (song.SourceType == Enums.MusicSource.Dropbox || song.SourceType == Enums.MusicSource.OneDrive || song.SourceType == Enums.MusicSource.PCloud || song.SourceType == Enums.MusicSource.GoogleDrive)
+                    {
+                        
                     }
                 }
             }
@@ -50,7 +57,10 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 foreach (var song in songs)
                 {
-                    sb.AppendLine(song.Path);
+                    if (song.SourceType == Enums.MusicSource.LocalFile || song.SourceType == Enums.MusicSource.LocalNotMusicLibrary)
+                    {
+                        sb.AppendLine(song.Path);
+                    }
                 }
             }
 
@@ -86,13 +96,13 @@ namespace NextPlayerUWPDataLayer.Services
             if (!autoSave) return;
             string newName = playlist.Name + ".m3u";
 
-            StorageFolder playlistsFolder = await GetPlaylistsFolder();
+            StorageFolder playlistsFolder = await GetFolderWithPlaylists();
             if (playlistsFolder == null)
             {
                 //clear imported table
                 return;
             }
-            string content = await ExportAsM3U(playlist, false, "");
+            string content = await ToM3UContent(playlist, false, "");
             var list = await DatabaseManager.Current.GetImportedPlaylists();
             var imported = list.SingleOrDefault(p => p.PlainPlaylistId.Equals(playlist.Id));
             if (imported == null)
@@ -135,7 +145,7 @@ namespace NextPlayerUWPDataLayer.Services
                 string oldFileName = Path.GetFileName(imported.Path);
                 string newFileName = playlist.Name + ".m3u";
 
-                StorageFolder playlistsFolder = await GetPlaylistsFolder();
+                StorageFolder playlistsFolder = await GetFolderWithPlaylists();
                 if (playlistsFolder == null)
                 {
                     //clear imported table
@@ -158,7 +168,6 @@ namespace NextPlayerUWPDataLayer.Services
                 {
                     //log
                 }
-                
             }
         }
 
@@ -170,7 +179,7 @@ namespace NextPlayerUWPDataLayer.Services
             var imported = list.SingleOrDefault(p => p.PlainPlaylistId.Equals(playlist.Id));
             if (imported != null)
             {
-                StorageFolder playlistsFolder = await GetPlaylistsFolder();
+                StorageFolder playlistsFolder = await GetFolderWithPlaylists();
                 if (playlistsFolder != null && imported.Path.StartsWith(playlistsFolder.Path))
                 {
                     try
@@ -187,7 +196,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        private async Task<StorageFolder> GetPlaylistsFolder()
+        private async Task<StorageFolder> GetFolderWithPlaylists()
         {
             try
             {
@@ -213,7 +222,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task SaveAllPlaylists()
+        public async Task SaveAllPlainPlaylists()
         {
             var playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             foreach(var playlist in playlists)
@@ -222,7 +231,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task DeleteAllPlaylists()
+        public async Task DeleteAllPlainPlaylists()
         {
             var playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             foreach (var playlist in playlists)
