@@ -188,7 +188,7 @@ namespace NextPlayerUWP.Views
         {
             if (IsDesktop())
             {
-                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+                //Menu.NavigationService.Navigate(App.Pages.NowPlaying);
                 //Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
             }
             else

@@ -175,14 +175,14 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.Instance.TogglePlayPause();
         }
 
-        public async void Previous()
+        public void Previous()
         {
-            await PlaybackService.Instance.Previous();
+            PlaybackService.Instance.Previous();
         }
 
-        public async void Next()
+        public void Next()
         {
-            await PlaybackService.Instance.Next();
+            PlaybackService.Instance.Next();
         }
 
         public async void ShuffleCommand()
@@ -216,7 +216,7 @@ namespace NextPlayerUWP.ViewModels
         {
             WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
-                if (state == MediaPlaybackState.Playing)
+                if (state == MediaPlaybackState.Playing || state == MediaPlaybackState.Buffering)
                 {
                     PlayButtonContent = "\uE769";
                 }
@@ -226,7 +226,7 @@ namespace NextPlayerUWP.ViewModels
                 }
                 else
                 {
-                    PlayButtonContent = "\uE767";
+                    PlayButtonContent = "\uE768";
                 }
             });
         }

@@ -217,6 +217,9 @@ namespace NextPlayerUWP.ViewModels
                 case SortNames.TrackNumber:
                     Sort(s => s.TrackNumber, s => s.TrackNumber, "SongId");
                     break;
+                case SortNames.FileName:
+                    Sort(s => s.FileName, s => s.FileName[0].ToString().ToLower(), "FileName");
+                    break;
                 default:
                     Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
                     break;

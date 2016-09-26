@@ -432,7 +432,7 @@ namespace NextPlayerUWP.Common
         public async Task<int> UnShufflePlaylist()
         {
             int newCurrentIndex = currentIndex;
-            if (ar.Length == songs.Count)
+            if (ar !=null && ar.Length == songs.Count)
             {
                 int n = 0;
                 while (n < songs.Count - 1)

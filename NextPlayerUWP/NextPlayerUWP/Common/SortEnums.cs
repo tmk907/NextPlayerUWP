@@ -34,6 +34,7 @@ namespace NextPlayerUWP.Common
         public const string Name = "Name";
         public const string Composer = "Composer";
         public const string TrackNumber = "TrackNumber";
+        public const string FileName = "FileName";
 
         private MusicItemTypes type;
         public MusicItemTypes Type { get { return type; } }
@@ -83,12 +84,13 @@ namespace NextPlayerUWP.Common
                     comboboxItems.Add(new ComboBoxItemValue(AlbumArtist, loader.GetString(AlbumArtist)));
                     comboboxItems.Add(new ComboBoxItemValue(Rating, loader.GetString(Rating)));
                     comboboxItems.Add(new ComboBoxItemValue(Year, loader.GetString(Year)));
+                    comboboxItems.Add(new ComboBoxItemValue(TrackNumber, loader.GetString(TrackNumber)));
                     comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
                     comboboxItems.Add(new ComboBoxItemValue(Composer, loader.GetString(Composer)));
-                    comboboxItems.Add(new ComboBoxItemValue(TrackNumber, loader.GetString(TrackNumber)));
                     comboboxItems.Add(new ComboBoxItemValue(LastAdded, loader.GetString(LastAdded)));
                     comboboxItems.Add(new ComboBoxItemValue(LastPlayed, loader.GetString(LastPlayed)));
                     comboboxItems.Add(new ComboBoxItemValue(PlayCount, loader.GetString(PlayCount)));
+                    comboboxItems.Add(new ComboBoxItemValue(FileName, loader.GetString(FileName)));
                     break;
             }
             return comboboxItems;

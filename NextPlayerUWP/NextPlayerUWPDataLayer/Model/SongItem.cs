@@ -43,7 +43,25 @@ namespace NextPlayerUWPDataLayer.Model
         public TimeSpan Duration { get { return duration; } set { duration = value; } }
         private string path;
         public string Path { get { return path; } set { path = value; } }
-
+        private string fileName;
+        public string FileName
+        {
+            get
+            {
+                if (fileName == null)
+                {
+                    if (sourceType == MusicSource.LocalFile || sourceType == MusicSource.LocalNotMusicLibrary)
+                    {
+                        fileName = path.Substring(path.LastIndexOf('\\') + 1);
+                    }
+                    else
+                    {
+                        fileName = title;
+                    }
+                }
+                return fileName;
+            }
+        }
 
         private DateTime contentPathUpdatedAt;
         private DateTime contentPathExpiresAt;

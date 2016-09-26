@@ -54,16 +54,6 @@ namespace NextPlayerUWP
 
         private bool isFirstRun = false;
 
-        //private static PlaybackManager playbackManager;
-        //public static PlaybackManager PlaybackManager
-        //{
-        //    get
-        //    {
-        //        if (playbackManager == null) playbackManager = new PlaybackManager();
-        //        return playbackManager;
-        //    }
-        //}
-
         bool _isInBackgroundMode = false;
 
         public App()
@@ -132,15 +122,16 @@ namespace NextPlayerUWP
         private void MemoryManager_AppMemoryUsageIncreased(object sender, object e)
         {
             var level = MemoryManager.AppMemoryUsageLevel;
-
+            Debug.WriteLine("App MemoryManager_AppMemoryUsageIncreased {0}", level);
             if (level == AppMemoryUsageLevel.OverLimit || level == AppMemoryUsageLevel.High)
             {
                 ReduceMemoryUsage(MemoryManager.AppMemoryUsageLimit);
             }
         }
 
-        private void MemoryManager_AppMemoryUsageLimitChanging(object sender, Windows.System.AppMemoryUsageLimitChangingEventArgs e)
+        private void MemoryManager_AppMemoryUsageLimitChanging(object sender, AppMemoryUsageLimitChangingEventArgs e)
         {
+            Debug.WriteLine("App MemoryManager_AppMemoryUsageLimitChanging {0}", e.NewLimit);
             if (MemoryManager.AppMemoryUsage >= e.NewLimit)
             {
                 ReduceMemoryUsage(e.NewLimit);
@@ -149,6 +140,7 @@ namespace NextPlayerUWP
 
         public void ReduceMemoryUsage(ulong limit)
         {
+            Debug.WriteLine("App ReduceMemoryUsage {0} {1}", _isInBackgroundMode, limit);
             if (_isInBackgroundMode && Window.Current.Content != null)
             {
 
@@ -157,8 +149,15 @@ namespace NextPlayerUWP
             }
         }
 
+        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        {
+            Debug.WriteLine("App App_EnteredBackground");
+            _isInBackgroundMode = true;
+        }
+
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
+            Debug.WriteLine("App App_LeavingBackground");
             _isInBackgroundMode = false;
 
             // Reastore view content if it was previously unloaded.
@@ -202,11 +201,6 @@ namespace NextPlayerUWP
                 // parameter
                 rootFrame.Navigate(typeof(Views.PlaylistsView));
             }
-        }
-
-        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
-        {
-            _isInBackgroundMode = true;
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -465,8 +459,6 @@ namespace NextPlayerUWP
         
         public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
         {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Suspended));
-            
             if (OnNewTilePinned != null)
             {
                 OnNewTilePinned();
@@ -475,24 +467,22 @@ namespace NextPlayerUWP
             return base.OnSuspendingAsync(s, e, prelaunch);
         }
 
-        public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
-        {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Active));
+        //public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
+        //{
+        //    base.OnResuming(s, e, previousExecutionState);
+        //}
+
+        //public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)
+        //{
+        //    runOnStartAsync = true;
             
-            base.OnResuming(s, e, previousExecutionState);
-        }
+        //    object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
+        //    if (o == null) return Task.CompletedTask;
 
-        public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)
-        {
-            runOnStartAsync = true;
-            
-            object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
-            if (o == null) return Task.CompletedTask;
+        //    var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
 
-            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
 
         #endregion
 

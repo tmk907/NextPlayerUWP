@@ -705,4 +705,7 @@
   <data name="TBAutoSavePlaylists.Text" xml:space="preserve">
     <value>Automatically save playlists in</value>
   </data>
+  <data name="FileName" xml:space="preserve">
+    <value>Filename</value>
+  </data>
 </root>
