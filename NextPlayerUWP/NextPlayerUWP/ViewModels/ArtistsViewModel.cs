@@ -14,12 +14,14 @@ namespace NextPlayerUWP.ViewModels
     {
         public ArtistsViewModel()
         {
-            SortNames si = new SortNames(MusicItemTypes.artist);
-            ComboBoxItemValues = si.GetSortNames();
-            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            sortingHelper = new SortingHelperForArtistItems("Artists");
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
         }
+
+        SortingHelperForArtistItems sortingHelper;
 
         private async void MediaImport_MediaImported(string s)
         {
@@ -63,6 +65,7 @@ namespace NextPlayerUWP.ViewModels
                     }
                     GroupedArtists.Add(group);
                 }
+                SortMusicItems();
             }
         }
 
@@ -84,36 +87,22 @@ namespace NextPlayerUWP.ViewModels
 
         protected override void SortMusicItems()
         {
-            string option = selectedComboBoxItem.Option;
-            switch (option)
-            {
-                case SortNames.Artist:
-                    Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
-                    break;
-                case SortNames.Duration:
-                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "Artist", "duration");
-                    break;
-                case SortNames.SongCount:
-                    Sort(s => s.SongsNumber, t => t.SongsNumber, "Artist");
-                    break;
-                case SortNames.LastAdded:
-                    Sort(s => s.LastAdded.Ticks, t => String.Format("{0:d}", t.LastAdded), "Artist", "date");
-                    break;
-                default:
-                    Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
-                    break;
-            }
-        }
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            var orderSelector = sortingHelper.GetOrderBySelector();
+            var groupSelector = sortingHelper.GetGroupBySelector();
+            string propertyName = sortingHelper.GetPropertyName();
+            string format = sortingHelper.GetFormat();
 
-        private void Sort(Func<ArtistItem, object> orderSelector, Func<ArtistItem, object> groupSelector, string propertyName, string format = "no")
-        {
             var query = artists.OrderBy(orderSelector).
                 GroupBy(groupSelector).
                 OrderBy(g => g.Key).
-                Select(group => new { GroupName = (format != "duration") ? group.Key.ToString().ToUpper() 
-                : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss") 
-                : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss") 
-                : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"), Items = group });
+                Select(group => new {
+                    GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
+                : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")
+                : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss")
+                : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"),
+                    Items = group
+                });
             int i = 0;
             string s;
             GroupedArtists.Clear();

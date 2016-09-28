@@ -173,6 +173,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
         private ConcurrentDictionary<string, Task<NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata>> cache = new ConcurrentDictionary<string, Task<NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata>>();
         private ConcurrentDictionary<string, Task<CloudFolder>> cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
 
+        public void ClearCache()
+        {
+            Debug.WriteLine("OneDriveService ClearCache()");
+            cache = new ConcurrentDictionary<string, Task<NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata>>();
+            cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
+        }
+
         public async Task<string> GetRootFolderId()
         {
             Debug.WriteLine("PCloudService GetRootFolderId");
@@ -200,13 +207,20 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
 
             List<SongItem> songs = new List<SongItem>();
             List<SongData> songData = new List<SongData>();
-
+            if (content == null)
+            {
+                ClearCache();
+                return songs;
+            }
             foreach (var item in content.Contents)
             {
                 if (!item.IsFolder)
                 {
-                    if (item.Name.ToLower().EndsWith(".mp3") || item.Name.ToLower().EndsWith(".m4a"))
-                    songData.Add(CreateSongData(item, userId, folder));
+                    if (item.Name.ToLower().EndsWith(".mp3") || item.Name.ToLower().EndsWith(".m4a") || item.Name.ToLower().EndsWith(".ac3") ||
+                        item.Name.ToLower().EndsWith(".wma") || item.Name.ToLower().EndsWith(".flac") || item.Name.ToLower().EndsWith(".aac"))
+                    {
+                        songData.Add(CreateSongData(item, userId, folder));
+                    }
                 }
             }
 
@@ -223,6 +237,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             var content = await contentTask;
 
             List<CloudFolder> folders = new List<CloudFolder>();
+            if (content == null)
+            {
+                ClearCache();
+                return folders;
+            }
             foreach (var item in content.Contents)
             {
                 if (item.IsFolder)
@@ -248,8 +267,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             }
             catch (Microsoft.Graph.ServiceException ex)
             {
-                return null;
+
             }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
 
         private async Task<NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata> GetFolderContentInternalAsync(string folderId)
@@ -265,8 +289,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             }
             catch (Microsoft.Graph.ServiceException ex)
             {
-                return null;
+
             }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
 
         private static SongData CreateSongData(NextPlayerUWPDataLayer.pCloud.Model.BaseMetadata item, string userId, CloudFolder folder)

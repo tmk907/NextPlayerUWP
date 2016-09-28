@@ -39,11 +39,7 @@ namespace NextPlayerUWP.ViewModels
             get { return comboBoxItemValues; }
             set
             {
-                if (value!= comboBoxItemValues)
-                {
-                    comboBoxItemValues = value;
-                }
-                //Set(ref comboBoxItemValues, value);
+                comboBoxItemValues = value;
             }
         }
 
@@ -53,9 +49,12 @@ namespace NextPlayerUWP.ViewModels
             get { return selectedComboBoxItem; }
             set
             {
-                bool different = value != selectedComboBoxItem;
-                Set(ref selectedComboBoxItem, value);
-                if (different && value != null) SortMusicItems();
+                bool diff = selectedComboBoxItem != value;
+                selectedComboBoxItem = value;
+                if (value != null && diff)
+                {
+                    SortMusicItems();
+                }
             }
         }
 

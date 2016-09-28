@@ -25,6 +25,8 @@
 
         public const string RadioCover = "ms-appx:///Assets/Albums/AlbumCoverTRnG.png";
 
+        public const string EmptyMP3File = "ms-appx:///Assets/Sounds/Empty.mp3";
+
         //Layout
         public const string AppTheme = "AppTheme";
         public const string AppAccent = "AppAccent";

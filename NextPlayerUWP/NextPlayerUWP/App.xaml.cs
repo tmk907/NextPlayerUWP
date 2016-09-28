@@ -333,7 +333,7 @@ namespace NextPlayerUWP
 
             if (!isFirstRun)
             {
-                AlbumArtFinder.StartLooking();
+                AlbumArtFinder.StartLooking().ConfigureAwait(false);
             }
         }
 

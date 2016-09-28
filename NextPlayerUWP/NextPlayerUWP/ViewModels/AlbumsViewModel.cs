@@ -13,12 +13,13 @@ namespace NextPlayerUWP.ViewModels
     public class AlbumsViewModel : MusicViewModelBase
     {
         private bool isRunning = false;
+        SortingHelperForAlbumItems sortingHelper;
 
         public AlbumsViewModel()
         {
-            SortNames si = new SortNames(MusicItemTypes.album);
-            ComboBoxItemValues = si.GetSortNames();
-            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            sortingHelper = new SortingHelperForAlbumItems("Albums");
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
             AlbumArtFinder.AlbumArtUpdatedEvent += AlbumArtFinder_AlbumArtUpdatedEvent;
@@ -87,6 +88,7 @@ namespace NextPlayerUWP.ViewModels
                     gr.Add(group);
                 }
                 GroupedAlbums = gr;
+                SortMusicItems();
             }
         }
 
@@ -113,42 +115,23 @@ namespace NextPlayerUWP.ViewModels
 
         protected override void SortMusicItems()
         {
-            string option = selectedComboBoxItem.Option;
-            switch (option)
-            {
-                case SortNames.Album:
-                    Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
-                    break;
-                case SortNames.AlbumArtist:
-                    Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
-                    break;
-                case SortNames.Year:
-                    Sort(s => s.Year, t => t.Year, "AlbumId");
-                    break;
-                case SortNames.Duration:
-                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId", "duration");
-                    break;
-                case SortNames.SongCount:
-                    Sort(s => s.SongsNumber, t => t.SongsNumber, "AlbumId");
-                    break;
-                case SortNames.LastAdded:
-                    Sort(s => s.LastAdded.Ticks, t => String.Format("{0:d}", t.LastAdded), "Album", "date");
-                    break;
-                default:
-                    Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
-                    break;
-            }
-        }
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
 
-        private void Sort(Func<AlbumItem, object> orderSelector, Func<AlbumItem, object> groupSelector, string propertyName, string format = "no")
-        {
+            var orderSelector = sortingHelper.GetOrderBySelector();
+            var groupSelector = sortingHelper.GetGroupBySelector();
+            string propertyName = sortingHelper.GetPropertyName();
+            string format = sortingHelper.GetFormat();
+
             var query = albums.OrderBy(orderSelector).
                 GroupBy(groupSelector).
                 OrderBy(g => g.Key).
-                Select(group => new { GroupName = (format != "duration") ? group.Key.ToString().ToUpper() 
-                : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss") 
-                : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss") 
-                : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"), Items = group });
+                Select(group => new {
+                    GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
+                    : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")
+                    : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss")
+                    : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"),
+                    Items = group
+                });
             int i = 0;
             string s;
             GroupedAlbums.Clear();

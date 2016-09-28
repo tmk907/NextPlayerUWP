@@ -254,7 +254,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             var content = await contentTask;
 
             List<CloudFolder> folders = new List<CloudFolder>();
-
+            if (content == null)
+            {
+                ClearCache();
+                return folders;
+            }
             foreach (var item in content)
             {
                 if (item.Folder != null)
@@ -278,7 +282,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             var content = await contentTask;
             var folder = await folderTask;
 
-            
+            if (content == null)
+            {
+                ClearCache();
+                return songs;
+            }
 
             foreach (var item in content)
             {
@@ -305,8 +313,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             }
             catch (Microsoft.Graph.ServiceException ex)
             {
-                return null;
+
             }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
 
         private async Task<IItemChildrenCollectionPage> GetFolderContentInternalAsync(string folderId)
@@ -321,8 +334,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             }
             catch (Microsoft.Graph.ServiceException ex)
             {
-                return null;
+
             }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
 
         public async Task<string> GetDownloadLink(string fileId)

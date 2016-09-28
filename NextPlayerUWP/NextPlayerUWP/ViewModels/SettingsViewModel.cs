@@ -1,27 +1,18 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
 using Windows.System;
-using Windows.UI;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
-using NextPlayerUWPDataLayer.CloudStorage.GoogleDrive;
 using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
@@ -188,9 +179,7 @@ namespace NextPlayerUWP.ViewModels
 
             OneDriveAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.OneDrive));
             DropboxAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.Dropbox));
-
-            //IsOneDriveLoggedIn = OneDriveService.Instance.IsAuthenticated;
-            //IsDropboxLoggedIn = DropboxService.Instance.IsAuthenticated;
+            PCloudAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.pCloud));
 
             //About
             if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
@@ -591,7 +580,6 @@ namespace NextPlayerUWP.ViewModels
             emailMessage.Subject = AppConstants.AppName;
             emailMessage.Body = "";
             emailMessage.To.Add(new Windows.ApplicationModel.Email.EmailRecipient(AppConstants.DeveloperEmail));
-
             await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
         }
 

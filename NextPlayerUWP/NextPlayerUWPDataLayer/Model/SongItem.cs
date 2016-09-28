@@ -74,7 +74,7 @@ namespace NextPlayerUWPDataLayer.Model
 
         public void UpdateContentPath(string newContentPath, DateTime expiresAt)
         {
-            ContentPath = newContentPath;
+            ContentPath = (newContentPath != "") ? newContentPath : AppConstants.EmptyMP3File;
             contentPathExpiresAt = expiresAt;
             contentPathUpdatedAt = DateTime.Now;
         }

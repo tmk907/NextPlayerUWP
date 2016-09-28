@@ -136,6 +136,7 @@ namespace NextPlayerUWP.Common
 
                 if (mss != null)
                 {
+                    
                     var source = MediaSource.CreateFromMediaStreamSource(mss);
                     //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
                     //var source = MediaSource.CreateFromStorageFile(file);
@@ -266,9 +267,16 @@ namespace NextPlayerUWP.Common
                 }
                 CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
                 var service = cssf.GetService(cloudType, song.CloudUserId);
-                var link = await service.GetDownloadLink(song.Path);
-                var validForHours = (cloudType == CloudStorageType.OneDrive) ? 100 : (cloudType == CloudStorageType.Dropbox || cloudType == CloudStorageType.pCloud) ? 4 : 1;
-                song.UpdateContentPath(link, DateTime.Now.AddHours(validForHours));
+                try
+                {
+                    var link = await service.GetDownloadLink(song.Path);
+                    var validForHours = (cloudType == CloudStorageType.OneDrive) ? 100 : (cloudType == CloudStorageType.Dropbox || cloudType == CloudStorageType.pCloud) ? 4 : 1;
+                    song.UpdateContentPath(link, DateTime.Now.AddHours(validForHours));
+                }
+                catch (Exception ex)
+                {
+                    song.UpdateContentPath("", DateTime.Now.AddSeconds(10));
+                }
             }
         }
 

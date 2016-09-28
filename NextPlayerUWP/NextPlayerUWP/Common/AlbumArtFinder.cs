@@ -31,18 +31,18 @@ namespace NextPlayerUWP.Common
             MediaImport.MediaImported += MediaImport_MediaImported;
         }
 
-        private void MediaImport_MediaImported(string s)
+        private async void MediaImport_MediaImported(string s)
         {
-            StartLooking();
+            await StartLooking();
         }
 
-        public async void StartLooking()
+        public async Task StartLooking()
         {
             Logger.DebugWrite("AlbumArtFinder", "StartLooking");
 
             if (isRunning) return;
-
-            await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () => 
+            var dispatcher = Template10.Common.DispatcherWrapper.Current();
+            await dispatcher.DispatchAsync(async () => 
             {
                 albums = await DatabaseManager.Current.GetAlbumsTable();
                 songs = await DatabaseManager.Current.GetSongsWithoutAlbumArtAsync();
@@ -59,12 +59,13 @@ namespace NextPlayerUWP.Common
 
         private async Task FindAlbumArtOfEverySong()
         {
+            Debug.WriteLine("AlbumArtFinder FindAlbumArtOfEverySong()");
             //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
             //Stopwatch st = new Stopwatch();
             //st.Start();
 
             //First find album arts of albums, where Album or AlbumArtist is known. These album arts are shown in AlbumsView list.
-            foreach (var group in songs.Where(a => !(a.Album == "" && a.AlbumArtist == "")).GroupBy(s => new { s.Album, s.AlbumArtist }))
+            foreach (var group in songs.Where(a => !(a.Album == "" && a.AlbumArtist == "")).OrderBy(a=>a.Album).GroupBy(s => new { s.Album, s.AlbumArtist }))
             {
                 var album = albums.FirstOrDefault(a => a.Album.Equals(group.Key.Album) && a.AlbumArtist.Equals(group.Key.AlbumArtist));
                 await UpdateAlbum(group, album);
@@ -91,6 +92,7 @@ namespace NextPlayerUWP.Common
 
         private async Task UpdateAlbumsWithNoArt()
         {
+            Debug.WriteLine("AlbumArtFinder UpdateAlbumsWithNoArt()");
             await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
             {
                 albums = await DatabaseManager.Current.GetAlbumsTable();
@@ -125,6 +127,7 @@ namespace NextPlayerUWP.Common
 
         private static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumsTable album)
         {
+            Debug.WriteLine("AlbumArtFinder UpdateAlbum() AlbumsTable: {0} {1}", album.Album, album.AlbumArtist);
             string path = AppConstants.AlbumCover;
             Dictionary<string, string> hashes = new Dictionary<string, string>();
             foreach (var song in group)
@@ -181,6 +184,7 @@ namespace NextPlayerUWP.Common
 
         private static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumItem album)
         {
+            Debug.WriteLine("AlbumArtFinder UpdateAlbum() AlbumItem: {0} {1}", album.Album, album.AlbumArtist);
             string path = AppConstants.AlbumCover;
             Dictionary<string, string> hashes = new Dictionary<string, string>();
             foreach (var song in group)
@@ -236,6 +240,7 @@ namespace NextPlayerUWP.Common
 
         public static async Task UpdateAlbumArt(AlbumItem album)
         {
+            Debug.WriteLine("AlbumArtFinder UpdateAlbumArt() {0} {1}", album.AlbumId, album.Album);
             if (!album.IsImageSet)
             {
                 var songs = await DatabaseManager.Current.GetSongsFromAlbumItemAsync(album);

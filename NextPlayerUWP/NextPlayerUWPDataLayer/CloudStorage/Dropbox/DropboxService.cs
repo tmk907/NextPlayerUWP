@@ -194,6 +194,12 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         private ConcurrentDictionary<string, Task<Dropbox.Api.Files.ListFolderResult>> cache = new ConcurrentDictionary<string, Task<Dropbox.Api.Files.ListFolderResult>>();
         private ConcurrentDictionary<string, Task<CloudFolder>> cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
 
+        public void ClearCache()
+        {
+            Debug.WriteLine("OneDriveService ClearCache()");
+            cache = new ConcurrentDictionary<string, Task<Dropbox.Api.Files.ListFolderResult>>();
+            cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
+        }
 
         public async Task<string> GetRootFolderId()
         {
@@ -220,7 +226,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
 
             List<SongItem> songs = new List<SongItem>();
             List<SongData> songData = new List<SongData>();
-
+            if (content == null)
+            {
+                ClearCache();
+                return songs;
+            }
             foreach (var item in content.Entries.Where(i=>i.IsFile))
             {
                 var itemAsFile = item.AsFile;
@@ -242,6 +252,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             var content = await contentTask;
 
             List<CloudFolder> folders = new List<CloudFolder>();
+            if (content == null)
+            {
+                ClearCache();
+                return folders;
+            }
 
             foreach (var item in content.Entries.Where(i => i.IsFolder))
             {
@@ -269,8 +284,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             }
             catch (Microsoft.Graph.ServiceException ex)
             {
-                return null;
+
             }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
 
         private async Task<Dropbox.Api.Files.ListFolderResult> GetFolderContentInternalAsync(string path)
@@ -286,8 +306,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             }
             catch (Microsoft.Graph.ServiceException ex)
             {
-                return null;
+                
             }
+            catch(Exception ex)
+            {
+
+            }
+            return null;
         }
 
         //Expire in 4 hours

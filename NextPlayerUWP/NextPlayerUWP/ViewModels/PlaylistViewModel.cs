@@ -19,9 +19,8 @@ namespace NextPlayerUWP.ViewModels
     {
         public PlaylistViewModel()
         {
-            SortNames si = new SortNames(MusicItemTypes.song);
-            ComboBoxItemValues = si.GetSortNames();
-            //SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            sortingHelper = new SortingHelperForSongItems("init");
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 playlist = new ObservableCollection<SongItem>();
@@ -35,6 +34,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        SortingHelperForSongItems sortingHelper;
         private MusicItemTypes type;
         string firstParam;
 
@@ -75,12 +75,16 @@ namespace NextPlayerUWP.ViewModels
                         Playlist = await DatabaseManager.Current.GetSongItemsFromFolderAsync(firstParam);
                         break;
                     case MusicItemTypes.genre:
+                        sortingHelper = new SortingHelperForSongItems("GenrePlaylist");
+                        SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(a=>a.Option.Equals(sortingHelper.SelectedSortOption.Option));
                         PageTitle = loader.GetString("Genre");
                         PageSubTitle = firstParam;
                         IsPlainPlaylist = false;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromGenreAsync(firstParam);
                         break;
                     case MusicItemTypes.plainplaylist:
+                        sortingHelper = new SortingHelperForSongItems("Playlist");
+                        SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(a => a.Option.Equals(sortingHelper.SelectedSortOption.Option));
                         PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
                         PageSubTitle = p.Name;
@@ -88,6 +92,8 @@ namespace NextPlayerUWP.ViewModels
                         Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
                         break;
                     case MusicItemTypes.smartplaylist:
+                        sortingHelper = new SortingHelperForSongItems("Playlist");
+                        SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(a => a.Option.Equals(sortingHelper.SelectedSortOption.Option));
                         PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetSmartPlaylistAsync(Int32.Parse(firstParam));
                         PageSubTitle = p.Name;
@@ -104,20 +110,9 @@ namespace NextPlayerUWP.ViewModels
             if (parameter != null)
             {
                 type = MusicItem.ParseType(parameter as string);
-                if (!choosenSorting.ContainsKey(type.ToString()))
-                {
-                    SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
-                    choosenSorting.Add(type.ToString(), selectedComboBoxItem.Option);
-                }
-                else
-                {
-                    SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(c => c.Option.Equals(choosenSorting[type.ToString()]));
-                }
                 firstParam = MusicItem.SplitParameter(parameter as string)[1];
             }
         }
-
-        Dictionary<string, string> choosenSorting = new Dictionary<string, string>();
 
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
@@ -125,7 +120,6 @@ namespace NextPlayerUWP.ViewModels
             {
                 playlist = new ObservableCollection<SongItem>();
                 pageTitle = "";
-                choosenSorting[type.ToString()] = selectedComboBoxItem.Option;
             }
             await base.OnNavigatingFromAsync(args);
         }
@@ -190,56 +184,8 @@ namespace NextPlayerUWP.ViewModels
 
         protected override void SortMusicItems()
         {
-            string option = selectedComboBoxItem.Option;
-            switch (option)
-            {
-                case SortNames.Title:
-                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
-                    break;
-                case SortNames.Album:
-                    Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
-                    break;
-                case SortNames.Artist:
-                    Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
-                    break;
-                case SortNames.AlbumArtist:
-                    Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
-                    break;
-                case SortNames.Year:
-                    Sort(s => s.Year, t => t.Year, "SongId");
-                    break;
-                case SortNames.Duration:
-                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "SongId");
-                    break;
-                case SortNames.Rating:
-                    Sort(s => s.Rating, t => t.Rating, "SongId");
-                    break;
-                case SortNames.Composer:
-                    Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
-                    break;
-                case SortNames.LastAdded:
-                    Sort(s => s.DateAdded.Ticks, t => String.Format("{0:d}", t.DateAdded), "SongId");
-                    break;
-                case SortNames.LastPlayed:
-                    Sort(s => s.LastPlayed.Ticks, t => String.Format("{0:d}", t.LastPlayed), "SongId");
-                    break;
-                case SortNames.PlayCount:
-                    Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
-                    break;
-                case SortNames.TrackNumber:
-                    Sort(s => s.TrackNumber, s => s.TrackNumber, "SongId");
-                    break;
-                case SortNames.FileName:
-                    Sort(s => s.FileName, s => s.FileName[0].ToString().ToLower(), "FileName");
-                    break;
-                default:
-                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
-                    break;
-            }
-        }
-
-        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem, object> groupSelector, string propertyName)
-        {
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            var orderSelector = sortingHelper.GetOrderBySelector();
             var query = playlist.OrderBy(orderSelector);
             Playlist = new ObservableCollection<SongItem>(query);
         }
