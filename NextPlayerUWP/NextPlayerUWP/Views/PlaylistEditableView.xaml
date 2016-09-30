@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="NextPlayerUWP.Views.PlaylistView"
+    x:Class="NextPlayerUWP.Views.PlaylistEditableView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:NextPlayerUWP.Views"
@@ -45,30 +45,6 @@
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
-        <MenuFlyout x:Key="ContextMenuList">
-            <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
-                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
-                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
-                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
-                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
-                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
-                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
-                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
-                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
-        </MenuFlyout>
-        
         <DataTemplate x:Key="SongItemTemplateDesktop" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>

@@ -61,7 +61,15 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.Playlist, ((PlaylistItem)e.ClickedItem).GetParameter());
+            var item = (PlaylistItem)e.ClickedItem;
+            if (!item.IsSmart)
+            {
+                NavigationService.Navigate(App.Pages.PlaylistEditable, item.GetParameter());
+            }
+            else
+            {
+                NavigationService.Navigate(App.Pages.Playlist, item.GetParameter());
+            }
         }
 
         public void NewSmartPlaylist()

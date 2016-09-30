@@ -27,6 +27,7 @@ namespace NextPlayerUWP.ViewModels
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
             lastFmCache = new LastFmCache();
+            seekButtonsHelper = new SeekButtonsHelper();           
         }
 
         private LastFmCache lastFmCache;
@@ -139,13 +140,16 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (volume != value)
                 {
-                    //if (value == 0) isMuted = true;
-                    //else isMuted = false;
+                    if (value == 0) isMuted = true;
+                    else isMuted = false;
                     PlaybackService.Instance.ChangeVolume(value);
                 }
                 Set(ref volume, value);
             }
         }
+
+        private bool isMuted = false;
+        private int prevVolume = 100;
 
         private bool isVolumeControlVisible = false;
         public bool IsVolumeControlVisible
@@ -153,6 +157,35 @@ namespace NextPlayerUWP.ViewModels
             get { return isVolumeControlVisible; }
             set { Set(ref isVolumeControlVisible, value); }
         }
+
+        private int currentIndex = 0;
+        public int CurrentIndex
+        {
+            get { return currentIndex; }
+            set { Set(ref currentIndex, value); }
+        }
+
+        private int songsCount = 0;
+        public int SongsCount
+        {
+            get { return songsCount; }
+            set { Set(ref songsCount, value); }
+        }
+
+        private int flipViewSelectedIndex = 0;
+        public int FlipViewSelectedIndex
+        {
+            get{ return flipViewSelectedIndex; }
+            set
+            {
+                if (flipViewSelectedIndex != value)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue("FlipViewSelectedIndex", value);
+                }
+                Set(ref flipViewSelectedIndex, value);
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -160,6 +193,25 @@ namespace NextPlayerUWP.ViewModels
         public void Play()
         {
             PlaybackService.Instance.TogglePlayPause();
+        }
+
+        private SeekButtonsHelper seekButtonsHelper;
+
+        public int RepeatButtonInterval
+        {
+            get { return seekButtonsHelper.RepeatButtonInterval; }
+        }
+
+        public void PreviousButtonDown()
+        {
+            System.Diagnostics.Debug.WriteLine("PreviousButtonDown");
+            seekButtonsHelper.Previous();
+        }
+
+        public void NextButtonDown()
+        {
+            System.Diagnostics.Debug.WriteLine("NextButtonDown");
+            seekButtonsHelper.Next();
         }
 
         public void Previous()
@@ -193,6 +245,19 @@ namespace NextPlayerUWP.ViewModels
                 Song.Rating = rating;
                 await lastFmCache.CacheTrackLove(song.Artist, song.Title, rating);
                 await DatabaseManager.Current.UpdateRatingAsync(song.SongId, song.Rating).ConfigureAwait(false);
+            }
+        }
+
+        public void MuteVolume()
+        {
+            if (isMuted)
+            {
+                Volume = prevVolume;
+            }
+            else
+            {
+                prevVolume = volume;
+                Volume = 0;
             }
         }
 
@@ -308,8 +373,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     CoverUri = song.AlbumArtUri;
                 }
-                RefreshFlipView();
-
+                CurrentIndex = PlaybackService.Instance.CurrentSongIndex + 1;
             });
         }
 
@@ -431,6 +495,9 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackService.MediaPlayerTrackChanged += ChangeSong;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
+            CurrentIndex = PlaybackService.Instance.CurrentSongIndex + 1;
+            SongsCount = NowPlayingPlaylistManager.Current.songs.Count;
+            FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue("FlipViewSelectedIndex");
             StartTimer();
             ChangePlayButtonContent(PlaybackService.Instance.PlayerState);
             RefreshFlipView();

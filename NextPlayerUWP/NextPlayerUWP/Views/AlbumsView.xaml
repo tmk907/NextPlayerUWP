@@ -8,6 +8,7 @@
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -61,7 +62,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Image Grid.Row="0" Width="132" Height="132" Margin="4">
+                <Image Grid.Row="0" Width="132" Height="132" Margin="4" Opacity="0" ImageOpened="Image_ImageOpened">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind ImageUri}"
                                      DecodePixelType="Logical"

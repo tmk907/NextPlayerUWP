@@ -7,6 +7,7 @@ using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Core;
@@ -175,6 +176,7 @@ namespace NextPlayerUWP.Common
                     Play();
                 }
             }
+            OnMediaPlayerMediaOpened();
             ManageQueue();
             command = false;
         }
@@ -236,13 +238,13 @@ namespace NextPlayerUWP.Common
         }
         #endregion
 
-        private int CurrentSongIndex
+        public int CurrentSongIndex
         {
             get
             {
                 return ApplicationSettingsHelper.ReadSongIndex();
             }
-            set
+            private set
             {
                 ApplicationSettingsHelper.SaveSongIndex(value);
                 OnMediaPlayerTrackChanged(value);
@@ -440,6 +442,48 @@ namespace NextPlayerUWP.Common
             }
         }
 
+        int fastForwardInterval = 5000;
+        int rewindInterval = 5000;
+        int fastForwardFasterInterval = 15000;
+        int rewindFasterInterval = 15000;
+
+        public void FastForward()
+        {
+            System.Diagnostics.Debug.WriteLine("FastForward");
+            var session = Player.PlaybackSession;
+            if (session.CanSeek)
+            {
+                var interval = TimeSpan.FromMilliseconds(fastForwardInterval);
+                if (session.Position + interval + TimeSpan.FromMilliseconds(500) < session.NaturalDuration)
+                {
+                    session.Position += TimeSpan.FromMilliseconds(fastForwardInterval);
+                }
+                else
+                {
+                    Pause();
+                    session.Position = TimeSpan.Zero;
+                }
+            }
+        }
+
+        public void Rewind()
+        {
+            System.Diagnostics.Debug.WriteLine("Rewind");
+            var session = Player.PlaybackSession;
+            if (session.CanSeek)
+            {
+                if (session.Position > TimeSpan.FromMilliseconds(rewindInterval))
+                {
+                    session.Position -= TimeSpan.FromMilliseconds(rewindInterval);
+                }
+                else
+                {
+                    Pause();
+                    session.Position = TimeSpan.Zero;
+                }
+            }
+        }
+
         public async Task ChangeShuffle()
         {
             shuffle = Shuffle.CurrentState();
@@ -593,15 +637,18 @@ namespace NextPlayerUWP.Common
         private async Task LoadAll(int startIndex)
         {
             ClearMediaList();
-            //mediaList = new MediaPlaybackList();
             int index = 0;
+            //Stopwatch s1 = new Stopwatch();
             foreach(var song in NowPlayingPlaylistManager.Current.songs)
             {
-                var playbackItem = await PreparePlaybackItem(song);
+                //s1.Start();
+                var playbackItem = await PlaybackItemBuilder.PreparePlaybackItem(song);
+                //s1.Stop();
                 playbackItem.Source.CustomProperties[propertyIndex] = index;
                 mediaList.Items.Add(playbackItem);
                 index++;
             }
+            //Debug.WriteLine("{0} {1} ", s1.ElapsedMilliseconds, PlaybackItemBuilder.time);
             mediaList.StartingItem = mediaList.Items.FirstOrDefault(i => i.Source.CustomProperties[propertyIndex].Equals(startIndex));
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
         }
@@ -795,16 +842,30 @@ namespace NextPlayerUWP.Common
         private void UpdateStats()
         {
             System.Diagnostics.Debug.WriteLine("ScrobbleTrack started at:{0} played:{1}", songStartedAt, songPlayed);
-            //var item = mediaList.CurrentItem;
-            //if (item == null) return;
-            //var duration = item.Source.Duration ?? TimeSpan.Zero;
-            //var song = NowPlayingPlaylistManager.Current.songs[(int)mediaList.CurrentItemIndex];
+            var item = mediaList.CurrentItem;
+            if (item == null)
+            {
+                return;
+            }
+            var duration = item?.Source.Duration ?? TimeSpan.Zero;
+            int a = (int)mediaList.CurrentItemIndex;
+            if (a != CurrentSongIndex)
+            {
 
-            //if (CanFlagSongAsPlayed(songPlayed) && (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotMusicLibrary))
-            //{
-            //    UpdateSongStatistics(song.SongId, duration);
-            //    ScrobbleTrack(song, duration);
-            //}
+            }
+            int songId = (int)item.Source.CustomProperties[propertySongId];
+            UpdateStats2(songId, duration, songPlayed);
+        }
+
+        private async Task UpdateStats2(int songId, TimeSpan duration, TimeSpan songPlayed)
+        {
+            var song = await DatabaseManager.Current.GetSongItemAsync(songId);
+
+            if (CanFlagSongAsPlayed(songPlayed) && (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotMusicLibrary))
+            {
+                await UpdateSongStatistics(song.SongId, duration);
+                await ScrobbleTrack(song, duration);
+            }
         }
 
         private async Task ScrobbleTrack(SongItem song, TimeSpan duration)

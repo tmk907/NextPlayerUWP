@@ -112,7 +112,7 @@ namespace NextPlayerUWP.Common
             return mpi;
         }
 
-        private static MediaPlaybackItem PrepareFromLocalFile(SongItem song)
+        public static MediaPlaybackItem PrepareFromLocalFile(SongItem song)
         {
             MyStreamReference msr = new MyStreamReference(song.ContentPath);
             var source = MediaSource.CreateFromStreamReference(msr, "");

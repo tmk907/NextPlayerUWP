@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using System.IO;
 using Windows.UI.Xaml;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -122,6 +123,17 @@ namespace NextPlayerUWP.ViewModels
                 pageTitle = "";
             }
             await base.OnNavigatingFromAsync(args);
+        }
+
+        public void SlidableListItem_RightCommandActivated(object sender, EventArgs e)
+        {
+
+            var a = (sender as SlidableListItem).DataContext;
+        }
+
+        public void SlidableListItem_LeftCommandActivated(object sender, EventArgs e)
+        {
+
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)

@@ -281,10 +281,7 @@
                         <Setter Target="AlbumSongsListView.ItemTemplate" Value="{StaticResource AlbumSongItemTemplateMobileWide}"/>
                         <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecondSemiTr}"/>
                         <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormalSemiTr}"/>
-                        <Setter Target="AlbumCoverImage.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCoverImage.Opacity" Value="0"/>
                         <Setter Target="AlbumCoverImageBG.Visibility" Value="Visible"/>
-                        <Setter Target="AlbumCoverImageBG.Opacity" Value="1"/>
                         <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
                         <Setter Target="DarkenLayer.Opacity" Value="1"/>
                         <Setter Target="ForegroundColor.Color" Value="White"/>
@@ -301,10 +298,7 @@
                         <Setter Target="AlbumSongsListView.ItemTemplate" Value="{StaticResource AlbumSongItemTemplateMobile}"/>
                         <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecondSemiTr}"/>
                         <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormalSemiTr}"/>
-                        <Setter Target="AlbumCoverImage.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCoverImage.Opacity" Value="0"/>
                         <Setter Target="AlbumCoverImageBG.Visibility" Value="Visible"/>
-                        <Setter Target="AlbumCoverImageBG.Opacity" Value="1"/>
                         <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
                         <Setter Target="DarkenLayer.Opacity" Value="1"/>
                         <Setter Target="ForegroundColor.Color" Value="White"/>
@@ -319,9 +313,6 @@
                         <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecond}"/>
                         <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormal}"/>
                         <Setter Target="AlbumCoverImage.Visibility" Value="Visible"/>
-                        <Setter Target="AlbumCoverImage.Opacity" Value="1"/>
-                        <Setter Target="AlbumCoverImageBG.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCoverImageBG.Opacity" Value="0"/>
                         <Setter Target="DarkenLayer.Visibility" Value="Collapsed"/>
                         <Setter Target="DarkenLayer.Opacity" Value="0"/>
                         <Setter Target="ForegroundColor.Color" Value="{ThemeResource SystemBaseHighColor}"/>
@@ -351,9 +342,14 @@
                 Icon="Shuffle"
                 Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
             </controls:PageHeader>
-            <Image x:Name="AlbumCoverImageBG" Grid.Row="1" Stretch="UniformToFill"
+            <Image x:Name="AlbumCoverImageBG" Grid.Row="1" 
+                   Stretch="UniformToFill"
+                   Opacity="0"
+                   x:DeferLoadStrategy="Lazy"
+                   Visibility="Collapsed"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Center">
+                   HorizontalAlignment="Center"
+                   ImageOpened="AlbumCoverImageBG_ImageOpened">
                 <Image.Source>
                     <BitmapImage 
                         UriSource="{Binding Album.ImageUri, Mode=OneWay}"/>
@@ -405,7 +401,12 @@
                         </StackPanel>
                     </ContentDialog.Content>
                 </ContentDialog>
-                <Image x:Name="AlbumCoverImage" Margin="12,12,12,12">
+                <Image x:Name="AlbumCoverImage" Margin="12,12,12,12" 
+                       x:DeferLoadStrategy="Lazy" 
+                       Visibility="Collapsed"
+                       Opacity="0"
+                       ImageOpened="AlbumCoverImage_ImageOpened"
+                       >
                     <Image.Source>
                         <BitmapImage x:Name="AlbumBitmapImage"
                                      UriSource="{Binding Album.ImageUri, Mode=OneWay}"

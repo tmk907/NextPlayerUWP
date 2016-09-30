@@ -81,6 +81,77 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="BottomPlayerRepeatButtonStyle" TargetType="RepeatButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="MinWidth" Value="40"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="TimeSliderStyle" TargetType="Slider">
             <Setter Property="Background" Value="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
             <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}"/>
@@ -414,10 +485,9 @@
                     <VisualState.Setters>
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
-                        <Setter Target="SliderGrid.Opacity" Value="0" />
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed"/>
-                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>
+                        <!--<Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <!--VisualState to be triggered when window width is >=720 effective pixels.-->
@@ -433,7 +503,6 @@
                         <Setter Target="RightPanel.Width" Value="300" />
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
-                        <Setter Target="SliderGrid.Opacity" Value="1" />
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
@@ -450,7 +519,6 @@
                         <Setter Target="RightPanel.Width" Value="250" />
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
-                        <Setter Target="SliderGrid.Opacity" Value="1" />
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
@@ -467,7 +535,6 @@
                         <Setter Target="RightPanel.Width" Value="0"/>
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
-                        <Setter Target="SliderGrid.Opacity" Value="0" />
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
                     </VisualState.Setters>
@@ -645,11 +712,12 @@
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
-                <Button Grid.Column="1"
-                    Click="{x:Bind BPViewModel.Previous}"
+                <RepeatButton Grid.Column="1"
+                    Click="{x:Bind BPViewModel.PreviousButtonDown}"
+                    Interval="{x:Bind BPViewModel.RepeatButtonInterval}"
                     Width="48" Height="60"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
+                    Style="{StaticResource BottomPlayerRepeatButtonStyle}">
+                    <RepeatButton.ContentTemplate>
                         <DataTemplate>
                             <Grid>
                                 <TextBlock Text="&#xE892;" 
@@ -660,8 +728,8 @@
                                            FontFamily="Segoe MDL2 Assets"/>
                             </Grid>
                         </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
+                    </RepeatButton.ContentTemplate>
+                </RepeatButton>
                 <Button Grid.Column="2"
                     Click="{x:Bind BPViewModel.Play}"
                     Width="48" Height="60"
@@ -680,11 +748,12 @@
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
-                <Button Grid.Column="3"
-                    Click="{x:Bind BPViewModel.Next}"
+                <RepeatButton Grid.Column="3"
+                    Click="{x:Bind BPViewModel.NextButtonDown}"
+                    Interval="{x:Bind BPViewModel.RepeatButtonInterval}"
                     Width="48" Height="60"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
+                    Style="{StaticResource BottomPlayerRepeatButtonStyle}">
+                    <RepeatButton.ContentTemplate>
                         <DataTemplate>
                             <Grid>
                                 <TextBlock Text="&#xE893;" 
@@ -695,8 +764,8 @@
                                            FontFamily="Segoe MDL2 Assets"/>
                             </Grid>
                         </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
+                    </RepeatButton.ContentTemplate>
+                </RepeatButton>
                 <Button Grid.Column="4"
                         x:Name="RepeatButton"
                     Click="{x:Bind BPViewModel.RepeatCommand}"
@@ -717,7 +786,7 @@
                     </Button.ContentTemplate>
                 </Button>
             </Grid>
-            <Grid Grid.Column="3" x:Name="SliderGrid" FlowDirection="LeftToRight">
+            <Grid Grid.Column="3" x:Name="SliderGrid" FlowDirection="LeftToRight" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition/>
@@ -748,7 +817,7 @@
                            Margin="0,0,8,0"
                            Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
             </Grid>
-            <Grid Grid.Column="2" x:Name="VolumeGrid">
+            <Grid Grid.Column="2" x:Name="VolumeGrid" x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
                 <Button Style="{StaticResource BottomPlayerButtonStyle}"
                         x:Name="VolumeButton"
                         RightTapped="{x:Bind BPViewModel.MuteVolume}"

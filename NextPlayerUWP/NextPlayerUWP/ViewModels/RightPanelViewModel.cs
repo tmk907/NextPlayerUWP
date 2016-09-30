@@ -292,9 +292,10 @@ namespace NextPlayerUWP.ViewModels
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
             int index = 0;
+            int id = ((SongItem)e.ClickedItem).SongId;
             foreach (var s in songs)
             {
-                if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
+                if (s.SongId == id) break;
                 index++;
             }
             PlaybackService.Instance.JumpTo(index);
@@ -302,7 +303,6 @@ namespace NextPlayerUWP.ViewModels
 
         public async void Delete(object sender, RoutedEventArgs e)
         {
-            if (songs.Count == 1) return;
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }

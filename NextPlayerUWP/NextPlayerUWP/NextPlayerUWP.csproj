@@ -125,6 +125,7 @@
     <Compile Include="Common\PlaybackItemBuilder.cs" />
     <Compile Include="Common\PlaybackService.cs" />
     <Compile Include="Common\PlaybackTimer.cs" />
+    <Compile Include="Common\SeekButtonsHelper.cs" />
     <Compile Include="Common\SongCoverManager.cs" />
     <Compile Include="Common\SortingHelper.cs" />
     <Compile Include="Common\StateManager.cs" />
@@ -244,6 +245,9 @@
     </Compile>
     <Compile Include="Views\NowPlayingView.xaml.cs">
       <DependentUpon>NowPlayingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaylistEditableView.xaml.cs">
+      <DependentUpon>PlaylistEditableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlaylistsView.xaml.cs">
       <DependentUpon>PlaylistsView.xaml</DependentUpon>
@@ -419,6 +423,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NowPlayingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaylistEditableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

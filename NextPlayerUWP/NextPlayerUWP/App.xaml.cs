@@ -227,6 +227,7 @@ namespace NextPlayerUWP
             NowPlayingPlaylist,
             Playlists,
             Playlist,
+            PlaylistEditable,
             Radios,
             Settings,
             Songs,
@@ -306,6 +307,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
             if (!keys.ContainsKey(Pages.Playlist))
                 keys.Add(Pages.Playlist, typeof(PlaylistView));
+            if (!keys.ContainsKey(Pages.PlaylistEditable))
+                keys.Add(Pages.PlaylistEditable, typeof(PlaylistEditableView));
             if (!keys.ContainsKey(Pages.Radios))
                 keys.Add(Pages.Radios, typeof(RadiosView));
             if (!keys.ContainsKey(Pages.Settings))

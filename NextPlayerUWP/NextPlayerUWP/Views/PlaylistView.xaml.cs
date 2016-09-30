@@ -1,4 +1,7 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.Common;
+using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +33,7 @@ namespace NextPlayerUWP.Views
             this.Loaded += delegate { ((PlaylistViewModel)DataContext).OnLoaded(PlaylistListView); };
             ViewModel = (PlaylistViewModel)DataContext;
         }
-
+        public bool IsA = true;
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
@@ -46,6 +49,18 @@ namespace NextPlayerUWP.Views
             }
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
+        {
+            var a = (sender as SlidableListItem).DataContext as SongItem;
+            await NowPlayingPlaylistManager.Current.Add(a);
+        }
+
+        private void SlidableListItem_RightCommandRequested(object sender, EventArgs e)
+        {
+            var a = (sender as SlidableListItem).DataContext as SongItem;
+            ViewModel.Playlist.Remove(a);
         }
     }
 }

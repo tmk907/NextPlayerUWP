@@ -42,6 +42,7 @@ namespace NextPlayerUWP.ViewModels
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
             NowPlayingPlaylistManager.Current.SetDispatcher(WindowWrapper.Current().Dispatcher);
+            seekButtonsHelper = new SeekButtonsHelper();
             PlaybackService.Instance.Initialize().ConfigureAwait(false);
         }
 
@@ -169,6 +170,25 @@ namespace NextPlayerUWP.ViewModels
         #endregion
 
         #region Commands
+
+        private SeekButtonsHelper seekButtonsHelper;
+
+        public int RepeatButtonInterval
+        {
+            get { return seekButtonsHelper.RepeatButtonInterval; }
+        }
+
+        public void PreviousButtonDown()
+        {
+            System.Diagnostics.Debug.WriteLine("PreviousButtonDown");
+            seekButtonsHelper.Previous();
+        }
+
+        public void NextButtonDown()
+        {
+            System.Diagnostics.Debug.WriteLine("NextButtonDown");
+            seekButtonsHelper.Next();
+        }
 
         public void Play()
         {

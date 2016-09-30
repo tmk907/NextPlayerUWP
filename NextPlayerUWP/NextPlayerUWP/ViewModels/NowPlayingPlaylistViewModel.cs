@@ -199,20 +199,20 @@ namespace NextPlayerUWP.ViewModels
 
         #region Commands
 
-        public async void ItemClicked(object sender, ItemClickEventArgs e)
+        public void ItemClicked(object sender, ItemClickEventArgs e)
         {
+            int id = ((SongItem)e.ClickedItem).SongId;
             int index = 0;
             foreach (var s in songs)
             {
-                if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
+                if (s.SongId == id) break;
                 index++;
             }
-            await PlaybackService.Instance.PlayNewList(index);
+            PlaybackService.Instance.JumpTo(index);
         }
 
         public async void Delete(object sender, RoutedEventArgs e)
         {
-            if (songs.Count == 1) return;
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }

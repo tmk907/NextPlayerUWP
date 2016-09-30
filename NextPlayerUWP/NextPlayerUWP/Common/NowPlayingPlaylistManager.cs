@@ -299,6 +299,8 @@ namespace NextPlayerUWP.Common
 
         public async Task Delete(int songId)
         {
+            if (songs.Count == 1 || GetCurrentPlaying().SongId == songId) return;
+
             int i = 0;
             foreach(var s in songs)
             {
