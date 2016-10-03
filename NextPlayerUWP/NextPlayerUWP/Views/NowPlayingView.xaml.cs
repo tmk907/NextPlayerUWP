@@ -56,7 +56,18 @@ namespace NextPlayerUWP.Views
                 //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
             }
         }
-        #endregion  
+        #endregion
+
+        private async void ButtonShowPlaybackRate_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogPlaybackRate.ShowAsync();
+        }
+
+        private async void ButtonShowVolume_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogVolume.ShowAsync();
+        }
+
     }
 
     public class SizeNotifyPanel : ContentPresenter

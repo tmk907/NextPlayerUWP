@@ -375,10 +375,17 @@
                 />
             <controls:PageHeader.SecondaryCommands>
                 <AppBarButton
-                x:Uid="AppBarButtonLyrics"
-                Label="Lyrics"
-                Click="{x:Bind ViewModel.GoToLyrics}"
-                />
+                    x:Uid="AppBarButtonLyrics"
+                    Label="Lyrics"
+                    Click="{x:Bind ViewModel.GoToLyrics}"/>
+                <AppBarButton
+                    x:Uid="AppBarButtonPlaybackRate"
+                    Label="Playback rate"
+                    Click="ButtonShowPlaybackRate_Click"/>
+                <AppBarButton
+                    x:Uid="AppBarButtonVolume"
+                    Label="Volume"
+                    Click="ButtonShowVolume_Click"/>
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <Grid Grid.Row="1">
@@ -389,6 +396,83 @@
                 <RowDefinition Height="5*"/>
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
+            <ContentDialog x:Name="ContentDialogVolume"
+                Grid.Row="1"
+                x:Uid="ContentDialogVolume"
+                VerticalAlignment="Center"
+                Title="Volume"
+                PrimaryButtonText="OK"
+                IsPrimaryButtonEnabled="True"
+                IsSecondaryButtonEnabled="False"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel 
+                            Grid.Row="0"
+                            Orientation="Horizontal">
+                            <TextBlock x:Uid="TBVolume" Text="Volume"/>
+                            <TextBlock Text=":" Margin="0,0,4,0"/>
+                            <TextBlock Text="{x:Bind ViewModel.Volume, Mode=OneWay}"/>
+                            <TextBlock Text="%"/>
+                        </StackPanel>
+                        <Slider
+                            Grid.Row="1"
+                            StepFrequency="1.0"
+                            Maximum="100"
+                            Value="{x:Bind ViewModel.Volume, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center" 
+                            Style="{StaticResource TimeSliderStyle}"/>
+                    </Grid>
+                </ContentDialog.Content>
+            </ContentDialog>
+            <ContentDialog x:Name="ContentDialogPlaybackRate"
+                Grid.Row="1"
+                x:Uid="ContentDialogPlaybackRate"
+                VerticalAlignment="Center"
+                Title="Playback rate"
+                PrimaryButtonText="OK"
+                IsPrimaryButtonEnabled="True"
+                IsSecondaryButtonEnabled="False"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel 
+                            Grid.Row="0"
+                            Orientation="Horizontal">
+                            <TextBlock x:Uid="TBPlaybackRate" Text="Playback rate"/>
+                            <TextBlock Text=":" Margin="0,0,4,0"/>
+                            <TextBlock Text="{x:Bind ViewModel.PlaybackRate, Mode=OneWay}"/>
+                            <TextBlock Text="%"/>
+                        </StackPanel>
+                        <Slider
+                            Grid.Row="1"
+                            StepFrequency="1.0"
+                            Minimum="30"
+                            Maximum="200"
+                            Value="{x:Bind ViewModel.PlaybackRate, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center" 
+                            Style="{StaticResource TimeSliderStyle}"/>
+                        <Button 
+                            x:Uid="ButtonReset"
+                            Grid.Row="2"
+                            Content="Reset"
+                            Click="{x:Bind ViewModel.ResetPlaybackRate}"/>
+                    </Grid>
+                </ContentDialog.Content>
+            </ContentDialog>
             <local:SizeNotifyPanel x:Name="SizePanel" Grid.Row="0" 
                                    Margin="12,8,12,0">
                 <Grid>

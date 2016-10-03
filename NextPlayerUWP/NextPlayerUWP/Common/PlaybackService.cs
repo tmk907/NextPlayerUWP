@@ -574,9 +574,27 @@ namespace NextPlayerUWP.Common
             Player.AudioBalance = 0;
         }
 
+        public int PlaybackRatePercent
+        {
+            get 
+            {
+                return (int)Player.PlaybackSession.PlaybackRate * 100;
+            }
+            set
+            {
+                if (value>30 && value < 400)
+                {
+                    double playbackRate = value / 100.0;
+                    Player.PlaybackSession.PlaybackRate = playbackRate;
+                }
+            }
+        }
 
-        ThreadPoolTimer playbackTimer = null;
-        bool isPlaybackTimerSet = false;
+        public void ResetPlaybackRate()
+        {
+            var session = Player.PlaybackSession;
+            session.PlaybackRate = 1.0;
+        }
 
         public void SetPlaybackTimer()
         {

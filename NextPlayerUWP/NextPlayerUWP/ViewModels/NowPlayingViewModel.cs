@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -180,10 +181,26 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (flipViewSelectedIndex != value)
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue("FlipViewSelectedIndex", value);
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FlipViewSelectedIndex, value);
                 }
                 Set(ref flipViewSelectedIndex, value);
             }
+        }
+
+        private int playbackRate = 100;
+        public int PlaybackRate
+        {
+            get { return playbackRate; }
+            set
+            {
+                Set(ref playbackRate, value);
+                PlaybackService.Instance.PlaybackRatePercent = value;
+            }
+        }
+
+        public void ResetPlaybackRate()
+        {
+            PlaybackRate = 100;
         }
 
         #endregion
@@ -497,7 +514,7 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             CurrentIndex = PlaybackService.Instance.CurrentSongIndex + 1;
             SongsCount = NowPlayingPlaylistManager.Current.songs.Count;
-            FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue("FlipViewSelectedIndex");
+            FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FlipViewSelectedIndex);
             StartTimer();
             ChangePlayButtonContent(PlaybackService.Instance.PlayerState);
             RefreshFlipView();
@@ -506,6 +523,8 @@ namespace NextPlayerUWP.ViewModels
             
             RepeatMode = Repeat.CurrentState();
             ShuffleMode = Shuffle.CurrentState();
+
+            PlaybackRate = PlaybackService.Instance.PlaybackRatePercent;
 
             TimeEnd = song.Duration;
             SliderValue = 0.0;

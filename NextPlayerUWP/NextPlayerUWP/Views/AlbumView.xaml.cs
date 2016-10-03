@@ -14,6 +14,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp.UI.Animations;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWPDataLayer.Model;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -38,6 +40,12 @@ namespace NextPlayerUWP.Views
             var menu = this.Resources["ContextMenu"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
+        {
+            var song = (sender as SlidableListItem).DataContext as MusicItem;
+            await ViewModel.SlidableListItemLeftCommandRequested(song);
         }
 
         private async void EditAlbum_Click(object sender, RoutedEventArgs e)

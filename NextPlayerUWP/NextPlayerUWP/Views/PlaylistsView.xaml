@@ -8,6 +8,8 @@
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=PlaylistsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -43,19 +45,62 @@
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
-        <DataTemplate x:Key="PlaylistItemTemplate" x:DataType="data:PlaylistItem">
+        <DataTemplate x:Key="PlaylistItemTemplateMobile" x:DataType="data:PlaylistItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="Add" 
+	            LeftLabel="Queue" 
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                           Text="{x:Bind Name, Mode=OneWay}"
+                           VerticalAlignment="Center"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
+        <DataTemplate x:Key="PlaylistItemTemplateDesktop" x:DataType="data:PlaylistItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                           Text="{x:Bind Name, Mode=OneWay}"
-                           VerticalAlignment="Center"/>
+                        Text="{x:Bind Name, Mode=OneWay}"
+                        VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Mobile">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistsListView.ItemTemplate" Value="{StaticResource PlaylistItemTemplateMobile}"/>
+                        <Setter Target="PlaylistsListView.CanDragItems" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistsListView.ItemTemplate" Value="{StaticResource PlaylistItemTemplateDesktop}"/>
+                        <Setter Target="PlaylistsListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -158,12 +203,12 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
-            <mycontrols:AlternatingRowListView x:Name="PlaylistsListView"
-                      Grid.Row="1"
+            <mycontrols:AlternatingRowListView 
+                x:Name="PlaylistsListView"
+                Grid.Row="1"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                 OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                 ItemsSource="{Binding Playlists, Mode=OneWay}"
-                ItemTemplate="{StaticResource PlaylistItemTemplate}"
                 SelectionMode="None"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked}"

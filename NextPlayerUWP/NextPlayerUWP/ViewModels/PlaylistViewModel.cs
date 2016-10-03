@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using System.IO;
 using Windows.UI.Xaml;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -123,17 +123,12 @@ namespace NextPlayerUWP.ViewModels
                 pageTitle = "";
             }
             await base.OnNavigatingFromAsync(args);
+            
         }
 
-        public void SlidableListItem_RightCommandActivated(object sender, EventArgs e)
+        public async Task SlidableListItemRightCommandRequested(SongItem song)
         {
-
-            var a = (sender as SlidableListItem).DataContext;
-        }
-
-        public void SlidableListItem_LeftCommandActivated(object sender, EventArgs e)
-        {
-
+            await DeleteFromPlaylist(song);
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)
@@ -178,20 +173,25 @@ namespace NextPlayerUWP.ViewModels
             await PlaybackService.Instance.PlayNewList(0);
         }
 
-        public async void DeleteFromPlaylist(object sender, RoutedEventArgs e)
+        public async void DeleteFromPlaylistClick(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await DeleteFromPlaylist(item);
+        }
+
+        private async Task DeleteFromPlaylist(SongItem song)
+        {
             int i = 0;
             foreach (var s in playlist)
             {
-                if (s.SongId == item.SongId) break;
+                if (s.SongId == song.SongId) break;
                 i++;
             }
             Playlist.RemoveAt(i);
             var p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
             PlaylistExporter pe = new PlaylistExporter();
             await pe.AutoSavePlaylist(p);
-            await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(item.SongId);
+            await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(song.SongId);
         }
 
         protected override void SortMusicItems()

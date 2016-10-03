@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -79,6 +80,12 @@ namespace NextPlayerUWP.Views
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
             ViewModel.EditPlaylist = new PlaylistItem(selected.Id, selected.IsSmart, selected.Name);
             await ContentDialogChoosePathKind.ShowAsync();
+        }
+
+        private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
+        {
+            var song = (sender as SlidableListItem).DataContext as SongItem;
+            await ViewModel.SlidableListItemLeftCommandRequested(song);
         }
 
     }

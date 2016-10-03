@@ -13,6 +13,7 @@ using NextPlayerUWPDataLayer.Helpers;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.DataTransfer;
 using Template10.Services.NavigationService;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -123,6 +124,27 @@ namespace NextPlayerUWP.ViewModels
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
             App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
+        }
+
+        public async Task SlidableListItemLeftCommandRequested(MusicItem item)
+        {
+            string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            if (action.Equals(AppConstants.SwipeActionAddToNowPlaying))
+            {
+                await NowPlayingPlaylistManager.Current.Add(item);
+            }
+            else if (action.Equals(AppConstants.SwipeActionPlayNext))
+            {
+                await NowPlayingPlaylistManager.Current.AddNext(item);
+            }
+            else if (action.Equals(AppConstants.SwipeActionPlayNow))
+            {
+                await NowPlayingPlaylistManager.Current.AddNext(item);
+            }
+            else if (action.Equals(AppConstants.SwipeActionAddToPlaylist))
+            {
+                NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+            }
         }
 
         #endregion

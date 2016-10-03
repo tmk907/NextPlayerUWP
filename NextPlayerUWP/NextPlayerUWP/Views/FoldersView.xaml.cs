@@ -1,4 +1,6 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,6 +47,12 @@ namespace NextPlayerUWP.Views
             var menu = this.Resources["ContextMenuFile"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
+        {
+            var item = (sender as SlidableListItem).DataContext as MusicItem;
+            await ViewModel.SlidableListItemLeftCommandRequested(item);
         }
     }
 }

@@ -9,6 +9,7 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -85,59 +86,79 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="AlbumSongItemTemplateMobile" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.RowSpan="2"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="Add" 
+	            LeftLabel="Queue" 
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.RowSpan="2"
                     Text="{x:Bind TrackNumber}"
                     Style="{StaticResource SongItemStyleIndex}"
                     Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="1" Grid.Row="0"
+                    <TextBlock Grid.Column="1" Grid.Row="0"
                     Text="{x:Bind Title}"
                     Style="{StaticResource SongItemStyleTop}"
                     Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
+                    <TextBlock Grid.Column="1" Grid.Row="1"
                     Text="{x:Bind Artist}"
                     Style="{StaticResource SongItemStyleBottom}"
                     Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"
                     Foreground="{StaticResource ForegroundColor}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
         <DataTemplate x:Key="AlbumSongItemTemplateMobileWide" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="Add" 
+	            LeftLabel="Queue" 
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
                     Text="{x:Bind TrackNumber}"
                     Style="{StaticResource SongItemStyleIndex}"
                     Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="1"
+                    <TextBlock Grid.Column="1"
                     Text="{x:Bind Title}"
                     Style="{StaticResource SongItemStyleLeft}"
                     Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="2"
+                    <TextBlock Grid.Column="2"
                     Text="{x:Bind Artist}"
                     Style="{StaticResource SongItemStyleCenter}"
                     Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="3"
+                    <TextBlock Grid.Column="3"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"
                     Foreground="{StaticResource ForegroundColor}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
         <Style x:Key="AlbumButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -285,6 +306,7 @@
                         <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
                         <Setter Target="DarkenLayer.Opacity" Value="1"/>
                         <Setter Target="ForegroundColor.Color" Value="White"/>
+                        <Setter Target="AlbumSongsListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -302,6 +324,7 @@
                         <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
                         <Setter Target="DarkenLayer.Opacity" Value="1"/>
                         <Setter Target="ForegroundColor.Color" Value="White"/>
+                        <Setter Target="AlbumSongsListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -316,6 +339,7 @@
                         <Setter Target="DarkenLayer.Visibility" Value="Collapsed"/>
                         <Setter Target="DarkenLayer.Opacity" Value="0"/>
                         <Setter Target="ForegroundColor.Color" Value="{ThemeResource SystemBaseHighColor}"/>
+                        <Setter Target="AlbumSongsListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

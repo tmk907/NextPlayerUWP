@@ -152,10 +152,20 @@
         public const string ActionAddToNowPlaying = "ActionAddToNowPlaying";
         public const string ActionPlayNow = "ActionPlayNow";
 
+        public const string ActionAfterSwipeLeftCommand = "ActionAfterSwipeLeftCommand";
+        public const string ActionAfterSwipeRightCommand = "ActionAfterSwipeRightCommand";
+        public const string SwipeActionPlayNext = "SwipeActionPlayNext";
+        public const string SwipeActionAddToNowPlaying = "SwipeActionAddToNowPlaying";
+        public const string SwipeActionPlayNow = "SwipeActionPlayNow";
+        public const string SwipeActionAddToPlaylist = "SwipeActionAddToPlaylist";
+        public const string SwipeActionDelete = "SwipeActionDelete";
+
+
         public const string DisableLockscreen = "DisableLockscreen";
         public const string HideStatusBar = "HideStatusBar";
         public const string IncludeSubFolders = "IncludeSubFolders";
         public const string PlaylistsFolder = "PlaylistsFolder";
         public const string AutoSavePlaylists = "AutoSavePlaylists";
+        public const string FlipViewSelectedIndex = "FlipViewSelectedIndex";
     }
 }
