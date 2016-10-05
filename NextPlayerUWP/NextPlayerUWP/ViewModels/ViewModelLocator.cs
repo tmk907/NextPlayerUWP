@@ -14,6 +14,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<AlbumViewModel>();
             SimpleIoc.Default.Register<ArtistsViewModel>();
             SimpleIoc.Default.Register<ArtistViewModel>();
+            SimpleIoc.Default.Register<AudioSettingsViewModel>();
             SimpleIoc.Default.Register<BottomPlayerViewModel>();
             SimpleIoc.Default.Register<CloudStorageFoldersViewModel>();
             SimpleIoc.Default.Register<FileInfoViewModel>();
@@ -31,13 +32,16 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<SongsViewModel>();
             SimpleIoc.Default.Register<TagsEditorViewModel>();
             SimpleIoc.Default.Register<TestViewModel>();
+            SimpleIoc.Default.Register<PlayerViewModelBase>();
         }
 
+        public PlayerViewModelBase PlayerVM => ServiceLocator.Current.GetInstance<PlayerViewModelBase>();
         public AddToPlaylistViewModel AddToPlaylistVM => ServiceLocator.Current.GetInstance<AddToPlaylistViewModel>();
         public AlbumViewModel AlbumVM => ServiceLocator.Current.GetInstance<AlbumViewModel>();
         public AlbumsViewModel AlbumsVM => ServiceLocator.Current.GetInstance<AlbumsViewModel>();
         public ArtistsViewModel ArtistsVM => ServiceLocator.Current.GetInstance<ArtistsViewModel>();
         public ArtistViewModel ArtistVM => ServiceLocator.Current.GetInstance<ArtistViewModel>();
+        public AudioSettingsViewModel AudioSettingsVM => ServiceLocator.Current.GetInstance<AudioSettingsViewModel>();
         public BottomPlayerViewModel BottomPlayerVM => ServiceLocator.Current.GetInstance<BottomPlayerViewModel>();
         public CloudStorageFoldersViewModel CloudStorageFoldersVM => ServiceLocator.Current.GetInstance<CloudStorageFoldersViewModel>();
         public FileInfoViewModel FileInfoVM => ServiceLocator.Current.GetInstance<FileInfoViewModel>();

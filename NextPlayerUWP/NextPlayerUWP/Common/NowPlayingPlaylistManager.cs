@@ -136,6 +136,9 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackService_MediaPlayerTrackChanged(int index)
         {
+            //dispatcher.Dispatch(() =>
+            //{
+
             currentIndex = index;
             int i = 0;
             foreach (var song in songs)
@@ -156,6 +159,8 @@ namespace NextPlayerUWP.Common
                 }
                 i++;
             }
+            //});
+
         }
 
         public async Task Add(MusicItem item)

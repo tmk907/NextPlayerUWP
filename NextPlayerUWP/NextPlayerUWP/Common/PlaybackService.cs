@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
@@ -22,6 +23,14 @@ namespace NextPlayerUWP.Common
     public delegate void MediaPlayerMediaOpenHandler();
     public delegate void StreamUpdatedHandler(NowPlayingSong song);
     
+    public class InfoForTask
+    {
+        public int c { get; set; }
+        public int max { get; set; }
+        public int e { get; set; }
+        public CancellationToken token { get; set; }
+    }
+
     public class PlaybackService
     {
         static PlaybackService instance;
@@ -109,12 +118,15 @@ namespace NextPlayerUWP.Common
 
             RadioTimer = new PlaybackTimer();
             MusicPlaybackTimer = new PlaybackTimer();
+
+            cts = new CancellationTokenSource();
         }
 
         public async Task Initialize()
         {
             System.Diagnostics.Debug.WriteLine("PlaybackService Initialize Start");
             await LoadAll(CurrentSongIndex);
+            await LoadRest(info);
             //System.Diagnostics.Debug.WriteLine("PlaybackService Initialize Loaded");
             Player.Source = mediaList;
             canPlay = true;
@@ -523,6 +535,26 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("ChangeRepeat {0}", repeat);
         }
 
+        public int Volume
+        {
+            get
+            {
+                int vol = (int)(Player.Volume * 100.0);
+                return vol;
+            }
+            set
+            {
+                if (value < 0 || value > 100)
+                {
+                    return;
+                }
+                double volume = value / 100.0;
+                if (Player.Volume == volume) return;
+                Player.Volume = volume;
+                //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, value);
+            }
+        }
+
         public void ChangeVolume(int volume)
         {
             if (volume < 0 || volume > 100)
@@ -563,10 +595,19 @@ namespace NextPlayerUWP.Common
         /// <summary>
         /// -1 balance 1
         /// </summary>
-        /// <param name="balance"></param>
-        public void AudioBalance(double balance)
+        public double AudioBalance
         {
-            Player.AudioBalance = balance;
+            get
+            {
+                return Player.AudioBalance;
+            }
+            set
+            {
+                if (value >= -1 && value <= 1)
+                {
+                    Player.AudioBalance = value;
+                }
+            }
         }
 
         public void ResetBalance()
@@ -578,11 +619,11 @@ namespace NextPlayerUWP.Common
         {
             get 
             {
-                return (int)Player.PlaybackSession.PlaybackRate * 100;
+                return (int)(Player.PlaybackSession.PlaybackRate * 100.0);
             }
             set
             {
-                if (value>30 && value < 400)
+                if (value >= 30 && value <= 400)
                 {
                     double playbackRate = value / 100.0;
                     Player.PlaybackSession.PlaybackRate = playbackRate;
@@ -641,6 +682,9 @@ namespace NextPlayerUWP.Common
 
         #region mediaList
 
+        CancellationTokenSource cts;
+        bool isLoaded = false;
+
         private void ClearMediaList()
         {
             ClearQueue();
@@ -654,23 +698,123 @@ namespace NextPlayerUWP.Common
 
         private async Task LoadAll(int startIndex)
         {
+            cts = new CancellationTokenSource();
             ClearMediaList();
-            int index = 0;
-            //Stopwatch s1 = new Stopwatch();
-            foreach(var song in NowPlayingPlaylistManager.Current.songs)
-            {
-                //s1.Start();
-                var playbackItem = await PlaybackItemBuilder.PreparePlaybackItem(song);
-                //s1.Stop();
-                playbackItem.Source.CustomProperties[propertyIndex] = index;
-                mediaList.Items.Add(playbackItem);
-                index++;
-            }
-            //Debug.WriteLine("{0} {1} ", s1.ElapsedMilliseconds, PlaybackItemBuilder.time);
+            //int index = 0;
+            //foreach (var song in NowPlayingPlaylistManager.Current.songs)
+            //{
+            //    //s1.Start();
+            //    var playbackItem = await PlaybackItemBuilder.PreparePlaybackItem(song);
+            //    //s1.Stop();
+            //    playbackItem.Source.CustomProperties[propertyIndex] = index;
+            //    mediaList.Items.Add(playbackItem);
+            //    index++;
+            //}
+            Stopwatch s1 = new Stopwatch();
+            s1.Start();
+            await LoadAll2(startIndex);
+            s1.Stop();
+            Debug.WriteLine("LoadAll {0}", s1.ElapsedMilliseconds);
             mediaList.StartingItem = mediaList.Items.FirstOrDefault(i => i.Source.CustomProperties[propertyIndex].Equals(startIndex));
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
         }
 
+        private InfoForTask info;
+
+        private async Task LoadAll2(int startIndex)
+        {
+            isLoaded = false;
+            int maxIndex = NowPlayingPlaylistManager.Current.songs.Count - 1;
+            int currentIndex = CurrentSongIndex;
+            info = null;
+            if (maxIndex <= 100)
+            {
+                await BasicLoad(0, maxIndex);
+                isLoaded = true;
+            }
+            else
+            {
+                int endBasicLoad = (currentIndex + 50 < maxIndex) ? currentIndex + 50 : maxIndex;
+                if (currentIndex < 75)
+                {
+                    await BasicLoad(0, 100);
+                }
+                else
+                {
+                    await BasicLoad(currentIndex - 50, endBasicLoad);
+                }
+                info = new InfoForTask() { c = currentIndex, max = maxIndex, e = endBasicLoad, token = cts.Token };
+            }
+        }
+
+        private async Task LoadRest(InfoForTask info)
+        {
+            if (info == null) return;
+            int currentIndex = info.c;
+            int maxIndex = info.max;
+            int endBasicLoad = info.e;
+            CancellationToken token = info.token;
+            mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
+            try
+            {
+                if (currentIndex < 75)
+                {
+                    await StartLoadingEnd(101, maxIndex, token);
+                }
+                else
+                {
+                    await StartLoadingBeginning(0, currentIndex - 51, cts.Token);
+                    if (endBasicLoad < maxIndex)
+                    {
+                        await StartLoadingEnd(endBasicLoad + 1, maxIndex, token);
+                    }
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+
+            }
+            mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
+            isLoaded = true;
+        }
+
+        private async Task BasicLoad(int startIndex, int endIndex)
+        {
+            Debug.WriteLine("BasicLoad {0} {1}", startIndex, endIndex);
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                var song = NowPlayingPlaylistManager.Current.songs[i];
+                var playbackItem = await PlaybackItemBuilder.PreparePlaybackItem(song);
+                playbackItem.Source.CustomProperties[propertyIndex] = i;
+                mediaList.Items.Add(playbackItem);
+            }
+        }
+
+        private async Task StartLoadingBeginning(int startIndex, int endIndex, CancellationToken token)
+        {
+            Debug.WriteLine("StartLoadingBeginning {0} {1}", startIndex, endIndex);
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                var song = NowPlayingPlaylistManager.Current.songs[i];
+                var playbackItem = await PlaybackItemBuilder.PreparePlaybackItem(song);
+                playbackItem.Source.CustomProperties[propertyIndex] = i;
+                token.ThrowIfCancellationRequested();
+                mediaList.Items.Insert(i, playbackItem);
+            }
+        }
+
+        private async Task StartLoadingEnd(int startIndex, int endIndex, CancellationToken token)
+        {
+            Debug.WriteLine("StartLoadingEnd {0} {1}", startIndex, endIndex);
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                var song = NowPlayingPlaylistManager.Current.songs[i];
+                var playbackItem = await PlaybackItemBuilder.PreparePlaybackItem(song);
+                playbackItem.Source.CustomProperties[propertyIndex] = i;
+                token.ThrowIfCancellationRequested();
+                mediaList.Items.Add(playbackItem);
+            }
+        }
 
         public async Task UpdateMediaListWithoutPausing()
         {
@@ -718,17 +862,30 @@ namespace NextPlayerUWP.Common
         }
 
         private bool startPlay = false;
-        public void JumpTo(int startIndex)//nie zmienia stanu na playing!!
+        public async Task JumpTo(int startIndex)//nie zmienia stanu na playing!!
         {
             System.Diagnostics.Debug.WriteLine("JumpTo {0}", startIndex);
             if (!canPlay) return;
             command = true;
 
+            if (!isLoaded)
+            {
+                
+                if (startIndex > mediaList.Items.Count)
+                {
+                    return;
+                }
+                for (int i = 0; i < 50; i++)
+                {
+                    if ((int)mediaList.Items[i].Source.CustomProperties[propertyIndex] != i) return;
+                }
+            }
+
             songPlayed = DateTime.Now - songStartedAt + songPlayed;
             UpdateStats();
             songStartedAt = DateTime.Now;
             songPlayed = TimeSpan.Zero;
-
+            int q = mediaList.Items.Count;
             if (Player.PlaybackSession.PlaybackState == MediaPlaybackState.Paused)
             {
                 //mediaList.StartingItem = mediaList.Items[startIndex];
@@ -749,7 +906,7 @@ namespace NextPlayerUWP.Common
         {
             System.Diagnostics.Debug.WriteLine("PlayNewList {0}", startIndex);
             command = true;
-            
+            cts.Cancel();
             Player.Pause();
 
             songPlayed = DateTime.Now - songStartedAt + songPlayed;
@@ -774,6 +931,8 @@ namespace NextPlayerUWP.Common
                 Player.Play();
                 OnMediaPlayerMediaOpened();
             }
+
+            await LoadRest(info).ConfigureAwait(false);
         }
 
         private static async Task<MediaPlaybackItem> PreparePlaybackItem(SongItem song)

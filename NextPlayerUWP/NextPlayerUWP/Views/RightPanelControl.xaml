@@ -46,7 +46,7 @@
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   Padding="4,0,4,0"
-                  Background="Transparent">
+                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="44"/>

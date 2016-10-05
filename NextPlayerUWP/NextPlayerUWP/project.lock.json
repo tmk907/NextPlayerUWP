@@ -11,7 +11,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -363,7 +363,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
@@ -2303,7 +2303,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -2602,7 +2602,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
@@ -4664,7 +4664,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -4964,7 +4964,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
@@ -7064,7 +7064,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -7367,7 +7367,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
@@ -9434,7 +9434,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -9738,7 +9738,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
@@ -11843,7 +11843,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -12146,7 +12146,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
@@ -14213,7 +14213,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -14517,7 +14517,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
@@ -16630,11 +16630,11 @@
         "package/services/metadata/core-properties/99be0c88b2fd41c8b07c42071005ee47.psmdcp"
       ]
     },
-    "Dropbox.Api/3.5.0": {
-      "sha512": "QStAPWU72BaANZiau11FsR++zu4C3zjKBFXMqbhfewlr4hE+61SNix/u7rEWnqXApgrxMrZs85aWad5XceRXOw==",
+    "Dropbox.Api/3.6.0": {
+      "sha512": "sX0yFIco7OjTXUBExPEqku27fZm1ZqpN1XEuOxc4wo+v1J1rUD5/MCPvFVBnwbyknEjM3Ilr9/4xoEI3zIydhQ==",
       "type": "package",
       "files": [
-        "Dropbox.Api.3.5.0.nupkg.sha512",
+        "Dropbox.Api.3.6.0.nupkg.sha512",
         "Dropbox.Api.nuspec",
         "lib/net45/Dropbox.Api.dll",
         "lib/net45/Dropbox.Api.xml",
@@ -17153,11 +17153,11 @@
         "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll"
       ]
     },
-    "Microsoft.OneDriveSDK.Authentication/1.0.3": {
-      "sha512": "Ok7XhGrfhlYrqEGfdcLvE0t4CJ+vGxTUzipzeCBh7fu6+10Mtr3psh7fDPHott+Rm9ncMzW2VcALN29QLTGX0Q==",
+    "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "sha512": "IfouIQf+gSVl2cD/P8hmmnY83CJTr/4hH3lSxQI2PKAF26DVJGT7YRq8JtmlWdPMtp9Hi9xq18yDg1a1Y7zwJA==",
       "type": "package",
       "files": [
-        "Microsoft.OneDriveSDK.Authentication.1.0.3.nupkg.sha512",
+        "Microsoft.OneDriveSDK.Authentication.1.0.5.nupkg.sha512",
         "Microsoft.OneDriveSDK.Authentication.nuspec",
         "lib/net451/Microsoft.OneDrive.Sdk.Authentication.Desktop.dll",
         "lib/portable-win81+wpa81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll",

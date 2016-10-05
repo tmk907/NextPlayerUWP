@@ -28,10 +28,13 @@ namespace NextPlayerUWP.ViewModels
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
             lastFmCache = new LastFmCache();
-            seekButtonsHelper = new SeekButtonsHelper();           
+            seekButtonsHelper = new SeekButtonsHelper();
+            ViewModelLocator vml = new ViewModelLocator();
+            PlayerVM = vml.PlayerVM;
         }
 
         private LastFmCache lastFmCache;
+        public PlayerViewModelBase PlayerVM { get; set; }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
@@ -44,6 +47,7 @@ namespace NextPlayerUWP.ViewModels
 
         private void Current_Resuming(object sender, object e)
         {
+            App.ChangeBottomPlayerVisibility(false);
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackService.MediaPlayerTrackChanged += ChangeSong;
@@ -105,52 +109,12 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref playButtonContent, value); }
         }
 
-        private bool shuffleMode = false;
-        public bool ShuffleMode
-        {
-            get { return shuffleMode; }
-            set { Set(ref shuffleMode, value); }
-        }
-
-        private RepeatEnum repeatMode = RepeatEnum.NoRepeat;
-        public RepeatEnum RepeatMode
-        {
-            get { return repeatMode; }
-            set { Set(ref repeatMode, value); }
-        }
-
         private Uri coverUri;
         public Uri CoverUri
         {
             get { return coverUri; }
             set { Set(ref coverUri, value); }
         }
-
-        private Uri coverUri2;
-        public Uri CoverUri2
-        {
-            get { return coverUri2; }
-            set { Set(ref coverUri2, value); }
-        }
-
-        private int volume = 100;
-        public int Volume
-        {
-            get { return volume; }
-            set
-            {
-                if (volume != value)
-                {
-                    if (value == 0) isMuted = true;
-                    else isMuted = false;
-                    PlaybackService.Instance.ChangeVolume(value);
-                }
-                Set(ref volume, value);
-            }
-        }
-
-        private bool isMuted = false;
-        private int prevVolume = 100;
 
         private bool isVolumeControlVisible = false;
         public bool IsVolumeControlVisible
@@ -187,30 +151,9 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private int playbackRate = 100;
-        public int PlaybackRate
-        {
-            get { return playbackRate; }
-            set
-            {
-                Set(ref playbackRate, value);
-                PlaybackService.Instance.PlaybackRatePercent = value;
-            }
-        }
-
-        public void ResetPlaybackRate()
-        {
-            PlaybackRate = 100;
-        }
-
         #endregion
 
         #region Commands
-
-        public void Play()
-        {
-            PlaybackService.Instance.TogglePlayPause();
-        }
 
         private SeekButtonsHelper seekButtonsHelper;
 
@@ -219,40 +162,18 @@ namespace NextPlayerUWP.ViewModels
             get { return seekButtonsHelper.RepeatButtonInterval; }
         }
 
-        public void PreviousButtonDown()
+        public void PreviousOrSeek()
         {
-            System.Diagnostics.Debug.WriteLine("PreviousButtonDown");
+            System.Diagnostics.Debug.WriteLine("PreviousOrSeek");
             seekButtonsHelper.Previous();
         }
 
-        public void NextButtonDown()
+        public void NextOrSeek()
         {
-            System.Diagnostics.Debug.WriteLine("NextButtonDown");
+            System.Diagnostics.Debug.WriteLine("NextOrSeek");
             seekButtonsHelper.Next();
         }
-
-        public void Previous()
-        {
-            PlaybackService.Instance.Previous();
-        }
-
-        public void Next()
-        {
-            PlaybackService.Instance.Next();
-        }
-
-        public async void ShuffleCommand()
-        {
-            ShuffleMode = Shuffle.Change();
-            await PlaybackService.Instance.ChangeShuffle();
-        }
-
-        public void RepeatCommand()
-        {
-            RepeatMode = Repeat.Change();
-            PlaybackService.Instance.ApplyRepeatState();
-        }
-
+        
         public async void RateSong(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -262,19 +183,6 @@ namespace NextPlayerUWP.ViewModels
                 Song.Rating = rating;
                 await lastFmCache.CacheTrackLove(song.Artist, song.Title, rating);
                 await DatabaseManager.Current.UpdateRatingAsync(song.SongId, song.Rating).ConfigureAwait(false);
-            }
-        }
-
-        public void MuteVolume()
-        {
-            if (isMuted)
-            {
-                Volume = prevVolume;
-            }
-            else
-            {
-                prevVolume = volume;
-                Volume = 0;
             }
         }
 
@@ -309,15 +217,15 @@ namespace NextPlayerUWP.ViewModels
             var a = e.GetCurrentPoint(null);
             if (Math.Abs(x - a.Position.X) > 50)
             {
-                if (x - a.Position.X > 0) Next();
-                else Previous();
+                if (x - a.Position.X > 0) PlayerVM.Next();
+                else PlayerVM.Previous();
             }
             isPressed = false;
         }
 
         public void Image_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            Play();
+            PlayerVM.Play();
         }
         private double iMGX;
         public double IMGX
@@ -348,11 +256,11 @@ namespace NextPlayerUWP.ViewModels
                     isPressed = false;
                     if (delta > 0)
                     {
-                        Next();
+                        PlayerVM.Next();
                     }
                     else
                     {
-                        Previous();
+                        PlayerVM.Previous();
                     }
                 }
                 //IMGY = a.Position.Y;
@@ -521,11 +429,6 @@ namespace NextPlayerUWP.ViewModels
 
             Song =  NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             
-            RepeatMode = Repeat.CurrentState();
-            ShuffleMode = Shuffle.CurrentState();
-
-            PlaybackRate = PlaybackService.Instance.PlaybackRatePercent;
-
             TimeEnd = song.Duration;
             SliderValue = 0.0;
             SliderMaxValue = (int)Math.Round(song.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);

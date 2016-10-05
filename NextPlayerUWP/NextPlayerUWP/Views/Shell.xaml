@@ -488,6 +488,7 @@
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed"/>
                         <!--<Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>-->
+                        
                     </VisualState.Setters>
                 </VisualState>
                 <!--VisualState to be triggered when window width is >=720 effective pixels.-->
@@ -504,6 +505,7 @@
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
+                        <Setter Target="HBIAudioSettings.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -520,6 +522,7 @@
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
+                        <Setter Target="HBIAudioSettings.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -536,6 +539,7 @@
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
+                        <Setter Target="HBIAudioSettings.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -617,6 +621,12 @@
             </controls:HamburgerMenu.PrimaryButtons>
 
             <controls:HamburgerMenu.SecondaryButtons>
+                <controls:HamburgerButtonInfo PageType="views:AudioSettingsView" x:Name="HBIAudioSettings" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Filter" Width="48" Height="48" />
+                        <TextBlock x:Uid="TBSettings" Text="Audio settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:SettingsView" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Setting" Width="48" Height="48" />
@@ -696,7 +706,7 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="ShuffleButton"
                     Grid.Column="0"
-                    Click="{x:Bind BPViewModel.ShuffleCommand}" 
+                    Click="{x:Bind BPViewModel.PlayerVM.ShuffleCommand}" 
                     Width="48" Height="48"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
@@ -707,13 +717,13 @@
                                            HorizontalAlignment="Center" 
                                            FontSize="20" 
                                            FontFamily="Segoe MDL2 Assets" 
-                                           Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
+                                           Foreground="{Binding PlayerVM.ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
                             </Grid>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <RepeatButton Grid.Column="1"
-                    Click="{x:Bind BPViewModel.PreviousButtonDown}"
+                    Click="{x:Bind BPViewModel.PreviousOrSeek}"
                     Interval="{x:Bind BPViewModel.RepeatButtonInterval}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerRepeatButtonStyle}">
@@ -731,7 +741,7 @@
                     </RepeatButton.ContentTemplate>
                 </RepeatButton>
                 <Button Grid.Column="2"
-                    Click="{x:Bind BPViewModel.Play}"
+                    Click="{x:Bind BPViewModel.PlayerVM.Play}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
@@ -749,7 +759,7 @@
                     </Button.ContentTemplate>
                 </Button>
                 <RepeatButton Grid.Column="3"
-                    Click="{x:Bind BPViewModel.NextButtonDown}"
+                    Click="{x:Bind BPViewModel.NextOrSeek}"
                     Interval="{x:Bind BPViewModel.RepeatButtonInterval}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerRepeatButtonStyle}">
@@ -768,15 +778,15 @@
                 </RepeatButton>
                 <Button Grid.Column="4"
                         x:Name="RepeatButton"
-                    Click="{x:Bind BPViewModel.RepeatCommand}"
+                    Click="{x:Bind BPViewModel.PlayerVM.RepeatCommand}"
                     Width="48" 
                     Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Grid>
-                                <TextBlock Text="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
-                                           Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
+                                <TextBlock Text="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
+                                           Foreground="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
                                            FontSize="18" 
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 
@@ -820,13 +830,13 @@
             <Grid Grid.Column="2" x:Name="VolumeGrid" x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
                 <Button Style="{StaticResource BottomPlayerButtonStyle}"
                         x:Name="VolumeButton"
-                        RightTapped="{x:Bind BPViewModel.MuteVolume}"
+                        RightTapped="{x:Bind BPViewModel.PlayerVM.MuteVolume}"
                         Width="48" 
                         Height="60">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Grid>
-                                <SymbolIcon Symbol="{Binding Volume, Converter={StaticResource VolumeSymbolConverter}}"
+                                <SymbolIcon Symbol="{Binding PlayerVM.Volume, Converter={StaticResource VolumeSymbolConverter}}"
                                             Foreground="White"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"/>
@@ -843,7 +853,7 @@
                                 Height="200"
                                 Width="36"
                                 StepFrequency="1.0"
-                                Value="{Binding Volume, Mode=TwoWay}"
+                                Value="{Binding PlayerVM.Volume, Mode=TwoWay}"
                                 Style="{StaticResource VolumeSliderStyle}"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Stretch"/>

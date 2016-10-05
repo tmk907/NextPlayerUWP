@@ -3,7 +3,7 @@
   "version": 2,
   "targets": {
     "UAP,Version=v10.0": {
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -326,7 +326,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "type": "package",
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
@@ -2303,7 +2303,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -2573,7 +2573,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "type": "package",
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
@@ -4711,7 +4711,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -4982,7 +4982,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "type": "package",
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
@@ -7158,7 +7158,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -7431,7 +7431,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "type": "package",
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
@@ -9575,7 +9575,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -9849,7 +9849,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "type": "package",
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
@@ -12031,7 +12031,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -12304,7 +12304,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "type": "package",
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
@@ -14448,7 +14448,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
-      "Dropbox.Api/3.5.0": {
+      "Dropbox.Api/3.6.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -14722,7 +14722,7 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.3": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
         "type": "package",
         "dependencies": {
           "Microsoft.Graph.Core": "1.1.1",
@@ -16905,11 +16905,11 @@
     }
   },
   "libraries": {
-    "Dropbox.Api/3.5.0": {
-      "sha512": "QStAPWU72BaANZiau11FsR++zu4C3zjKBFXMqbhfewlr4hE+61SNix/u7rEWnqXApgrxMrZs85aWad5XceRXOw==",
+    "Dropbox.Api/3.6.0": {
+      "sha512": "sX0yFIco7OjTXUBExPEqku27fZm1ZqpN1XEuOxc4wo+v1J1rUD5/MCPvFVBnwbyknEjM3Ilr9/4xoEI3zIydhQ==",
       "type": "package",
       "files": [
-        "Dropbox.Api.3.5.0.nupkg.sha512",
+        "Dropbox.Api.3.6.0.nupkg.sha512",
         "Dropbox.Api.nuspec",
         "lib/net45/Dropbox.Api.dll",
         "lib/net45/Dropbox.Api.xml",
@@ -17352,11 +17352,11 @@
         "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll"
       ]
     },
-    "Microsoft.OneDriveSDK.Authentication/1.0.3": {
-      "sha512": "Ok7XhGrfhlYrqEGfdcLvE0t4CJ+vGxTUzipzeCBh7fu6+10Mtr3psh7fDPHott+Rm9ncMzW2VcALN29QLTGX0Q==",
+    "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "sha512": "IfouIQf+gSVl2cD/P8hmmnY83CJTr/4hH3lSxQI2PKAF26DVJGT7YRq8JtmlWdPMtp9Hi9xq18yDg1a1Y7zwJA==",
       "type": "package",
       "files": [
-        "Microsoft.OneDriveSDK.Authentication.1.0.3.nupkg.sha512",
+        "Microsoft.OneDriveSDK.Authentication.1.0.5.nupkg.sha512",
         "Microsoft.OneDriveSDK.Authentication.nuspec",
         "lib/net451/Microsoft.OneDrive.Sdk.Authentication.Desktop.dll",
         "lib/portable-win81+wpa81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll",
@@ -23336,12 +23336,12 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Dropbox.Api >= 3.5.0",
+      "Dropbox.Api >= 3.6.0",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.2.2",
       "Microsoft.NETNative.Analyzer >= 1.0.0",
       "Microsoft.Net.Http >= 2.2.29",
       "Microsoft.OneDriveSDK >= 2.0.0",
-      "Microsoft.OneDriveSDK.Authentication >= 1.0.3",
+      "Microsoft.OneDriveSDK.Authentication >= 1.0.5",
       "Newtonsoft.Json >= 9.0.1",
       "NotificationsExtensions.Win10 >= 14332.0.0",
       "TagLib.Portable >= 1.0.4",

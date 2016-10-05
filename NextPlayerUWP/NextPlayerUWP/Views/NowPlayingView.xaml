@@ -9,6 +9,7 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:tconverters="using:Template10.Converters"
     DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}"
     mc:Ignorable="d"
     d:DesignHeight="500"
@@ -21,6 +22,7 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
+        <tconverters:StringFormatConverter x:Key="StrFormatConverter" Format="{}{0:N1}"/>
         <Style x:Key="FontIconStyle" TargetType="FontIcon">
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -379,13 +381,9 @@
                     Label="Lyrics"
                     Click="{x:Bind ViewModel.GoToLyrics}"/>
                 <AppBarButton
-                    x:Uid="AppBarButtonPlaybackRate"
-                    Label="Playback rate"
-                    Click="ButtonShowPlaybackRate_Click"/>
-                <AppBarButton
-                    x:Uid="AppBarButtonVolume"
-                    Label="Volume"
-                    Click="ButtonShowVolume_Click"/>
+                    x:Uid="AppBarButtonAudioSettings"
+                    Label="Audio settings"
+                    Click="ButtonShowAudioSettings_Click"/>
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <Grid Grid.Row="1">
@@ -396,80 +394,85 @@
                 <RowDefinition Height="5*"/>
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
-            <ContentDialog x:Name="ContentDialogVolume"
+            <ContentDialog x:Name="ContentDialogAudioSettings"
                 Grid.Row="1"
-                x:Uid="ContentDialogVolume"
+                x:Uid="ContentDialogAudioSettings"
                 VerticalAlignment="Center"
-                Title="Volume"
+                Title="Audio settings"
                 PrimaryButtonText="OK"
                 IsPrimaryButtonEnabled="True"
                 IsSecondaryButtonEnabled="False"
-                VerticalContentAlignment="Stretch"
+                VerticalContentAlignment="Center"
                 MaxWidth="300">
                 <ContentDialog.Content>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <StackPanel 
                             Grid.Row="0"
+                            Margin="0,8,0,0"
                             Orientation="Horizontal">
                             <TextBlock x:Uid="TBVolume" Text="Volume"/>
                             <TextBlock Text=":" Margin="0,0,4,0"/>
-                            <TextBlock Text="{x:Bind ViewModel.Volume, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind ViewModel.PlayerVM.Volume, Mode=OneWay}"/>
                             <TextBlock Text="%"/>
                         </StackPanel>
                         <Slider
                             Grid.Row="1"
                             StepFrequency="1.0"
                             Maximum="100"
-                            Value="{x:Bind ViewModel.Volume, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
+                            Value="{x:Bind ViewModel.PlayerVM.Volume, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center" 
                             Style="{StaticResource TimeSliderStyle}"/>
-                    </Grid>
-                </ContentDialog.Content>
-            </ContentDialog>
-            <ContentDialog x:Name="ContentDialogPlaybackRate"
-                Grid.Row="1"
-                x:Uid="ContentDialogPlaybackRate"
-                VerticalAlignment="Center"
-                Title="Playback rate"
-                PrimaryButtonText="OK"
-                IsPrimaryButtonEnabled="True"
-                IsSecondaryButtonEnabled="False"
-                VerticalContentAlignment="Stretch"
-                MaxWidth="300">
-                <ContentDialog.Content>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
                         <StackPanel 
-                            Grid.Row="0"
+                            Grid.Row="2"
+                            Margin="0,12,0,0"
+                            Orientation="Horizontal">
+                            <TextBlock x:Uid="TBAudioBalance" Text="Audio balance"/>
+                            <TextBlock Text=":" Margin="0,0,4,0"/>
+                            <TextBlock Text="{x:Bind ViewModel.PlayerVM.AudioBalance, Converter={StaticResource StrFormatConverter}, Mode=OneWay}"/>
+                        </StackPanel>
+                        <Slider
+                            Grid.Row="3"
+                            StepFrequency="0.1"
+                            Minimum="-1"
+                            Maximum="1"
+                            Value="{x:Bind ViewModel.PlayerVM.AudioBalance, Mode=TwoWay}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center" 
+                            Style="{StaticResource TimeSliderStyle}"/>
+                        <StackPanel 
+                            Grid.Row="4"
+                            Margin="0,12,0,0"
                             Orientation="Horizontal">
                             <TextBlock x:Uid="TBPlaybackRate" Text="Playback rate"/>
                             <TextBlock Text=":" Margin="0,0,4,0"/>
-                            <TextBlock Text="{x:Bind ViewModel.PlaybackRate, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind ViewModel.PlayerVM.PlaybackRate, Mode=OneWay}"/>
                             <TextBlock Text="%"/>
                         </StackPanel>
                         <Slider
-                            Grid.Row="1"
+                            Grid.Row="5"
                             StepFrequency="1.0"
                             Minimum="30"
                             Maximum="200"
-                            Value="{x:Bind ViewModel.PlaybackRate, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
+                            Value="{x:Bind ViewModel.PlayerVM.PlaybackRate, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center" 
                             Style="{StaticResource TimeSliderStyle}"/>
                         <Button 
                             x:Uid="ButtonReset"
-                            Grid.Row="2"
+                            Grid.Row="6"
+                            Margin="0"
                             Content="Reset"
-                            Click="{x:Bind ViewModel.ResetPlaybackRate}"/>
+                            Click="{x:Bind ViewModel.PlayerVM.ResetPlaybackRate}"/>
                     </Grid>
                 </ContentDialog.Content>
             </ContentDialog>
@@ -477,41 +480,19 @@
                                    Margin="12,8,12,0">
                 <Grid>
                     <Rectangle Grid.Column="0" Grid.Row="0"
+                               x:Name="CoverBackgroundRectangle"
                                VerticalAlignment="Bottom"
                                HorizontalAlignment="Center"
                                Width="{Binding Size.Height, ElementName=SizePanel}" 
                                Height="{Binding Size.Height, ElementName=SizePanel}" 
                                Fill="{StaticResource UserAccentBrush}"/>
-                    <!--<FlipView
-                        Grid.Column="0" Grid.Row="0"
-                        VerticalAlignment="Bottom"
-                        Width="{Binding Size.Height, ElementName=SizePanel}" 
-                        Height="{Binding Size.Height, ElementName=SizePanel}" 
-                        HorizontalAlignment="Center"
-                        ItemsSource="{x:Bind ViewModel.AlbumArts, Mode=OneWay}"
-                        SelectionChanged="{x:Bind ViewModel.FlipViewSelectionChanged}"
-                        SelectedIndex="{x:Bind ViewModel.FlipIndex, Mode=TwoWay}"
-                    >
-                        <FlipView.ItemTemplate>
-                            <DataTemplate>
-                                <Image>
-                                    <Image.Source>
-                                        <BitmapImage 
-                                            DecodePixelHeight="{Binding Size.Height, ElementName=SizePanel}" 
-                                            DecodePixelWidth="{Binding Size.Height, ElementName=SizePanel}"
-                                            DecodePixelType="Logical"
-                                            UriSource="{Binding}"/>
-                                    </Image.Source>
-                                </Image>
-                            </DataTemplate>
-                        </FlipView.ItemTemplate>
-                    </FlipView>-->
                     <Image Grid.Column="0" Grid.Row="0"
                         x:Name="CoverImage" 
                         VerticalAlignment="Bottom" 
                         HorizontalAlignment="Center"
+                        ImageOpened="CoverImage_ImageOpened"
                         PointerPressed="{x:Bind ViewModel.Image_Pressed}"
-                        
+                        Opacity="0"
                         PointerReleased="{x:Bind ViewModel.Image_Released}"
                         PointerExited="{x:Bind ViewModel.Image_Exited}"
                         DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}">
@@ -521,11 +502,12 @@
                                         DecodePixelType="Logical"
                                         UriSource="{Binding CoverUri}"/>
                         </Image.Source>
-                        <!--<Image.RenderTransform>
-                        PointerMoved="{x:Bind ViewModel.CoverImage_PointerMoved}"
-                            <TranslateTransform X="{x:Bind ViewModel.IMGX, Mode=OneWay}" Y="{x:Bind ViewModel.IMGY, Mode=OneWay}" />
-                        </Image.RenderTransform>-->
                     </Image>
+                    <Image Grid.Column="0" Grid.Row="0"
+                        x:Name="CoverImage2" 
+                        VerticalAlignment="Bottom" 
+                        HorizontalAlignment="Center"/>
+
                 </Grid>
             </local:SizeNotifyPanel>
             <Grid Grid.Row="1" >
@@ -622,22 +604,10 @@
                         </FlipViewItem>
                     </FlipView.Items>
                 </FlipView>
-                <StackPanel
-                    Visibility="{x:Bind ViewModel.IsVolumeControlVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                    <Slider
-                        StepFrequency="1.0"
-                        Maximum="100"
-                        Margin="60,0,60,0"
-                        Value="{x:Bind ViewModel.Volume, Converter={StaticResource IntToDoubleConverter},Mode=TwoWay}"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center" 
-                        Style="{StaticResource TimeSliderStyle}"/>
-                </StackPanel>
             </Grid>
             <Grid Grid.Row="2" 
                   Margin="12,0,12,0" 
-                  Background="Transparent" 
-                  DoubleTapped="{x:Bind ViewModel.ShowVolumeControl}">
+                  Background="Transparent">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -663,7 +633,7 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="ShuffleButton"
                     Grid.Column="0"
-                    Click="{x:Bind ViewModel.ShuffleCommand}"
+                    Click="{x:Bind ViewModel.PlayerVM.ShuffleCommand}"
                     Width="48" Height="48"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
@@ -674,13 +644,13 @@
                                            HorizontalAlignment="Center" 
                                            FontSize="20" 
                                            FontFamily="Segoe MDL2 Assets" 
-                                           Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}, ConverterParameter=True}"/>
+                                           Foreground="{Binding PlayerVM.ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}, ConverterParameter=True}"/>
                             </Grid>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <RepeatButton Grid.Column="1"
-                    Click="{x:Bind ViewModel.PreviousButtonDown}"
+                    Click="{x:Bind ViewModel.PreviousOrSeek}"
                     Interval="{x:Bind ViewModel.RepeatButtonInterval, Mode=OneTime}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerRepeatButtonStyle}">
@@ -697,7 +667,7 @@
                     </RepeatButton.ContentTemplate>
                 </RepeatButton>
                 <Button Grid.Column="2"
-                    Click="{x:Bind ViewModel.Play}"
+                    Click="{x:Bind ViewModel.PlayerVM.Play}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
@@ -714,7 +684,7 @@
                     </Button.ContentTemplate>
                 </Button>
                 <RepeatButton Grid.Column="3"
-                    Click="{x:Bind ViewModel.NextButtonDown}"
+                    Click="{x:Bind ViewModel.NextOrSeek}"
                     Interval="{x:Bind ViewModel.RepeatButtonInterval, Mode=OneTime}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerRepeatButtonStyle}">
@@ -732,15 +702,15 @@
                 </RepeatButton>
                 <Button Grid.Column="4"
                         x:Name="RepeatButton"
-                    Click="{x:Bind ViewModel.RepeatCommand}"
+                    Click="{x:Bind ViewModel.PlayerVM.RepeatCommand}"
                     Width="48" 
                     Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Grid>
-                                <TextBlock Text="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
-                                           Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}, ConverterParameter=True}"
+                                <TextBlock Text="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
+                                           Foreground="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatForegroundConverter}, ConverterParameter=True}"
                                            FontSize="18" 
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 

@@ -259,7 +259,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != isPlaying)
                 {
                     isPlaying = value;
-                    onPropertyChanged(this, nameof(isPlaying));
+                    onPropertyChanged(this, nameof(IsPlaying));
                 }
             }
         }

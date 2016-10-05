@@ -20,8 +20,7 @@ namespace NextPlayerUWP.ViewModels
         public BottomPlayerViewModel()
         {
             Logger.DebugWrite("BottomPlayerViewModel()", "");
-            RepeatMode = Repeat.CurrentState();
-            ShuffleMode = Shuffle.CurrentState();
+
             _timer = new DispatcherTimer();
             SetupTimer();
             ChangePlayButtonContent(PlaybackService.Instance.PlayerState);
@@ -38,12 +37,14 @@ namespace NextPlayerUWP.ViewModels
             {
                 CoverUri = song.AlbumArtUri;
             }
-            Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
+            
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
             NowPlayingPlaylistManager.Current.SetDispatcher(WindowWrapper.Current().Dispatcher);
             seekButtonsHelper = new SeekButtonsHelper();
             PlaybackService.Instance.Initialize().ConfigureAwait(false);
+            ViewModelLocator vml = new ViewModelLocator();
+            PlayerVM = vml.PlayerVM;
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -58,7 +59,7 @@ namespace NextPlayerUWP.ViewModels
             System.Diagnostics.Debug.WriteLine("BottomPlayerVM Suspending");
             StopTimer();
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, volume);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, PlayerVM.Volume);
         }
 
         private void Current_Resuming(object sender, object e)
@@ -73,8 +74,10 @@ namespace NextPlayerUWP.ViewModels
             System.Diagnostics.Debug.WriteLine("BottomPlayerVM Resuming");
             StartTimer();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
-            Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
+            PlayerVM.Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
         }
+
+        public PlayerViewModelBase PlayerVM { get; set; }
 
         #region Properties
         private SongItem song = new SongItem();
@@ -127,45 +130,12 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref playButtonContent, value); }
         }
 
-        private bool shuffleMode = false;
-        public bool ShuffleMode
-        {
-            get { return shuffleMode; }
-            set { Set(ref shuffleMode, value); }
-        }
-
-        private RepeatEnum repeatMode = RepeatEnum.NoRepeat;
-        public RepeatEnum RepeatMode
-        {
-            get { return repeatMode; }
-            set { Set(ref repeatMode, value); }
-        }
-
         private Uri coverUri;
         public Uri CoverUri
         {
             get { return coverUri; }
             set { Set(ref coverUri, value); }
         }
-
-        private int volume = 100;
-        public int Volume
-        {
-            get { return volume; }
-            set
-            {
-                if (volume != value)
-                {
-                    if (value == 0) isMuted = true;
-                    else isMuted = false;
-                    PlaybackService.Instance.ChangeVolume(value);
-                }
-                Set(ref volume, value);
-            }
-        }
-
-        private bool isMuted = false;
-        private int prevVolume = 100;
 
         #endregion
 
@@ -178,56 +148,14 @@ namespace NextPlayerUWP.ViewModels
             get { return seekButtonsHelper.RepeatButtonInterval; }
         }
 
-        public void PreviousButtonDown()
+        public void PreviousOrSeek()
         {
-            System.Diagnostics.Debug.WriteLine("PreviousButtonDown");
             seekButtonsHelper.Previous();
         }
 
-        public void NextButtonDown()
+        public void NextOrSeek()
         {
-            System.Diagnostics.Debug.WriteLine("NextButtonDown");
             seekButtonsHelper.Next();
-        }
-
-        public void Play()
-        {
-            PlaybackService.Instance.TogglePlayPause();
-        }
-
-        public void Previous()
-        {
-            PlaybackService.Instance.Previous();
-        }
-
-        public void Next()
-        {
-            PlaybackService.Instance.Next();
-        }
-
-        public async void ShuffleCommand()
-        {
-            ShuffleMode = Shuffle.Change();
-            await PlaybackService.Instance.ChangeShuffle();
-        }
-
-        public void RepeatCommand()
-        {
-            RepeatMode = Repeat.Change();
-            PlaybackService.Instance.ApplyRepeatState();
-        }
-        
-        public void MuteVolume()
-        {
-            if (isMuted)
-            {
-                Volume = prevVolume;
-            }
-            else
-            {
-                prevVolume = volume;
-                Volume = 0;
-            }
         }
 
         #endregion
@@ -334,7 +262,7 @@ namespace NextPlayerUWP.ViewModels
             {
 
             }
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, volume);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, PlayerVM.Volume);
             await Task.CompletedTask;
         }
 

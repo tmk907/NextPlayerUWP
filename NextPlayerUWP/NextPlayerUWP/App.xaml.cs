@@ -216,6 +216,7 @@ namespace NextPlayerUWP
             Album,
             Artists,
             Artist,
+            AudioSettings,
             CloudStorageFolders,
             Genres,
             FileInfo,
@@ -285,6 +286,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Artists, typeof(ArtistsView));
             if (!keys.ContainsKey(Pages.Artist))
                 keys.Add(Pages.Artist, typeof(ArtistView));
+            if (!keys.ContainsKey(Pages.AudioSettings))
+                keys.Add(Pages.AudioSettings, typeof(AudioSettingsView));
             if (!keys.ContainsKey(Pages.CloudStorageFolders))
                 keys.Add(Pages.CloudStorageFolders, typeof(CloudStorageFoldersView));
             if (!keys.ContainsKey(Pages.FileInfo))

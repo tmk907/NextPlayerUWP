@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Common;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using NextPlayerUWP.Common;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using System;
@@ -6,6 +7,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -58,16 +60,30 @@ namespace NextPlayerUWP.Views
         }
         #endregion
 
-        private async void ButtonShowPlaybackRate_Click(object sender, RoutedEventArgs e)
+        private async void ButtonShowAudioSettings_Click(object sender, RoutedEventArgs e)
         {
-            await ContentDialogPlaybackRate.ShowAsync();
+            await ContentDialogAudioSettings.ShowAsync();
         }
 
-        private async void ButtonShowVolume_Click(object sender, RoutedEventArgs e)
+        private void CoverImage_ImageOpened(object sender, RoutedEventArgs e)
         {
-            await ContentDialogVolume.ShowAsync();
+            var anim1 = CoverImage.Fade(1, 400, 0);
+            var anim2 = CoverImage2.Fade(0, 400, 0);
+            anim2.Completed += Anim2_Completed;
+            anim1.Start();
+            anim2.Start();
         }
 
+        private void Anim2_Completed(object sender, EventArgs e)
+        {
+            BitmapImage source1 = CoverImage.Source as BitmapImage;
+            BitmapImage bmp = new BitmapImage(source1.UriSource);
+            bmp.DecodePixelHeight = source1.DecodePixelHeight;
+            bmp.DecodePixelWidth = source1.DecodePixelWidth;
+            CoverImage2.Source = bmp;
+            CoverImage2.Opacity = 1;
+            CoverImage.Opacity = 0;
+        }
     }
 
     public class SizeNotifyPanel : ContentPresenter

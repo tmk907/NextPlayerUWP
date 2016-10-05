@@ -730,12 +730,33 @@
     <value>Volume</value>
   </data>
   <data name="ContentDialogVolume.SecondaryButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Annulla</value>
   </data>
   <data name="AppBarButtonPlaybackRate.Label" xml:space="preserve">
     <value>Playback rate</value>
   </data>
   <data name="AppBarButtonVolume.Label" xml:space="preserve">
     <value>Volume</value>
+  </data>
+  <data name="ContentDialogAudioBalance.PrimaryButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ContentDialogAudioBalance.SecondaryButtonText" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="ContentDialogPlaybackRate.SecondaryButtonText" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="TBAudioBalance.Text" xml:space="preserve">
+    <value>Audio balance</value>
+  </data>
+  <data name="ContentDialogAudioBalance.Title" xml:space="preserve">
+    <value>Audio balance</value>
+  </data>
+  <data name="AppBarButtonAudioBalance.Label" xml:space="preserve">
+    <value>Audio balance</value>
+  </data>
+  <data name="PageHeaderLyrics.Content" xml:space="preserve">
+    <value>Testo</value>
   </data>
 </root>

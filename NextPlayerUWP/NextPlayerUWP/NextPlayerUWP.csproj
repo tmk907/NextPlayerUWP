@@ -186,6 +186,7 @@
     <Compile Include="ViewModels\AlbumViewModel.cs" />
     <Compile Include="ViewModels\ArtistsViewModel.cs" />
     <Compile Include="ViewModels\ArtistViewModel.cs" />
+    <Compile Include="ViewModels\AudioSettingsViewModel.cs" />
     <Compile Include="ViewModels\CloudStorageFoldersViewModel.cs" />
     <Compile Include="ViewModels\FileInfoViewModel.cs" />
     <Compile Include="ViewModels\FoldersViewModel.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="ViewModels\NowPlayingPlaylistViewModel.cs" />
     <Compile Include="ViewModels\BottomPlayerViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
+    <Compile Include="ViewModels\PlayerViewModelBase.cs" />
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\RadiosViewModel.cs" />
@@ -219,6 +221,9 @@
     </Compile>
     <Compile Include="Views\ArtistView.xaml.cs">
       <DependentUpon>ArtistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AudioSettingsView.xaml.cs">
+      <DependentUpon>AudioSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BottomPlayerControl.xaml.cs">
       <DependentUpon>BottomPlayerControl.xaml</DependentUpon>
@@ -386,6 +391,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ArtistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AudioSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
