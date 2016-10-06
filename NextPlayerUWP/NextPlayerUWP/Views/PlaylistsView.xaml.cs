@@ -84,8 +84,8 @@ namespace NextPlayerUWP.Views
 
         private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
         {
-            var song = (sender as SlidableListItem).DataContext as SongItem;
-            await ViewModel.SlidableListItemLeftCommandRequested(song);
+            var item = (sender as SlidableListItem).DataContext as PlaylistItem;
+            await ViewModel.SlidableListItemLeftCommandRequested(item);
         }
 
     }

@@ -65,25 +65,33 @@ namespace NextPlayerUWP.Views
             await ContentDialogAudioSettings.ShowAsync();
         }
 
-        private void CoverImage_ImageOpened(object sender, RoutedEventArgs e)
-        {
-            var anim1 = CoverImage.Fade(1, 400, 0);
-            var anim2 = CoverImage2.Fade(0, 400, 0);
-            anim2.Completed += Anim2_Completed;
-            anim1.Start();
-            anim2.Start();
-        }
+        //private void CoverImage_ImageOpened(object sender, RoutedEventArgs e)
+        //{
+        //    var anim1 = CoverImage.Fade(1, 400, 0);
+        //    var anim2 = CoverImage2.Fade(0, 500, 0);
+        //    anim2.Completed += Anim2_Completed;
+        //    anim1.Completed += Anim1_Completed;
+        //    anim1.Start();
+        //    anim2.Start();
+        //}
 
-        private void Anim2_Completed(object sender, EventArgs e)
-        {
-            BitmapImage source1 = CoverImage.Source as BitmapImage;
-            BitmapImage bmp = new BitmapImage(source1.UriSource);
-            bmp.DecodePixelHeight = source1.DecodePixelHeight;
-            bmp.DecodePixelWidth = source1.DecodePixelWidth;
-            CoverImage2.Source = bmp;
-            CoverImage2.Opacity = 1;
-            CoverImage.Opacity = 0;
-        }
+        //private void Anim1_Completed(object sender, EventArgs e)
+        //{
+        //    System.Diagnostics.Debug.WriteLine("Anim1_Completed");
+        //}
+
+        //private void Anim2_Completed(object sender, EventArgs e)
+        //{
+        //    System.Diagnostics.Debug.WriteLine("Anim2_Completed");
+
+        //    BitmapImage source1 = CoverImage.Source as BitmapImage;
+        //    BitmapImage bmp = new BitmapImage(source1.UriSource);
+        //    bmp.DecodePixelHeight = source1.DecodePixelHeight;
+        //    bmp.DecodePixelWidth = source1.DecodePixelWidth;
+        //    CoverImage2.Source = bmp;
+        //    CoverImage2.Opacity = 1;
+        //    CoverImage.Opacity = 0;
+        //}
     }
 
     public class SizeNotifyPanel : ContentPresenter

@@ -20,7 +20,7 @@ namespace NextPlayerUWP.ViewModels
     {
         public PlaylistViewModel()
         {
-            sortingHelper = new SortingHelperForSongItems("init");
+            sortingHelper = new SortingHelperForSongItemsInPlaylist("init");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
@@ -35,7 +35,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        SortingHelperForSongItems sortingHelper;
+        BaseSortingHelper<SongItem> sortingHelper;
         private MusicItemTypes type;
         string firstParam;
 
@@ -67,6 +67,7 @@ namespace NextPlayerUWP.ViewModels
                 PlaylistItem p = new PlaylistItem(-1, false, "Playlist");
                 var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
                 IsPlainPlaylist = false;
+                int i = 0;
                 switch (type)
                 {
                     case MusicItemTypes.folder:
@@ -84,22 +85,32 @@ namespace NextPlayerUWP.ViewModels
                         Playlist = await DatabaseManager.Current.GetSongItemsFromGenreAsync(firstParam);
                         break;
                     case MusicItemTypes.plainplaylist:
-                        sortingHelper = new SortingHelperForSongItems("Playlist");
+                        sortingHelper = new SortingHelperForSongItemsInPlaylist("Playlist");
                         SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(a => a.Option.Equals(sortingHelper.SelectedSortOption.Option));
                         PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
                         PageSubTitle = p.Name;
                         IsPlainPlaylist = true;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
+                        foreach(var song in playlist)
+                        {
+                            song.Index = i;
+                            i++;
+                        }
                         break;
                     case MusicItemTypes.smartplaylist:
-                        sortingHelper = new SortingHelperForSongItems("Playlist");
+                        sortingHelper = new SortingHelperForSongItemsInPlaylist("Playlist");
                         SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(a => a.Option.Equals(sortingHelper.SelectedSortOption.Option));
                         PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetSmartPlaylistAsync(Int32.Parse(firstParam));
                         PageSubTitle = p.Name;
                         IsPlainPlaylist = false;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromSmartPlaylistAsync(Int32.Parse(firstParam));
+                        foreach (var song in playlist)
+                        {
+                            song.Index = i;
+                            i++;
+                        }
                         break;
                 }
             }

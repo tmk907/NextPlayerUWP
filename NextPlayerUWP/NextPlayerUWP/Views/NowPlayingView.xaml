@@ -490,9 +490,7 @@
                         x:Name="CoverImage" 
                         VerticalAlignment="Bottom" 
                         HorizontalAlignment="Center"
-                        ImageOpened="CoverImage_ImageOpened"
                         PointerPressed="{x:Bind ViewModel.Image_Pressed}"
-                        Opacity="0"
                         PointerReleased="{x:Bind ViewModel.Image_Released}"
                         PointerExited="{x:Bind ViewModel.Image_Exited}"
                         DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}">
@@ -503,10 +501,10 @@
                                         UriSource="{Binding CoverUri}"/>
                         </Image.Source>
                     </Image>
-                    <Image Grid.Column="0" Grid.Row="0"
+                    <!--<Image Grid.Column="0" Grid.Row="0"
                         x:Name="CoverImage2" 
                         VerticalAlignment="Bottom" 
-                        HorizontalAlignment="Center"/>
+                        HorizontalAlignment="Center"/>-->
 
                 </Grid>
             </local:SizeNotifyPanel>

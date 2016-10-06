@@ -83,9 +83,21 @@
                     <VisualState.Setters>
                         <Setter Target="TimerStackPanel.Orientation" Value="Vertical"/>
                         <Setter Target="DragDropActionStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Visible"/>
                         <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Collapsed"/>
-                        <Setter Target="AddMusicFoldersStackPanel.Opacity" Value="0"/>
                         <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TimerStackPanel.Orientation" Value="Horizontal"/>
+                        <Setter Target="DragDropActionStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -279,7 +291,36 @@
                                      GroupName="DragDropAction"
                                      Content="Add to now playing"
                                      IsChecked="{Binding ActionNr3, Mode=TwoWay}"/>
-                    </StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="SwipeLeftCommandActionStackPanel"
+                        Orientation="Vertical" 
+                        Margin="4">
+                    <TextBlock x:Uid="TBSwipeLeftCommand"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Swipe right:"/>
+                    <RadioButton x:Uid="RBPlay"
+                                    Margin="4,0,4,0"
+                                    GroupName="SwipeLeftCommandAction"
+                                    Content="Play"
+                                    IsChecked="{Binding SwipeActionNr1, Mode=TwoWay}"/>
+                    <RadioButton x:Uid="RBPlayNext"
+                                    Margin="4,0,4,0"
+                                    GroupName="SwipeLeftCommandAction"
+                                    Content="Play next"
+                                    IsChecked="{Binding SwipeActionNr2, Mode=TwoWay}"/>
+                    <RadioButton x:Uid="RBAddToNowPlaying"
+                                    Margin="4,0,4,0"
+                                    GroupName="SwipeLeftCommandAction"
+                                    Content="Add to now playing"
+                                    IsChecked="{Binding SwipeActionNr3, Mode=TwoWay}"/>
+                    <RadioButton x:Uid="RBAddToPlaylist"
+                                    Margin="4,0,4,0"
+                                    GroupName="SwipeLeftCommandAction"
+                                    Content="Add to playlist"
+                                    IsChecked="{Binding SwipeActionNr4, Mode=TwoWay}"/>
+                </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <TextBlock x:Uid="TBIncludeSubFolders"
                         Style="{StaticResource BodyTextBlockStyle}"

@@ -759,4 +759,25 @@
   <data name="PageHeaderLyrics.Content" xml:space="preserve">
     <value>Letra</value>
   </data>
+  <data name="AppBarButtonSort.Label" xml:space="preserve">
+    <value>Separado</value>
+  </data>
+  <data name="ContentDialogAudioSettings.PrimaryButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ContentDialogAudioSettings.Title" xml:space="preserve">
+    <value>Audio settings</value>
+  </data>
+  <data name="AppBarButtonAudioSettings.Label" xml:space="preserve">
+    <value>Audio settings</value>
+  </data>
+  <data name="ContentDialogAudioSettings.SecondaryButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="TBSwipeLeftCommand.Text" xml:space="preserve">
+    <value>Swipe right:</value>
+  </data>
+  <data name="RBAddToPlaylist.Content" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
 </root>

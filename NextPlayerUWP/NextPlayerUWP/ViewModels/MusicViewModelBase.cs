@@ -128,22 +128,23 @@ namespace NextPlayerUWP.ViewModels
 
         public async Task SlidableListItemLeftCommandRequested(MusicItem item)
         {
-            string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
-            if (action.Equals(AppConstants.SwipeActionAddToNowPlaying))
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            switch (swipeAction)
             {
-                await NowPlayingPlaylistManager.Current.Add(item);
-            }
-            else if (action.Equals(AppConstants.SwipeActionPlayNext))
-            {
-                await NowPlayingPlaylistManager.Current.AddNext(item);
-            }
-            else if (action.Equals(AppConstants.SwipeActionPlayNow))
-            {
-                await NowPlayingPlaylistManager.Current.AddNext(item);
-            }
-            else if (action.Equals(AppConstants.SwipeActionAddToPlaylist))
-            {
-                NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+                case AppConstants.SwipeActionPlayNow:
+                    await NowPlayingPlaylistManager.Current.NewPlaylist(item);
+                    break;
+                case AppConstants.SwipeActionPlayNext:
+                    await NowPlayingPlaylistManager.Current.AddNext(item);
+                    break;
+                case AppConstants.SwipeActionAddToNowPlaying:
+                    await NowPlayingPlaylistManager.Current.Add(item);
+                    break;
+                case AppConstants.SwipeActionAddToPlaylist:
+                    NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -256,13 +257,13 @@ namespace NextPlayerUWP.ViewModels
             await Task.CompletedTask;
         }
 
-        public void OnLoaded(ListView p)
+        public async void OnLoaded(ListView p)
         {
             listView = p;
             if (onNavigatedCompleted)
             {
                 System.Diagnostics.Debug.WriteLine("OnLoaded LoadAndScroll()");
-                LoadAndScroll();
+                await LoadAndScroll();
             }
             else onLoadedCompleted = true;//zanim zostanie zmieniona wartosc, w OnNavigatedToAsync moze przeskoczyc do if(onloadedcomplete) ?
         }
@@ -276,7 +277,7 @@ namespace NextPlayerUWP.ViewModels
             onLoadedCompleted = false;
         }
 
-        protected virtual async Task LoadData() { }
+        protected virtual async Task LoadData() { await Task.CompletedTask; }
 
         protected async Task SetScrollPosition()
         {

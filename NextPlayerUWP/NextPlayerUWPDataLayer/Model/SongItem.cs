@@ -324,6 +324,20 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
+        private int index;
+        public int Index
+        {
+            get { return index; }
+            set
+            {
+                if (value != index)
+                {
+                    index = value;
+                    onPropertyChanged(this, nameof(Index));
+                }
+            }
+        }
+
         public SongItem()
         {
             title = "Unknown Title";

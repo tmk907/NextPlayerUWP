@@ -131,6 +131,25 @@ namespace NextPlayerUWP.ViewModels
                 ActionNr = 3;
             }
 
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            switch (swipeAction)
+            {
+                case AppConstants.SwipeActionPlayNow:
+                    SwipeActionNr = 1;
+                    break;
+                case AppConstants.SwipeActionPlayNext:
+                    SwipeActionNr = 2;
+                    break;
+                case AppConstants.SwipeActionAddToNowPlaying:
+                    SwipeActionNr = 3;
+                    break;
+                case AppConstants.SwipeActionAddToPlaylist:
+                    SwipeActionNr = 4;
+                    break;
+                default:
+                    break;
+            }
+
             PreventScreenLock = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
             HideStatusBar = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
             IncludeSubFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
@@ -318,6 +337,65 @@ namespace NextPlayerUWP.ViewModels
                 ActionNr = 3;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
                 TelemetryAdapter.TrackEvent("After Drop Item " + AppConstants.ActionAddToNowPlaying);
+            }
+        }
+
+
+        private int swipeActionNr = default(int);
+        public int SwipeActionNr
+        {
+            get { return swipeActionNr; }
+            set
+            {
+                Set(ref swipeActionNr, value);
+                RaisePropertyChanged("SwipeAction1");
+                RaisePropertyChanged("SwipeAction2");
+                RaisePropertyChanged("SwipeAction3");
+                RaisePropertyChanged("SwipeAction4");
+            }
+        }
+
+        public bool SwipeAction1
+        {
+            get { return swipeActionNr.Equals(1); }
+            set
+            {
+                SwipeActionNr = 1;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionPlayNow);
+                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionPlayNow);
+            }
+        }
+
+        public bool SwipeActionNr2
+        {
+            get { return swipeActionNr.Equals(2); }
+            set
+            {
+                SwipeActionNr = 2;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionPlayNext);
+                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionPlayNext);
+            }
+        }
+
+        public bool SwipeActionNr3
+        {
+            get { return swipeActionNr.Equals(3); }
+            set
+            {
+                SwipeActionNr = 3;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
+                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionAddToNowPlaying);
+            }
+        }
+
+        public bool SwipeActionNr4
+        {
+            get { return swipeActionNr.Equals(4); }
+            set
+            {
+                SwipeActionNr = 4;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToPlaylist);
+                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionAddToPlaylist);
             }
         }
 

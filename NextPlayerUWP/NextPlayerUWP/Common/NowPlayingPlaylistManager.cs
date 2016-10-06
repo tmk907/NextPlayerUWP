@@ -36,7 +36,11 @@ namespace NextPlayerUWP.Common
             PlaybackService.StreamUpdated += PlaybackService_StreamUpdated;
             App.SongUpdated += App_SongUpdated;
             currentIndex = ApplicationSettingsHelper.ReadSongIndex();
+            SortingHelper = new SortingHelperForSongItemsInPlaylist("nowplaying");
+            SortingHelper.SelectedSortOption = SortingHelper.ComboBoxItemValues.FirstOrDefault();
         }
+
+        public SortingHelperForSongItemsInPlaylist SortingHelper;
 
         private DispatcherWrapper dispatcher;
         public void SetDispatcher(DispatcherWrapper dispatcher)
@@ -202,15 +206,29 @@ namespace NextPlayerUWP.Common
                         var folder = (CloudRootFolder)item;
                         var factory = new CloudStorageServiceFactory();
                         var service = factory.GetService(folder.CloudType, folder.UserId);
-                        var id = await service.GetRootFolderId();
-                        list = await service.GetSongItems(id);
+                        try
+                        {
+                            var id = await service.GetRootFolderId();
+                            list = await service.GetSongItems(id);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
                     }
                     else
                     {
                         var folder = (CloudFolder)item;
                         var factory = new CloudStorageServiceFactory();
                         var service = factory.GetService(folder.CloudType, folder.UserId);
-                        list = await service.GetSongItems(folder.Id);
+                        try
+                        {
+                            list = await service.GetSongItems(folder.Id);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
                     }
                     break;
             }
@@ -520,6 +538,25 @@ namespace NextPlayerUWP.Common
             //await PlaybackService.Instance.NewPlaylists(songs);
         }
 
+        public async Task SortPlaylist()
+        {
+            var songid = GetCurrentPlaying().SongId;
+            var orderSelector = SortingHelper.GetOrderBySelector();
+            var list = songs.OrderBy(orderSelector).ToList();
+            songs.Clear();
+            int newIndex = 0;
+            foreach(var song in list)
+            {
+                if (song.SongId == songid)
+                {
+                    ApplicationSettingsHelper.SaveSongIndex(newIndex);
+                    currentIndex = newIndex;
+                }
+                songs.Add(song);
+                newIndex++;
+            }
+            await NotifyChange();
+        }
 
     }
 }

@@ -50,22 +50,32 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <DataTemplate x:Key="ArtistItemTemplate" x:DataType="data:ArtistItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="Add" 
+	            LeftLabel="Queue" 
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
                     Text="{x:Bind Artist}"
                     Style="{StaticResource ArtistItemStyleLeft}"/>
-                <TextBlock Grid.Column="1"
+                    <TextBlock Grid.Column="1"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ArtistItemStyleRight}"/>
-                <TextBlock Grid.Column="2"
+                    <TextBlock Grid.Column="2"
                     Text="{x:Bind SongsNumber}"
                     Style="{StaticResource ArtistItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
         <DataTemplate x:Key="GroupHeaderItemTemplate" x:DataType="data:GroupList">
             <TextBlock Text="{x:Bind Key}" 

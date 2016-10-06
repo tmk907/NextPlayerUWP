@@ -771,4 +771,13 @@
   <data name="AppBarButtonAudioSettings.Label" xml:space="preserve">
     <value>Ustawienia audio</value>
   </data>
+  <data name="AppBarButtonSort.Label" xml:space="preserve">
+    <value>Sortuj</value>
+  </data>
+  <data name="TBSwipeLeftCommand.Text" xml:space="preserve">
+    <value>Przesuń w prawo</value>
+  </data>
+  <data name="RBAddToPlaylist.Content" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
 </root>

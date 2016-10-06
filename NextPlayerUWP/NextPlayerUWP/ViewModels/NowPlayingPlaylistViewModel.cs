@@ -7,6 +7,7 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Template10.Common;
 using Windows.Foundation;
@@ -24,12 +25,16 @@ namespace NextPlayerUWP.ViewModels
 
         public NowPlayingPlaylistViewModel()
         {
+            sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             lastFmCache = new LastFmCache();
         }
 
+        SortingHelperForSongItemsInPlaylist sortingHelper;
         LastFmCache lastFmCache;
 
         private int selectedPivotIndex = 0;
@@ -137,7 +142,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 positionKey = (string)state[nameof(positionKey)];
             }
-
+            selectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(c => c.Option.Equals(sortingHelper.SelectedSortOption.Option));
             await Task.CompletedTask;
         }
 
@@ -286,6 +291,37 @@ namespace NextPlayerUWP.ViewModels
             {
                 CoverUri = cacheUri;
             });
+        }
+
+        protected ObservableCollection<ComboBoxItemValue> comboBoxItemValues = new ObservableCollection<ComboBoxItemValue>();
+        public ObservableCollection<ComboBoxItemValue> ComboBoxItemValues
+        {
+            get { return comboBoxItemValues; }
+            set
+            {
+                comboBoxItemValues = value;
+            }
+        }
+
+        protected ComboBoxItemValue selectedComboBoxItem;
+        public ComboBoxItemValue SelectedComboBoxItem
+        {
+            get { return selectedComboBoxItem; }
+            set
+            {
+                bool diff = selectedComboBoxItem != value;
+                selectedComboBoxItem = value;
+                if (value != null && diff)
+                {
+                    SortMusicItems();
+                }
+            }
+        }
+
+        public async void SortMusicItems()
+        {
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            await NowPlayingPlaylistManager.Current.SortPlaylist();
         }
     }
 }

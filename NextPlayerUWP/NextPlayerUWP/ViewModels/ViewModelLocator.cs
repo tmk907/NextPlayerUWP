@@ -35,7 +35,6 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<PlayerViewModelBase>();
         }
 
-        public PlayerViewModelBase PlayerVM => ServiceLocator.Current.GetInstance<PlayerViewModelBase>();
         public AddToPlaylistViewModel AddToPlaylistVM => ServiceLocator.Current.GetInstance<AddToPlaylistViewModel>();
         public AlbumViewModel AlbumVM => ServiceLocator.Current.GetInstance<AlbumViewModel>();
         public AlbumsViewModel AlbumsVM => ServiceLocator.Current.GetInstance<AlbumsViewModel>();
@@ -59,5 +58,7 @@ namespace NextPlayerUWP.ViewModels
         public SongsViewModel SongsVM => ServiceLocator.Current.GetInstance<SongsViewModel>();
         public TagsEditorViewModel TagsEditorVM => ServiceLocator.Current.GetInstance<TagsEditorViewModel>();
         public TestViewModel TestVM => ServiceLocator.Current.GetInstance<TestViewModel>();
+        public PlayerViewModelBase PlayerVM => ServiceLocator.Current.GetInstance<PlayerViewModelBase>();
+
     }
 }

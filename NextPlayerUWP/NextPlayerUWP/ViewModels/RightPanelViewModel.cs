@@ -26,7 +26,9 @@ namespace NextPlayerUWP.ViewModels
         public RightPanelViewModel()
         {
             Logger.DebugWrite("RightPanelViewModel()", "");
-
+            sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             //App.SongUpdated += App_SongUpdated;
@@ -355,7 +357,45 @@ namespace NextPlayerUWP.ViewModels
         public void SavePlaylist()
         {
             NowPlayingListItem item = new NowPlayingListItem();
-            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+            App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
+
+        public void ShowAudioSettings()
+        {
+            App.Current.NavigationService.Navigate(App.Pages.AudioSettings);
+        }
+
+        SortingHelperForSongItemsInPlaylist sortingHelper;
+
+        protected ObservableCollection<ComboBoxItemValue> comboBoxItemValues = new ObservableCollection<ComboBoxItemValue>();
+        public ObservableCollection<ComboBoxItemValue> ComboBoxItemValues
+        {
+            get { return comboBoxItemValues; }
+            set
+            {
+                comboBoxItemValues = value;
+            }
+        }
+
+        protected ComboBoxItemValue selectedComboBoxItem;
+        public ComboBoxItemValue SelectedComboBoxItem
+        {
+            get { return selectedComboBoxItem; }
+            set
+            {
+                bool diff = selectedComboBoxItem != value;
+                selectedComboBoxItem = value;
+                if (value != null && diff)
+                {
+                    SortMusicItems();
+                }
+            }
+        }
+
+        public async void SortMusicItems()
+        {
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            await NowPlayingPlaylistManager.Current.SortPlaylist();
         }
 
         #region Lyrics

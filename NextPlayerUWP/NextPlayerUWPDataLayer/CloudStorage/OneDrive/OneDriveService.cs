@@ -42,7 +42,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
         public bool IsAuthenticated
         {
-            get { return (((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).IsAuthenticated); }
+            get { return ((refreshToken != null) && ((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).IsAuthenticated); }
         }
 
         public async Task<bool> LoginSilently()

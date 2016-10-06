@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Navigation;
-
-namespace NextPlayerUWP.ViewModels
+﻿namespace NextPlayerUWP.ViewModels
 {
     public class AudioSettingsViewModel : Template10.Mvvm.ViewModelBase
     {
@@ -13,6 +9,5 @@ namespace NextPlayerUWP.ViewModels
         }
 
         public PlayerViewModelBase PlayerVM { get; set; }
-       
     }
 }

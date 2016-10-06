@@ -65,8 +65,13 @@ namespace NextPlayerUWP.ViewModels
             //if (folders.Count == 0)
             //{
             Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-                //SortItems(null, null);
+            //SortItems(null, null);
             //}
+            if (items.Count != 0)
+            {
+                items = new ObservableCollection<MusicItem>();
+            }
+
             if (folders.Count > 0)
             {
                 if (directory == null)

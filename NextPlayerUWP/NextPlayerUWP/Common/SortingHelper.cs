@@ -46,6 +46,7 @@ namespace NextPlayerUWP.Common
         public const string Composer = "Composer";
         public const string TrackNumber = "TrackNumber";
         public const string FileName = "FileName";
+        public const string Default = "Default";
     }
 
     public abstract class BaseSortingHelper<T> : ISortingHelper<T>
@@ -233,6 +234,145 @@ namespace NextPlayerUWP.Common
         {
             ResourceLoader loader = new ResourceLoader();
             ObservableCollection<ComboBoxItemValue> comboboxItems = new ObservableCollection<ComboBoxItemValue>();
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Title, loader.GetString(SortNames.Title)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Album, loader.GetString(SortNames.Album)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Artist, loader.GetString(SortNames.Artist)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.AlbumArtist, loader.GetString(SortNames.AlbumArtist)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Rating, loader.GetString(SortNames.Rating)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Year, loader.GetString(SortNames.Year)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.TrackNumber, loader.GetString(SortNames.TrackNumber)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Duration, loader.GetString(SortNames.Duration)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Composer, loader.GetString(SortNames.Composer)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.LastAdded, loader.GetString(SortNames.LastAdded)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.LastPlayed, loader.GetString(SortNames.LastPlayed)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.PlayCount, loader.GetString(SortNames.PlayCount)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.FileName, loader.GetString(SortNames.FileName)));
+            return comboboxItems;
+        }
+    }
+
+    public class SortingHelperForSongItemsInPlaylist : BaseSortingHelper<SongItem>
+    {
+        public SortingHelperForSongItemsInPlaylist(string collectionName) : base(collectionName)
+        {
+        }
+
+        public override Func<SongItem, object> GetGroupBySelector()
+        {
+            switch (SortOption)
+            {
+                case SortNames.Default:
+                    return t => t.Index;
+                case SortNames.Title:
+                    return t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower();
+                case SortNames.Album:
+                    return t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower();
+                case SortNames.Artist:
+                    return t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower();
+                case SortNames.AlbumArtist:
+                    return t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower();
+                case SortNames.Year:
+                    return t => t.Year;
+                case SortNames.Duration:
+                    return t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds);
+                case SortNames.Rating:
+                    return t => t.Rating;
+                case SortNames.Composer:
+                    return t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower();
+                case SortNames.LastAdded:
+                    return t => String.Format("{0:d}", t.DateAdded);
+                case SortNames.LastPlayed:
+                    return t => String.Format("{0:d}", t.LastPlayed);
+                case SortNames.PlayCount:
+                    return t => t.PlayCount;
+                case SortNames.TrackNumber:
+                    return t => t.TrackNumber;
+                case SortNames.FileName:
+                    return t => t.FileName[0].ToString().ToLower();
+                default:
+                    return t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower();
+            }
+        }
+
+        public override Func<SongItem, object> GetOrderBySelector()
+        {
+            switch (SortOption)
+            {
+                case SortNames.Default:
+                    return s => s.Index;
+                case SortNames.Title:
+                    return s => s.Title;
+                case SortNames.Album:
+                    return s => s.Album;
+                case SortNames.Artist:
+                    return s => s.Artist;
+                case SortNames.AlbumArtist:
+                    return s => s.AlbumArtist;
+                case SortNames.Year:
+                    return s => s.Year;
+                case SortNames.Duration:
+                    return s => s.Duration.TotalSeconds;
+                case SortNames.Rating:
+                    return s => s.Rating;
+                case SortNames.Composer:
+                    return s => s.Composer;
+                case SortNames.LastAdded:
+                    return s => s.DateAdded.Ticks;
+                case SortNames.LastPlayed:
+                    return s => s.LastPlayed.Ticks;
+                case SortNames.PlayCount:
+                    return s => s.PlayCount;
+                case SortNames.TrackNumber:
+                    return s => s.TrackNumber;
+                case SortNames.FileName:
+                    return s => s.FileName;
+                default:
+                    return s => s.Title;
+            }
+        }
+
+        public override string GetPropertyName()
+        {
+            switch (SortOption)
+            {
+                case SortNames.Default:
+                    return "Default";
+                case SortNames.Title:
+                    return "Title";
+                case SortNames.Album:
+                    return "Album";
+                case SortNames.Artist:
+                    return "Artist";
+                case SortNames.AlbumArtist:
+                    return "AlbumArtist";
+                case SortNames.Year:
+                    return "Year";
+                case SortNames.Duration:
+                    return "Duration";
+                case SortNames.Rating:
+                    return "Rating";
+                case SortNames.Composer:
+                    return "Composer";
+                case SortNames.LastAdded:
+                    return "DateAdded";
+                case SortNames.LastPlayed:
+                    return "LastPlayed";
+                case SortNames.PlayCount:
+                    return "PlayCount";
+                case SortNames.TrackNumber:
+                    return "TrackNumber";
+                case SortNames.FileName:
+                    return "FileName";
+                default:
+                    return "Title";
+            }
+        }
+
+        protected override ObservableCollection<ComboBoxItemValue> GetComboBoxValues()
+        {
+            ResourceLoader loader = new ResourceLoader();
+            ObservableCollection<ComboBoxItemValue> comboboxItems = new ObservableCollection<ComboBoxItemValue>();
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Default, loader.GetString(SortNames.Default)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.Title, loader.GetString(SortNames.Title)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.Album, loader.GetString(SortNames.Album)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.Artist, loader.GetString(SortNames.Artist)));

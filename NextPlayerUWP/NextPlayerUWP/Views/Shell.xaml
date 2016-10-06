@@ -621,12 +621,6 @@
             </controls:HamburgerMenu.PrimaryButtons>
 
             <controls:HamburgerMenu.SecondaryButtons>
-                <controls:HamburgerButtonInfo PageType="views:AudioSettingsView" x:Name="HBIAudioSettings" Visibility="Collapsed">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Filter" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBSettings" Text="Audio settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo PageType="views:SettingsView" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Setting" Width="48" Height="48" />
