@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using Microsoft.Advertising.WinRT.UI;
+using NextPlayerUWP.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -27,6 +28,16 @@ namespace NextPlayerUWP.Views
             var menu = this.Resources["ContextMenu"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private void AdControl_ErrorOccurred(object sender, AdErrorEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("AdControl error (" + ((AdControl)sender).Name + "): " + e.ErrorMessage + " ErrorCode: " + e.ErrorCode.ToString());
+        }
+
+        private void AdControl_AdRefreshed(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

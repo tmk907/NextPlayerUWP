@@ -5,9 +5,6 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Behaviors="using:Template10.Behaviors"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
@@ -516,7 +513,7 @@
                 x:Name="AppBarButtonSort"
                 Icon="Sort" 
                 Label="Sort">
-                <FlyoutBase.AttachedFlyout>
+                <AppBarButton.Flyout>
                     <Flyout>
                         <Flyout.FlyoutPresenterStyle>
                             <Style TargetType="FlyoutPresenter">
@@ -541,19 +538,14 @@
                                     <Setter Property="Height" Value="30"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
-                            <Interactivity:Interaction.Behaviors>
-                                <Core:EventTriggerBehavior EventName="ItemClick">
-                                    <Behaviors:CloseFlyoutAction/>
-                                </Core:EventTriggerBehavior>
-                            </Interactivity:Interaction.Behaviors>
                         </ListView>
                     </Flyout>
-                </FlyoutBase.AttachedFlyout>
-                <Interactivity:Interaction.Behaviors>
+                </AppBarButton.Flyout>
+                <!--<Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="Tapped">
                         <Behaviors:OpenFlyoutAction />
                     </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
+                </Interactivity:Interaction.Behaviors>-->
             </AppBarButton>
             <AppBarButton Icon="Save"
                 x:Uid="AppBarButtonSave"

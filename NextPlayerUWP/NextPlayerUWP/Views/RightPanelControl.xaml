@@ -5,12 +5,11 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Behaviors="using:Template10.Behaviors"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:UI="using:Microsoft.Advertising.WinRT.UI"
+    xmlns:winstatetriggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=RightPanelVM}"
     mc:Ignorable="d"
     d:DesignHeight="600"
@@ -322,9 +321,36 @@
     </UserControl.Resources>
     <!--Background="Black"-->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="ShowAd">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="1008"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowHeight="908"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AdControlRightPanel.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HideAd">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowHeight="0"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AdControlRightPanel.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <controls:PageHeader
             Grid.Row="0"
@@ -333,7 +359,7 @@
                 x:Uid="AppBarButtonSort"
                 Icon="Sort" 
                 Label="Sort">
-                <FlyoutBase.AttachedFlyout>
+                <AppBarButton.Flyout>
                     <Flyout>
                         <Flyout.FlyoutPresenterStyle>
                             <Style TargetType="FlyoutPresenter">
@@ -358,19 +384,9 @@
                                     <Setter Property="Height" Value="30"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
-                            <Interactivity:Interaction.Behaviors>
-                                <Core:EventTriggerBehavior EventName="ItemClick">
-                                    <Behaviors:CloseFlyoutAction/>
-                                </Core:EventTriggerBehavior>
-                            </Interactivity:Interaction.Behaviors>
                         </ListView>
                     </Flyout>
-                </FlyoutBase.AttachedFlyout>
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="Tapped">
-                        <Behaviors:OpenFlyoutAction />
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
+                </AppBarButton.Flyout>
             </AppBarButton>
             <AppBarButton
                 x:Uid="AppBarButtonSave"
@@ -498,6 +514,17 @@
                 </Grid>
             </PivotItem>
         </Pivot>
-
+        <UI:AdControl
+            Grid.Row="2"
+            x:Name="AdControlRightPanel"
+            AdUnitId="10865270"
+            ApplicationId="3f83fe91-d6be-434d-a0ae-7351c5a997f1"
+            Height="250"
+            Width="300"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            ErrorOccurred="AdControl_ErrorOccurred"
+            AdRefreshed="AdControl_AdRefreshed"
+            />
     </Grid>
 </UserControl>

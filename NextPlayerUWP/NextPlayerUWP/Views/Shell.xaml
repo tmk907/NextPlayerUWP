@@ -505,7 +505,6 @@
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
-                        <Setter Target="HBIAudioSettings.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -522,7 +521,6 @@
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
-                        <Setter Target="HBIAudioSettings.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -539,7 +537,6 @@
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
-                        <Setter Target="HBIAudioSettings.Visibility" Value="Visible"/>
                         <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
                     </VisualState.Setters>
                 </VisualState>
@@ -790,37 +787,6 @@
                     </Button.ContentTemplate>
                 </Button>
             </Grid>
-            <Grid Grid.Column="3" x:Name="SliderGrid" FlowDirection="LeftToRight" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="60"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                           FontSize="17"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"
-                           Margin="0,0,8,0"
-                           Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
-                <Slider x:Name="timeslider" Grid.Column="1"
-                        StepFrequency="1.0"
-                        Margin="4,8,4,0"
-                        Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
-                        Value="{Binding SliderValue, Mode=TwoWay}"
-                        ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
-                <TextBlock Grid.Column="2"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           FontSize="17"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"
-                           Margin="0,0,8,0"
-                           Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
-            </Grid>
             <Grid Grid.Column="2" x:Name="VolumeGrid" x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
                 <Button Style="{StaticResource BottomPlayerButtonStyle}"
                         x:Name="VolumeButton"
@@ -856,9 +822,40 @@
                     </Button.Flyout>
                 </Button>
             </Grid>
+            <Grid Grid.Column="3" x:Name="SliderGrid" FlowDirection="LeftToRight" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           FontSize="17"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           Foreground="{ThemeResource BottomPlayerTextForeground}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Margin="0,0,8,0"
+                           Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
+                <Slider x:Name="timeslider" Grid.Column="1"
+                        StepFrequency="1.0"
+                        Margin="4,8,4,0"
+                        Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
+                        Value="{Binding SliderValue, Mode=TwoWay}"
+                        ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
+                <TextBlock Grid.Column="2"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           Foreground="{ThemeResource BottomPlayerTextForeground}"
+                           FontSize="17"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Margin="0,0,8,0"
+                           Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
+            </Grid>
         </Grid>
         <UserControl Grid.Row="0" Grid.Column="1">
-            <local:RightPanelControl x:Name="RightPanel" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Width="250"/>
+            <local:RightPanelControl x:Name="RightPanel" x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
         </UserControl>
     </Grid>
 
