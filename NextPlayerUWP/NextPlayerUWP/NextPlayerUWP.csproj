@@ -504,14 +504,6 @@
       <Project>{ac3e4f10-6615-4e16-bb0f-104760c92b95}</Project>
       <Name>Template10 %28Library%29</Name>
     </ProjectReference>
-    <ProjectReference Include="D:\Github\UWPCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Animations\Microsoft.Toolkit.Uwp.UI.Animations.csproj">
-      <Project>{b24a296c-b3eb-4e06-a64e-74ac2d1acc91}</Project>
-      <Name>Microsoft.Toolkit.Uwp.UI.Animations</Name>
-    </ProjectReference>
-    <ProjectReference Include="D:\Github\UWPCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls\Microsoft.Toolkit.Uwp.UI.Controls.csproj">
-      <Project>{e9faabfb-d726-42c1-83c1-cb46a29fea81}</Project>
-      <Name>Microsoft.Toolkit.Uwp.UI.Controls</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FFmpegInterop, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">

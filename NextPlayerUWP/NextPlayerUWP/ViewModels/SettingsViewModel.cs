@@ -348,14 +348,14 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 Set(ref swipeActionNr, value);
-                RaisePropertyChanged("SwipeAction1");
-                RaisePropertyChanged("SwipeAction2");
-                RaisePropertyChanged("SwipeAction3");
-                RaisePropertyChanged("SwipeAction4");
+                RaisePropertyChanged("SwipeActionNr1");
+                RaisePropertyChanged("SwipeActionNr2");
+                RaisePropertyChanged("SwipeActionNr3");
+                RaisePropertyChanged("SwipeActionNr4");
             }
         }
 
-        public bool SwipeAction1
+        public bool SwipeActionNr1
         {
             get { return swipeActionNr.Equals(1); }
             set

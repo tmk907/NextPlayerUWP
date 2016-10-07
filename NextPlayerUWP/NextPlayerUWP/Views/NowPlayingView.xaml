@@ -511,6 +511,7 @@
             <Grid Grid.Row="1" >
                 <FlipView 
                     Background="Transparent" 
+                    SelectedIndex="{x:Bind ViewModel.FlipViewSelectedIndex, Mode=TwoWay}"
                     Visibility="{x:Bind ViewModel.IsVolumeControlVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
                     <FlipView.Items>
                         <FlipViewItem>

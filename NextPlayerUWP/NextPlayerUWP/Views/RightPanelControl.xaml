@@ -331,7 +331,7 @@
                         </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AdControlRightPanel.Visibility" Value="Visible"/>
+                        <Setter Target="GridAdControlRightPanel.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="HideAd">
@@ -342,7 +342,7 @@
                         </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AdControlRightPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="GridAdControlRightPanel.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -514,7 +514,9 @@
                 </Grid>
             </PivotItem>
         </Pivot>
-        <UI:AdControl
+        <Grid Grid.Row="2"
+              x:Name="GridAdControlRightPanel">
+            <!--<UI:AdControl
             Grid.Row="2"
             x:Name="AdControlRightPanel"
             AdUnitId="10865270"
@@ -525,6 +527,8 @@
             VerticalAlignment="Top"
             ErrorOccurred="AdControl_ErrorOccurred"
             AdRefreshed="AdControl_AdRefreshed"
-            />
+            />-->
+        </Grid>
+        
     </Grid>
 </UserControl>

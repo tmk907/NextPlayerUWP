@@ -133,6 +133,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 case AppConstants.SwipeActionPlayNow:
                     await NowPlayingPlaylistManager.Current.NewPlaylist(item);
+                    await PlaybackService.Instance.PlayNewList(0);
                     break;
                 case AppConstants.SwipeActionPlayNext:
                     await NowPlayingPlaylistManager.Current.AddNext(item);
