@@ -131,6 +131,8 @@
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
     <Compile Include="Common\PlaybackItemBuilder.cs" />
     <Compile Include="Common\PlaybackService.cs" />
+    <Compile Include="Common\PlaybackService2.cs" />
+    <Compile Include="Common\PlaybackServiceBase.cs" />
     <Compile Include="Common\PlaybackTimer.cs" />
     <Compile Include="Common\SeekButtonsHelper.cs" />
     <Compile Include="Common\SongCoverManager.cs" />

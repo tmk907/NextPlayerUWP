@@ -29,6 +29,7 @@ namespace NextPlayerUWP.Common
 
         private NowPlayingPlaylistManager()
         {
+            ApplicationSettingsHelper.SaveSongIndex(0);
             Logger.DebugWrite("NowPlayingPlaylistManager()","");
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
             songs.CollectionChanged += Songs_CollectionChanged;

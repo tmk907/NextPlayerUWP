@@ -28,7 +28,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     if (value == 0) isMuted = true;
                     else isMuted = false;
-                    PlaybackService.Instance.ChangeVolume(value);
+                    PlaybackService.Instance.Volume = value;
                 }
                 Set(ref volume, value);
             }

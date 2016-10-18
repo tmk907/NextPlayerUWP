@@ -10,5 +10,5 @@ Requires:
 Requires.private: libavcodec >= 56.41.100, libswresample >= 1.2.100, libavutil >= 54.27.100
 Conflicts:
 Libs: -L${libdir}  -lavformat 
-Libs.private: ws2_32.lib
+Libs.private: ws2_32.lib psapi.lib
 Cflags: -I${includedir}

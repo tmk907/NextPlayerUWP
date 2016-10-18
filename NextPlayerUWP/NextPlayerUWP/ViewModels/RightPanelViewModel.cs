@@ -395,7 +395,10 @@ namespace NextPlayerUWP.ViewModels
         public async void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
-            await NowPlayingPlaylistManager.Current.SortPlaylist();
+            if (songs!=null)
+            {
+                await NowPlayingPlaylistManager.Current.SortPlaylist();
+            }
         }
 
         #region Lyrics
