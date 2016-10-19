@@ -11,10 +11,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage.Streams;
-using Windows.System.Threading;
 
 namespace NextPlayerUWP.Common
 {
@@ -691,19 +689,30 @@ namespace NextPlayerUWP.Common
             {
                 return;
             }
-            var duration = item?.Source.Duration ?? TimeSpan.Zero;
-            int a = (int)mediaList.CurrentItemIndex;
-            if (a != CurrentSongIndex)
+            TimeSpan duration;
+            int a = CurrentSongIndex;
+            var song = NowPlayingPlaylistManager.Current.songs[a];
+            if (song.SourceType == MusicSource.RadioJamendo) return;
+            if (song.Duration == TimeSpan.Zero)
+            {
+                duration = item?.Source?.Duration ?? TimeSpan.Zero;
+            }
+            else
+            {
+                duration = item?.Source?.Duration ?? TimeSpan.Zero;
+                if (song.Duration != duration && duration != TimeSpan.Zero)
+                {
+                    song.Duration = duration;
+                    //DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd);
+                }
+                duration = song.Duration;
+            }
+
+            if (a != (int)mediaList.CurrentItemIndex)
             {
 
             }
-            int songId = (int)item.Source.CustomProperties[propertySongId];
-            UpdateStats2(songId, duration, songPlayed);
+            UpdateStats2(song.SongId, duration, songPlayed);
         }
-
-        private void UpdateStats(int songId, TimeSpan songDuration, TimeSpan songPlayed)
-        {
-        }
-
     }
 }

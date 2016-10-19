@@ -38,7 +38,7 @@ namespace NextPlayerUWP
             AppThemeChanged?.Invoke(isLight);
         }
 
-        private const int dbVersion = 7;
+        private const int dbVersion = 8;
 
         public static bool IsLightThemeOn = false;
 
@@ -51,6 +51,7 @@ namespace NextPlayerUWP
                 return albumArtFinder;
             }
         }
+        public static AudioFormatsHelper AudioFormatsHelper;
 
         private bool isFirstRun = false;
 
@@ -116,6 +117,7 @@ namespace NextPlayerUWP
             Logger.ClearSettingsLogs();
 #endif
             //DatabaseManager.Current.resetdb();
+            AudioFormatsHelper = new AudioFormatsHelper(true);
             this.UnhandledException += App_UnhandledException;
         }
 
@@ -355,7 +357,7 @@ namespace NextPlayerUWP
             }
             else
             {
-                if (PlaybackService.Instance.PlayerState != Windows.Media.Playback.MediaPlaybackState.Playing) TileUpdater.ChangeAppTileToDefaultTransparent();//!!
+                if (PlaybackService.Instance.PlayerState != Windows.Media.Playback.MediaPlaybackState.Playing) Common.Tiles.TileUpdateHelper.ClearTile();//!!
             }
 
             var fileArgs = args as FileActivatedEventArgs;
@@ -604,6 +606,12 @@ namespace NextPlayerUWP
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 7);
                 version = "7";
             }
+            if (version.ToString() == "7")
+            {
+                DatabaseManager.Current.UpdateToVersion8();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
+                version = "8";
+            }
             // change  private const int dbVersion
         }
 
@@ -713,9 +721,9 @@ namespace NextPlayerUWP
 
         private async Task OpenFileAndPlay(StorageFile file)
         {
-            MediaImport mi = new MediaImport();
+            MediaImport mi = new MediaImport(AudioFormatsHelper);
             string type = file.FileType.ToLower();
-            if (MediaImport.IsAudioFile(type))
+            if (AudioFormatsHelper.IsFormatSupported(type))
             {
                 SongItem si = await mi.OpenSingleFileAsync(file);
                 await NowPlayingPlaylistManager.Current.NewPlaylist(si);
@@ -731,7 +739,7 @@ namespace NextPlayerUWP
 
         private async Task OpenFilesAndAddToNowPlaying(IEnumerable<IStorageItem> files)
         {
-            MediaImport mi = new MediaImport();
+            MediaImport mi = new MediaImport(AudioFormatsHelper);
             List<SongItem> list = new List<SongItem>();
             int i = 0;
             const int size = 4;

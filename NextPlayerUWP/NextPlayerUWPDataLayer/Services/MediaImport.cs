@@ -41,26 +41,18 @@ namespace NextPlayerUWPDataLayer.Services
             MediaImported?.Invoke(s);
         }
 
-        private static readonly List<string> supportedAudioFormats = new List<string>()
+        public MediaImport(AudioFormatsHelper audioFormatsHelper)
         {
-            ".mp3"  ,".m4a"  ,".wma",
-            ".wav"  ,".aac"  ,".asf"  ,".flac", 
-            ".adt"  ,".adts"  ,".amr"  ,".mp4", 
-            ".ogg"  ,".ape"  ,".wv"  ,".opus", 
-            ".ac3"
-        };
+            this.audioFormatsHelper = audioFormatsHelper;
+        }
 
+        private AudioFormatsHelper audioFormatsHelper;
         private int songsAdded;
         private int modifiedSongs;
         private IProgress<int> progress;
         private List<string> importedPlaylistPaths;
         private List<ImportedPlaylist> importedPlaylists;
         private List<string> libraryDirectories;
-
-        public static bool IsAudioFile(string type)
-        {
-            return supportedAudioFormats.Contains(type);
-        }
 
         public static bool IsPlaylistFile(string type)
         {
@@ -281,7 +273,7 @@ namespace NextPlayerUWPDataLayer.Services
                         importedPlaylists.Add(ip);
                     }
                 }
-                else if (IsAudioFile(type))
+                else if (audioFormatsHelper.IsFormatSupported(type))
                 {
                     var song = oldSongs.FirstOrDefault(s => s.Path.Equals(file.Path));
                     if (null != song)
@@ -602,7 +594,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             string type = file.FileType.ToLower();
             SongItem song = new SongItem();
-            if (IsAudioFile(type))
+            if (audioFormatsHelper.IsFormatSupported(type))
             {
                 song = await DatabaseManager.Current.GetSongItemIfExistAsync(file.Path);
                 if (song == null)

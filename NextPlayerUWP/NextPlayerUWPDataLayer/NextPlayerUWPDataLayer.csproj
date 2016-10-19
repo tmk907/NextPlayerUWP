@@ -190,6 +190,7 @@
     <Compile Include="pCloud\Requests\General.cs" />
     <Compile Include="pCloud\Requests\Streaming.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AudioFormatsHelper.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\ImagesManager.cs" />
     <Compile Include="Services\IRadioService.cs" />
@@ -200,7 +201,6 @@
     <Compile Include="Services\NowPlayingManager.cs" />
     <Compile Include="Services\PlaylistExporter.cs" />
     <Compile Include="Services\SpotifyService.cs" />
-    <Compile Include="Services\TileUpdater.cs" />
     <Compile Include="SoundCloud\Enums\License.cs" />
     <Compile Include="SoundCloud\Enums\SCPlaylistType.cs" />
     <Compile Include="SoundCloud\Enums\TrackState.cs" />

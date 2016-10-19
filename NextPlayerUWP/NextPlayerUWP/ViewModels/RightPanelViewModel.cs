@@ -106,7 +106,7 @@ namespace NextPlayerUWP.ViewModels
                 var items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
                 {
-                    MediaImport mi = new MediaImport();
+                    MediaImport mi = new MediaImport(App.AudioFormatsHelper);
                     bool first = true;
                     foreach (var file in items)
                     {
@@ -114,7 +114,7 @@ namespace NextPlayerUWP.ViewModels
                         {
                             var storageFile = file as Windows.Storage.StorageFile;
                             string type = storageFile.FileType.ToLower();
-                            if (MediaImport.IsAudioFile(type))
+                            if (App.AudioFormatsHelper.IsFormatSupported(type))
                             {
                                 SongItem newSong = await mi.OpenSingleFileAsync(storageFile);
 

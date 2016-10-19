@@ -1,10 +1,12 @@
-﻿using NextPlayerUWPDataLayer.Constants;
+﻿using NextPlayerUWP.Common.Tiles;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Jamendo;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
@@ -21,6 +23,7 @@ namespace NextPlayerUWP.Common
         {
             System.Diagnostics.Debug.WriteLine("OnMediaPlayerTrackChanged {0}", index);
             MediaPlayerTrackChanged?.Invoke(index);
+            UpdateTile();
         }
 
         bool shuffle;
@@ -321,28 +324,35 @@ namespace NextPlayerUWP.Common
             }
         }
 
-
+        private int lastUpdatedTileSongId = -1;
         public void UpdateTile()
         {
-            //var displayProperties = mlist.CurrentItem.Source.CustomProperties[songid];
-            //if (path != AppConstants.AlbumCover)
-            //{
-            //    myTileUpdater.UpdateAppTileBG(displayProperties.MusicProperties.Title, displayProperties.MusicProperties.Artist, AppConstants.AppLogoMedium);
-            //}
-            //else
-            //{
-            //    myTileUpdater.UpdateAppTileBG(displayProperties.MusicProperties.Title, displayProperties.MusicProperties.Artist, AppConstants.AppLogoMedium);
-            //}
+            TileUpdateHelper tileHelper = new TileUpdateHelper();
+            int songIndex = CurrentSongIndex;
+            var song = NowPlayingPlaylistManager.Current.songs[songIndex];
+            if (song.SongId == lastUpdatedTileSongId) return;
+            lastUpdatedTileSongId = song.SongId;
+            if (NowPlayingPlaylistManager.Current.songs.Count < 3)
+            {
+                
+                tileHelper.UpdateAppTile(song.Title, song.Artist, song.AlbumArtUri.ToString());
+            }
+            else
+            {
+                var prevSong = NowPlayingPlaylistManager.Current.songs[(songIndex == 0) ? NowPlayingPlaylistManager.Current.songs.Count - 1 : songIndex - 1];
+                var nextSong = NowPlayingPlaylistManager.Current.songs[(songIndex == NowPlayingPlaylistManager.Current.songs.Count - 1) ? 0 : songIndex + 1];
+                List<string> titles = new List<string>() { prevSong.Title, song.Title, nextSong.Title };
+                List<string> artists = new List<string>() { prevSong.Artist, song.Artist, nextSong.Artist };
+                tileHelper.UpdateAppTile(titles, artists, song.AlbumArtUri.ToString());
+            }
         }
-
-
         
         private async Task UpdateStats2(int songId, TimeSpan songDuration, TimeSpan songPlayed)
         {
             if (WasSongPlayedLongEnough(songPlayed, songDuration))
             {
                 var song = await DatabaseManager.Current.GetSongItemAsync(songId);
-                if (song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.LocalNotMusicLibrary)
+                if (song.SourceType != MusicSource.RadioJamendo)
                 {
                     System.Diagnostics.Debug.WriteLine("UpdateStats2 {0} {1} {2}", songId, songDuration, songPlayed);
                     await UpdateSongStatistics(song.SongId);
@@ -365,6 +375,7 @@ namespace NextPlayerUWP.Common
 
         private async Task ScrobbleTrack(SongItem song, TimeSpan duration)
         {
+            System.Diagnostics.Debug.WriteLine("ScrobbleTrack {0} {1}", song.Path, duration);
             if (duration > TimeSpan.FromSeconds(30) && lastFmCache.AreCredentialsSet())
             {
                 await CacheTrackScrobble(song);

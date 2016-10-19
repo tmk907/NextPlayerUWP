@@ -142,6 +142,8 @@
     <Compile Include="Common\Test2.cs" />
     <Compile Include="Common\ThemeHelper.cs" />
     <Compile Include="Common\TileManager.cs" />
+    <Compile Include="Common\Tiles\TileContentFactory.cs" />
+    <Compile Include="Common\Tiles\TileUpdateHelper.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
@@ -312,6 +314,11 @@
     <Content Include="Assets\Visual Assets\Square150\Square150b.scale-150.png" />
     <Content Include="Assets\Visual Assets\Square150\Square150b.scale-200.png" />
     <Content Include="Assets\Visual Assets\Square150\Square150b.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-400.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-16.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-24.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-256.png" />
@@ -529,7 +536,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\doc\" />
-    <Folder Include="Assets\Visual Assets\Square310\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

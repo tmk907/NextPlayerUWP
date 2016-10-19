@@ -22,6 +22,7 @@
         public const string AppLogoSmall71 = "ms-appx:///Assets/Visual Assets/Square71/Small3.png";
         public const string AppLogoMedium = "ms-appx:///Assets/Visual Assets/Square150/Medium3.png";
         public const string AppLogoWide = "ms-appx:///Assets/Visual Assets/Wide310/Wide3.png";
+        public const string AppLogoLarge = "ms-appx:///Assets/Visual Assets/Square310/Square310.png";
 
         public const string RadioCover = "ms-appx:///Assets/Albums/AlbumCoverTRnG.png";
 

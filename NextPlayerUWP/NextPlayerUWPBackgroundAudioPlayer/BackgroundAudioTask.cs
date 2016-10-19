@@ -27,7 +27,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
         private AppState foregroundAppState = AppState.Unknown;
         private NowPlayingManager nowPlayingManager;
         private bool shutdown;
-        private TileUpdater myTileUpdater;    
+        //private TileUpdater myTileUpdater;    
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
@@ -67,7 +67,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                 //SetTimer();//!
             }
 
-            myTileUpdater = new TileUpdater();
+            //myTileUpdater = new TileUpdater();
 
             deferral = taskInstance.GetDeferral(); // This must be retrieved prior to subscribing to events below which use it
             //s1.Stop();
@@ -344,14 +344,14 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             //    smtc.DisplayUpdater.Thumbnail = null;
 
             smtc.DisplayUpdater.Update();
-            if (path != AppConstants.AlbumCover)
-            {
-                myTileUpdater.UpdateAppTileBG(title, artist, path);
-            }
-            else
-            {
-                myTileUpdater.UpdateAppTileBG(title, artist, AppConstants.AppLogoMedium);
-            }
+            //if (path != AppConstants.AlbumCover)
+            //{
+            //    myTileUpdater.UpdateAppTileBG(title, artist, path);
+            //}
+            //else
+            //{
+            //    myTileUpdater.UpdateAppTileBG(title, artist, AppConstants.AppLogoMedium);
+            //}
         }
 
         private void ChangeVolume(double volume)

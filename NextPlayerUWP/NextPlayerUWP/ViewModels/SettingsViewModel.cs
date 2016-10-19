@@ -212,7 +212,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void UpdateLibrary()
         {
-            MediaImport m = new MediaImport();
+            MediaImport m = new MediaImport(App.AudioFormatsHelper);
             UpdateProgressTextVisibility = true;
             Progress<int> progress = new Progress<int>(
                 percent =>
