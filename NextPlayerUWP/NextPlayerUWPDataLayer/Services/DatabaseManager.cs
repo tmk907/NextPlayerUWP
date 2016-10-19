@@ -1991,6 +1991,7 @@ namespace NextPlayerUWPDataLayer.Services
         public void UpdateToVersion8()
         {
             connection.Execute("UPDATE SongsTable SET IsAvailable = 0 WHERE Path LIKE ? OR Path LIKE ? OR Path LIKE ? OR Path LIKE ? OR Path LIKE ?", "%.ogg", "%.ape", "%.wv", "%.opus", "%.ac3");
+            connection.Execute("DELETE FROM NowPlayingTable WHERE Path LIKE ? OR Path LIKE ? OR Path LIKE ? OR Path LIKE ? OR Path LIKE ?", "%.ogg", "%.ape", "%.wv", "%.opus", "%.ac3");
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()
