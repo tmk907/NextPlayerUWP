@@ -26,7 +26,7 @@ namespace NextPlayerUWP.Views
 
         private async Task LoadAdControl()
         {
-            await Task.Delay(10);
+            await Task.Delay(1000);
             var adControl = new AdControl();
             adControl.Width = 300;
             adControl.Height = 250;

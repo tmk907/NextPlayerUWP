@@ -99,7 +99,7 @@ namespace NextPlayerUWP.ViewModels
                         }
                         break;
                     case MusicItemTypes.smartplaylist:
-                        sortingHelper = new SortingHelperForSongItemsInPlaylist("Playlist");
+                        sortingHelper = new SortingHelperForSongItemsInPlaylist("SmartPlaylist");
                         SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(a => a.Option.Equals(sortingHelper.SelectedSortOption.Option));
                         PageTitle = loader.GetString("Playlist");
                         p = await DatabaseManager.Current.GetSmartPlaylistAsync(Int32.Parse(firstParam));

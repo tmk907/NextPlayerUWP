@@ -80,7 +80,7 @@ namespace NextPlayerUWP.Common
                     }
                     else
                     {
-                        mpi = await PrepareFromLocalFileFFmpeg(song);
+                        mpi = null;// await PrepareFromLocalFileFFmpeg(song);
                     }
                     break;
                 case MusicSource.LocalNotMusicLibrary:
@@ -90,7 +90,7 @@ namespace NextPlayerUWP.Common
                     }
                     else
                     {
-                        mpi = await PrepareFromFutureAccessListFFmpeg(song);
+                        mpi = null;// await PrepareFromFutureAccessListFFmpeg(song);
                     }
                     break;
                 case MusicSource.RadioJamendo:

@@ -51,7 +51,7 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 bool diff = selectedComboBoxItem != value;
-                selectedComboBoxItem = value;
+                Set(ref selectedComboBoxItem, value);
                 if (value != null && diff)
                 {
                     SortMusicItems();

@@ -57,15 +57,21 @@
         <DataTemplate x:Key="CloudAccountTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition MinWidth="128" Width="Auto"/>
-                    <ColumnDefinition MinWidth="128" Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" 
+                <!--<SymbolIcon Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Symbol=""/>-->
+                <TextBlock Grid.Column="1" 
                     Text="{Binding Username}"
                            VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-                <Button Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Margin="4,0,4,0"/>
+                <Button Grid.Column="2"
                         x:Uid="ButtonLogout"
+                        MinWidth="64"
                         Click="ViewModel.CloudStorageLogout"
                         Tag="{Binding}"
                         Content="Logout"
@@ -426,7 +432,9 @@
                 <StackPanel Orientation="Vertical" Margin="4">
                     <ListView Margin="0,4,4,4"
                         ItemsSource="{x:Bind ViewModel.OneDriveAccounts, Mode=OneWay}"
-                        ItemTemplate="{StaticResource CloudAccountTemplate}">
+                        ItemTemplate="{StaticResource CloudAccountTemplate}"
+                        SelectionMode="None"
+                        IsItemClickEnabled="False">
                     </ListView>
                     <Button x:Uid="ButtonAddAccount"
                         Content="Add account"
@@ -442,7 +450,9 @@
                 <StackPanel Orientation="Vertical" Margin="4">
                     <ListView Margin="0,4,4,4"
                         ItemsSource="{x:Bind ViewModel.DropboxAccounts, Mode=OneWay}"
-                        ItemTemplate="{StaticResource CloudAccountTemplate}">
+                        ItemTemplate="{StaticResource CloudAccountTemplate}"
+                        SelectionMode="None"
+                        IsItemClickEnabled="False">
                     </ListView>
                     <Button x:Uid="ButtonAddAccount"
                         Content="Add account"
@@ -458,7 +468,9 @@
                     <StackPanel Orientation="Vertical" Margin="4">
                         <ListView Margin="0,4,4,4"
                             ItemsSource="{x:Bind ViewModel.PCloudAccounts, Mode=OneWay}"
-                            ItemTemplate="{StaticResource CloudAccountTemplate}">
+                            ItemTemplate="{StaticResource CloudAccountTemplate}"
+                            SelectionMode="None"
+                            IsItemClickEnabled="False">
                         </ListView>
                         <Button x:Uid="ButtonAddAccount"
                             Content="Add account"
