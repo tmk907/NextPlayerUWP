@@ -58,17 +58,17 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition MinWidth="128" Width="Auto"/>
+                    <ColumnDefinition MinWidth="192" Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <!--<SymbolIcon Grid.Column="0"
+                <SymbolIcon Grid.Column="0"
                             VerticalAlignment="Center"
-                            Symbol=""/>-->
+                            Symbol="Contact"/>
                 <TextBlock Grid.Column="1" 
-                    Text="{Binding Username}"
+                           Text="{Binding Username}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Left"
-                           Margin="4,0,4,0"/>
+                           Margin="8,0,8,0"/>
                 <Button Grid.Column="2"
                         x:Uid="ButtonLogout"
                         MinWidth="64"
@@ -166,7 +166,9 @@
                                Text="Folders, where app look music"/>
                     <ListView Margin="0,4,4,4"
                             ItemsSource="{x:Bind ViewModel.MusicLibraryFolders, Mode=OneWay}"
-                            ItemTemplate="{StaticResource MusicFolderTemplate}">
+                            ItemTemplate="{StaticResource MusicFolderTemplate}"
+                            SelectionMode="None"
+                            IsItemClickEnabled="False">
                     </ListView>
                     <Button x:Uid="ButtonAddFolder"
                             Content="Add folder" 

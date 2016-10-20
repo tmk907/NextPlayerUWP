@@ -10,6 +10,7 @@
 
         public bool IsDefaultSupportedType(string type)
         {
+            type = type.ToLower();
             return (type == ".mp3" || type == ".m4a" || type == ".wma" ||
                     type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
                     type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4");
@@ -17,6 +18,7 @@
 
         public bool IsFFmpegSupportedType(string type)
         {
+            type = type.ToLower();
             return (type == ".ogg" || type == ".ape" || type == ".wv" || type == ".opus" || type == ".ac3");
         }
 

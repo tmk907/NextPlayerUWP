@@ -80,7 +80,7 @@ namespace NextPlayerUWP.Common
                     }
                     else
                     {
-                        mpi = null;// await PrepareFromLocalFileFFmpeg(song);
+                        mpi = PrepareDefaultItem();// await PrepareFromLocalFileFFmpeg(song);
                     }
                     break;
                 case MusicSource.LocalNotMusicLibrary:
@@ -90,7 +90,7 @@ namespace NextPlayerUWP.Common
                     }
                     else
                     {
-                        mpi = null;// await PrepareFromFutureAccessListFFmpeg(song);
+                        mpi = PrepareDefaultItem();// await PrepareFromFutureAccessListFFmpeg(song);
                     }
                     break;
                 case MusicSource.RadioJamendo:
@@ -106,10 +106,21 @@ namespace NextPlayerUWP.Common
                     mpi = PrepareFromCloudStorage(song);
                     break;
                 default:
-                    mpi = null;
+                    mpi = PrepareDefaultItem();
                     break;
             }
             return mpi;
+        }
+
+        public static MediaPlaybackItem PrepareDefaultItem()
+        {
+            //MyStreamReference msr = new MyStreamReference(AppConstants.EmptyMP3File);
+            var source = MediaSource.CreateFromUri(new Uri(AppConstants.EmptyMP3File));//.CreateFromStreamReference(msr, "");
+            var playbackItem = new MediaPlaybackItem(source);
+            playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+            UpdateDisplayProperties(playbackItem, new SongItem());
+            source.CustomProperties[propertySongId] = -1;
+            return playbackItem;
         }
 
         public static MediaPlaybackItem PrepareFromLocalFile(SongItem song)

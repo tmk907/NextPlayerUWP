@@ -689,30 +689,33 @@ namespace NextPlayerUWP.Common
             {
                 return;
             }
-            TimeSpan duration;
+            TimeSpan duration = TimeSpan.Zero;
             int a = CurrentSongIndex;
-            var song = NowPlayingPlaylistManager.Current.songs[a];
-            if (song.SourceType == MusicSource.RadioJamendo) return;
-            if (song.Duration == TimeSpan.Zero)
+            int songId = (int)item.Source.CustomProperties[propertySongId];
+            
+            if (item.Source.Duration == TimeSpan.Zero)
             {
                 duration = item?.Source?.Duration ?? TimeSpan.Zero;
             }
-            else
-            {
-                duration = item?.Source?.Duration ?? TimeSpan.Zero;
-                if (song.Duration != duration && duration != TimeSpan.Zero)
-                {
-                    song.Duration = duration;
-                    //DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd);
-                }
-                duration = song.Duration;
-            }
+            //else
+            //{
+            //    duration = item?.Source?.Duration ?? TimeSpan.Zero;
+            //    if (song.Duration != duration && duration != TimeSpan.Zero)
+            //    {
+            //        song.Duration = duration;
+            //        //DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd);
+            //    }
+            //    duration = song.Duration;
+            //}
 
             if (a != (int)mediaList.CurrentItemIndex)
             {
 
             }
-            UpdateStats2(song.SongId, duration, songPlayed);
+            if (songPlayed.TotalSeconds >= duration.TotalSeconds*0.5 || duration.TotalSeconds >= 4 * 60)
+            {
+                UpdateStats2(songId, duration);
+            }
         }
     }
 }

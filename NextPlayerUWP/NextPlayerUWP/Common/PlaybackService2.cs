@@ -334,7 +334,6 @@ namespace NextPlayerUWP.Common
             lastUpdatedTileSongId = song.SongId;
             if (NowPlayingPlaylistManager.Current.songs.Count < 3)
             {
-                
                 tileHelper.UpdateAppTile(song.Title, song.Artist, song.AlbumArtUri.ToString());
             }
             else
@@ -347,17 +346,14 @@ namespace NextPlayerUWP.Common
             }
         }
         
-        private async Task UpdateStats2(int songId, TimeSpan songDuration, TimeSpan songPlayed)
+        private async Task UpdateStats2(int songId, TimeSpan songDuration)
         {
-            if (WasSongPlayedLongEnough(songPlayed, songDuration))
+            var song = await DatabaseManager.Current.GetSongItemAsync(songId);
+            if (song.SourceType != MusicSource.RadioJamendo)
             {
-                var song = await DatabaseManager.Current.GetSongItemAsync(songId);
-                if (song.SourceType != MusicSource.RadioJamendo)
-                {
-                    System.Diagnostics.Debug.WriteLine("UpdateStats2 {0} {1} {2}", songId, songDuration, songPlayed);
-                    await UpdateSongStatistics(song.SongId);
-                    await ScrobbleTrack(song, songDuration);
-                }
+                System.Diagnostics.Debug.WriteLine("UpdateStats2 {0} {1}", songId, songDuration);
+                await UpdateSongStatistics(song.SongId);
+                await ScrobbleTrack(song, songDuration);
             }
         }
 
@@ -387,13 +383,11 @@ namespace NextPlayerUWP.Common
             int seconds = 0;
             try
             {
-                DateTime start = DateTime.UtcNow - songPlayed;
+                DateTime start = DateTime.UtcNow - song.Duration;
                 seconds = (int)start.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             }
             catch (Exception ex)
             {
-                //Diagnostics.Logger.SaveBG("Scrobble paused " + songPlayed + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
-                //Diagnostics.Logger.SaveToFileBG();
                 return;
             }
             string artist = song.Artist;
@@ -406,12 +400,9 @@ namespace NextPlayerUWP.Common
                 Timestamp = timestamp
             };
             await lastFmCache.CacheTrackScrobble(scrobble);
-            System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track + " " + songPlayed);
+            System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track);
         }
 
-        private bool WasSongPlayedLongEnough(TimeSpan totalTimePlayed, TimeSpan songDuration)
-        {
-            return (totalTimePlayed.TotalSeconds >= songDuration.TotalSeconds * 0.5 || songDuration.TotalSeconds >= 4 * 60);
-        }
+        
     }
 }

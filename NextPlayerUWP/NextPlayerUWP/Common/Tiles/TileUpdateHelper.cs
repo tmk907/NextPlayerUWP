@@ -3,6 +3,8 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.Common.Tiles
 {
@@ -20,15 +22,33 @@ namespace NextPlayerUWP.Common.Tiles
             }
         }
 
-        public void UpdateAppTile(string title, string artist, string coverUri)
+        public async Task UpdateAppTile(string title, string artist, string coverUri)
         {
+            TileImageHelper ti = new TileImageHelper();
+            try
+            {
+                coverUri = await ti.PrepareImage(coverUri);
+            }
+            catch (Exception ex)
+            {
+                coverUri = AppConstants.SongCoverBig;
+            }
             var factory = new TileContentFactory(title, artist, coverUri);
             var notification = PrepareTileNotification(factory);
             SendNotification(notification);
         }
 
-        public void UpdateAppTile(List<string> titles, List<string> artists, string coverUri)
+        public async Task UpdateAppTile(List<string> titles, List<string> artists, string coverUri)
         {
+            TileImageHelper ti = new TileImageHelper();
+            try
+            {
+                coverUri = await ti.PrepareImage(coverUri);
+            }
+            catch (Exception ex)
+            {
+                coverUri = AppConstants.SongCoverBig;
+            }
             TileContentFactory factory = new TileContentFactory(titles, artists, coverUri);
             TileNotification notification = PrepareTileNotification(factory);
             SendNotification(notification);
@@ -39,7 +59,8 @@ namespace NextPlayerUWP.Common.Tiles
             try
             {
                 System.Diagnostics.Debug.WriteLine("SendNotification tile");
-                TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
+                var tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication("App");//.Update(notification);
+                tileUpdater.Update(notification);
             }
             catch (Exception ex)
             {
