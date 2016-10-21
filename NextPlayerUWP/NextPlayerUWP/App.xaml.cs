@@ -117,7 +117,7 @@ namespace NextPlayerUWP
             Logger.ClearSettingsLogs();
 #endif
             //DatabaseManager.Current.resetdb();
-            AudioFormatsHelper = new AudioFormatsHelper(true);
+            AudioFormatsHelper = new AudioFormatsHelper(false);
             this.UnhandledException += App_UnhandledException;
         }
 
