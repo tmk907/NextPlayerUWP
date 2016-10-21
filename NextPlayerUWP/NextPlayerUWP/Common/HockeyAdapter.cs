@@ -8,7 +8,7 @@ namespace NextPlayerUWP.Common
         {
             StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
             logger.Log(eventName);
-            Microsoft.HockeyApp.HockeyClient.Current.TrackEvent(eventName);
+            //Microsoft.HockeyApp.HockeyClient.Current.TrackEvent(eventName);
             System.Diagnostics.Debug.WriteLine("TrackEvent: " + eventName);
         }
 
@@ -21,7 +21,7 @@ namespace NextPlayerUWP.Common
         public static void TrackPageView(string name)
         {
             System.Diagnostics.Debug.WriteLine("TrackPageView " + name);
-            Microsoft.HockeyApp.HockeyClient.Current.TrackPageView(name);
+            //Microsoft.HockeyApp.HockeyClient.Current.TrackPageView(name);
         }
     }
 }
