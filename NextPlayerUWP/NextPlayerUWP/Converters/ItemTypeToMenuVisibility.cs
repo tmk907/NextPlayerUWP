@@ -21,7 +21,18 @@ namespace NextPlayerUWP.Converters
                 {
                     return Visibility.Visible;
                 }
-                if (command == "addtoplaylist" || command == "gotoartist" || command == "gotoalbum" || command == "showdetails" || command == "edittags")
+                if (command == "addtoplaylist")
+                {
+                    if (type == MusicSource.RadioJamendo)
+                    {
+                        return Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        return Visibility.Visible;
+                    }
+                }
+                else if (command == "gotoartist" || command == "gotoalbum" || command == "showdetails" || command == "edittags")
                 {
                     return Visibility.Collapsed;
                 }

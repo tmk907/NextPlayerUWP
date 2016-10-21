@@ -27,7 +27,7 @@ namespace NextPlayerUWP.Common.Tiles
             TileImageHelper ti = new TileImageHelper();
             try
             {
-                coverUri = await ti.PrepareImage(coverUri);
+                coverUri = await ti.PrepareTileImage(coverUri);
             }
             catch (Exception ex)
             {
@@ -43,7 +43,7 @@ namespace NextPlayerUWP.Common.Tiles
             TileImageHelper ti = new TileImageHelper();
             try
             {
-                coverUri = await ti.PrepareImage(coverUri);
+                coverUri = await ti.PrepareTileImage(coverUri);
             }
             catch (Exception ex)
             {

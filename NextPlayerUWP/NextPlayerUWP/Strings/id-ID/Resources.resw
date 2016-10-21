@@ -783,4 +783,7 @@
   <data name="Default" xml:space="preserve">
     <value>Default</value>
   </data>
+  <data name="ButtonAppStretch.Content" xml:space="preserve">
+    <value>Request feature</value>
+  </data>
 </root>

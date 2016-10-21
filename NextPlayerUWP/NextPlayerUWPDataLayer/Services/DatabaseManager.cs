@@ -868,7 +868,7 @@ namespace NextPlayerUWPDataLayer.Services
             foreach (var e in query)
             {
                 var type = (MusicSource)e.SourceType;
-                if (type == MusicSource.LocalFile || type == MusicSource.LocalNotMusicLibrary || type == MusicSource.Dropbox || type == MusicSource.OneDrive)
+                if (type == MusicSource.LocalFile || type == MusicSource.LocalNotMusicLibrary || type == MusicSource.Dropbox || type == MusicSource.OneDrive || type == MusicSource.PCloud)
                 {
                     var query2 = connection.Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
                     if (query2 != null)

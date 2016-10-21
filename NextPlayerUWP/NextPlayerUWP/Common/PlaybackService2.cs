@@ -329,6 +329,7 @@ namespace NextPlayerUWP.Common
         {
             TileUpdateHelper tileHelper = new TileUpdateHelper();
             int songIndex = CurrentSongIndex;
+            if (NowPlayingPlaylistManager.Current.songs.Count == 0) return;
             var song = NowPlayingPlaylistManager.Current.songs[songIndex];
             if (song.SongId == lastUpdatedTileSongId) return;
             lastUpdatedTileSongId = song.SongId;

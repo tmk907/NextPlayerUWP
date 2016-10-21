@@ -217,7 +217,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
                 if (!item.IsFolder)
                 {
                     if (item.Name.ToLower().EndsWith(".mp3") || item.Name.ToLower().EndsWith(".m4a") ||
-                        item.Name.ToLower().EndsWith(".wma") || item.Name.ToLower().EndsWith(".flac"))
+                        item.Name.ToLower().EndsWith(".wma") || item.Name.ToLower().EndsWith(".flac") || item.Name.ToLower().EndsWith(".wav"))
                     {
                         songData.Add(CreateSongData(item, userId, folder));
                     }

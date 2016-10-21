@@ -652,11 +652,22 @@ namespace NextPlayerUWP.ViewModels
             await launcher.LaunchAsync();
         }
 
-        public async void SendEmail()
+        public async void RequestFeatureAppStretch()
         {
+            var uri = new Uri(AppConstants.AppStretchLink);
+            // Set the option to show a warning
+            //var promptOptions = new Windows.System.LauncherOptions();
+
+            bool success = await Launcher.LaunchUriAsync(uri);
+            TelemetryAdapter.TrackEvent("AppStretch " + success.ToString());
+        }
+
+        public async void ContactWithSupport()
+        {
+            TelemetryAdapter.TrackEvent("Email support");
             var emailMessage = new Windows.ApplicationModel.Email.EmailMessage();
             emailMessage.Subject = AppConstants.AppName;
-            emailMessage.Body = "";
+            emailMessage.Body = "Next-Player";
             emailMessage.To.Add(new Windows.ApplicationModel.Email.EmailRecipient(AppConstants.DeveloperEmail));
             await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
         }

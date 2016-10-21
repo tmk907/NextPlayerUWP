@@ -191,23 +191,6 @@
                         <ToggleSwitch IsOn="{x:Bind ViewModel.AutoSavePlaylists, Mode=TwoWay}"/>
                     </StackPanel>
                 </StackPanel>
-                <!--<StackPanel Orientation="Vertical" Margin="4">
-                    <TextBlock x:Uid="TBChooseFolderForPlaylists"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        FontSize="17"
-                        Margin="4,4,4,4"
-                        Text="Choose folder, where playlists are saved"/>
-                        <TextBlock Text="{x:Bind ViewModel.PlaylistsFolder, Mode=OneWay}"
-                               FontSize="15"
-                               Margin="4,0,0,0"/>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="8,0,0,0">
-                            <Button x:Uid="ButtonChoosePlaylistsFolder"
-                                Content="Change"
-                                MinWidth="128"
-                                Click="{x:Bind ViewModel.ChoosePlaylistsFolder}"/>
-                    </StackPanel>
-                </StackPanel>-->
                 <TextBlock x:Uid="TBPersonalize"
                         Style="{StaticResource TitleTextBlockStyle}" 
                         Margin="0,12,0,12"
@@ -432,9 +415,10 @@
                     Margin="0,12,0,12"
                     Text="OneDrive"/>
                 <StackPanel Orientation="Vertical" Margin="4">
-                    <ListView Margin="0,4,4,4"
+                    <ListView
                         ItemsSource="{x:Bind ViewModel.OneDriveAccounts, Mode=OneWay}"
                         ItemTemplate="{StaticResource CloudAccountTemplate}"
+                        ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
                         SelectionMode="None"
                         IsItemClickEnabled="False">
                     </ListView>
@@ -450,9 +434,10 @@
                     Margin="0,12,0,12"
                     Text="Dropbox"/>
                 <StackPanel Orientation="Vertical" Margin="4">
-                    <ListView Margin="0,4,4,4"
+                    <ListView
                         ItemsSource="{x:Bind ViewModel.DropboxAccounts, Mode=OneWay}"
                         ItemTemplate="{StaticResource CloudAccountTemplate}"
+                        ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
                         SelectionMode="None"
                         IsItemClickEnabled="False">
                     </ListView>
@@ -468,9 +453,10 @@
                     Margin="0,12,0,12"
                     Text="pCloud"/>
                     <StackPanel Orientation="Vertical" Margin="4">
-                        <ListView Margin="0,4,4,4"
+                        <ListView
                             ItemsSource="{x:Bind ViewModel.PCloudAccounts, Mode=OneWay}"
                             ItemTemplate="{StaticResource CloudAccountTemplate}"
+                            ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
                             SelectionMode="None"
                             IsItemClickEnabled="False">
                         </ListView>
@@ -508,6 +494,19 @@
                         Content="Feedback"
                         Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                         Click="{x:Bind ViewModel.LeaveFeedback}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Uid="ButtonAppStrech"
+                        Margin="0,4,0,8"
+                        MinWidth="128"
+                        Content="Request feature"
+                        Click="{x:Bind ViewModel.RequestFeatureAppStretch}"/>
+                    <Image Source="/Assets/AppStretch_Small_Blue.png" Width="40" Height="40" Margin="8,0,0,0"/>
+                </StackPanel>
+                <!--<Button x:Uid="ButtonEmail"
+                        Content="Email"
+                        MinWidth="128"
+                        Margin="0,4,0,8"
+                        Click="{x:Bind ViewModel.ContactWithSupport}"/>-->
                 <Button x:Uid="ButtonLicenses"
                         Content="Licenses"
                         Margin="0,4,0,8"

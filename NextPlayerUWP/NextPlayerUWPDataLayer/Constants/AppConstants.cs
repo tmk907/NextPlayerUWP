@@ -147,6 +147,8 @@
         public const string JamendoClientId = "8ed1da48";
         public const string JamendoClientSecret = "45994f52254ba988c15abee8967bbc84";
 
+        //AppStretch
+        public const string AppStretchLink = @"https://appstretch.com/App/25821";
 
         public const string ActionAfterDropItem = "ActionAfterDropItem";
         public const string ActionPlayNext = "ActionPlayNext";

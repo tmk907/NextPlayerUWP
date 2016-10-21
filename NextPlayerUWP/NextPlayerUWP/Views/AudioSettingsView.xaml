@@ -29,6 +29,7 @@
             <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
             <Setter Property="ManipulationMode" Value="None"/>
             <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Margin" Value="8,0,8,0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Slider">
@@ -163,20 +164,20 @@
 			VisualStateNormalMinWidth="720"/>
         <Grid Grid.Row="1" 
               Margin="12,12,12,12"
-              MaxWidth="400" 
+              Width="400"
               HorizontalAlignment="Left">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <StackPanel 
                         Grid.Row="0"
-                        Margin="0,8,0,0"
+                        Margin="8,16,0,0"
                         Orientation="Horizontal">
                 <TextBlock x:Uid="TBVolume" Text="Volume"/>
                 <TextBlock Text=":" Margin="0,0,4,0"/>
@@ -193,7 +194,7 @@
                         Style="{StaticResource TimeSliderStyle}"/>
             <StackPanel 
                         Grid.Row="2"
-                        Margin="0,12,0,0"
+                        Margin="8,24,0,0"
                         Orientation="Horizontal">
                 <TextBlock x:Uid="TBAudioBalance" Text="Audio balance"/>
                 <TextBlock Text=":" Margin="0,0,4,0"/>
@@ -210,7 +211,7 @@
                         Style="{StaticResource TimeSliderStyle}"/>
             <StackPanel 
                         Grid.Row="4"
-                        Margin="0,12,0,0"
+                        Margin="8,24,0,0"
                         Orientation="Horizontal">
                 <TextBlock x:Uid="TBPlaybackRate" Text="Playback rate"/>
                 <TextBlock Text=":" Margin="0,0,4,0"/>
@@ -229,7 +230,7 @@
             <Button 
                         x:Uid="ButtonReset"
                         Grid.Row="6"
-                        Margin="0"
+                        Margin="8,0,0,0"
                         Content="Reset"
                         Click="{x:Bind ViewModel.PlayerVM.ResetPlaybackRate}"/>
         </Grid>

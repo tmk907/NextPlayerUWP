@@ -11,7 +11,7 @@ namespace NextPlayerUWP.Common.Tiles
         const int maxSize = 800;
         const int targetSize = 512;
 
-        public async Task<string> PrepareImage(string coverUri)
+        public async Task<string> PrepareTileImage(string coverUri)
         {
             if (coverUri.StartsWith("ms-appx")) return coverUri;
 
@@ -25,7 +25,7 @@ namespace NextPlayerUWP.Common.Tiles
             
             int width = softwareBitmap.PixelWidth;
             int height = softwareBitmap.PixelHeight;
-
+            string newCoverUri = coverUri;
             if (width > maxSize || height > maxSize)
             {
                 if (width == height)
@@ -43,44 +43,53 @@ namespace NextPlayerUWP.Common.Tiles
                     width = width * targetSize / height;
                     height = targetSize;
                 }
-                string newFilename = coverUri.Substring(coverUri.LastIndexOf('/') + 1);
 
                 var folder = ApplicationData.Current.TemporaryFolder;
+                string newFilename = coverUri.Substring(coverUri.LastIndexOf('/') + 1);
+                newCoverUri = "ms-appdata:///temp/" + newFilename;
                 StorageFile outputFile = await folder.CreateFileAsync(newFilename, CreationCollisionOption.ReplaceExisting);
-                using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite))
+
+                await SaveBitmap(outputFile, softwareBitmap, (uint)height, (uint)width);
+            }
+            return newCoverUri;
+        }
+
+        private async Task SaveBitmap(StorageFile file, SoftwareBitmap bitmap, uint newHeight = 0, uint newWidth = 0)
+        {
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                encoder.SetSoftwareBitmap(bitmap);
+                if (newWidth > 0 || newHeight > 0)
                 {
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-                    encoder.SetSoftwareBitmap(softwareBitmap);
-
                     encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Linear;
-                    encoder.BitmapTransform.ScaledHeight = (uint)height;
-                    encoder.BitmapTransform.ScaledWidth = (uint)width;
-                    encoder.IsThumbnailGenerated = true;
-                    try
+                    encoder.BitmapTransform.ScaledHeight = newHeight;
+                    encoder.BitmapTransform.ScaledWidth = newWidth;
+                }
+                encoder.IsThumbnailGenerated = true;
+                try
+                {
+                    await encoder.FlushAsync();
+                }
+                catch (Exception err)
+                {
+                    switch (err.HResult)
                     {
-                        await encoder.FlushAsync();
-                    }
-                    catch (Exception err)
-                    {
-                        switch (err.HResult)
-                        {
-                            case unchecked((int)0x88982F81): //WINCODEC_ERR_UNSUPPORTEDOPERATION
-                                                             // If the encoder does not support writing a thumbnail, then try again
-                                                             // but disable thumbnail generation.
-                                encoder.IsThumbnailGenerated = false;
-                                break;
-                            default:
-                                throw err;
-                        }
-                    }
-
-                    if (encoder.IsThumbnailGenerated == false)
-                    {
-                        await encoder.FlushAsync();
+                        case unchecked((int)0x88982F81): //WINCODEC_ERR_UNSUPPORTEDOPERATION
+                                                         // If the encoder does not support writing a thumbnail, then try again
+                                                         // but disable thumbnail generation.
+                            encoder.IsThumbnailGenerated = false;
+                            break;
+                        default:
+                            throw err;
                     }
                 }
+
+                if (encoder.IsThumbnailGenerated == false)
+                {
+                    await encoder.FlushAsync();
+                }
             }
-            return coverUri;
         }
     }
 }
