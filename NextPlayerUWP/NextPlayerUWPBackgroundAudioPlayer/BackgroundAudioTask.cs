@@ -1,4 +1,4 @@
-﻿using FFmpegInterop;
+﻿//using FFmpegInterop;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
@@ -239,7 +239,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             }
         }
 
-        private FFmpegInteropMSS FFmpegMSS;
+        //private FFmpegInteropMSS FFmpegMSS;
 
         private async Task OpenUsingFFmpeg(string path, bool fromAccessList)
         {
@@ -270,19 +270,19 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             try
             {
                 // Instantiate FFmpegInteropMSS using the opened local file stream
-                FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
-                MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
+                //FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
+                //MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
 
-                if (mss != null)
-                {
-                    BackgroundMediaPlayer.Current.AutoPlay = false;
-                    // Pass MediaStreamSource to Media Element
-                    BackgroundMediaPlayer.Current.SetMediaSource(mss);
-                }
-                else
-                {
+                //if (mss != null)
+                //{
+                //    BackgroundMediaPlayer.Current.AutoPlay = false;
+                //    // Pass MediaStreamSource to Media Element
+                //    BackgroundMediaPlayer.Current.SetMediaSource(mss);
+                //}
+                //else
+                //{
 
-                }
+                //}
             }
             catch (Exception ex)
             {

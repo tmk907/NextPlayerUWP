@@ -1,4 +1,4 @@
-﻿using FFmpegInterop;
+﻿//using FFmpegInterop;
 using NextPlayerUWPDataLayer.CloudStorage;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
@@ -134,36 +134,36 @@ namespace NextPlayerUWP.Common
             return playbackItem;
         }
 
-        private static async Task<MediaPlaybackItem> PrepareFromLocalFileFFmpeg(SongItem song)
-        {
-            StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-            IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
+        //private static async Task<MediaPlaybackItem> PrepareFromLocalFileFFmpeg(SongItem song)
+        //{
+        //    StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+        //    IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
 
-            try
-            {
-                // Instantiate FFmpegInteropMSS using the opened local file stream
-                FFmpegInteropMSS FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
-                MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
+        //    try
+        //    {
+        //        // Instantiate FFmpegInteropMSS using the opened local file stream
+        //        FFmpegInteropMSS FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
+        //        MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
 
-                if (mss != null)
-                {
+        //        if (mss != null)
+        //        {
                     
-                    var source = MediaSource.CreateFromMediaStreamSource(mss);
-                    //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                    //var source = MediaSource.CreateFromStorageFile(file);
-                    var playbackItem = new MediaPlaybackItem(source);
-                    playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-                    UpdateDisplayProperties(playbackItem, song);
-                    source.CustomProperties[propertySongId] = song.SongId;
-                    return playbackItem;
-                }
-            }
-            catch (Exception ex)
-            {
+        //            var source = MediaSource.CreateFromMediaStreamSource(mss);
+        //            //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+        //            //var source = MediaSource.CreateFromStorageFile(file);
+        //            var playbackItem = new MediaPlaybackItem(source);
+        //            playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+        //            UpdateDisplayProperties(playbackItem, song);
+        //            source.CustomProperties[propertySongId] = song.SongId;
+        //            return playbackItem;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-            }
-            return null;
-        }
+        //    }
+        //    return null;
+        //}
 
         private static MediaPlaybackItem PrepareFromFutureAccessList(SongItem song)
         {
@@ -176,39 +176,39 @@ namespace NextPlayerUWP.Common
             return playbackItem;
         }
 
-        private static async Task<MediaPlaybackItem> PrepareFromFutureAccessListFFmpeg(SongItem song)
-        {
-            string token = await FutureAccessHelper.GetTokenFromPath(song.Path);
-            if (token != null)
-            {
-                StorageFile file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(song.Path);
-                IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
+        //private static async Task<MediaPlaybackItem> PrepareFromFutureAccessListFFmpeg(SongItem song)
+        //{
+        //    string token = await FutureAccessHelper.GetTokenFromPath(song.Path);
+        //    if (token != null)
+        //    {
+        //        StorageFile file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(song.Path);
+        //        IRandomAccessStream readStream = await file.OpenAsync(FileAccessMode.Read);
 
-                try
-                {
-                    // Instantiate FFmpegInteropMSS using the opened local file stream
-                    FFmpegInteropMSS FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
-                    MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
+        //        try
+        //        {
+        //            // Instantiate FFmpegInteropMSS using the opened local file stream
+        //            FFmpegInteropMSS FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
+        //            MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
 
-                    if (mss != null)
-                    {
-                        var source = MediaSource.CreateFromMediaStreamSource(mss);
-                        //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                        //var source = MediaSource.CreateFromStorageFile(file);
-                        var playbackItem = new MediaPlaybackItem(source);
-                        playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
-                        UpdateDisplayProperties(playbackItem, song);
-                        source.CustomProperties[propertySongId] = song.SongId;
-                        return playbackItem;
-                    }
-                }
-                catch (Exception ex)
-                {
+        //            if (mss != null)
+        //            {
+        //                var source = MediaSource.CreateFromMediaStreamSource(mss);
+        //                //StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+        //                //var source = MediaSource.CreateFromStorageFile(file);
+        //                var playbackItem = new MediaPlaybackItem(source);
+        //                playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+        //                UpdateDisplayProperties(playbackItem, song);
+        //                source.CustomProperties[propertySongId] = song.SongId;
+        //                return playbackItem;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
 
-                }
-            }
-            return null;
-        }
+        //        }
+        //    }
+        //    return null;
+        //}
 
         private static async Task<MediaPlaybackItem> PrepareFromJamendo(SongItem song)
         {
