@@ -4,32 +4,22 @@ using System.Collections.Generic;
 
 namespace NextPlayerUWP.Common.Tiles
 {
-    public class TileContentFactory : ITileContentFactory
+    public class TileWithoutImage : ITileContentFactory
     {
         private string title;
         private string artist;
         private List<string> titles;
         private List<string> artists;
-        private string coverUri;
-        private string coverUriLarge;
 
-        public TileContentFactory(string title, string artist, string coverUri)
+        public TileWithoutImage(string title, string artist)
         {
             titles = new List<string>();
             this.title = title;
             artists = new List<string>();
             this.artist = artist;
-
-            this.coverUri = coverUri;
-            this.coverUriLarge = coverUri;
-            if (string.IsNullOrEmpty(coverUri) || coverUriLarge.StartsWith("ms-appx"))
-            {
-                coverUri = AppConstants.AppLogoMedium;
-                coverUriLarge = AppConstants.AppLogoLarge;
-            }
         }
 
-        public TileContentFactory(List<string> titles, List<string> artists, string coverUri)
+        public TileWithoutImage(List<string> titles, List<string> artists)
         {
             this.titles = titles;
             this.artists = artists;
@@ -48,60 +38,52 @@ namespace NextPlayerUWP.Common.Tiles
                 title = titles[0];
                 artist = artists[0];
             }
-
-            this.coverUri = coverUri;
-            this.coverUriLarge = coverUri;
-            if (string.IsNullOrEmpty(coverUri) || coverUri.StartsWith("ms-appx"))
-            {
-                this.coverUri = AppConstants.AppLogoMedium;
-                coverUriLarge = AppConstants.AppLogoLarge;
-            }
         }
 
         public TileBindingContentAdaptive GetSmallBindingContent()
         {
-            return GetSmallBindingContent(title, artist, coverUri);
+            return GetSmallBindingContent(title, artist);
         }
 
         public TileBindingContentAdaptive GetMediumBindingContent()
         {
-            return GetMediumBindingContent(title, artist, coverUri);
+            return GetMediumBindingContent(title, artist);
         }
 
         public TileBindingContentAdaptive GetWideBindingContent()
         {
-            return GetWideBindingContent(title, artist, coverUri);
+            return GetWideBindingContent(title, artist);
         }
 
         public TileBindingContentAdaptive GetLargeBindingContent()
         {
             if (titles.Count < 3)
             {
-                return GetLargeBindingContent(title, artist, coverUriLarge);
+                return GetLargeBindingContent(title, artist);
             }
             else
             {
-                return GetLargeBindingContent(titles, artists, coverUriLarge);
+                return GetLargeBindingContent(titles, artists);
             }
         }
 
-        private TileBindingContentAdaptive GetSmallBindingContent(string title, string artist, string coverUri)
+        private TileBindingContentAdaptive GetSmallBindingContent(string title, string artist)
         {
             TileBindingContentAdaptive smallBindingContent = new TileBindingContentAdaptive()
             {
                 Children =
+            {
+                new AdaptiveImage()
                 {
-                   new AdaptiveImage()
-                   {
-                       Source = AppConstants.AppLogoSmall71,
-                       HintRemoveMargin = true
-                   }
+                    Source = AppConstants.AppLogoSmall71,
+                    HintRemoveMargin = true
                 }
+            }
             };
             return smallBindingContent;
         }
 
-        private TileBindingContentAdaptive GetMediumBindingContent(string title, string artist, string coverUri)
+        private TileBindingContentAdaptive GetMediumBindingContent(string title, string artist)
         {
             TileBindingContentAdaptive mediumBindingContent = new TileBindingContentAdaptive()
             {
@@ -120,17 +102,12 @@ namespace NextPlayerUWP.Common.Tiles
                         HintWrap = true,
                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                     }
-                },
-
-                PeekImage = new TilePeekImage()
-                {
-                    Source = coverUri,
                 }
             };
             return mediumBindingContent;
         }
 
-        private TileBindingContentAdaptive GetWideBindingContent(string title, string artist, string coverUri)
+        private TileBindingContentAdaptive GetWideBindingContent(string title, string artist)
         {
             TileBindingContentAdaptive wideBindingContent = new TileBindingContentAdaptive()
             {
@@ -140,20 +117,6 @@ namespace NextPlayerUWP.Common.Tiles
                     {
                         Children =
                         {
-                            new AdaptiveSubgroup()
-                            {
-                                Children =
-                                {
-                                   new AdaptiveImage()
-                                   {
-                                       Source = coverUri,
-                                       HintAlign = AdaptiveImageAlign.Stretch,
-                                       HintRemoveMargin = true
-                                   }
-                                },
-                                HintWeight = 1
-                            },
-
                             new AdaptiveSubgroup()
                             {
                                 Children =
@@ -172,7 +135,6 @@ namespace NextPlayerUWP.Common.Tiles
                                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                                     }
                                 },
-                                HintWeight = 2
                             }
                         }
                     }
@@ -181,16 +143,10 @@ namespace NextPlayerUWP.Common.Tiles
             return wideBindingContent;
         }
 
-        private TileBindingContentAdaptive GetLargeBindingContentBackgroundImage(string title, string artist, string coverUri)
+        private TileBindingContentAdaptive GetLargeBindingContent2(string title, string artist)
         {
             TileBindingContentAdaptive largeBindingContent = new TileBindingContentAdaptive()
             {
-                BackgroundImage = new TileBackgroundImage()
-                {
-                    Source = coverUri,
-                    HintOverlay = 60
-                },
-
                 Children =
                 {
                     new AdaptiveText()
@@ -211,31 +167,12 @@ namespace NextPlayerUWP.Common.Tiles
             return largeBindingContent;
         }
 
-        private TileBindingContentAdaptive GetLargeBindingContent(string title, string artist, string coverUri)
+        private TileBindingContentAdaptive GetLargeBindingContent(string title, string artist)
         {
             TileBindingContentAdaptive largeBindingContent = new TileBindingContentAdaptive()
             {
                 Children =
                 {
-                    new AdaptiveGroup()
-                    {
-                        Children =
-                        {
-                            new AdaptiveSubgroup() { HintWeight = 1 },
-                            new AdaptiveSubgroup()
-                            {
-                                Children =
-                                {
-                                    new AdaptiveImage()
-                                    {
-                                        Source = coverUri,
-                                    }
-                                },
-                                HintWeight = 3
-                            },
-                            new AdaptiveSubgroup() { HintWeight = 1 }
-                        }
-                    },
                     new AdaptiveText()
                     {
                         Text = title,
@@ -252,21 +189,15 @@ namespace NextPlayerUWP.Common.Tiles
                         HintAlign = AdaptiveTextAlign.Center
                     }
                 },
-                TextStacking = TileTextStacking.Center
+                    TextStacking = TileTextStacking.Center
             };
             return largeBindingContent;
         }
 
-        private TileBindingContentAdaptive GetLargeBindingContent(List<string> titles, List<string> artists, string coverUri)
+        private TileBindingContentAdaptive GetLargeBindingContent(List<string> titles, List<string> artists)
         {
             TileBindingContentAdaptive largeBindingContent = new TileBindingContentAdaptive()
             {
-                BackgroundImage = new TileBackgroundImage()
-                {
-                    Source = coverUri,
-                    HintOverlay = 60
-                },
-
                 Children =
                 {
                     new AdaptiveGroup()
@@ -290,7 +221,7 @@ namespace NextPlayerUWP.Common.Tiles
                                         HintWrap = false,
                                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                                     }
-                                }                                
+                                }
                             }
                         }
                     },

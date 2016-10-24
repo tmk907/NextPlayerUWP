@@ -33,7 +33,7 @@ namespace NextPlayerUWP.Common.Tiles
             {
                 coverUri = AppConstants.SongCoverBig;
             }
-            var factory = new TileContentFactory(title, artist, coverUri);
+            ITileContentFactory factory = new TileWithoutImage(title, artist);
             var notification = PrepareTileNotification(factory);
             SendNotification(notification);
         }
@@ -49,7 +49,7 @@ namespace NextPlayerUWP.Common.Tiles
             {
                 coverUri = AppConstants.SongCoverBig;
             }
-            TileContentFactory factory = new TileContentFactory(titles, artists, coverUri);
+            ITileContentFactory factory = new TileWithoutImage(titles, artists);
             TileNotification notification = PrepareTileNotification(factory);
             SendNotification(notification);
         }
@@ -68,7 +68,7 @@ namespace NextPlayerUWP.Common.Tiles
             }
         }
 
-        private TileNotification PrepareTileNotification(TileContentFactory contentFactory)
+        private TileNotification PrepareTileNotification(ITileContentFactory contentFactory)
         {
             TileBindingContentAdaptive mediumBindingContent = contentFactory.GetMediumBindingContent();
             TileBindingContentAdaptive wideBindingContent = contentFactory.GetWideBindingContent();
