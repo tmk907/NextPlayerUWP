@@ -23,7 +23,7 @@ namespace NextPlayerUWP.Common
         {
             System.Diagnostics.Debug.WriteLine("OnMediaPlayerTrackChanged {0}", index);
             MediaPlayerTrackChanged?.Invoke(index);
-            UpdateTile();
+            UpdateLiveTile(false);
         }
 
         bool shuffle;
@@ -325,14 +325,14 @@ namespace NextPlayerUWP.Common
         }
 
         private int lastUpdatedTileSongId = -1;
-        public void UpdateTile()
+        public void UpdateLiveTile(bool refresh)
         {
-            TileUpdateHelper tileHelper = new TileUpdateHelper();
-            int songIndex = CurrentSongIndex;
             if (NowPlayingPlaylistManager.Current.songs.Count == 0) return;
+            int songIndex = CurrentSongIndex;
             var song = NowPlayingPlaylistManager.Current.songs[songIndex];
-            if (song.SongId == lastUpdatedTileSongId) return;
+            if (!refresh && song.SongId == lastUpdatedTileSongId) return;
             lastUpdatedTileSongId = song.SongId;
+            TileUpdateHelper tileHelper = new TileUpdateHelper();
             if (NowPlayingPlaylistManager.Current.songs.Count < 3)
             {
                 tileHelper.UpdateAppTile(song.Title, song.Artist, song.AlbumArtUri.ToString());

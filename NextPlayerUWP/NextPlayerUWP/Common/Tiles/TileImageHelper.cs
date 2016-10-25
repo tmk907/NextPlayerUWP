@@ -11,19 +11,6 @@ namespace NextPlayerUWP.Common.Tiles
         const int maxSize = 800;
         const int targetSize = 512;
 
-        public string ChangePath(string p)
-        {
-            try
-            {
-                p = p.Replace("ms-appdata:///local/Songs", ApplicationData.Current.LocalFolder.Path);
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return p;
-        }
-
         public async Task<string> PrepareTileImage(string coverUri)
         {
             if (coverUri.StartsWith("ms-appx")) return coverUri;
@@ -57,13 +44,19 @@ namespace NextPlayerUWP.Common.Tiles
                     height = targetSize;
                 }
 
-                var folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Songs", CreationCollisionOption.OpenIfExists);
-                var tilesFolder = await folder.CreateFolderAsync("LiveTile", CreationCollisionOption.OpenIfExists);
+                var albumArtsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Songs", CreationCollisionOption.OpenIfExists);
+                var tilesFolder = await albumArtsFolder.CreateFolderAsync("LiveTile", CreationCollisionOption.OpenIfExists);
                 string newFilename = coverUri.Substring(coverUri.LastIndexOf('/') + 1);
-                newCoverUri = "ms-appdata:///local/Songs/LiveTile/" + newFilename; //doesn't work
-                StorageFile outputFile = await tilesFolder.CreateFileAsync(newFilename, CreationCollisionOption.ReplaceExisting);
+                try
+                {
+                    StorageFile outputFile = await tilesFolder.CreateFileAsync(newFilename, CreationCollisionOption.FailIfExists);
+                    await SaveBitmap(outputFile, softwareBitmap, (uint)height, (uint)width);
+                }
+                catch (Exception ex)
+                {
 
-                await SaveBitmap(outputFile, softwareBitmap, (uint)height, (uint)width);
+                }
+                newCoverUri = "ms-appdata:///local/Songs/LiveTile/" + newFilename;
             }
             return newCoverUri;
         }
