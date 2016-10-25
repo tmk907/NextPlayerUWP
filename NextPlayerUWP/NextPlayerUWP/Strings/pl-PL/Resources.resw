@@ -786,4 +786,7 @@
   <data name="ButtonAppStretch.Content" xml:space="preserve">
     <value>Request feature</value>
   </data>
+  <data name="TBLiveTileWithImage.Text" xml:space="preserve">
+    <value>Pokaż okładkę albumu na kafelku</value>
+  </data>
 </root>
