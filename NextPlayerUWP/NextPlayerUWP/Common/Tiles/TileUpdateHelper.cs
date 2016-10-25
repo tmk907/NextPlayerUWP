@@ -5,6 +5,7 @@ using Windows.Data.Xml.Dom;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Helpers;
 
 namespace NextPlayerUWP.Common.Tiles
 {
@@ -33,7 +34,7 @@ namespace NextPlayerUWP.Common.Tiles
             {
                 coverUri = AppConstants.SongCoverBig;
             }
-            ITileContentFactory factory = new TileWithoutImage(title, artist);
+            ITileContentFactory factory = CreateFactory(title, artist, coverUri);
             var notification = PrepareTileNotification(factory);
             SendNotification(notification);
         }
@@ -49,9 +50,35 @@ namespace NextPlayerUWP.Common.Tiles
             {
                 coverUri = AppConstants.SongCoverBig;
             }
-            ITileContentFactory factory = new TileWithoutImage(titles, artists);
+            ITileContentFactory factory = CreateFactory(titles, artists, coverUri);
             TileNotification notification = PrepareTileNotification(factory);
             SendNotification(notification);
+        }
+
+        private ITileContentFactory CreateFactory(string title, string artist, string coverUri)
+        {
+            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
+            if (enableImage)
+            {
+                return new TileWithImage(title, artist, coverUri);
+            }
+            else
+            {
+                return new TileWithoutImage(title, artist);
+            }
+        }
+
+        private ITileContentFactory CreateFactory(List<string> titles, List<string> artists, string coverUri)
+        {
+            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
+            if (enableImage)
+            {
+                return new TileWithImage(titles, artists, coverUri);
+            }
+            else
+            {
+                return new TileWithoutImage(titles, artists);
+            }
         }
 
         private void SendNotification(TileNotification notification)
@@ -59,7 +86,7 @@ namespace NextPlayerUWP.Common.Tiles
             try
             {
                 System.Diagnostics.Debug.WriteLine("SendNotification tile");
-                var tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication("App");//.Update(notification);
+                var tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();//.Update(notification);
                 tileUpdater.Update(notification);
             }
             catch (Exception ex)

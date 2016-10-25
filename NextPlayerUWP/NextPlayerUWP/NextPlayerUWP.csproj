@@ -127,7 +127,7 @@
     <Compile Include="Common\BackgroundTaskHelper.cs" />
     <Compile Include="Common\ColorsHelper.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
-    <Compile Include="Common\HockeyAdapter.cs" />
+    <Compile Include="Common\TelemetryAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
     <Compile Include="Common\PlaybackItemBuilder.cs" />
     <Compile Include="Common\PlaybackService.cs" />
@@ -143,7 +143,7 @@
     <Compile Include="Common\ThemeHelper.cs" />
     <Compile Include="Common\TileManager.cs" />
     <Compile Include="Common\Tiles\ITileContentFactory.cs" />
-    <Compile Include="Common\Tiles\TileContentFactory.cs" />
+    <Compile Include="Common\Tiles\TileWithImage.cs" />
     <Compile Include="Common\Tiles\TileImageHelper.cs" />
     <Compile Include="Common\Tiles\TileUpdateHelper.cs" />
     <Compile Include="Common\Tiles\TileWithoutImage.cs" />

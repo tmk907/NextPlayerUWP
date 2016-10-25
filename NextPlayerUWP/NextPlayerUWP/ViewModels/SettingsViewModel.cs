@@ -152,6 +152,7 @@ namespace NextPlayerUWP.ViewModels
 
             PreventScreenLock = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
             HideStatusBar = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
+            LiveTileWithAlbumArt = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
             IncludeSubFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
 
             //Personalization
@@ -500,6 +501,24 @@ namespace NextPlayerUWP.ViewModels
             if (!initialization)
             {
                 TelemetryAdapter.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
+            }
+        }
+
+        private bool liveTileWithAlbumArt = false;
+        public bool LiveTileWithAlbumArt
+        {
+            get { return liveTileWithAlbumArt; }
+            set
+            {
+                if (value != liveTileWithAlbumArt)
+                {
+                    if (!initialization)
+                    {
+                        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, value);
+                        TelemetryAdapter.TrackEvent("LiveImage " + ((value) ? "on" : "off"));
+                    }
+                }
+                Set(ref liveTileWithAlbumArt, value);
             }
         }
 

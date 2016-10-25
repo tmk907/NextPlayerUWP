@@ -86,6 +86,7 @@
         public const string TileIdValue = "TileIdValue";
         public const string TileImage = "TileImage";
         public const string TileAppTransparent = "isapptiletransparent";
+        public const string EnableLiveTileWithImage = "EnableLiveTileWithImage";
 
         public const string DataLastSend = "DataLastSend";
 

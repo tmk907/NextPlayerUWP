@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NextPlayerUWP.Common.Tiles
 {
-    public class TileContentFactory : ITileContentFactory
+    public class TileWithImage : ITileContentFactory
     {
         private string title;
         private string artist;
@@ -13,7 +13,7 @@ namespace NextPlayerUWP.Common.Tiles
         private string coverUri;
         private string coverUriLarge;
 
-        public TileContentFactory(string title, string artist, string coverUri)
+        public TileWithImage(string title, string artist, string coverUri)
         {
             titles = new List<string>();
             this.title = title;
@@ -29,7 +29,7 @@ namespace NextPlayerUWP.Common.Tiles
             }
         }
 
-        public TileContentFactory(List<string> titles, List<string> artists, string coverUri)
+        public TileWithImage(List<string> titles, List<string> artists, string coverUri)
         {
             this.titles = titles;
             this.artists = artists;
@@ -77,7 +77,7 @@ namespace NextPlayerUWP.Common.Tiles
         {
             if (titles.Count < 3)
             {
-                return GetLargeBindingContent(title, artist, coverUriLarge);
+                return GetLargeBindingContentBackgroundImage(title, artist, coverUriLarge);
             }
             else
             {
@@ -197,16 +197,19 @@ namespace NextPlayerUWP.Common.Tiles
                     {
                         Text = title,
                         HintWrap = true,
-                        HintStyle = AdaptiveTextStyle.Caption
+                        HintStyle = AdaptiveTextStyle.Body,
+                        HintAlign = AdaptiveTextAlign.Center
                     },
 
                     new AdaptiveText()
                     {
                         Text = artist,
                         HintWrap = true,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                        HintStyle = AdaptiveTextStyle.BodySubtle,
+                        HintAlign = AdaptiveTextAlign.Center
                     }
-                }
+                },
+                TextStacking = TileTextStacking.Bottom
             };
             return largeBindingContent;
         }
