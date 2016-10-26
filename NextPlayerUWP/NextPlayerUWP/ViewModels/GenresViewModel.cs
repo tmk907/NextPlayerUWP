@@ -1,6 +1,5 @@
 ﻿using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -49,6 +48,12 @@ namespace NextPlayerUWP.ViewModels
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             //SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+        }
+
+        public override void FreeResources()
+        {
+            genres = null;
+            genres = new ObservableCollection<GenreItem>();
         }
 
         public void ItemClicked(object sender, ItemClickEventArgs e)

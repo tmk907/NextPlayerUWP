@@ -1,5 +1,4 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;

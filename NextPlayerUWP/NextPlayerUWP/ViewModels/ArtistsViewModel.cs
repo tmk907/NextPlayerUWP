@@ -69,6 +69,14 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        public override void FreeResources()
+        {
+            groupedArtists = null;
+            artists = null;
+            groupedArtists = new ObservableCollection<GroupList>();
+            artists = new ObservableCollection<ArtistItem>();
+        }
+
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
             NavigationService.Navigate(App.Pages.Artist, ((ArtistItem)e.ClickedItem).ArtistId);

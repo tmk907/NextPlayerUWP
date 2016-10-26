@@ -17,6 +17,7 @@ namespace NextPlayerUWP.ViewModels
 
         public AlbumsViewModel()
         {
+            System.Diagnostics.Debug.WriteLine("AlbumsViewModel constructor");
             sortingHelper = new SortingHelperForAlbumItems("Albums");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
@@ -37,6 +38,8 @@ namespace NextPlayerUWP.ViewModels
                 albums.Add(new AlbumItem());
             }
         }
+
+
 
         private void AlbumArtFinder_AlbumArtUpdatedEvent(int albumId, string albumArtPath)
         {
@@ -90,6 +93,14 @@ namespace NextPlayerUWP.ViewModels
                 GroupedAlbums = gr;
                 SortMusicItems();
             }
+        }
+
+        public override void FreeResources()
+        {
+            groupedAlbums = null;
+            albums = null;
+            groupedAlbums = new ObservableCollection<GroupList>();
+            albums = new ObservableCollection<AlbumItem>();
         }
 
         private async void MediaImport_MediaImported(string s)

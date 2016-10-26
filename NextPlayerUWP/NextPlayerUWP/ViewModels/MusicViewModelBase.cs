@@ -19,6 +19,19 @@ namespace NextPlayerUWP.ViewModels
 {
     public abstract class MusicViewModelBase:Template10.Mvvm.ViewModelBase
     {
+        //public MusicViewModelBase()
+        //{
+        //    App.MemoryUsageReduced += App_MemoryUsageReduced;
+        //}
+
+        private void App_MemoryUsageReduced(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Before: {0}", Windows.System.MemoryManager.AppMemoryUsage);
+            FreeResources();
+            GC.Collect();
+            System.Diagnostics.Debug.WriteLine("After: {0}", Windows.System.MemoryManager.AppMemoryUsage);
+        }
+
         protected ListView listView;
         protected int firstVisibleItemIndex;
         protected string positionKey;
@@ -268,6 +281,8 @@ namespace NextPlayerUWP.ViewModels
             }
             else onLoadedCompleted = true;//zanim zostanie zmieniona wartosc, w OnNavigatedToAsync moze przeskoczyc do if(onloadedcomplete) ?
         }
+
+        virtual public void FreeResources() { }
 
         protected async Task LoadAndScroll()
         {

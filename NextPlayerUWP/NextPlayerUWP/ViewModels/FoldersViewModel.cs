@@ -2,7 +2,6 @@
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -113,6 +112,14 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             SortMusicItems();
+        }
+
+        public override void FreeResources()
+        {
+            folders = null;
+            items = null;
+            folders = new ObservableCollection<FolderItem>();
+            items = new ObservableCollection<MusicItem>();
         }
 
         string directory;

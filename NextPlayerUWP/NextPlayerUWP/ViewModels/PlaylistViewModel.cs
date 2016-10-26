@@ -1,5 +1,4 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -12,7 +11,6 @@ using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using System.IO;
 using Windows.UI.Xaml;
-using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -62,7 +60,7 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            if (Playlist.Count == 0)
+            if (playlist.Count == 0)
             {
                 PlaylistItem p = new PlaylistItem(-1, false, "Playlist");
                 var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
@@ -115,6 +113,12 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             SortMusicItems();
+        }
+
+        public override void FreeResources()
+        {
+            playlist = null;
+            playlist = new ObservableCollection<SongItem>();
         }
 
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)

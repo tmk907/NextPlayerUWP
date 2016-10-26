@@ -1,5 +1,4 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -7,11 +6,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -113,6 +109,14 @@ namespace NextPlayerUWP.ViewModels
                 //    GroupedSongs.FirstOrDefault(e => e.Key.Equals(a)).Add(item);
                 //}
             }
+        }
+
+        public override void FreeResources()
+        {
+            groupedSongs = null;
+            songs = null;
+            groupedSongs = new ObservableCollection<GroupList>();
+            songs = new ObservableCollection<SongItem>();
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)
