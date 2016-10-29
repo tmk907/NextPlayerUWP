@@ -188,12 +188,13 @@ namespace NextPlayerUWP.Views
         {
             if (IsDesktop())
             {
+#if DEBUG
                 Menu.NavigationService.Navigate(App.Pages.NowPlaying);
                 //Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
+#endif
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Shell GoToNowPlaying");
                 Menu.NavigationService.Navigate(App.Pages.NowPlaying);
             }
         }

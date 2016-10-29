@@ -34,8 +34,8 @@ namespace NextPlayerUWP.Common.Tiles
             {
                 coverUri = AppConstants.SongCoverBig;
             }
-            ITileContentFactory factory = CreateFactory(title, artist, coverUri);
-            var notification = PrepareTileNotification(factory);
+            //ITileContentFactory factory = CreateFactory(title, artist, coverUri);
+            TileNotification notification = CreateTileNotification(title, artist, coverUri);// PrepareTileNotification(factory);
             SendNotification(notification);
         }
 
@@ -50,9 +50,54 @@ namespace NextPlayerUWP.Common.Tiles
             {
                 coverUri = AppConstants.SongCoverBig;
             }
-            ITileContentFactory factory = CreateFactory(titles, artists, coverUri);
-            TileNotification notification = PrepareTileNotification(factory);
+            //ITileContentFactory factory = CreateFactory(titles, artists, coverUri);
+            TileNotification notification = CreateTileNotification(titles,artists,coverUri);// PrepareTileNotification(factory);
             SendNotification(notification);
+        }
+
+        
+
+        private TileNotification CreateTileNotification(string title, string artist, string coverUri)
+        {
+            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
+            ITileXml tile;
+            if (enableImage)
+            {
+                tile = new TileWithImageXml(title, artist, coverUri);
+            }
+            else
+            {
+                tile = new TileWithoutImageXml(title, artist);
+            }
+            return tile.GetNotification();
+        }
+
+        private TileNotification CreateTileNotification(List<string> titles, List<string> artists, string coverUri)
+        {
+            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
+            ITileXml tile;
+            if (enableImage)
+            {
+                tile = new TileWithImageXml(titles, artists, coverUri);
+            }
+            else
+            {
+                tile = new TileWithoutImageXml(titles, artists);
+            }
+            return tile.GetNotification();
+        }
+
+        private void SendNotification(TileNotification notification)
+        {
+            try
+            {
+                var tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();//.Update(notification);
+                tileUpdater.Update(notification);
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         private ITileContentFactory CreateFactory(string title, string artist, string coverUri)
@@ -78,20 +123,6 @@ namespace NextPlayerUWP.Common.Tiles
             else
             {
                 return new TileWithoutImage(titles, artists);
-            }
-        }
-
-        private void SendNotification(TileNotification notification)
-        {
-            try
-            {
-                System.Diagnostics.Debug.WriteLine("SendNotification tile");
-                var tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();//.Update(notification);
-                tileUpdater.Update(notification);
-            }
-            catch (Exception ex)
-            {
-
             }
         }
 

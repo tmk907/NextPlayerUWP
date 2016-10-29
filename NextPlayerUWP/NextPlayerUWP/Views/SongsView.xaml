@@ -239,6 +239,18 @@
                         <Setter Target="SongsListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SongsListView.ItemTemplate" Value="{StaticResource SongsListViewItemTemplateDesktop}"/>
+                        <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplate}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="SongsListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>

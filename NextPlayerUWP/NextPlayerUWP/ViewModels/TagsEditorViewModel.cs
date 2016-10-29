@@ -167,6 +167,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            App.ChangeBottomPlayerVisibility(true);
             songId = -1;
             songData = new SongData();
             if (parameter != null)
@@ -179,7 +180,7 @@ namespace NextPlayerUWP.ViewModels
             artists = tagsData.Artists;
             genres = tagsData.Genres;
             albumArtist = tagsData.AlbumArtist;
-            TelemetryAdapter.TrackPageView("Page: Tags Editor");
+            TelemetryAdapter.TrackPageView(this.GetType().ToString());
         }
     }
 }

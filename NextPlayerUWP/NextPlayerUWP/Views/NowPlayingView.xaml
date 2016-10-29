@@ -598,7 +598,7 @@
                                     Margin="4,0,0,0"
                                     HorizontalAlignment="Left"
                                     FontSize="17"
-                                    Text="{x:Bind ViewModel.SongsCount}"/>
+                                    Text="{x:Bind ViewModel.SongsCount, Mode=OneWay}"/>
                             </Grid>
                         </FlipViewItem>
                     </FlipView.Items>

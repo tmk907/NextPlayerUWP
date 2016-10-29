@@ -166,6 +166,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            App.ChangeBottomPlayerVisibility(true);
             isBack = false;
             firstVisibleItemIndex = 0;
             selectedItemIndex = 0;
@@ -217,13 +218,13 @@ namespace NextPlayerUWP.ViewModels
 
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
-                TelemetryAdapter.TrackEvent("Navigated to " + this.GetType());
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
         }
 
         virtual public bool RestoreListPosition(NavigationMode mode)
         {
-            if (NavigationMode.Back == mode) return true;
+            if (NavigationMode.Back == mode || NavigationMode.Refresh == mode) return true;
             else return false;
         }
 

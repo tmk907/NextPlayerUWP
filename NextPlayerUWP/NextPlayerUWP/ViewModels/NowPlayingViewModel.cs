@@ -13,7 +13,6 @@ using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
@@ -24,9 +23,9 @@ namespace NextPlayerUWP.ViewModels
         {
             _timer = new DispatcherTimer();
             SetupTimer();
-
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
+
             lastFmCache = new LastFmCache();
             seekButtonsHelper = new SeekButtonsHelper();
             ViewModelLocator vml = new ViewModelLocator();
@@ -47,7 +46,6 @@ namespace NextPlayerUWP.ViewModels
 
         private void Current_Resuming(object sender, object e)
         {
-            App.ChangeBottomPlayerVisibility(false);
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
             PlaybackService.MediaPlayerTrackChanged += ChangeSong;
@@ -414,6 +412,7 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             System.Diagnostics.Debug.WriteLine("NowPlayingVM OnNavigatedToAsync");
+
             App.ChangeBottomPlayerVisibility(false);
             CoverUri = SongCoverManager.Instance.GetCurrent();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
@@ -439,7 +438,8 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
             System.Diagnostics.Debug.WriteLine("NowPlayingVM OnNavigatedFromAsync");
-            App.ChangeBottomPlayerVisibility(true);
+
+            //App.ChangeBottomPlayerVisibility(true);
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             PlaybackService.MediaPlayerStateChanged -= ChangePlayButtonContent;
             PlaybackService.MediaPlayerTrackChanged -= ChangeSong;

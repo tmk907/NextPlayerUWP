@@ -239,7 +239,8 @@ namespace NextPlayerUWP.ViewModels
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
-        {           
+        {
+            App.ChangeBottomPlayerVisibility(true);
             if (parameter != null)
             {
                 id = Int32.Parse(parameter.ToString());

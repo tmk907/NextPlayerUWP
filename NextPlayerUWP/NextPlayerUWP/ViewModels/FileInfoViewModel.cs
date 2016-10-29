@@ -19,6 +19,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            App.ChangeBottomPlayerVisibility(true);
             fileInfo = new SongData();
             if (parameter != null)
             {
@@ -33,7 +34,7 @@ namespace NextPlayerUWP.ViewModels
                     await AddFileSize();
                 }
             }
-            TelemetryAdapter.TrackPageView("Page: File Info");
+            TelemetryAdapter.TrackPageView(this.GetType().ToString());
         }
 
         private async Task AddFileSize()

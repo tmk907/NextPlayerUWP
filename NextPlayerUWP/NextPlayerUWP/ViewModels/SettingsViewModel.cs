@@ -100,7 +100,7 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             initialization = true;
-
+            App.ChangeBottomPlayerVisibility(true);
             // Tools
             var tt = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
             var IsTimerOn = (bool)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn)??false);

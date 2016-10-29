@@ -131,7 +131,10 @@
                 </VisualState>
                 <VisualState x:Name="Desktop">
                     <VisualState.StateTriggers>
-                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                        <triggers:CompositeStateTrigger Operator="Or">
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                        </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="Column1.Width" Value="*"/>

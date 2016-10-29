@@ -70,7 +70,6 @@ namespace NextPlayerUWP
             this.LeavingBackground += App_LeavingBackground;
             MemoryManager.AppMemoryUsageLimitChanging += MemoryManager_AppMemoryUsageLimitChanging;
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_AppMemoryUsageIncreased;
-
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
 
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
@@ -122,6 +121,12 @@ namespace NextPlayerUWP
 #else
             Logger.ClearSettingsLogs();
 #endif
+
+            //if (IsXbox())
+            //{
+            //    Application.Current.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+            //}
+
             //DatabaseManager.Current.resetdb();
             AudioFormatsHelper = new AudioFormatsHelper(false);
             this.UnhandledException += App_UnhandledException;
@@ -139,46 +144,80 @@ namespace NextPlayerUWP
 
         private void MemoryManager_AppMemoryUsageLimitChanging(object sender, AppMemoryUsageLimitChangingEventArgs e)
         {
-            Debug.WriteLine("App MemoryManager_AppMemoryUsageLimitChanging {0}", e.NewLimit);
+            Debug.WriteLine("App MemoryManager_AppMemoryUsageLimitChanging " + (e.OldLimit) + " to " + (e.NewLimit));
             if (MemoryManager.AppMemoryUsage >= e.NewLimit)
             {
                 ReduceMemoryUsage(e.NewLimit);
             }
         }
 
-        public void ReduceMemoryUsage(ulong limit)
+        public async void ReduceMemoryUsage(ulong limit)
         {
             Debug.WriteLine("App ReduceMemoryUsage {0} {1}", _isInBackgroundMode, limit);
             TelemetryAdapter.TrackEvent("ReduceMemoryUsage");
             OnMemoryUsageReduced();
-            //if (_isInBackgroundMode && Window.Current.Content != null)
-            //{
-
-            //    //Window.Current.Content = null;
-            //}
-            
-            GC.Collect();
+            if (_isInBackgroundMode && Window.Current != null && Window.Current.Content != null)
+            {
+                if (NavigationService != null)
+                {
+                    await OnReduceMemoryUsage();
+                    await NavigationService.SaveNavigationAsync();
+                    WindowWrapper.Current().NavigationServices.Clear();//.Remove(NavigationService);
+                    var a = WindowWrapper.Current().NavigationServices.Count;
+                }
+                else
+                {
+                    //?
+                }
+                Window.Current.Content = null;
+                GC.Collect();
+            }
         }
 
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             Debug.WriteLine("App App_EnteredBackground");
-            Debug.WriteLine("Usage={0} level={1} limit={2}", MemoryManager.AppMemoryUsage, MemoryManager.AppMemoryUsageLevel, MemoryManager.AppMemoryUsageLimit);
+            Debug.WriteLine("Memory Usage={0} level={1} limit={2}", MemoryManager.AppMemoryUsage, MemoryManager.AppMemoryUsageLevel, MemoryManager.AppMemoryUsageLimit);
 
+            var deferral = e.GetDeferral();
             _isInBackgroundMode = true;
-            //ReduceMemoryUsage(MemoryManager.AppMemoryUsageLimit);
+            try
+            {
+#if DEBUG
+                //If we are in debug mode free memory here because the memory limits are turned off
+                //In release builds defer the actual reduction of memory to the limit changing event so we don't 
+                //unnecessarily throw away the UI
+
+                //ReduceMemoryUsage(0);
+#endif
+            }
+            finally
+            {
+                deferral.Complete();
+            }
         }
 
-        private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        bool isBackgroundLeavedFirstTime = true;
+        private async void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             Debug.WriteLine("App App_LeavingBackground");
             _isInBackgroundMode = false;
 
             // Reastore view content if it was previously unloaded.
-            if (Window.Current.Content == null)
+            if (!isBackgroundLeavedFirstTime && Window.Current != null && Window.Current.Content == null)
             {
-                //CreateRootElement(null);
+                var deferral = e.GetDeferral();
+                var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+                await service.RestoreSavedNavigationAsync();
+                Window.Current.Content = new ModalDialog
+                {
+                    DisableBackButtonWhenModal = true,
+                    Content = new Views.Shell(service),
+                    ModalContent = new Views.Busy(),
+                };
+                deferral.Complete();
             }
+            isBackgroundLeavedFirstTime = false;
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -743,6 +782,15 @@ namespace NextPlayerUWP
             {
                 await NowPlayingPlaylistManager.Current.Add(list);
             }
+        }
+
+        static string deviceFamily;
+        public static bool IsXbox()
+        {
+            if (deviceFamily == null)
+                deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
+
+            return deviceFamily == "Windows.Xbox";
         }
     }
 }

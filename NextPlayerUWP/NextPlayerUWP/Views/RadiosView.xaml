@@ -108,6 +108,14 @@
                         <Setter Target="RadiosListView.ItemTemplate" Value="{StaticResource RadioItemTemplateDesktop}"/>
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RadiosListView.ItemTemplate" Value="{StaticResource RadioItemTemplateDesktop}"/>
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>

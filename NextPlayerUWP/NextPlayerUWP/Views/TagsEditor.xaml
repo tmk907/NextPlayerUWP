@@ -52,6 +52,17 @@
                         <Setter Target="MobileLayout.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DesktopLayout.Opacity" Value="1"/>
+                        <Setter Target="DesktopLayout.Visibility" Value="Visible"/>
+                        <Setter Target="MobileLayout.Opacity" Value="0"/>
+                        <Setter Target="MobileLayout.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>

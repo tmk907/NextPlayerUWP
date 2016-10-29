@@ -143,10 +143,13 @@
     <Compile Include="Common\ThemeHelper.cs" />
     <Compile Include="Common\TileManager.cs" />
     <Compile Include="Common\Tiles\ITileContentFactory.cs" />
+    <Compile Include="Common\Tiles\ITileXml.cs" />
     <Compile Include="Common\Tiles\TileWithImage.cs" />
     <Compile Include="Common\Tiles\TileImageHelper.cs" />
     <Compile Include="Common\Tiles\TileUpdateHelper.cs" />
+    <Compile Include="Common\Tiles\TileWithImageXml.cs" />
     <Compile Include="Common\Tiles\TileWithoutImage.cs" />
+    <Compile Include="Common\Tiles\TileWithoutImageXml.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">

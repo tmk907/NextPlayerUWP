@@ -84,7 +84,7 @@
             </Setter>
         </Style>
         <DataTemplate x:Key="GroupHeaderTemplate">
-            <Grid Margin="0,12,0,4">
+            <Grid Margin="0,0,0,4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition/>
@@ -213,10 +213,14 @@
                         <triggers:CompositeStateTrigger Operator="And">
                             <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                             <triggers:AdaptiveTrigger MinWindowWidth="480"/>
+                            <triggers:OrientationStateTrigger Orientation="Portrait"/>
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateMobileWide}"/>
+                        <Setter Target="ArtistSongsListView.CanDragItems" Value="False"/>
+                        <Setter Target="PortraitView.Visibility" Value="Visible"/>
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -224,10 +228,26 @@
                         <triggers:CompositeStateTrigger Operator="And">
                             <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                             <triggers:AdaptiveTrigger MinWindowWidth="0"/>
+                            <triggers:OrientationStateTrigger Orientation="Portrait"/>
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateMobile}"/>
+                        <Setter Target="ArtistSongsListView.CanDragItems" Value="False"/>
+                        <Setter Target="PortraitView.Visibility" Value="Visible"/>
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MobileLandscape">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:OrientationStateTrigger Orientation="Landscape"/>
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Visible"/>
+                        <Setter Target="PortraitView.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -236,6 +256,16 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateDesktop}"/>
+                        <Setter Target="PortraitView.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateDesktop}"/>
+                        <Setter Target="PortraitView.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -261,7 +291,8 @@
                 Icon="Shuffle"
                 Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
         </controls:PageHeader>
-        <Grid Grid.Row="1" Grid.Column="0">
+        <Grid Grid.Row="1" Grid.Column="0"
+              x:Name="PortraitView">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
@@ -269,30 +300,73 @@
             <TextBlock Grid.Row="0"
                 Text="{Binding Artist.Artist}"
                 Style="{StaticResource ArtistDescriptionTextBlockStyle}"
-                Margin="12,20,12,12"/>
-            <mycontrols:AlternatingRowListView x:Name="ArtistSongsListView"
-                    Grid.Row="1"
-                    EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-                    OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                    ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
-                    ItemTemplate="{StaticResource ArtistSongItemTemplateDesktop}"
-                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
-                    IsItemClickEnabled="True"
-                    ItemClick="{x:Bind ViewModel.ItemClicked }"
-                    SelectionMode="None"
-                    Margin="12,0,0,0"
-                    CanDragItems="True"
-                    DragItemsStarting="{x:Bind ViewModel.DragStarting}">
+                Margin="12,12,12,12"/>
+            <mycontrols:AlternatingRowListView
+                        x:Name="ArtistSongsListView"
+                        Grid.Row="1"
+                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                        ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
+                        ItemTemplate="{StaticResource ArtistSongItemTemplateDesktop}"
+                        ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
+                        IsItemClickEnabled="True"
+                        ItemClick="{x:Bind ViewModel.ItemClicked }"
+                        SelectionMode="None"
+                        Margin="12,0,0,0"
+                        CanDragItems="True"
+                        DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                 <mycontrols:AlternatingRowListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
                 </mycontrols:AlternatingRowListView.ItemsPanel>
                 <mycontrols:AlternatingRowListView.GroupStyle>
-                    <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}"
-                                HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"/>
+                    <GroupStyle 
+                        HeaderTemplate="{StaticResource GroupHeaderTemplate}"
+                        HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"/>
                 </mycontrols:AlternatingRowListView.GroupStyle>
             </mycontrols:AlternatingRowListView>
         </Grid>
+        <ScrollViewer 
+                Grid.Row="1" Grid.Column="0"
+                x:Name="MobileLandscapeView"
+                x:DeferLoadStrategy="Lazy" 
+                Visibility="Collapsed"
+                ScrollViewer.VerticalScrollMode="Enabled" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                        Text="{Binding Artist.Artist}"
+                        Style="{StaticResource ArtistDescriptionTextBlockStyle}"
+                        Margin="12,12,12,12"/>
+                <mycontrols:AlternatingRowListView 
+                        Grid.Row="1"
+                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                        ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
+                        ItemTemplate="{StaticResource ArtistSongItemTemplateMobileWide}"
+                        ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
+                        IsItemClickEnabled="True"
+                        ItemClick="{x:Bind ViewModel.ItemClicked }"
+                        SelectionMode="None"
+                        Margin="12,0,0,0"
+                        CanDragItems="False"
+                        ScrollViewer.VerticalScrollMode="Disabled">
+                    <mycontrols:AlternatingRowListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </mycontrols:AlternatingRowListView.ItemsPanel>
+                    <mycontrols:AlternatingRowListView.GroupStyle>
+                        <GroupStyle 
+                                HeaderTemplate="{StaticResource GroupHeaderTemplate}"
+                                HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"/>
+                    </mycontrols:AlternatingRowListView.GroupStyle>
+                </mycontrols:AlternatingRowListView>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>

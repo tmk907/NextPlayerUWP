@@ -99,6 +99,15 @@
                         <Setter Target="PlaylistsListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistsListView.ItemTemplate" Value="{StaticResource PlaylistItemTemplateDesktop}"/>
+                        <Setter Target="PlaylistsListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>

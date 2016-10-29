@@ -31,6 +31,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            App.ChangeBottomPlayerVisibility(true);
             Updating = true;
             if (Radios.Count == 0)
             {
@@ -41,7 +42,7 @@ namespace NextPlayerUWP.ViewModels
             Updating = false;
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
-                TelemetryAdapter.TrackEvent("Navigated to " + this.GetType());
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
         }
 

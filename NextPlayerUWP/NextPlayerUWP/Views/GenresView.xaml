@@ -133,6 +133,17 @@
                         <Setter Target="GenresListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="GenresListView.ItemTemplate" Value="{StaticResource GenreItemTemplateDesktop}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="GenresListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>

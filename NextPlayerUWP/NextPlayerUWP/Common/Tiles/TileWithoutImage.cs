@@ -104,6 +104,7 @@ namespace NextPlayerUWP.Common.Tiles
                     }
                 }
             };
+            NextPlayerUWPDataLayer.Diagnostics.Logger.Save(mediumBindingContent.ToString());
             return mediumBindingContent;
         }
 

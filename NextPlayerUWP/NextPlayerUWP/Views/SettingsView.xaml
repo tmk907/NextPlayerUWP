@@ -106,6 +106,18 @@
                         <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TimerStackPanel.Orientation" Value="Horizontal"/>
+                        <Setter Target="DragDropActionStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
