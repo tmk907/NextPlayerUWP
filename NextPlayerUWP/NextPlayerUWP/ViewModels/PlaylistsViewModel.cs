@@ -47,28 +47,23 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            Playlists = await DatabaseManager.Current.GetPlaylistItemsAsync();
-        }
-
-        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
-        {
-            if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
+            var p = await DatabaseManager.Current.GetPlaylistItemsAsync();
+            if (p.Count != playlists.Count)
             {
-                playlists = new ObservableCollection<PlaylistItem>();
+                Playlists = p;
             }
-            await base.OnNavigatingFromAsync(args);
         }
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
             var item = (PlaylistItem)e.ClickedItem;
-            if (!item.IsSmart)
+            if (item.IsSmart)
             {
-                NavigationService.Navigate(App.Pages.PlaylistEditable, item.GetParameter());
+                NavigationService.Navigate(App.Pages.Playlist, item.GetParameter());
             }
             else
             {
-                NavigationService.Navigate(App.Pages.Playlist, item.GetParameter());
+                NavigationService.Navigate(App.Pages.PlaylistEditable, item.GetParameter());
             }
         }
 

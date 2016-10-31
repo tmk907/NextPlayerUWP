@@ -358,6 +358,28 @@
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Portrait">
+                    <VisualState.StateTriggers>
+                        <triggers:OrientationStateTrigger Orientation="Portrait"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--<Setter Property="LandscapeGrid.Visibility" Value="Collapsed"/>
+                        <Setter Property="PortraitGrid.Visibility" Value="Visible"/>-->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Landscape">
+                    <VisualState.StateTriggers>
+                        <triggers:OrientationStateTrigger Orientation="Landscape"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--<Setter Property="PortraitGrid.Visibility" Value="Collapsed"/>
+                        <Setter Property="LandscapeGrid.Visibility" Value="Visible"/>-->
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -386,7 +408,7 @@
                     Click="ButtonShowAudioSettings_Click"/>
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" x:Name="PortraitGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="14*"/>
                 <RowDefinition Height="3*"/>
@@ -750,5 +772,261 @@
                         Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
             </Grid>
         </Grid>
+        <!--<Grid Grid.Row="1"
+              x:Name="LandscapeGrid"
+              x:DeferLoadStrategy="Lazy"
+              Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="1" Grid.Row="0">
+                <FlipView 
+                    Background="Transparent" 
+                    SelectedIndex="{x:Bind ViewModel.FlipViewSelectedIndex, Mode=TwoWay}"
+                    Visibility="{x:Bind ViewModel.IsVolumeControlVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
+                    <FlipView.Items>
+                        <FlipViewItem>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Style="{StaticResource TransparentButtonStyle}"
+                                    Click="{x:Bind ViewModel.RateSong}"
+                                    Width="36"
+                                    Height="36"
+                                    Tag="0"/>
+                                <Button Style="{StaticResource TransparentButtonStyle}"
+                                    Click="{x:Bind ViewModel.RateSong}"
+                                    Tag="1"
+                                    Width="36"
+                                    Height="36">
+                                    <Button.Content>
+                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
+                                              Style="{StaticResource FontIconStyle}"/>
+                                    </Button.Content>
+                                </Button>
+                                <Button Style="{StaticResource TransparentButtonStyle}"
+                                    Click="{x:Bind ViewModel.RateSong}"
+                                    Tag="2"
+                                    Width="40"
+                                    Height="40">
+                                    <Button.Content>
+                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
+                                              Style="{StaticResource FontIconStyle}"/>
+                                    </Button.Content>
+                                </Button>
+                                <Button Style="{StaticResource TransparentButtonStyle}"
+                                    Click="{x:Bind ViewModel.RateSong}"
+                                    Tag="3"
+                                    Width="40"
+                                    Height="40">
+                                    <Button.Content>
+                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
+                                              Style="{StaticResource FontIconStyle}"/>
+                                    </Button.Content>
+                                </Button>
+                                <Button Style="{StaticResource TransparentButtonStyle}"
+                                    Click="{x:Bind ViewModel.RateSong}"
+                                    Tag="4"
+                                    Width="40"
+                                    Height="40">
+                                    <Button.Content>
+                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
+                                              Style="{StaticResource FontIconStyle}"/>
+                                    </Button.Content>
+                                </Button>
+                                <Button Style="{StaticResource TransparentButtonStyle}"
+                                    Click="{x:Bind ViewModel.RateSong}"
+                                    Tag="5"
+                                    Width="40"
+                                    Height="40">
+                                    <Button.Content>
+                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
+                                              Style="{StaticResource FontIconStyle}"/>
+                                    </Button.Content>
+                                </Button>
+                                <Rectangle Fill="Transparent" Width="24" Height="36"/>
+                            </StackPanel>
+                        </FlipViewItem>
+                        <FlipViewItem>
+                            <Grid 
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock 
+                                    Grid.Column="0"
+                                    Margin="0,0,4,0"
+                                    HorizontalAlignment="Right"
+                                    FontSize="17"
+                                    Text="{x:Bind ViewModel.CurrentIndex, Mode=OneWay}"/>
+                                <TextBlock 
+                                    Grid.Column="1"
+                                    FontSize="17"
+                                    Text="/"/>
+                                <TextBlock 
+                                    Grid.Column="2"
+                                    Margin="4,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    FontSize="17"
+                                    Text="{x:Bind ViewModel.SongsCount, Mode=OneWay}"/>
+                            </Grid>
+                        </FlipViewItem>
+                    </FlipView.Items>
+                </FlipView>
+            </Grid>
+            <Grid Grid.Row="2" 
+                  Margin="12,0,12,0" 
+                  Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" 
+                           Style="{StaticResource SongTitleTextBlockStyle}"
+                           Text="{x:Bind ViewModel.Song.Title, Mode=OneWay}"/>
+                <TextBlock Grid.Row="1" 
+                           Style="{StaticResource SongArtistTextBlockStyle}"
+                           Text="{x:Bind ViewModel.Song.Artist, Mode=OneWay}"/>
+                <TextBlock Grid.Row="2" 
+                           Style="{StaticResource SongAlbumTextBlockStyle}"
+                           Text="{x:Bind ViewModel.Song.Album, Mode=OneWay}"/>
+            </Grid>
+            <Grid Grid.Row="3" FlowDirection="LeftToRight">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="ShuffleButton"
+                    Grid.Column="0"
+                    Click="{x:Bind ViewModel.PlayerVM.ShuffleCommand}"
+                    Width="48" Height="48"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="&#xE14B;" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontSize="20" 
+                                           FontFamily="Segoe MDL2 Assets" 
+                                           Foreground="{Binding PlayerVM.ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}, ConverterParameter=True}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <RepeatButton Grid.Column="1"
+                    Click="{x:Bind ViewModel.PreviousOrSeek}"
+                    Interval="{x:Bind ViewModel.RepeatButtonInterval, Mode=OneTime}"
+                    Width="48" Height="60"
+                    Style="{StaticResource BottomPlayerRepeatButtonStyle}">
+                    <RepeatButton.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="&#xE892;" 
+                                           FontSize="30" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>
+                            </Grid>
+                        </DataTemplate>
+                    </RepeatButton.ContentTemplate>
+                </RepeatButton>
+                <Button Grid.Column="2"
+                    Click="{x:Bind ViewModel.PlayerVM.Play}"
+                    Width="48" Height="60"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="{Binding PlayButtonContent}" 
+                                           FontSize="30" 
+                                           FontFamily="Segoe MDL2 Assets"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,0"/>
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <RepeatButton Grid.Column="3"
+                    Click="{x:Bind ViewModel.NextOrSeek}"
+                    Interval="{x:Bind ViewModel.RepeatButtonInterval, Mode=OneTime}"
+                    Width="48" Height="60"
+                    Style="{StaticResource BottomPlayerRepeatButtonStyle}">
+                    <RepeatButton.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="&#xE893;" 
+                                           FontSize="30" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>
+                            </Grid>
+                        </DataTemplate>
+                    </RepeatButton.ContentTemplate>
+                </RepeatButton>
+                <Button Grid.Column="4"
+                        x:Name="RepeatButton"
+                    Click="{x:Bind ViewModel.PlayerVM.RepeatCommand}"
+                    Width="48" 
+                    Height="60"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
+                                           Foreground="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatForegroundConverter}, ConverterParameter=True}"
+                                           FontSize="18" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets"/>
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+            </Grid>
+            <Grid Grid.ColumnSpan="2" Grid.Row="2" x:Name="SliderGrid" FlowDirection="LeftToRight">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                        FontSize="17"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,8,0"
+                        Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
+                <Slider x:Name="timeslider" Grid.Column="1"
+                    StepFrequency="1.0"
+                    Margin="4,8,4,0"
+                    Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
+                    Value="{Binding SliderValue, Mode=TwoWay}"
+                    ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center" 
+                    Style="{StaticResource TimeSliderStyle}"/>
+                <TextBlock Grid.Column="2"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        FontSize="17"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,8,0"
+                        Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
+            </Grid>
+        </Grid>-->
     </Grid>
 </Page>

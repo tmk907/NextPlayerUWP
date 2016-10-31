@@ -40,7 +40,7 @@ namespace NextPlayerUWP.Views
         //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
-            shufflebutton.Click -= AppBarButton_Click;
+            ShuffleAppBarButton.Click -= ShuffleAppBarButton_Click;
             //ViewModel.OnUnloaded();
             //ViewModel = null;
             //DataContext = null;
@@ -50,7 +50,7 @@ namespace NextPlayerUWP.Views
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
-            shufflebutton.Click += AppBarButton_Click;
+            ShuffleAppBarButton.Click += ShuffleAppBarButton_Click;
             ViewModel.OnLoaded(AlbumSongsListView);
         }
 
@@ -86,7 +86,7 @@ namespace NextPlayerUWP.Views
             image.Fade(1, 800, 0).Start();
         }
 
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private void ShuffleAppBarButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ShuffleAllSongs();
         }

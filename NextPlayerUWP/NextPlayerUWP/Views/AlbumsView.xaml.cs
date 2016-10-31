@@ -6,6 +6,7 @@ using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,6 +21,7 @@ namespace NextPlayerUWP.Views
         public AlbumsView()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
             //this.Unloaded += View_Unloaded;
             ViewModel = (AlbumsViewModel)DataContext;

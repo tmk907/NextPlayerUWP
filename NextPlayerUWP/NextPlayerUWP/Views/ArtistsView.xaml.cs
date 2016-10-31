@@ -20,10 +20,10 @@ namespace NextPlayerUWP.Views
         public ArtistsView()
         {
             this.InitializeComponent();
-            this.Loaded += View_Loaded;
-            //this.Unloaded += View_Unloaded;
-            ViewModel = (ArtistsViewModel)DataContext;
             NavigationCacheMode = NavigationCacheMode.Required;
+            this.Loaded += View_Loaded;
+            this.Unloaded += View_Unloaded;
+            ViewModel = (ArtistsViewModel)DataContext;
         }
 
         //~ArtistsView()

@@ -33,10 +33,10 @@ namespace NextPlayerUWP.Views
         public PlaylistsView()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
             //this.Unloaded += View_Unloaded;
             ViewModel = (PlaylistsViewModel)DataContext;
-            //NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         //~PlaylistsView()

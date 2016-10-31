@@ -385,10 +385,9 @@
             VisualStateNormalMinWidth="720">
             <AppBarButton
             x:Uid="AppBarButtonShuffleAll"
-                x:Name="shufflebutton"
+            x:Name="ShuffleAppBarButton"
             Label="Shuffle all"
-            Icon="Shuffle"
-            />
+            Icon="Shuffle"/>
         </controls:PageHeader>
         <Image x:Name="AlbumCoverImageBG" Grid.Row="1" 
                 Stretch="UniformToFill"

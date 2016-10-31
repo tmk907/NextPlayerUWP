@@ -91,7 +91,7 @@
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                     SelectionMode="None"
                     IsItemClickEnabled="True"
-                    Margin="12,4,0,0"
+                    Margin="12,4,12,0"
                     ItemClick="{x:Bind ViewModel.ItemClicked}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>

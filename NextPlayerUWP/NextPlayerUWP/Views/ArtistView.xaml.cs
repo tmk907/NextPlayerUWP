@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Navigation;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,9 +22,9 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
             this.Loaded += View_Loaded;
-            //this.Unloaded += View_Unloaded;
+            this.Unloaded += View_Unloaded;
             ViewModel = (ArtistViewModel)DataContext;
-            NavigationCacheMode = NavigationCacheMode.Required;
+            //NavigationCacheMode = NavigationCacheMode.Required;
         }
         //~ArtistView()
         //{
@@ -31,15 +32,17 @@ namespace NextPlayerUWP.Views
         //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.OnUnloaded();
-            ViewModel = null;
-            DataContext = null;
-            this.Loaded -= View_Loaded;
-            this.Unloaded -= View_Unloaded;
+            ShuffleAppBarButton.Click -= ShuffleAppBarButton_Click;
+            //ViewModel.OnUnloaded();
+            //ViewModel = null;
+            //DataContext = null;
+            //this.Loaded -= View_Loaded;
+            //this.Unloaded -= View_Unloaded;
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
+            ShuffleAppBarButton.Click += ShuffleAppBarButton_Click;
             ViewModel.OnLoaded(ArtistSongsListView);
         }
 
@@ -55,6 +58,17 @@ namespace NextPlayerUWP.Views
         {
             var song = (sender as SlidableListItem).DataContext as MusicItem;
             await ViewModel.SlidableListItemLeftCommandRequested(song);
+        }
+
+        private void AlbumCoverImage_ImageOpened(object sender, RoutedEventArgs e)
+        {
+            var image = (Image)sender;
+            image.Fade(1, 500, 0).Start();
+        }
+
+        private void ShuffleAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShuffleAllSongs();
         }
     }
 }

@@ -93,7 +93,8 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Image Grid.Column="0" Grid.RowSpan="2">
+                <Image Grid.Column="0" Grid.RowSpan="2"
+                       ImageOpened="AlbumCoverImage_ImageOpened">
                     <Image.Source>
                         <BitmapImage UriSource="{Binding Header.ImageUri, Mode=OneWay}"
                                      DecodePixelType="Logical"
@@ -287,9 +288,9 @@
                 VisualStateNormalMinWidth="720">
             <AppBarButton
                 x:Uid="AppBarButtonShuffleAll"
+                x:Name="ShuffleAppBarButton"
                 Label="Shuffle all"
-                Icon="Shuffle"
-                Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
+                Icon="Shuffle"/>
         </controls:PageHeader>
         <Grid Grid.Row="1" Grid.Column="0"
               x:Name="PortraitView">
