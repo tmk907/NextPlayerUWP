@@ -130,6 +130,11 @@ namespace NextPlayerUWP
             //DatabaseManager.Current.resetdb();
             AudioFormatsHelper = new AudioFormatsHelper(false);
             this.UnhandledException += App_UnhandledException;
+
+            //var gcTimer = new DispatcherTimer();
+            //gcTimer.Tick += (sender, e) => { GC.Collect(); };
+            //gcTimer.Interval = TimeSpan.FromSeconds(1);
+            //gcTimer.Start();
         }
 
         private void MemoryManager_AppMemoryUsageIncreased(object sender, object e)

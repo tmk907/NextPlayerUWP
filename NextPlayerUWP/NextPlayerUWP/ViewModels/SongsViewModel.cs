@@ -39,13 +39,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get
             {
-                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-                {
-                    for(int i = 0; i < 10; i++)
-                    {
-                        Songs.Add(new SongItem());
-                    }
-                }
+                //if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                //{
+                //    for(int i = 0; i < 10; i++)
+                //    {
+                //        Songs.Add(new SongItem());
+                //    }
+                //}
                 return songs; }
             set { Set(ref songs, value); }
         }
@@ -55,16 +55,16 @@ namespace NextPlayerUWP.ViewModels
         {
             get
             {
-                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-                {
-                    string[] t = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "K" };
-                    for (int i = 0; i < 10; i++)
-                    {
-                        GroupList group = new GroupList();
-                        group.Key = t[i];
-                        groupedSongs.Add(group);
-                    }
-                }
+                //if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                //{
+                //    string[] t = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "K" };
+                //    for (int i = 0; i < 10; i++)
+                //    {
+                //        GroupList group = new GroupList();
+                //        group.Key = t[i];
+                //        groupedSongs.Add(group);
+                //    }
+                //}
                 return groupedSongs;
             }
             set { Set(ref groupedSongs, value); }

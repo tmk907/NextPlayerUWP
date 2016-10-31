@@ -285,6 +285,11 @@ namespace NextPlayerUWP.ViewModels
 
         virtual public void FreeResources() { }
 
+        public void OnUnloaded()
+        {
+            listView = null;
+        }
+
         protected async Task LoadAndScroll()
         {
             await LoadData();

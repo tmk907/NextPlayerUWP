@@ -19,8 +19,26 @@ namespace NextPlayerUWP.Views
         public CloudStorageFoldersView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((CloudStorageFoldersViewModel)DataContext).OnLoaded(FoldersListView); };
+            this.Loaded += View_Loaded;
+            //this.Unloaded += View_Unloaded;
             ViewModel = (CloudStorageFoldersViewModel)DataContext;
+        }
+        //~CloudStorageFoldersView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+        private void View_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnUnloaded();
+            ViewModel = null;
+            DataContext = null;
+            this.Loaded -= View_Loaded;
+            this.Unloaded -= View_Unloaded;
+        }
+
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(FoldersListView);
         }
 
         private void ListViewFolderItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

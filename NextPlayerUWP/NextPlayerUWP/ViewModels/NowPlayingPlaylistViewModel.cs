@@ -124,6 +124,11 @@ namespace NextPlayerUWP.ViewModels
             await Task.CompletedTask;
         }
 
+        public void OnUnloaded()
+        {
+            listView = null;
+        }
+
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             //App.ChangeRightPanelVisibility(false);

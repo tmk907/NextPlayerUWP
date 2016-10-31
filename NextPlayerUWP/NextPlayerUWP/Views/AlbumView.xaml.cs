@@ -30,8 +30,28 @@ namespace NextPlayerUWP.Views
         public AlbumView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((AlbumViewModel)DataContext).OnLoaded(AlbumSongsListView); };
+            this.Loaded += View_Loaded;
+            this.Unloaded += View_Unloaded;
             ViewModel = (AlbumViewModel)DataContext;
+        }
+        //~AlbumView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+        private void View_Unloaded(object sender, RoutedEventArgs e)
+        {
+            shufflebutton.Click -= AppBarButton_Click;
+            //ViewModel.OnUnloaded();
+            //ViewModel = null;
+            //DataContext = null;
+            //this.Loaded -= View_Loaded;
+            //this.Unloaded -= View_Unloaded;
+        }
+
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            shufflebutton.Click += AppBarButton_Click;
+            ViewModel.OnLoaded(AlbumSongsListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -64,6 +84,11 @@ namespace NextPlayerUWP.Views
         {
             var image = (Image)sender;
             image.Fade(1, 800, 0).Start();
+        }
+
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShuffleAllSongs();
         }
     }
 }

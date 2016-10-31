@@ -29,8 +29,29 @@ namespace NextPlayerUWP.Views
         public GenresView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate {((GenresViewModel)DataContext).OnLoaded(GenresListView);};
+            this.Loaded += View_Loaded;
+            //this.Unloaded += View_Unloaded;
             ViewModel = (GenresViewModel)DataContext;
+            NavigationCacheMode = NavigationCacheMode.Required;
+        }
+
+        //~GenresView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+
+        private void View_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnUnloaded();
+            ViewModel = null;
+            DataContext = null;
+            this.Loaded -= View_Loaded;
+            this.Unloaded -= View_Unloaded;
+        }
+
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(GenresListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

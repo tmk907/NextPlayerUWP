@@ -514,21 +514,8 @@
                 </Grid>
             </PivotItem>
         </Pivot>
-        <Grid Grid.Row="2"
-              x:Name="GridAdControlRightPanel">
-            <!--<UI:AdControl
+        <Grid 
             Grid.Row="2"
-            x:Name="AdControlRightPanel"
-            AdUnitId="10865270"
-            ApplicationId="3f83fe91-d6be-434d-a0ae-7351c5a997f1"
-            Height="250"
-            Width="300"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            ErrorOccurred="AdControl_ErrorOccurred"
-            AdRefreshed="AdControl_AdRefreshed"
-            />-->
-        </Grid>
-        
+            x:Name="GridAdControlRightPanel"/>
     </Grid>
 </UserControl>

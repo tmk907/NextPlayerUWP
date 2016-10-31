@@ -29,7 +29,7 @@ namespace NextPlayerUWP.Views
             this.InitializeComponent();
             ViewModel = (RadiosViewModel)DataContext;
         }
-
+       
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;

@@ -2,18 +2,9 @@
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -29,8 +20,25 @@ namespace NextPlayerUWP.Views
         public ArtistsView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((ArtistsViewModel)DataContext).OnLoaded(ArtistsListView); };
+            this.Loaded += View_Loaded;
+            //this.Unloaded += View_Unloaded;
             ViewModel = (ArtistsViewModel)DataContext;
+            NavigationCacheMode = NavigationCacheMode.Required;
+        }
+
+        //~ArtistsView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+
+        private void View_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnUnloaded();
+        }
+
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(ArtistsListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

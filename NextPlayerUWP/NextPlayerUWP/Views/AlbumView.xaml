@@ -62,104 +62,6 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="{StaticResource ForegroundColor}"/>
         </Style>
-
-        <DataTemplate x:Key="AlbumSongItemTemplateDesktop" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                    Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource SongItemStyleIndex}"/>
-                <TextBlock Grid.Column="1"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleLeft}"/>
-                <TextBlock Grid.Column="2"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
-                <TextBlock Grid.Column="3"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="AlbumSongItemTemplateMobile" x:DataType="data:SongItem">
-            <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
-	            LeftBackground="{StaticResource UserAccentBrush}" 
-	            LeftForeground="White" 
-	            ActivationWidth="100"
-                Background="Transparent"
-	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
-                IsRightCommandEnabled="False">
-                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="40"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="40"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Column="0" Grid.RowSpan="2"
-                    Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource SongItemStyleIndex}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                    <TextBlock Grid.Column="1" Grid.Row="0"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleTop}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                    <TextBlock Grid.Column="1" Grid.Row="1"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleBottom}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                </Grid>
-            </toolkitcontrols:SlidableListItem>
-        </DataTemplate>
-        <DataTemplate x:Key="AlbumSongItemTemplateMobileWide" x:DataType="data:SongItem">
-            <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
-	            LeftBackground="{StaticResource UserAccentBrush}" 
-	            LeftForeground="White" 
-	            ActivationWidth="100"
-                Background="Transparent"
-	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
-                IsRightCommandEnabled="False">
-                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="40"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="40"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0"
-                    Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource SongItemStyleIndex}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                    <TextBlock Grid.Column="1"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleLeft}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                    <TextBlock Grid.Column="2"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleCenter}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                    <TextBlock Grid.Column="3"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                </Grid>
-            </toolkitcontrols:SlidableListItem>
-        </DataTemplate>
         <Style x:Key="AlbumButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{ThemeResource UserAccentBrush}"/>
@@ -286,7 +188,103 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        <DataTemplate x:Key="AlbumSongItemTemplateDesktop" x:DataType="data:SongItem">
+            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                    Text="{x:Bind TrackNumber}"
+                    Style="{StaticResource SongItemStyleIndex}"/>
+                <TextBlock Grid.Column="1"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleLeft}"/>
+                <TextBlock Grid.Column="2"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleCenter}"/>
+                <TextBlock Grid.Column="3"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="AlbumSongItemTemplateMobile" x:DataType="data:SongItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="Add" 
+	            LeftLabel="Queue" 
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.RowSpan="2"
+                    Text="{x:Bind TrackNumber}"
+                    Style="{StaticResource SongItemStyleIndex}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleTop}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleBottom}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
+        <DataTemplate x:Key="AlbumSongItemTemplateMobileWide" x:DataType="data:SongItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="Add" 
+	            LeftLabel="Queue" 
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                    Text="{x:Bind TrackNumber}"
+                    Style="{StaticResource SongItemStyleIndex}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="1"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleLeft}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="2"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleCenter}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="3"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -370,186 +368,186 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            x:Uid="PageHeaderAlbum"
+            Content="Album" 
+            VisualStateNarrowMinWidth="0" 
+            VisualStateNormalMinWidth="720">
+            <AppBarButton
+            x:Uid="AppBarButtonShuffleAll"
+                x:Name="shufflebutton"
+            Label="Shuffle all"
+            Icon="Shuffle"
+            />
+        </controls:PageHeader>
+        <Image x:Name="AlbumCoverImageBG" Grid.Row="1" 
+                Stretch="UniformToFill"
+                x:DeferLoadStrategy="Lazy"
+                Visibility="Collapsed"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                ImageOpened="AlbumCoverImageBG_ImageOpened">
+            <Image.Source>
+                <BitmapImage 
+                    UriSource="{Binding Album.ImageUri, Mode=OneWay}"/>
+            </Image.Source>
+        </Image>
+        <Rectangle x:Name="DarkenLayer" 
+                    x:DeferLoadStrategy="Lazy"
+                    Visibility="Collapsed"
+                    Grid.Row="1"
+                    Fill="#80161616"/>
+        <ContentDialog x:Name="ContentDialogEditAlbum"
+                Grid.RowSpan="2" Grid.ColumnSpan="2"
+                x:Uid="ContentDialogEditAlbum"
+                VerticalAlignment="Center"
+                Title="Edit"
+                PrimaryButtonText="Save"
+                PrimaryButtonClick="{x:Bind ViewModel.SaveAlbum}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="360"
+                Height="Auto">
+            <ContentDialog.Content>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Margin="0,4,4,0"
+                                    x:Uid="TBAlbum"
+                                    VerticalAlignment="Center"
+                                    Text="Album:"/>
+                    <TextBox Margin="0,4,4,0"
+                                  Text="{Binding EditedAlbum.AlbumParam, Mode=TwoWay}"/>
+                    <TextBlock Margin="0,4,4,0"
+                                    x:Uid="TBAlbumArtist"
+                                    VerticalAlignment="Center"
+                                    Text="Album artist:"/>
+                    <TextBox Margin="0,4,4,0"
+                                  Text="{Binding EditedAlbum.AlbumArtist, Mode=TwoWay}"/>
+                    <TextBlock Margin="0,4,4,0"
+                                    VerticalAlignment="Center"
+                                    x:Uid="TBYear"
+                                    Text="Year:"/>
+                    <TextBox Margin="0,4,4,0"
+                                  Text="{Binding EditedAlbum.Year, Mode=TwoWay}"/>
+                </StackPanel>
+            </ContentDialog.Content>
+        </ContentDialog>
+        <Grid Grid.Row="1" Grid.Column="0"
+              x:Name="PortraitView">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderAlbum"
-                Content="Album" 
-                VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720">
-                <AppBarButton
-                x:Uid="AppBarButtonShuffleAll"
-                Label="Shuffle all"
-                Icon="Shuffle"
-                Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
-            </controls:PageHeader>
-            <Image x:Name="AlbumCoverImageBG" Grid.Row="1" 
-                   Stretch="UniformToFill"
-                   x:DeferLoadStrategy="Lazy"
-                   Visibility="Collapsed"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   ImageOpened="AlbumCoverImageBG_ImageOpened">
+            <Image Grid.Column="0" Grid.Row="0"
+                    Margin="12,12,12,12"
+                    x:Name="AlbumCoverImage"
+                    x:DeferLoadStrategy="Lazy" 
+                    Visibility="Collapsed"
+                    ImageOpened="AlbumCoverImage_ImageOpened">
                 <Image.Source>
-                    <BitmapImage 
-                        UriSource="{Binding Album.ImageUri, Mode=OneWay}"/>
+                    <BitmapImage
+                        UriSource="{Binding Album.ImageUri, Mode=OneWay}"
+                        DecodePixelType="Logical"
+                        DecodePixelHeight="220" DecodePixelWidth="220"/>
                 </Image.Source>
             </Image>
-            <Rectangle x:Name="DarkenLayer" 
-                       x:DeferLoadStrategy="Lazy"
-                       Visibility="Collapsed"
-                       Grid.Row="1"
-                       Fill="#80161616"/>
-            <ContentDialog x:Name="ContentDialogEditAlbum"
-                    Grid.RowSpan="2" Grid.ColumnSpan="2"
-                    x:Uid="ContentDialogEditAlbum"
-                    VerticalAlignment="Center"
-                    Title="Edit"
-                    PrimaryButtonText="Save"
-                    PrimaryButtonClick="{x:Bind ViewModel.SaveAlbum}"
-                    SecondaryButtonText="Cancel"
-                    VerticalContentAlignment="Stretch"
-                    MaxWidth="360"
-                    Height="Auto">
-                <ContentDialog.Content>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Margin="0,4,4,0"
-                                       x:Uid="TBAlbum"
-                                       VerticalAlignment="Center"
-                                       Text="Album:"/>
-                        <TextBox Margin="0,4,4,0"
-                                     Text="{Binding EditedAlbum.AlbumParam, Mode=TwoWay}"/>
-                        <TextBlock Margin="0,4,4,0"
-                                       x:Uid="TBAlbumArtist"
-                                       VerticalAlignment="Center"
-                                       Text="Album artist:"/>
-                        <TextBox Margin="0,4,4,0"
-                                     Text="{Binding EditedAlbum.AlbumArtist, Mode=TwoWay}"/>
-                        <TextBlock Margin="0,4,4,0"
-                                       VerticalAlignment="Center"
-                                       x:Uid="TBYear"
-                                       Text="Year:"/>
-                        <TextBox Margin="0,4,4,0"
-                                     Text="{Binding EditedAlbum.Year, Mode=TwoWay}"/>
-                    </StackPanel>
-                </ContentDialog.Content>
-            </ContentDialog>
-            <Grid Grid.Row="1" Grid.Column="0"
-                  x:Name="PortraitView">
+            <Grid Grid.Column="1" Grid.Row="0" Margin="12,12,12,12">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Grid.Row="0"
-                        Margin="12,12,12,12"
-                        x:Name="AlbumCoverImage"
-                        x:DeferLoadStrategy="Lazy" 
-                        Visibility="Collapsed"
-                        ImageOpened="AlbumCoverImage_ImageOpened">
-                    <Image.Source>
-                        <BitmapImage
-                            UriSource="{Binding Album.ImageUri, Mode=OneWay}"
-                            DecodePixelType="Logical"
-                            DecodePixelHeight="220" DecodePixelWidth="220"/>
-                    </Image.Source>
-                </Image>
-                <Grid Grid.Column="1" Grid.Row="0" Margin="12,12,12,12">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"
-                            Text="{x:Bind ViewModel.Album.Album, Mode=OneWay}" 
-                            Style="{StaticResource AlbumDescriptionAlbumNameStyle}"/>
-                    <TextBlock Grid.Row="1"
-                            Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
-                            Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
-                    <TextBlock Grid.Row="2"
-                                Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
-                                Style="{StaticResource AlbumDescription2TBStyle}"/>
-                    <Grid Grid.Row="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0"
-                            Text="{Binding Album.Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                <TextBlock Grid.Row="0"
+                        Text="{x:Bind ViewModel.Album.Album, Mode=OneWay}" 
+                        Style="{StaticResource AlbumDescriptionAlbumNameStyle}"/>
+                <TextBlock Grid.Row="1"
+                        Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
+                        Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
+                <TextBlock Grid.Row="2"
+                            Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
                             Style="{StaticResource AlbumDescription2TBStyle}"/>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                            <Button Click="{x:Bind ViewModel.PlayAlbum}"
-                                    Style="{StaticResource AlbumButtonStyle}">
-                                <Button.Content>
-                                    <TextBlock Text="&#xE102;" FontFamily="Segoe MDL2 Assets"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Style="{StaticResource AlbumButtonStyle}">
-                                <Button.Content>
-                                    <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets"/>
-                                </Button.Content>
-                                <Button.Flyout>
-                                    <Flyout Placement="Bottom">
-                                        <StackPanel>
-                                            <Button x:Uid="ButtonPlayNext" 
-                                                    Content="Play next" 
-                                                    Style="{StaticResource FlyoutButtonTemplate}"
-                                                    Click="{x:Bind ViewModel.PlayAlbumNext}"/>
-                                            <Button x:Uid="ButtonAddToNowPlaying" 
-                                                    Content="Add to now playing" 
-                                                    Style="{StaticResource FlyoutButtonTemplate}"
-                                                    Click="{x:Bind ViewModel.AddAlbumToNowPlaying}"/>
-                                            <Button x:Uid="ButtonAddToPlaylist" 
-                                                    Content="Add to playlist" 
-                                                    Style="{StaticResource FlyoutButtonTemplate}"
-                                                    Click="{x:Bind ViewModel.AddAlbumToPlaylist}"/>
-                                        </StackPanel>
-                                    </Flyout>
-                                </Button.Flyout>
-                            </Button>
-                            <Button Click="EditAlbum_Click"
-                                    Style="{StaticResource AlbumButtonStyle}">
-                                <Button.Content>
-                                    <TextBlock Text="&#xE104;" FontFamily="Segoe MDL2 Assets"/>
-                                </Button.Content>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                        Text="{Binding Album.Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                        Style="{StaticResource AlbumDescription2TBStyle}"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Button Click="{x:Bind ViewModel.PlayAlbum}"
+                                Style="{StaticResource AlbumButtonStyle}">
+                            <Button.Content>
+                                <TextBlock Text="&#xE102;" FontFamily="Segoe MDL2 Assets"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Style="{StaticResource AlbumButtonStyle}">
+                            <Button.Content>
+                                <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets"/>
+                            </Button.Content>
+                            <Button.Flyout>
+                                <Flyout Placement="Bottom">
+                                    <StackPanel>
+                                        <Button x:Uid="ButtonPlayNext" 
+                                                Content="Play next" 
+                                                Style="{StaticResource FlyoutButtonTemplate}"
+                                                Click="{x:Bind ViewModel.PlayAlbumNext}"/>
+                                        <Button x:Uid="ButtonAddToNowPlaying" 
+                                                Content="Add to now playing" 
+                                                Style="{StaticResource FlyoutButtonTemplate}"
+                                                Click="{x:Bind ViewModel.AddAlbumToNowPlaying}"/>
+                                        <Button x:Uid="ButtonAddToPlaylist" 
+                                                Content="Add to playlist" 
+                                                Style="{StaticResource FlyoutButtonTemplate}"
+                                                Click="{x:Bind ViewModel.AddAlbumToPlaylist}"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button Click="EditAlbum_Click"
+                                Style="{StaticResource AlbumButtonStyle}">
+                            <Button.Content>
+                                <TextBlock Text="&#xE104;" FontFamily="Segoe MDL2 Assets"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
                 </Grid>
-                <mycontrols:AlternatingRowListView Grid.Row="1" Grid.ColumnSpan="2"
-                        x:Name="AlbumSongsListView"
-                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                        ItemsSource="{Binding Songs}"
-                        ItemTemplate="{StaticResource AlbumSongItemTemplateDesktop}"
-                        ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
-                        IsItemClickEnabled="True"
-                        ItemClick="{x:Bind ViewModel.ItemClicked }"
-                        Margin="12,0,0,4"
-                        SelectionMode="None"
-                        CanDragItems="True"
-                        DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                    <mycontrols:AlternatingRowListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsStackPanel Orientation="Vertical"/>
-                        </ItemsPanelTemplate>
-                    </mycontrols:AlternatingRowListView.ItemsPanel>
-                </mycontrols:AlternatingRowListView>
             </Grid>
-            <ScrollViewer 
+            <mycontrols:AlternatingRowListView Grid.Row="1" Grid.ColumnSpan="2"
+                    x:Name="AlbumSongsListView"
+                    EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                    OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                    ItemsSource="{Binding Songs}"
+                    ItemTemplate="{StaticResource AlbumSongItemTemplateDesktop}"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
+                    IsItemClickEnabled="True"
+                    ItemClick="{x:Bind ViewModel.ItemClicked }"
+                    Margin="12,0,0,4"
+                    SelectionMode="None"
+                    CanDragItems="True"
+                    DragItemsStarting="{x:Bind ViewModel.DragStarting}">
+                <mycontrols:AlternatingRowListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </mycontrols:AlternatingRowListView.ItemsPanel>
+            </mycontrols:AlternatingRowListView>
+        </Grid>
+        <ScrollViewer 
                 Grid.Row="1" Grid.Column="0"
                 x:Name="MobileLandscapeView"
                 x:DeferLoadStrategy="Lazy" 
@@ -647,6 +645,5 @@
                     </mycontrols:AlternatingRowListView>
                 </Grid>
             </ScrollViewer>
-        </Grid>
     </Grid>
 </Page>

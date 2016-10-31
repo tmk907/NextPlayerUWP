@@ -54,26 +54,26 @@
         </Style>
 
         <DataTemplate x:Key="SongsListViewItemTemplateDesktop" x:DataType="data:SongItem">
-                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="8*"/>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" 
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleLeft}"/>
-                    <TextBlock Grid.Column="1" 
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
-                    <TextBlock Grid.Column="2" 
-                    Text="{x:Bind Album}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
-                    <TextBlock Grid.Column="3" 
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
-                </Grid>
+              <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                  <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="8*"/>
+                      <ColumnDefinition Width="6*"/>
+                      <ColumnDefinition Width="6*"/>
+                      <ColumnDefinition Width="2*"/>
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Grid.Column="0" 
+                  Text="{x:Bind Title}"
+                  Style="{StaticResource SongItemStyleLeft}"/>
+                  <TextBlock Grid.Column="1" 
+                  Text="{x:Bind Artist}"
+                  Style="{StaticResource SongItemStyleCenter}"/>
+                  <TextBlock Grid.Column="2" 
+                  Text="{x:Bind Album}"
+                  Style="{StaticResource SongItemStyleCenter}"/>
+                  <TextBlock Grid.Column="3" 
+                  Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                  Style="{StaticResource SongItemStyleRight}"/>
+              </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SongsListViewItemTemplateMobile" x:DataType="data:SongItem">
             <toolkitcontrols:SlidableListItem
