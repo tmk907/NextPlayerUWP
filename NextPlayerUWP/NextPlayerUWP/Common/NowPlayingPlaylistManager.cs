@@ -433,11 +433,11 @@ namespace NextPlayerUWP.Common
 
         private static Random rng = new Random();
         private int[] ar;
-        public async Task<int> ShufflePlaylist()
+        public async Task<int> ShufflePlaylist(int startIndex)
         {
             ar = new int[songs.Count];
             int n = songs.Count;
-            int newCurrentIndex = currentIndex;
+            int newCurrentIndex = startIndex;
             while (n > 1)
             {
                 n--;

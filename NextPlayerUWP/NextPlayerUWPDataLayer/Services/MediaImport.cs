@@ -324,6 +324,11 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
+        public static async Task UpdateTemovableStorage()
+        {
+            var removableFolder = KnownFolders.RemovableDevices;
+            
+        }
 
         public async Task UpdateDatabase(IProgress<int> p)
         {
@@ -335,12 +340,15 @@ namespace NextPlayerUWPDataLayer.Services
             importedPlaylistPaths = await DatabaseManager.Current.GetImportedPlaylistPathsAsync();
             importedPlaylists = new List<ImportedPlaylist>();
             libraryDirectories = new List<string>();
+
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
+            
             foreach (var folder in library.Folders)
             {
                 await AddFilesFromFolder(folder);
             }
+
             await DatabaseManager.Current.ChangeToNotAvaialble(libraryDirectories);
 
             await DatabaseManager.Current.UpdateTables();

@@ -232,7 +232,7 @@ namespace NextPlayerUWP.Common
             }
             else
             {
-                CurrentSongIndex = await NowPlayingPlaylistManager.Current.ShufflePlaylist();
+                CurrentSongIndex = await NowPlayingPlaylistManager.Current.ShufflePlaylist(CurrentSongIndex);
                 //mediaList.ShuffleEnabled = true;
             }
             await UpdateMediaListWithoutPausing();
@@ -438,13 +438,14 @@ namespace NextPlayerUWP.Common
             songPlayed = TimeSpan.Zero;
 
             Player.Source = null;
-            CurrentSongIndex = startIndex;
 
             shuffle = Shuffle.CurrentState();
             if (shuffle)
             {
-                startIndex = await NowPlayingPlaylistManager.Current.ShufflePlaylist();
+                startIndex = await NowPlayingPlaylistManager.Current.ShufflePlaylist(startIndex);
             }
+            CurrentSongIndex = startIndex;
+
 
             await LoadAll(startIndex);
             Player.Source = mediaList;

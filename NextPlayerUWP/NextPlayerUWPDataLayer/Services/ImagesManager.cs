@@ -30,7 +30,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (song != null) return song.CoverPath;
 
             song = songs.FirstOrDefault();
-            var bmp = await GetAlbumArtBitmap(song.Path, true);
+            var bmp = await GetAlbumArtSoftwareBitmap(song.Path, true);
             string name = "ms-appx:///Assets/AppImages/Logo/LogoTr.png";
 
             if (bmp != null)
@@ -101,6 +101,66 @@ namespace NextPlayerUWPDataLayer.Services
             return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
         }
 
+        public static async Task<string> SaveCover(string fileName, string folderName, SoftwareBitmap image, int resize = 0)
+        {
+            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+            StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
+
+            try
+            {
+                using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                    encoder.SetSoftwareBitmap(image);
+                    int width = image.PixelWidth;
+                    int height = image.PixelHeight;
+                    if (resize != 0)
+                    {
+                        if (width == height)
+                        {
+                            height = resize;
+                        }
+                        else
+                        {
+                            height = height * resize / width;
+                        }
+                        width = resize;
+
+                        encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Linear;
+                        encoder.BitmapTransform.ScaledHeight = (uint)height;
+                        encoder.BitmapTransform.ScaledWidth = (uint)width;
+                    }
+                    encoder.IsThumbnailGenerated = true;
+                    try
+                    {
+                        await encoder.FlushAsync();
+                    }
+                    catch (Exception err)
+                    {
+                        switch (err.HResult)
+                        {
+                            case unchecked((int)0x88982F81): //WINCODEC_ERR_UNSUPPORTEDOPERATION
+                                                             // If the encoder does not support writing a thumbnail, then try again
+                                                             // but disable thumbnail generation.
+                                encoder.IsThumbnailGenerated = false;
+                                break;
+                            default:
+                                throw err;
+                        }
+                    }
+                    if (encoder.IsThumbnailGenerated == false)
+                    {
+                        await encoder.FlushAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //image exists and is opened in album view
+            }
+            return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
+        }
+
         public static string GetHash(WriteableBitmap bmp)
         {
             var alg = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
@@ -111,7 +171,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public static async Task SaveAlbumArtFromSong(SongItem song)
         {
-            var cover = await GetAlbumArtBitmap(song.Path);
+            var cover = await GetAlbumArtSoftwareBitmap(song.Path);
 
             if (cover == null)
             {
@@ -128,7 +188,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public static async Task SaveAlbumArtFromSong(SongData song)
         {
-            var cover = await GetAlbumArtBitmap(song.Path);
+            var cover = await GetAlbumArtSoftwareBitmap(song.Path);
 
             if (cover == null)
             {
@@ -247,6 +307,101 @@ namespace NextPlayerUWPDataLayer.Services
             return null;
         }
 
+        public static async Task<SoftwareBitmap> GetAlbumArtSoftwareBitmap(string path, bool searchInThumbnail = false)
+        {
+            try
+            {
+                SoftwareBitmap softwareBitmap = null;
+                StorageFile songFile = await StorageFile.GetFileFromPathAsync(path);
+                bool set = false;
+                // <5ms
+                var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
+                if (searchInThumbnail)
+                {
+                    if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
+                    {
+                        if (thumb.OriginalWidth > 200)
+                        {
+                            using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                            {
+                                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                                softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                            }
+                            set = true;
+                        }
+                    }
+                }
+                if (!set)
+                {
+                    try
+                    {
+                        Stream fileStream = await songFile.OpenStreamForReadAsync();
+                        TagLib.File tagFile = TagLib.File.Create(new StreamFileAbstraction(songFile.Name, fileStream, fileStream));
+                        int picturesCount = tagFile.Tag.Pictures.Length;
+                        fileStream.Dispose();
+                        if (picturesCount > 0)
+                        {
+                            IPicture pic = tagFile.Tag.Pictures[0];
+                            using (MemoryStream stream = new MemoryStream(pic.Data.Data))
+                            {
+                                using (IRandomAccessStream istream = stream.AsRandomAccessStream())
+                                {
+                                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                                }
+                            }
+                            set = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    if (!set)
+                    {
+                        try
+                        {
+                            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
+                            // not  exist
+                            // 15ms 30 ms
+                            QueryOptions q = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { ".jpg", ".png", ".jpeg" });
+                            var res = folder.CreateFileQueryWithOptions(q);
+                            var files2 = await res.GetFilesAsync();
+                            List<string> acceptedFileNames = new List<string>() { "cover", "album", "front", "albumart", "album art", "album-art" };
+                            var files3 = files2.Where(f => acceptedFileNames.Contains(f.DisplayName.ToLower()));
+                            if (files3.Count() > 0)
+                            {
+                                using (IRandomAccessStream istream = await files3.FirstOrDefault().OpenAsync(FileAccessMode.Read))
+                                {
+                                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                                }
+                                set = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+                if (searchInThumbnail && !set && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && thumb.OriginalHeight > 100)
+                {
+                    using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                    {
+                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                        softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    }
+                    set = true;
+                }
+                if (set) return softwareBitmap;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
 
         #region old
 

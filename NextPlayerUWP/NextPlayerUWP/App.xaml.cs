@@ -358,12 +358,12 @@ namespace NextPlayerUWP
             {
                 //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
             }
-
+            //await MediaImport.CheckChanges();
             if (!isFirstRun)
             {
                 AlbumArtFinder.StartLooking().ConfigureAwait(false);
             }
-        }
+        }   
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
