@@ -48,7 +48,7 @@ namespace NextPlayerUWP.ViewModels
                 var alb = Albums.FirstOrDefault(a => a.AlbumId == albumId);
                 alb.ImagePath = albumArtPath;
                 alb.ImageUri = new Uri(albumArtPath);
-                alb.IsImageSet = true;
+                alb.IsImageSet = true;               
             });
         }
 
