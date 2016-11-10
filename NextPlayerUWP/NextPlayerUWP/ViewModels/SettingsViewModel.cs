@@ -213,7 +213,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void UpdateLibrary()
         {
-            MediaImport m = new MediaImport(App.AudioFormatsHelper);
+            MediaImport m = new MediaImport(App.FileFormatsHelper);
             UpdateProgressTextVisibility = true;
             Progress<int> progress = new Progress<int>(
                 percent =>
@@ -282,7 +282,7 @@ namespace NextPlayerUWP.ViewModels
         public async Task SavePlaylists()
         {
             PlaylistExporter pe = new PlaylistExporter();
-            await pe.SaveAllPlainPlaylists().ConfigureAwait(false);
+            await pe.SavePlainPlaylistsInPlaylistsFolder().ConfigureAwait(false);
         }
 
         public async Task DeletePlaylists()

@@ -44,7 +44,7 @@ namespace NextPlayerUWP
             MemoryUsageReduced?.Invoke(null, null);
         }
 
-        private const int dbVersion = 8;
+        private const int dbVersion = 9;
 
         public static bool IsLightThemeOn = false;
 
@@ -57,7 +57,7 @@ namespace NextPlayerUWP
                 return albumArtFinder;
             }
         }
-        public static AudioFormatsHelper AudioFormatsHelper;
+        public static FileFormatsHelper FileFormatsHelper;
 
         private bool isFirstRun = false;
 
@@ -128,7 +128,7 @@ namespace NextPlayerUWP
             //}
 
             //DatabaseManager.Current.resetdb();
-            AudioFormatsHelper = new AudioFormatsHelper(false);
+            FileFormatsHelper = new FileFormatsHelper(false);
             this.UnhandledException += App_UnhandledException;
 
             //var gcTimer = new DispatcherTimer();
@@ -633,6 +633,12 @@ namespace NextPlayerUWP
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
                 version = "8";
             }
+            if (version.ToString() == "8")
+            {
+                DatabaseManager.Current.UpdateToVersion9();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 9);
+                version = "9";
+            }
             // change  private const int dbVersion
         }
 
@@ -746,25 +752,25 @@ namespace NextPlayerUWP
 
         private async Task OpenFileAndPlay(StorageFile file)
         {
-            MediaImport mi = new MediaImport(AudioFormatsHelper);
+            MediaImport mi = new MediaImport(FileFormatsHelper);
             string type = file.FileType.ToLower();
-            if (AudioFormatsHelper.IsFormatSupported(type))
+            if (FileFormatsHelper.IsFormatSupported(type))
             {
                 SongItem si = await mi.OpenSingleFileAsync(file);
                 await NowPlayingPlaylistManager.Current.NewPlaylist(si);
                 await PlaybackService.Instance.PlayNewList(0);
             }
-            else if (MediaImport.IsPlaylistFile(type))
+            else if (FileFormatsHelper.IsPlaylistSupportedType(type))
             {
-                var list = await mi.OpenPlaylistFileAsync(file);
-                await NowPlayingPlaylistManager.Current.NewPlaylist(list);
+                var playlist = await mi.OpenPlaylistFileAsync(file);
+                await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
                 await PlaybackService.Instance.PlayNewList(0);
             }
         }
 
         private async Task OpenFilesAndAddToNowPlaying(IEnumerable<IStorageItem> files)
         {
-            MediaImport mi = new MediaImport(AudioFormatsHelper);
+            MediaImport mi = new MediaImport(FileFormatsHelper);
             List<SongItem> list = new List<SongItem>();
             int i = 0;
             const int size = 4;

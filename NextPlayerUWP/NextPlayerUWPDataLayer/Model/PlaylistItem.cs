@@ -29,11 +29,71 @@ namespace NextPlayerUWPDataLayer.Model
         private bool isNotDefault;
         public bool IsNotDefault { get { return isNotDefault; } }
         public bool IsSmartAndNotDefault { get { return IsSmart && isNotDefault; } }
+        private string path;
+        public string Path
+        {
+            get
+            {
+                return path;
+            }
+            set
+            {
+                if (value != path)
+                {
+                    path = value;
+                    onPropertyChanged(this, "Path");
+                }
+            }
+        }
+        private DateTime dateModified;
+        public DateTime DateModified
+        {
+            get
+            {
+                return dateModified;
+            }
+            set
+            {
+                if (value != dateModified)
+                {
+                    dateModified = value;
+                    onPropertyChanged(this, "DateModified");
+                }
+            }
+        }
 
         public PlaylistItem(int id, bool issmart, string _name)
         {
             this.id = id;
             isSmart = issmart;
+            if (issmart)
+            {
+                isNotDefault = !Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);
+
+                Dictionary<int, string> ids = Helpers.ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
+                if (ids.ContainsKey(id))
+                {
+                    var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                    name = loader.GetString(ids[id]);
+                }
+                else
+                {
+                    name = _name;
+                }
+            }
+            else
+            {
+                name = _name;
+                isNotDefault = true;
+            }
+        }
+
+        public PlaylistItem(int id, bool issmart, string _name, string path, DateTime dateModified)
+        {
+            this.id = id;
+            isSmart = issmart;
+            this.path = path;
+            this.dateModified = dateModified;
             if (issmart)
             {
                 isNotDefault = !Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);

@@ -94,30 +94,49 @@ namespace NextPlayerUWPDataLayer.Services
         {
             bool autoSave = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
             if (!autoSave) return;
-            string newName = playlist.Name + ".m3u";
+            
 
-            StorageFolder playlistsFolder = await GetFolderWithPlaylists();
+            StorageFolder playlistsFolder = await GetFolderWithAppPlaylists();
             if (playlistsFolder == null)
             {
                 //clear imported table
                 return;
             }
-            string content = await ToM3UContent(playlist, false, "");
-            var list = await DatabaseManager.Current.GetImportedPlaylists();
-            var imported = list.SingleOrDefault(p => p.PlainPlaylistId.Equals(playlist.Id));
-            if (imported == null)
+            if (!playlist.Path.StartsWith(playlistsFolder.Path))
             {
-                var file = await playlistsFolder.CreateFileAsync(newName, CreationCollisionOption.GenerateUniqueName);
-                newName = file.Name;
-                await FileIO.WriteTextAsync(file, content);
-                DatabaseManager.Current.InsertImportedPlaylist(newName, file.Path, playlist.Id);
+                //playlist was imported to app - no need to create backup
+                return;
             }
-            else if (imported.Path.StartsWith(playlistsFolder.Path))
+            string newName = playlist.Name + ".m3u";
+
+            string content = await ToM3UContent(playlist, false, "");
+            if (String.IsNullOrEmpty(playlist.Path))
             {
                 try
                 {
-                    var file = await playlistsFolder.GetFileAsync(Path.GetFileName(imported.Path));
+                    var file = await playlistsFolder.CreateFileAsync(newName, CreationCollisionOption.GenerateUniqueName);
+                    newName = file.Name;
                     await FileIO.WriteTextAsync(file, content);
+                    playlist.Path = file.Path;
+                    var prop = await file.GetBasicPropertiesAsync();
+                    playlist.DateModified = prop.DateModified.UtcDateTime;
+                    await DatabaseManager.Current.UpdatePlainPlaylistAsync(playlist);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            else if (playlist.Path.StartsWith(playlistsFolder.Path))
+            {
+                //update file
+                try
+                {
+                    var file = await playlistsFolder.GetFileAsync(Path.GetFileName(playlist.Path));
+                    await FileIO.WriteTextAsync(file, content);
+                    var prop = await file.GetBasicPropertiesAsync();
+                    playlist.DateModified = prop.DateModified.UtcDateTime;
+                    await DatabaseManager.Current.UpdatePlainPlaylistAsync(playlist);
                 }
                 catch (FileNotFoundException)
                 {
@@ -134,20 +153,19 @@ namespace NextPlayerUWPDataLayer.Services
         {
             bool autoSave = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
             if (!autoSave) return;
-            var list = await DatabaseManager.Current.GetImportedPlaylists();
-            var imported = list.SingleOrDefault(p => p.PlainPlaylistId.Equals(playlist.Id));
-            if (imported == null)
+            if (String.IsNullOrEmpty(playlist.Path))
             {
                 await AutoSavePlaylist(playlist);
             }
             else
             {
-                string oldFileName = Path.GetFileName(imported.Path);
+                string oldFileName = Path.GetFileName(playlist.Path);
                 string newFileName = playlist.Name + ".m3u";
 
-                StorageFolder playlistsFolder = await GetFolderWithPlaylists();
+                StorageFolder playlistsFolder = await GetFolderWithAppPlaylists();
                 if (playlistsFolder == null)
                 {
+                    //log
                     //clear imported table
                     return;
                 }
@@ -156,9 +174,10 @@ namespace NextPlayerUWPDataLayer.Services
                     var file = await playlistsFolder.GetFileAsync(oldFileName);
                     await file.RenameAsync(newFileName, NameCollisionOption.GenerateUniqueName);
                     newFileName = file.Name;
-                    imported.Path = imported.Path.Replace(oldFileName, newFileName);
-                    imported.Name = playlist.Name;
-                    await DatabaseManager.Current.UpdateImportedPlaylist(imported);
+                    playlist.Path = file.Path;
+                    var prop = await file.GetBasicPropertiesAsync();
+                    playlist.DateModified = prop.DateModified.UtcDateTime;
+                    await DatabaseManager.Current.UpdatePlainPlaylistAsync(playlist);
                 }
                 catch (FileNotFoundException)
                 {
@@ -171,32 +190,40 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
+        /// <summary>
+        /// Delete playlist and playlist entries in db and delete playlist file if file is in app playlist folder
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
         public async Task DeletePlaylist(PlaylistItem playlist)
         {
-            bool autoSave = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
-            //if (!autoSave) return;
-            var list = await DatabaseManager.Current.GetImportedPlaylists();
-            var imported = list.SingleOrDefault(p => p.PlainPlaylistId.Equals(playlist.Id));
-            if (imported != null)
+            if (!playlist.IsSmart)
             {
-                StorageFolder playlistsFolder = await GetFolderWithPlaylists();
-                if (playlistsFolder != null && imported.Path.StartsWith(playlistsFolder.Path))
+                if (!String.IsNullOrEmpty(playlist.Path))
                 {
-                    try
+                    StorageFolder playlistsFolder = await GetFolderWithAppPlaylists();
+                    if (playlistsFolder != null && playlist.Path.StartsWith(playlistsFolder.Path))
                     {
-                        var file = await playlistsFolder.GetFileAsync(Path.GetFileName(imported.Path));
-                        await file.DeleteAsync();
+                        try
+                        {
+                            var file = await playlistsFolder.GetFileAsync(Path.GetFileName(playlist.Path));
+                            await file.DeleteAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            //log
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        //log
-                    }
-                    await DatabaseManager.Current.DeleteImportedPlaylist(imported);
                 }
+                await DatabaseManager.Current.DeletePlainPlaylistAsync(playlist.Id);
+            }
+            else if (playlist.IsSmartAndNotDefault)
+            {
+                await DatabaseManager.Current.DeleteSmartPlaylistAsync(playlist.Id);
             }
         }
 
-        private async Task<StorageFolder> GetFolderWithPlaylists()
+        public async Task<StorageFolder> GetFolderWithAppPlaylists()
         {
             try
             {
@@ -222,7 +249,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task SaveAllPlainPlaylists()
+        public async Task SavePlainPlaylistsInPlaylistsFolder()
         {
             var playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             foreach(var playlist in playlists)

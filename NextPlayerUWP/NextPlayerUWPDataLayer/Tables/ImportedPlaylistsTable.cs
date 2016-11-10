@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using System;
 
 namespace NextPlayerUWPDataLayer.Tables
 {
@@ -9,6 +10,7 @@ namespace NextPlayerUWPDataLayer.Tables
         public int Id { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
+        public DateTime DateModified { get; set; }
         public int PlainPlaylistId { get; set; }
     }
 }

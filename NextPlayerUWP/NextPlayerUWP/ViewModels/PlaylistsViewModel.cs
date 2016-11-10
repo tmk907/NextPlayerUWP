@@ -125,7 +125,7 @@ namespace NextPlayerUWP.ViewModels
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation =  Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
             // Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Playlist", new List<string>() { ".m3u" });
+            savePicker.FileTypeChoices.Add("m3u playlist", new List<string>() { ".m3u" });
             savePicker.SuggestedFileName = editPlaylist.Name;
 
             Windows.Storage.StorageFile file = await savePicker.PickSaveFileAsync();
@@ -146,24 +146,23 @@ namespace NextPlayerUWP.ViewModels
                 Windows.Storage.Provider.FileUpdateStatus status = await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
                 if (status == Windows.Storage.Provider.FileUpdateStatus.Complete)
                 {
-                    //this.textBlock.Text = "File " + file.Name + " was saved.";
-                    if (editPlaylist.IsSmart)
-                    {
-                        DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, -1);
-                    }
-                    else
-                    {
-                        DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, editPlaylist.Id);
-                    }
+                    //if (editPlaylist.IsSmart)
+                    //{
+                    //    DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, -1);
+                    //}
+                    //else
+                    //{
+                    //    DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, editPlaylist.Id);
+                    //}
                 }
                 else
                 {
-                    //this.textBlock.Text = "File " + file.Name + " couldn't be saved.";
+                    //"File couldn't be saved.";
                 }
             }
             else
             {
-                //this.textBlock.Text = "Operation cancelled.";
+                //"Operation cancelled.";
             }
         }
     }

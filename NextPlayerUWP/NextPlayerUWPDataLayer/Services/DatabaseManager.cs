@@ -77,7 +77,6 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<AlbumsTable>();
             connection.CreateTable<ArtistsTable>();
             connection.CreateTable<CachedScrobble>();
-            connection.CreateTable<ImportedPlaylistsTable>();
             connection.CreateTable<FutureAccessTokensTable>();
             connection.CreateTable<CloudAccountsTable>();
         }
@@ -95,7 +94,6 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<AlbumsTable>();
             connection.DropTable<ArtistsTable>();
             connection.DropTable<CachedScrobble>();
-            connection.DropTable<ImportedPlaylistsTable>();
             connection.DropTable<FutureAccessTokensTable>();
             connection.DropTable<CloudAccountsTable>();
         }
@@ -1067,22 +1065,40 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
 
-        public async Task<List<string>> GetImportedPlaylistPathsAsync()
+        public async Task<List<ImportedPlaylist>> GetImportedPlaylistsAsync()
         {
-            List<string> list = new List<string>();
-            var query = await connectionAsync.Table<ImportedPlaylistsTable>().ToListAsync();
-            foreach(var q in query)
+            List<ImportedPlaylist> list = new List<ImportedPlaylist>();
+            var playlists = await connectionAsync.Table<PlainPlaylistsTable>().ToListAsync();
+            var playlistsEntries = await connectionAsync.Table<PlainPlaylistEntryTable>().ToListAsync();
+            foreach(var q in playlists.Where(p => !String.IsNullOrEmpty(p.Path)))
             {
-                list.Add(q.Path);
+                var paths = new List<string>();
+                foreach(var item in playlistsEntries.Where(p => p.PlaylistId == q.PlainPlaylistId).OrderBy(p => p.Place))
+                {
+                    if (String.IsNullOrEmpty(item.Path) && item.SongId > 0)
+                    {
+                        var song = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(item.SongId)).FirstOrDefaultAsync();
+                        item.Path = song?.Path ?? "";
+                    }
+                    paths.Add(item.Path);
+                }
+                list.Add(new ImportedPlaylist()
+                {
+                    DateModified = q.DateModified,
+                    Name = q.Name,
+                    Path = q.Path,
+                    PlainPlaylistId = q.PlainPlaylistId,
+                    SongPaths = paths
+                });
             }
             return list;
         }
 
-        public async Task<List<ImportedPlaylistsTable>> GetImportedPlaylists()
-        {
-            List<ImportedPlaylistsTable> list = await connectionAsync.Table<ImportedPlaylistsTable>().ToListAsync();
-            return list;
-        }
+        //public async Task<List<ImportedPlaylistsTable>> GetImportedPlaylists()
+        //{
+        //    List<ImportedPlaylistsTable> list = await connectionAsync.Table<ImportedPlaylistsTable>().ToListAsync();
+        //    return list;
+        //}
 
         #endregion
 
@@ -1168,7 +1184,30 @@ namespace NextPlayerUWPDataLayer.Services
                 SongId = _songId,
                 Place = _place,
             };
+            await connectionAsync.InsertAsync(newEntry);//error
+        }
 
+        public async Task InsertPlainPlaylistEntryAsync(int playlistId, string path, int _place)
+        {
+            var newEntry = new PlainPlaylistEntryTable
+            {
+                PlaylistId = playlistId,
+                Path = path,
+                Place = _place,
+                SongId = -1,
+            };
+            await connectionAsync.InsertAsync(newEntry);//error
+        }
+
+        public async Task InsertPlainPlaylistEntryAsync(int playlistId, int songId, string path, int _place)
+        {
+            var newEntry = new PlainPlaylistEntryTable
+            {
+                PlaylistId = playlistId,
+                Path = path,
+                Place = _place,
+                SongId = songId,
+            };
             await connectionAsync.InsertAsync(newEntry);//error
         }
 
@@ -1270,15 +1309,15 @@ namespace NextPlayerUWPDataLayer.Services
            connection.Insert(newEntry);
         }
 
-        public int InsertImportedPlaylist(string name, string path, int plainId)
-        {
-            var p = new ImportedPlaylistsTable() {
-                Name = name,
-                Path = path,
-                PlainPlaylistId = plainId
-            };
-            return connection.Insert(p);
-        }
+        //public int InsertImportedPlaylist(string name, string path, int plainId)
+        //{
+        //    var p = new ImportedPlaylistsTable() {
+        //        Name = name,
+        //        Path = path,
+        //        PlainPlaylistId = plainId
+        //    };
+        //    return connection.Insert(p);
+        //}
 
         public async Task<List<SongItem>> InsertCloudItems(IEnumerable<SongData> songsdata, MusicSource type)
         {
@@ -1314,6 +1353,54 @@ namespace NextPlayerUWPDataLayer.Services
                 songs.Add(new SongItem(song));
             }
             return songs;
+        }
+
+        public async Task<int> InsertOrUpdateImportedPlaylist(ImportedPlaylist playlist)
+        {
+            int id;
+            var plainPlaylists = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.Path.Equals(playlist.Path)).ToListAsync();
+            if (plainPlaylists.Count == 0)
+            {
+                var table = new PlainPlaylistsTable()
+                {
+                    DateModified = playlist.DateModified,
+                    Name = playlist.Name,
+                    Path = playlist.Path,
+                };
+                connection.Insert(table);
+                id = table.PlainPlaylistId;
+            }
+            else
+            {
+                var existingPlaylist = plainPlaylists.FirstOrDefault();
+                id = existingPlaylist.PlainPlaylistId;
+                existingPlaylist.DateModified = playlist.DateModified;
+                existingPlaylist.Name = playlist.Name;
+                await connectionAsync.UpdateAsync(existingPlaylist);
+                await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlist.PlainPlaylistId);
+            }
+
+            var songs = await connectionAsync.Table<SongsTable>().ToListAsync();
+            var dict = songs.ToDictionary(s => s.Path, t => t.SongId);
+            int i = 0;
+            List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
+            foreach (var path in playlist.SongPaths)
+            {
+                int songId = -1;
+                dict.TryGetValue(path, out songId);
+                var entry = new PlainPlaylistEntryTable()
+                {
+                    Path = path,
+                    Place = i,
+                    PlaylistId = id,
+                    SongId = songId,
+                };
+                entries.Add(entry);
+                i++;
+            }
+            await connectionAsync.InsertAllAsync(entries);
+
+            return id;
         }
 
         #endregion
@@ -1356,26 +1443,11 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task DeletePlainPlaylistAsync(int playlistId)
         {
-            var items = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(playlistId)).ToListAsync();
-            //foreach (var item in items)
-            //{
-            //    DeletePlainPlaylistEntry(item.Id);
-            //}
-
             await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlistId);
-
-            var list2 = connection.Table<ImportedPlaylistsTable>().Where(s => s.PlainPlaylistId == playlistId).ToList();
-            if (list2.Count > 0)
-            {
-                foreach (var item in list2)
-                {
-                    connection.Delete(item);
-                }
-            }
-
-            var list = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId.Equals(playlistId)).ToListAsync();
-            var playlist = list.FirstOrDefault();
-            await connectionAsync.DeleteAsync(playlist);
+            await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistsTable WHERE PlainPlaylistId = ?");
+            //var list = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId.Equals(playlistId)).ToListAsync();
+            //var playlist = list.FirstOrDefault();
+            //await connectionAsync.DeleteAsync(playlist);
         }
 
 
@@ -1399,10 +1471,10 @@ namespace NextPlayerUWPDataLayer.Services
             await UpdateTables();
         }
 
-        public async Task DeleteImportedPlaylist(ImportedPlaylistsTable table)
-        {
-            await connectionAsync.DeleteAsync(table);
-        }
+        //public async Task DeleteImportedPlaylist(ImportedPlaylistsTable table)
+        //{
+        //    await connectionAsync.DeleteAsync(table);
+        //}
 
         #endregion
 
@@ -1525,9 +1597,90 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.UpdateAsync(playlist);
         }
 
-        public async Task UpdateImportedPlaylist(ImportedPlaylistsTable table)
+        //public async Task UpdateImportedPlaylist(ImportedPlaylistsTable table)
+        //{
+        //    await connectionAsync.UpdateAsync(table);
+        //}
+
+        public async Task UpdateImportedPlaylists(List<ImportedPlaylist> toDelete, List<ImportedPlaylist> newPlaylists, List<ImportedPlaylist> updatedPlaylists)
         {
-            await connectionAsync.UpdateAsync(table);
+            foreach(var playlist in toDelete)
+            {
+                await DeletePlainPlaylistAsync(playlist.PlainPlaylistId);
+            }
+            var songs = await connectionAsync.Table<SongsTable>().ToListAsync();
+            var dict = songs.ToDictionary(s => s.Path, t => t.SongId);
+            List<PlainPlaylistsTable> updatedPPT = new List<PlainPlaylistsTable>();            
+            foreach (var playlist in updatedPlaylists)
+            {
+                PlainPlaylistsTable t = new PlainPlaylistsTable()
+                {
+                    DateModified = playlist.DateModified,
+                    Name = playlist.Name,
+                    Path = playlist.Path,
+                    PlainPlaylistId = playlist.PlainPlaylistId
+                };
+                updatedPPT.Add(t);
+                await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlist.PlainPlaylistId);
+                int i = 0;
+                List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
+                foreach (var path in playlist.SongPaths)
+                {
+                    int songId = -1;
+                    dict.TryGetValue(path, out songId);
+                    var entry = new PlainPlaylistEntryTable()
+                    {
+                        Path = path,
+                        Place = i,
+                        PlaylistId = t.PlainPlaylistId,
+                        SongId = songId,
+                    };
+                    entries.Add(entry);
+                    i++;
+                }
+                await connectionAsync.InsertAllAsync(entries);
+            }
+            await connectionAsync.UpdateAllAsync(updatedPPT);
+            foreach(var playlist in newPlaylists)
+            {
+                PlainPlaylistsTable t = new PlainPlaylistsTable()
+                {
+                    DateModified = playlist.DateModified,
+                    Name = playlist.Name,
+                    Path = playlist.Path
+                };
+                connection.Insert(t);
+                int i = 0;
+                List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
+                foreach (var path in playlist.SongPaths)
+                {
+                    int songId = -1;
+                    dict.TryGetValue(path, out songId);
+                    var entry = new PlainPlaylistEntryTable()
+                    {
+                        Path = path,
+                        Place = i,
+                        PlaylistId = t.PlainPlaylistId,
+                        SongId = songId,
+                    };
+                    entries.Add(entry);
+                    i++;
+                }
+                await connectionAsync.InsertAllAsync(entries);
+            }
+        }
+
+        public async Task UpdatePlainPlaylistAsync(PlaylistItem playlist)
+        {
+            if (playlist.IsSmart) return;
+            var item = new PlainPlaylistsTable()
+            {
+                DateModified = playlist.DateModified,
+                Name = playlist.Name,
+                Path = playlist.Path,
+                PlainPlaylistId = playlist.Id
+            };
+            await connectionAsync.UpdateAsync(item);
         }
 
         /// <summary>
@@ -1905,7 +2058,6 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<AlbumsTable>();
             connection.DropTable<ArtistsTable>();
             connection.DropTable<CachedScrobble>();
-            connection.DropTable<ImportedPlaylistsTable>();
 
             connection.CreateTable<PlainPlaylistsTable>();
             connection.CreateTable<PlainPlaylistEntryTable>();
@@ -1916,7 +2068,6 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<AlbumsTable>();
             connection.CreateTable<ArtistsTable>();
             connection.CreateTable<CachedScrobble>();
-            connection.CreateTable<ImportedPlaylistsTable>();
         }
 
         public void UpdateToVersion2()
@@ -1992,6 +2143,15 @@ namespace NextPlayerUWPDataLayer.Services
         {
             connection.Execute("UPDATE SongsTable SET IsAvailable = 0 WHERE Path LIKE ? OR Path LIKE ? OR Path LIKE ? OR Path LIKE ? OR Path LIKE ?", "%.ogg", "%.ape", "%.wv", "%.opus", "%.ac3");
             connection.Execute("DELETE FROM NowPlayingTable WHERE Path LIKE ? OR Path LIKE ? OR Path LIKE ? OR Path LIKE ? OR Path LIKE ?", "%.ogg", "%.ape", "%.wv", "%.opus", "%.ac3");
+        }
+
+        public void UpdateToVersion9()
+        {
+            connection.Execute("DELETE FROM PlainPlaylistEntryTable WHERE PlainPlaylistEntryTable.Id IN ( SELECT PlainPlaylistEntryTable.Id FROM PlainPlaylistEntryTable LEFT JOIN ImportedPlaylistsTable ON PlainPlaylistEntryTable.PlaylistId = ImportedPlaylistsTable.PlainPlaylistId)");
+            connection.Execute("Delete FROM PlainPlaylistsTable WHERE PlainPlaylistsTable.PlainPlaylistId IN ( SELECT PlainPlaylistsTable.PlainPlaylistId FROM PlainPlaylistsTable LEFT JOIN ImportedPlaylistsTable ON PlainPlaylistsTable.PlainPlaylistId = ImportedPlaylistsTable.PlainPlaylistId WHERE ImportedPlaylistsTable.PlainPlaylistId IS NOT NULL)");
+            connection.Execute("DELETE FROM ImportedPlaylistsTable");
+            connection.CreateTable<PlainPlaylistsTable>();
+            connection.CreateTable<PlainPlaylistEntryTable>();
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()

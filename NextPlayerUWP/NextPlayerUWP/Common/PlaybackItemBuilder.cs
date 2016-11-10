@@ -74,7 +74,7 @@ namespace NextPlayerUWP.Common
             switch (song.SourceType)
             {
                 case MusicSource.LocalFile:
-                    if (App.AudioFormatsHelper.IsDefaultSupportedType(song.Path.Substring(song.Path.LastIndexOf('.'))))
+                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.Substring(song.Path.LastIndexOf('.'))))
                     {
                         mpi = PrepareFromLocalFile(song);
                     }
@@ -84,7 +84,7 @@ namespace NextPlayerUWP.Common
                     }
                     break;
                 case MusicSource.LocalNotMusicLibrary:
-                    if (App.AudioFormatsHelper.IsDefaultSupportedType(song.Path.Substring(song.Path.LastIndexOf('.'))))
+                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.Substring(song.Path.LastIndexOf('.'))))
                     {
                         mpi = PrepareFromFutureAccessList(song);
                     }

@@ -151,6 +151,7 @@
     <Compile Include="Model\FolderItem.cs" />
     <Compile Include="Model\GenreItem.cs" />
     <Compile Include="Model\GroupList.cs" />
+    <Compile Include="Model\ImportedPlaylist.cs" />
     <Compile Include="Model\MusicItem.cs" />
     <Compile Include="Model\NowPlayingListItem.cs" />
     <Compile Include="Model\NowPlayingSong.cs" />
@@ -188,7 +189,7 @@
     <Compile Include="pCloud\Requests\General.cs" />
     <Compile Include="pCloud\Requests\Streaming.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AudioFormatsHelper.cs" />
+    <Compile Include="Services\FileFormatsHelper.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\ImagesManager.cs" />
     <Compile Include="Services\IRadioService.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\NowPlayingManager.cs" />
+    <Compile Include="Services\PlaylistHelper.cs" />
     <Compile Include="Services\PlaylistExporter.cs" />
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="SoundCloud\Enums\License.cs" />
