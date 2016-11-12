@@ -1,17 +1,13 @@
-﻿using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Model;
+﻿using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
-using System.IO;
+using Windows.Storage;
+using Windows.Storage.Provider;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -72,36 +68,26 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.NewSmartPlaylist);
         }
 
-        public void Save()
+        public async void Save()
         {
             int id = DatabaseManager.Current.InsertPlainPlaylist(name);
-            Playlists.Add(new PlaylistItem(id, false, name));
+            var playlist = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
+            Playlists.Add(playlist);
             Name = "";
         }
 
         public async void ConfirmDelete(object e)
         {
             PlaylistItem p = (PlaylistItem)e;
-            if (p.IsSmart)
-            {
-                if (p.IsNotDefault)
-                {
-                    Playlists.Remove(p);
-                    await DatabaseManager.Current.DeleteSmartPlaylistAsync(p.Id);
-                }
-            }
-            else
-            {
-                Playlists.Remove(p);
-                PlaylistExporter pe = new PlaylistExporter();
-                await pe.DeletePlaylist(p).ConfigureAwait(false);
-                await DatabaseManager.Current.DeletePlainPlaylistAsync(p.Id).ConfigureAwait(false);
-            }
+            Playlists.Remove(p);
+            PlaylistExporter pe = new PlaylistExporter();
+            await pe.DeletePlaylistAsync(p);
         }
 
         public void EditSmartPlaylist(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.NewSmartPlaylist,((PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter).Id);
+            var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.NewSmartPlaylist,playlist.Id);
         }
 
         public async void SaveEditedName()
@@ -116,7 +102,7 @@ namespace NextPlayerUWP.ViewModels
             }
             await DatabaseManager.Current.UpdatePlaylistName(editPlaylist.Id, editPlaylist.Name);
             PlaylistExporter pe = new PlaylistExporter();
-            await pe.ChangePlaylistName(editPlaylist).ConfigureAwait(false);
+            await pe.ChangePlaylistNameAsync(editPlaylist);//.ConfigureAwait(false);
             //await LoadData();
         }
 
@@ -128,28 +114,25 @@ namespace NextPlayerUWP.ViewModels
             savePicker.FileTypeChoices.Add("m3u playlist", new List<string>() { ".m3u" });
             savePicker.SuggestedFileName = editPlaylist.Name;
 
-            Windows.Storage.StorageFile file = await savePicker.PickSaveFileAsync();
+            StorageFile file = await savePicker.PickSaveFileAsync();
             if (file != null)
             {
                 // Prevent updates to the remote version of the file until
                 // we finish making changes and call CompleteUpdatesAsync.
-                Windows.Storage.CachedFileManager.DeferUpdates(file);
+                CachedFileManager.DeferUpdates(file);
 
-                string folderPath = Path.GetDirectoryName(file.Path);
                 PlaylistExporter pe = new PlaylistExporter();
-                string content = await pe.ToM3UContent(editPlaylist, relativePaths, folderPath);
-
-                await Windows.Storage.FileIO.WriteTextAsync(file, content);
+                await pe.ExportPlaylistToM3UAsync(editPlaylist, file, relativePaths);
                 // Let Windows know that we're finished changing the file so
                 // the other app can update the remote version of the file.
                 // Completing updates may require Windows to ask for user input.
-                Windows.Storage.Provider.FileUpdateStatus status = await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
-                if (status == Windows.Storage.Provider.FileUpdateStatus.Complete)
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                if (status == FileUpdateStatus.Complete)
                 {
-                    //if (editPlaylist.IsSmart)
-                    //{
-                    //    DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, -1);
-                    //}
+                    if (!editPlaylist.IsSmart)
+                    {
+                        await DatabaseManager.Current.UpdatePlainPlaylistAsync(editPlaylist);
+                    }
                     //else
                     //{
                     //    DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, editPlaylist.Id);

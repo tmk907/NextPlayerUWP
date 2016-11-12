@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Tables;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -86,33 +87,36 @@ namespace NextPlayerUWPDataLayer.Model
                 name = _name;
                 isNotDefault = true;
             }
+            path = "";
+            dateModified = DateTime.MinValue;
         }
 
-        public PlaylistItem(int id, bool issmart, string _name, string path, DateTime dateModified)
+        public PlaylistItem(PlainPlaylistsTable table)
         {
-            this.id = id;
-            isSmart = issmart;
-            this.path = path;
-            this.dateModified = dateModified;
-            if (issmart)
-            {
-                isNotDefault = !Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);
+            this.id = table.PlainPlaylistId;
+            isSmart = false;
+            this.path = table.Path ?? "";
+            this.dateModified = table.DateModified;
+            name = table.Name;
+            isNotDefault = true;
+        }
 
-                Dictionary<int, string> ids = Helpers.ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
-                if (ids.ContainsKey(id))
-                {
-                    var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-                    name = loader.GetString(ids[id]);
-                }
-                else
-                {
-                    name = _name;
-                }
+        public PlaylistItem(SmartPlaylistsTable table)
+        {
+            this.id = table.SmartPlaylistId;
+            isSmart = true;
+            this.path = "";
+            this.dateModified = DateTime.MinValue;
+            isNotDefault = !Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);
+            Dictionary<int, string> ids = Helpers.ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
+            if (ids.ContainsKey(id))
+            {
+                var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                name = loader.GetString(ids[id]);
             }
             else
             {
-                name = _name;
-                isNotDefault = true;
+                name = table.Name;
             }
         }
 

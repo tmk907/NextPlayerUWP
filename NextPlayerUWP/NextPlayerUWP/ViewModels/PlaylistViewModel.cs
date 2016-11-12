@@ -205,7 +205,7 @@ namespace NextPlayerUWP.ViewModels
             Playlist.RemoveAt(i);
             var p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
             PlaylistExporter pe = new PlaylistExporter();
-            await pe.AutoSavePlaylist(p);
+            await pe.AutoSavePlaylistAsync(p);
             await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(song.SongId);
         }
 

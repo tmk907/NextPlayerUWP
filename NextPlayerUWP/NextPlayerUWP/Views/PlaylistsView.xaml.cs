@@ -99,7 +99,7 @@ namespace NextPlayerUWP.Views
         private async void MFIExportChoosePathKind(object sender, RoutedEventArgs e)
         {
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
-            ViewModel.EditPlaylist = new PlaylistItem(selected.Id, selected.IsSmart, selected.Name);
+            ViewModel.EditPlaylist = selected;
             await ContentDialogChoosePathKind.ShowAsync();
         }
 

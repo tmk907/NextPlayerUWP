@@ -540,6 +540,7 @@ namespace NextPlayerUWP.Common
 
         public async Task SortPlaylist()
         {
+            if (songs.Count == 0) return;
             var songid = GetCurrentPlaying().SongId;
             var orderSelector = SortingHelper.GetOrderBySelector();
             var list = songs.OrderBy(orderSelector).ToList();

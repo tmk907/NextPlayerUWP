@@ -282,13 +282,13 @@ namespace NextPlayerUWP.ViewModels
         public async Task SavePlaylists()
         {
             PlaylistExporter pe = new PlaylistExporter();
-            await pe.SavePlainPlaylistsInPlaylistsFolder().ConfigureAwait(false);
+            await pe.SavePlainPlaylistsInPlaylistsFolderAsync().ConfigureAwait(false);
         }
 
         public async Task DeletePlaylists()
         {
             PlaylistExporter pe = new PlaylistExporter();
-            await pe.DeleteAllPlainPlaylists().ConfigureAwait(false);
+            await pe.DeleteAllPlainPlaylistsAsync().ConfigureAwait(false);
         }
 
         #endregion

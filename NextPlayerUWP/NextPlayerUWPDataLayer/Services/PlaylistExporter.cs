@@ -13,7 +13,7 @@ namespace NextPlayerUWPDataLayer.Services
 {
     public class PlaylistExporter
     {
-        public async Task<string> ToM3UContent(PlaylistItem playlist, bool relativePaths, string folderPath)
+        public async Task<string> ToM3UContentAsync(PlaylistItem playlist, bool useRelativePaths, string folderPath)
         {
             ObservableCollection<SongItem> songs;
             if (playlist.IsSmart)
@@ -31,7 +31,24 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 folderPath += Path.DirectorySeparatorChar;
             }
-            if (relativePaths)
+            //if path are from different volumes don't use relative paths
+            if (useRelativePaths)
+            {
+                char disk = ':';
+                foreach (var song in songs)
+                {
+                    if (song.Path.Length > 1 && song.Path[1] == Path.VolumeSeparatorChar)
+                    {
+                        if (disk != ':' && song.Path[0] == disk)
+                        {
+                            useRelativePaths = false;
+                            break;
+                        }
+                        disk = song.Path[0];
+                    }
+                }
+            }
+            if (useRelativePaths)
             {
                 foreach (var song in songs)
                 {
@@ -90,13 +107,13 @@ namespace NextPlayerUWPDataLayer.Services
             return relativePath;
         }
 
-        public async Task AutoSavePlaylist(PlaylistItem playlist)
+        public async Task AutoSavePlaylistAsync(PlaylistItem playlist)
         {
             bool autoSave = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
             if (!autoSave) return;
             
 
-            StorageFolder playlistsFolder = await GetFolderWithAppPlaylists();
+            StorageFolder playlistsFolder = await GetFolderWithAppPlaylistsAsync();
             if (playlistsFolder == null)
             {
                 //clear imported table
@@ -109,7 +126,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
             string newName = playlist.Name + ".m3u";
 
-            string content = await ToM3UContent(playlist, false, "");
+            string content = await ToM3UContentAsync(playlist, false, "");
             if (String.IsNullOrEmpty(playlist.Path))
             {
                 try
@@ -149,20 +166,20 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task ChangePlaylistName(PlaylistItem playlist)
+        public async Task ChangePlaylistNameAsync(PlaylistItem playlist)
         {
             bool autoSave = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
             if (!autoSave) return;
             if (String.IsNullOrEmpty(playlist.Path))
             {
-                await AutoSavePlaylist(playlist);
+                await AutoSavePlaylistAsync(playlist);
             }
             else
             {
                 string oldFileName = Path.GetFileName(playlist.Path);
                 string newFileName = playlist.Name + ".m3u";
 
-                StorageFolder playlistsFolder = await GetFolderWithAppPlaylists();
+                StorageFolder playlistsFolder = await GetFolderWithAppPlaylistsAsync();
                 if (playlistsFolder == null)
                 {
                     //log
@@ -181,7 +198,7 @@ namespace NextPlayerUWPDataLayer.Services
                 }
                 catch (FileNotFoundException)
                 {
-                    await AutoSavePlaylist(playlist);
+                    await AutoSavePlaylistAsync(playlist);
                 }
                 catch (Exception ex)
                 {
@@ -195,13 +212,13 @@ namespace NextPlayerUWPDataLayer.Services
         /// </summary>
         /// <param name="playlist"></param>
         /// <returns></returns>
-        public async Task DeletePlaylist(PlaylistItem playlist)
+        public async Task DeletePlaylistAsync(PlaylistItem playlist)
         {
             if (!playlist.IsSmart)
             {
                 if (!String.IsNullOrEmpty(playlist.Path))
                 {
-                    StorageFolder playlistsFolder = await GetFolderWithAppPlaylists();
+                    StorageFolder playlistsFolder = await GetFolderWithAppPlaylistsAsync();
                     if (playlistsFolder != null && playlist.Path.StartsWith(playlistsFolder.Path))
                     {
                         try
@@ -223,7 +240,18 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task<StorageFolder> GetFolderWithAppPlaylists()
+        public async Task ExportPlaylistToM3UAsync(PlaylistItem playlist, StorageFile file, bool useRealtivePaths = false)
+        {
+            string folderPath = Path.GetDirectoryName(file.Path);
+            PlaylistExporter pe = new PlaylistExporter();
+            string content = await pe.ToM3UContentAsync(playlist, useRealtivePaths, folderPath);
+            await FileIO.WriteTextAsync(file, content);
+            playlist.Path = file.Path;
+            var prop = await file.GetBasicPropertiesAsync();
+            playlist.DateModified = prop.DateModified.UtcDateTime;
+        }
+
+        public async Task<StorageFolder> GetFolderWithAppPlaylistsAsync()
         {
             try
             {
@@ -249,21 +277,21 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task SavePlainPlaylistsInPlaylistsFolder()
+        public async Task SavePlainPlaylistsInPlaylistsFolderAsync()
         {
             var playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             foreach(var playlist in playlists)
             {
-                await AutoSavePlaylist(playlist);
+                await AutoSavePlaylistAsync(playlist);
             }
         }
 
-        public async Task DeleteAllPlainPlaylists()
+        public async Task DeleteAllPlainPlaylistsAsync()
         {
             var playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             foreach (var playlist in playlists)
             {
-                await DeletePlaylist(playlist);
+                await DeletePlaylistAsync(playlist);
             }
         }
     }

@@ -132,15 +132,16 @@ namespace NextPlayerUWP.ViewModels
                     break;
             }
             PlaylistExporter pe = new PlaylistExporter();
-            await pe.AutoSavePlaylist(p);
+            await pe.AutoSavePlaylistAsync(p);
             Loading = false;
             NavigationService.GoBack();
         }
 
-        public void Save()
+        public async void Save()
         {
             int id = DatabaseManager.Current.InsertPlainPlaylist(name);
-            Playlists.Add(new PlaylistItem(id, false, name));
+            var playlist = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
+            Playlists.Add(playlist);
             Name = "";
         }
     }

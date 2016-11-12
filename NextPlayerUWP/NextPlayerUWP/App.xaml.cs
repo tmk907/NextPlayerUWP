@@ -586,6 +586,7 @@ namespace NextPlayerUWP
 
         private void UpdateDB()
         {
+            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
             object version = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DBVersion);
             if (version.ToString() == "1")
             {

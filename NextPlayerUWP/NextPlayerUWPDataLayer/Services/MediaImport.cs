@@ -25,6 +25,19 @@ namespace NextPlayerUWPDataLayer.Services
     {
         public static event MediaImportedHandler MediaImported;
 
+        private class ImportedPlaylistComparer : IEqualityComparer<ImportedPlaylist>
+        {
+            public bool Equals(ImportedPlaylist x, ImportedPlaylist y)
+            {
+                return (x.Path == y.Path);
+            }
+
+            public int GetHashCode(ImportedPlaylist obj)
+            {
+                return obj.Path.GetHashCode();
+            }
+        }
+
         public static void OnMediaImported(string s)
         {
             MediaImported?.Invoke(s);
@@ -278,7 +291,7 @@ namespace NextPlayerUWPDataLayer.Services
             try
             {
                 PlaylistExporter pe = new PlaylistExporter();
-                var playlistsFolder = await pe.GetFolderWithAppPlaylists();
+                var playlistsFolder = await pe.GetFolderWithAppPlaylistsAsync();
                 var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { ".m3u" });
                 var query = playlistsFolder.CreateFileQueryWithOptions(queryOptions);
                 return await query.GetFilesAsync();
@@ -340,8 +353,9 @@ namespace NextPlayerUWPDataLayer.Services
                     {
                         newImportedPlaylists.Add(newPlaylist);
                     }
-                    else if (oldPlaylist.DateModified <= dateModified)
+                    else if (oldPlaylist.DateModified < dateModified)
                     {
+                        newPlaylist.PlainPlaylistId = oldPlaylist.PlainPlaylistId;
                         updatedPlaylists.Add(newPlaylist);
                     }
                     else
@@ -369,8 +383,9 @@ namespace NextPlayerUWPDataLayer.Services
                     {
                         newImportedPlaylists.Add(newPlaylist);
                     }
-                    else if (oldPlaylist.DateModified <= dateModified)
+                    else if (oldPlaylist.DateModified < dateModified)
                     {
+                        newPlaylist.PlainPlaylistId = oldPlaylist.PlainPlaylistId;
                         updatedPlaylists.Add(newPlaylist);
                     }
                     else
@@ -386,7 +401,7 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
 
-            var toDelete = oldImportedPlaylists.Except(withoutChangePlaylists).Except(updatedPlaylists).ToList();
+            var toDelete = oldImportedPlaylists.Except(withoutChangePlaylists).Except(updatedPlaylists, new ImportedPlaylistComparer()).ToList();
 
             await DatabaseManager.Current.UpdateImportedPlaylists(toDelete, newImportedPlaylists, updatedPlaylists);
         }
