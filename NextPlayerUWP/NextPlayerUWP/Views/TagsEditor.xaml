@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Template10.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     DataContext="{Binding Source={StaticResource Locator}, Path=TagsEditorVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -17,6 +18,18 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
+        <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIAddFromFile" Text="Add from file" 
+                            Click="{x:Bind ViewModel.AddFromFile}"/>
+            <MenuFlyoutItem x:Uid="MFIAddFromSong" Text="Add from song" 
+                            Click="AddFromSong_Click"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFISaveToFile" Text="Save to file" 
+                            Click="{x:Bind ViewModel.SaveToFile}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
+                            Click="{x:Bind ViewModel.ClearAlbumArt}"/>
+        </MenuFlyout>
         <Style x:Key="DescriptionStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -27,6 +40,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </Page.Resources>
+    <Page.Content>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -82,6 +96,91 @@
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <ContentDialog x:Name="ContentDialogAddFromSong"
+                Grid.RowSpan="3"
+                IsPrimaryButtonEnabled="True"
+                PrimaryButtonText="OK"
+                IsSecondaryButtonEnabled="True"
+                SecondaryButtonText="Cancel">
+                <ContentControl.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <AutoSuggestBox Grid.Row="0"
+                                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
+                                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
+                                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}"
+                                    QueryIcon="Find"
+                                    Margin="0,0,0,8">
+                            <AutoSuggestBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Title}"/>
+                                </DataTemplate>
+                            </AutoSuggestBox.ItemTemplate>
+                        </AutoSuggestBox>
+                        <ListView Grid.Row="1"
+                                x:Name="songslist"
+                                ItemsSource="{x:Bind ViewModel.Songs}"
+                                SelectionMode="Single"
+                                DoubleTapped="songslist_DoubleTapped">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Padding" Value="0,0,0,0"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="data:SongItem">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Image Grid.Column="0"
+                                               Grid.RowSpan="2"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+                                            Width="44"
+                                            Height="44">
+                                            <Image.Source>
+                                                <BitmapImage 
+                                                    UriSource="{x:Bind AlbumArtUri}"
+                                                    DecodePixelType="Logical"
+                                                    DecodePixelHeight="44" 
+                                                    DecodePixelWidth="44"/>
+                                            </Image.Source>
+                                        </Image>
+                                        <TextBlock Grid.Column="1" Grid.Row="0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="14"
+                                            TextTrimming="CharacterEllipsis"
+                                            Text="{x:Bind Title}"
+                                        />
+                                        <TextBlock Grid.Column="1" Grid.Row="1"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            TextTrimming="CharacterEllipsis"
+                                            Text="{x:Bind Artist}"
+                                        />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </ContentControl.Content>
+            </ContentDialog>
             <ProgressBar Grid.Row="0"
                 Height="8"
                 Visibility="{x:Bind ViewModel.ShowProgressBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
@@ -249,6 +348,8 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0"
                             x:Uid="TBLyrics"
@@ -259,11 +360,47 @@
                             AcceptsReturn="True"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             Text="{x:Bind ViewModel.TagsData.Lyrics, Mode=TwoWay}"/>
+                        <TextBlock Grid.Row="2"
+                            x:Uid="TBAlbumCover"
+                            Text="Album cover"
+                            Visibility="{x:Bind ViewModel.IsAlbumArtVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                            Style="{StaticResource DescriptionStyle}"/>
+                        <TextBlock Grid.Row="2" 
+                            x:Uid="TBNoAlbumCover"
+                            Text="No album cover"
+                            Visibility="{x:Bind ViewModel.IsAlbumArtVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                            Style="{StaticResource DescriptionStyle}"/>
+                        <Grid Grid.Row="3" 
+                            HorizontalAlignment="Stretch"
+                            Visibility="{x:Bind ViewModel.IsAlbumArtVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                x:Uid="ButtonAddFromFile"
+                                Content="Add from file"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Click="{x:Bind ViewModel.AddFromFile}"/>
+                            <Button Grid.Column="1"
+                                x:Uid="ButtonAddFromSong"
+                                Content="Add from song"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Click="AddFromSong_Click"/>
+                        </Grid>
+                        <Image Grid.Row="3"
+                            MaxHeight="500"
+                            MaxWidth="500"
+                            Tapped="Image_Tapped"
+                            RightTapped="Image_Tapped"
+                            Visibility="{x:Bind ViewModel.IsAlbumArtVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                            Source="{x:Bind ViewModel.AlbumArt, Mode=OneWay}"/>
                     </Grid>
                 </Grid>
             </ScrollViewer>
-            <ScrollViewer Grid.Row="1"
-                x:Name="MobileLayout">
+            <ScrollViewer Grid.Row="1" x:Name="MobileLayout">
                 <Grid HorizontalAlignment="Stretch" Margin="8,0,8,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -416,9 +553,10 @@
                     <Grid Grid.Row="1"
                         Margin="4,0,4,0"
                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
-                        >
+                        VerticalAlignment="Top">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
@@ -426,12 +564,49 @@
                             x:Uid="TBLyrics"
                             Text="Lyrics"
                             Style="{StaticResource DescriptionStyle}"/>
-                        <TextBox Grid.Row="1"
+                        <TextBox Grid.Row="1" 
                             TextWrapping="Wrap"
                             AcceptsReturn="True"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             Text="{x:Bind ViewModel.TagsData.Lyrics, Mode=TwoWay}"/>
-                    </Grid>
+                        <TextBlock Grid.Row="2"
+                            x:Uid="TBAlbumCover"
+                            Text="Album cover"
+                            Visibility="{x:Bind ViewModel.IsAlbumArtVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                            Style="{StaticResource DescriptionStyle}"/>
+                        <TextBlock Grid.Row="2" 
+                            x:Uid="TBNoAlbumCover"
+                            Text="No album cover"
+                            Visibility="{x:Bind ViewModel.IsAlbumArtVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                            Style="{StaticResource DescriptionStyle}"/>
+                        <Grid Grid.Row="3" 
+                            HorizontalAlignment="Stretch"
+                            Visibility="{x:Bind ViewModel.IsAlbumArtVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                x:Uid="ButtonAddFromFile"
+                                Content="Add from file"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Click="{x:Bind ViewModel.AddFromFile}"/>
+                            <Button Grid.Column="1"
+                                x:Uid="ButtonAddFromSong"
+                                Content="Add from song"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Click="AddFromSong_Click"/>
+                        </Grid>
+                        <Image Grid.Row="3"
+                            MaxHeight="500"
+                            MaxWidth="500"
+                            Tapped="Image_Tapped"
+                            RightTapped="Image_Tapped"
+                            Visibility="{x:Bind ViewModel.IsAlbumArtVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                            Source="{x:Bind ViewModel.AlbumArt, Mode=OneWay}"/>
+                        </Grid>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Row="2" Margin="12,4,12,4" HorizontalAlignment="Stretch">
@@ -458,4 +633,5 @@
             </Grid>
         </Grid>
     </Grid>
+    </Page.Content>
 </Page>

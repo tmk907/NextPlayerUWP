@@ -2151,11 +2151,11 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void UpdateToVersion9()
         {
-            connection.Execute("DELETE FROM PlainPlaylistEntryTable WHERE PlainPlaylistEntryTable.Id IN ( SELECT PlainPlaylistEntryTable.Id FROM PlainPlaylistEntryTable LEFT JOIN ImportedPlaylistsTable ON PlainPlaylistEntryTable.PlaylistId = ImportedPlaylistsTable.PlainPlaylistId)");
-            connection.Execute("Delete FROM PlainPlaylistsTable WHERE PlainPlaylistsTable.PlainPlaylistId IN ( SELECT PlainPlaylistsTable.PlainPlaylistId FROM PlainPlaylistsTable LEFT JOIN ImportedPlaylistsTable ON PlainPlaylistsTable.PlainPlaylistId = ImportedPlaylistsTable.PlainPlaylistId WHERE ImportedPlaylistsTable.PlainPlaylistId IS NOT NULL)");
-            connection.Execute("DELETE FROM ImportedPlaylistsTable");
             connection.CreateTable<PlainPlaylistsTable>();
             connection.CreateTable<PlainPlaylistEntryTable>();
+            connection.Execute("DELETE FROM PlainPlaylistEntryTable WHERE PlainPlaylistEntryTable.Id IN ( SELECT PlainPlaylistEntryTable.Id FROM PlainPlaylistEntryTable LEFT JOIN ImportedPlaylistsTable ON PlainPlaylistEntryTable.PlaylistId = ImportedPlaylistsTable.PlainPlaylistId)");
+            connection.Execute("DELETE FROM PlainPlaylistsTable WHERE PlainPlaylistsTable.PlainPlaylistId IN ( SELECT PlainPlaylistsTable.PlainPlaylistId FROM PlainPlaylistsTable LEFT JOIN ImportedPlaylistsTable ON PlainPlaylistsTable.PlainPlaylistId = ImportedPlaylistsTable.PlainPlaylistId WHERE ImportedPlaylistsTable.PlainPlaylistId IS NOT NULL)");
+            connection.Execute("DELETE FROM ImportedPlaylistsTable");
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()

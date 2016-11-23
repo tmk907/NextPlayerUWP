@@ -89,21 +89,22 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 try
                 {
                     await msaAuthenticationProvider.AuthenticateUserAsync();
+                    var currentAccountSession = ((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession;
                     if (refreshToken == null)
                     {
-                        refreshToken = (((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession).RefreshToken;
+                        refreshToken = currentAccountSession.RefreshToken;
                     }
                     else
                     {
-                        if (refreshToken != (((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession).RefreshToken)
+                        if (refreshToken != currentAccountSession.RefreshToken)
                         {
-                            refreshToken = (((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession).RefreshToken;
+                            refreshToken = currentAccountSession.RefreshToken;
                         }
                     }
                     isLoggedIn = true;
                     if (userId == null)
                     {
-                        userId = ((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession.UserId;
+                        userId = currentAccountSession.UserId;
                         string username = await GetUsername();
                         if (!CloudAccounts.Instance.Exists(userId, CloudStorageType.OneDrive))
                         {

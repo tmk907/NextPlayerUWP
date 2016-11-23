@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.Common;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -8,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -73,14 +72,14 @@ namespace NextPlayerUWP.Views
 
         private async void MenuFlyoutItemDelete_Click(object sender, RoutedEventArgs e)
         {
-            ResourceLoader loader = new ResourceLoader();
-            string content = loader.GetString("DeletePlaylistConfirmation");
+            TranslationHelper helper = new  TranslationHelper();
+            string content = helper.GetTranslation("DeletePlaylistConfirmation");
             MessageDialog dialog = new MessageDialog(content);
-            dialog.Commands.Add(new UICommand(loader.GetString("Delete"), (command) =>
+            dialog.Commands.Add(new UICommand(helper.GetTranslation(TranslationHelper.Delete), (command) =>
             {
                 ViewModel.ConfirmDelete(((MenuFlyoutItem)sender).CommandParameter);
             }));
-            dialog.Commands.Add(new UICommand(loader.GetString("Cancel"), (command) => 
+            dialog.Commands.Add(new UICommand(helper.GetTranslation(TranslationHelper.Cancel), (command) => 
             {
 
             }));

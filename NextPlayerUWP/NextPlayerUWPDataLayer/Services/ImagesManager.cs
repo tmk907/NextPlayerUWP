@@ -54,51 +54,90 @@ namespace NextPlayerUWPDataLayer.Services
         {
             StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
             StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
-
+            int width = 0;
+            int height = 0;
+            if (resize != 0)
+            {
+                width = image.PixelWidth;
+                height = image.PixelHeight;
+                if (width == height)
+                {
+                    height = resize;
+                }
+                else
+                {
+                    height = height * resize / width;
+                }
+                width = resize;
+            }
             try
             {
-                using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                await SaveBitmap(file, image, height, width);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                //image exists and is opened in album view
+                try
                 {
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                    file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.GenerateUniqueName);
+                    await SaveBitmap(file, image, height, width);
+                }
+                catch(Exception ex2)
+                {
 
-                    int width = image.PixelWidth;
-                    int height = image.PixelHeight;
+                }
+            }
+            catch(Exception ex)
+            {
 
-                    if (resize != 0)
-                    {
-                        if (width > resize)
-                        {
-                            if (width == height)
-                            {
-                                height = resize;
-                            }
-                            else
-                            {
-                                height = height * resize / width;
-                            }
-                            width = resize;
+            }
+            return "ms-appdata:///local/" + folderName + "/" + file.Name;
+        }
 
-                            image = image.Resize(width, height, WriteableBitmapExtensions.Interpolation.Bilinear);
-                        }
-                    }
+        public static async Task<string> SaveCover(string fileName, string folderName, SoftwareBitmap image, int resize = 0)
+        {
+            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+            StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
 
-                    using (var pixelStream = image.PixelBuffer.AsStream())
-                    {
-                        byte[] pixels = new byte[image.PixelBuffer.Length];
+            int width = 0;
+            int height = 0;
+            if (resize != 0)
+            {
+                width = image.PixelWidth;
+                height = image.PixelHeight;
+                if (width == height)
+                {
+                    height = resize;
+                }
+                else
+                {
+                    height = height * resize / width;
+                }
+                width = resize;
+            }
+            try
+            {
+                await SaveBitmap(file, image, (uint)width, (uint)height);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                //image exists and is opened in album view
+                try
+                {
+                    file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.GenerateUniqueName);
+                    await SaveBitmap(file, image, (uint)height, (uint)width);
+                }
+                catch (Exception ex2)
+                {
 
-                        await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-
-                        encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)width, (uint)height, 96, 96, pixels);
-
-                        await encoder.FlushAsync();
-                    }
                 }
             }
             catch (Exception ex)
             {
-                //image exists and is opened in album view
+
             }
-            return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
+
+            return "ms-appdata:///local/" + folderName + "/" + file.Name;
         }
 
         public static async Task SaveBitmap(StorageFile file, SoftwareBitmap bitmap, uint newHeight = 0, uint newWidth = 0)
@@ -138,98 +177,36 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public static async Task<string> SaveCover2(string fileName, string folderName, SoftwareBitmap image, int resize = 0)
+        /// <summary>
+        /// UI Thread
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="bitmap"></param>
+        /// <param name="newHeight"></param>
+        /// <param name="newWidth"></param>
+        /// <returns></returns>
+        public static async Task SaveBitmap(StorageFile file, WriteableBitmap bitmap, int newHeight = 0, int newWidth = 0)
         {
-            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
-            StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
-
-            int width = 0;
-            int height = 0;
-            if (resize != 0)
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
             {
-                width = image.PixelWidth;
-                height = image.PixelHeight;
-                if (width == height)
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+
+                if (newWidth > 0 || newHeight > 0)
                 {
-                    height = resize;
+                    bitmap = bitmap.Resize(newWidth, newHeight, WriteableBitmapExtensions.Interpolation.Bilinear);
                 }
-                else
+
+                int width = bitmap.PixelWidth;
+                int height = bitmap.PixelHeight;
+
+                using (var pixelStream = bitmap.PixelBuffer.AsStream())
                 {
-                    height = height * resize / width;
-                }
-                width = resize;
-            }
-
-            try
-            {
-                await SaveBitmap(file, image, (uint)width, (uint)height);
-            }
-            catch (Exception)
-            {
-                //image exists and is opened in album view
-            }
-
-            return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
-        }
-
-        public static async Task<string> SaveCover(string fileName, string folderName, SoftwareBitmap image, int resizeTo = 0)
-        {
-            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
-            StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
-
-            try
-            {
-                using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-                    encoder.SetSoftwareBitmap(image);
-                    int width = image.PixelWidth;
-                    int height = image.PixelHeight;
-                    if (resizeTo != 0)
-                    {
-                        if (width == height)
-                        {
-                            height = resizeTo;
-                        }
-                        else
-                        {
-                            height = height * resizeTo / width;
-                        }
-                        width = resizeTo;
-
-                        encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Linear;
-                        encoder.BitmapTransform.ScaledHeight = (uint)height;
-                        encoder.BitmapTransform.ScaledWidth = (uint)width;
-                    }
-                    encoder.IsThumbnailGenerated = true;
-                    try
-                    {
-                        await encoder.FlushAsync();
-                    }
-                    catch (Exception err)
-                    {
-                        switch (err.HResult)
-                        {
-                            case unchecked((int)0x88982F81): //WINCODEC_ERR_UNSUPPORTEDOPERATION
-                                                             // If the encoder does not support writing a thumbnail, then try again
-                                                             // but disable thumbnail generation.
-                                encoder.IsThumbnailGenerated = false;
-                                break;
-                            default:
-                                throw err;
-                        }
-                    }
-                    if (encoder.IsThumbnailGenerated == false)
-                    {
-                        await encoder.FlushAsync();
-                    }
+                    byte[] pixels = new byte[bitmap.PixelBuffer.Length];
+                    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)width, (uint)height, 96, 96, pixels);
+                    await encoder.FlushAsync();
                 }
             }
-            catch (Exception ex)
-            {
-                //image exists and is opened in album view
-            }
-            return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
         }
 
         public static string GetHash(WriteableBitmap bmp)
@@ -270,6 +247,12 @@ namespace NextPlayerUWPDataLayer.Services
                 string p = await SaveCover(song.SongId.ToString(), "Songs", cover);
                 song.AlbumArtPath = p;
             }
+        }
+
+        public static async Task TryDeleteAppLocalFile(string filePath)
+        {
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(filePath));
+            await file.DeleteAsync();
         }
 
         /// <summary>

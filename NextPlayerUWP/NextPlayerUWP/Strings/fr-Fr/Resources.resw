@@ -789,4 +789,25 @@
   <data name="TBLiveTileWithImage.Text" xml:space="preserve">
     <value>Show album art on live tile</value>
   </data>
+  <data name="MFISaveToFile.Text" xml:space="preserve">
+    <value>Save to file</value>
+  </data>
+  <data name="MFIAddFromFile.Text" xml:space="preserve">
+    <value>Add from file</value>
+  </data>
+  <data name="TBAlbumCover.Text" xml:space="preserve">
+    <value>Album cover</value>
+  </data>
+  <data name="TBNoAlbumCover.Text" xml:space="preserve">
+    <value>No album cover</value>
+  </data>
+  <data name="MFIAddFromSong.Text" xml:space="preserve">
+    <value>Add from song</value>
+  </data>
+  <data name="ButtonAddFromFile.Content" xml:space="preserve">
+    <value>Add from file</value>
+  </data>
+  <data name="ButtonAddFromSong.Content" xml:space="preserve">
+    <value>Add from song</value>
+  </data>
 </root>

@@ -94,8 +94,8 @@ namespace NextPlayerUWP.ViewModels
                     var header = new ArtistItemHeader();
                     if (g.GroupName.Album == "")
                     {
-                        var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-                        header.Album = loader.GetString("UnknownAlbum");
+                        var helper = new TranslationHelper();
+                        header.Album = helper.GetTranslation(TranslationHelper.UnknownAlbum);
                     }
                     else
                     {
@@ -179,8 +179,8 @@ namespace NextPlayerUWP.ViewModels
             var image = (Image)sender;
             var header = (ArtistItemHeader)image.Tag;
             var album = header.Album;
-            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            if (album == loader.GetString("UnknownAlbum"))
+            var helper = new TranslationHelper();
+            if (album == helper.GetTranslation(TranslationHelper.UnknownAlbum))
             {
                 album = "";
             }

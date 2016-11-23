@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using NextPlayerUWPDataLayer.Model;
 using System.Diagnostics;
 using Dropbox.Api;
 using NextPlayerUWPDataLayer.Constants;
 using Windows.Security.Authentication.Web;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Services;
 using System.Collections.Concurrent;
 

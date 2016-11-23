@@ -789,4 +789,25 @@
   <data name="TBLiveTileWithImage.Text" xml:space="preserve">
     <value>Pokaż okładkę albumu na kafelku</value>
   </data>
+  <data name="MFISaveToFile.Text" xml:space="preserve">
+    <value>Zapisz do pliku</value>
+  </data>
+  <data name="MFIAddFromFile.Text" xml:space="preserve">
+    <value>Dodaj z pliku</value>
+  </data>
+  <data name="TBAlbumCover.Text" xml:space="preserve">
+    <value>Okładka albumu</value>
+  </data>
+  <data name="TBNoAlbumCover.Text" xml:space="preserve">
+    <value>Brak okładki utworu</value>
+  </data>
+  <data name="MFIAddFromSong.Text" xml:space="preserve">
+    <value>Dodaj z utworu</value>
+  </data>
+  <data name="ButtonAddFromFile.Content" xml:space="preserve">
+    <value>Dodaj z pliku</value>
+  </data>
+  <data name="ButtonAddFromSong.Content" xml:space="preserve">
+    <value>Dodaj z utworu</value>
+  </data>
 </root>

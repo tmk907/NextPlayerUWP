@@ -11,7 +11,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.6.0": {
+      "Dropbox.Api/4.1.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -110,9 +110,9 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.Graph.Core/1.1.1": {
+      "Microsoft.Graph.Core/1.2.1": {
         "dependencies": {
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "[6.0.1, 10.0.0)"
         },
         "compile": {
           "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
@@ -351,10 +351,10 @@
       },
       "Microsoft.NETCore.Windows.ApiSets/1.0.1": {},
       "Microsoft.NETNative.Analyzer/1.0.0": {},
-      "Microsoft.OneDriveSDK/2.0.0": {
+      "Microsoft.OneDriveSDK/2.0.6": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
-          "Newtonsoft.Json": "6.0.2"
+          "Microsoft.Graph.Core": "1.2.1",
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
@@ -363,11 +363,11 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.8": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.Graph.Core": "1.2.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
@@ -378,7 +378,7 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp/1.1.0": {
+      "Microsoft.Toolkit.Uwp/1.2.0": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
@@ -389,7 +389,7 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.Notifications/1.1.0": {
+      "Microsoft.Toolkit.Uwp.Notifications/1.2.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         },
@@ -397,9 +397,9 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
@@ -408,10 +408,10 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Animations/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Animations/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Win2D.uwp": "1.18.0"
         },
@@ -422,11 +422,11 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Controls/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Controls/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI.Animations": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI.Animations": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.dll": {}
@@ -2351,7 +2351,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.6.0": {
+      "Dropbox.Api/4.1.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -2450,9 +2450,9 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.Graph.Core/1.1.1": {
+      "Microsoft.Graph.Core/1.2.1": {
         "dependencies": {
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "[6.0.1, 10.0.0)"
         },
         "compile": {
           "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
@@ -2638,10 +2638,10 @@
       },
       "Microsoft.NETCore.Windows.ApiSets/1.0.1": {},
       "Microsoft.NETNative.Analyzer/1.0.0": {},
-      "Microsoft.OneDriveSDK/2.0.0": {
+      "Microsoft.OneDriveSDK/2.0.6": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
-          "Newtonsoft.Json": "6.0.2"
+          "Microsoft.Graph.Core": "1.2.1",
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
@@ -2650,11 +2650,11 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.8": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.Graph.Core": "1.2.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
@@ -2665,7 +2665,7 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp/1.1.0": {
+      "Microsoft.Toolkit.Uwp/1.2.0": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
@@ -2676,7 +2676,7 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.Notifications/1.1.0": {
+      "Microsoft.Toolkit.Uwp.Notifications/1.2.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         },
@@ -2684,9 +2684,9 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
@@ -2695,10 +2695,10 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Animations/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Animations/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Win2D.uwp": "1.18.0"
         },
@@ -2709,11 +2709,11 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Controls/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Controls/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI.Animations": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI.Animations": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.dll": {}
@@ -4760,7 +4760,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.6.0": {
+      "Dropbox.Api/4.1.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -4859,9 +4859,9 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.Graph.Core/1.1.1": {
+      "Microsoft.Graph.Core/1.2.1": {
         "dependencies": {
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "[6.0.1, 10.0.0)"
         },
         "compile": {
           "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
@@ -5048,10 +5048,10 @@
       },
       "Microsoft.NETCore.Windows.ApiSets/1.0.1": {},
       "Microsoft.NETNative.Analyzer/1.0.0": {},
-      "Microsoft.OneDriveSDK/2.0.0": {
+      "Microsoft.OneDriveSDK/2.0.6": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
-          "Newtonsoft.Json": "6.0.2"
+          "Microsoft.Graph.Core": "1.2.1",
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
@@ -5060,11 +5060,11 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.8": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.Graph.Core": "1.2.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
@@ -5075,7 +5075,7 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp/1.1.0": {
+      "Microsoft.Toolkit.Uwp/1.2.0": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
@@ -5086,7 +5086,7 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.Notifications/1.1.0": {
+      "Microsoft.Toolkit.Uwp.Notifications/1.2.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         },
@@ -5094,9 +5094,9 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
@@ -5105,10 +5105,10 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Animations/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Animations/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Win2D.uwp": "1.18.0"
         },
@@ -5119,11 +5119,11 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Controls/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Controls/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI.Animations": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI.Animations": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.dll": {}
@@ -7208,7 +7208,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.6.0": {
+      "Dropbox.Api/4.1.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -7307,9 +7307,9 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.Graph.Core/1.1.1": {
+      "Microsoft.Graph.Core/1.2.1": {
         "dependencies": {
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "[6.0.1, 10.0.0)"
         },
         "compile": {
           "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
@@ -7499,10 +7499,10 @@
       },
       "Microsoft.NETCore.Windows.ApiSets/1.0.1": {},
       "Microsoft.NETNative.Analyzer/1.0.0": {},
-      "Microsoft.OneDriveSDK/2.0.0": {
+      "Microsoft.OneDriveSDK/2.0.6": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
-          "Newtonsoft.Json": "6.0.2"
+          "Microsoft.Graph.Core": "1.2.1",
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
@@ -7511,11 +7511,11 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.8": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.Graph.Core": "1.2.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
@@ -7526,7 +7526,7 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp/1.1.0": {
+      "Microsoft.Toolkit.Uwp/1.2.0": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
@@ -7537,7 +7537,7 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.Notifications/1.1.0": {
+      "Microsoft.Toolkit.Uwp.Notifications/1.2.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         },
@@ -7545,9 +7545,9 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
@@ -7556,10 +7556,10 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Animations/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Animations/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Win2D.uwp": "1.18.0"
         },
@@ -7570,11 +7570,11 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Controls/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Controls/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI.Animations": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI.Animations": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.dll": {}
@@ -9626,7 +9626,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.6.0": {
+      "Dropbox.Api/4.1.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -9725,9 +9725,9 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.Graph.Core/1.1.1": {
+      "Microsoft.Graph.Core/1.2.1": {
         "dependencies": {
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "[6.0.1, 10.0.0)"
         },
         "compile": {
           "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
@@ -9918,10 +9918,10 @@
       },
       "Microsoft.NETCore.Windows.ApiSets/1.0.1": {},
       "Microsoft.NETNative.Analyzer/1.0.0": {},
-      "Microsoft.OneDriveSDK/2.0.0": {
+      "Microsoft.OneDriveSDK/2.0.6": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
-          "Newtonsoft.Json": "6.0.2"
+          "Microsoft.Graph.Core": "1.2.1",
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
@@ -9930,11 +9930,11 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.8": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.Graph.Core": "1.2.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
@@ -9945,7 +9945,7 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp/1.1.0": {
+      "Microsoft.Toolkit.Uwp/1.2.0": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
@@ -9956,7 +9956,7 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.Notifications/1.1.0": {
+      "Microsoft.Toolkit.Uwp.Notifications/1.2.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         },
@@ -9964,9 +9964,9 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
@@ -9975,10 +9975,10 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Animations/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Animations/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Win2D.uwp": "1.18.0"
         },
@@ -9989,11 +9989,11 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Controls/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Controls/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI.Animations": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI.Animations": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.dll": {}
@@ -12083,7 +12083,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.6.0": {
+      "Dropbox.Api/4.1.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -12182,9 +12182,9 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.Graph.Core/1.1.1": {
+      "Microsoft.Graph.Core/1.2.1": {
         "dependencies": {
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "[6.0.1, 10.0.0)"
         },
         "compile": {
           "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
@@ -12374,10 +12374,10 @@
       },
       "Microsoft.NETCore.Windows.ApiSets/1.0.1": {},
       "Microsoft.NETNative.Analyzer/1.0.0": {},
-      "Microsoft.OneDriveSDK/2.0.0": {
+      "Microsoft.OneDriveSDK/2.0.6": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
-          "Newtonsoft.Json": "6.0.2"
+          "Microsoft.Graph.Core": "1.2.1",
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
@@ -12386,11 +12386,11 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.8": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.Graph.Core": "1.2.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
@@ -12401,7 +12401,7 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp/1.1.0": {
+      "Microsoft.Toolkit.Uwp/1.2.0": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
@@ -12412,7 +12412,7 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.Notifications/1.1.0": {
+      "Microsoft.Toolkit.Uwp.Notifications/1.2.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         },
@@ -12420,9 +12420,9 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
@@ -12431,10 +12431,10 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Animations/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Animations/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Win2D.uwp": "1.18.0"
         },
@@ -12445,11 +12445,11 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Controls/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Controls/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI.Animations": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI.Animations": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.dll": {}
@@ -14501,7 +14501,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/3.6.0": {
+      "Dropbox.Api/4.1.0": {
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
         },
@@ -14600,9 +14600,9 @@
           "lib/netcore50/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.Graph.Core/1.1.1": {
+      "Microsoft.Graph.Core/1.2.1": {
         "dependencies": {
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "[6.0.1, 10.0.0)"
         },
         "compile": {
           "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll": {}
@@ -14793,10 +14793,10 @@
       },
       "Microsoft.NETCore.Windows.ApiSets/1.0.1": {},
       "Microsoft.NETNative.Analyzer/1.0.0": {},
-      "Microsoft.OneDriveSDK/2.0.0": {
+      "Microsoft.OneDriveSDK/2.0.6": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
-          "Newtonsoft.Json": "6.0.2"
+          "Microsoft.Graph.Core": "1.2.1",
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
@@ -14805,11 +14805,11 @@
           "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll": {}
         }
       },
-      "Microsoft.OneDriveSDK.Authentication/1.0.5": {
+      "Microsoft.OneDriveSDK.Authentication/1.0.8": {
         "dependencies": {
-          "Microsoft.Graph.Core": "1.1.1",
+          "Microsoft.Graph.Core": "1.2.1",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "(2.22.0, 3.0.0)",
-          "Newtonsoft.Json": "6.0.2"
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
@@ -14820,7 +14820,7 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp/1.1.0": {
+      "Microsoft.Toolkit.Uwp/1.2.0": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
@@ -14831,7 +14831,7 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.Notifications/1.1.0": {
+      "Microsoft.Toolkit.Uwp.Notifications/1.2.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         },
@@ -14839,9 +14839,9 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
@@ -14850,10 +14850,10 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Animations/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Animations/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Win2D.uwp": "1.18.0"
         },
@@ -14864,11 +14864,11 @@
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.dll": {}
         }
       },
-      "Microsoft.Toolkit.Uwp.UI.Controls/1.1.0": {
+      "Microsoft.Toolkit.Uwp.UI.Controls/1.2.0": {
         "dependencies": {
-          "Microsoft.Toolkit.Uwp": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI": "1.1.0",
-          "Microsoft.Toolkit.Uwp.UI.Animations": "1.1.0"
+          "Microsoft.Toolkit.Uwp": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI": "1.2.0",
+          "Microsoft.Toolkit.Uwp.UI.Animations": "1.2.0"
         },
         "compile": {
           "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.dll": {}
@@ -16966,11 +16966,11 @@
         "package/services/metadata/core-properties/99be0c88b2fd41c8b07c42071005ee47.psmdcp"
       ]
     },
-    "Dropbox.Api/3.6.0": {
-      "sha512": "sX0yFIco7OjTXUBExPEqku27fZm1ZqpN1XEuOxc4wo+v1J1rUD5/MCPvFVBnwbyknEjM3Ilr9/4xoEI3zIydhQ==",
+    "Dropbox.Api/4.1.0": {
+      "sha512": "rRA0bolMs37GNYgVbfm4USa1j5lL0LGDgrXSOW6juG+H82ajCM6+VLFv3OwXuzuo8VjjPOMZHJ/FY+nmOStu8Q==",
       "type": "package",
       "files": [
-        "Dropbox.Api.3.6.0.nupkg.sha512",
+        "Dropbox.Api.4.1.0.nupkg.sha512",
         "Dropbox.Api.nuspec",
         "lib/net45/Dropbox.Api.dll",
         "lib/net45/Dropbox.Api.xml",
@@ -17219,12 +17219,16 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "Microsoft.Graph.Core/1.1.1": {
-      "sha512": "s+cB1G1z3Fk+GIwgpx1PRsINyZklgUdWvtnAbxqwUMAqNy76WQJiAm+6DXVpIDDBXGdFoDAZGytnQ2Qah9r07Q==",
+    "Microsoft.Graph.Core/1.2.1": {
+      "sha512": "ZVfBio42uIrKT7P2AmUDb5FQiY27hayaeJ1aSj3eocRojkqs15dcjk6+iuVb2qxgK2Re3raJHE31BZUK/+mB/A==",
       "type": "package",
       "files": [
-        "Microsoft.Graph.Core.1.1.1.nupkg.sha512",
+        "Microsoft.Graph.Core.1.2.1.nupkg.sha512",
         "Microsoft.Graph.Core.nuspec",
+        "lib/MonoAndroid10/Microsoft.Graph.Core.dll",
+        "lib/MonoTouch10/Microsoft.Graph.Core.dll",
+        "lib/Xamarin.Mac20/Microsoft.Graph.Core.dll",
+        "lib/Xamarin.iOS10/Microsoft.Graph.Core.dll",
         "lib/portable45-net45+win8+wpa81/Microsoft.Graph.Core.dll"
       ]
     },
@@ -17480,20 +17484,20 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Microsoft.OneDriveSDK/2.0.0": {
-      "sha512": "x9arqbkykhstIl7GVPC8GlinhMFUWxKSoy1gZSo8OpE5UUlh9Y7jKX33BxUGLm5uZpbj6Svcneo5TANWx7mOxw==",
+    "Microsoft.OneDriveSDK/2.0.6": {
+      "sha512": "3FBkCa5cVuUe/YP23mSwbzNsenzRJAeOwIk45nXfFfaTz6mYtOWNj490xKRttoCn0IT0UZy1a3YjWRxBkN3l0g==",
       "type": "package",
       "files": [
-        "Microsoft.OneDriveSDK.2.0.0.nupkg.sha512",
+        "Microsoft.OneDriveSDK.2.0.6.nupkg.sha512",
         "Microsoft.OneDriveSDK.nuspec",
         "lib/portable-net45+netcore45+wpa81+win8/Microsoft.OneDrive.Sdk.dll"
       ]
     },
-    "Microsoft.OneDriveSDK.Authentication/1.0.5": {
-      "sha512": "IfouIQf+gSVl2cD/P8hmmnY83CJTr/4hH3lSxQI2PKAF26DVJGT7YRq8JtmlWdPMtp9Hi9xq18yDg1a1Y7zwJA==",
+    "Microsoft.OneDriveSDK.Authentication/1.0.8": {
+      "sha512": "sN3kPp58/nHmwQJpA3WREWrojKOblDsXpRRW//NyKhaXuq1+NJoQILst5cC+uuvH0pL3afsD6bIANjH0Tytzgg==",
       "type": "package",
       "files": [
-        "Microsoft.OneDriveSDK.Authentication.1.0.5.nupkg.sha512",
+        "Microsoft.OneDriveSDK.Authentication.1.0.8.nupkg.sha512",
         "Microsoft.OneDriveSDK.Authentication.nuspec",
         "lib/net451/Microsoft.OneDrive.Sdk.Authentication.Desktop.dll",
         "lib/portable-win81+wpa81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll",
@@ -17501,11 +17505,11 @@
         "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll"
       ]
     },
-    "Microsoft.Toolkit.Uwp/1.1.0": {
-      "sha512": "3oVCXZrk2qzQ01t5YPaW4vjMrKUri7aEI0DxHiLZ9tGU9xwiInEcwH4UQ1xnE9BR/ihv/7toVtNVhR7t3rmRYw==",
+    "Microsoft.Toolkit.Uwp/1.2.0": {
+      "sha512": "YZZTfjWNLV3PZ770PtgxxcPRE0ej4S1lLrdOZbCs62OA9Gt0EJOowvwXElPDTBNozn9JtgVZZKn4aBrAlWZ7og==",
       "type": "package",
       "files": [
-        "Microsoft.Toolkit.Uwp.1.1.0.nupkg.sha512",
+        "Microsoft.Toolkit.Uwp.1.2.0.nupkg.sha512",
         "Microsoft.Toolkit.Uwp.nuspec",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.dll",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.pdb",
@@ -17513,11 +17517,11 @@
         "lib/uap10.0/Microsoft.Toolkit.Uwp.xml"
       ]
     },
-    "Microsoft.Toolkit.Uwp.Notifications/1.1.0": {
-      "sha512": "UstmxYXhEuc3f05XzEOitjH2nSSFhCHDrGF8Rn2MaP7mrk39X6o5y7PdNz8crEUa0gxshtcBEy/cjq41GBUXjA==",
+    "Microsoft.Toolkit.Uwp.Notifications/1.2.0": {
+      "sha512": "YbCSSxNytBG+WWHsvyvnPupE2W2r4IiXogpy0HJ9yhF5qoC1SpgGnYR772fg25ny2fqG1q13NIy8ULYx8Y7zBg==",
       "type": "package",
       "files": [
-        "Microsoft.Toolkit.Uwp.Notifications.1.1.0.nupkg.sha512",
+        "Microsoft.Toolkit.Uwp.Notifications.1.2.0.nupkg.sha512",
         "Microsoft.Toolkit.Uwp.Notifications.nuspec",
         "build/native/Microsoft.Toolkit.Uwp.Notifications.targets",
         "lib/dotnet/Microsoft.Toolkit.Uwp.Notifications.dll",
@@ -17536,11 +17540,11 @@
         "lib/uap10.0/Microsoft.Toolkit.Uwp.Notifications.xml"
       ]
     },
-    "Microsoft.Toolkit.Uwp.UI/1.1.0": {
-      "sha512": "VS5TY4zRdlas+B0T1u0H/nL6IogskyjG4MUdweLqJYgs1VFEialYVHnQZv5HPaIn0J7+sz0WSFo5sXW+yZvc5w==",
+    "Microsoft.Toolkit.Uwp.UI/1.2.0": {
+      "sha512": "G534s6yLmM8T18uSghrte0MuHrde84wEajhwsfocBZYZ88VvLuJRoPVcgpB8RwSst9pLv2nqSBbN82PThXyYGA==",
       "type": "package",
       "files": [
-        "Microsoft.Toolkit.Uwp.UI.1.1.0.nupkg.sha512",
+        "Microsoft.Toolkit.Uwp.UI.1.2.0.nupkg.sha512",
         "Microsoft.Toolkit.Uwp.UI.nuspec",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.dll",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.pdb",
@@ -17548,11 +17552,11 @@
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.xml"
       ]
     },
-    "Microsoft.Toolkit.Uwp.UI.Animations/1.1.0": {
-      "sha512": "KGTqBdQ4HhctxxGwafsM8RyOu1ZRvk/7HQYd1/EyzMPdqo4MfSCY+SBpwoxW6Tq81HFD7vobPWuCD2Hcva2GxQ==",
+    "Microsoft.Toolkit.Uwp.UI.Animations/1.2.0": {
+      "sha512": "uitHw6qNyo7z28FrGV5a+LDBxLBt39gZEyUQpYdelhO6hzHKzbjEO2FJWSLQohFH04DkMv4hT9DcZOFXLFg0bQ==",
       "type": "package",
       "files": [
-        "Microsoft.Toolkit.Uwp.UI.Animations.1.1.0.nupkg.sha512",
+        "Microsoft.Toolkit.Uwp.UI.Animations.1.2.0.nupkg.sha512",
         "Microsoft.Toolkit.Uwp.UI.Animations.nuspec",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.dll",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.pdb",
@@ -17560,23 +17564,23 @@
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Animations.xml"
       ]
     },
-    "Microsoft.Toolkit.Uwp.UI.Controls/1.1.0": {
-      "sha512": "h/KMMV2pRA92NGl3266LvQNhteh1oE367Uf5XfjqS8+ReSqNbpiV6J850Ibndxntu/xco7RWOngb3EimTeVF9Q==",
+    "Microsoft.Toolkit.Uwp.UI.Controls/1.2.0": {
+      "sha512": "MrDNHZm3Dfq6pWikiRLE9tJESb/jZMrnkCALNySLoxATdOTiQNaK1GOMBawvv6pWIaPwqevYpIO2v2JjqS12WA==",
       "type": "package",
       "files": [
-        "Microsoft.Toolkit.Uwp.UI.Controls.1.1.0.nupkg.sha512",
+        "Microsoft.Toolkit.Uwp.UI.Controls.1.2.0.nupkg.sha512",
         "Microsoft.Toolkit.Uwp.UI.Controls.nuspec",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.dll",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.pdb",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.pri",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls.xml",
-        "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/AdaptiveGridView/AdaptiveGridView.xaml",
-        "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/BladeControl/BladeControl.xaml",
+        "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/BladeView/BladeView.xaml",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/DropShadowPanel/DropShadowPanel.xaml",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/GridSplitter/GridSplitter.xaml",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/HamburgerMenu/HamburgerMenu.xaml",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/HeaderedTextBlock/HeaderedTextBlock.xaml",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/ImageEx/ImageEx.xaml",
+        "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/MasterDetailsView/MasterDetailsView.xaml",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/Microsoft.Toolkit.Uwp.UI.Controls.xr.xml",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/PullToRefreshListView/PullToRefreshListView.xaml",
         "lib/uap10.0/Microsoft.Toolkit.Uwp.UI.Controls/RadialGauge/RadialGauge.xaml",
@@ -23725,9 +23729,9 @@
       "Microsoft.ApplicationInsights.WindowsApps >= 1.1.1",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.2.2",
       "Microsoft.Net.Http >= 2.2.29",
-      "Microsoft.Toolkit.Uwp.Notifications >= 1.1.0",
-      "Microsoft.Toolkit.Uwp.UI.Animations >= 1.1.0",
-      "Microsoft.Toolkit.Uwp.UI.Controls >= 1.1.0",
+      "Microsoft.Toolkit.Uwp.Notifications >= 1.2.0",
+      "Microsoft.Toolkit.Uwp.UI.Animations >= 1.2.0",
+      "Microsoft.Toolkit.Uwp.UI.Controls >= 1.2.0",
       "MvvmLight >= 5.3.0",
       "WindowsStateTriggers >= 1.1.0"
     ],

@@ -21,7 +21,7 @@ namespace NextPlayerUWP.ViewModels
         public LyricsViewModel()
         {
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            translationHelper = new TranslationHelper();
         }
 
         private SongItem song;
@@ -161,7 +161,7 @@ namespace NextPlayerUWP.ViewModels
         //}
         private string address;
         private bool original = true;
-        private Windows.ApplicationModel.Resources.ResourceLoader loader;
+        private TranslationHelper translationHelper;
         private bool lyricsNotLoaded = false;
         private int cachedIndex = 0;
 
@@ -215,7 +215,7 @@ namespace NextPlayerUWP.ViewModels
             string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?action=lyrics&artist=" + artist + "&song=" + title + "&fmt=realjson");
             if (result == null || result == "")
             {
-                StatusText = loader.GetString("ConnectionError");
+                StatusText = translationHelper.GetTranslation(TranslationHelper.ConnectionError);
                 ShowProgressBar = false;
                 return;
             }
@@ -226,7 +226,7 @@ namespace NextPlayerUWP.ViewModels
                 string l = jsonList.GetObject().GetNamedString("lyrics");
                 if (l == "Not found")
                 {
-                    StatusText = loader.GetString("CantFindLyrics");
+                    StatusText = translationHelper.GetTranslation(TranslationHelper.CantFindLyrics);
                     ShowProgressBar = false;
                 }
                 else
@@ -241,14 +241,14 @@ namespace NextPlayerUWP.ViewModels
                     }
                     catch (FormatException e)
                     {
-                        StatusText = loader.GetString("ConnectionError");
+                        StatusText = translationHelper.GetTranslation(TranslationHelper.ConnectionError);
                         ShowProgressBar = false;
                     }
                 }
             }
             else
             {
-                StatusText = loader.GetString("ConnectionError");
+                StatusText = translationHelper.GetTranslation(TranslationHelper.ConnectionError);
                 ShowProgressBar = false;
             }
         }
