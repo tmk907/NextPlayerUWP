@@ -28,7 +28,9 @@ namespace NextPlayerUWPDataLayer.Playlists
                     foreach (var media in mediaElements)
                     {
                         var src = media.Attribute("src").Value;
+                        src = UnEscape(src);
                         var trackTitle = media.Attribute("trackTitle")?.Value;
+                        trackTitle = UnEscape(trackTitle);
                         string displayName = "";
                         if (!String.IsNullOrEmpty(trackTitle))
                         {
@@ -45,6 +47,7 @@ namespace NextPlayerUWPDataLayer.Playlists
                         });
                     }
                     string title = doc.Descendants("head").Elements("title").FirstOrDefault()?.Value;
+                    title = UnEscape(title);
                     if (!String.IsNullOrEmpty(title))
                     {
                         iplaylist.Name = title;
@@ -56,6 +59,12 @@ namespace NextPlayerUWPDataLayer.Playlists
                 }
             }
             return iplaylist;
+        }
+
+        private static string UnEscape(string content)
+        {
+            if (content == null) return content;
+            return content.Replace("&amp;", "&").Replace("&apos;", "'").Replace("&quot;", @"""").Replace("&gt;", ">").Replace("&lt;", "<");
         }
     }
 }

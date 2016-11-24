@@ -48,7 +48,7 @@ namespace NextPlayerUWPDataLayer.Playlists
                         prevLineIsExtInf = true;
                         try
                         {
-                            title = line.Substring(line.IndexOf(','));
+                            title = line.Substring(line.IndexOf(',') + 1);
                         }
                         catch
                         {

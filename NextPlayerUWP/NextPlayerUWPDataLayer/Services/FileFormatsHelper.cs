@@ -13,7 +13,7 @@ namespace NextPlayerUWPDataLayer.Services
             ffmpegSupported = new List<string>()
                 { ".ogg", ".ape", ".wv", ".opus", ".ac3" };
             playlistFormats = new List<string>()
-                { ".m3u", ".m3u8", ".pls", ".wpl" };
+                { ".m3u", ".m3u8", ".pls", ".wpl", ".zpl" };
         }
 
         private readonly List<string> defaultSupported;
