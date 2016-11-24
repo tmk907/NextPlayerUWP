@@ -54,6 +54,47 @@
                 </Button>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="SdCardFolderTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MinWidth="192" Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <FontIcon Grid.Column="0" Grid.RowSpan="3"
+                          FontFamily="Segoe MDL2 Assets"
+                          Glyph="&#xE8B7;" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,12,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Name}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           FontSize="13"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Path}"/>
+                <TextBlock Grid.Column="1" Grid.Row="2"
+                           FontSize="13"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding IncludeSubFolders}"/>
+                <Button Grid.Column="3" Grid.RowSpan="3"
+                        Click="RemoveSdCardFolder_Click"
+                        Width="40"
+                        Height="40"
+                        Background="Transparent"
+                        Tag="{Binding}"
+                        VerticalAlignment="Center">
+                    <Button.Content>
+                        <SymbolIcon Symbol="Cancel"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="CloudAccountTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -91,6 +132,7 @@
                         <Setter Target="DragDropActionStackPanel.Visibility" Value="Collapsed"/>
                         <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Visible"/>
                         <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Visible"/>
                         <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -103,6 +145,7 @@
                         <Setter Target="DragDropActionStackPanel.Visibility" Value="Visible"/>
                         <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Collapsed"/>
                         <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Collapsed"/>
                         <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -129,12 +172,12 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-			BackButtonVisibility="Collapsed" 
-			Frame="{x:Bind Frame, Mode=OneWay}"
-			Content="Settings"
-			x:Uid="PageHeaderSettings"
-			VisualStateNarrowMinWidth="0"
-			VisualStateNormalMinWidth="720">
+			      BackButtonVisibility="Collapsed" 
+			      Frame="{x:Bind Frame, Mode=OneWay}"
+			      Content="Settings"
+			      x:Uid="PageHeaderSettings"
+			      VisualStateNarrowMinWidth="0"
+			      VisualStateNormalMinWidth="720">
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1" Margin="12,12,0,4">
             <ScrollViewer Padding="0,0,12,0">
@@ -175,7 +218,7 @@
                     <TextBlock x:Uid="TBAddMusicLibraryFolders"
                                Style="{StaticResource BodyTextBlockStyle}"
                                FontSize="17"
-                               Text="Folders, where app look music"/>
+                               Text="Folders, where app looks for music"/>
                     <ListView Margin="0,4,4,4"
                             ItemsSource="{x:Bind ViewModel.MusicLibraryFolders, Mode=OneWay}"
                             ItemTemplate="{StaticResource MusicFolderTemplate}"
@@ -188,7 +231,26 @@
                             Margin="0,4,4,4"
                             MinWidth="128"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="4">
+                <StackPanel x:Name="AddSdCardFoldersStackPanel"
+                          Orientation="Vertical" 
+                          Margin="4,4,4,4">
+                  <TextBlock x:Uid="TBAddMusicLibraryFolders"
+                              Style="{StaticResource BodyTextBlockStyle}"
+                              FontSize="17"
+                              Text="Folders, where app looks for music"/>
+                  <ListView Margin="0,4,4,4"
+                          ItemsSource="{x:Bind ViewModel.SdCardFolders, Mode=OneWay}"
+                          ItemTemplate="{StaticResource SdCardFolderTemplate}"
+                          SelectionMode="None"
+                          IsItemClickEnabled="False">
+                  </ListView>
+                  <Button x:Uid="ButtonAddFolder"
+                          Content="Add folder" 
+                          Click="{x:Bind ViewModel.AddSdCardFolder}"
+                          Margin="0,4,4,4"
+                          MinWidth="128"/>
+                </StackPanel>
+                <!--<StackPanel Orientation="Vertical" Margin="4">
                     <TextBlock x:Uid="TBAutoSavePlaylists"
                         Style="{StaticResource BodyTextBlockStyle}"
                         FontSize="17"
@@ -202,7 +264,7 @@
                                 Margin="8,0,0,0">
                         <ToggleSwitch IsOn="{x:Bind ViewModel.AutoSavePlaylists, Mode=TwoWay}"/>
                     </StackPanel>
-                </StackPanel>
+                </StackPanel>-->
                 <TextBlock x:Uid="TBPersonalize"
                         Style="{StaticResource TitleTextBlockStyle}" 
                         Margin="0,12,0,12"

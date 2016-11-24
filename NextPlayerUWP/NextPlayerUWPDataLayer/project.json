@@ -6,6 +6,7 @@
     "Microsoft.NETNative.Analyzer": "1.0.0",
     "Microsoft.OneDriveSDK": "2.0.6",
     "Microsoft.OneDriveSDK.Authentication": "1.0.8",
+    "Microsoft.Toolkit.Uwp": "1.2.0",
     "Newtonsoft.Json": "9.0.1",
     "sqlite-net-pcl": "1.1.1",
     "TagLib.Portable": "1.0.4",

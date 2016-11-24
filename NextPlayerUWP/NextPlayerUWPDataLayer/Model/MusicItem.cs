@@ -17,6 +17,7 @@ namespace NextPlayerUWPDataLayer.Model
         radio,
         smartplaylist,
         song,
+        listofsongs,
         unknown
     }
     public abstract class MusicItem
@@ -43,4 +44,13 @@ namespace NextPlayerUWPDataLayer.Model
             return param.Split(new string[] { separator }, StringSplitOptions.None);
         }
     }
+
+    public class ListOfSongs : MusicItem
+    {
+        public override string GetParameter()
+        {
+            return MusicItemTypes.listofsongs + separator + "a";
+        }
+    }
+
 }

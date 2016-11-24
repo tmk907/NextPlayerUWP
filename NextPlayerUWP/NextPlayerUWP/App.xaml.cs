@@ -61,7 +61,7 @@ namespace NextPlayerUWP
 
         private bool isFirstRun = false;
 
-        bool _isInBackgroundMode = false;
+        bool _isInBackgroundMode = false;        
 
         public App()
         {
@@ -803,6 +803,24 @@ namespace NextPlayerUWP
                 deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
 
             return deviceFamily == "Windows.Xbox";
+        }
+
+        private static List<SongItem> temporaryList = new List<SongItem>();
+        public static void AddToCache(List<SongItem> songs)
+        {
+            temporaryList = new List<SongItem>();
+            foreach(var song in songs)
+            {
+                temporaryList.Add(song);
+            }
+        }
+        public static List<SongItem> GetFromCache()
+        {
+            return temporaryList;
+        }
+        public static void ClearCache()
+        {
+            temporaryList = new List<SongItem>();
         }
     }
 }

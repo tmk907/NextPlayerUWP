@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -174,23 +175,51 @@ namespace NextPlayerUWP.ViewModels
             await PlaybackService.Instance.PlayNewList(0);
         }
 
-        public async void ImageTapped(object sender, TappedRoutedEventArgs e)
+        public async void PlayNowAlbum(object sender, RoutedEventArgs e)
         {
-            var image = (Image)sender;
-            var header = (ArtistItemHeader)image.Tag;
-            var album = header.Album;
-            var helper = new TranslationHelper();
-            if (album == helper.GetTranslation(TranslationHelper.UnknownAlbum))
+            var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            List<SongItem> list = new List<SongItem>();
+            foreach(SongItem song in group)
             {
-                album = "";
+                list.Add(song);
             }
-            var item = songs.Where(s => s.Album.Equals(album)).FirstOrDefault();
-            if (item == null)//?
+            await NowPlayingPlaylistManager.Current.NewPlaylist(list);
+            await PlaybackService.Instance.PlayNewList(0);
+        }
+
+        public async void PlayNextAlbum(object sender, RoutedEventArgs e)
+        {
+            var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            List<SongItem> list = new List<SongItem>();
+            foreach (SongItem song in group)
             {
-                item = songs.FirstOrDefault();
+                list.Add(song);
             }
-            AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
-            App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
+            await NowPlayingPlaylistManager.Current.AddNext(list);
+        }
+
+        public async void AddToNowPlayingAlbum(object sender, RoutedEventArgs e)
+        {
+            var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            List<SongItem> list = new List<SongItem>();
+            foreach (SongItem song in group)
+            {
+                list.Add(song);
+            }
+            await NowPlayingPlaylistManager.Current.Add(list);
+        }
+
+        public void AddToPlaylistAlbum(object sender, RoutedEventArgs e)
+        {
+            var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            List<SongItem> list = new List<SongItem>();
+            foreach (SongItem song in group)
+            {
+                list.Add(song);
+            }
+            App.AddToCache(list);
+            var item = new ListOfSongs();
+            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
         }
     }
 }

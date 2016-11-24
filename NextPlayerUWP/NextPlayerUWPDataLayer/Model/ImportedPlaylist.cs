@@ -8,11 +8,18 @@ namespace NextPlayerUWPDataLayer.Model
         public string Name { get; set; }
         public string Path { get; set; }
         public DateTime DateModified { get; set; }
-        public List<string> SongPaths { get; set; }
+        public List<Song> SongPaths { get; set; }
         public int PlainPlaylistId { get; set; }
+
         public ImportedPlaylist()
         {
-            SongPaths = new List<string>();
+            SongPaths = new List<Song>();
+        }
+
+        public class Song
+        {
+            public string Path { get; set; }
+            public string DisplayName { get; set; }
         }
     }
 }

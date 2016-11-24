@@ -342,6 +342,18 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Toolkit.Uwp/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        }
+      },
       "Microsoft.VisualBasic/10.0.1": {
         "type": "package",
         "dependencies": {
@@ -2578,6 +2590,18 @@
         "runtime": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        }
+      },
+      "Microsoft.Toolkit.Uwp/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -4978,6 +5002,18 @@
         "runtime": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        }
+      },
+      "Microsoft.Toolkit.Uwp/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -7420,6 +7456,18 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Toolkit.Uwp/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        }
+      },
       "Microsoft.VisualBasic/10.0.1": {
         "type": "package",
         "dependencies": {
@@ -9827,6 +9875,18 @@
         "runtime": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        }
+      },
+      "Microsoft.Toolkit.Uwp/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -12275,6 +12335,18 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Toolkit.Uwp/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        }
+      },
       "Microsoft.VisualBasic/10.0.1": {
         "type": "package",
         "dependencies": {
@@ -14682,6 +14754,18 @@
         "runtime": {
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll": {},
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
+        }
+      },
+      "Microsoft.Toolkit.Uwp/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Toolkit.Uwp.dll": {}
         }
       },
       "Microsoft.VisualBasic/10.0.1": {
@@ -17303,6 +17387,18 @@
         "lib/portable-win81+wpa81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll",
         "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll",
         "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll"
+      ]
+    },
+    "Microsoft.Toolkit.Uwp/1.2.0": {
+      "sha512": "YZZTfjWNLV3PZ770PtgxxcPRE0ej4S1lLrdOZbCs62OA9Gt0EJOowvwXElPDTBNozn9JtgVZZKn4aBrAlWZ7og==",
+      "type": "package",
+      "files": [
+        "Microsoft.Toolkit.Uwp.1.2.0.nupkg.sha512",
+        "Microsoft.Toolkit.Uwp.nuspec",
+        "lib/uap10.0/Microsoft.Toolkit.Uwp.dll",
+        "lib/uap10.0/Microsoft.Toolkit.Uwp.pdb",
+        "lib/uap10.0/Microsoft.Toolkit.Uwp.pri",
+        "lib/uap10.0/Microsoft.Toolkit.Uwp.xml"
       ]
     },
     "Microsoft.VisualBasic/10.0.1": {
@@ -23264,6 +23360,7 @@
       "Microsoft.Net.Http >= 2.2.29",
       "Microsoft.OneDriveSDK >= 2.0.6",
       "Microsoft.OneDriveSDK.Authentication >= 1.0.8",
+      "Microsoft.Toolkit.Uwp >= 1.2.0",
       "Newtonsoft.Json >= 9.0.1",
       "TagLib.Portable >= 1.0.4",
       "WriteableBitmapEx >= 1.5.0",

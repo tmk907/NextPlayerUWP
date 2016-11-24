@@ -34,7 +34,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             connectionAsync = new SQLiteAsyncConnection(DBFilePath, true);
             connection = new SQLiteConnection(DBFilePath, true);
-            connection.BusyTimeout = TimeSpan.FromSeconds(5);
+            connection.BusyTimeout = TimeSpan.FromSeconds(10);
         }
 
         private SQLiteAsyncConnection connectionAsync;
@@ -1073,7 +1073,7 @@ namespace NextPlayerUWPDataLayer.Services
             var playlistsEntries = await connectionAsync.Table<PlainPlaylistEntryTable>().ToListAsync();
             foreach(var q in playlists.Where(p => !String.IsNullOrEmpty(p.Path)))
             {
-                var paths = new List<string>();
+                var songPaths = new List<ImportedPlaylist.Song>();
                 foreach(var item in playlistsEntries.Where(p => p.PlaylistId == q.PlainPlaylistId).OrderBy(p => p.Place))
                 {
                     if (String.IsNullOrEmpty(item.Path) && item.SongId > 0)
@@ -1081,7 +1081,11 @@ namespace NextPlayerUWPDataLayer.Services
                         var song = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(item.SongId)).FirstOrDefaultAsync();
                         item.Path = song?.Path ?? "";
                     }
-                    paths.Add(item.Path);
+                    songPaths.Add(new ImportedPlaylist.Song()
+                    {
+                        DisplayName = item.DisplayName ?? "",
+                        Path = item.Path
+                    });
                 }
                 list.Add(new ImportedPlaylist()
                 {
@@ -1089,7 +1093,7 @@ namespace NextPlayerUWPDataLayer.Services
                     Name = q.Name,
                     Path = q.Path,
                     PlainPlaylistId = q.PlainPlaylistId,
-                    SongPaths = paths
+                    SongPaths = songPaths
                 });
             }
             return list;
@@ -1126,6 +1130,25 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.InsertAllAsync(list);
         }
 
+        public async Task AddToPlaylist(int playlistId, IEnumerable<SongItem> songs)
+        {
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            var l = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToListAsync();
+            int lastPosition = l.Count;
+            foreach (var song in songs)
+            {
+                lastPosition++;
+                var newEntry = new PlainPlaylistEntryTable()
+                {
+                    PlaylistId = playlistId,
+                    SongId = song.SongId,
+                    Place = lastPosition,
+                };
+                list.Add(newEntry);
+            }
+            await connectionAsync.InsertAllAsync(list);
+        }
+
         public async Task AddNowPlayingToPlaylist(int playlistId)
         {
             var songs = await connectionAsync.Table<NowPlayingTable>().ToListAsync();
@@ -1139,6 +1162,7 @@ namespace NextPlayerUWPDataLayer.Services
                     lastPosition++;
                     var newEntry = new PlainPlaylistEntryTable()
                     {
+                        DisplayName = item.Title,
                         PlaylistId = playlistId,
                         SongId = item.SongId,
                         Place = lastPosition,
@@ -1385,13 +1409,14 @@ namespace NextPlayerUWPDataLayer.Services
             var dict = songs.ToDictionary(s => s.Path, t => t.SongId);
             int i = 0;
             List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
-            foreach (var path in playlist.SongPaths)
+            foreach (var item in playlist.SongPaths)
             {
                 int songId = -1;
-                dict.TryGetValue(path, out songId);
+                dict.TryGetValue(item.Path, out songId);
                 var entry = new PlainPlaylistEntryTable()
                 {
-                    Path = path,
+                    DisplayName = item.DisplayName,
+                    Path = item.Path,
                     Place = i,
                     PlaylistId = id,
                     SongId = songId,
@@ -1628,13 +1653,14 @@ namespace NextPlayerUWPDataLayer.Services
                 await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlist.PlainPlaylistId);
                 int i = 0;
                 List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
-                foreach (var path in playlist.SongPaths)
+                foreach (var item in playlist.SongPaths)
                 {
                     int songId = -1;
-                    dict.TryGetValue(path, out songId);
+                    dict.TryGetValue(item.Path, out songId);
                     var entry = new PlainPlaylistEntryTable()
                     {
-                        Path = path,
+                        DisplayName = item.DisplayName,
+                        Path = item.Path,
                         Place = i,
                         PlaylistId = t.PlainPlaylistId,
                         SongId = songId,
@@ -1656,13 +1682,14 @@ namespace NextPlayerUWPDataLayer.Services
                 connection.Insert(t);
                 int i = 0;
                 List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
-                foreach (var path in playlist.SongPaths)
+                foreach (var item in playlist.SongPaths)
                 {
                     int songId = -1;
-                    dict.TryGetValue(path, out songId);
+                    dict.TryGetValue(item.Path, out songId);
                     var entry = new PlainPlaylistEntryTable()
                     {
-                        Path = path,
+                        DisplayName = item.DisplayName,
+                        Path = item.Path,
                         Place = i,
                         PlaylistId = t.PlainPlaylistId,
                         SongId = songId,

@@ -128,6 +128,9 @@ namespace NextPlayerUWP.ViewModels
                     await servicep.GetSongItems(folderId);
                     await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.PCloud), s => s.Title);
                     break;
+                case MusicItemTypes.listofsongs:
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, App.GetFromCache());
+                    break;
                 default:
                     break;
             }

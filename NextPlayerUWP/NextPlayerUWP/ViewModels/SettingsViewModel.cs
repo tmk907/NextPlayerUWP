@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using NextPlayerUWPDataLayer.CloudStorage;
+using NextPlayerUWPDataLayer.Model;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -95,6 +96,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return musicLibraryFolders; }
             set { Set(ref musicLibraryFolders, value); }
+        }
+
+        private ObservableCollection<SdCardFolder> sdCardFolders = new ObservableCollection<SdCardFolder>();
+        public ObservableCollection<SdCardFolder> SdCardFolders
+        {
+            get { return sdCardFolders; }
+            set { Set(ref sdCardFolders, value); }
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -183,6 +191,18 @@ namespace NextPlayerUWP.ViewModels
                     MusicLibraryFolders.Add(new MusicFolder() { Name = f.DisplayName, Path = f.Path });
                 }
             }
+            if (sdCardFolders.Count == 0)
+            {
+                var list = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
+                var folder = new SdCardFolder()
+                {
+                    Name = "Music",
+                    Path = @"C:\",
+                    IncludeSubFolders = true,
+                };
+                list.Insert(0, folder);
+                SdCardFolders = new ObservableCollection<SdCardFolder>(list);
+            }
             PlaylistsFolder = Windows.Storage.KnownFolders.Playlists.Path;
             AutoSavePlaylists = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
 
@@ -253,6 +273,35 @@ namespace NextPlayerUWP.ViewModels
                 await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
                 MediaImport.OnMediaImported("FolderRemoved");
             }
+        }
+
+        public async void AddSdCardFolder()
+        {
+            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
+            Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                MessageDialogHelper helper = new MessageDialogHelper();
+                bool includeSubFolders = await helper.IncludeAllSubFolders();
+                SdCardFolders.Add(new SdCardFolder()
+                {
+                    Name = folder.Name,
+                    Path = folder.Path,
+                    IncludeSubFolders = includeSubFolders,
+                });
+                var list = new List<SdCardFolder>(sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:")));
+                await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
+            }
+        }
+
+        public async void RemoveSdCardFolder(SdCardFolder musicFolder)
+        {
+            if (musicFolder.Path.ToLower().StartsWith("c:")) return;
+
+            SdCardFolders.Remove(musicFolder);
+            await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
+            MediaImport.OnMediaImported("FolderRemoved");
         }
 
         private string playlistsFolder;

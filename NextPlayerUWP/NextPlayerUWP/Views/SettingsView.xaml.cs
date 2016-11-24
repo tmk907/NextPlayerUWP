@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -22,6 +23,12 @@ namespace NextPlayerUWP.Views
         {
             MusicFolder folder = (MusicFolder)((Button)sender).Tag;
             ViewModel.RemoveFolder(folder);
+        }
+
+        private void RemoveSdCardFolder_Click(object sender, RoutedEventArgs e)
+        {
+            SdCardFolder folder = (SdCardFolder)((Button)sender).Tag;
+            ViewModel.RemoveSdCardFolder(folder);
         }
     }
 }

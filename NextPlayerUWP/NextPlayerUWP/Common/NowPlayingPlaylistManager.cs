@@ -308,11 +308,16 @@ namespace NextPlayerUWP.Common
             await NotifyChange();
         }
 
-        //public async Task AddNext(IEnumerable<SongItem> songs)
-        //{
-        //    //await SaveNowPlayingInDB();
-
-        //}
+        public async Task AddNext(IEnumerable<SongItem> list)
+        {
+            int index = ApplicationSettingsHelper.ReadSongIndex();
+            foreach (var n in list)
+            {
+                index++;
+                songs.Insert(index, n);
+            }
+            await NotifyChange();
+        }
 
         public async Task Delete(SongItem song)
         {

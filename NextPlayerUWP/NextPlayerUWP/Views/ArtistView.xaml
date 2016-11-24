@@ -40,7 +40,17 @@
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
-
+        <MenuFlyout x:Key="AlbumContextMenu">
+          <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now"
+                          Click="{x:Bind ViewModel.PlayNowAlbum}" CommandParameter="{Binding}"/>
+          <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next"
+                          Click="{x:Bind ViewModel.PlayNextAlbum}" CommandParameter="{Binding}"/>
+          <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing"
+                          Click="{x:Bind ViewModel.AddToNowPlayingAlbum}" CommandParameter="{Binding}"/>
+          <MenuFlyoutSeparator/>
+          <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
+                          Click="{x:Bind ViewModel.AddToPlaylistAlbum}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
         <Style x:Key="ArtistDescriptionTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
             <Setter Property="FontSize" Value="30"/>
             <Setter Property="FontWeight" Value="Light"/>
@@ -55,7 +65,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Margin" Value="0,0,12,4"/>
             <Setter Property="Padding" Value="0,8,12,0"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Top" />
             <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}"/>
             <Setter Property="UseSystemFocusVisuals" Value="True" />
@@ -84,7 +94,9 @@
             </Setter>
         </Style>
         <DataTemplate x:Key="GroupHeaderTemplate">
-            <Grid Margin="0,0,0,4">
+            <Grid Margin="0,0,0,4" 
+                  RightTapped="AlbumGroupHeader_RightTapped" 
+                  Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition/>

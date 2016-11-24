@@ -12,5 +12,6 @@ namespace NextPlayerUWPDataLayer.Tables
         public int SongId { get; set; }
         public int Place { get; set; }
         public string Path { get; set; }
+        public string DisplayName { get; set; }
     }
 }

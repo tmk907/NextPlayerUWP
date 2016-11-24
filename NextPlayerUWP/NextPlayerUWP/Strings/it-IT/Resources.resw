@@ -810,4 +810,10 @@
   <data name="ButtonAddFromSong.Content" xml:space="preserve">
     <value>Add from song</value>
   </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="IncludeSubFolders" xml:space="preserve">
+    <value>Include subfolders?</value>
+  </data>
 </root>

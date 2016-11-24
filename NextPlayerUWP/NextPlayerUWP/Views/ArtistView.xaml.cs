@@ -54,6 +54,14 @@ namespace NextPlayerUWP.Views
             menu.ShowAt(senderElement, position);
         }
 
+        private void AlbumGroupHeader_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["AlbumContextMenu"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
+        }
+
         private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
         {
             var song = (sender as SlidableListItem).DataContext as MusicItem;

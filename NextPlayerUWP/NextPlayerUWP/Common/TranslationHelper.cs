@@ -4,6 +4,8 @@ namespace NextPlayerUWP.Common
 {
     public class TranslationHelper
     {
+        public const string Yes = "Yes";
+        public const string No = "No"; 
         public const string Delete = "Delete";
         public const string Cancel = "Cancel";
         public const string AlbumArtSaveError = "AlbumArtSaveError";
@@ -12,6 +14,7 @@ namespace NextPlayerUWP.Common
         public const string UnknownArtist = "UnknownArtist";
         public const string ConnectionError = "ConnectionError";
         public const string CantFindLyrics = "CantFindLyrics";
+        public const string IncludeSubFolders = "IncludeSubFolders";
 
         private ResourceLoader loader;
 

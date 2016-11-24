@@ -2,6 +2,7 @@
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWPDataLayer.Playlists;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -57,9 +58,9 @@ namespace NextPlayerUWPDataLayer.Services
         private List<ImportedPlaylist> updatedPlaylists;
         private List<ImportedPlaylist> withoutChangePlaylists;
         private List<string> libraryDirectories;
-        QueryOptions queryOptions;
+        private List<SdCardFolder> sdCardFoldersToScan;
+        private QueryOptions queryOptions;
         private List<StorageFile> playlistFiles;
-        private object importedPlaylists;
 
         private async Task UpdateSongMusicProperties(Tables.SongsTable songTable, BasicProperties prop, StorageFile file)
         {
@@ -208,7 +209,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        private async Task AddFilesFromFolder(StorageFolder folder)
+        private async Task AddFilesFromFolder(StorageFolder folder, bool includeSubFolders = true)
         {
             var query = folder.CreateFileQueryWithOptions(queryOptions);
             var files = await query.GetFilesAsync();
@@ -271,17 +272,53 @@ namespace NextPlayerUWPDataLayer.Services
 
             songsAdded += newSongs.Count;// + oldSongs.Where(s => s.IsAvailable == 1).Count();
             progress.Report(songsAdded);
-            var folders = await folder.GetFoldersAsync();
-            foreach (var f in folders)
+            if (includeSubFolders)
             {
-                await AddFilesFromFolder(f);
+                var folders = await folder.GetFoldersAsync();
+                foreach (var f in folders)
+                {
+                    await AddFilesFromFolder(f);
+                }
             }
         }
 
-        public static async Task UpdateTemovableStorage()
+        public async Task MobileUpdate()
         {
-            var removableFolder = KnownFolders.RemovableDevices;
-            
+            var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            StorageFolder externalDevices = KnownFolders.RemovableDevices;
+            StorageFolder sdCard = (await externalDevices.GetFoldersAsync()).FirstOrDefault();
+            string sdCardPath = sdCard?.Path ?? "!";
+            foreach (var folder in library.Folders)
+            {
+                if (!folder.Path.StartsWith(sdCardPath))
+                {
+                    await AddFilesFromFolder(folder);
+                }
+            }
+            if (sdCardFoldersToScan.Count > 0 && sdCard != null)
+            {
+                foreach(var folderToScan in sdCardFoldersToScan)
+                {
+                    try
+                    {
+                        var folder = await StorageFolder.GetFolderFromPathAsync(folderToScan.Path);
+                        await AddFilesFromFolder(folder, folderToScan.IncludeSubFolders);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        public async Task ScanWholeMusicLibrary()
+        {
+            var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            foreach (var folder in library.Folders)
+            {
+                await AddFilesFromFolder(folder);
+            }
         }
 
         private async Task<IReadOnlyList<StorageFile>> GetM3UFilesFromAppPlaylistsFolder()
@@ -309,28 +346,12 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         private async Task<ImportedPlaylist> ImportPlaylist(StorageFile file)
-        {
-            PlaylistHelper playlistHelper = new PlaylistHelper();
-            var prop = await file.GetBasicPropertiesAsync();
-            DateTime dateModified = prop.DateModified.UtcDateTime;
+        {            
             string type = file.FileType.ToLower();
             ImportedPlaylist newPlaylist = null;
-            if (type == ".m3u" || type == ".m3u8")
-            {
-                newPlaylist = await playlistHelper.ParseM3UPlaylist(file);
-            }
-            else if (type == ".wpl")
-            {
-                newPlaylist = await playlistHelper.ParseWPLPlaylist(file);
-            }
-            else if (type == ".pls")
-            {
-                newPlaylist = await playlistHelper.ParsePLSPlaylist(file);
-            }
-            if (newPlaylist != null)
-            {
-                newPlaylist.DateModified = dateModified;
-            }
+            PlaylistParserFactory factory = new PlaylistParserFactory();
+            IPlaylistParser parser = factory.GetParser(type);
+            newPlaylist = await parser.ParsePlaylist(file);
             return newPlaylist;
         }
 
@@ -413,19 +434,24 @@ namespace NextPlayerUWPDataLayer.Services
             progress = p;
             libraryDirectories = new List<string>();
             playlistFiles = new List<StorageFile>();
-            var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            sdCardFoldersToScan = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
 
             var propertiesToRetrieve = new List<string>();
             queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileFormatsHelper.SupportedAudioAndPlaylistFormats());
             queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
             queryOptions.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties | PropertyPrefetchOptions.BasicProperties, propertiesToRetrieve);
-            
+
             Stopwatch s = new Stopwatch();
             s.Start();
-            foreach (var folder in library.Folders)
+            string deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
+            if (deviceFamily == "Windows.Mobile")
             {
-                await AddFilesFromFolder(folder);
+                await MobileUpdate();
+            }
+            else
+            {
+                await ScanWholeMusicLibrary();
             }
             s.Stop();
             Debug.WriteLine("Scan {0}ms", s.ElapsedMilliseconds);

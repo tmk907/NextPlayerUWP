@@ -160,6 +160,7 @@
     <Compile Include="Model\PlaylistItem.cs" />
     <Compile Include="Model\RadioItem.cs" />
     <Compile Include="Model\SCSong.cs" />
+    <Compile Include="Model\SdCardFolder.cs" />
     <Compile Include="Model\SmartPlaylistItem.cs" />
     <Compile Include="Model\SongData.cs" />
     <Compile Include="Model\SongItem.cs" />
@@ -188,6 +189,14 @@
     <Compile Include="pCloud\Requests\Folder.cs" />
     <Compile Include="pCloud\Requests\General.cs" />
     <Compile Include="pCloud\Requests\Streaming.cs" />
+    <Compile Include="Playlists\IPlaylistParser.cs" />
+    <Compile Include="Playlists\M3uPlaylistParser.cs" />
+    <Compile Include="Playlists\BasePlaylistParser.cs" />
+    <Compile Include="Playlists\PlaylistParserFactory.cs" />
+    <Compile Include="Playlists\PlsPlaylistParser.cs" />
+    <Compile Include="Playlists\UnsupportedPlaylistParser.cs" />
+    <Compile Include="Playlists\WplPlaylistParser.cs" />
+    <Compile Include="Playlists\ZplPlaylistParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FileFormatsHelper.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
@@ -198,7 +207,6 @@
     <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\NowPlayingManager.cs" />
-    <Compile Include="Services\PlaylistHelper.cs" />
     <Compile Include="Services\PlaylistExporter.cs" />
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="SoundCloud\Enums\License.cs" />
