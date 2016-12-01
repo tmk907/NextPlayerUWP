@@ -11,5 +11,6 @@ namespace NextPlayerUWPDataLayer.Tables
         public string Name { get; set; }
         public string Path { get; set; }
         public DateTime DateModified { get; set; }
+        public bool IsHidden { get; set; }
     }
 }

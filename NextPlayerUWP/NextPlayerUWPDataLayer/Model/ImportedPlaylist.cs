@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Playlists;
+using System;
 using System.Collections.Generic;
 
 namespace NextPlayerUWPDataLayer.Model
@@ -8,18 +9,14 @@ namespace NextPlayerUWPDataLayer.Model
         public string Name { get; set; }
         public string Path { get; set; }
         public DateTime DateModified { get; set; }
-        public List<Song> SongPaths { get; set; }
+        public List<int> SongIds { get; set; }
+        public List<MaxPlaylistEntry> max { get; set; }
         public int PlainPlaylistId { get; set; }
 
         public ImportedPlaylist()
         {
-            SongPaths = new List<Song>();
-        }
-
-        public class Song
-        {
-            public string Path { get; set; }
-            public string DisplayName { get; set; }
+            SongIds = new List<int>();
+            max = new List<MaxPlaylistEntry>();
         }
     }
 }

@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.Storage;
 using Windows.Storage.Provider;
+using NextPlayerUWPDataLayer.Playlists;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -80,8 +81,8 @@ namespace NextPlayerUWP.ViewModels
         {
             PlaylistItem p = (PlaylistItem)e;
             Playlists.Remove(p);
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.DeletePlaylistAsync(p);
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.DeletePlaylistItem(p);
         }
 
         public void EditSmartPlaylist(object sender, RoutedEventArgs e)
@@ -96,13 +97,11 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (p.Id == editPlaylist.Id && !p.IsSmart)
                 {
-                    p.Name = editPlaylist.Name;
+                    PlaylistHelper ph = new PlaylistHelper();
+                    await ph.EditName(p,editPlaylist.Name);
                     break;
                 }
             }
-            await DatabaseManager.Current.UpdatePlaylistName(editPlaylist.Id, editPlaylist.Name);
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.ChangePlaylistNameAsync(editPlaylist);//.ConfigureAwait(false);
             //await LoadData();
         }
 
@@ -112,6 +111,9 @@ namespace NextPlayerUWP.ViewModels
             savePicker.SuggestedStartLocation =  Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
             // Dropdown of file types the user can save the file as
             savePicker.FileTypeChoices.Add("m3u playlist", new List<string>() { ".m3u" });
+            savePicker.FileTypeChoices.Add("pls playlist", new List<string>() { ".pls" });
+            savePicker.FileTypeChoices.Add("wpl playlist", new List<string>() { ".wpl" });
+            savePicker.FileTypeChoices.Add("zpl playlist", new List<string>() { ".zpl" });
             savePicker.SuggestedFileName = editPlaylist.Name;
 
             StorageFile file = await savePicker.PickSaveFileAsync();
@@ -121,22 +123,15 @@ namespace NextPlayerUWP.ViewModels
                 // we finish making changes and call CompleteUpdatesAsync.
                 CachedFileManager.DeferUpdates(file);
 
-                PlaylistExporter pe = new PlaylistExporter();
-                await pe.ExportPlaylistToM3UAsync(editPlaylist, file, relativePaths);
+                PlaylistHelper ph = new PlaylistHelper();
+                await ph.ExportPlaylistToFile(editPlaylist, file, false, relativePaths);
                 // Let Windows know that we're finished changing the file so
                 // the other app can update the remote version of the file.
                 // Completing updates may require Windows to ask for user input.
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
                 if (status == FileUpdateStatus.Complete)
                 {
-                    if (!editPlaylist.IsSmart)
-                    {
-                        await DatabaseManager.Current.UpdatePlainPlaylistAsync(editPlaylist);
-                    }
-                    //else
-                    //{
-                    //    DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, editPlaylist.Id);
-                    //}
+                    
                 }
                 else
                 {

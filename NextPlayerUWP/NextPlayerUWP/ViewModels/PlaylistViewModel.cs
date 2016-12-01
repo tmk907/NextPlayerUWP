@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using System.IO;
 using Windows.UI.Xaml;
+using NextPlayerUWPDataLayer.Playlists;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -204,8 +205,8 @@ namespace NextPlayerUWP.ViewModels
             }
             Playlist.RemoveAt(i);
             var p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.AutoSavePlaylistAsync(p);
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.UpdatePlaylistFile(p);
             await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(song.SongId);
         }
 

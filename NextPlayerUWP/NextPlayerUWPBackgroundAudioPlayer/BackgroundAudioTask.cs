@@ -248,10 +248,10 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             StorageFile file;
             if (fromAccessList)
             {
-                string token = await FutureAccessHelper.GetTokenFromPath(path);
-                if (token != null)
+                file = await FutureAccessHelper.GetFileFromPathAsync(path);
+                if (file != null)
                 {
-                    file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(path);
+                    
                 }
                 else
                 {

@@ -12,6 +12,7 @@ using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.CloudStorage;
 using NextPlayerUWPDataLayer.Enums;
+using NextPlayerUWPDataLayer.Playlists;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -134,8 +135,8 @@ namespace NextPlayerUWP.ViewModels
                 default:
                     break;
             }
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.AutoSavePlaylistAsync(p);
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.UpdatePlaylistFile(p);
             Loading = false;
             NavigationService.GoBack();
         }

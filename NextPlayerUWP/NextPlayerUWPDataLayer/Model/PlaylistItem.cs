@@ -62,6 +62,22 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
+        private bool isHidden;
+        public bool IsHidden
+        {
+            get
+            {
+                return isHidden;
+            }
+            set
+            {
+                if (value != isHidden)
+                {
+                    isHidden = value;
+                    onPropertyChanged(this, "IsHidden");
+                }
+            }
+        }
 
         public PlaylistItem(int id, bool issmart, string _name)
         {
@@ -99,6 +115,7 @@ namespace NextPlayerUWPDataLayer.Model
             this.dateModified = table.DateModified;
             name = table.Name;
             isNotDefault = true;
+            isHidden = table.IsHidden;
         }
 
         public PlaylistItem(SmartPlaylistsTable table)
@@ -118,6 +135,7 @@ namespace NextPlayerUWPDataLayer.Model
             {
                 name = table.Name;
             }
+            isHidden = table.Hide;
         }
 
         public override string ToString()

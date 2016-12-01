@@ -46,7 +46,7 @@ namespace NextPlayerUWP.Common
         // private async helper task that is necessary if you need to use await.
         private async Task<IRandomAccessStreamWithContentType> Open()
         {
-            string token = await FutureAccessHelper.GetTokenFromPath(path);
+            string token = await FutureAccessHelper.GetTokenFromPathAsync(path);
             if (token != null)
             {
                 var file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);

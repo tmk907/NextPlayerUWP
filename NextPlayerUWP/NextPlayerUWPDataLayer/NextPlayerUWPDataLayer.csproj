@@ -189,14 +189,17 @@
     <Compile Include="pCloud\Requests\Folder.cs" />
     <Compile Include="pCloud\Requests\General.cs" />
     <Compile Include="pCloud\Requests\Streaming.cs" />
-    <Compile Include="Playlists\IPlaylistParser.cs" />
-    <Compile Include="Playlists\M3uPlaylistParser.cs" />
-    <Compile Include="Playlists\BasePlaylistParser.cs" />
-    <Compile Include="Playlists\PlaylistParserFactory.cs" />
-    <Compile Include="Playlists\PlsPlaylistParser.cs" />
-    <Compile Include="Playlists\UnsupportedPlaylistParser.cs" />
-    <Compile Include="Playlists\WplPlaylistParser.cs" />
-    <Compile Include="Playlists\ZplPlaylistParser.cs" />
+    <Compile Include="Playlists\ContentCreator\EmptyContentCreator.cs" />
+    <Compile Include="Playlists\ContentCreator\IContentCreator.cs" />
+    <Compile Include="Playlists\ContentCreator\M3uContentCreator.cs" />
+    <Compile Include="Playlists\ContentCreator\PlsContentCreator.cs" />
+    <Compile Include="Playlists\ContentCreator\WplContentCreator.cs" />
+    <Compile Include="Playlists\ContentCreator\ZplContentCreator.cs" />
+    <Compile Include="Playlists\MaxPlaylistEntry.cs" />
+    <Compile Include="Playlists\PlaylistHelper.cs" />
+    <Compile Include="Playlists\PlaylistFileReader.cs" />
+    <Compile Include="Playlists\PlaylistFileSaver.cs" />
+    <Compile Include="Playlists\PlaylistImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FileFormatsHelper.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
@@ -207,7 +210,6 @@
     <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\NowPlayingManager.cs" />
-    <Compile Include="Services\PlaylistExporter.cs" />
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="SoundCloud\Enums\License.cs" />
     <Compile Include="SoundCloud\Enums\SCPlaylistType.cs" />
@@ -284,6 +286,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Spotify\Auth\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Playlists.NET\Playlists.NET\Playlists.NET.csproj">
+      <Project>{ae595073-e082-4d49-8802-76dc61c46186}</Project>
+      <Name>Playlists.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

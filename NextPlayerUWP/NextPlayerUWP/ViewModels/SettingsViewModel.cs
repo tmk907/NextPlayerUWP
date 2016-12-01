@@ -204,7 +204,6 @@ namespace NextPlayerUWP.ViewModels
                 SdCardFolders = new ObservableCollection<SdCardFolder>(list);
             }
             PlaylistsFolder = Windows.Storage.KnownFolders.Playlists.Path;
-            AutoSavePlaylists = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
 
             //Last.fm
             string login = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string;
@@ -309,35 +308,6 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return playlistsFolder; }
             set { Set(ref playlistsFolder, value); }
-        }
-
-        private bool autoSavePlaylists;
-        public bool AutoSavePlaylists
-        {
-            get { return autoSavePlaylists; }
-            set
-            {
-                if (value != autoSavePlaylists && !initialization)
-                {
-                    if (value) SavePlaylists();
-                    else DeletePlaylists();
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, value);
-                    TelemetryAdapter.TrackEvent("AutoSavePlaylists " + value);
-                }
-                Set(ref autoSavePlaylists, value);
-            }
-        }
-
-        public async Task SavePlaylists()
-        {
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.SavePlainPlaylistsInPlaylistsFolderAsync().ConfigureAwait(false);
-        }
-
-        public async Task DeletePlaylists()
-        {
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.DeleteAllPlainPlaylistsAsync().ConfigureAwait(false);
         }
 
         #endregion

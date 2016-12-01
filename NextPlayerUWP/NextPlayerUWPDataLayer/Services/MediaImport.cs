@@ -327,8 +327,8 @@ namespace NextPlayerUWPDataLayer.Services
             if (!add) return new List<StorageFile>().AsReadOnly();
             try
             {
-                PlaylistExporter pe = new PlaylistExporter();
-                var playlistsFolder = await pe.GetFolderWithAppPlaylistsAsync();
+                PlaylistHelper ph = new PlaylistHelper();
+                var playlistsFolder = await ph.GetFolderWithAppPlaylistsAsync();
                 var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { ".m3u" });
                 var query = playlistsFolder.CreateFileQueryWithOptions(queryOptions);
                 return await query.GetFilesAsync();
@@ -345,13 +345,15 @@ namespace NextPlayerUWPDataLayer.Services
             return new List<StorageFile>().AsReadOnly();
         }
 
-        private async Task<ImportedPlaylist> ImportPlaylist(StorageFile file)
-        {            
-            string type = file.FileType.ToLower();
-            ImportedPlaylist newPlaylist = null;
-            PlaylistParserFactory factory = new PlaylistParserFactory();
-            IPlaylistParser parser = factory.GetParser(type);
-            newPlaylist = await parser.ParsePlaylist(file);
+        private async Task<ImportedPlaylist> ImportPlaylist(StorageFile file, IEnumerable<SongItem> songs)
+        {
+            PlaylistImporter pi = new PlaylistImporter();
+            ImportedPlaylist newPlaylist = await pi.Import(file);
+            foreach(var m in newPlaylist.max)
+            {
+                int id = await AddSongFromPlaylistEntry(m, songs);
+                newPlaylist.SongIds.Add(id);
+            }
             return newPlaylist;
         }
 
@@ -362,39 +364,11 @@ namespace NextPlayerUWPDataLayer.Services
             updatedPlaylists = new List<ImportedPlaylist>();
             withoutChangePlaylists = new List<ImportedPlaylist>();
 
+            var allSongs = await DatabaseManager.Current.GetSongItemsAsync();
+
             foreach (var file in playlistFiles)
             {
-                ImportedPlaylist newPlaylist = await ImportPlaylist(file);
-                var oldPlaylist = oldImportedPlaylists.FirstOrDefault(p => p.Path.Equals(file.Path));
-                if (newPlaylist != null)
-                {
-                    var prop = await file.GetBasicPropertiesAsync();
-                    DateTime dateModified = prop.DateModified.UtcDateTime;
-                    if (oldPlaylist == null)
-                    {
-                        newImportedPlaylists.Add(newPlaylist);
-                    }
-                    else if (oldPlaylist.DateModified < dateModified)
-                    {
-                        newPlaylist.PlainPlaylistId = oldPlaylist.PlainPlaylistId;
-                        updatedPlaylists.Add(newPlaylist);
-                    }
-                    else
-                    {
-                        //playlist didn't change, but still  exists
-                        withoutChangePlaylists.Add(oldPlaylist);
-                    }
-                }
-                else if (oldPlaylist != null)
-                {
-                    //can't read playlist now
-                    //delete it
-                }
-            }
-            var appPlaylists = await GetM3UFilesFromAppPlaylistsFolder();
-            foreach (var file in appPlaylists)
-            {
-                ImportedPlaylist newPlaylist = await ImportPlaylist(file);
+                ImportedPlaylist newPlaylist = await ImportPlaylist(file, allSongs);
                 var oldPlaylist = oldImportedPlaylists.FirstOrDefault(p => p.Path.Equals(file.Path));
                 if (newPlaylist != null)
                 {
@@ -694,6 +668,63 @@ namespace NextPlayerUWPDataLayer.Services
             return song;
         }
 
+        /// <summary>
+        /// If database doesn't contain item with entry.Path new item is created
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="allSongs"></param>
+        /// <returns>songId</returns>
+        private async Task<int> AddSongFromPlaylistEntry(MaxPlaylistEntry entry, IEnumerable<SongItem> allSongs)
+        {
+            var song = allSongs.FirstOrDefault(s => s.Path.Equals(entry.Path));
+            int id = 0;
+            if (song != null)
+            {
+                id = song.SongId;
+            }
+            else
+            {
+                SongData data = DatabaseManager.CreateEmptySongData();
+                if (entry.Path.Length>=2 && entry.Path[1] == ':')
+                {
+                    var file = await FutureAccessHelper.GetFileFromPathAsync(entry.Path);
+                    if (file != null)
+                    {
+                        data = await CreateSongFromFile(file);
+                        id = await DatabaseManager.Current.InsertSongAsync(data);
+                    }
+                }
+                if (id == 0)
+                {
+                    try
+                    {
+                        data.DirectoryPath = (!String.IsNullOrWhiteSpace(entry.Path)) ? Path.GetDirectoryName(entry.Path) : "UnknownDirectory";
+                        data.Filename = Path.GetFileName(entry.Path);
+                        data.FolderName = Path.GetFileName(data.DirectoryPath);
+                    }
+                    catch { }
+                    data.Duration = entry.Duration;
+                    data.IsAvailable = 0;
+                    if (entry.Path.StartsWith("http"))
+                    {
+                        data.MusicSourceType = (int)Enums.MusicSource.OnlineFile;
+                    }
+                    else
+                    {
+                        data.MusicSourceType = (int)Enums.MusicSource.LocalNotMusicLibrary;
+                    }
+                    data.Path = entry.Path;
+                    data.Tag.Album = entry.AlbumTitle;
+                    data.Tag.AlbumArtist = entry.AlbumArtist;
+                    data.Tag.Title = entry.TrackTitle;
+                    data.Tag.Artists = entry.TrackArtist;
+                    data.Tag.FirstArtist = entry.TrackArtist;
+                    id = await DatabaseManager.Current.InsertSongAsync(data);
+                }
+            }
+            return id;
+        }
+
         public async Task<SongItem> OpenSingleFileAsync(StorageFile file)
         {
             string type = file.FileType.ToLower();
@@ -708,9 +739,7 @@ namespace NextPlayerUWPDataLayer.Services
                     songData.IsAvailable = 0;
                     int id = await DatabaseManager.Current.InsertSongAsync(songData);
                     song = await DatabaseManager.Current.GetSongItemAsync(id);
-                    string token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-                    
-                    await FutureAccessHelper.SaveToken(file.Path, token);
+                    await FutureAccessHelper.AddToFutureAccessListAndSaveTokenAsync(file);
                 }
             }
             return song;
@@ -726,7 +755,8 @@ namespace NextPlayerUWPDataLayer.Services
                 var playlistItem = playlists.FirstOrDefault(p => p.Path.Equals(file.Path));
                 if (playlistItem == null || playlistItem.DateModified < prop.DateModified)
                 {
-                    ImportedPlaylist playlist = await ImportPlaylist(file);
+                    var allSongs = await DatabaseManager.Current.GetSongItemsAsync();
+                    ImportedPlaylist playlist = await ImportPlaylist(file, allSongs);
                     if (playlist!= null)
                     {
                         await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);

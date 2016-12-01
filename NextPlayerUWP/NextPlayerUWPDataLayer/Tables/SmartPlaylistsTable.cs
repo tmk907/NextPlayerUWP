@@ -10,5 +10,6 @@ namespace NextPlayerUWPDataLayer.Tables
         public string Name { get; set; }
         public int SongsNumber { get; set; }
         public string SortBy { get; set; }
+        public bool Hide { get; set; }
     }
 }
