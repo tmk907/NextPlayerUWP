@@ -382,6 +382,8 @@ namespace NextPlayerUWP.ViewModels
             {
                 SwipeActionNr = 1;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionPlayNow);
+                TranslationHelper tr = new TranslationHelper();
+                tr.ChangeSlideableItemDescription();
                 TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionPlayNow);
             }
         }
@@ -393,6 +395,8 @@ namespace NextPlayerUWP.ViewModels
             {
                 SwipeActionNr = 2;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionPlayNext);
+                TranslationHelper tr = new TranslationHelper();
+                tr.ChangeSlideableItemDescription();
                 TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionPlayNext);
             }
         }
@@ -404,6 +408,8 @@ namespace NextPlayerUWP.ViewModels
             {
                 SwipeActionNr = 3;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
+                TranslationHelper tr = new TranslationHelper();
+                tr.ChangeSlideableItemDescription();
                 TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionAddToNowPlaying);
             }
         }
@@ -415,6 +421,8 @@ namespace NextPlayerUWP.ViewModels
             {
                 SwipeActionNr = 4;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToPlaylist);
+                TranslationHelper tr = new TranslationHelper();
+                tr.ChangeSlideableItemDescription();
                 TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionAddToPlaylist);
             }
         }

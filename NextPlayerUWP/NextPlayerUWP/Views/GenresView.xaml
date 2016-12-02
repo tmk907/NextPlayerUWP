@@ -53,13 +53,13 @@
         </Style>
         <DataTemplate x:Key="GenreItemTemplateMobile" x:DataType="data:GenreItem">
             <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
-	            LeftBackground="{StaticResource UserAccentBrush}" 
-	            LeftForeground="White" 
-	            ActivationWidth="100"
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}" 
+	              LeftLabel="{ThemeResource SlideableListItemLeftLabel}" 
+	              LeftBackground="{StaticResource UserAccentBrush}" 
+	              LeftForeground="White" 
+	              ActivationWidth="100"
                 Background="Transparent"
-	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+	              LeftCommandRequested="SlidableListItem_LeftCommandRequested"
                 IsRightCommandEnabled="False">
                 <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                     <Grid.ColumnDefinitions>
@@ -81,8 +81,8 @@
         </DataTemplate>
         <DataTemplate x:Key="GenreItemTemplateDesktop" x:DataType="data:GenreItem">
             <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}" 
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
 	            LeftBackground="{StaticResource UserAccentBrush}" 
 	            LeftForeground="White" 
 	            ActivationWidth="100"

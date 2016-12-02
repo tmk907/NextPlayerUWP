@@ -823,6 +823,18 @@
     <value>Hide</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value></value>
+    <value>OK</value>
+  </data>
+  <data name="Play now" xml:space="preserve">
+    <value>التشغيل الآن</value>
+  </data>
+  <data name="Play next" xml:space="preserve">
+    <value>تشغيل التالي</value>
+  </data>
+  <data name="Add to now playing" xml:space="preserve">
+    <value>إضافة إلى التشغيل الآن</value>
+  </data>
+  <data name="Add to playlist" xml:space="preserve">
+    <value>إضافة إلى قائمة تشغيل</value>
   </data>
 </root>

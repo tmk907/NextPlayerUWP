@@ -290,6 +290,8 @@ namespace NextPlayerUWP
 
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
+            TranslationHelper tr = new TranslationHelper();
+            tr.ChangeSlideableItemDescription();
 
             await ChangeStatusBarVisibility();
             bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);

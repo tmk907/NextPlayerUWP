@@ -102,8 +102,8 @@
         </DataTemplate>
         <DataTemplate x:Key="FolderItemTemplateMobile" x:DataType="data:FolderItem">
             <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
 	            LeftBackground="{StaticResource UserAccentBrush}" 
 	            LeftForeground="White" 
 	            ActivationWidth="100"
@@ -141,8 +141,8 @@
         </DataTemplate>
         <DataTemplate x:Key="FolderItemTemplateMobileWide" x:DataType="data:FolderItem">
             <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
 	            LeftBackground="{StaticResource UserAccentBrush}" 
 	            LeftForeground="White" 
 	            ActivationWidth="100"
@@ -204,8 +204,8 @@
         </DataTemplate>
         <DataTemplate x:Key="FileItemTemplateMobile" x:DataType="data:SongItem">
             <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}" 
 	            LeftBackground="{StaticResource UserAccentBrush}" 
 	            LeftForeground="White" 
 	            ActivationWidth="100"
@@ -240,8 +240,8 @@
         </DataTemplate>
         <DataTemplate x:Key="FileItemTemplateMobileWide" x:DataType="data:SongItem">
             <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
 	            LeftBackground="{StaticResource UserAccentBrush}" 
 	            LeftForeground="White" 
 	            ActivationWidth="100"

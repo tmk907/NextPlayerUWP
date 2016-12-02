@@ -55,8 +55,8 @@
         </MenuFlyout>
         <DataTemplate x:Key="PlaylistItemTemplateMobile" x:DataType="data:PlaylistItem">
           <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}" 
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
 	            LeftBackground="{StaticResource UserAccentBrush}" 
 	            LeftForeground="White" 
 	            ActivationWidth="100"
@@ -127,12 +127,12 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-			BackButtonVisibility="Collapsed" 
-			Frame="{x:Bind Frame, Mode=OneWay}"
-			Content="Playlists"
-			x:Uid="PageHeaderPlaylists"
-			VisualStateNarrowMinWidth="0"
-			VisualStateNormalMinWidth="720">
+			      BackButtonVisibility="Collapsed" 
+			      Frame="{x:Bind Frame, Mode=OneWay}"
+			      Content="Playlists"
+			      x:Uid="PageHeaderPlaylists"
+			      VisualStateNarrowMinWidth="0"
+			      VisualStateNormalMinWidth="720">
             <AppBarButton 
                 Icon="Add"
                 x:Uid="AppBarButtonAddPlaylist"
@@ -204,8 +204,7 @@
                   VerticalAlignment="Center"
                   Title="Details"
                   PrimaryButtonText="OK"
-                  VerticalContentAlignment="Stretch"
-                  MaxWidth="300">
+                  VerticalContentAlignment="Stretch">
               <ContentDialog.Content>
                 <StackPanel Orientation="Vertical">
                   <TextBlock 
@@ -246,15 +245,24 @@
             </ContentDialog>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
               <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Name="Column1"/>
-                    <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
-                    <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
+                  <ColumnDefinition x:Name="Column1"/>
+                  <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
+                  <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
                 </Grid.ColumnDefinitions>
+              <Button
+                >
+                  <Button.Flyout>
+                     <Flyout>
+                        <TextBlock Text="This is a flyout!"/>
+                     </Flyout>
+                  </Button.Flyout>
+                </Button>
               <AutoSuggestBox  Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
-                    Margin="4,0,12,0" 
-                    HorizontalAlignment="Stretch" 
+                    Margin="4,0,12,0"
+                    MinWidth="192"
+                    HorizontalAlignment="Left" 
                     VerticalAlignment="Center"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"

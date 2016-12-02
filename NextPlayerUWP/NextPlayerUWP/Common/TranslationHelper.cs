@@ -1,4 +1,7 @@
-﻿using Windows.ApplicationModel.Resources;
+﻿using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Helpers;
+using Windows.ApplicationModel.Resources;
+using Windows.UI.Xaml.Controls;
 
 namespace NextPlayerUWP.Common
 {
@@ -27,6 +30,41 @@ namespace NextPlayerUWP.Common
         public string GetTranslation(string toTranslate)
         {
             return loader.GetString(toTranslate);
+        }
+
+        public void ChangeSlideableItemDescription()
+        {
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            string translation = "";
+            Symbol symbol = Symbol.Play;
+
+            switch (swipeAction)
+            {
+                case AppConstants.SwipeActionPlayNow:
+                    translation = GetTranslation("Play now");
+                    symbol = Symbol.Play;
+                    break;
+                case AppConstants.SwipeActionPlayNext:
+                    translation = GetTranslation("Play next");
+                    symbol = Symbol.Add;
+                    break;
+                case AppConstants.SwipeActionAddToNowPlaying:
+                    translation = GetTranslation("Add to now playing");
+                    symbol = Symbol.Add;
+                    break;
+                case AppConstants.SwipeActionAddToPlaylist:
+                    translation = GetTranslation("Add to playlist");
+                    symbol = Symbol.Add;
+                    break;
+                default:
+                    break;
+            }
+            foreach (var dict in App.Current.Resources.ThemeDictionaries)
+            {
+                var theme = dict.Value as Windows.UI.Xaml.ResourceDictionary;
+                theme["SlideableListItemLeftLabel"] = translation;
+                theme["SlideableListItemLeftIcon"] = symbol;
+            }
         }
     }
 }

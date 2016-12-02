@@ -822,4 +822,19 @@
   <data name="MFIShow.Text" xml:space="preserve">
     <value>Pokaż</value>
   </data>
+  <data name="Play next" xml:space="preserve">
+    <value>Odtwórz jako następne</value>
+  </data>
+  <data name="Play now" xml:space="preserve">
+    <value>Odtwórz teraz</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Add to now playing" xml:space="preserve">
+    <value>Dodaj do teraz odtwarzane</value>
+  </data>
+  <data name="Add to playlist" xml:space="preserve">
+    <value>Dodaj do playlisty</value>
+  </data>
 </root>

@@ -51,8 +51,8 @@
         </Style>
         <DataTemplate x:Key="ArtistItemTemplate" x:DataType="data:ArtistItem">
             <toolkitcontrols:SlidableListItem
-                LeftIcon="Add" 
-	            LeftLabel="Queue" 
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
 	            LeftBackground="{StaticResource UserAccentBrush}" 
 	            LeftForeground="White" 
 	            ActivationWidth="100"

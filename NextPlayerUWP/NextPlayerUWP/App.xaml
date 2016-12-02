@@ -10,6 +10,9 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Dark">
+                    <x:String x:Key="SlideableListItemLeftLabel">Play</x:String>
+                    <Symbol x:Key="SlideableListItemLeftIcon">Add</Symbol>
+                    
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="White"/>
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#cccccc"/>
                     <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="#FF171717"/>
@@ -91,6 +94,9 @@
                     </Style>-->
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
+                    <x:String x:Key="SlideableListItemLeftLabel">Play</x:String>
+                    <Symbol x:Key="SlideableListItemLeftIcon">Add</Symbol>
+                    
                     <SolidColorBrush x:Key="ListItemForegroundSolid" Color="Black"/>
                     <SolidColorBrush x:Key="ListItemForegroundLight" Color="#323232"/>
                     <SolidColorBrush x:Key="ListViewItemBackgroundSecond" Color="#FFF2F2F2"/>
@@ -172,6 +178,8 @@
             <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlitLight" Color="#FFF2F2F2"/>
 
             <SolidColorBrush x:Key="TopAppBarBrush" Color="LightGray"/>
+
+            
 
             <!--<converters:GetListView x:Key="GetListView"/>-->
             <converters:BackgroundConverter x:Key="BackgroundConverter"/>
