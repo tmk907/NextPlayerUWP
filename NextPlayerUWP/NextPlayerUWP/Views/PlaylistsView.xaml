@@ -39,6 +39,14 @@
                             Click="MenuFlyoutItemDelete_Click" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIExport" Text="Export" 
                             Click="MFIExportChoosePathKind" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIHide" Text="Hide"
+                            Visibility="{Binding IsHidden, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
+                            Click="{x:Bind ViewModel.HidePlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShow" Text="Show"
+                            Visibility="{Binding IsHidden, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Click="{x:Bind ViewModel.ShowPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details"
+                            Click="MenuFlyoutItemShowDetails_Click" CommandParameter="{Binding}" />
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
@@ -46,7 +54,7 @@
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
         <DataTemplate x:Key="PlaylistItemTemplateMobile" x:DataType="data:PlaylistItem">
-            <toolkitcontrols:SlidableListItem
+          <toolkitcontrols:SlidableListItem
                 LeftIcon="Add" 
 	            LeftLabel="Queue" 
 	            LeftBackground="{StaticResource UserAccentBrush}" 
@@ -135,11 +143,15 @@
                     x:Uid="AppBarButtonNewSmartPlaylist"
                     Label="New smart"
                     Click="{x:Bind ViewModel.NewSmartPlaylist}"/>
+                <AppBarButton 
+                    x:Uid="AppBarButtonShowHidden"
+                    Label="Show hidden"
+                    Click="{x:Bind ViewModel.ShowAllPlaylists}"/>
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="0"/>
+                <RowDefinition Height="48"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <ContentDialog x:Name="ContentDialogNewPlaylist"
@@ -186,6 +198,26 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
+            <ContentDialog x:Name="ContentDialogShowDetails"
+                  Grid.Row="1"
+                  x:Uid="ContentDialogShowDetails"
+                  VerticalAlignment="Center"
+                  Title="Details"
+                  PrimaryButtonText="OK"
+                  VerticalContentAlignment="Stretch"
+                  MaxWidth="300">
+              <ContentDialog.Content>
+                <StackPanel Orientation="Vertical">
+                  <TextBlock 
+                      Margin="0,4,4,4"
+                      Text="Path"/>
+                  <TextBlock 
+                      Margin="0,4,4,0"
+                      Text="{x:Bind ViewModel.EditPlaylist.Path, Mode=OneWay}"
+                      TextWrapping="Wrap"/>
+                </StackPanel>
+              </ContentDialog.Content>
+            </ContentDialog>
             <ContentDialog x:Name="ContentDialogChoosePathKind"
                 Grid.Row="1"
                 x:Uid="ContentDialogChoosePathKind"
@@ -212,6 +244,28 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
+            <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
+              <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="Column1"/>
+                    <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
+                    <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
+                </Grid.ColumnDefinitions>
+              <AutoSuggestBox  Grid.Column="2" 
+                    PlaceholderText="search" 
+                    QueryIcon="Find" 
+                    Margin="4,0,12,0" 
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Center"
+                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
+                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+            </Grid>
             <mycontrols:AlternatingRowListView 
                 x:Name="PlaylistsListView"
                 Grid.Row="1"

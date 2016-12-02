@@ -564,14 +564,6 @@
                         Content="Feedback"
                         Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                         Click="{x:Bind ViewModel.LeaveFeedback}"/>
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Uid="ButtonAppStrech"
-                        Margin="0,4,0,8"
-                        MinWidth="128"
-                        Content="Request feature"
-                        Click="{x:Bind ViewModel.RequestFeatureAppStretch}"/>
-                    <Image Source="/Assets/AppStretch_Small_Blue.png" Width="40" Height="40" Margin="8,0,0,0"/>
-                </StackPanel>
                 <!--<Button x:Uid="ButtonEmail"
                         Content="Email"
                         MinWidth="128"

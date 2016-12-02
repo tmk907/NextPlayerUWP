@@ -54,8 +54,8 @@ namespace NextPlayerUWPDataLayer.Playlists
                 var p = await pr.OpenM3uPlaylist(file);
                 foreach (var entry in p.PlaylistEntries)
                 {
-                    MaxPlaylistEntry m = new MaxPlaylistEntry(entry);
-                    newPlaylist.max.Add(m);
+                    GeneralPlaylistEntry m = new GeneralPlaylistEntry(entry);
+                    newPlaylist.Entries.Add(m);
                 }
             }
             else if (type == ".wpl")
@@ -63,8 +63,8 @@ namespace NextPlayerUWPDataLayer.Playlists
                 var p = await pr.OpenWplPlaylist(file);
                 foreach (var entry in p.PlaylistEntries)
                 {
-                    MaxPlaylistEntry m = new MaxPlaylistEntry(entry);
-                    newPlaylist.max.Add(m);
+                    GeneralPlaylistEntry m = new GeneralPlaylistEntry(entry);
+                    newPlaylist.Entries.Add(m);
                 }
             }
             else if (type == ".pls")
@@ -72,8 +72,8 @@ namespace NextPlayerUWPDataLayer.Playlists
                 var p = await pr.OpenPlsPlaylist(file);
                 foreach (var entry in p.PlaylistEntries)
                 {
-                    MaxPlaylistEntry m = new MaxPlaylistEntry(entry);
-                    newPlaylist.max.Add(m);
+                    GeneralPlaylistEntry m = new GeneralPlaylistEntry(entry);
+                    newPlaylist.Entries.Add(m);
                 }
             }
             else if (type == ".zpl")
@@ -81,8 +81,8 @@ namespace NextPlayerUWPDataLayer.Playlists
                 var p = await pr.OpenZplPlaylist(file);
                 foreach (var entry in p.PlaylistEntries)
                 {
-                    MaxPlaylistEntry m = new MaxPlaylistEntry(entry);
-                    newPlaylist.max.Add(m);
+                    GeneralPlaylistEntry m = new GeneralPlaylistEntry(entry);
+                    newPlaylist.Entries.Add(m);
                 }
             }
 

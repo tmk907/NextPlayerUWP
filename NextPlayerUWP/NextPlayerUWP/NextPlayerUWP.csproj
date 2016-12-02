@@ -316,7 +316,6 @@
     <None Include="NextPlayerUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\AppStretch_Small_Blue.png" />
     <Content Include="Assets\Sounds\Empty.mp3" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.png" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-16.png" />

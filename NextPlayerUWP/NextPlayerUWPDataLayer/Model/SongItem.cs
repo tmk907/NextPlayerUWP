@@ -401,7 +401,7 @@ namespace NextPlayerUWPDataLayer.Model
                 coverPath = table.AlbumArt;
             }
             contentPathUpdatedAt = DateTime.Now;
-            if (table.MusicSourceType == (int)MusicSource.LocalFile)
+            if (sourceType == MusicSource.LocalFile || sourceType == MusicSource.OnlineFile || sourceType == MusicSource.RadioJamendo)
             {
                 contentPath = path;
                 contentPathExpiresAt = DateTime.MaxValue;

@@ -14,11 +14,14 @@ namespace NextPlayerUWPDataLayer.Services
                 { ".ogg", ".ape", ".wv", ".opus", ".ac3" };
             playlistFormats = new List<string>()
                 { ".m3u", ".m3u8", ".pls", ".wpl", ".zpl" };
+            supportedProtocols = new List<string>()
+                { "http://", "https://"};
         }
 
         private readonly List<string> defaultSupported;
         private readonly List<string> ffmpegSupported;
         private readonly List<string> playlistFormats;
+        private readonly List<string> supportedProtocols;
 
         public bool IsDefaultSupportedType(string type)
         {
@@ -65,6 +68,11 @@ namespace NextPlayerUWPDataLayer.Services
             var list = SupportedAudioFormats();
             list.AddRange(playlistFormats);
             return list;
+        }
+
+        public List<string> SupportedProtocols()
+        {
+            return supportedProtocols;
         }
     }
 }

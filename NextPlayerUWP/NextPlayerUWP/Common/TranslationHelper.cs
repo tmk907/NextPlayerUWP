@@ -4,6 +4,7 @@ namespace NextPlayerUWP.Common
 {
     public class TranslationHelper
     {
+        public const string OK = "OK";
         public const string Yes = "Yes";
         public const string No = "No"; 
         public const string Delete = "Delete";

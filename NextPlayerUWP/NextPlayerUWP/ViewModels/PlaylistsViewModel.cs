@@ -9,11 +9,13 @@ using Windows.UI.Xaml;
 using Windows.Storage;
 using Windows.Storage.Provider;
 using NextPlayerUWPDataLayer.Playlists;
+using System.Linq;
 
 namespace NextPlayerUWP.ViewModels
 {
     public class PlaylistsViewModel : MusicViewModelBase
     {
+        private ObservableCollection<PlaylistItem> allPlaylists = new ObservableCollection<PlaylistItem>();
         private ObservableCollection<PlaylistItem> playlists = new ObservableCollection<PlaylistItem>();
         public ObservableCollection<PlaylistItem> Playlists
         {
@@ -28,7 +30,7 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref name, value); }
         }
 
-        private PlaylistItem editPlaylist = new PlaylistItem(-1,false,"");
+        private PlaylistItem editPlaylist = new PlaylistItem(-1, false, "");
         public PlaylistItem EditPlaylist
         {
             get { return editPlaylist; }
@@ -45,9 +47,14 @@ namespace NextPlayerUWP.ViewModels
         protected override async Task LoadData()
         {
             var p = await DatabaseManager.Current.GetPlaylistItemsAsync();
-            if (p.Count != playlists.Count)
+            if (p.Count != allPlaylists.Count)
             {
-                Playlists = p;
+                Playlists.Clear();
+                allPlaylists = p;
+                foreach(var item in allPlaylists.Where(i => !i.IsHidden))
+                {
+                    Playlists.Add(item);
+                }
             }
         }
 
@@ -105,6 +112,27 @@ namespace NextPlayerUWP.ViewModels
             //await LoadData();
         }
 
+        public void ShowAllPlaylists()
+        {
+            Playlists = new ObservableCollection<PlaylistItem>(allPlaylists);
+        }
+
+        public async void ShowPlaylist(object sender, RoutedEventArgs e)
+        {
+            var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.EditPlaylist(playlist, false);
+            Playlists.Insert(allPlaylists.IndexOf(playlist), playlist);
+        }
+
+        public async void HidePlaylist(object sender, RoutedEventArgs e)
+        {
+            var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.EditPlaylist(playlist, true);
+            Playlists.Remove(playlist);
+        }
+
         public async void ExportPlaylist()
         {
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
@@ -142,6 +170,49 @@ namespace NextPlayerUWP.ViewModels
             {
                 //"Operation cancelled.";
             }
+        }
+
+        public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                string query = sender.Text.ToLower();
+                var matching = playlists.Where(s => s.Name.ToLower().StartsWith(query));
+                sender.ItemsSource = matching.ToList();
+            }
+        }
+
+        public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            int index;
+            if (args.ChosenSuggestion != null)
+            {
+                index = playlists.IndexOf((PlaylistItem)args.ChosenSuggestion);
+            }
+            else
+            {
+                var list = playlists.Where(s => s.Name.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Name).ToList();
+                if (list.Count == 0) return;
+                index = 0;
+                bool find = false;
+                foreach (var g in playlists)
+                {
+                    if (g.Name.Equals(list.FirstOrDefault().Name))
+                    {
+                        find = true;
+                        break;
+                    }
+                    index++;
+                }
+                if (!find) return;
+            }
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+        }
+
+        public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var item = args.SelectedItem as PlaylistItem;
+            sender.Text = item.Name;
         }
     }
 }

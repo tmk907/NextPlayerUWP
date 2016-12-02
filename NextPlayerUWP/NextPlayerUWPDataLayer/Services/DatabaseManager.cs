@@ -552,7 +552,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 Diagnostics.Logger.Save("GetSongDataAsync null id=" + songId);
 
-                s = CreateEmptySongData();//!
+                s = GetEmptySongData();//!
             }
             else
             {
@@ -743,9 +743,9 @@ namespace NextPlayerUWPDataLayer.Services
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
             var playlistEntries = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId.Equals(id)).ToListAsync();
             var songsList = await connectionAsync.QueryAsync<SongsTable>(@"SELECT * FROM SongsTable
-                WHERE SongId IN (SELECT PlainPlaylistEntryTable.SongId FROM PlainPlaylistEntryTable WHERE PlaylistId = ? ORDER BY PlainPlaylistEntryTable.Place)
-                     OR Path IN (SELECT PlainPlaylistEntryTable.Path FROM PlainPlaylistEntryTable WHERE PlaylistId = ? ORDER BY PlainPlaylistEntryTable.Place)", id, id);
-            var result = songsList.Where(s => (s.IsAvailable == 1 && (s.MusicSourceType != (int)MusicSource.OnlineFile && s.MusicSourceType != (int)MusicSource.RadioJamendo)));
+                WHERE SongId IN 
+                (SELECT PlainPlaylistEntryTable.SongId FROM PlainPlaylistEntryTable WHERE PlaylistId = ? ORDER BY PlainPlaylistEntryTable.Place)", id, id);
+            var result = songsList.Where(s => s.IsAvailable == 1);
             foreach (var item in playlistEntries)    
             {
                 var song = result.FirstOrDefault(s => s.SongId == item.SongId);
@@ -2007,7 +2007,7 @@ namespace NextPlayerUWPDataLayer.Services
             return s;
         }
 
-        public static SongData CreateEmptySongData()
+        public static SongData GetEmptySongData()
         {
             Tags tag = new Tags()
             {

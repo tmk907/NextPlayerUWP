@@ -10,13 +10,13 @@ namespace NextPlayerUWPDataLayer.Model
         public string Path { get; set; }
         public DateTime DateModified { get; set; }
         public List<int> SongIds { get; set; }
-        public List<MaxPlaylistEntry> max { get; set; }
+        public List<GeneralPlaylistEntry> Entries { get; set; }
         public int PlainPlaylistId { get; set; }
 
         public ImportedPlaylist()
         {
             SongIds = new List<int>();
-            max = new List<MaxPlaylistEntry>();
+            Entries = new List<GeneralPlaylistEntry>();
         }
     }
 }

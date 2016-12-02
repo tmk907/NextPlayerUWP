@@ -195,7 +195,7 @@
     <Compile Include="Playlists\ContentCreator\PlsContentCreator.cs" />
     <Compile Include="Playlists\ContentCreator\WplContentCreator.cs" />
     <Compile Include="Playlists\ContentCreator\ZplContentCreator.cs" />
-    <Compile Include="Playlists\MaxPlaylistEntry.cs" />
+    <Compile Include="Playlists\GeneralPlaylistEntry.cs" />
     <Compile Include="Playlists\PlaylistHelper.cs" />
     <Compile Include="Playlists\PlaylistFileReader.cs" />
     <Compile Include="Playlists\PlaylistFileSaver.cs" />

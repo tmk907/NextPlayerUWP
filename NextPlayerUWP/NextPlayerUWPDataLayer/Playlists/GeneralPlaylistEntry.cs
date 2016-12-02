@@ -3,7 +3,7 @@ using System;
 
 namespace NextPlayerUWPDataLayer.Playlists
 {
-    public class MaxPlaylistEntry
+    public class GeneralPlaylistEntry
     {
         public string Path { get; set; }
         public string AlbumTitle { get; set; }
@@ -12,25 +12,25 @@ namespace NextPlayerUWPDataLayer.Playlists
         public string TrackArtist { get; set; }
         public TimeSpan Duration { get; set; }
 
-        public MaxPlaylistEntry(M3uPlaylistEntry entry)
+        public GeneralPlaylistEntry(M3uPlaylistEntry entry)
         {
-            Path = entry.Path;
+            Path = entry.Path ?? "";
             TrackTitle = entry.Title;
             Duration = entry.Duration;
             AlbumTitle = entry.Album;
             AlbumArtist = entry.AlbumArtist;
         }
 
-        public MaxPlaylistEntry(PlsPlaylistEntry entry)
+        public GeneralPlaylistEntry(PlsPlaylistEntry entry)
         {
-            Path = entry.Path;
+            Path = entry.Path ?? "";
             TrackTitle = entry.Title;
             Duration = entry.Length;
         }
 
-        public MaxPlaylistEntry(WplPlaylistEntry entry)
+        public GeneralPlaylistEntry(WplPlaylistEntry entry)
         {
-            Path = entry.Path;
+            Path = entry.Path ?? "";
             TrackTitle = entry.TrackTitle;
             TrackArtist = entry.TrackArtist;
             AlbumTitle = entry.AlbumTitle;
@@ -38,9 +38,9 @@ namespace NextPlayerUWPDataLayer.Playlists
             Duration = TimeSpan.Zero;
         }
 
-        public MaxPlaylistEntry(ZplPlaylistEntry entry)
+        public GeneralPlaylistEntry(ZplPlaylistEntry entry)
         {
-            Path = entry.Path;
+            Path = entry.Path ?? "";
             TrackTitle = entry.TrackTitle;
             TrackArtist = entry.TrackArtist;
             AlbumTitle = entry.AlbumTitle;

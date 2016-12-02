@@ -556,7 +556,7 @@
     <value>حفظ باستخدام</value>
   </data>
   <data name="MFIExport.Text" xml:space="preserve">
-    <value>حفظ بصيغة m3u</value>
+    <value>Save as...</value>
   </data>
   <data name="TBPreventScreenLock.Text" xml:space="preserve">
     <value>منع قفل الشاشة</value>
@@ -815,5 +815,14 @@
   </data>
   <data name="IncludeSubFolders" xml:space="preserve">
     <value>Include subfolders?</value>
+  </data>
+  <data name="MFIShow.Text" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="MFIHide.Text" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value></value>
   </data>
 </root>

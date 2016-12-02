@@ -574,7 +574,7 @@
     <value>Save using</value>
   </data>
   <data name="MFIExport.Text" xml:space="preserve">
-    <value>Save as m3u</value>
+    <value>Save as...</value>
   </data>
   <data name="TBPreventScreenLock.Text" xml:space="preserve">
     <value>Prevent screen from dimming</value>
@@ -815,5 +815,11 @@
   </data>
   <data name="IncludeSubFolders" xml:space="preserve">
     <value>Include subfolders?</value>
+  </data>
+  <data name="MFIHide.Text" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="MFIShow.Text" xml:space="preserve">
+    <value>Show</value>
   </data>
 </root>

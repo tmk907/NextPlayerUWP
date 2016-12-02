@@ -88,6 +88,13 @@ namespace NextPlayerUWP.Views
             await dialog.ShowAsync();
         }
 
+        private async void MenuFlyoutItemShowDetails_Click(object sender, RoutedEventArgs e)
+        {
+            PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
+            ViewModel.EditPlaylist = selected;
+            await ContentDialogShowDetails.ShowAsync();
+        }
+
         private async void MFIEditName_Click(object sender, RoutedEventArgs e)
         {
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;

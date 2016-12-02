@@ -816,4 +816,10 @@
   <data name="IncludeSubFolders" xml:space="preserve">
     <value>Include subfolders?</value>
   </data>
+  <data name="MFIHide.Text" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="MFIShow.Text" xml:space="preserve">
+    <value>Show</value>
+  </data>
 </root>

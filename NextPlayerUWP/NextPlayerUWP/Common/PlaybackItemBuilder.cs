@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Media.Streaming.Adaptive;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
@@ -104,6 +105,9 @@ namespace NextPlayerUWP.Common
                     break;
                 case MusicSource.PCloud:
                     mpi = PrepareFromCloudStorage(song);
+                    break;
+                case MusicSource.OnlineFile:
+                    mpi = PrepareFromOnlineFile(song);
                     break;
                 default:
                     mpi = PrepareDefaultItem();
@@ -240,6 +244,16 @@ namespace NextPlayerUWP.Common
             playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
             UpdateDisplayProperties(playbackItem, song);
             
+            return playbackItem;
+        }
+
+        private static MediaPlaybackItem PrepareFromOnlineFile(SongItem song)
+        {
+            var source = MediaSource.CreateFromUri(new Uri(song.Path));
+            var playbackItem = new MediaPlaybackItem(source);
+            playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+            UpdateDisplayProperties(playbackItem, song);
+            source.CustomProperties[propertySongId] = song.SongId;
             return playbackItem;
         }
 
