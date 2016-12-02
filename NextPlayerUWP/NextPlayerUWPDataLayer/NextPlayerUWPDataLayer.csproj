@@ -157,6 +157,7 @@
     <Compile Include="Model\NowPlayingSong.cs" />
     <Compile Include="Model\ObservableRangeCollection.cs" />
     <Compile Include="Model\CloudFolder.cs" />
+    <Compile Include="Model\PlaylistFilterElement.cs" />
     <Compile Include="Model\PlaylistItem.cs" />
     <Compile Include="Model\RadioItem.cs" />
     <Compile Include="Model\SCSong.cs" />

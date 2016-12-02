@@ -44,6 +44,13 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref relativePaths, value); }
         }
 
+        private ObservableCollection<PlaylistFilterElement> filters = new ObservableCollection<PlaylistFilterElement>();
+        public ObservableCollection<PlaylistFilterElement> Filters
+        {
+            get { return filters; }
+            set { Set(ref filters, value); }
+        }
+
         protected override async Task LoadData()
         {
             var p = await DatabaseManager.Current.GetPlaylistItemsAsync();
@@ -55,6 +62,24 @@ namespace NextPlayerUWP.ViewModels
                 {
                     Playlists.Add(item);
                 }
+            }
+            if (filters.Count == 0)
+            {
+                Filters.Add(new PlaylistFilterElement(FilterPlaylists)
+                {
+                    IsChecked = true,
+                    Name = "Smart playlists"
+                });
+                Filters.Add(new PlaylistFilterElement(FilterPlaylists)
+                {
+                    IsChecked = true,
+                    Name = "Normal playlists"
+                });
+                Filters.Add(new PlaylistFilterElement(FilterPlaylists)
+                {
+                    IsChecked = false,
+                    Name = "Show hidden"
+                });
             }
         }
 
@@ -112,6 +137,15 @@ namespace NextPlayerUWP.ViewModels
             //await LoadData();
         }
 
+        public void FilterPlaylists()
+        {
+            if (filters.Count < 3) return;
+            bool showSmart = filters[0].IsChecked;
+            bool showNormal = filters[1].IsChecked;
+            bool showHidden = filters[2].IsChecked;
+            Playlists = new ObservableCollection<PlaylistItem>(allPlaylists.Where(p => ((p.IsSmart && showSmart) || (!p.IsSmart && showNormal)) && (!p.IsHidden || showHidden)));
+        }
+
         public void ShowAllPlaylists()
         {
             Playlists = new ObservableCollection<PlaylistItem>(allPlaylists);
@@ -132,6 +166,8 @@ namespace NextPlayerUWP.ViewModels
             await ph.EditPlaylist(playlist, true);
             Playlists.Remove(playlist);
         }
+
+        
 
         public async void ExportPlaylist()
         {

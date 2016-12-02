@@ -114,6 +114,5 @@ namespace NextPlayerUWP.Views
             var item = (sender as SlidableListItem).DataContext as PlaylistItem;
             await ViewModel.SlidableListItemLeftCommandRequested(item);
         }
-
     }
 }
