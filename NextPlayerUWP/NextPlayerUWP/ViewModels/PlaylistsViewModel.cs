@@ -10,6 +10,7 @@ using Windows.Storage;
 using Windows.Storage.Provider;
 using NextPlayerUWPDataLayer.Playlists;
 using System.Linq;
+using NextPlayerUWP.Common;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -63,22 +64,23 @@ namespace NextPlayerUWP.ViewModels
                     Playlists.Add(item);
                 }
             }
+            TranslationHelper tr = new TranslationHelper();
             if (filters.Count == 0)
             {
                 Filters.Add(new PlaylistFilterElement(FilterPlaylists)
                 {
                     IsChecked = true,
-                    Name = "Smart playlists"
+                    Name = tr.GetTranslation("Smart playlists")
                 });
                 Filters.Add(new PlaylistFilterElement(FilterPlaylists)
                 {
                     IsChecked = true,
-                    Name = "Normal playlists"
+                    Name = tr.GetTranslation("Normal playlists")
                 });
                 Filters.Add(new PlaylistFilterElement(FilterPlaylists)
                 {
                     IsChecked = false,
-                    Name = "Show hidden"
+                    Name = tr.GetTranslation("Show hidden")
                 });
             }
         }
@@ -214,7 +216,9 @@ namespace NextPlayerUWP.ViewModels
             {
                 string query = sender.Text.ToLower();
                 var matching = playlists.Where(s => s.Name.ToLower().StartsWith(query));
-                sender.ItemsSource = matching.ToList();
+                var matching2 = playlists.Where(s => s.Name.ToLower().Contains(query));
+                var result = matching.Concat(matching2).Distinct();
+                sender.ItemsSource = result.ToList();
             }
         }
 

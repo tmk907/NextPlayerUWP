@@ -205,9 +205,9 @@ namespace NextPlayerUWP.ViewModels
             }
             Playlist.RemoveAt(i);
             var p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
+            await DatabaseManager.Current.DeletePlainPlaylistEntryAsync(song.SongId, p.Id);
             PlaylistHelper ph = new PlaylistHelper();
-            await ph.UpdatePlaylistFile(p);
-            await DatabaseManager.Current.DeletePlainPlaylistEntryByIdAsync(song.SongId);
+            await ph.UpdatePlaylistFile(p).ConfigureAwait(false);
         }
 
         protected override void SortMusicItems()

@@ -185,6 +185,7 @@
             <converters:BackgroundConverter x:Key="BackgroundConverter"/>
             <converters:BoolToBackgroundHighlight x:Key="BoolToBackgroundHighlightConverter"/>
             <converters:BoolToInvertedVisibility x:Key="BoolToInvertedVisibilityConverter"/>
+            <converters:BoolToSubfoldersDescription x:Key="BoolToSubfoldersDescriptionConverter"/>
             <converters:BoolToVisibility x:Key="BoolToVisibilityConverter"/>
             <converters:BoolToNullableBool x:Key="BoolToNullableBoolConverter"/>
             <converters:BoolToHighlightedItemForeground x:Key="BoolToHighlightedItemForegroundConverter"/>

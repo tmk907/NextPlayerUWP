@@ -99,7 +99,7 @@ namespace NextPlayerUWP.Common
             });
             if (albums.Exists(a => a.ImagePath == ""))
             {
-                var songs = await DatabaseManager.Current.GetSongItemsAsync();
+                var songs = await DatabaseManager.Current.GetAllSongItemsAsync();
                 var groups = songs.GroupBy(s => new { s.Album, s.AlbumArtist });
                 foreach (var album in albums.Where(a => a.ImagePath == ""))
                 {

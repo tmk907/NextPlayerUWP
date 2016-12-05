@@ -34,24 +34,23 @@
             <MenuFlyoutItem x:Uid="MFIEditPlainName" Text="Edit name"
                             Visibility="{Binding IsSmart, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
                             Click="MFIEditName_Click" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
-                            Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Click="MenuFlyoutItemDelete_Click" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIExport" Text="Export" 
                             Click="MFIExportChoosePathKind" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details"
+                            Visibility="{Binding IsSmart, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
+                            Click="MenuFlyoutItemShowDetails_Click" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIHide" Text="Hide"
                             Visibility="{Binding IsHidden, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
                             Click="{x:Bind ViewModel.HidePlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIShow" Text="Show"
                             Visibility="{Binding IsHidden, Converter={StaticResource BoolToVisibilityConverter}}"
                             Click="{x:Bind ViewModel.ShowPlaylist}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details"
-                            Click="MenuFlyoutItemShowDetails_Click" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
+                            Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Click="MenuFlyoutItemDelete_Click" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
         <DataTemplate x:Key="PlaylistItemTemplateMobile" x:DataType="data:PlaylistItem">
           <toolkitcontrols:SlidableListItem
@@ -65,10 +64,19 @@
                 IsRightCommandEnabled="False">
                 <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="50"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0"
+                    <SymbolIcon Grid.Column="0"
+                            Symbol="Tag"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="40"
+                            Height="40"
+                            Margin="0"
+                            Visibility="{x:Bind IsHidden, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                    <TextBlock Grid.Column="1"
                            Text="{x:Bind Name, Mode=OneWay}"
                            VerticalAlignment="Center"/>
                 </Grid>
@@ -77,10 +85,19 @@
         <DataTemplate x:Key="PlaylistItemTemplateDesktop" x:DataType="data:PlaylistItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
+                <SymbolIcon Grid.Column="0"
+                            Symbol="Tag"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="40"
+                            Height="40"
+                            Margin="0"
+                            Visibility="{x:Bind IsHidden, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                <TextBlock Grid.Column="1"
                         Text="{x:Bind Name, Mode=OneWay}"
                         VerticalAlignment="Center"/>
             </Grid>

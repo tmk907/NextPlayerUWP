@@ -74,7 +74,7 @@ namespace NextPlayerUWP.ViewModels
         {               
             if (songs.Count == 0)
             {
-                Songs = await DatabaseManager.Current.GetSongItemsAsync();
+                Songs = await DatabaseManager.Current.GetSongItemsWithoutStreamsAsync();
             }
             if (groupedSongs.Count == 0)
             {
@@ -167,7 +167,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ReloadData()
         {
-            Songs = await DatabaseManager.Current.GetSongItemsAsync();
+            Songs = await DatabaseManager.Current.GetSongItemsWithoutStreamsAsync();
             SortMusicItems();
         }
 

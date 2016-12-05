@@ -327,7 +327,7 @@ namespace NextPlayerUWPDataLayer.Services
             updatedPlaylists = new List<ImportedPlaylist>();
             withoutChangePlaylists = new List<ImportedPlaylist>();
 
-            var allSongs = await DatabaseManager.Current.GetSongItemsAsync();
+            var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
 
             foreach (var file in playlistFiles)
             {
@@ -358,7 +358,14 @@ namespace NextPlayerUWPDataLayer.Services
                     //delete it
                 }
             }
-
+            foreach (var playlist in oldImportedPlaylists.Where(p => !String.IsNullOrEmpty(p.Path)))
+            {
+                string token = await FutureAccessHelper.GetTokenFromPathAsync(playlist.Path);
+                if (token != null)
+                {
+                    withoutChangePlaylists.Add(playlist);
+                }
+            }
             var toDelete = oldImportedPlaylists.Except(withoutChangePlaylists).Except(updatedPlaylists, new ImportedPlaylistComparer()).ToList();
 
             await DatabaseManager.Current.UpdateImportedPlaylists(toDelete, newImportedPlaylists, updatedPlaylists);
@@ -766,11 +773,13 @@ namespace NextPlayerUWPDataLayer.Services
                 var playlistItem = playlists.FirstOrDefault(p => p.Path.Equals(file.Path));
                 if (playlistItem == null || playlistItem.DateModified < prop.DateModified)
                 {
-                    var allSongs = await DatabaseManager.Current.GetSongItemsAsync();
+                    var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
                     ImportedPlaylist playlist = await ImportPlaylist(file, allSongs);
                     if (playlist!= null)
                     {
-                        await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
+                        int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
+                        playlistItem = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
+                        await FutureAccessHelper.AddToFutureAccessListAndSaveTokenAsync(file);
                     }
                 }
                 return playlistItem;

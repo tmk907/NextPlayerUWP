@@ -282,7 +282,7 @@ namespace NextPlayerUWP.ViewModels
             if (folder != null)
             {
                 MessageDialogHelper helper = new MessageDialogHelper();
-                bool includeSubFolders = await helper.IncludeAllSubFolders();
+                bool includeSubFolders = await helper.ShowIncludeAllSubFoldersQuestion();
                 SdCardFolders.Add(new SdCardFolder()
                 {
                     Name = folder.Name,

@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -25,10 +26,15 @@ namespace NextPlayerUWP.Views
             ViewModel.RemoveFolder(folder);
         }
 
-        private void RemoveSdCardFolder_Click(object sender, RoutedEventArgs e)
+        private async void RemoveSdCardFolder_Click(object sender, RoutedEventArgs e)
         {
             SdCardFolder folder = (SdCardFolder)((Button)sender).Tag;
-            ViewModel.RemoveSdCardFolder(folder);
+            MessageDialogHelper msg = new MessageDialogHelper();
+            bool remove = await msg.ShowExcludeFolderConfirmation();
+            if (remove)
+            {
+                ViewModel.RemoveSdCardFolder(folder);
+            }
         }
     }
 }

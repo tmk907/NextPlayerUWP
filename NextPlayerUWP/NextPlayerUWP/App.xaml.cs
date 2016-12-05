@@ -371,6 +371,11 @@ namespace NextPlayerUWP
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
 
+            if (startKind == StartKind.Launch)
+            {
+                TelemetryAdapter.TrackAppLaunch();
+            }
+
             if (isFirstRun)
             {
                 isFirstRun = false;
@@ -766,8 +771,11 @@ namespace NextPlayerUWP
             else if (FileFormatsHelper.IsPlaylistSupportedType(type))
             {
                 var playlist = await mi.OpenPlaylistFileAsync(file);
-                await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
-                await PlaybackService.Instance.PlayNewList(0);
+                if (playlist != null)
+                {
+                    await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
+                    await PlaybackService.Instance.PlayNewList(0);
+                }
             }
         }
 

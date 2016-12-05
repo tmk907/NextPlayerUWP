@@ -693,21 +693,12 @@ namespace NextPlayerUWP.Common
             TimeSpan duration = TimeSpan.Zero;
             int a = CurrentSongIndex;
             int songId = (int)item.Source.CustomProperties[propertySongId];
-            
-            if (item.Source.Duration == TimeSpan.Zero)
+
+            try
             {
                 duration = item?.Source?.Duration ?? TimeSpan.Zero;
             }
-            //else
-            //{
-            //    duration = item?.Source?.Duration ?? TimeSpan.Zero;
-            //    if (song.Duration != duration && duration != TimeSpan.Zero)
-            //    {
-            //        song.Duration = duration;
-            //        //DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd);
-            //    }
-            //    duration = song.Duration;
-            //}
+            catch (Exception ex) { }
 
             if (a != (int)mediaList.CurrentItemIndex)
             {

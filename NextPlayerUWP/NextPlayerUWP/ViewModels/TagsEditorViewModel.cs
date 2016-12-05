@@ -336,7 +336,7 @@ namespace NextPlayerUWP.ViewModels
             if (!IsAlbumArtSet())
             {
                 MessageDialogHelper m = new MessageDialogHelper();
-                await m.AlbumArtSaveError();
+                await m.ShowAlbumArtSaveError();
                 return;
             }
 
@@ -360,7 +360,7 @@ namespace NextPlayerUWP.ViewModels
                 else
                 {
                     MessageDialogHelper m = new MessageDialogHelper();
-                    await m.AlbumArtSaveError();
+                    await m.ShowAlbumArtSaveError();
                 }
             }
             else
@@ -371,7 +371,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async Task LoadSongs()
         {
-            var s = await DatabaseManager.Current.GetSongItemsAsync();
+            var s = await DatabaseManager.Current.GetAllSongItemsAsync();
             Songs = new ObservableCollection<SongItem>(s.Where(t => t.CoverPath != AppConstants.AlbumCover));
         }
 

@@ -18,7 +18,10 @@ namespace NextPlayerUWP.Common
         public const string UnknownArtist = "UnknownArtist";
         public const string ConnectionError = "ConnectionError";
         public const string CantFindLyrics = "CantFindLyrics";
-        public const string IncludeSubFolders = "IncludeSubFolders";
+        public const string DoYouWantToIncludeSubFolders = "DoYouWantToIncludeSubFolders";
+        public const string IncludeSubfolders = "IncludeSubfolders";
+        public const string DontIncludeSubFolders = "DontIncludeSubFolders";
+        public const string DoYouWantExcludeFolderFromLibrary = "DoYouWantExcludeFolderFromLibrary";
 
         private ResourceLoader loader;
 

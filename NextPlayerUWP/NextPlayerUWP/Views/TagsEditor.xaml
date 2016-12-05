@@ -382,12 +382,14 @@
                                 Content="Add from file"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
+                                Margin="0,0,4,0"
                                 Click="{x:Bind ViewModel.AddFromFile}"/>
                             <Button Grid.Column="1"
                                 x:Uid="ButtonAddFromSong"
                                 Content="Add from song"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
+                                Margin="4,0,0,0"
                                 Click="AddFromSong_Click"/>
                         </Grid>
                         <Image Grid.Row="3"
@@ -591,12 +593,14 @@
                                 Content="Add from file"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
+                                Margin="0,0,4,0"
                                 Click="{x:Bind ViewModel.AddFromFile}"/>
                             <Button Grid.Column="1"
                                 x:Uid="ButtonAddFromSong"
                                 Content="Add from song"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
+                                Margin="4,0,0,0"
                                 Click="AddFromSong_Click"/>
                         </Grid>
                         <Image Grid.Row="3"

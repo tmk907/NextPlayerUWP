@@ -522,7 +522,7 @@
   <data name="TrackNumber" xml:space="preserve">
     <value>Número da faixa</value>
   </data>
-  <data name="PageHeaderRadios" xml:space="preserve">
+  <data name="PageHeaderRadios.Content" xml:space="preserve">
     <value>Rádio</value>
   </data>
   <data name="TBRadio.Text" xml:space="preserve">
@@ -813,8 +813,8 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
-  <data name="IncludeSubFolders" xml:space="preserve">
-    <value>Include subfolders?</value>
+  <data name="DoYouWantToIncludeSubFolders" xml:space="preserve">
+    <value>Do you want to include subfolders?</value>
   </data>
   <data name="MFIHide.Text" xml:space="preserve">
     <value>Hide</value>
@@ -836,5 +836,35 @@
   </data>
   <data name="Add to playlist" xml:space="preserve">
     <value>Adicionar à lista de execução</value>
+  </data>
+  <data name="AppBarButtonFilter.Label" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Smart playlists" xml:space="preserve">
+    <value>Smart playlists</value>
+  </data>
+  <data name="Normal playlists" xml:space="preserve">
+    <value>Normal playlists</value>
+  </data>
+  <data name="Show hidden" xml:space="preserve">
+    <value>Show hidden</value>
+  </data>
+  <data name="DontIncludeSubFolders" xml:space="preserve">
+    <value>without subfolders</value>
+  </data>
+  <data name="DoYouWantRemoveFolder" xml:space="preserve">
+    <value>Do you want to exclude this folder from library?</value>
+  </data>
+  <data name="IncludeSubfolders" xml:space="preserve">
+    <value>with subfolders</value>
+  </data>
+  <data name="TBOnline.Text" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="TBStreams.Text" xml:space="preserve">
+    <value>Streams</value>
+  </data>
+  <data name="PageHeaderOnline.Content" xml:space="preserve">
+    <value>Online</value>
   </data>
 </root>

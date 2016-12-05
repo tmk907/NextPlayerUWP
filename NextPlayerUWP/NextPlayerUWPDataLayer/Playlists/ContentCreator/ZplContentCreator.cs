@@ -23,7 +23,7 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
                 {
                     AlbumTitle = song.Album,
                     AlbumArtist = song.AlbumArtist,
-                    //Duration = song.Duration,
+                    Duration = song.Duration,
                     Path = song.Path,
                     TrackArtist = song.Artist,
                     TrackTitle = song.Title
@@ -58,17 +58,19 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
                 {
                     AlbumTitle = song.Album,
                     AlbumArtist = song.AlbumArtist,
-                    //Duration = song.Duration,
+                    Duration = song.Duration,
                     Path = song.Path,
                     TrackArtist = song.Artist,
                     TrackTitle = song.Title
                 });
             }
 
+            string updated = "";
             using (Stream stream = await file.OpenStreamForWriteAsync())
             {
-                zplContent.Update(playlist, stream);
+                updated = zplContent.Update(playlist, stream);
             }
+            await FileIO.WriteTextAsync(file, updated);
         }
     }
 }

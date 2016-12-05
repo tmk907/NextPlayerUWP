@@ -17,8 +17,8 @@ namespace NextPlayerUWPDataLayer.Playlists
             Path = entry.Path ?? "";
             TrackTitle = entry.Title;
             Duration = entry.Duration;
-            AlbumTitle = entry.Album;
-            AlbumArtist = entry.AlbumArtist;
+            AlbumTitle = entry.Album ?? "";
+            AlbumArtist = entry.AlbumArtist ?? "";
         }
 
         public GeneralPlaylistEntry(PlsPlaylistEntry entry)
@@ -35,7 +35,7 @@ namespace NextPlayerUWPDataLayer.Playlists
             TrackArtist = entry.TrackArtist;
             AlbumTitle = entry.AlbumTitle;
             AlbumArtist = entry.AlbumArtist;
-            Duration = TimeSpan.Zero;
+            Duration = entry.Duration;
         }
 
         public GeneralPlaylistEntry(ZplPlaylistEntry entry)
@@ -45,7 +45,7 @@ namespace NextPlayerUWPDataLayer.Playlists
             TrackArtist = entry.TrackArtist;
             AlbumTitle = entry.AlbumTitle;
             AlbumArtist = entry.AlbumArtist;
-            Duration = TimeSpan.Zero;
+            Duration = entry.Duration;
         }
     }
 }

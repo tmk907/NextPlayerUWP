@@ -600,10 +600,23 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task<ObservableCollection<SongItem>> GetSongItemsAsync()
+        public async Task<ObservableCollection<SongItem>> GetAllSongItemsAsync()
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
             var result = await songsConnectionAsync.OrderBy(s => s.Title).ToListAsync();
+            foreach (var item in result)
+            {
+                songs.Add(new SongItem(item));
+            }
+            return songs;
+        }
+
+        public async Task<ObservableCollection<SongItem>> GetSongItemsWithoutStreamsAsync()
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+            var result = await songsConnectionAsync.
+                Where(s => s.MusicSourceType != (int)MusicSource.OnlineFile && s.MusicSourceType != (int)MusicSource.RadioJamendo).
+                OrderBy(s => s.Title).ToListAsync();
             foreach (var item in result)
             {
                 songs.Add(new SongItem(item));
@@ -1424,17 +1437,12 @@ namespace NextPlayerUWPDataLayer.Services
 
         #region Delete
 
-        public void DeleteSmartPlaylistEntry(int primaryId)//! async?
-        {
-            connection.Delete<SmartPlaylistEntryTable>(primaryId);
-        }
-
         public async Task DeleteSmartPlaylistEntries(int playlistId)
         {
             var items = await connectionAsync.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(playlistId)).ToListAsync();
             foreach (var item in items)
             {
-                DeleteSmartPlaylistEntry(item.Id);
+                connection.Delete<SmartPlaylistEntryTable>(item.Id);
             }
         }
 
@@ -1446,16 +1454,10 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.DeleteAsync(playlist);
         }
 
-
-        public async Task DeletePlainPlaylistEntryByIdAsync(int songId)
+        public async Task DeletePlainPlaylistEntryAsync(int songId, int playlistId)
         {
-            var item = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(s => s.SongId == songId).ToListAsync();
+            var item = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(s => s.SongId == songId && s.PlaylistId == playlistId).ToListAsync();
             await connectionAsync.DeleteAsync(item.FirstOrDefault());
-        }
-
-        public void DeletePlainPlaylistEntry(int primaryId)
-        {
-            connection.Delete<PlainPlaylistEntryTable>(primaryId);           
         }
 
         public async Task DeletePlainPlaylistAsync(int playlistId)
@@ -1490,11 +1492,6 @@ namespace NextPlayerUWPDataLayer.Services
             });
             await UpdateTables();
         }
-
-        //public async Task DeleteImportedPlaylist(ImportedPlaylistsTable table)
-        //{
-        //    await connectionAsync.DeleteAsync(table);
-        //}
 
         #endregion
 
@@ -1673,7 +1670,7 @@ namespace NextPlayerUWPDataLayer.Services
                     DateModified = playlist.DateModified,
                     Name = playlist.Name,
                     Path = playlist.Path,
-                    IsHidden = false
+                    IsHidden = playlist.SongIds.Count == 0
                 };
                 connection.Insert(t);
                 int i = 0;

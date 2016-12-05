@@ -167,6 +167,7 @@
     <Compile Include="Converters\BoolToHighlightedItemForeground.cs" />
     <Compile Include="Converters\BoolToInvertedVisibility.cs" />
     <Compile Include="Converters\BoolToNullableBool.cs" />
+    <Compile Include="Converters\BoolToSubfoldersDescription.cs" />
     <Compile Include="Converters\BoolToVisibility.cs" />
     <Compile Include="Converters\ComboBoxItemValueConverter.cs" />
     <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
