@@ -852,7 +852,7 @@
   <data name="DontIncludeSubFolders" xml:space="preserve">
     <value>without subfolders</value>
   </data>
-  <data name="DoYouWantRemoveFolder" xml:space="preserve">
+  <data name="DoYouWantExcludeFolderFromLibrary" xml:space="preserve">
     <value>Do you want to exclude this folder from library?</value>
   </data>
   <data name="IncludeSubfolders" xml:space="preserve">

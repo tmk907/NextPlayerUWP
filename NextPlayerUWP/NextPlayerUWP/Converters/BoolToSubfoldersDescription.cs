@@ -10,7 +10,7 @@ namespace NextPlayerUWP.Converters
         {
             bool a = (bool)value;
             TranslationHelper tr = new TranslationHelper();
-            if (a) return tr.GetTranslation(TranslationHelper.DoYouWantToIncludeSubFolders);
+            if (a) return tr.GetTranslation(TranslationHelper.IncludeSubfolders);
             else return tr.GetTranslation(TranslationHelper.DontIncludeSubFolders);
         }
 
