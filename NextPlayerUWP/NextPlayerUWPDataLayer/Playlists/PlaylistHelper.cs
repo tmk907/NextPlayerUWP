@@ -43,21 +43,22 @@ namespace NextPlayerUWPDataLayer.Playlists
             bool saved = await SaveToFile(file, content);
             if (saved)
             {
-                var properties = await file.GetBasicPropertiesAsync();
-                item.DateModified = properties.DateModified.UtcDateTime;
-                item.Path = file.Path;
                 if (item.IsSmart)
                 {
                     int id = DatabaseManager.Current.InsertPlainPlaylist(file.Name);
                     var p = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
                     p.Path = file.Path;
-                    p.DateModified = item.DateModified;
+                    var properties = await file.GetBasicPropertiesAsync();
+                    p.DateModified = properties.DateModified.UtcDateTime;
                     p.IsHidden = false;
                     await DatabaseManager.Current.UpdatePlainPlaylistAsync(p);
                     await DatabaseManager.Current.AddToPlaylist(id, songs);
                 }
-                else
+                else if (String.IsNullOrEmpty(item.Path)) // if playlist was created in app and is exported first time
                 {
+                    var properties = await file.GetBasicPropertiesAsync();
+                    item.DateModified = properties.DateModified.UtcDateTime;
+                    item.Path = file.Path;
                     await DatabaseManager.Current.UpdatePlainPlaylistAsync(item);
                     await DeleteBackupPlaylistAsync(item);
                 }

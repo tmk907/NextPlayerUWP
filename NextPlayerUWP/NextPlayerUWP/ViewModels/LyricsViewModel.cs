@@ -53,7 +53,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
-            App.ChangeBottomPlayerVisibility(true);
+            App.OnNavigatedToNewView(true);
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             if (suspensionState.ContainsKey(nameof(song.SongId)))
             {

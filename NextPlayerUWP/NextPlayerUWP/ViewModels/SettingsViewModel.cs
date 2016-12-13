@@ -108,7 +108,7 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             initialization = true;
-            App.ChangeBottomPlayerVisibility(true);
+            App.OnNavigatedToNewView(true);
             // Tools
             var tt = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
             var IsTimerOn = (bool)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn)??false);
@@ -697,16 +697,6 @@ namespace NextPlayerUWP.ViewModels
             TelemetryAdapter.TrackEvent("Leave feedback button");
             var launcher =  Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
             await launcher.LaunchAsync();
-        }
-
-        public async void RequestFeatureAppStretch()
-        {
-            var uri = new Uri(AppConstants.AppStretchLink);
-            // Set the option to show a warning
-            //var promptOptions = new Windows.System.LauncherOptions();
-
-            bool success = await Launcher.LaunchUriAsync(uri);
-            TelemetryAdapter.TrackEvent("AppStretch " + success.ToString());
         }
 
         public async void ContactWithSupport()

@@ -158,10 +158,14 @@
     <Compile Include="Common\Tiles\TileWithoutImageXml.cs" />
     <Compile Include="Common\TranslationHelper.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
+    <Compile Include="Controls\CompositionImage.cs" />
+    <Compile Include="Controls\ConnectedTransition.cs" />
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
       <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SurfaceLoader.cs" />
+    <Compile Include="Controls\VisualTreeHelperExtensions.cs" />
     <Compile Include="Converters\BackgroundConverter.cs" />
     <Compile Include="Converters\BoolToBackground.cs" />
     <Compile Include="Converters\BoolToHighlightedItemForeground.cs" />
@@ -212,6 +216,7 @@
     <Compile Include="ViewModels\LyricsViewModel.cs" />
     <Compile Include="ViewModels\MusicViewModelBase.cs" />
     <Compile Include="ViewModels\NewSmartPlaylistViewModel.cs" />
+    <Compile Include="ViewModels\NowPlayingDesktopViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingPlaylistViewModel.cs" />
     <Compile Include="ViewModels\BottomPlayerViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
@@ -221,6 +226,7 @@
     <Compile Include="ViewModels\RadiosViewModel.cs" />
     <Compile Include="ViewModels\RightPanelViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SongsViewModel.cs" />
     <Compile Include="ViewModels\TagsEditorViewModel.cs" />
     <Compile Include="ViewModels\TestViewModel.cs" />
@@ -269,6 +275,9 @@
     </Compile>
     <Compile Include="Views\NewSmartPlaylistView.xaml.cs">
       <DependentUpon>NewSmartPlaylistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NowPlayingDesktopView.xaml.cs">
+      <DependentUpon>NowPlayingDesktopView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NowPlayingPlaylistView.xaml.cs">
       <DependentUpon>NowPlayingPlaylistView.xaml</DependentUpon>
@@ -454,6 +463,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NewSmartPlaylistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NowPlayingDesktopView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

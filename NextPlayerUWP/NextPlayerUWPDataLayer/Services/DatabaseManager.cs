@@ -1493,6 +1493,15 @@ namespace NextPlayerUWPDataLayer.Services
             await UpdateTables();
         }
 
+        public async Task DeleteSong(int songId)
+        {
+            var q = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(songId)).ToListAsync();
+            if (q.Count == 1)
+            {
+                connection.Delete(q.FirstOrDefault());
+            }
+        }
+
         #endregion
 
         #region Update

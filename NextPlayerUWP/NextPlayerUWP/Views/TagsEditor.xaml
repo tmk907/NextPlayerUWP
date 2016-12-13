@@ -41,7 +41,7 @@
         </Style>
     </Page.Resources>
     <Page.Content>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Mobile">
@@ -103,7 +103,7 @@
                 IsSecondaryButtonEnabled="True"
                 SecondaryButtonText="Cancel">
                 <ContentControl.Content>
-                    <Grid>
+                    <Grid Height="{Binding ElementName=LayoutRoot, Path=ActualHeight}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
@@ -148,6 +148,8 @@
                                         </Grid.RowDefinitions>
                                         <Image Grid.Column="0"
                                                Grid.RowSpan="2"
+                                               x:Phase="2"
+                                               Tag="{x:Bind Genres}"
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Left"
                                             Width="44"
@@ -160,7 +162,7 @@
                                                     DecodePixelWidth="44"/>
                                             </Image.Source>
                                         </Image>
-                                        <TextBlock Grid.Column="1" Grid.Row="0"
+                                        <TextBlock Grid.Column="1" Grid.Row="0"                                              
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             FontSize="14"
@@ -168,6 +170,7 @@
                                             Text="{x:Bind Title}"
                                         />
                                         <TextBlock Grid.Column="1" Grid.Row="1"
+                                                   x:Phase="1"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             FontSize="12"

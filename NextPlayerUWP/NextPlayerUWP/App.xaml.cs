@@ -247,6 +247,7 @@ namespace NextPlayerUWP
             Licenses,
             NewSmartPlaylist,
             NowPlaying,
+            NowPlayingDesktop,
             NowPlayingPlaylist,
             Playlists,
             Playlist,
@@ -328,6 +329,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.NewSmartPlaylist, typeof(NewSmartPlaylistView));
             if (!keys.ContainsKey(Pages.NowPlaying))
                 keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
+            if (!keys.ContainsKey(Pages.NowPlayingDesktop))
+                keys.Add(Pages.NowPlayingDesktop, typeof(NowPlayingDesktopView));
             if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
                 keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
             if (!keys.ContainsKey(Pages.Playlists))
@@ -725,10 +728,11 @@ namespace NextPlayerUWP
             ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeRightPanelVisibility(visible);
         }
 
-        public static void ChangeBottomPlayerVisibility(bool visible)
+        public static void OnNavigatedToNewView(bool visible, bool isNowPlayingDesktopActive = false)
         {
             if (Window.Current.Content == null) return;
             ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
+            ((Shell)((ModalDialog)Window.Current.Content).Content).OnDesktopViewActiveChange(isNowPlayingDesktopActive);
         }
 
         public static async Task ChangeStatusBarVisibility()

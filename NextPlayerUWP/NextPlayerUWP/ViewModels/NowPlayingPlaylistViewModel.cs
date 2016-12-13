@@ -132,7 +132,7 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             //App.ChangeRightPanelVisibility(false);
-            App.ChangeBottomPlayerVisibility(true);
+            App.OnNavigatedToNewView(true);
             CoverUri = SongCoverManager.Instance.GetCurrent();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             int i = ApplicationSettingsHelper.ReadSongIndex();

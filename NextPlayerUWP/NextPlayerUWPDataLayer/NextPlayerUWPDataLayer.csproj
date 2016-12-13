@@ -281,18 +281,12 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.UWP.2015, Version=3.13.0">
-      <Name>SQLite for Universal Windows Platform</Name>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.15.2">
+      <Name>SQLite for Universal Windows Platform %28SQLite.UWP.2015, Version=3.15.2%29</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Spotify\Auth\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Playlists.NET\Playlists.NET\Playlists.NET.csproj">
-      <Project>{ae595073-e082-4d49-8802-76dc61c46186}</Project>
-      <Name>Playlists.NET</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

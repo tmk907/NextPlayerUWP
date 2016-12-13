@@ -25,10 +25,13 @@ namespace NextPlayerUWP.Views
         public static Shell Instance { get; set; }
         public static HamburgerMenu HamburgerMenu => Instance.Menu;
 
+        ShellViewModel ShellVM = new ShellViewModel();
+
         public Shell()
         {
             Instance = this;
             InitializeComponent();
+            this.DataContext = ShellVM;
             this.Loaded += LoadSlider;
             //HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
             //SetNavigationService(navigationService);
@@ -39,15 +42,7 @@ namespace NextPlayerUWP.Views
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
             ReviewReminder();
-            //test();
         }
-
-        private async void test()
-        {
-            //await PlaybackService.Instance.LoadSongsFromDB();
-            //PlaybackService.Instance.Play();
-        }
-
 
         public Shell(INavigationService navigationService) : this()
         {
@@ -110,10 +105,17 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        private bool IsDesktop()
+        public void OnDesktopViewActiveChange(bool isActive)
         {
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop") return true;
-            else return false;
+            ShellVM.IsNowPlayingDesktopViewActive = isActive;
+        }
+
+        private bool IsDesktop
+        {
+            get
+            {
+                return (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop");
+            }
         }
 
         #region Slider 
@@ -126,29 +128,26 @@ namespace NextPlayerUWP.Views
             timeslider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
         }
 
+        private void BottomSlider_Loaded(object sender, RoutedEventArgs e)
+        {
+            PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
+            durationSliderBottom.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
+
+            PointerEventHandler pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
+            durationSliderBottom.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
+        }
+
         void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
-            viewModel.sliderpressed = true;
+            BPViewModel.sliderpressed = true;
         }
 
         void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
-            BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
-            viewModel.sliderpressed = false;
-            PlaybackService.Instance.Position = TimeSpan.FromSeconds(timeslider.Value);
-            //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(timeslider.Value));
+            BPViewModel.sliderpressed = false;
+            PlaybackService.Instance.Position = TimeSpan.FromSeconds(((Slider)sender).Value);
         }
-
-        void progressbar_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
-        {
-            BottomPlayerViewModel viewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
-            if (!viewModel.sliderpressed)
-            {
-                PlaybackService.Instance.Position = TimeSpan.FromSeconds(e.NewValue);
-                //viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
-            }
-        }
+        
         #endregion
 
         private async Task ReviewReminder()
@@ -186,7 +185,7 @@ namespace NextPlayerUWP.Views
 
         private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
         {
-            if (IsDesktop())
+            if (IsDesktop)
             {
 #if DEBUG
                 Menu.NavigationService.Navigate(App.Pages.NowPlaying);
@@ -196,6 +195,20 @@ namespace NextPlayerUWP.Views
             else
             {
                 Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+            }
+        }
+
+        private void NPButton_Tapped(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("npgo");
+
+            if (IsDesktop)
+            {
+                Menu.NavigationService.Navigate(App.Pages.NowPlayingDesktop);
+            }
+            else
+            {
+                Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
             }
         }
     }

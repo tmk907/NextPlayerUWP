@@ -63,7 +63,12 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Image Grid.Row="0" Width="132" Height="132" Margin="4" Opacity="0" ImageOpened="Image_ImageOpened">
+                <Image Grid.Row="0" 
+                       Width="132" 
+                       Height="132" 
+                       Margin="4" 
+                       Opacity="0" 
+                       ImageOpened="Image_ImageOpened">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind ImageUri}"
                                      DecodePixelType="Logical"

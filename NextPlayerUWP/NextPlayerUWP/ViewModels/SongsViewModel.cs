@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace NextPlayerUWP.ViewModels
@@ -213,6 +215,27 @@ namespace NextPlayerUWP.ViewModels
                     group.Add(item);
                 }
                 GroupedSongs.Add(group);
+            }
+        }
+
+        public async void DeleteSong(object sender, RoutedEventArgs e)
+        {
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            MessageDialogHelper msg = new MessageDialogHelper();
+            bool delete = await msg.ShowDeleteSongConfirmationDialog();
+            if (delete)
+            {
+                Songs.Remove(item);
+                await DatabaseManager.Current.DeleteSong(item.SongId);
+                try
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(item.Path);
+                    await file.DeleteAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
         }
 

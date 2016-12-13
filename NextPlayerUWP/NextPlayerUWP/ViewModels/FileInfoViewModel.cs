@@ -19,7 +19,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            App.ChangeBottomPlayerVisibility(true);
+            App.OnNavigatedToNewView(true);
             fileInfo = new SongData();
             if (parameter != null)
             {

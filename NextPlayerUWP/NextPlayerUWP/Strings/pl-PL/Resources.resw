@@ -864,7 +864,10 @@
   <data name="TBStreams.Text" xml:space="preserve">
     <value>Streams</value>
   </data>
-  <data name="PageHeaderOnline.Content" xml:space="preserve">
+  <data name="Online" xml:space="preserve">
     <value>Online</value>
+  </data>
+  <data name="DoYouWantDeleteThisSong" xml:space="preserve">
+    <value>Czy chcesz usunąć ten plik z biblioteki oraz dysku?</value>
   </data>
 </root>

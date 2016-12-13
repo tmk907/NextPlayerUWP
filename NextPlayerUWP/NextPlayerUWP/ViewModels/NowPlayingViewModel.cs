@@ -413,7 +413,7 @@ namespace NextPlayerUWP.ViewModels
         {
             System.Diagnostics.Debug.WriteLine("NowPlayingVM OnNavigatedToAsync");
 
-            App.ChangeBottomPlayerVisibility(false);
+            App.OnNavigatedToNewView(false);
             CoverUri = SongCoverManager.Instance.GetCurrent();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;

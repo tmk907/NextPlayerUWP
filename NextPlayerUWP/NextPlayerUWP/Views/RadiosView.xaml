@@ -130,8 +130,6 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Pivot">
                         <Grid x:Name="RootElement" 
-                              BorderBrush="Gray"
-                              BorderThickness="1,0,0,0"
                               Background="{TemplateBinding Background}" 
                               HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                               VerticalAlignment="{TemplateBinding VerticalAlignment}">

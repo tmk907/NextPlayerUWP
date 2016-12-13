@@ -44,7 +44,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            App.ChangeBottomPlayerVisibility(true);
+            App.OnNavigatedToNewView(true);
             Playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             type = MusicItem.ParseType((string)parameter);
             values = MusicItem.SplitParameter((string)parameter);

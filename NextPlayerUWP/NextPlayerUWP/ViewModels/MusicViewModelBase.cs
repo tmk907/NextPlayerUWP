@@ -166,7 +166,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            App.ChangeBottomPlayerVisibility(true);
+            App.OnNavigatedToNewView(true);
             isBack = false;
             firstVisibleItemIndex = 0;
             selectedItemIndex = 0;

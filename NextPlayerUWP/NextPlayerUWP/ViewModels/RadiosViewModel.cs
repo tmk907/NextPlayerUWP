@@ -39,7 +39,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            App.ChangeBottomPlayerVisibility(true);
+            App.OnNavigatedToNewView(true);
             Updating = true;
             if (streams.Count == 0)
             {

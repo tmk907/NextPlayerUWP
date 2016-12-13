@@ -30,6 +30,14 @@ namespace NextPlayerUWP.Common
             await dialog.ShowAsync();
         }
 
+        public async Task<bool> ShowDeleteSongConfirmationDialog()
+        {
+            string content = translator.GetTranslation(TranslationHelper.DoYouWantDeleteThisSong);
+            var dialog = PrepareMessageDialog(content);
+            var command = await dialog.ShowAsync();
+            return (int)command.Id == 0;
+        }
+
         public async Task<bool> ShowIncludeAllSubFoldersQuestion()
         {
             string content = translator.GetTranslation(TranslationHelper.DoYouWantToIncludeSubFolders);

@@ -37,7 +37,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 CoverUri = song.AlbumArtUri;
             }
-            
+
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
             NowPlayingPlaylistManager.Current.SetDispatcher(WindowWrapper.Current().Dispatcher);
@@ -137,6 +137,23 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref coverUri, value); }
         }
 
+        private string showHideSliderButtonContent = "\uE972";
+        public string ShowHideSliderButtonContent
+        {
+            get { return showHideSliderButtonContent; }
+            set { Set(ref showHideSliderButtonContent, value); }
+        }
+
+        private bool isSliderVisible = false;
+        public bool IsSliderVisible
+        {
+            get { return isSliderVisible; }
+            set
+            {
+                Set(ref isSliderVisible, value);
+                ShowHideSliderButtonContent = value ? "\uE972" : "\uE971";
+            }
+        }
         #endregion
 
         #region Commands
@@ -266,6 +283,11 @@ namespace NextPlayerUWP.ViewModels
             await Task.CompletedTask;
         }
 
+        public void ShowHideSlider()
+        {
+            IsSliderVisible = !IsSliderVisible;
+        }
+
         #region Slider Timer
 
         public bool sliderpressed = false;
@@ -326,9 +348,6 @@ namespace NextPlayerUWP.ViewModels
 
             return hr;
         }
-
-
-
         #endregion
 
     }

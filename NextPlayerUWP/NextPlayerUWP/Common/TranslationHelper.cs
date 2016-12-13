@@ -22,6 +22,7 @@ namespace NextPlayerUWP.Common
         public const string IncludeSubfolders = "IncludeSubfolders";
         public const string DontIncludeSubFolders = "DontIncludeSubFolders";
         public const string DoYouWantExcludeFolderFromLibrary = "DoYouWantExcludeFolderFromLibrary";
+        public const string DoYouWantDeleteThisSong = "DoYouWantDeleteThisSong";
 
         private ResourceLoader loader;
 

@@ -398,62 +398,6 @@
                     Style="{StaticResource SongItemStyleRight}"/>
             </Grid>
         </DataTemplate>
-        <Style x:Key="SongDescriptionBigStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
-            <Setter Property="FontSize" Value="27"/>
-            <Setter Property="FontWeight" Value="Light"/>
-            <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="SongDescriptionMediumStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="FontWeight" Value="Light"/>
-            <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="SongDescriptionSmallStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleTextBlockStyle}">
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="TransparentButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{ThemeResource UserAccentColor}"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
-            <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
-            <Setter Property="UseSystemFocusVisuals" Value="True"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal">
-                                        <Storyboard>
-                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="FontIconStyle" TargetType="FontIcon">
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="24"/>
-        </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -466,6 +410,7 @@
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!--<Setter Target="NowPlayingPlaylistListView.Visibility" Value="Visible"/>-->
                         <Setter Target="NowPlayingPlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobileWide}"/>
                         <Setter Target="AppBarButtonSave.Visibility" Value="Visible"/>
                         <Setter Target="AppBarButtonSort.Visibility" Value="Visible"/>
@@ -479,6 +424,7 @@
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!--<Setter Target="NowPlayingPlaylistListView.Visibility" Value="Visible"/>-->
                         <Setter Target="NowPlayingPlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobile}"/>
                         <Setter Target="AppBarButtonSave.Visibility" Value="Visible"/>
                         <Setter Target="AppBarButtonSort.Visibility" Value="Visible"/>
@@ -489,8 +435,7 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="NowPlayingPlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
-                        <Setter Target="SongInfoGrid.Visibility" Value="Visible"/>
+                        <!--<Setter Target="SongInfoGrid.Visibility" Value="Visible"/>-->
                         <Setter Target="AppBarButtonSave.Visibility" Value="Collapsed"/>
                         <Setter Target="AppBarButtonSort.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
@@ -500,8 +445,7 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="NowPlayingPlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
-                        <Setter Target="SongInfoGrid.Visibility" Value="Visible"/>
+                        <!--<Setter Target="SongInfoGrid.Visibility" Value="Visible"/>-->
                         <Setter Target="AppBarButtonSave.Visibility" Value="Collapsed"/>
                         <Setter Target="AppBarButtonSort.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
@@ -565,117 +509,17 @@
                 Click="{x:Bind ViewModel.SavePlaylist}"/>
         </controls:PageHeader>
         <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="0"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" x:Name="SongInfoGrid" x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Rectangle Grid.Column="0" 
-                           Margin="12,12,12,0" 
-                           Width="220" Height="220" 
-                           Fill="{StaticResource UserAccentBrush}"/>
-                <Image Grid.Column="0"
-                       Margin="12,12,12,0">
-                    <Image.Source>
-                        <BitmapImage UriSource="{Binding CoverUri}"
-                                     DecodePixelType="Logical"
-                                     DecodePixelHeight="220" DecodePixelWidth="220"/>
-                    </Image.Source>
-                </Image>
-                <Grid Grid.Column="1" Grid.Row="0" Margin="12,12,12,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"
-                               Text="{Binding CurrentSong.Title}" 
-                               Style="{StaticResource SongDescriptionBigStyle}"/>
-                    <TextBlock Grid.Row="1"
-                               Text="{Binding CurrentSong.Artist}"
-                               Style="{StaticResource SongDescriptionMediumStyle}"/>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0"
-                                   Text="{Binding CurrentSong.Album}"
-                                   Style="{StaticResource SongDescriptionSmallStyle}"/>
-                        <TextBlock Grid.Column="1"
-                                   Text="{Binding CurrentSong.Year, Converter={StaticResource YearConverter}}"
-                                   Margin="12,0,0,0"
-                                   Style="{StaticResource SongDescriptionSmallStyle}"/>
-                    </Grid>
-                    <Grid Grid.Row="3">
-                        <StackPanel Orientation="Horizontal" Margin="-18,0,0,0">
-                            <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Width="18"
-                                    Height="36"
-                                    Tag="0"/>
-                            <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="1"
-                                    Width="36"
-                                    Height="36">
-                                <Button.Content>
-                                    <FontIcon Glyph="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="2"
-                                    Width="40"
-                                    Height="40">
-                                <Button.Content>
-                                    <FontIcon Glyph="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="3"
-                                    Width="40"
-                                    Height="40">
-                                <Button.Content>
-                                    <FontIcon Glyph="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="4"
-                                    Width="40"
-                                    Height="40">
-                                <Button.Content>
-                                    <FontIcon Glyph="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="5"
-                                    Width="40"
-                                    Height="40">
-                                <Button.Content>
-                                    <FontIcon Glyph="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                </Button.Content>
-                            </Button>
-                            
-                        </StackPanel>
-                    </Grid>
-                </Grid>
-            </Grid>
+            </Grid.RowDefinitions>-->
+            <!--<UserControl Grid.Row="0">
+                <local:NowPlayingDesktopView 
+                    x:Name="SongInfoGrid" 
+                  x:DeferLoadStrategy="Lazy" 
+                  Visibility="Collapsed"/>
+            </UserControl>-->
             <mycontrols:AlternatingRowListView 
-                Grid.Row="1"
                 x:Name="NowPlayingPlaylistListView"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                 OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
