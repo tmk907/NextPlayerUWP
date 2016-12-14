@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Windows.Storage.Search;
 using Windows.Security.Cryptography.Core;
 using Windows.Security.Cryptography;
+using Windows.UI;
 
 namespace NextPlayerUWPDataLayer.Services
 {

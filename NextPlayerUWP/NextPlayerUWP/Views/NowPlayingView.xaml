@@ -498,38 +498,20 @@
                     </Grid>
                 </ContentDialog.Content>
             </ContentDialog>
-            <local:SizeNotifyPanel x:Name="SizePanel" Grid.Row="0" 
-                                   Margin="12,8,12,0">
-                <Grid>
-                    <Rectangle Grid.Column="0" Grid.Row="0"
-                               x:Name="CoverBackgroundRectangle"
-                               VerticalAlignment="Bottom"
-                               HorizontalAlignment="Center"
-                               Width="{Binding Size.Height, ElementName=SizePanel}" 
-                               Height="{Binding Size.Height, ElementName=SizePanel}" 
-                               Fill="{StaticResource UserAccentBrush}"/>
-                    <Image Grid.Column="0" Grid.Row="0"
-                        x:Name="CoverImage" 
-                        VerticalAlignment="Bottom" 
-                        HorizontalAlignment="Center"
-                        PointerPressed="{x:Bind ViewModel.Image_Pressed}"
-                        PointerReleased="{x:Bind ViewModel.Image_Released}"
-                        PointerExited="{x:Bind ViewModel.Image_Exited}"
-                        DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}">
-                        <Image.Source>
-                            <BitmapImage DecodePixelHeight="{Binding Size.Height, ElementName=SizePanel}" 
-                                        DecodePixelWidth="{Binding Size.Height, ElementName=SizePanel}"
-                                        DecodePixelType="Logical"
-                                        UriSource="{Binding CoverUri}"/>
-                        </Image.Source>
-                    </Image>
-                    <!--<Image Grid.Column="0" Grid.Row="0"
-                        x:Name="CoverImage2" 
-                        VerticalAlignment="Bottom" 
-                        HorizontalAlignment="Center"/>-->
-
-                </Grid>
-            </local:SizeNotifyPanel>
+            <Grid Grid.Row="0"
+                Margin="12,8,12,0"
+                DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}"
+                Background="Transparent"
+                PointerPressed="{x:Bind ViewModel.Image_Pressed}"
+                PointerReleased="{x:Bind ViewModel.Image_Released}"
+                PointerExited="{x:Bind ViewModel.Image_Exited}">
+                <mycontrols:CompositionImage
+                    x:Name="PrimaryImage"
+                    Grid.Column="0" Grid.Row="0"
+                    VerticalAlignment="Bottom" 
+                    HorizontalAlignment="Center"
+                    Stretch="Uniform"/>
+            </Grid>
             <Grid Grid.Row="1" >
                 <FlipView 
                     Background="Transparent" 

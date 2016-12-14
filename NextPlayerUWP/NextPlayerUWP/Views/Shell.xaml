@@ -606,7 +606,7 @@
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
                         <Setter Target="ShowHideGrid.Visibility" Value="Visible"/>
                         <Setter Target="SongInfoColumn.Width" Value="0"/>
-                        <Setter Target="BottomSlider.Visibility" Value="Visible"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
                         <Setter Target="ShuffleButton.Visibility" Value="Visible"/>
                         <Setter Target="RepeatButton.Visibility" Value="Visible"/>
                     </VisualState.Setters>

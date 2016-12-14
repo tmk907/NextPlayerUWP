@@ -24,6 +24,8 @@ using Microsoft.Graphics.Canvas;
 using Windows.Graphics.DirectX;
 using Microsoft.Graphics.Canvas.UI.Composition;
 using Windows.UI.ViewManagement;
+using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWP.Common;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -48,12 +50,12 @@ namespace NextPlayerUWP.Views
         NowPlayingDesktopViewModel ViewModel;
         public NowPlayingDesktopView()
         {
-            System.Diagnostics.Debug.WriteLine("np1");
             this.InitializeComponent();
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(340, 500));
             System.Diagnostics.Debug.WriteLine("np1a");
             NavigationCacheMode = NavigationCacheMode.Required;
             ViewModel = (NowPlayingDesktopViewModel)DataContext;
+            first = true;
             this.Loaded += NowPlayingDesktopView_Loaded;
             this.Unloaded += NowPlayingDesktopView_Unloaded;
             _compositor = ElementCompositionPreview.GetElementVisual(ContentGrid).Compositor;
@@ -96,7 +98,7 @@ namespace NextPlayerUWP.Views
             {
                 if (first)
                 {
-                    imageUri = ViewModel.CoverUri;
+                    imageUri = GetAlbumUri();
                     PrimaryImage.Source = imageUri;
                     BackgroundImage.Source = imageUri;
                     first = false;
@@ -107,12 +109,12 @@ namespace NextPlayerUWP.Views
 
         }
 
-        bool first = true;
+        bool first;
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ViewModel.CoverUri))
             {
-                imageUri = ViewModel.CoverUri;
+                imageUri = GetAlbumUri();
                 if (first)
                 {
                     PrimaryImage.Source = imageUri;
@@ -123,6 +125,19 @@ namespace NextPlayerUWP.Views
                 {
                     StartAnimations();
                 }
+            }
+        }
+
+        private Uri GetAlbumUri()
+        {
+            if (ViewModel.CoverUri == new Uri(AppConstants.SongCoverBig))
+            {
+                ColorsHelper ch = new ColorsHelper();
+                return new Uri(ch.GetAlbumCoverAssetWithCurrentAccentColor());
+            }
+            else
+            {
+                return ViewModel.CoverUri;
             }
         }
 
@@ -184,6 +199,7 @@ namespace NextPlayerUWP.Views
 
         private void StartAnimations()
         {
+            if (_previousSurfaceBrushPrimary == null || _previousSurfaceBrushBackground == null) return;
             if (_crossFadeBatchBackground == null)
             {
                 // Save the previous image for a cross-fade
@@ -344,7 +360,7 @@ namespace NextPlayerUWP.Views
             fadeInAnimation.InsertKeyFrame(0, 0);
             fadeInAnimation.InsertKeyFrame(1, 1);
             fadeInAnimation.Duration = TimeSpan.FromMilliseconds(1000);
-            BackgroundImage.SpriteVisual.StartAnimation("Opacity", fadeInAnimation);
+            PrimaryImage.SpriteVisual.StartAnimation("Opacity", fadeInAnimation);
 
             CompositionDrawingSurface surface = (CompositionDrawingSurface)PrimaryImage.SurfaceBrush.Surface;
             PrimaryImage.SurfaceBrush.CenterPoint = new Vector2((float)surface.Size.Width, (float)surface.Size.Height) * .5f;

@@ -98,9 +98,6 @@
                 <RowDefinition Height="13*"/>
                 <RowDefinition Height="8*"/>
             </Grid.RowDefinitions>
-            <!--<Rectangle Grid.Row="0"
-                Grid.RowSpan="2"
-                Fill="{StaticResource UserAccentBrush}"/>-->
             <mycontrols:CompositionImage
                 x:Name="BackgroundImage"
                 Grid.Row="0"
@@ -113,12 +110,6 @@
                 x:Name="GlassHost"
                 Grid.Row="0"
                 Grid.RowSpan="2"/>
-            <!--<Rectangle Grid.Row="0"
-                x:Name="RectanglePrimaryImage"
-                Margin="8,4,8,0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Fill="{StaticResource UserAccentBrush}"/>-->
             <mycontrols:CompositionImage
                 x:Name="PrimaryImage"
                 Grid.Row="0"

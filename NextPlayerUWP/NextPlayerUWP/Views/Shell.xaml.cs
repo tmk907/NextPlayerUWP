@@ -42,8 +42,15 @@ namespace NextPlayerUWP.Views
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
             ReviewReminder();
+            test();
         }
 
+        public async void test()
+        {
+            ColorsHelper ch = new ColorsHelper();
+            string name = ch.GetAlbumCoverAssetWithCurrentAccentColor();
+            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri(name));
+        } 
         public Shell(INavigationService navigationService) : this()
         {
             SetNavigationService(navigationService);

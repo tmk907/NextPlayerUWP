@@ -161,6 +161,7 @@
     <Compile Include="Controls\CompositionImage.cs" />
     <Compile Include="Controls\ConnectedTransition.cs" />
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
+    <Compile Include="Controls\SizeNotifyPanel.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
       <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
     </Compile>
@@ -326,6 +327,54 @@
     <None Include="NextPlayerUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Albums\Colors\FF0063B1-min.png" />
+    <Content Include="Assets\Albums\Colors\FF0078D7-min.png" />
+    <Content Include="Assets\Albums\Colors\FF0099BC-min.png" />
+    <Content Include="Assets\Albums\Colors\FF00B294-min.png" />
+    <Content Include="Assets\Albums\Colors\FF00B7C3-min.png" />
+    <Content Include="Assets\Albums\Colors\FF00CC6A-min.png" />
+    <Content Include="Assets\Albums\Colors\FF018574-min.png" />
+    <Content Include="Assets\Albums\Colors\FF038387-min.png" />
+    <Content Include="Assets\Albums\Colors\FF107C10-min.png" />
+    <Content Include="Assets\Albums\Colors\FF10893E-min.png" />
+    <Content Include="Assets\Albums\Colors\FF2D7D9A-min.png" />
+    <Content Include="Assets\Albums\Colors\FF486860-min.png" />
+    <Content Include="Assets\Albums\Colors\FF498205-min.png" />
+    <Content Include="Assets\Albums\Colors\FF4A5459-min.png" />
+    <Content Include="Assets\Albums\Colors\FF4C4A48-min.png" />
+    <Content Include="Assets\Albums\Colors\FF515C6B-min.png" />
+    <Content Include="Assets\Albums\Colors\FF525E54-min.png" />
+    <Content Include="Assets\Albums\Colors\FF567C73-min.png" />
+    <Content Include="Assets\Albums\Colors\FF5D5A58-min.png" />
+    <Content Include="Assets\Albums\Colors\FF647C64-min.png" />
+    <Content Include="Assets\Albums\Colors\FF68768A-min.png" />
+    <Content Include="Assets\Albums\Colors\FF69797E-min.png" />
+    <Content Include="Assets\Albums\Colors\FF6B69D6-min.png" />
+    <Content Include="Assets\Albums\Colors\FF744DA9-min.png" />
+    <Content Include="Assets\Albums\Colors\FF767676-min.png" />
+    <Content Include="Assets\Albums\Colors\FF7A7574-min.png" />
+    <Content Include="Assets\Albums\Colors\FF7E735F-min.png" />
+    <Content Include="Assets\Albums\Colors\FF847545-min.png" />
+    <Content Include="Assets\Albums\Colors\FF8764B8-min.png" />
+    <Content Include="Assets\Albums\Colors\FF881798-min.png" />
+    <Content Include="Assets\Albums\Colors\FF8E8CD8-min.png" />
+    <Content Include="Assets\Albums\Colors\FF9A0089-min.png" />
+    <Content Include="Assets\Albums\Colors\FFB146C2-min.png" />
+    <Content Include="Assets\Albums\Colors\FFBF0077-min.png" />
+    <Content Include="Assets\Albums\Colors\FFC239B3-min.png" />
+    <Content Include="Assets\Albums\Colors\FFC30052-min.png" />
+    <Content Include="Assets\Albums\Colors\FFCA5010-min.png" />
+    <Content Include="Assets\Albums\Colors\FFD13438-min.png" />
+    <Content Include="Assets\Albums\Colors\FFDA3B01-min.png" />
+    <Content Include="Assets\Albums\Colors\FFE3008C-min.png" />
+    <Content Include="Assets\Albums\Colors\FFE74856-min.png" />
+    <Content Include="Assets\Albums\Colors\FFE81123-min.png" />
+    <Content Include="Assets\Albums\Colors\FFEA005E-min.png" />
+    <Content Include="Assets\Albums\Colors\FFEF6950-min.png" />
+    <Content Include="Assets\Albums\Colors\FFF7630C-min.png" />
+    <Content Include="Assets\Albums\Colors\FFFF4343-min.png" />
+    <Content Include="Assets\Albums\Colors\FFFF8C00-min.png" />
+    <Content Include="Assets\Albums\Colors\FFFFB900-min.png" />
     <Content Include="Assets\Sounds\Empty.mp3" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.png" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-16.png" />
