@@ -1156,6 +1156,25 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.InsertAllAsync(list);
         }
 
+        public async Task AddToPlaylist(int playlistId, IEnumerable<int> songIds)
+        {
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            var l = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToListAsync();
+            int lastPosition = l.Count;
+            foreach (var id in songIds)
+            {
+                lastPosition++;
+                var newEntry = new PlainPlaylistEntryTable()
+                {
+                    PlaylistId = playlistId,
+                    SongId = id,
+                    Place = lastPosition,
+                };
+                list.Add(newEntry);
+            }
+            await connectionAsync.InsertAllAsync(list);
+        }
+
         public async Task AddNowPlayingToPlaylist(int playlistId)
         {
             var songs = await connectionAsync.Table<NowPlayingTable>().ToListAsync();

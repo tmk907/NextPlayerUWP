@@ -406,6 +406,12 @@ namespace NextPlayerUWPDataLayer.Services
             await DatabaseManager.Current.ChangeToNotAvaialble(libraryDirectories);
             await DatabaseManager.Current.UpdateTables();
 
+            var updated = ApplicationSettingsHelper.ReadSettingsValue("ImportPlaylistsAfterAppUpdate9");
+            if (updated == null)
+            {
+                await ImportPlaylistsAfterAppUpdate9();
+            }
+
             await UpdatePlaylists(playlistFiles);
             Debug.WriteLine("New songs: {0} updated songs: {1}", songsAdded, modifiedSongs);
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
@@ -814,6 +820,24 @@ namespace NextPlayerUWPDataLayer.Services
         {
             await DatabaseManager.Current.UpdateTables();
 
+        }
+
+        private async Task ImportPlaylistsAfterAppUpdate9()
+        {           
+            PlaylistHelper ph = new PlaylistHelper();
+            var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+            var folder = await ph.GetFolderWithAppPlaylistsAsync();
+            queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string> { ".m3u" });
+            queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
+            var query = folder.CreateFileQueryWithOptions(queryOptions);
+            var files = await query.GetFilesAsync();
+            foreach(var file in files)
+            {
+                ImportedPlaylist newPlaylist = await ImportPlaylist(file, allSongs);
+                int id = DatabaseManager.Current.InsertPlainPlaylist(newPlaylist.Name);
+                await DatabaseManager.Current.AddToPlaylist(id, newPlaylist.SongIds);
+            }
+            ApplicationSettingsHelper.SaveSettingsValue("ImportPlaylistsAfterAppUpdate9", true);
         }
 
         public static async Task UpdateRating(int songId, int rating)
