@@ -572,11 +572,11 @@
                         Content="Feedback"
                         Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                         Click="{x:Bind ViewModel.LeaveFeedback}"/>
-                <!--<Button x:Uid="ButtonEmail"
-                        Content="Email"
+                <Button x:Uid="ButtonEmail"
+                        Content="Support"
                         MinWidth="128"
                         Margin="0,4,0,8"
-                        Click="{x:Bind ViewModel.ContactWithSupport}"/>-->
+                        Click="{x:Bind ViewModel.ContactWithSupport}"/>
                 <Button x:Uid="ButtonLicenses"
                         Content="Licenses"
                         Margin="0,4,0,8"

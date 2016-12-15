@@ -46,25 +46,28 @@ namespace NextPlayerUWP.ViewModels
             Dispatcher.Dispatch(() => 
             {
                 var alb = Albums.FirstOrDefault(a => a.AlbumId == albumId);
-                alb.ImagePath = albumArtPath;
-                alb.ImageUri = new Uri(albumArtPath);
-                alb.IsImageSet = true;
-                bool stop = false;
-                foreach (var group in GroupedAlbums)
+                if (alb != null)
                 {
-                    foreach (AlbumItem album in group)
+                    alb.ImagePath = albumArtPath;
+                    alb.ImageUri = new Uri(albumArtPath);
+                    alb.IsImageSet = true;
+                    bool stop = false;
+                    foreach (var group in GroupedAlbums)
                     {
-                        if (album.AlbumId == albumId)
+                        foreach (AlbumItem album in group)
                         {
-                            album.ImagePath = albumArtPath;
-                            album.ImageUri = new Uri(albumArtPath);
-                            album.IsImageSet = true;
-                            album.Album = album.Album;
-                            stop = true;
-                            break;
+                            if (album.AlbumId == albumId)
+                            {
+                                album.ImagePath = albumArtPath;
+                                album.ImageUri = new Uri(albumArtPath);
+                                album.IsImageSet = true;
+                                album.Album = album.Album;
+                                stop = true;
+                                break;
+                            }
                         }
+                        if (stop) break;
                     }
-                    if (stop) break;
                 }
             });
         }
