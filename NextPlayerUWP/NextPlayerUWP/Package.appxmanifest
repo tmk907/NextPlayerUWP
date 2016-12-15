@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap uap3 mp">
-  <Identity Name="60490polApki.Next-Player" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="1.12.0.0" />
+  <Identity Name="60490polApki.Next-Player" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="1.14.0.0" />
   <mp:PhoneIdentity PhoneProductId="5709a693-517f-4619-9942-4d8a3e15c758" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Next-Player</DisplayName>

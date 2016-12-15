@@ -16,6 +16,7 @@ using Windows.Storage.Search;
 using Windows.Security.Cryptography.Core;
 using Windows.Security.Cryptography;
 using Windows.UI;
+using NextPlayerUWPDataLayer.Helpers;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -237,7 +238,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public static async Task SaveAlbumArtFromSong(SongData song)
         {
-            var cover = await GetAlbumArtSoftwareBitmap(song.Path);
+            var cover = await GetAlbumArtSoftwareBitmap(song.Path, true);
 
             if (cover == null)
             {
@@ -268,7 +269,16 @@ namespace NextPlayerUWPDataLayer.Services
             try 
             {
                 WriteableBitmap bitmap = new WriteableBitmap(1, 1);
-                StorageFile songFile = await StorageFile.GetFileFromPathAsync(path);
+                StorageFile songFile;
+                try
+                {
+                    songFile = await StorageFile.GetFileFromPathAsync(path);
+                }
+                catch (Exception ex)
+                {
+                    songFile = await FutureAccessHelper.GetFileFromPathAsync(path);
+                    if (songFile == null) throw;
+                }
                 bool set = false;
                 // <5ms
                 var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
@@ -367,7 +377,16 @@ namespace NextPlayerUWPDataLayer.Services
             try
             {
                 SoftwareBitmap softwareBitmap = null;
-                StorageFile songFile = await StorageFile.GetFileFromPathAsync(path);
+                StorageFile songFile;
+                try
+                {
+                    songFile = await StorageFile.GetFileFromPathAsync(path);
+                }
+                catch (Exception ex)
+                {
+                    songFile = await FutureAccessHelper.GetFileFromPathAsync(path);
+                    if (songFile == null) throw;
+                }
                 bool set = false;
                 // <5ms
                 var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);

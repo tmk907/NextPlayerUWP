@@ -120,7 +120,7 @@ namespace NextPlayerUWP.Common
             try
             {
                 Stream fileStream = await file.OpenStreamForReadAsync();
-                TagLib.File tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+                TagLib.File tagFile = TagLib.File.Create(new MyFileAbstraction(file.Name, fileStream, fileStream));
                 int picturesCount = tagFile.Tag.Pictures.Length;
                 fileStream.Dispose();
                 if (picturesCount > 0)

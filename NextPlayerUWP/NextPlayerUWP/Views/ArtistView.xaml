@@ -22,6 +22,8 @@
     <Page.Resources>
         <CollectionViewSource x:Name="AlbumsCVS" Source="{Binding Albums}" IsSourceGrouped="True"/>
         <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 

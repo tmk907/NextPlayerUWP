@@ -23,7 +23,7 @@ namespace NextPlayerUWP.Converters
                 }
                 if (command == "addtoplaylist")
                 {
-                    if (type == MusicSource.RadioJamendo)
+                    if (type == MusicSource.RadioJamendo || type == MusicSource.Unknown)
                     {
                         return Visibility.Collapsed;
                     }
@@ -34,7 +34,14 @@ namespace NextPlayerUWP.Converters
                 }
                 else if (command == "gotoartist" || command == "gotoalbum" || command == "showdetails" || command == "edittags")
                 {
-                    return Visibility.Collapsed;
+                    if (MusicSource.OnlineFile == type)
+                    {
+                        return Visibility.Visible;
+                    }
+                    else
+                    {
+                        return Visibility.Collapsed;
+                    }
                 }
                 return Visibility.Visible;
             }

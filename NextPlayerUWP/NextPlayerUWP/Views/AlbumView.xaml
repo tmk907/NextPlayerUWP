@@ -21,6 +21,8 @@
     </Page.Transitions>
     <Page.Resources>
         <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
