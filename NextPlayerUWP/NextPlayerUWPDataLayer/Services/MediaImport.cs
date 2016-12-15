@@ -764,7 +764,7 @@ namespace NextPlayerUWPDataLayer.Services
                     await FutureAccessHelper.AddToFutureAccessListAndSaveTokenAsync(file);
                     var songData = await CreateSongFromFile(file);
                     await ImagesManager.SaveAlbumArtFromSong(songData);
-                    songData.IsAvailable = 1;
+                    songData.IsAvailable = 0;
                     int id = await DatabaseManager.Current.InsertSongAsync(songData);
                     song = await DatabaseManager.Current.GetSongItemAsync(id);
                 }
