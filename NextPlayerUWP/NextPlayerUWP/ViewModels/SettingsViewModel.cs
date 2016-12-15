@@ -70,41 +70,6 @@ namespace NextPlayerUWP.ViewModels
 
         private bool initialization = false;
 
-        private string updateProgressText = "";
-        public string UpdateProgressText
-        {
-            get { return updateProgressText; }
-            set { Set(ref updateProgressText, value); }
-        }
-
-        private bool updateProgressTextVisibility = false;
-        public bool UpdateProgressTextVisibility
-        {
-            get { return updateProgressTextVisibility; }
-            set { Set(ref updateProgressTextVisibility, value); }
-        }
-
-        private bool isUpdating = false;
-        public bool IsUpdating
-        {
-            get { return isUpdating; }
-            set { Set(ref isUpdating, value); }
-        }
-
-        private ObservableCollection<MusicFolder> musicLibraryFolders = new ObservableCollection<MusicFolder>();
-        public ObservableCollection<MusicFolder> MusicLibraryFolders
-        {
-            get { return musicLibraryFolders; }
-            set { Set(ref musicLibraryFolders, value); }
-        }
-
-        private ObservableCollection<SdCardFolder> sdCardFolders = new ObservableCollection<SdCardFolder>();
-        public ObservableCollection<SdCardFolder> SdCardFolders
-        {
-            get { return sdCardFolders; }
-            set { Set(ref sdCardFolders, value); }
-        }
-
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             initialization = true;
@@ -181,6 +146,7 @@ namespace NextPlayerUWP.ViewModels
             if (!isUpdating)
             {
                 UpdateProgressText = "";
+                ScannedFolder = "";
                 UpdateProgressTextVisibility = false;
             }
             if (musicLibraryFolders.Count == 0)
@@ -230,19 +196,64 @@ namespace NextPlayerUWP.ViewModels
 
         #region Library
 
+        private string updateProgressText = "";
+        public string UpdateProgressText
+        {
+            get { return updateProgressText; }
+            set { Set(ref updateProgressText, value); }
+        }
+
+        private string scannedFolder = "";
+        public string ScannedFolder
+        {
+            get { return scannedFolder; }
+            set { Set(ref scannedFolder, value); }
+        }
+
+        private bool updateProgressTextVisibility = false;
+        public bool UpdateProgressTextVisibility
+        {
+            get { return updateProgressTextVisibility; }
+            set { Set(ref updateProgressTextVisibility, value); }
+        }
+
+        private bool isUpdating = false;
+        public bool IsUpdating
+        {
+            get { return isUpdating; }
+            set { Set(ref isUpdating, value); }
+        }
+
+        private ObservableCollection<MusicFolder> musicLibraryFolders = new ObservableCollection<MusicFolder>();
+        public ObservableCollection<MusicFolder> MusicLibraryFolders
+        {
+            get { return musicLibraryFolders; }
+            set { Set(ref musicLibraryFolders, value); }
+        }
+
+        private ObservableCollection<SdCardFolder> sdCardFolders = new ObservableCollection<SdCardFolder>();
+        public ObservableCollection<SdCardFolder> SdCardFolders
+        {
+            get { return sdCardFolders; }
+            set { Set(ref sdCardFolders, value); }
+        }
+
         public async void UpdateLibrary()
         {
             MediaImport m = new MediaImport(App.FileFormatsHelper);
             UpdateProgressTextVisibility = true;
-            Progress<int> progress = new Progress<int>(
-                percent =>
+            Progress<string> progress = new Progress<string>(
+                data =>
                 {
-                    UpdateProgressText = percent.ToString();
+                    var array = data.Split('|');
+                    ScannedFolder = array[0];
+                    UpdateProgressText = array[1].ToString();
                 }
             );
             IsUpdating = true;
             await Task.Run(() => m.UpdateDatabase(progress));
             IsUpdating = false;
+            ScannedFolder = "";
             TelemetryAdapter.TrackEvent("Library updated");
         }
 

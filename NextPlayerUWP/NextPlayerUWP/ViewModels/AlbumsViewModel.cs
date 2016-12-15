@@ -59,6 +59,7 @@ namespace NextPlayerUWP.ViewModels
                             album.ImagePath = albumArtPath;
                             album.ImageUri = new Uri(albumArtPath);
                             album.IsImageSet = true;
+                            album.Album = album.Album;
                             stop = true;
                             break;
                         }
@@ -188,8 +189,9 @@ namespace NextPlayerUWP.ViewModels
                 string query = sender.Text.ToLower();
                 var m1 = albums.Where(s => s.Album.ToLower().StartsWith(query));
                 var m2 = albums.Where(s => s.Album.ToLower().Contains(query));
-                //var m3 = albums.Where(a => a.ArtistParam.ToLower().Contains(query));
-                var result = m1.Concat(m2).Distinct();
+                var m3 = albums.Where(a => a.AlbumArtist.ToLower().StartsWith(query));
+                var m4 = albums.Where(a => a.AlbumArtist.ToLower().Contains(query));
+                var result = m1.Concat(m2).Concat(m3).Concat(m4).Distinct();
                 sender.ItemsSource = result.ToList();
             }
         }

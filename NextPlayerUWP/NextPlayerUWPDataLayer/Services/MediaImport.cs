@@ -50,9 +50,10 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         private FileFormatsHelper fileFormatsHelper;
+        string currentScanningFolderPath;
         private int songsAdded;
         private int modifiedSongs;
-        private IProgress<int> progress;
+        private IProgress<string> progress;
         private List<ImportedPlaylist> oldImportedPlaylists;
         private List<ImportedPlaylist> newImportedPlaylists;
         private List<ImportedPlaylist> updatedPlaylists;
@@ -211,6 +212,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private async Task AddFilesFromFolder(StorageFolder folder, bool includeSubFolders = true)
         {
+            progress.Report(folder.Path + "|" + songsAdded);
             var query = folder.CreateFileQueryWithOptions(queryOptions);
             var files = await query.GetFilesAsync();
 
@@ -219,7 +221,8 @@ namespace NextPlayerUWPDataLayer.Services
             List<int> availableChange = new List<int>();
             List<int> availableNotChange = new List<int>();
             libraryDirectories.Add(folder.Path);
-            foreach(var file in files)
+
+            foreach (var file in files)
             {
                 string type = file.FileType.ToLower();
                 if (fileFormatsHelper.IsPlaylistSupportedType(type))
@@ -270,7 +273,7 @@ namespace NextPlayerUWPDataLayer.Services
             await DatabaseManager.Current.UpdateFolderAsync(folder.Path, oldSongs, newSongs, toNotAvailable, toUpdate);
 
             songsAdded += newSongs.Count;// + oldSongs.Where(s => s.IsAvailable == 1).Count();
-            progress.Report(songsAdded);
+            progress.Report(folder.Path + "|" + songsAdded);
             if (includeSubFolders)
             {
                 var folders = await folder.GetFoldersAsync();
@@ -314,6 +317,7 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task ScanWholeMusicLibrary()
         {
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            
             foreach (var folder in library.Folders)
             {
                 await AddFilesFromFolder(folder);
@@ -371,7 +375,7 @@ namespace NextPlayerUWPDataLayer.Services
             await DatabaseManager.Current.UpdateImportedPlaylists(toDelete, newImportedPlaylists, updatedPlaylists);
         }
 
-        public async Task UpdateDatabase(IProgress<int> p)
+        public async Task UpdateDatabase(IProgress<string> p)
         {
             songsAdded = 0;
             modifiedSongs = 0;
@@ -388,8 +392,7 @@ namespace NextPlayerUWPDataLayer.Services
 
             Stopwatch s = new Stopwatch();
             s.Start();
-            string deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-            if (deviceFamily == "Windows.Mobile")
+            if (DeviceFamilyHelper.IsMobile())
             {
                 await MobileUpdate();
             }

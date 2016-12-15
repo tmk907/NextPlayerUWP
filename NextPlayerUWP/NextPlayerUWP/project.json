@@ -10,7 +10,6 @@
     "Microsoft.Toolkit.Uwp.UI.Animations": "1.2.0",
     "Microsoft.Toolkit.Uwp.UI.Controls": "1.2.0",
     "MvvmLight": "5.3.0",
-    "Robmikh.CompositionSurfaceFactory": "0.7.0-alpha",
     "WindowsStateTriggers": "1.1.0"
   },
   "frameworks": {

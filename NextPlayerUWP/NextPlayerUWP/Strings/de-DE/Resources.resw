@@ -379,7 +379,7 @@
     <value>Nach dem Ziehen von Liedern in die Aktuelle-Wiedergabe-Liste</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>Music folders</value>
+    <value>Choose folders containing music files</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -778,7 +778,7 @@
     <value>Swipe right:</value>
   </data>
   <data name="RBAddToPlaylist.Content" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Zu Wiedergabeliste hinzufügen</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Default</value>
@@ -869,5 +869,8 @@
   </data>
   <data name="DoYouWantDeleteThisSong" xml:space="preserve">
     <value>Do you want to delete this song from library and disk?</value>
+  </data>
+  <data name="PageHeaderNowPlaying.Content" xml:space="preserve">
+    <value>Nun laufend</value>
   </data>
 </root>

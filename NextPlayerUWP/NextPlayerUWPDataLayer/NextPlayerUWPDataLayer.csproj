@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="CloudStorage\CloudAccount.cs" />
     <Compile Include="CloudStorage\CloudAccounts.cs" />
+    <Compile Include="Helpers\DeviceFamilyHelper.cs" />
     <Compile Include="Helpers\TaskCache.cs" />
     <Compile Include="Model\CloudRootFolder.cs" />
     <Compile Include="CloudStorage\CloudStorageServiceFactory.cs" />

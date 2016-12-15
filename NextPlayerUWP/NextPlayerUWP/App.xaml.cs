@@ -396,7 +396,14 @@ namespace NextPlayerUWP
                 var file = fileArgs.Files.First() as StorageFile;
                 await OpenFileAndPlay(file);
 
-                await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
+                if (DeviceFamilyHelper.IsDesktop())
+                {
+                    await NavigationService.NavigateAsync(Pages.NowPlayingDesktop);
+                }
+                else
+                {
+                    await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
+                }
                 if (fileArgs.Files.Count > 1)
                 {
                     await OpenFilesAndAddToNowPlaying(fileArgs.Files.Skip(1));
@@ -808,15 +815,6 @@ namespace NextPlayerUWP
             {
                 await NowPlayingPlaylistManager.Current.Add(list);
             }
-        }
-
-        static string deviceFamily;
-        public static bool IsXbox()
-        {
-            if (deviceFamily == null)
-                deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-
-            return deviceFamily == "Windows.Xbox";
         }
 
         private static List<SongItem> temporaryList = new List<SongItem>();

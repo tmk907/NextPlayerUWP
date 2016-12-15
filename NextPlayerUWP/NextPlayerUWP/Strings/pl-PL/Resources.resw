@@ -379,7 +379,7 @@
     <value>Po przeciągnięciu do listy teraz odtwarzane:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>Music folders</value>
+    <value>Wybierz foldery zawierające pliki muzyczne</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -778,7 +778,7 @@
     <value>Przesuń w prawo</value>
   </data>
   <data name="RBAddToPlaylist.Content" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Dodaj do playlisty</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Domyślne</value>
@@ -869,5 +869,8 @@
   </data>
   <data name="DoYouWantDeleteThisSong" xml:space="preserve">
     <value>Czy chcesz usunąć ten plik z biblioteki oraz dysku?</value>
+  </data>
+  <data name="PageHeaderNowPlaying.Content" xml:space="preserve">
+    <value>Teraz odtwarzane</value>
   </data>
 </root>

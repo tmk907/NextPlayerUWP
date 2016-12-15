@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Robmikh.CompositionSurfaceFactory;
 using Microsoft.Graphics.Canvas.Effects;
 using Windows.Graphics.Effects;
 using Microsoft.Graphics.Canvas;

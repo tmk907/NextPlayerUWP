@@ -361,7 +361,7 @@
     <value>بعد سحب العنصر إلى قائمة التشغيل الآن:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>مجلدات الموسيقى</value>
+    <value>Choose folders containing music files</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>الألبوم</value>
@@ -778,7 +778,7 @@
     <value>Swipe right: </value>
   </data>
   <data name="RBAddToPlaylist.Content" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>إضافة إلى قائمة تشغيل</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Default</value>
@@ -869,5 +869,8 @@
   </data>
   <data name="DoYouWantDeleteThisSong" xml:space="preserve">
     <value>Do you want to delete this song from library and disk?</value>
+  </data>
+  <data name="PageHeaderNowPlaying.Content" xml:space="preserve">
+    <value>يشغَّل الآن</value>
   </data>
 </root>

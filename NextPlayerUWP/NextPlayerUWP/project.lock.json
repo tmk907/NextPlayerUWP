@@ -517,43 +517,6 @@
           "lib/netstandard1.3/Playlists.NET.dll": {}
         }
       },
-      "Robmikh.CompositionSurfaceFactory/0.7.0-alpha": {
-        "dependencies": {
-          "Win2D.uwp": "1.19.0"
-        },
-        "compile": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "runtimeTargets": {
-          "runtimes/win10-arm/native/Robmikh.CompositionSurfaceFactory.dll": {
-            "assetType": "native",
-            "rid": "win10-arm"
-          },
-          "runtimes/win10-arm/native/Robmikh.CompositionSurfaceFactory.pri": {
-            "assetType": "native",
-            "rid": "win10-arm"
-          },
-          "runtimes/win10-x64/native/Robmikh.CompositionSurfaceFactory.dll": {
-            "assetType": "native",
-            "rid": "win10-x64"
-          },
-          "runtimes/win10-x64/native/Robmikh.CompositionSurfaceFactory.pri": {
-            "assetType": "native",
-            "rid": "win10-x64"
-          },
-          "runtimes/win10-x86/native/Robmikh.CompositionSurfaceFactory.dll": {
-            "assetType": "native",
-            "rid": "win10-x86"
-          },
-          "runtimes/win10-x86/native/Robmikh.CompositionSurfaceFactory.pri": {
-            "assetType": "native",
-            "rid": "win10-x86"
-          }
-        }
-      },
       "runtime.native.System.IO.Compression/4.1.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.0.1",
@@ -2348,7 +2311,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Win2D.uwp/1.19.0": {
+      "Win2D.uwp/1.18.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
         },
@@ -2848,21 +2811,6 @@
         },
         "runtime": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
-        }
-      },
-      "Robmikh.CompositionSurfaceFactory/0.7.0-alpha": {
-        "dependencies": {
-          "Win2D.uwp": "1.19.0"
-        },
-        "compile": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "native": {
-          "runtimes/win10-arm/native/Robmikh.CompositionSurfaceFactory.dll": {},
-          "runtimes/win10-arm/native/Robmikh.CompositionSurfaceFactory.pri": {}
         }
       },
       "runtime.any.System.Collections/4.0.11": {
@@ -4791,7 +4739,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Win2D.uwp/1.19.0": {
+      "Win2D.uwp/1.18.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
         },
@@ -5281,21 +5229,6 @@
         },
         "runtime": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
-        }
-      },
-      "Robmikh.CompositionSurfaceFactory/0.7.0-alpha": {
-        "dependencies": {
-          "Win2D.uwp": "1.19.0"
-        },
-        "compile": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "native": {
-          "runtimes/win10-arm/native/Robmikh.CompositionSurfaceFactory.dll": {},
-          "runtimes/win10-arm/native/Robmikh.CompositionSurfaceFactory.pri": {}
         }
       },
       "runtime.aot.System.Collections/4.0.10": {
@@ -7262,7 +7195,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Win2D.uwp/1.19.0": {
+      "Win2D.uwp/1.18.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
         },
@@ -7755,21 +7688,6 @@
         },
         "runtime": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
-        }
-      },
-      "Robmikh.CompositionSurfaceFactory/0.7.0-alpha": {
-        "dependencies": {
-          "Win2D.uwp": "1.19.0"
-        },
-        "compile": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "native": {
-          "runtimes/win10-x64/native/Robmikh.CompositionSurfaceFactory.dll": {},
-          "runtimes/win10-x64/native/Robmikh.CompositionSurfaceFactory.pri": {}
         }
       },
       "runtime.any.System.Collections/4.0.11": {
@@ -9703,7 +9621,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Win2D.uwp/1.19.0": {
+      "Win2D.uwp/1.18.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
         },
@@ -10197,21 +10115,6 @@
         },
         "runtime": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
-        }
-      },
-      "Robmikh.CompositionSurfaceFactory/0.7.0-alpha": {
-        "dependencies": {
-          "Win2D.uwp": "1.19.0"
-        },
-        "compile": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "native": {
-          "runtimes/win10-x64/native/Robmikh.CompositionSurfaceFactory.dll": {},
-          "runtimes/win10-x64/native/Robmikh.CompositionSurfaceFactory.pri": {}
         }
       },
       "runtime.aot.System.Collections/4.0.10": {
@@ -12183,7 +12086,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Win2D.uwp/1.19.0": {
+      "Win2D.uwp/1.18.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
         },
@@ -12676,21 +12579,6 @@
         },
         "runtime": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
-        }
-      },
-      "Robmikh.CompositionSurfaceFactory/0.7.0-alpha": {
-        "dependencies": {
-          "Win2D.uwp": "1.19.0"
-        },
-        "compile": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "native": {
-          "runtimes/win10-x86/native/Robmikh.CompositionSurfaceFactory.dll": {},
-          "runtimes/win10-x86/native/Robmikh.CompositionSurfaceFactory.pri": {}
         }
       },
       "runtime.any.System.Collections/4.0.11": {
@@ -14624,7 +14512,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Win2D.uwp/1.19.0": {
+      "Win2D.uwp/1.18.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
         },
@@ -15118,21 +15006,6 @@
         },
         "runtime": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
-        }
-      },
-      "Robmikh.CompositionSurfaceFactory/0.7.0-alpha": {
-        "dependencies": {
-          "Win2D.uwp": "1.19.0"
-        },
-        "compile": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "runtime": {
-          "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd": {}
-        },
-        "native": {
-          "runtimes/win10-x86/native/Robmikh.CompositionSurfaceFactory.dll": {},
-          "runtimes/win10-x86/native/Robmikh.CompositionSurfaceFactory.pri": {}
         }
       },
       "runtime.aot.System.Collections/4.0.10": {
@@ -17104,7 +16977,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "Win2D.uwp/1.19.0": {
+      "Win2D.uwp/1.18.0": {
         "compile": {
           "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
         },
@@ -18012,25 +17885,6 @@
         "Playlists.NET.1.1.0.nupkg.sha512",
         "Playlists.NET.nuspec",
         "lib/netstandard1.3/Playlists.NET.dll"
-      ]
-    },
-    "Robmikh.CompositionSurfaceFactory/0.7.0-alpha": {
-      "sha512": "rAXnSB3AJRLrsks+eQSJktkOMEnC3gyPvvW34RSDv33VrLRi6Jni/Th7epfLNGbY0ptQlBQ3fCZnZgzUyGm9hw==",
-      "type": "package",
-      "path": "Robmikh.CompositionSurfaceFactory/0.7.0-alpha",
-      "files": [
-        "Robmikh.CompositionSurfaceFactory.0.7.0-alpha.nupkg.sha512",
-        "Robmikh.CompositionSurfaceFactory.nuspec",
-        "build/native/Robmikh.CompositionSurfaceFactory.props",
-        "build/native/Robmikh.CompositionSurfaceFactory.targets",
-        "lib/uap10.0/Robmikh.CompositionSurfaceFactory.winmd",
-        "lib/uap10.0/Robmikh.CompositionSurfaceFactory.xml",
-        "runtimes/win10-arm/native/Robmikh.CompositionSurfaceFactory.dll",
-        "runtimes/win10-arm/native/Robmikh.CompositionSurfaceFactory.pri",
-        "runtimes/win10-x64/native/Robmikh.CompositionSurfaceFactory.dll",
-        "runtimes/win10-x64/native/Robmikh.CompositionSurfaceFactory.pri",
-        "runtimes/win10-x86/native/Robmikh.CompositionSurfaceFactory.dll",
-        "runtimes/win10-x86/native/Robmikh.CompositionSurfaceFactory.pri"
       ]
     },
     "runtime.any.System.Collections/4.0.11": {
@@ -23847,12 +23701,12 @@
         "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll"
       ]
     },
-    "Win2D.uwp/1.19.0": {
-      "sha512": "pLL/gLb3uY75IlswAKzOvQnwwiGrMxZyBl2DbJOjuzG6SOWMp0sg+tkj+HZU8uyQ8jIdAbOE0Iu5+z9zyT5E6Q==",
+    "Win2D.uwp/1.18.0": {
+      "sha512": "qPRgHJF9l7vKLyM/adOjUHE9OE90nYFCpa3/IOaBu1lMyiMwcfXyV2JEri+beNir0eo7luzz8dRBpyBIkjK9qw==",
       "type": "package",
-      "path": "Win2D.uwp/1.19.0",
+      "path": "Win2D.uwp/1.18.0",
       "files": [
-        "Win2D.uwp.1.19.0.nupkg.sha512",
+        "Win2D.uwp.1.18.0.nupkg.sha512",
         "Win2D.uwp.nuspec",
         "Win2d.githash.txt",
         "build/native/Win2D.uwp.targets",
@@ -23946,7 +23800,6 @@
       "Microsoft.Toolkit.Uwp.UI.Animations >= 1.2.0",
       "Microsoft.Toolkit.Uwp.UI.Controls >= 1.2.0",
       "MvvmLight >= 5.3.0",
-      "Robmikh.CompositionSurfaceFactory >= 0.7.0-alpha",
       "WindowsStateTriggers >= 1.1.0"
     ],
     "UAP,Version=v10.0": []

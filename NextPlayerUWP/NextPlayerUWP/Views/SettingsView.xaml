@@ -192,26 +192,33 @@
                            FontSize="17"
                            Margin="4,4,4,4"
                            Text="Update library"/>
-                <StackPanel Orientation="Horizontal" Margin="4,4,4,4">
-                    <Button x:Uid="ButtonUpdate"
-                            Content="Update" 
-                            Margin="0,0,12,0"
-                            MinWidth="128"
-                            IsEnabled="{x:Bind ViewModel.IsUpdating, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
-                            Click="{x:Bind ViewModel.UpdateLibrary}"/>
-                    <TextBlock x:Uid="TBNewSongs"
-                               VerticalAlignment="Center"
-                               Text="new songs:"
-                               Margin="0,0,8,0"
-                               Visibility="{Binding UpdateProgressTextVisibility, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    <TextBlock Text="{Binding UpdateProgressText}"
-                               VerticalAlignment="Center"/>
-                    <ProgressRing VerticalAlignment="Center"
-                                  Width="28"
-                                  Height="28"
-                                  Margin="12,0,4,0"
-                                  IsActive="{Binding IsUpdating}" 
-                                  Visibility="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Margin="4,4,4,4">
+                        <Button x:Uid="ButtonUpdate"
+                                Content="Update" 
+                                Margin="0,0,12,0"
+                                MinWidth="128"
+                                IsEnabled="{x:Bind ViewModel.IsUpdating, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.UpdateLibrary}"/>
+                            <TextBlock x:Uid="TBNewSongs"
+                                    VerticalAlignment="Center"
+                                    Text="new songs:"
+                                    Margin="0,0,8,0"
+                                    Visibility="{Binding UpdateProgressTextVisibility, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBlock Text="{Binding UpdateProgressText}"
+                                VerticalAlignment="Center"/>
+                            <ProgressRing VerticalAlignment="Center"
+                                        Width="28"
+                                        Height="28"
+                                        Margin="12,0,4,0"
+                                        IsActive="{Binding IsUpdating}" 
+                                        Visibility="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"  Margin="4,0,4,4">
+                            <TextBlock VerticalAlignment="Center"
+                                    Text="{Binding ScannedFolder}"
+                                    Margin="0,0,8,0"/>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="AddMusicFoldersStackPanel"
                             Orientation="Vertical" 
