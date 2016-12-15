@@ -1294,7 +1294,7 @@ namespace NextPlayerUWPDataLayer.Services
                 Name = name,
                 SongsNumber = songsNumber,
                 SortBy = sorting,
-                Hide = false
+                IsHidden = false
             };
 
             connection.Insert(newplaylist);
@@ -1308,7 +1308,7 @@ namespace NextPlayerUWPDataLayer.Services
                 Name = name,
                 SongsNumber = songsNumber,
                 SortBy = sorting,
-                Hide = false
+                IsHidden = false
             };
 
             await connectionAsync.InsertAsync(newplaylist);
@@ -1628,7 +1628,7 @@ namespace NextPlayerUWPDataLayer.Services
             var playlist = await connectionAsync.Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).FirstOrDefaultAsync();
             if (playlist == null) return;
             playlist.Name = name;
-            playlist.Hide = hide;
+            playlist.IsHidden = hide;
             await connectionAsync.UpdateAsync(playlist);
         }
 

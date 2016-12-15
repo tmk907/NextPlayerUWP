@@ -135,7 +135,7 @@ namespace NextPlayerUWPDataLayer.Model
             {
                 name = table.Name;
             }
-            isHidden = table.Hide;
+            isHidden = table.IsHidden;
         }
 
         public override string ToString()
