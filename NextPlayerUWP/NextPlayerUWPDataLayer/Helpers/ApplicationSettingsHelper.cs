@@ -1,6 +1,9 @@
-﻿using NextPlayerUWPDataLayer.Constants;
+﻿using Microsoft.Toolkit.Uwp;
+using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace NextPlayerUWPDataLayer.Helpers
@@ -169,6 +172,45 @@ namespace NextPlayerUWPDataLayer.Helpers
                 }
             }
             return list;
+        }
+
+
+        private const string sdCardFoldersFileName = "sdCard.txt";
+
+        //public static async Task SaveSdCardFoldersToScan(Dictionary<string,bool> folders)
+        //{
+        //    LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
+        //    await helper.SaveFileAsync(sdCardFoldersFileName, folders);
+        //}
+
+        //public static async Task<Dictionary<string,bool>> GetSdCardFoldersToScan()
+        //{
+        //    LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
+        //    Dictionary<string, bool> folders = await helper.ReadFileAsync<Dictionary<string,bool>>(sdCardFoldersFileName);
+        //    return folders;
+        //}
+
+        public static async Task SaveSdCardFoldersToScan(List<SdCardFolder> folders)
+        {
+            LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
+            await helper.SaveFileAsync(sdCardFoldersFileName, folders);
+        }
+
+        public static async Task<List<SdCardFolder>> GetSdCardFoldersToScan()
+        {
+            LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
+            bool exists = await helper.FileExistsAsync(sdCardFoldersFileName);
+            List<SdCardFolder> folders;
+            if (!exists)
+            {
+                folders = new List<SdCardFolder>();
+                await SaveSdCardFoldersToScan(folders);
+            }
+            else
+            {
+                folders = await helper.ReadFileAsync<List<SdCardFolder>>(sdCardFoldersFileName);
+            }
+            return folders;
         }
     }
 }

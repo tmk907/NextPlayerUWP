@@ -1,0 +1,288 @@
+﻿<Page
+    x:Class="NextPlayerUWP.Views.PlaylistEditableView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerUWP.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    DataContext="{Binding Source={StaticResource Locator}, Path=PlaylistVM}"
+    mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
+    <Page.Resources>
+        <MenuFlyout x:Key="ContextMenuPlain">
+            <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Name="MFIDelete" x:Uid="MFIDelete" Text="Delete" 
+                            Click="{x:Bind ViewModel.DeleteFromPlaylistClick}" CommandParameter="{Binding}" />
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
+                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
+                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+        </MenuFlyout>
+        <DataTemplate x:Key="SongItemTemplateDesktop" x:DataType="data:SongItem">
+            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" 
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleLeft}"/>
+                <TextBlock Grid.Column="1" 
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleCenter}"/>
+                <TextBlock Grid.Column="2" 
+                    Text="{x:Bind Album}"
+                    Style="{StaticResource SongItemStyleCenter}"/>
+                <TextBlock Grid.Column="3" 
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="SongItemTemplateMobile" x:DataType="data:SongItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}" 
+	            RightIcon="Delete" 
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            RightLabel="Delete"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            RightBackground="OrangeRed"
+	            LeftForeground="White" 
+	            RightForeground="White"
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+	            RightCommandRequested="SlidableListItem_RightCommandRequested"
+                >
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleTop}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleBottom}"/>
+                    <TextBlock Grid.Column="1" Grid.RowSpan="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
+        <DataTemplate x:Key="SongItemTemplateMobileWide" x:DataType="data:SongItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}" 
+	            RightIcon="Delete"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            RightLabel="Delete"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            RightBackground="OrangeRed"
+	            LeftForeground="White" 
+	            RightForeground="White"
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+	            RightCommandRequested="SlidableListItem_LeftCommandRequested"
+                >
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleTop}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleBottom}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1"
+                    Text="{x:Bind Album}"
+                    Style="{StaticResource SongItemStyleBottom}"/>
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="MobileWide">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                            <triggers:AdaptiveTrigger MinWindowWidth="480"/>
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobileWide}"/>
+                        <Setter Target="Column1.Width" Value="0"/>
+                        <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="PlaylistListView.CanDragItems" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MobileNarrow">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                            <triggers:AdaptiveTrigger MinWindowWidth="0"/>
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobile}"/>
+                        <Setter Target="Column1.Width" Value="0"/>
+                        <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="PlaylistListView.CanDragItems" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="PlaylistListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="PlaylistListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+                BackButtonVisibility="Collapsed" 
+                Frame="{x:Bind Frame, Mode=OneWay}"
+                Content="{Binding PageTitle}" 
+                VisualStateNarrowMinWidth="0"
+                VisualStateNormalMinWidth="720">
+            <AppBarButton
+                x:Uid="AppBarButtonShuffleAll"
+                Label="Shuffle all"
+                Icon="Shuffle"
+                Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
+        </controls:PageHeader>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="Column1"/>
+                    <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
+                    <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock 
+                        Text="{Binding PageSubTitle}" 
+                        Margin="16"
+                        FontSize="17" 
+                        TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+                <AutoSuggestBox  Grid.Column="2" 
+                    PlaceholderText="search" 
+                    QueryIcon="Find" 
+                    Margin="4,0,12,0" 
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Center"
+                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
+                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}"/>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
+                    <ComboBox Margin="4,0,8,0" 
+                            BorderThickness="0" 
+                            Width="Auto" 
+                            VerticalAlignment="Center"
+                            ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
+                            DisplayMemberPath="Label"
+                            SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1">
+                <mycontrols:AlternatingRowListView x:Name="PlaylistListView"
+                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                          ItemsSource="{Binding Playlist}"
+                          ItemTemplate="{StaticResource SongItemTemplateDesktop}"
+                          IsItemClickEnabled="True"
+                          ItemClick="{x:Bind ViewModel.ItemClicked }"  
+                          Margin="12,0,0,0"
+                          ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
+                          SelectionMode="None"
+                          CanDragItems="False"
+                          DragItemsStarting="{x:Bind ViewModel.DragStarting}">
+                    <mycontrols:AlternatingRowListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </mycontrols:AlternatingRowListView.ItemsPanel>
+                </mycontrols:AlternatingRowListView>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

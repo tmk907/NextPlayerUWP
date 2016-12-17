@@ -1,6 +1,5 @@
 ﻿using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,13 +14,15 @@ namespace NextPlayerUWP.ViewModels
     {
         public GenresViewModel()
         {
-            SortNames si = new SortNames(MusicItemTypes.genre);
-            ComboBoxItemValues = si.GetSortNames();
-            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            sortingHelper = new SortingHelperForGenreItems("Genres");
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) Genres.Add(new GenreItem());
         }
+
+        SortingHelperForGenreItems sortingHelper;
 
         private async void MediaImport_MediaImported(string s)
         {
@@ -49,6 +50,12 @@ namespace NextPlayerUWP.ViewModels
             //SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
         }
 
+        public override void FreeResources()
+        {
+            genres = null;
+            genres = new ObservableCollection<GenreItem>();
+        }
+
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
             NavigationService.Navigate(App.Pages.Playlist, ((GenreItem)e.ClickedItem).GetParameter());
@@ -67,29 +74,8 @@ namespace NextPlayerUWP.ViewModels
 
         protected override void SortMusicItems()
         {
-            string option = selectedComboBoxItem.Option;
-            switch (option)
-            {
-                case SortNames.Genre:
-                    Sort(s => s.Genre, t => (t.Genre == "") ? "" : t.Genre[0].ToString().ToLower(), "Genre");
-                    break;
-                case SortNames.Duration:
-                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "Genre");
-                    break;
-                case SortNames.SongCount:
-                    Sort(s => s.SongsNumber, t => t.SongsNumber, "Genre");
-                    break;
-                case SortNames.LastAdded:
-                    Sort(s => s.LastAdded.Ticks * -1, t => String.Format("{0:d}", t.LastAdded), "Genre");
-                    break;
-                default:
-                    Sort(s => s.Genre, t => (t.Genre == "") ? "" : t.Genre[0].ToString().ToLower(), "Genre");
-                    break;
-            }
-        }
-
-        private void Sort(Func<GenreItem, object> orderSelector, Func<GenreItem, object> groupSelector, string propertyName)
-        {
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            var orderSelector = sortingHelper.GetOrderBySelector();
             var query = genres.OrderBy(orderSelector);
             Genres = new ObservableCollection<GenreItem>(query);
         }

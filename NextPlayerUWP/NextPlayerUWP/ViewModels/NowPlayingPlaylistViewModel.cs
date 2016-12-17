@@ -7,7 +7,9 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using Template10.Common;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,12 +25,16 @@ namespace NextPlayerUWP.ViewModels
 
         public NowPlayingPlaylistViewModel()
         {
+            sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             UpdatePlaylist();
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-            PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             lastFmCache = new LastFmCache();
         }
 
+        SortingHelperForSongItemsInPlaylist sortingHelper;
         LastFmCache lastFmCache;
 
         private int selectedPivotIndex = 0;
@@ -40,17 +46,20 @@ namespace NextPlayerUWP.ViewModels
 
         private void TrackChanged(int index)
         {
-            if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
-            CurrentSong = songs[index];
-            if (!CurrentSong.IsAlbumArtSet)
+            Dispatcher.Dispatch(() =>
             {
+                if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
+                CurrentSong = songs[index];
+                if (!CurrentSong.IsAlbumArtSet)
+                {
 
-            }
-            else
-            {
-                CoverUri = CurrentSong.AlbumArtUri;
-            }
-            ScrollAfterTrackChanged(index);
+                }
+                else
+                {
+                    CoverUri = CurrentSong.AlbumArtUri;
+                }
+                ScrollAfterTrackChanged(index);
+            });
         }
 
         private void NPListChanged()
@@ -115,9 +124,15 @@ namespace NextPlayerUWP.ViewModels
             await Task.CompletedTask;
         }
 
+        public void OnUnloaded()
+        {
+            listView = null;
+        }
+
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             //App.ChangeRightPanelVisibility(false);
+            App.OnNavigatedToNewView(true);
             CoverUri = SongCoverManager.Instance.GetCurrent();
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             int i = ApplicationSettingsHelper.ReadSongIndex();
@@ -133,7 +148,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 positionKey = (string)state[nameof(positionKey)];
             }
-
+            selectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(c => c.Option.Equals(sortingHelper.SelectedSortOption.Option));
             await Task.CompletedTask;
         }
 
@@ -195,21 +210,20 @@ namespace NextPlayerUWP.ViewModels
 
         #region Commands
 
-        public void ItemClicked(object sender, ItemClickEventArgs e)
+        public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
+            int id = ((SongItem)e.ClickedItem).SongId;
             int index = 0;
             foreach (var s in songs)
             {
-                if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
+                if (s.SongId == id) break;
                 index++;
             }
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.JumpTo(index);
         }
 
         public async void Delete(object sender, RoutedEventArgs e)
         {
-            if (songs.Count == 1) return;
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }
@@ -279,7 +293,41 @@ namespace NextPlayerUWP.ViewModels
 
         public void ChangeCoverUri(Uri cacheUri)
         {
-            CoverUri = cacheUri;
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            {
+                CoverUri = cacheUri;
+            });
+        }
+
+        protected ObservableCollection<ComboBoxItemValue> comboBoxItemValues = new ObservableCollection<ComboBoxItemValue>();
+        public ObservableCollection<ComboBoxItemValue> ComboBoxItemValues
+        {
+            get { return comboBoxItemValues; }
+            set
+            {
+                comboBoxItemValues = value;
+            }
+        }
+
+        protected ComboBoxItemValue selectedComboBoxItem;
+        public ComboBoxItemValue SelectedComboBoxItem
+        {
+            get { return selectedComboBoxItem; }
+            set
+            {
+                bool diff = selectedComboBoxItem != value;
+                selectedComboBoxItem = value;
+                if (value != null && diff)
+                {
+                    SortMusicItems();
+                }
+            }
+        }
+
+        public async void SortMusicItems()
+        {
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            await NowPlayingPlaylistManager.Current.SortPlaylist();
         }
     }
 }

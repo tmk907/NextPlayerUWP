@@ -10,6 +10,9 @@ using Template10.Services.NavigationService;
 using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.CloudStorage;
+using NextPlayerUWPDataLayer.Enums;
+using NextPlayerUWPDataLayer.Playlists;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -29,11 +32,19 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref name, value); }
         }
 
+        private bool loading = false;
+        public bool Loading
+        {
+            get { return loading; }
+            set { Set(ref loading, value); }
+        }
+
         private MusicItemTypes type;
         private string[] values;
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            App.OnNavigatedToNewView(true);
             Playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             type = MusicItem.ParseType((string)parameter);
             values = MusicItem.SplitParameter((string)parameter);
@@ -52,8 +63,11 @@ namespace NextPlayerUWP.ViewModels
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
+            Loading = true;
             PlaylistItem p = (PlaylistItem)e.ClickedItem;
             string value = values[1];
+            string userId;
+            string folderId;
             switch (type)
             {
                 case MusicItemTypes.album:
@@ -86,21 +100,52 @@ namespace NextPlayerUWP.ViewModels
                 case MusicItemTypes.radio:
 
                     break;
+                case MusicItemTypes.dropboxfolder:
+                    userId = values[1];
+                    folderId = (values[2] != "") ? values[2] : "";
+                    CloudStorageServiceFactory cssfd = new CloudStorageServiceFactory();
+                    var serviced = cssfd.GetService(CloudStorageType.Dropbox, userId);
+                    await serviced.GetSongItems(folderId);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.Dropbox), s => s.Title);
+                    break;
                 case MusicItemTypes.onedrivefolder:
+                    userId = values[1];
+                    folderId = (values[2] != "") ? values[2] : null;
+                    CloudStorageServiceFactory cssf = new CloudStorageServiceFactory();
+                    var service = cssf.GetService(CloudStorageType.OneDrive, userId);
+                    if (folderId == null)
+                    {
+                        folderId = await service.GetRootFolderId();
+                    }
+                    await service.GetSongItems(folderId);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.OneDrive), s => s.Title);
 
+                    break;
+                case MusicItemTypes.pcloudfolder:
+                    userId = values[1];
+                    folderId = (values[2] != "") ? values[2] : "0";
+                    CloudStorageServiceFactory cssfp = new CloudStorageServiceFactory();
+                    var servicep = cssfp.GetService(CloudStorageType.pCloud, userId);
+                    await servicep.GetSongItems(folderId);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.PCloud), s => s.Title);
+                    break;
+                case MusicItemTypes.listofsongs:
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, App.GetFromCache());
                     break;
                 default:
                     break;
             }
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.AutoSavePlaylist(p);
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.UpdatePlaylistFile(p);
+            Loading = false;
             NavigationService.GoBack();
         }
 
-        public void Save()
+        public async void Save()
         {
             int id = DatabaseManager.Current.InsertPlainPlaylist(name);
-            Playlists.Add(new PlaylistItem(id, false, name));
+            var playlist = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
+            Playlists.Add(playlist);
             Name = "";
         }
     }

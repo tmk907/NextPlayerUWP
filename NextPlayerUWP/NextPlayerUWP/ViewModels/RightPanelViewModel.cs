@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Template10.Common;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Json;
 using Windows.Foundation;
@@ -25,9 +26,11 @@ namespace NextPlayerUWP.ViewModels
         public RightPanelViewModel()
         {
             Logger.DebugWrite("RightPanelViewModel()", "");
-
+            sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-            PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             //App.SongUpdated += App_SongUpdated;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             UpdatePlaylist();
@@ -43,10 +46,13 @@ namespace NextPlayerUWP.ViewModels
         private async void TrackChanged(int index)
         {
             Logger.DebugWrite("RightPanelViewModel", $"TrackChanged {index}");
-            if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
-            ScrollAfterTrackChanged(index);
-            //await Task.Run(() => ChangeLyrics(index));
-            await ChangeLyrics(index);
+            await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
+            {
+                if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
+                ScrollAfterTrackChanged(index);
+                //await Task.Run(() => ChangeLyrics(index));
+                await ChangeLyrics(index);
+            });
         }
 
         public void DragOver(object sender, DragEventArgs e)
@@ -100,7 +106,7 @@ namespace NextPlayerUWP.ViewModels
                 var items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
                 {
-                    MediaImport mi = new MediaImport();
+                    MediaImport mi = new MediaImport(App.FileFormatsHelper);
                     bool first = true;
                     foreach (var file in items)
                     {
@@ -108,7 +114,7 @@ namespace NextPlayerUWP.ViewModels
                         {
                             var storageFile = file as Windows.Storage.StorageFile;
                             string type = storageFile.FileType.ToLower();
-                            if (MediaImport.IsAudioFile(type))
+                            if (App.FileFormatsHelper.IsFormatSupported(type))
                             {
                                 SongItem newSong = await mi.OpenSingleFileAsync(storageFile);
 
@@ -125,8 +131,7 @@ namespace NextPlayerUWP.ViewModels
                                     if (first)
                                     {
                                         await NowPlayingPlaylistManager.Current.NewPlaylist(newSong);
-                                        ApplicationSettingsHelper.SaveSongIndex(0);
-                                        App.PlaybackManager.PlayNew();
+                                        await PlaybackService.Instance.PlayNewList(0);
                                     }
                                     else
                                     {
@@ -135,7 +140,7 @@ namespace NextPlayerUWP.ViewModels
                                 }
                                 first = false;
                             }
-                            else if (MediaImport.IsPlaylistFile(type))
+                            else if (App.FileFormatsHelper.IsPlaylistSupportedType(type))
                             {
                                 //TODO
                             }
@@ -156,8 +161,7 @@ namespace NextPlayerUWP.ViewModels
                 else if (action.Equals(AppConstants.ActionPlayNow))
                 {
                     await NowPlayingPlaylistManager.Current.NewPlaylist((MusicItem)item);
-                    ApplicationSettingsHelper.SaveSongIndex(0);
-                    App.PlaybackManager.PlayNew();
+                    await PlaybackService.Instance.PlayNewList(0);
                 }
             }
         }
@@ -287,21 +291,20 @@ namespace NextPlayerUWP.ViewModels
 
         #region Commands
 
-        public void ItemClicked(object sender, ItemClickEventArgs e)
+        public async void ItemClicked(object sender, ItemClickEventArgs e)
         {
             int index = 0;
+            int id = ((SongItem)e.ClickedItem).SongId;
             foreach (var s in songs)
             {
-                if (s.SongId == ((SongItem)e.ClickedItem).SongId) break;
+                if (s.SongId == id) break;
                 index++;
             }
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.JumpTo(index);
         }
 
         public async void Delete(object sender, RoutedEventArgs e)
         {
-            if (songs.Count == 1) return;
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }
@@ -354,7 +357,48 @@ namespace NextPlayerUWP.ViewModels
         public void SavePlaylist()
         {
             NowPlayingListItem item = new NowPlayingListItem();
-            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+            App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
+
+        public void ShowAudioSettings()
+        {
+            App.Current.NavigationService.Navigate(App.Pages.AudioSettings);
+        }
+
+        SortingHelperForSongItemsInPlaylist sortingHelper;
+
+        protected ObservableCollection<ComboBoxItemValue> comboBoxItemValues = new ObservableCollection<ComboBoxItemValue>();
+        public ObservableCollection<ComboBoxItemValue> ComboBoxItemValues
+        {
+            get { return comboBoxItemValues; }
+            set
+            {
+                comboBoxItemValues = value;
+            }
+        }
+
+        protected ComboBoxItemValue selectedComboBoxItem;
+        public ComboBoxItemValue SelectedComboBoxItem
+        {
+            get { return selectedComboBoxItem; }
+            set
+            {
+                bool diff = selectedComboBoxItem != value;
+                selectedComboBoxItem = value;
+                if (value != null && diff)
+                {
+                    SortMusicItems();
+                }
+            }
+        }
+
+        public async void SortMusicItems()
+        {
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            if (songs!=null)
+            {
+                await NowPlayingPlaylistManager.Current.SortPlaylist();
+            }
         }
 
         #region Lyrics

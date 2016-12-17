@@ -1,4 +1,6 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using Microsoft.Advertising.WinRT.UI;
+using NextPlayerUWP.ViewModels;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -19,6 +21,27 @@ namespace NextPlayerUWP.Views
             WebGrid.Children.Add(web);
             this.Loaded += delegate { ((RightPanelViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView, web); };
             ViewModel = (RightPanelViewModel)DataContext;
+            LoadAdControl();
+        }
+
+        private async Task LoadAdControl()
+        {
+            await Task.Delay(1000);
+            var adControl = new AdControl();
+            adControl.Width = 300;
+            adControl.Height = 250;
+            adControl.VerticalAlignment = VerticalAlignment.Top;
+            adControl.HorizontalAlignment = HorizontalAlignment.Left;
+            adControl.AdRefreshed += AdControl_AdRefreshed;
+            adControl.ErrorOccurred += AdControl_ErrorOccurred;
+#if DEBUG
+            adControl.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
+            adControl.AdUnitId = "10865270";
+#else
+            adControl.ApplicationId = "bc203ea3-080a-4a87-bd1d-fdf2aab1740d";
+            adControl.AdUnitId = "11647976";
+#endif
+            GridAdControlRightPanel.Children.Add(adControl);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -27,6 +50,16 @@ namespace NextPlayerUWP.Views
             var menu = this.Resources["ContextMenu"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private void AdControl_ErrorOccurred(object sender, AdErrorEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("AdControl error (" + ((AdControl)sender).Name + "): " + e.ErrorMessage + " ErrorCode: " + e.ErrorCode.ToString());
+        }
+
+        private void AdControl_AdRefreshed(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("AdControl refreshed (" + ((AdControl)sender).Name + ") has ad:" + ((AdControl)sender).HasAd.ToString());
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -11,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -95,8 +95,8 @@ namespace NextPlayerUWP.ViewModels
                     var header = new ArtistItemHeader();
                     if (g.GroupName.Album == "")
                     {
-                        var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-                        header.Album = loader.GetString("UnknownAlbum");
+                        var helper = new TranslationHelper();
+                        header.Album = helper.GetTranslation(TranslationHelper.UnknownAlbum);
                     }
                     else
                     {
@@ -147,8 +147,7 @@ namespace NextPlayerUWP.ViewModels
                 if (found) break;
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(albums);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
@@ -173,27 +172,54 @@ namespace NextPlayerUWP.ViewModels
             }
 
             await NowPlayingPlaylistManager.Current.NewPlaylist(list);
-            ApplicationSettingsHelper.SaveSongIndex(0);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(0);
         }
 
-        public async void ImageTapped(object sender, TappedRoutedEventArgs e)
+        public async void PlayNowAlbum(object sender, RoutedEventArgs e)
         {
-            var image = (Image)sender;
-            var header = (ArtistItemHeader)image.Tag;
-            var album = header.Album;
-            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            if (album == loader.GetString("UnknownAlbum"))
+            var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            List<SongItem> list = new List<SongItem>();
+            foreach(SongItem song in group)
             {
-                album = "";
+                list.Add(song);
             }
-            var item = songs.Where(s => s.Album.Equals(album)).FirstOrDefault();
-            if (item == null)//?
+            await NowPlayingPlaylistManager.Current.NewPlaylist(list);
+            await PlaybackService.Instance.PlayNewList(0);
+        }
+
+        public async void PlayNextAlbum(object sender, RoutedEventArgs e)
+        {
+            var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            List<SongItem> list = new List<SongItem>();
+            foreach (SongItem song in group)
             {
-                item = songs.FirstOrDefault();
+                list.Add(song);
             }
-            AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
-            App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
+            await NowPlayingPlaylistManager.Current.AddNext(list);
+        }
+
+        public async void AddToNowPlayingAlbum(object sender, RoutedEventArgs e)
+        {
+            var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            List<SongItem> list = new List<SongItem>();
+            foreach (SongItem song in group)
+            {
+                list.Add(song);
+            }
+            await NowPlayingPlaylistManager.Current.Add(list);
+        }
+
+        public void AddToPlaylistAlbum(object sender, RoutedEventArgs e)
+        {
+            var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            List<SongItem> list = new List<SongItem>();
+            foreach (SongItem song in group)
+            {
+                list.Add(song);
+            }
+            App.AddToCache(list);
+            var item = new ListOfSongs();
+            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
         }
     }
 }

@@ -29,11 +29,18 @@ namespace NextPlayerUWP.Views
             this.InitializeComponent();
             ViewModel = (RadiosViewModel)DataContext;
         }
-
-        private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+       
+        private void JamendoListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
-            var menu = this.Resources["ContextMenu"] as MenuFlyout;
+            var menu = this.Resources["ContextMenuJamendo"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
+        }
+        private void StreamsListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenuStream"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
         }

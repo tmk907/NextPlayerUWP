@@ -1,4 +1,6 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.Common;
+using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -7,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -16,7 +17,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -32,8 +32,29 @@ namespace NextPlayerUWP.Views
         public PlaylistsView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((PlaylistsViewModel)DataContext).OnLoaded(PlaylistsListView); };
+            NavigationCacheMode = NavigationCacheMode.Required;
+            this.Loaded += View_Loaded;
+            //this.Unloaded += View_Unloaded;
             ViewModel = (PlaylistsViewModel)DataContext;
+        }
+
+        //~PlaylistsView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(PlaylistsListView);
+        }
+
+        private void View_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnUnloaded();
+            ViewModel = null;
+            DataContext = null;
+            this.Loaded -= View_Loaded;
+            this.Unloaded -= View_Unloaded;
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -51,20 +72,27 @@ namespace NextPlayerUWP.Views
 
         private async void MenuFlyoutItemDelete_Click(object sender, RoutedEventArgs e)
         {
-            ResourceLoader loader = new ResourceLoader();
-            string content = loader.GetString("DeletePlaylistConfirmation");
+            TranslationHelper helper = new  TranslationHelper();
+            string content = helper.GetTranslation("DeletePlaylistConfirmation");
             MessageDialog dialog = new MessageDialog(content);
-            dialog.Commands.Add(new UICommand(loader.GetString("Delete"), (command) =>
+            dialog.Commands.Add(new UICommand(helper.GetTranslation(TranslationHelper.Delete), (command) =>
             {
                 ViewModel.ConfirmDelete(((MenuFlyoutItem)sender).CommandParameter);
             }));
-            dialog.Commands.Add(new UICommand(loader.GetString("Cancel"), (command) => 
+            dialog.Commands.Add(new UICommand(helper.GetTranslation(TranslationHelper.Cancel), (command) => 
             {
 
             }));
             dialog.DefaultCommandIndex = 0;
             dialog.CancelCommandIndex = 1;
             await dialog.ShowAsync();
+        }
+
+        private async void MenuFlyoutItemShowDetails_Click(object sender, RoutedEventArgs e)
+        {
+            PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
+            ViewModel.EditPlaylist = selected;
+            await ContentDialogShowDetails.ShowAsync();
         }
 
         private async void MFIEditName_Click(object sender, RoutedEventArgs e)
@@ -77,9 +105,14 @@ namespace NextPlayerUWP.Views
         private async void MFIExportChoosePathKind(object sender, RoutedEventArgs e)
         {
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
-            ViewModel.EditPlaylist = new PlaylistItem(selected.Id, selected.IsSmart, selected.Name);
+            ViewModel.EditPlaylist = selected;
             await ContentDialogChoosePathKind.ShowAsync();
         }
 
+        private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
+        {
+            var item = (sender as SlidableListItem).DataContext as PlaylistItem;
+            await ViewModel.SlidableListItemLeftCommandRequested(item);
+        }
     }
 }

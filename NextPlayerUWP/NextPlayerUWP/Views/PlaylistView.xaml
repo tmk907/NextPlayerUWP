@@ -9,6 +9,7 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=PlaylistVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -29,8 +30,6 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Name="MFIDelete" x:Uid="MFIDelete" Text="Delete" 
-                            Click="{x:Bind ViewModel.DeleteFromPlaylist}" CommandParameter="{Binding}" />
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
                             Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
@@ -91,50 +90,70 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SongItemTemplateMobile" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0"
                     Text="{x:Bind Title}"
                     Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="0" Grid.Row="1"
+                    <TextBlock Grid.Column="0" Grid.Row="1"
                     Text="{x:Bind Artist}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="1" Grid.RowSpan="2"
+                    <TextBlock Grid.Column="1" Grid.RowSpan="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
         <DataTemplate x:Key="SongItemTemplateMobileWide" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0"
                     Text="{x:Bind Title}"
                     Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="0" Grid.Row="1"
+                    <TextBlock Grid.Column="0" Grid.Row="1"
                     Text="{x:Bind Artist}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
+                    <TextBlock Grid.Column="1" Grid.Row="1"
                     Text="{x:Bind Album}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -151,6 +170,7 @@
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobileWide}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="PlaylistListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -164,6 +184,7 @@
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobile}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="PlaylistListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -174,6 +195,18 @@
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
                         <Setter Target="Column1.Width" Value="*"/>
                         <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="PlaylistListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="PlaylistListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -253,7 +286,7 @@
                           Margin="12,0,0,0"
                           ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
                           SelectionMode="None"
-                          CanDragItems="True"
+                          CanDragItems="False"
                           DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                     <mycontrols:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate>

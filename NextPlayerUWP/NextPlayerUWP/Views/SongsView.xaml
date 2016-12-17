@@ -9,6 +9,7 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=SongsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -40,6 +41,8 @@
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
+                            Click="{x:Bind ViewModel.DeleteSong}" CommandParameter="{Binding}"/>
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
@@ -53,72 +56,92 @@
         </Style>
 
         <DataTemplate x:Key="SongsListViewItemTemplateDesktop" x:DataType="data:SongItem">
+              <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                  <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="8*"/>
+                      <ColumnDefinition Width="6*"/>
+                      <ColumnDefinition Width="6*"/>
+                      <ColumnDefinition Width="2*"/>
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Grid.Column="0" 
+                  Text="{x:Bind Title}"
+                  Style="{StaticResource SongItemStyleLeft}"/>
+                  <TextBlock Grid.Column="1" 
+                  Text="{x:Bind Artist}"
+                  Style="{StaticResource SongItemStyleCenter}"/>
+                  <TextBlock Grid.Column="2" 
+                  Text="{x:Bind Album}"
+                  Style="{StaticResource SongItemStyleCenter}"/>
+                  <TextBlock Grid.Column="3" 
+                  Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                  Style="{StaticResource SongItemStyleRight}"/>
+              </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="SongsListViewItemTemplateMobile" x:DataType="data:SongItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
                 <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="8*"/>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="6*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" 
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0"
                     Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleLeft}"/>
-                    <TextBlock Grid.Column="1" 
+                    Style="{StaticResource SongItemStyleTop}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1"
                     Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
-                    <TextBlock Grid.Column="2" 
-                    Text="{x:Bind Album}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
-                    <TextBlock Grid.Column="3" 
+                    Style="{StaticResource SongItemStyleBottom}"/>
+                    <TextBlock Grid.Column="1" Grid.RowSpan="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"/>
                 </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="SongsListViewItemTemplateMobile" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="0" Grid.Row="1"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="1" Grid.RowSpan="2"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
         <DataTemplate x:Key="SongsListViewItemTemplateMobileWide" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	              LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	              LeftBackground="{StaticResource UserAccentBrush}" 
+	              LeftForeground="White" 
+	              ActivationWidth="100"
+                Background="Transparent"
+	              LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0"
                     Text="{x:Bind Title}"
                     Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="0" Grid.Row="1"
+                    <TextBlock Grid.Column="0" Grid.Row="1"
                     Text="{x:Bind Artist}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
+                    <TextBlock Grid.Column="1" Grid.Row="1"
                     Text="{x:Bind Album}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
         <DataTemplate x:Key="ZoomedOutItemsTemplate1">
             <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}}"
@@ -188,6 +211,7 @@
                         <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplateMobile}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="SongsListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -202,6 +226,7 @@
                         <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplateMobile}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="SongsListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -213,6 +238,19 @@
                         <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplate}"/>
                         <Setter Target="Column1.Width" Value="*"/>
                         <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="SongsListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SongsListView.ItemTemplate" Value="{StaticResource SongsListViewItemTemplateDesktop}"/>
+                        <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplate}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="SongsListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -52,5 +52,8 @@ namespace NextPlayerUWPDataLayer.Tables
         public int Track { get; set; }
         public int TrackCount { get; set; }
         public int Year { get; set; }
+
+        public int MusicSourceType { get; set; }
+        public string CloudUserId { get; set; }
     }
 }

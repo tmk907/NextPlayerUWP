@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWPDataLayer.Tables;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -29,6 +30,54 @@ namespace NextPlayerUWPDataLayer.Model
         private bool isNotDefault;
         public bool IsNotDefault { get { return isNotDefault; } }
         public bool IsSmartAndNotDefault { get { return IsSmart && isNotDefault; } }
+        private string path;
+        public string Path
+        {
+            get
+            {
+                return path;
+            }
+            set
+            {
+                if (value != path)
+                {
+                    path = value;
+                    onPropertyChanged(this, "Path");
+                }
+            }
+        }
+        private DateTime dateModified;
+        public DateTime DateModified
+        {
+            get
+            {
+                return dateModified;
+            }
+            set
+            {
+                if (value != dateModified)
+                {
+                    dateModified = value;
+                    onPropertyChanged(this, "DateModified");
+                }
+            }
+        }
+        private bool isHidden;
+        public bool IsHidden
+        {
+            get
+            {
+                return isHidden;
+            }
+            set
+            {
+                if (value != isHidden)
+                {
+                    isHidden = value;
+                    onPropertyChanged(this, "IsHidden");
+                }
+            }
+        }
 
         public PlaylistItem(int id, bool issmart, string _name)
         {
@@ -54,6 +103,39 @@ namespace NextPlayerUWPDataLayer.Model
                 name = _name;
                 isNotDefault = true;
             }
+            path = "";
+            dateModified = DateTime.MinValue;
+        }
+
+        public PlaylistItem(PlainPlaylistsTable table)
+        {
+            this.id = table.PlainPlaylistId;
+            isSmart = false;
+            this.path = table.Path ?? "";
+            this.dateModified = table.DateModified;
+            name = table.Name;
+            isNotDefault = true;
+            isHidden = table.IsHidden;
+        }
+
+        public PlaylistItem(SmartPlaylistsTable table)
+        {
+            this.id = table.SmartPlaylistId;
+            isSmart = true;
+            this.path = "";
+            this.dateModified = DateTime.MinValue;
+            isNotDefault = !Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);
+            Dictionary<int, string> ids = Helpers.ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
+            if (ids.ContainsKey(id))
+            {
+                var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                name = loader.GetString(ids[id]);
+            }
+            else
+            {
+                name = table.Name;
+            }
+            isHidden = table.IsHidden;
         }
 
         public override string ToString()

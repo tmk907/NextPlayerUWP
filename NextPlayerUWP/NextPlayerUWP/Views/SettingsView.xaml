@@ -54,18 +54,66 @@
                 </Button>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="SdCardFolderTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MinWidth="192" Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <FontIcon Grid.Column="0" Grid.RowSpan="3"
+                          FontFamily="Segoe MDL2 Assets"
+                          Glyph="&#xE8B7;" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,12,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Name}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           FontSize="13"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Path}"/>
+                <TextBlock Grid.Column="1" Grid.Row="2"
+                           FontSize="13"
+                           VerticalAlignment="Bottom"
+                           Visibility="{Binding IncludeSubFolders, Converter={StaticResource BoolToVisibilityConverter}}"
+                           Text="{Binding IncludeSubFolders, Converter={StaticResource BoolToSubfoldersDescriptionConverter}}"/>
+                <Button Grid.Column="3" Grid.RowSpan="3"
+                        Click="RemoveSdCardFolder_Click"
+                        Width="40"
+                        Height="40"
+                        Background="Transparent"
+                        Tag="{Binding}"
+                        VerticalAlignment="Center">
+                    <Button.Content>
+                        <SymbolIcon Symbol="Cancel"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="CloudAccountTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="128" Width="Auto"/>
-                    <ColumnDefinition MinWidth="128" Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MinWidth="192" Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" 
-                    Text="{Binding Username}"
+                <SymbolIcon Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Symbol="Contact"/>
+                <TextBlock Grid.Column="1" 
+                           Text="{Binding Username}"
                            VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-                <Button Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Margin="8,0,8,0"/>
+                <Button Grid.Column="2"
                         x:Uid="ButtonLogout"
+                        MinWidth="64"
                         Click="ViewModel.CloudStorageLogout"
                         Tag="{Binding}"
                         Content="Logout"
@@ -83,9 +131,35 @@
                     <VisualState.Setters>
                         <Setter Target="TimerStackPanel.Orientation" Value="Vertical"/>
                         <Setter Target="DragDropActionStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Visible"/>
                         <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Collapsed"/>
-                        <Setter Target="AddMusicFoldersStackPanel.Opacity" Value="0"/>
+                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Visible"/>
                         <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TimerStackPanel.Orientation" Value="Horizontal"/>
+                        <Setter Target="DragDropActionStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TimerStackPanel.Orientation" Value="Horizontal"/>
+                        <Setter Target="DragDropActionStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -99,12 +173,12 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-			BackButtonVisibility="Collapsed" 
-			Frame="{x:Bind Frame, Mode=OneWay}"
-			Content="Settings"
-			x:Uid="PageHeaderSettings"
-			VisualStateNarrowMinWidth="0"
-			VisualStateNormalMinWidth="720">
+			      BackButtonVisibility="Collapsed" 
+			      Frame="{x:Bind Frame, Mode=OneWay}"
+			      Content="Settings"
+			      x:Uid="PageHeaderSettings"
+			      VisualStateNarrowMinWidth="0"
+			      VisualStateNormalMinWidth="720">
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1" Margin="12,12,0,4">
             <ScrollViewer Padding="0,0,12,0">
@@ -118,26 +192,33 @@
                            FontSize="17"
                            Margin="4,4,4,4"
                            Text="Update library"/>
-                <StackPanel Orientation="Horizontal" Margin="4,4,4,4">
-                    <Button x:Uid="ButtonUpdate"
-                            Content="Update" 
-                            Margin="0,0,12,0"
-                            MinWidth="128"
-                            IsEnabled="{x:Bind ViewModel.IsUpdating, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
-                            Click="{x:Bind ViewModel.UpdateLibrary}"/>
-                    <TextBlock x:Uid="TBNewSongs"
-                               VerticalAlignment="Center"
-                               Text="new songs:"
-                               Margin="0,0,8,0"
-                               Visibility="{Binding UpdateProgressTextVisibility, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    <TextBlock Text="{Binding UpdateProgressText}"
-                               VerticalAlignment="Center"/>
-                    <ProgressRing VerticalAlignment="Center"
-                                  Width="28"
-                                  Height="28"
-                                  Margin="12,0,4,0"
-                                  IsActive="{Binding IsUpdating}" 
-                                  Visibility="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Margin="4,4,4,4">
+                        <Button x:Uid="ButtonUpdate"
+                                Content="Update" 
+                                Margin="0,0,12,0"
+                                MinWidth="128"
+                                IsEnabled="{x:Bind ViewModel.IsUpdating, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.UpdateLibrary}"/>
+                            <TextBlock x:Uid="TBNewSongs"
+                                    VerticalAlignment="Center"
+                                    Text="new songs:"
+                                    Margin="0,0,8,0"
+                                    Visibility="{Binding UpdateProgressTextVisibility, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBlock Text="{Binding UpdateProgressText}"
+                                VerticalAlignment="Center"/>
+                            <ProgressRing VerticalAlignment="Center"
+                                        Width="28"
+                                        Height="28"
+                                        Margin="12,0,4,0"
+                                        IsActive="{Binding IsUpdating}" 
+                                        Visibility="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"  Margin="4,0,4,4">
+                            <TextBlock VerticalAlignment="Center"
+                                    Text="{Binding ScannedFolder}"
+                                    Margin="0,0,8,0"/>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="AddMusicFoldersStackPanel"
                             Orientation="Vertical" 
@@ -145,10 +226,12 @@
                     <TextBlock x:Uid="TBAddMusicLibraryFolders"
                                Style="{StaticResource BodyTextBlockStyle}"
                                FontSize="17"
-                               Text="Folders, where app look music"/>
+                               Text="Folders, where app looks for music"/>
                     <ListView Margin="0,4,4,4"
                             ItemsSource="{x:Bind ViewModel.MusicLibraryFolders, Mode=OneWay}"
-                            ItemTemplate="{StaticResource MusicFolderTemplate}">
+                            ItemTemplate="{StaticResource MusicFolderTemplate}"
+                            SelectionMode="None"
+                            IsItemClickEnabled="False">
                     </ListView>
                     <Button x:Uid="ButtonAddFolder"
                             Content="Add folder" 
@@ -156,38 +239,25 @@
                             Margin="0,4,4,4"
                             MinWidth="128"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="4">
-                    <TextBlock x:Uid="TBAutoSavePlaylists"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        FontSize="17"
-                        Margin="4,4,4,4"
-                        Text="Automatically save playlists in"/>
-                        <TextBlock
-                        Text="{x:Bind ViewModel.PlaylistsFolder, Mode=TwoWay}"
-                        Margin="4"
-                        Style="{StaticResource BodyTextBlockStyle}"/>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="8,0,0,0">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.AutoSavePlaylists, Mode=TwoWay}"/>
-                    </StackPanel>
+                <StackPanel x:Name="AddSdCardFoldersStackPanel"
+                          Orientation="Vertical" 
+                          Margin="4,4,4,4">
+                  <TextBlock x:Uid="TBAddMusicLibraryFolders"
+                              Style="{StaticResource BodyTextBlockStyle}"
+                              FontSize="17"
+                              Text="Folders, where app looks for music"/>
+                  <ListView Margin="0,4,4,4"
+                          ItemsSource="{x:Bind ViewModel.SdCardFolders, Mode=OneWay}"
+                          ItemTemplate="{StaticResource SdCardFolderTemplate}"
+                          SelectionMode="None"
+                          IsItemClickEnabled="False">
+                  </ListView>
+                  <Button x:Uid="ButtonAddFolder"
+                          Content="Add folder" 
+                          Click="{x:Bind ViewModel.AddSdCardFolder}"
+                          Margin="0,4,4,4"
+                          MinWidth="128"/>
                 </StackPanel>
-                <!--<StackPanel Orientation="Vertical" Margin="4">
-                    <TextBlock x:Uid="TBChooseFolderForPlaylists"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        FontSize="17"
-                        Margin="4,4,4,4"
-                        Text="Choose folder, where playlists are saved"/>
-                        <TextBlock Text="{x:Bind ViewModel.PlaylistsFolder, Mode=OneWay}"
-                               FontSize="15"
-                               Margin="4,0,0,0"/>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="8,0,0,0">
-                            <Button x:Uid="ButtonChoosePlaylistsFolder"
-                                Content="Change"
-                                MinWidth="128"
-                                Click="{x:Bind ViewModel.ChoosePlaylistsFolder}"/>
-                    </StackPanel>
-                </StackPanel>-->
                 <TextBlock x:Uid="TBPersonalize"
                         Style="{StaticResource TitleTextBlockStyle}" 
                         Margin="0,12,0,12"
@@ -279,7 +349,36 @@
                                      GroupName="DragDropAction"
                                      Content="Add to now playing"
                                      IsChecked="{Binding ActionNr3, Mode=TwoWay}"/>
-                    </StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="SwipeLeftCommandActionStackPanel"
+                        Orientation="Vertical" 
+                        Margin="4">
+                    <TextBlock x:Uid="TBSwipeLeftCommand"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Swipe right:"/>
+                    <RadioButton x:Uid="RBPlay"
+                                    Margin="4,0,4,0"
+                                    GroupName="SwipeLeftCommandAction"
+                                    Content="Play"
+                                    IsChecked="{Binding SwipeActionNr1, Mode=TwoWay}"/>
+                    <RadioButton x:Uid="RBPlayNext"
+                                    Margin="4,0,4,0"
+                                    GroupName="SwipeLeftCommandAction"
+                                    Content="Play next"
+                                    IsChecked="{Binding SwipeActionNr2, Mode=TwoWay}"/>
+                    <RadioButton x:Uid="RBAddToNowPlaying"
+                                    Margin="4,0,4,0"
+                                    GroupName="SwipeLeftCommandAction"
+                                    Content="Add to now playing"
+                                    IsChecked="{Binding SwipeActionNr3, Mode=TwoWay}"/>
+                    <RadioButton x:Uid="RBAddToPlaylist"
+                                    Margin="4,0,4,0"
+                                    GroupName="SwipeLeftCommandAction"
+                                    Content="Add to playlist"
+                                    IsChecked="{Binding SwipeActionNr4, Mode=TwoWay}"/>
+                </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <TextBlock x:Uid="TBIncludeSubFolders"
                         Style="{StaticResource BodyTextBlockStyle}"
@@ -315,28 +414,39 @@
                         <ToggleSwitch IsOn="{x:Bind ViewModel.HideStatusBar, Mode=TwoWay}"/>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" 
-                            Margin="4">
-                        <TextBlock x:Uid="TBLanguage"
-                           Style="{StaticResource BodyTextBlockStyle}"
-                           FontSize="17"
-                           Margin="4,4,4,4"
-                           Text="Language:"/>
-                        <ComboBox Margin="0" 
-                            BorderThickness="0" 
-                            MinWidth="128" 
-                            VerticalAlignment="Center"
-                            DisplayMemberPath="Name"
-                            SelectionChanged="{x:Bind ViewModel.ChangeLanguage}"
-                            SelectedItem="{x:Bind ViewModel.SelectedLanguage, Converter={StaticResource LanguageComboBoxConverter}, Mode=TwoWay}"
-                            ItemsSource="{x:Bind ViewModel.Languages}"
-                            />
-                        <TextBlock x:Uid="TBChangesAppliedAfterRestart"
-                           Style="{StaticResource BodyTextBlockStyle}"
-                           FontSize="14"
-                           Margin="4,0,4,4"
-                           Text="Please restart app to apply changes."/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock x:Uid="TBLiveTileWithImage"
+                    Style="{StaticResource BodyTextBlockStyle}"
+                    FontSize="17"
+                    Margin="4,4,4,4"
+                    Text="Show album art on live tile"/>
+                    <StackPanel Orientation="Horizontal"
+                            Margin="8,0,0,0">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.LiveTileWithAlbumArt, Mode=TwoWay}"/>
                     </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" 
+                        Margin="4">
+                    <TextBlock x:Uid="TBLanguage"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Language:"/>
+                    <ComboBox Margin="0" 
+                        BorderThickness="0" 
+                        MinWidth="128" 
+                        VerticalAlignment="Center"
+                        DisplayMemberPath="Name"
+                        SelectionChanged="{x:Bind ViewModel.ChangeLanguage}"
+                        SelectedItem="{x:Bind ViewModel.SelectedLanguage, Converter={StaticResource LanguageComboBoxConverter}, Mode=TwoWay}"
+                        ItemsSource="{x:Bind ViewModel.Languages}"
+                        />
+                    <TextBlock x:Uid="TBChangesAppliedAfterRestart"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="14"
+                        Margin="4,0,4,4"
+                        Text="Please restart app to apply changes."/>
+                </StackPanel>
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}" 
                     Margin="0,12,0,12"
@@ -383,9 +493,12 @@
                     Margin="0,12,0,12"
                     Text="OneDrive"/>
                 <StackPanel Orientation="Vertical" Margin="4">
-                    <ListView Margin="0,4,4,4"
+                    <ListView
                         ItemsSource="{x:Bind ViewModel.OneDriveAccounts, Mode=OneWay}"
-                        ItemTemplate="{StaticResource CloudAccountTemplate}">
+                        ItemTemplate="{StaticResource CloudAccountTemplate}"
+                        ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
+                        SelectionMode="None"
+                        IsItemClickEnabled="False">
                     </ListView>
                     <Button x:Uid="ButtonAddAccount"
                         Content="Add account"
@@ -394,74 +507,82 @@
                         IsEnabled="{x:Bind ViewModel.IsOneDriveLoginEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.AddOneDriveAccount}"/>
                 </StackPanel>
+                <TextBlock
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="Dropbox"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <ListView
+                        ItemsSource="{x:Bind ViewModel.DropboxAccounts, Mode=OneWay}"
+                        ItemTemplate="{StaticResource CloudAccountTemplate}"
+                        ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
+                        SelectionMode="None"
+                        IsItemClickEnabled="False">
+                    </ListView>
+                    <Button x:Uid="ButtonAddAccount"
+                        Content="Add account"
+                        Margin="0,0,0,0"
+                        MinWidth="128"
+                        IsEnabled="{x:Bind ViewModel.IsDropboxLoginEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.AddDropboxAccount}"/>
+                </StackPanel>
                     <TextBlock
-                        Style="{StaticResource TitleTextBlockStyle}" 
-                        Margin="0,12,0,12"
-                        Text="Dropbox"/>
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="pCloud"/>
                     <StackPanel Orientation="Vertical" Margin="4">
-                        <ListView Margin="0,4,4,4"
-                            ItemsSource="{x:Bind ViewModel.DropboxAccounts, Mode=OneWay}"
-                            ItemTemplate="{StaticResource CloudAccountTemplate}">
+                        <ListView
+                            ItemsSource="{x:Bind ViewModel.PCloudAccounts, Mode=OneWay}"
+                            ItemTemplate="{StaticResource CloudAccountTemplate}"
+                            ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
+                            SelectionMode="None"
+                            IsItemClickEnabled="False">
                         </ListView>
                         <Button x:Uid="ButtonAddAccount"
                             Content="Add account"
                             Margin="0,0,0,0"
                             MinWidth="128"
-                            IsEnabled="{x:Bind ViewModel.IsDropboxLoginEnabled, Mode=OneWay}"
-                            Click="{x:Bind ViewModel.AddDropboxAccount}"/>
+                            IsEnabled="{x:Bind ViewModel.IsPCloudLoginEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.AddPCloudAccount}"/>
                     </StackPanel>
-                    <!--<TextBlock
+                    <TextBlock x:Uid="TBAbout"
                     Style="{StaticResource TitleTextBlockStyle}" 
                     Margin="0,12,0,12"
-                    Text="Google Drive"/>
-                    <StackPanel Orientation="Vertical" Margin="4">
-                        <Button x:Uid="ButtonLogin"
-                            Content="Login"
-                            Margin="0,0,0,0"
-                            MinWidth="128"
-                            IsEnabled="{x:Bind ViewModel.IsGoogleDriveLoginEnabled, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.IsGoogleDriveLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"    
-                            Click="{x:Bind ViewModel.GoogleDriveLogin}"/>
-                        <Button x:Uid="ButtonLogout"
-                            Content="Logout"
-                            MinWidth="128"
-                            Margin="0,8,0,0"
-                            Visibility="{x:Bind ViewModel.IsGoogleDriveLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                            Click="{x:Bind ViewModel.GoogleDriveLogout}"/>
-                    </StackPanel>-->
-                    <TextBlock x:Uid="TBAbout"
-                        Style="{StaticResource TitleTextBlockStyle}" 
-                        Margin="0,12,0,12"
-                        Text="About"/>
-                    <StackPanel Orientation="Vertical" Margin="4">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,4,8">
-                        <TextBlock 
-                            Style="{StaticResource BodyTextBlockStyle}"
-                            FontSize="17"
-                            Margin="0,0,8,0"
-                            Text="Next-Player"/>
-                        <TextBlock
-                            Style="{StaticResource BodyTextBlockStyle}"
-                            FontSize="17"
-                            Text="{x:Bind ViewModel.AppVersion}"/>
-                    </StackPanel>
-                    <Button x:Uid="ButtonRateApp"
-                            Content="Rate app"
-                            Margin="0,4,0,8"
-                            MinWidth="128"
-                            Click="{x:Bind ViewModel.RateApp}"/>
-                    <Button x:Uid="ButtonFeedback"
-                            Margin="0,4,0,8"
-                            MinWidth="128"
-                            Content="Feedback"
-                            Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                            Click="{x:Bind ViewModel.LeaveFeedback}"/>
-                    <Button x:Uid="ButtonLicenses"
-                            Content="Licenses"
-                            Margin="0,4,0,8"
-                            MinWidth="128"
-                            Click="{x:Bind ViewModel.Licenses}"/>
+                    Text="About"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                <StackPanel Orientation="Horizontal" Margin="0,0,4,8">
+                    <TextBlock 
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="0,0,8,0"
+                        Text="Next-Player"/>
+                    <TextBlock
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Text="{x:Bind ViewModel.AppVersion}"/>
                 </StackPanel>
+                <Button x:Uid="ButtonRateApp"
+                        Content="Rate app"
+                        Margin="0,4,0,8"
+                        MinWidth="128"
+                        Click="{x:Bind ViewModel.RateApp}"/>
+                <Button x:Uid="ButtonFeedback"
+                        Margin="0,4,0,8"
+                        MinWidth="128"
+                        Content="Feedback"
+                        Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.LeaveFeedback}"/>
+                <Button x:Uid="ButtonEmail"
+                        Content="Support"
+                        MinWidth="128"
+                        Margin="0,4,0,8"
+                        Click="{x:Bind ViewModel.ContactWithSupport}"/>
+                <Button x:Uid="ButtonLicenses"
+                        Content="Licenses"
+                        Margin="0,4,0,8"
+                        MinWidth="128"
+                        Click="{x:Bind ViewModel.Licenses}"/>
+            </StackPanel>
             </StackPanel>
             </ScrollViewer>
         </Grid>

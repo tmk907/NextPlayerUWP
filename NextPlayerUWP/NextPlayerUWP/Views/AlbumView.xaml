@@ -9,6 +9,7 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -20,6 +21,8 @@
     </Page.Transitions>
     <Page.Resources>
         <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
@@ -61,84 +64,6 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="{StaticResource ForegroundColor}"/>
         </Style>
-
-        <DataTemplate x:Key="AlbumSongItemTemplateDesktop" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                    Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource SongItemStyleIndex}"/>
-                <TextBlock Grid.Column="1"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleLeft}"/>
-                <TextBlock Grid.Column="2"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
-                <TextBlock Grid.Column="3"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="AlbumSongItemTemplateMobile" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.RowSpan="2"
-                    Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource SongItemStyleIndex}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="1" Grid.Row="0"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleTop}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleBottom}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="2" Grid.RowSpan="2"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="AlbumSongItemTemplateMobileWide" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                    Text="{x:Bind TrackNumber}"
-                    Style="{StaticResource SongItemStyleIndex}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="1"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleLeft}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="2"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleCenter}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-                <TextBlock Grid.Column="3"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"
-                    Foreground="{StaticResource ForegroundColor}"/>
-            </Grid>
-        </DataTemplate>
         <Style x:Key="AlbumButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{ThemeResource UserAccentBrush}"/>
@@ -265,7 +190,103 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        <DataTemplate x:Key="AlbumSongItemTemplateDesktop" x:DataType="data:SongItem">
+            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                    Text="{x:Bind TrackNumber}"
+                    Style="{StaticResource SongItemStyleIndex}"/>
+                <TextBlock Grid.Column="1"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleLeft}"/>
+                <TextBlock Grid.Column="2"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleCenter}"/>
+                <TextBlock Grid.Column="3"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="AlbumSongItemTemplateMobile" x:DataType="data:SongItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.RowSpan="2"
+                    Text="{x:Bind TrackNumber}"
+                    Style="{StaticResource SongItemStyleIndex}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleTop}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleBottom}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
+        <DataTemplate x:Key="AlbumSongItemTemplateMobileWide" x:DataType="data:SongItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                    Text="{x:Bind TrackNumber}"
+                    Style="{StaticResource SongItemStyleIndex}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="1"
+                    Text="{x:Bind Title}"
+                    Style="{StaticResource SongItemStyleLeft}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="2"
+                    Text="{x:Bind Artist}"
+                    Style="{StaticResource SongItemStyleCenter}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                    <TextBlock Grid.Column="3"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource SongItemStyleRight}"
+                    Foreground="{StaticResource ForegroundColor}"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -275,19 +296,20 @@
                         <triggers:CompositeStateTrigger Operator="And">
                             <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                             <triggers:AdaptiveTrigger MinWindowWidth="480"/>
+                            <triggers:OrientationStateTrigger Orientation="Portrait"/>
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AlbumSongsListView.ItemTemplate" Value="{StaticResource AlbumSongItemTemplateMobileWide}"/>
                         <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecondSemiTr}"/>
                         <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormalSemiTr}"/>
-                        <Setter Target="AlbumCoverImage.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCoverImage.Opacity" Value="0"/>
                         <Setter Target="AlbumCoverImageBG.Visibility" Value="Visible"/>
-                        <Setter Target="AlbumCoverImageBG.Opacity" Value="1"/>
                         <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
                         <Setter Target="DarkenLayer.Opacity" Value="1"/>
                         <Setter Target="ForegroundColor.Color" Value="White"/>
+                        <Setter Target="AlbumSongsListView.CanDragItems" Value="False"/>
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Collapsed"/>
+                        <Setter Target="PortraitView.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -295,207 +317,334 @@
                         <triggers:CompositeStateTrigger Operator="And">
                             <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                             <triggers:AdaptiveTrigger MinWindowWidth="0"/>
+                            <triggers:OrientationStateTrigger Orientation="Portrait"/>
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AlbumSongsListView.ItemTemplate" Value="{StaticResource AlbumSongItemTemplateMobile}"/>
                         <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecondSemiTr}"/>
                         <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormalSemiTr}"/>
-                        <Setter Target="AlbumCoverImage.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCoverImage.Opacity" Value="0"/>
                         <Setter Target="AlbumCoverImageBG.Visibility" Value="Visible"/>
-                        <Setter Target="AlbumCoverImageBG.Opacity" Value="1"/>
                         <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
                         <Setter Target="DarkenLayer.Opacity" Value="1"/>
                         <Setter Target="ForegroundColor.Color" Value="White"/>
+                        <Setter Target="AlbumSongsListView.CanDragItems" Value="False"/>
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Collapsed"/>
+                        <Setter Target="PortraitView.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MobileLandscape">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:OrientationStateTrigger Orientation="Landscape"/>
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PortraitView.Visibility" Value="Collapsed"/>
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Visible"/>
+                        <Setter Target="AlbumCoverImageBG.Visibility" Value="Visible"/>
+                        <Setter Target="DarkenLayer.Visibility" Value="Visible"/>
+                        <Setter Target="DarkenLayer.Opacity" Value="1"/>
+                        <Setter Target="ForegroundColor.Color" Value="White"/>
+                        <Setter Target="AlbumSongsListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
                     <VisualState.StateTriggers>
-                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                        <triggers:CompositeStateTrigger Operator="Or">
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                        </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AlbumSongsListView.ItemTemplate" Value="{StaticResource AlbumSongItemTemplateDesktop}"/>
                         <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecond}"/>
                         <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormal}"/>
                         <Setter Target="AlbumCoverImage.Visibility" Value="Visible"/>
-                        <Setter Target="AlbumCoverImage.Opacity" Value="1"/>
-                        <Setter Target="AlbumCoverImageBG.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCoverImageBG.Opacity" Value="0"/>
                         <Setter Target="DarkenLayer.Visibility" Value="Collapsed"/>
                         <Setter Target="DarkenLayer.Opacity" Value="0"/>
                         <Setter Target="ForegroundColor.Color" Value="{ThemeResource SystemBaseHighColor}"/>
+                        <Setter Target="AlbumSongsListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            x:Uid="PageHeaderAlbum"
+            Content="Album" 
+            VisualStateNarrowMinWidth="0" 
+            VisualStateNormalMinWidth="720">
+            <AppBarButton
+            x:Uid="AppBarButtonShuffleAll"
+            x:Name="ShuffleAppBarButton"
+            Label="Shuffle all"
+            Icon="Shuffle"/>
+        </controls:PageHeader>
+        <Image x:Name="AlbumCoverImageBG" Grid.Row="1" 
+                Stretch="UniformToFill"
+                x:DeferLoadStrategy="Lazy"
+                Visibility="Collapsed"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                ImageOpened="AlbumCoverImageBG_ImageOpened">
+            <Image.Source>
+                <BitmapImage 
+                    UriSource="{Binding Album.ImageUri, Mode=OneWay}"/>
+            </Image.Source>
+        </Image>
+        <Rectangle x:Name="DarkenLayer" 
+                    x:DeferLoadStrategy="Lazy"
+                    Visibility="Collapsed"
+                    Grid.Row="1"
+                    Fill="#80161616"/>
+        <ContentDialog x:Name="ContentDialogEditAlbum"
+                Grid.RowSpan="2" Grid.ColumnSpan="2"
+                x:Uid="ContentDialogEditAlbum"
+                VerticalAlignment="Center"
+                Title="Edit"
+                PrimaryButtonText="Save"
+                PrimaryButtonClick="{x:Bind ViewModel.SaveAlbum}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="360"
+                Height="Auto">
+            <ContentDialog.Content>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Margin="0,4,4,0"
+                                    x:Uid="TBAlbum"
+                                    VerticalAlignment="Center"
+                                    Text="Album:"/>
+                    <TextBox Margin="0,4,4,0"
+                                  Text="{Binding EditedAlbum.AlbumParam, Mode=TwoWay}"/>
+                    <TextBlock Margin="0,4,4,0"
+                                    x:Uid="TBAlbumArtist"
+                                    VerticalAlignment="Center"
+                                    Text="Album artist:"/>
+                    <TextBox Margin="0,4,4,0"
+                                  Text="{Binding EditedAlbum.AlbumArtist, Mode=TwoWay}"/>
+                    <TextBlock Margin="0,4,4,0"
+                                    VerticalAlignment="Center"
+                                    x:Uid="TBYear"
+                                    Text="Year:"/>
+                    <TextBox Margin="0,4,4,0"
+                                  Text="{Binding EditedAlbum.Year, Mode=TwoWay}"/>
+                </StackPanel>
+            </ContentDialog.Content>
+        </ContentDialog>
+        <Grid Grid.Row="1" Grid.Column="0"
+              x:Name="PortraitView">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderAlbum"
-                Content="Album" 
-                VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720">
-                <AppBarButton
-                x:Uid="AppBarButtonShuffleAll"
-                Label="Shuffle all"
-                Icon="Shuffle"
-                Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
-            </controls:PageHeader>
-            <Image x:Name="AlbumCoverImageBG" Grid.Row="1" Stretch="UniformToFill"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center">
+            <Image Grid.Column="0" Grid.Row="0"
+                    Margin="12,12,12,12"
+                    x:Name="AlbumCoverImage"
+                    x:DeferLoadStrategy="Lazy" 
+                    Visibility="Collapsed"
+                    ImageOpened="AlbumCoverImage_ImageOpened">
                 <Image.Source>
-                    <BitmapImage 
-                        UriSource="{Binding Album.ImageUri, Mode=OneWay}"/>
+                    <BitmapImage
+                        UriSource="{Binding Album.ImageUri, Mode=OneWay}"
+                        DecodePixelType="Logical"
+                        DecodePixelHeight="220" DecodePixelWidth="220"/>
                 </Image.Source>
             </Image>
-            <Rectangle x:Name="DarkenLayer" 
-                       Grid.Row="1"
-                       Fill="#80161616"/>
-            <Grid Grid.Row="1" Grid.Column="0">
+            <Grid Grid.Column="1" Grid.Row="0" Margin="12,12,12,12">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <ContentDialog x:Name="ContentDialogEditAlbum"
-                    Grid.RowSpan="2" Grid.ColumnSpan="2"
-                    x:Uid="ContentDialogEditAlbum"
-                    VerticalAlignment="Center"
-                    Title="Edit"
-                    PrimaryButtonText="Save"
-                    PrimaryButtonClick="{x:Bind ViewModel.SaveAlbum}"
-                    SecondaryButtonText="Cancel"
-                    VerticalContentAlignment="Stretch"
-                    MaxWidth="360"
-                    Height="Auto">
-                    <ContentDialog.Content>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Margin="0,4,4,0"
-                                       x:Uid="TBAlbum"
-                                       VerticalAlignment="Center"
-                                       Text="Album:"/>
-                            <TextBox Margin="0,4,4,0"
-                                     Text="{Binding EditedAlbum.AlbumParam, Mode=TwoWay}"/>
-                            <TextBlock Margin="0,4,4,0"
-                                       x:Uid="TBAlbumArtist"
-                                       VerticalAlignment="Center"
-                                       Text="Album artist:"/>
-                            <TextBox Margin="0,4,4,0"
-                                     Text="{Binding EditedAlbum.AlbumArtist, Mode=TwoWay}"/>
-                            <TextBlock Margin="0,4,4,0"
-                                       VerticalAlignment="Center"
-                                       x:Uid="TBYear"
-                                       Text="Year:"/>
-                            <TextBox Margin="0,4,4,0"
-                                     Text="{Binding EditedAlbum.Year, Mode=TwoWay}"/>
-                        </StackPanel>
-                    </ContentDialog.Content>
-                </ContentDialog>
-                <Image x:Name="AlbumCoverImage" Margin="12,12,12,12">
-                    <Image.Source>
-                        <BitmapImage x:Name="AlbumBitmapImage"
-                                     UriSource="{Binding Album.ImageUri, Mode=OneWay}"
-                                     DecodePixelType="Logical"
-                                     DecodePixelHeight="220" DecodePixelWidth="220"/>
-                    </Image.Source>
-                </Image>
-                <Grid Grid.Column="1" Grid.Row="0" Margin="12,12,12,12">
+                <TextBlock Grid.Row="0"
+                        Text="{x:Bind ViewModel.Album.Album, Mode=OneWay}" 
+                        Style="{StaticResource AlbumDescriptionAlbumNameStyle}"/>
+                <TextBlock Grid.Row="1"
+                        Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
+                        Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
+                <TextBlock Grid.Row="2"
+                            Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
+                            Style="{StaticResource AlbumDescription2TBStyle}"/>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                        Text="{Binding Album.Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                        Style="{StaticResource AlbumDescription2TBStyle}"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Button Click="{x:Bind ViewModel.PlayAlbum}"
+                                Style="{StaticResource AlbumButtonStyle}">
+                            <Button.Content>
+                                <TextBlock Text="&#xE102;" FontFamily="Segoe MDL2 Assets"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Style="{StaticResource AlbumButtonStyle}">
+                            <Button.Content>
+                                <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets"/>
+                            </Button.Content>
+                            <Button.Flyout>
+                                <Flyout Placement="Bottom">
+                                    <StackPanel>
+                                        <Button x:Uid="ButtonPlayNext" 
+                                                Content="Play next" 
+                                                Style="{StaticResource FlyoutButtonTemplate}"
+                                                Click="{x:Bind ViewModel.PlayAlbumNext}"/>
+                                        <Button x:Uid="ButtonAddToNowPlaying" 
+                                                Content="Add to now playing" 
+                                                Style="{StaticResource FlyoutButtonTemplate}"
+                                                Click="{x:Bind ViewModel.AddAlbumToNowPlaying}"/>
+                                        <Button x:Uid="ButtonAddToPlaylist" 
+                                                Content="Add to playlist" 
+                                                Style="{StaticResource FlyoutButtonTemplate}"
+                                                Click="{x:Bind ViewModel.AddAlbumToPlaylist}"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button Click="EditAlbum_Click"
+                                Style="{StaticResource AlbumButtonStyle}">
+                            <Button.Content>
+                                <TextBlock Text="&#xE104;" FontFamily="Segoe MDL2 Assets"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <mycontrols:AlternatingRowListView Grid.Row="1" Grid.ColumnSpan="2"
+                    x:Name="AlbumSongsListView"
+                    EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                    OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                    ItemsSource="{Binding Songs}"
+                    ItemTemplate="{StaticResource AlbumSongItemTemplateDesktop}"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
+                    IsItemClickEnabled="True"
+                    ItemClick="{x:Bind ViewModel.ItemClicked }"
+                    Margin="12,0,0,4"
+                    SelectionMode="None"
+                    CanDragItems="True"
+                    DragItemsStarting="{x:Bind ViewModel.DragStarting}">
+                <mycontrols:AlternatingRowListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </mycontrols:AlternatingRowListView.ItemsPanel>
+            </mycontrols:AlternatingRowListView>
+        </Grid>
+        <ScrollViewer 
+                Grid.Row="1" Grid.Column="0"
+                x:Name="MobileLandscapeView"
+                x:DeferLoadStrategy="Lazy" 
+                Visibility="Collapsed"
+                ScrollViewer.VerticalScrollMode="Enabled" >
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"
-                           Text="{x:Bind ViewModel.Album.Album, Mode=OneWay}" 
-                           Style="{StaticResource AlbumDescriptionAlbumNameStyle}"/>
-                    <TextBlock Grid.Row="1"
-                           Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
-                           Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
-                    <TextBlock Grid.Row="2"
-                               Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
-                               Style="{StaticResource AlbumDescription2TBStyle}"/>
-                    <Grid Grid.Row="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0"
-                           Text="{Binding Album.Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                           Style="{StaticResource AlbumDescription2TBStyle}"/>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                            <Button Click="{x:Bind ViewModel.PlayAlbum}"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1" Grid.Row="0" Margin="12,12,12,12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                            Text="{x:Bind ViewModel.Album.Album, Mode=OneWay}" 
+                            Style="{StaticResource AlbumDescriptionAlbumNameStyle}"/>
+                        <TextBlock Grid.Row="1"
+                            Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
+                            Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
+                        <TextBlock Grid.Row="2"
+                                Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
+                                Style="{StaticResource AlbumDescription2TBStyle}"/>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                Text="{Binding Album.Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                                Style="{StaticResource AlbumDescription2TBStyle}"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                <Button Click="{x:Bind ViewModel.PlayAlbum}"
                                     Style="{StaticResource AlbumButtonStyle}">
-                                <Button.Content>
-                                    <TextBlock Text="&#xE102;" FontFamily="Segoe MDL2 Assets"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Style="{StaticResource AlbumButtonStyle}">
-                                <Button.Content>
-                                    <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets"/>
-                                </Button.Content>
-                                <Button.Flyout>
-                                    <Flyout Placement="Bottom">
-                                        <StackPanel>
-                                            <Button x:Uid="ButtonPlayNext" 
+                                    <Button.Content>
+                                        <TextBlock Text="&#xE102;" FontFamily="Segoe MDL2 Assets"/>
+                                    </Button.Content>
+                                </Button>
+                                <Button Style="{StaticResource AlbumButtonStyle}">
+                                    <Button.Content>
+                                        <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets"/>
+                                    </Button.Content>
+                                    <Button.Flyout>
+                                        <Flyout Placement="Bottom">
+                                            <StackPanel>
+                                                <Button x:Uid="ButtonPlayNext" 
                                                     Content="Play next" 
                                                     Style="{StaticResource FlyoutButtonTemplate}"
                                                     Click="{x:Bind ViewModel.PlayAlbumNext}"/>
-                                            <Button x:Uid="ButtonAddToNowPlaying" 
+                                                <Button x:Uid="ButtonAddToNowPlaying" 
                                                     Content="Add to now playing" 
                                                     Style="{StaticResource FlyoutButtonTemplate}"
                                                     Click="{x:Bind ViewModel.AddAlbumToNowPlaying}"/>
-                                            <Button x:Uid="ButtonAddToPlaylist" 
+                                                <Button x:Uid="ButtonAddToPlaylist" 
                                                     Content="Add to playlist" 
                                                     Style="{StaticResource FlyoutButtonTemplate}"
                                                     Click="{x:Bind ViewModel.AddAlbumToPlaylist}"/>
-                                        </StackPanel>
-                                    </Flyout>
-                                </Button.Flyout>
-                            </Button>
-                            <Button Click="EditAlbum_Click"
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Click="EditAlbum_Click"
                                     Style="{StaticResource AlbumButtonStyle}">
-                                <Button.Content>
-                                    <TextBlock Text="&#xE104;" FontFamily="Segoe MDL2 Assets"/>
-                                </Button.Content>
-                            </Button>
-                        </StackPanel>
+                                    <Button.Content>
+                                        <TextBlock Text="&#xE104;" FontFamily="Segoe MDL2 Assets"/>
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <mycontrols:AlternatingRowListView Grid.Row="1" Grid.ColumnSpan="2"
-                        x:Name="AlbumSongsListView"
-                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                    <mycontrols:AlternatingRowListView Grid.Row="1" Grid.ColumnSpan="2"
+                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecondSemiTr}"
+                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormalSemiTr}"
                         ItemsSource="{Binding Songs}"
-                        ItemTemplate="{StaticResource AlbumSongItemTemplateDesktop}"
+                        ItemTemplate="{StaticResource AlbumSongItemTemplateMobileWide}"
                         ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
                         IsItemClickEnabled="True"
                         ItemClick="{x:Bind ViewModel.ItemClicked }"
                         Margin="12,0,0,4"
                         SelectionMode="None"
-                        CanDragItems="True"
-                        DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                    <mycontrols:AlternatingRowListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsStackPanel Orientation="Vertical"/>
-                        </ItemsPanelTemplate>
-                    </mycontrols:AlternatingRowListView.ItemsPanel>
-                </mycontrols:AlternatingRowListView>
-            </Grid>
-        </Grid>
+                        CanDragItems="False"
+                        ScrollViewer.VerticalScrollMode="Disabled">
+                        <mycontrols:AlternatingRowListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </mycontrols:AlternatingRowListView.ItemsPanel>
+                    </mycontrols:AlternatingRowListView>
+                </Grid>
+            </ScrollViewer>
     </Grid>
 </Page>

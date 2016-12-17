@@ -96,7 +96,13 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
-        public string PlayingNowArtistTitle { get { return playingNowArtist + " - " + playingNowTitle; } }
+        public string PlayingNowArtistTitle
+        {
+            get
+            {
+                return playingNowArtist + " - " + playingNowTitle;
+            }
+        }
 
         private RadioType type;
         public RadioType Type { get { return type; } }

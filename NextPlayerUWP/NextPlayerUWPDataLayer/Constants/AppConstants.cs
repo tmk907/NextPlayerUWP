@@ -22,8 +22,11 @@
         public const string AppLogoSmall71 = "ms-appx:///Assets/Visual Assets/Square71/Small3.png";
         public const string AppLogoMedium = "ms-appx:///Assets/Visual Assets/Square150/Medium3.png";
         public const string AppLogoWide = "ms-appx:///Assets/Visual Assets/Wide310/Wide3.png";
+        public const string AppLogoLarge = "ms-appx:///Assets/Visual Assets/Square310/Square310.png";
 
         public const string RadioCover = "ms-appx:///Assets/Albums/AlbumCoverTRnG.png";
+
+        public const string EmptyMP3File = "ms-appx:///Assets/Sounds/Empty.mp3";
 
         //Layout
         public const string AppTheme = "AppTheme";
@@ -83,6 +86,7 @@
         public const string TileIdValue = "TileIdValue";
         public const string TileImage = "TileImage";
         public const string TileAppTransparent = "isapptiletransparent";
+        public const string EnableLiveTileWithImage = "EnableLiveTileWithImage";
 
         public const string DataLastSend = "DataLastSend";
 
@@ -119,37 +123,50 @@
 
         //SoundCloud
         public const string SoundCloudClientId = "1a554caaef0c755f3a794ec4c46d2ee2";
-        public const string SoundCloudClientSecret = "292af0fae1bee4360317164d21cdf8dd";
+        //public const string SoundCloudClientSecret = "292af0fae1bee4360317164d21cdf8dd";
 
         //OneDrive
         public const string OneDriveAppId = "0000000048172F05";
-        public const string OneDriveAppSecret = "1VO9tiGE/0apI83XTSl9N9qnp/Pcnn7A";
+        //public const string OneDriveAppSecret = "1VO9tiGE/0apI83XTSl9N9qnp/Pcnn7A";
         //urn:ietf:wg:oauth:2.0:oob
         //https://login.live.com/oauth20_desktop.srf
 
         //Dropbox
         public const string DropboxAppKey = "cyqbr26o2vtbo8z";
-        public const string DropboxAppSecret = "tlj5wna6iuuhfmm";
+        //public const string DropboxAppSecret = "tlj5wna6iuuhfmm";
         public const string DropboxAuthToken = "DropboxAuthToken";
 
         //Google Drive
         public const string GoogleDriveClientId = "958984549072-t7lkdmpq50crclpt356js7egc1au3p8u.apps.googleusercontent.com";
-        public const string GoogleDriveAppSecret = "kIPQh3zCiK-X7LsD1lmPBPAJ";
+        //public const string GoogleDriveAppSecret = "kIPQh3zCiK-X7LsD1lmPBPAJ";
+
+        //pCloud
+        public const string PCloudClientId = "5hl070QJ9KY";
+        //public const string PCloudAppSecret = "zt17mban1oQj8iq25n5wNbtIuhuV";
 
         //Jamendo
         public const string JamendoClientId = "8ed1da48";
-        public const string JamendoClientSecret = "45994f52254ba988c15abee8967bbc84";
-
+        //public const string JamendoClientSecret = "45994f52254ba988c15abee8967bbc84";
 
         public const string ActionAfterDropItem = "ActionAfterDropItem";
         public const string ActionPlayNext = "ActionPlayNext";
         public const string ActionAddToNowPlaying = "ActionAddToNowPlaying";
         public const string ActionPlayNow = "ActionPlayNow";
 
+        public const string ActionAfterSwipeLeftCommand = "ActionAfterSwipeLeftCommand";
+        public const string ActionAfterSwipeRightCommand = "ActionAfterSwipeRightCommand";
+        public const string SwipeActionPlayNext = "SwipeActionPlayNext";
+        public const string SwipeActionAddToNowPlaying = "SwipeActionAddToNowPlaying";
+        public const string SwipeActionPlayNow = "SwipeActionPlayNow";
+        public const string SwipeActionAddToPlaylist = "SwipeActionAddToPlaylist";
+        public const string SwipeActionDelete = "SwipeActionDelete";
+
+
         public const string DisableLockscreen = "DisableLockscreen";
         public const string HideStatusBar = "HideStatusBar";
         public const string IncludeSubFolders = "IncludeSubFolders";
         public const string PlaylistsFolder = "PlaylistsFolder";
         public const string AutoSavePlaylists = "AutoSavePlaylists";
+        public const string FlipViewSelectedIndex = "FlipViewSelectedIndex";
     }
 }

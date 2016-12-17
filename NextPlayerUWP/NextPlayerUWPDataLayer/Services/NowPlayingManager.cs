@@ -25,7 +25,7 @@ namespace NextPlayerUWPDataLayer.Services
         private bool paused;
         private bool isFirst;
 
-        private Playlist playlist;
+        private CurrentPlaylistHelper playlist;
 
         private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
 
@@ -38,7 +38,7 @@ namespace NextPlayerUWPDataLayer.Services
             Logger.DebugWrite("NowPlayingManager", "");
             //Stopwatch s1 = new Stopwatch();
             //s1.Start();
-            playlist = new Playlist();
+            playlist = new CurrentPlaylistHelper();
             //s1.Stop();
             //Debug.WriteLine("NowPlayingManager 1 "+ s1.ElapsedMilliseconds);
             //ChangeRepeat();
@@ -180,7 +180,7 @@ namespace NextPlayerUWPDataLayer.Services
         {
             try
             {
-                string token = await FutureAccessHelper.GetTokenFromPath(path);
+                string token = await FutureAccessHelper.GetTokenFromPathAsync(path);
                 if (token != null)
                 {
                     var file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
@@ -581,7 +581,7 @@ namespace NextPlayerUWPDataLayer.Services
     }
 
 
-    class Playlist
+    class CurrentPlaylistHelper
     {
         private List<NowPlayingSong> playlist;
         private int currentIndex;
@@ -596,7 +596,7 @@ namespace NextPlayerUWPDataLayer.Services
         private bool isSongRepeated;
         private bool isPlaylistRepeated;
 
-        public Playlist()
+        public CurrentPlaylistHelper()
         {
             lastPlayed = new Queue<int>();
             LoadSongsFromDB();
@@ -606,18 +606,6 @@ namespace NextPlayerUWPDataLayer.Services
             isPlaylistRepeated = false;
             isSongRepeated = false;
             Logger.DebugWrite("Playlist()", "finished");
-        }
-
-        public Playlist(int index, bool shuffle, RepeatEnum repeat)
-        {
-            lastPlayed = new Queue<int>();
-            LoadSongsFromDB();
-            currentIndex = index;
-            previousIndex = -1;
-            this.shuffle = shuffle;
-            this.repeat = repeat;
-            isPlaylistRepeated = false;
-            isSongRepeated = false;
         }
 
         public bool IsFirst()

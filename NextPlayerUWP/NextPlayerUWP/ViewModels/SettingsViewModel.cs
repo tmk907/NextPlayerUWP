@@ -1,28 +1,20 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
 using Windows.System;
-using Windows.UI;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
-using NextPlayerUWPDataLayer.CloudStorage.GoogleDrive;
 using NextPlayerUWPDataLayer.CloudStorage;
+using NextPlayerUWPDataLayer.Model;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -78,38 +70,10 @@ namespace NextPlayerUWP.ViewModels
 
         private bool initialization = false;
 
-        private string updateProgressText = "";
-        public string UpdateProgressText
-        {
-            get { return updateProgressText; }
-            set { Set(ref updateProgressText, value); }
-        }
-
-        private bool updateProgressTextVisibility = false;
-        public bool UpdateProgressTextVisibility
-        {
-            get { return updateProgressTextVisibility; }
-            set { Set(ref updateProgressTextVisibility, value); }
-        }
-
-        private bool isUpdating = false;
-        public bool IsUpdating
-        {
-            get { return isUpdating; }
-            set { Set(ref isUpdating, value); }
-        }
-
-        private ObservableCollection<MusicFolder> musicLibraryFolders = new ObservableCollection<MusicFolder>();
-        public ObservableCollection<MusicFolder> MusicLibraryFolders
-        {
-            get { return musicLibraryFolders; }
-            set { Set(ref musicLibraryFolders, value); }
-        }
-
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             initialization = true;
-
+            App.OnNavigatedToNewView(true);
             // Tools
             var tt = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
             var IsTimerOn = (bool)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn)??false);
@@ -140,8 +104,28 @@ namespace NextPlayerUWP.ViewModels
                 ActionNr = 3;
             }
 
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            switch (swipeAction)
+            {
+                case AppConstants.SwipeActionPlayNow:
+                    SwipeActionNr = 1;
+                    break;
+                case AppConstants.SwipeActionPlayNext:
+                    SwipeActionNr = 2;
+                    break;
+                case AppConstants.SwipeActionAddToNowPlaying:
+                    SwipeActionNr = 3;
+                    break;
+                case AppConstants.SwipeActionAddToPlaylist:
+                    SwipeActionNr = 4;
+                    break;
+                default:
+                    break;
+            }
+
             PreventScreenLock = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
             HideStatusBar = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
+            LiveTileWithAlbumArt = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
             IncludeSubFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
 
             //Personalization
@@ -162,6 +146,7 @@ namespace NextPlayerUWP.ViewModels
             if (!isUpdating)
             {
                 UpdateProgressText = "";
+                ScannedFolder = "";
                 UpdateProgressTextVisibility = false;
             }
             if (musicLibraryFolders.Count == 0)
@@ -172,8 +157,19 @@ namespace NextPlayerUWP.ViewModels
                     MusicLibraryFolders.Add(new MusicFolder() { Name = f.DisplayName, Path = f.Path });
                 }
             }
+            if (sdCardFolders.Count == 0)
+            {
+                var list = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
+                var folder = new SdCardFolder()
+                {
+                    Name = "Music",
+                    Path = @"C:\",
+                    IncludeSubFolders = true,
+                };
+                list.Insert(0, folder);
+                SdCardFolders = new ObservableCollection<SdCardFolder>(list);
+            }
             PlaylistsFolder = Windows.Storage.KnownFolders.Playlists.Path;
-            AutoSavePlaylists = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists);
 
             //Last.fm
             string login = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string;
@@ -188,12 +184,10 @@ namespace NextPlayerUWP.ViewModels
 
             OneDriveAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.OneDrive));
             DropboxAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.Dropbox));
-
-            //IsOneDriveLoggedIn = OneDriveService.Instance.IsAuthenticated;
-            //IsDropboxLoggedIn = DropboxService.Instance.IsAuthenticated;
+            PCloudAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.pCloud));
 
             //About
-            if (Microsoft.Services.Store.Engagement.Feedback.IsSupported)
+            if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
             {
                 FeedbackVisibility = true;
             }
@@ -202,19 +196,64 @@ namespace NextPlayerUWP.ViewModels
 
         #region Library
 
+        private string updateProgressText = "";
+        public string UpdateProgressText
+        {
+            get { return updateProgressText; }
+            set { Set(ref updateProgressText, value); }
+        }
+
+        private string scannedFolder = "";
+        public string ScannedFolder
+        {
+            get { return scannedFolder; }
+            set { Set(ref scannedFolder, value); }
+        }
+
+        private bool updateProgressTextVisibility = false;
+        public bool UpdateProgressTextVisibility
+        {
+            get { return updateProgressTextVisibility; }
+            set { Set(ref updateProgressTextVisibility, value); }
+        }
+
+        private bool isUpdating = false;
+        public bool IsUpdating
+        {
+            get { return isUpdating; }
+            set { Set(ref isUpdating, value); }
+        }
+
+        private ObservableCollection<MusicFolder> musicLibraryFolders = new ObservableCollection<MusicFolder>();
+        public ObservableCollection<MusicFolder> MusicLibraryFolders
+        {
+            get { return musicLibraryFolders; }
+            set { Set(ref musicLibraryFolders, value); }
+        }
+
+        private ObservableCollection<SdCardFolder> sdCardFolders = new ObservableCollection<SdCardFolder>();
+        public ObservableCollection<SdCardFolder> SdCardFolders
+        {
+            get { return sdCardFolders; }
+            set { Set(ref sdCardFolders, value); }
+        }
+
         public async void UpdateLibrary()
         {
-            MediaImport m = new MediaImport();
+            MediaImport m = new MediaImport(App.FileFormatsHelper);
             UpdateProgressTextVisibility = true;
-            Progress<int> progress = new Progress<int>(
-                percent =>
+            Progress<string> progress = new Progress<string>(
+                data =>
                 {
-                    UpdateProgressText = percent.ToString();
+                    var array = data.Split('|');
+                    ScannedFolder = array[0];
+                    UpdateProgressText = array[1].ToString();
                 }
             );
             IsUpdating = true;
             await Task.Run(() => m.UpdateDatabase(progress));
             IsUpdating = false;
+            ScannedFolder = "";
             TelemetryAdapter.TrackEvent("Library updated");
         }
 
@@ -246,40 +285,40 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        public async void AddSdCardFolder()
+        {
+            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
+            Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                MessageDialogHelper helper = new MessageDialogHelper();
+                bool includeSubFolders = await helper.ShowIncludeAllSubFoldersQuestion();
+                SdCardFolders.Add(new SdCardFolder()
+                {
+                    Name = folder.Name,
+                    Path = folder.Path,
+                    IncludeSubFolders = includeSubFolders,
+                });
+                var list = new List<SdCardFolder>(sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:")));
+                await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
+            }
+        }
+
+        public async void RemoveSdCardFolder(SdCardFolder musicFolder)
+        {
+            if (musicFolder.Path.ToLower().StartsWith("c:")) return;
+
+            SdCardFolders.Remove(musicFolder);
+            await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
+            MediaImport.OnMediaImported("FolderRemoved");
+        }
+
         private string playlistsFolder;
         public string PlaylistsFolder
         {
             get { return playlistsFolder; }
             set { Set(ref playlistsFolder, value); }
-        }
-
-        private bool autoSavePlaylists;
-        public bool AutoSavePlaylists
-        {
-            get { return autoSavePlaylists; }
-            set
-            {
-                if (value != autoSavePlaylists && !initialization)
-                {
-                    if (value) SavePlaylists();
-                    else DeletePlaylists();
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, value);
-                    TelemetryAdapter.TrackEvent("AutoSavePlaylists " + value);
-                }
-                Set(ref autoSavePlaylists, value);
-            }
-        }
-
-        public async Task SavePlaylists()
-        {
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.SaveAllPlaylists().ConfigureAwait(false);
-        }
-
-        public async Task DeletePlaylists()
-        {
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.DeleteAllPlaylists().ConfigureAwait(false);
         }
 
         #endregion
@@ -332,6 +371,73 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+
+        private int swipeActionNr = default(int);
+        public int SwipeActionNr
+        {
+            get { return swipeActionNr; }
+            set
+            {
+                Set(ref swipeActionNr, value);
+                RaisePropertyChanged("SwipeActionNr1");
+                RaisePropertyChanged("SwipeActionNr2");
+                RaisePropertyChanged("SwipeActionNr3");
+                RaisePropertyChanged("SwipeActionNr4");
+            }
+        }
+
+        public bool SwipeActionNr1
+        {
+            get { return swipeActionNr.Equals(1); }
+            set
+            {
+                SwipeActionNr = 1;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionPlayNow);
+                TranslationHelper tr = new TranslationHelper();
+                tr.ChangeSlideableItemDescription();
+                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionPlayNow);
+            }
+        }
+
+        public bool SwipeActionNr2
+        {
+            get { return swipeActionNr.Equals(2); }
+            set
+            {
+                SwipeActionNr = 2;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionPlayNext);
+                TranslationHelper tr = new TranslationHelper();
+                tr.ChangeSlideableItemDescription();
+                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionPlayNext);
+            }
+        }
+
+        public bool SwipeActionNr3
+        {
+            get { return swipeActionNr.Equals(3); }
+            set
+            {
+                SwipeActionNr = 3;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
+                TranslationHelper tr = new TranslationHelper();
+                tr.ChangeSlideableItemDescription();
+                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionAddToNowPlaying);
+            }
+        }
+
+        public bool SwipeActionNr4
+        {
+            get { return swipeActionNr.Equals(4); }
+            set
+            {
+                SwipeActionNr = 4;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToPlaylist);
+                TranslationHelper tr = new TranslationHelper();
+                tr.ChangeSlideableItemDescription();
+                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionAddToPlaylist);
+            }
+        }
+
         private bool isTimerOn = false;
         public bool IsTimerOn
         {
@@ -368,13 +474,13 @@ namespace NextPlayerUWP.ViewModels
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, time.Ticks);
-                    SendMessage(AppConstants.SetTimer);
+                    PlaybackService.Instance.SetPlaybackStopTimer();
                     TelemetryAdapter.TrackEvent("Timer on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
-                    SendMessage(AppConstants.CancelTimer);
+                    PlaybackService.Instance.CancelPlaybackStopTimer();
                 }
             }
         }
@@ -433,6 +539,25 @@ namespace NextPlayerUWP.ViewModels
             if (!initialization)
             {
                 TelemetryAdapter.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
+            }
+        }
+
+        private bool liveTileWithAlbumArt = false;
+        public bool LiveTileWithAlbumArt
+        {
+            get { return liveTileWithAlbumArt; }
+            set
+            {
+                if (value != liveTileWithAlbumArt)
+                {
+                    if (!initialization)
+                    {
+                        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, value);
+                        TelemetryAdapter.TrackEvent("LiveImage " + ((value) ? "on" : "off"));
+                        PlaybackService.Instance.UpdateLiveTile(true);
+                    }
+                }
+                Set(ref liveTileWithAlbumArt, value);
             }
         }
 
@@ -581,16 +706,17 @@ namespace NextPlayerUWP.ViewModels
         public async void LeaveFeedback()
         {
             TelemetryAdapter.TrackEvent("Leave feedback button");
-            await Microsoft.Services.Store.Engagement.Feedback.LaunchFeedbackAsync();
+            var launcher =  Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+            await launcher.LaunchAsync();
         }
 
-        public async void SendEmail()
+        public async void ContactWithSupport()
         {
+            TelemetryAdapter.TrackEvent("Email support");
             var emailMessage = new Windows.ApplicationModel.Email.EmailMessage();
             emailMessage.Subject = AppConstants.AppName;
-            emailMessage.Body = "";
+            emailMessage.Body = "Next-Player";
             emailMessage.To.Add(new Windows.ApplicationModel.Email.EmailRecipient(AppConstants.DeveloperEmail));
-
             await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
         }
 
@@ -709,6 +835,29 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
+
+        public async void CloudStorageLogout(object sender, RoutedEventArgs e)
+        {
+            CloudAccount account = (CloudAccount)((Button)sender).Tag;
+            var cf = new CloudStorageServiceFactory();
+            var service = cf.GetService(account.Type, account.UserId);
+            await service.LoginSilently();
+            await service.Logout();
+            switch (account.Type)
+            {
+                case CloudStorageType.Dropbox:
+                    DropboxAccounts.Remove(account);
+                    break;
+                case CloudStorageType.OneDrive:
+                    OneDriveAccounts.Remove(account);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        #region OneDrive
+
         private ObservableCollection<CloudAccount> oneDriveAccounts = new ObservableCollection<CloudAccount>();
         public ObservableCollection<CloudAccount> OneDriveAccounts
         {
@@ -732,10 +881,15 @@ namespace NextPlayerUWP.ViewModels
             if (isLoggedIn)
             {
                 var info = await service.GetAccountInfo();
-                if (info!=null) OneDriveAccounts.Add(info);
+                if (info != null) OneDriveAccounts.Add(info);
+                TelemetryAdapter.TrackEvent("OneDrive Login");
             }
             IsOneDriveLoginEnabled = true;
         }
+
+        #endregion
+
+        #region Dropbox
 
         private ObservableCollection<CloudAccount> dropboxAccounts = new ObservableCollection<CloudAccount>();
         public ObservableCollection<CloudAccount> DropboxAccounts
@@ -761,78 +915,42 @@ namespace NextPlayerUWP.ViewModels
             {
                 var info = await service.GetAccountInfo();
                 if (info != null) DropboxAccounts.Add(info);
+                TelemetryAdapter.TrackEvent("Dropbox Login");
             }
             IsDropboxLoginEnabled = true;
-        }
-
-        public async void CloudStorageLogout(object sender, RoutedEventArgs e)
-        {
-            CloudAccount account = (CloudAccount)((Button)sender).Tag;
-            var cf = new CloudStorageServiceFactory();
-            var service = cf.GetService(account.Type, account.UserId);
-            await service.LoginSilently();
-            await service.Logout();
-            switch (account.Type)
-            {
-                case CloudStorageType.Dropbox:
-                    DropboxAccounts.Remove(account);
-                    break;
-                case CloudStorageType.OneDrive:
-                    OneDriveAccounts.Remove(account);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        #region OneDrive
-
-        private bool isOneDriveLoggedIn = false;
-        public bool IsOneDriveLoggedIn
-        {
-            get { return isOneDriveLoggedIn; }
-            set { Set(ref isOneDriveLoggedIn, value); }
-        }
-
-        
-
-        public async void OneDriveLogin()
-        {
-            IsOneDriveLoginEnabled = false;
-            //IsOneDriveLoggedIn = await OneDriveService.Instance.Login();
-            IsOneDriveLoginEnabled = true;
-        }
-
-        public async void OneDriveLogout()
-        {
-            //await OneDriveService.Instance.Logout();
-            IsOneDriveLoggedIn = false;
         }
 
         #endregion
 
-        #region Dropbox
+        #region pCloud
 
-        private bool isDropboxLoggedIn = false;
-        public bool IsDropboxLoggedIn
+        private ObservableCollection<CloudAccount> pCloudAccounts = new ObservableCollection<CloudAccount>();
+        public ObservableCollection<CloudAccount> PCloudAccounts
         {
-            get { return isDropboxLoggedIn; }
-            set { Set(ref isDropboxLoggedIn, value); }
+            get { return pCloudAccounts; }
+            set { Set(ref pCloudAccounts, value); }
         }
 
-        
-
-        public async void DropboxLogin()
+        private bool isPCloudLoginEnabled = true;
+        public bool IsPCloudLoginEnabled
         {
-            IsDropboxLoginEnabled = false;
-            //await DropboxService.Instance.Login();
-            IsDropboxLoginEnabled = true;
+            get { return isPCloudLoginEnabled; }
+            set { Set(ref isPCloudLoginEnabled, value); }
         }
 
-        public async void DropboxLogout()
+        public async void AddPCloudAccount()
         {
-            //await DropboxService.Instance.Logout();
-            IsDropboxLoggedIn = false;
+            IsPCloudLoginEnabled = false;
+            var cf = new CloudStorageServiceFactory();
+            var service = cf.GetService(CloudStorageType.pCloud);
+            var isLoggedIn = await service.Login();
+            if (isLoggedIn)
+            {
+                var info = await service.GetAccountInfo();
+                if (info != null) PCloudAccounts.Add(info);
+                TelemetryAdapter.TrackEvent("pCloud Login");
+            }
+            IsPCloudLoginEnabled = true;
         }
 
         #endregion
@@ -867,10 +985,5 @@ namespace NextPlayerUWP.ViewModels
         }
 
         #endregion
-
-        private void SendMessage(string message)
-        {
-            App.PlaybackManager.SendMessage(message, "");
-        }
     }
 }

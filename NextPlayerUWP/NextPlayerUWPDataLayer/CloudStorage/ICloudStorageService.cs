@@ -9,6 +9,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage
     public interface ICloudStorageService
     {
         Task<bool> Login();
+        Task<bool> Login(string login, string password);
         Task<bool> LoginSilently();
         Task Logout();
         Task<CloudAccount> GetAccountInfo();
@@ -18,6 +19,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage
         Task<CloudFolder> GetFolder(string id);
         Task<List<CloudFolder>> GetSubFolders(string id);
         Task<List<SongItem>> GetSongItems(string id);
+        Task<string> GetDownloadLink(string id);
 
         bool Check(string userId, CloudStorageType type);
     }

@@ -27,8 +27,26 @@ namespace NextPlayerUWP.Views
         public NowPlayingPlaylistView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((NowPlayingPlaylistViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView); };
+            this.Loaded += View_Loaded;
+            //this.Unloaded += View_Unloaded;
             ViewModel = (NowPlayingPlaylistViewModel)DataContext;
+        }
+        //~NowPlayingPlaylistView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+        private void View_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnUnloaded();
+            ViewModel = null;
+            DataContext = null;
+            this.Loaded -= View_Loaded;
+            this.Unloaded -= View_Unloaded;
+        }
+
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(NowPlayingPlaylistListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

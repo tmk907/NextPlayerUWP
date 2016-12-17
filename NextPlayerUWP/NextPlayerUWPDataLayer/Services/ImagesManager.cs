@@ -15,6 +15,8 @@ using System.Diagnostics;
 using Windows.Storage.Search;
 using Windows.Security.Cryptography.Core;
 using Windows.Security.Cryptography;
+using Windows.UI;
+using NextPlayerUWPDataLayer.Helpers;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -30,7 +32,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (song != null) return song.CoverPath;
 
             song = songs.FirstOrDefault();
-            var bmp = await GetAlbumArtBitmap(song.Path, true);
+            var bmp = await GetAlbumArtSoftwareBitmap(song.Path, true);
             string name = "ms-appx:///Assets/AppImages/Logo/LogoTr.png";
 
             if (bmp != null)
@@ -54,51 +56,159 @@ namespace NextPlayerUWPDataLayer.Services
         {
             StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
             StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
-
+            int width = 0;
+            int height = 0;
+            if (resize != 0)
+            {
+                width = image.PixelWidth;
+                height = image.PixelHeight;
+                if (width == height)
+                {
+                    height = resize;
+                }
+                else
+                {
+                    height = height * resize / width;
+                }
+                width = resize;
+            }
             try
             {
-                using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                await SaveBitmap(file, image, height, width);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                //image exists and is opened in album view
+                try
                 {
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                    file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.GenerateUniqueName);
+                    await SaveBitmap(file, image, height, width);
+                }
+                catch(Exception ex2)
+                {
 
-                    int width = image.PixelWidth;
-                    int height = image.PixelHeight;
+                }
+            }
+            catch(Exception ex)
+            {
 
-                    if (resize != 0)
-                    {
-                        if (width > resize)
-                        {
-                            if (width == height)
-                            {
-                                height = resize;
-                            }
-                            else
-                            {
-                                height = height * resize / width;
-                            }
-                            width = resize;
+            }
+            return "ms-appdata:///local/" + folderName + "/" + file.Name;
+        }
 
-                            image = image.Resize(width, height, WriteableBitmapExtensions.Interpolation.Bilinear);
-                        }
-                    }
+        public static async Task<string> SaveCover(string fileName, string folderName, SoftwareBitmap image, int resize = 0)
+        {
+            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+            StorageFile file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.OpenIfExists);
 
-                    using (var pixelStream = image.PixelBuffer.AsStream())
-                    {
-                        byte[] pixels = new byte[image.PixelBuffer.Length];
+            int width = 0;
+            int height = 0;
+            if (resize != 0)
+            {
+                width = image.PixelWidth;
+                height = image.PixelHeight;
+                if (width == height)
+                {
+                    height = resize;
+                }
+                else
+                {
+                    height = height * resize / width;
+                }
+                width = resize;
+            }
+            try
+            {
+                await SaveBitmap(file, image, (uint)width, (uint)height);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                //image exists and is opened in album view
+                try
+                {
+                    file = await folder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.GenerateUniqueName);
+                    await SaveBitmap(file, image, (uint)height, (uint)width);
+                }
+                catch (Exception ex2)
+                {
 
-                        await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-
-                        encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)width, (uint)height, 96, 96, pixels);
-
-                        await encoder.FlushAsync();
-                    }
                 }
             }
             catch (Exception ex)
             {
-                //image exists and is opened in album view
+
             }
-            return "ms-appdata:///local/" + folderName + "/" + fileName + ".jpg";
+
+            return "ms-appdata:///local/" + folderName + "/" + file.Name;
+        }
+
+        public static async Task SaveBitmap(StorageFile file, SoftwareBitmap bitmap, uint newHeight = 0, uint newWidth = 0)
+        {
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                encoder.SetSoftwareBitmap(bitmap);
+                if (newWidth > 0 || newHeight > 0)
+                {
+                    encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Linear;
+                    encoder.BitmapTransform.ScaledHeight = newHeight;
+                    encoder.BitmapTransform.ScaledWidth = newWidth;
+                }
+                encoder.IsThumbnailGenerated = true;
+                try
+                {
+                    await encoder.FlushAsync();
+                }
+                catch (Exception err)
+                {
+                    switch (err.HResult)
+                    {
+                        case unchecked((int)0x88982F81): //WINCODEC_ERR_UNSUPPORTEDOPERATION
+                                                         // If the encoder does not support writing a thumbnail, then try again
+                                                         // but disable thumbnail generation.
+                            encoder.IsThumbnailGenerated = false;
+                            break;
+                        default:
+                            throw err;
+                    }
+                }
+                if (encoder.IsThumbnailGenerated == false)
+                {
+                    await encoder.FlushAsync();
+                }
+            }
+        }
+
+        /// <summary>
+        /// UI Thread
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="bitmap"></param>
+        /// <param name="newHeight"></param>
+        /// <param name="newWidth"></param>
+        /// <returns></returns>
+        public static async Task SaveBitmap(StorageFile file, WriteableBitmap bitmap, int newHeight = 0, int newWidth = 0)
+        {
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+
+                if (newWidth > 0 || newHeight > 0)
+                {
+                    bitmap = bitmap.Resize(newWidth, newHeight, WriteableBitmapExtensions.Interpolation.Bilinear);
+                }
+
+                int width = bitmap.PixelWidth;
+                int height = bitmap.PixelHeight;
+
+                using (var pixelStream = bitmap.PixelBuffer.AsStream())
+                {
+                    byte[] pixels = new byte[bitmap.PixelBuffer.Length];
+                    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)width, (uint)height, 96, 96, pixels);
+                    await encoder.FlushAsync();
+                }
+            }
         }
 
         public static string GetHash(WriteableBitmap bmp)
@@ -111,7 +221,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public static async Task SaveAlbumArtFromSong(SongItem song)
         {
-            var cover = await GetAlbumArtBitmap(song.Path);
+            var cover = await GetAlbumArtSoftwareBitmap(song.Path);
 
             if (cover == null)
             {
@@ -128,7 +238,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public static async Task SaveAlbumArtFromSong(SongData song)
         {
-            var cover = await GetAlbumArtBitmap(song.Path);
+            var cover = await GetAlbumArtSoftwareBitmap(song.Path, true);
 
             if (cover == null)
             {
@@ -139,6 +249,12 @@ namespace NextPlayerUWPDataLayer.Services
                 string p = await SaveCover(song.SongId.ToString(), "Songs", cover);
                 song.AlbumArtPath = p;
             }
+        }
+
+        public static async Task TryDeleteAppLocalFile(string filePath)
+        {
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(filePath));
+            await file.DeleteAsync();
         }
 
         /// <summary>
@@ -153,7 +269,16 @@ namespace NextPlayerUWPDataLayer.Services
             try 
             {
                 WriteableBitmap bitmap = new WriteableBitmap(1, 1);
-                StorageFile songFile = await StorageFile.GetFileFromPathAsync(path);
+                StorageFile songFile;
+                try
+                {
+                    songFile = await StorageFile.GetFileFromPathAsync(path);
+                }
+                catch (Exception ex)
+                {
+                    songFile = await FutureAccessHelper.GetFileFromPathAsync(path);
+                    if (songFile == null) throw;
+                }
                 bool set = false;
                 // <5ms
                 var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
@@ -247,391 +372,109 @@ namespace NextPlayerUWPDataLayer.Services
             return null;
         }
 
+        public static async Task<SoftwareBitmap> GetAlbumArtSoftwareBitmap(string path, bool searchInThumbnail = false)
+        {
+            try
+            {
+                SoftwareBitmap softwareBitmap = null;
+                StorageFile songFile;
+                try
+                {
+                    songFile = await StorageFile.GetFileFromPathAsync(path);
+                }
+                catch (Exception ex)
+                {
+                    songFile = await FutureAccessHelper.GetFileFromPathAsync(path);
+                    if (songFile == null) throw;
+                }
+                bool set = false;
+                // <5ms
+                var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
+                if (searchInThumbnail)
+                {
+                    if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
+                    {
+                        if (thumb.OriginalWidth > 200)
+                        {
+                            using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                            {
+                                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                                softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                            }
+                            set = true;
+                        }
+                    }
+                }
+                if (!set)
+                {
+                    try
+                    {
+                        Stream fileStream = await songFile.OpenStreamForReadAsync();
+                        TagLib.File tagFile = TagLib.File.Create(new StreamFileAbstraction(songFile.Name, fileStream, fileStream));
+                        int picturesCount = tagFile.Tag.Pictures.Length;
+                        fileStream.Dispose();
+                        if (picturesCount > 0)
+                        {
+                            IPicture pic = tagFile.Tag.Pictures[0];
+                            using (MemoryStream stream = new MemoryStream(pic.Data.Data))
+                            {
+                                using (IRandomAccessStream istream = stream.AsRandomAccessStream())
+                                {
+                                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                                }
+                            }
+                            set = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
 
-        #region old
+                    }
+                    if (!set)
+                    {
+                        try
+                        {
+                            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
+                            // not  exist
+                            // 15ms 30 ms
+                            QueryOptions q = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { ".jpg", ".png", ".jpeg" });
+                            var res = folder.CreateFileQueryWithOptions(q);
+                            var files2 = await res.GetFilesAsync();
+                            List<string> acceptedFileNames = new List<string>() { "cover", "album", "front", "albumart", "album art", "album-art" };
+                            var files3 = files2.Where(f => acceptedFileNames.Contains(f.DisplayName.ToLower()));
+                            if (files3.Count() > 0)
+                            {
+                                using (IRandomAccessStream istream = await files3.FirstOrDefault().OpenAsync(FileAccessMode.Read))
+                                {
+                                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                                }
+                                set = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
 
-        ///// <summary>
-        ///// Read cover from file, and if exists save it in app folder, return saved image path or default app tile path
-        ///// </summary>
-        ///// <param name="path"></param>
-        ///// <param name="fileName"></param>
-        ///// <returns></returns>
-        //public static async Task<string> SaveSongCover(string path, string fileName)
-        //{
-        //    string imagePath = "";
+                        }
+                    }
+                }
+                if (searchInThumbnail && !set && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && thumb.OriginalHeight > 100)
+                {
+                    using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                    {
+                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                        softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    }
+                    set = true;
+                }
+                if (set) return softwareBitmap;
+            }
+            catch (Exception ex)
+            {
 
-        //    int a = 0;
-        //    try
-        //    {
-        //        StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-        //        Stream fileStream = await file.OpenStreamForReadAsync();
-        //        var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
-        //        a = tagFile.Tag.Pictures.Length;
-
-        //        if (a > 0)
-        //        {
-        //            IPicture pic = tagFile.Tag.Pictures[0];
-        //            MemoryStream stream = new MemoryStream(pic.Data.Data);
-
-        //            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-        //            StorageFile storageFile = await localFolder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.ReplaceExisting);
-        //            imagePath = "ms-appdata:///local/" + fileName + ".jpg";
-        //            stream.Seek(0, SeekOrigin.Begin);
-        //            using (Stream outputStream = await storageFile.OpenStreamForWriteAsync())
-        //            {
-        //                stream.CopyTo(outputStream);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
-        //            try
-        //            {
-        //                IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
-        //                if (files.Count > 0)
-        //                {
-        //                    foreach (var x in files)
-        //                    {
-        //                        if (x.Path.EndsWith("jpg"))
-        //                        {
-        //                            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-        //                            StorageFile storageFile = await localFolder.CreateFileAsync(fileName + ".jpg", CreationCollisionOption.ReplaceExisting);
-        //                            imagePath = "ms-appdata:///local/" + fileName + ".jpg";
-        //                            using (Stream stream = await x.OpenStreamForReadAsync())
-        //                            {
-        //                                using (Stream outputStream = await storageFile.OpenStreamForWriteAsync())
-        //                                {
-        //                                    stream.CopyTo(outputStream);
-        //                                }
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception e)
-        //            {
-
-        //            }
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //    }
-        //    if (imagePath == "")
-        //    {
-        //        imagePath = "ms-appx:///Assets/AppImages/Logo/LogoTr.png";
-        //    }
-        //    return imagePath;
-        //}
-
-        ///// <summary>
-        ///// Return cover saved in file tags or .jpg from folder.
-        ///// If cover doesn't exist width and height are 0px.
-        ///// UI Thread
-        ///// </summary>
-        //public static async Task<BitmapImage> GetOriginalCover(string path)
-        //{
-        //    BitmapImage bitmap = new BitmapImage();
-        //    int a = 0;
-        //    try
-        //    {
-        //        StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-        //        Stream fileStream = await file.OpenStreamForReadAsync();
-        //        TagLib.File tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
-        //        a = tagFile.Tag.Pictures.Length;
-        //        fileStream.Dispose();
-        //        if (a > 0)
-        //        {
-        //            IPicture pic = tagFile.Tag.Pictures[0];
-        //            using (MemoryStream stream = new MemoryStream(pic.Data.Data))
-        //            {
-        //                using (IRandomAccessStream istream = stream.AsRandomAccessStream())
-        //                {
-        //                    await bitmap.SetSourceAsync(istream);
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
-        //            try
-        //            {
-        //                IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
-        //                if (files.Count > 0)
-        //                {
-        //                    foreach (var x in files)
-        //                    {
-        //                        if (x.Path.EndsWith("jpg"))
-        //                        {
-        //                            using (IRandomAccessStream stream = await x.OpenAsync(FileAccessMode.Read))
-        //                            {
-        //                                await bitmap.SetSourceAsync(stream);
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception e)
-        //            {
-
-        //            }
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //    }
-        //    return bitmap;
-        //}
-
-        ///// <summary>
-        ///// Return default cover.
-        ///// UI Thread
-        ///// </summary>
-        //public static async Task<BitmapImage> GetDefaultCover(bool small = true)
-        //{
-        //    BitmapImage bitmap = new BitmapImage();
-        //    Uri uri;
-        //    if (small)
-        //    {
-        //        uri = new Uri(AppConstants.AlbumCoverSmall);
-        //    }
-        //    else
-        //    {
-        //        uri = new Uri(AppConstants.AlbumCover);
-        //    }
-        //    var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-        //    using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
-        //    {
-        //        await bitmap.SetSourceAsync(stream);
-        //    }
-        //    return bitmap;
-        //}
-
-        ///// <summary>
-        ///// Return cover saved in file tags or .jpg from folder or default cover.
-        ///// UI Thread
-        ///// </summary>
-        //public static async Task<BitmapImage> GetCover(string path, bool isSmall = true)
-        //{
-        //    BitmapImage bitmap = new BitmapImage();
-
-        //    if (string.IsNullOrEmpty(path))
-        //    {
-        //        bitmap = await GetDefaultCover(isSmall);
-        //    }
-        //    else
-        //    {
-        //        bitmap = await GetOriginalCover(path);
-        //    }
-
-        //    if (bitmap.PixelHeight == 0)
-        //    {
-        //        bitmap = await GetDefaultCover(isSmall);
-        //    }
-
-        //    return bitmap;
-        //}
-
-        ///// <summary>
-        ///// UI Thread
-        ///// </summary>
-        ///// <param name="path"></param>
-        ///// <returns></returns>
-        //private static async Task<BitmapImage> GetCachedCover(string path)
-        //{
-        //    BitmapImage image = new BitmapImage();
-        //    if (path == "") return image;//!
-        //    Uri uri = new Uri(path);
-
-        //    var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-        //    using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
-        //    {
-        //        await image.SetSourceAsync(stream);
-        //    }
-
-        //    return image;
-        //}
-
-        ///// <summary>
-        ///// UI Thread
-        ///// </summary>
-        ///// <param name="album"></param>
-        ///// <returns></returns>
-        //public static async Task<string> GetAlbumCoverPath(AlbumItem album)
-        //{
-        //    string imagePath = AppConstants.AlbumCover;
-        //    if (!album.IsImageSet)
-        //    {
-        //        var songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam, album.AlbumArtist);
-        //        var song = songs.FirstOrDefault(s => s.IsAlbumArtSet && s.CoverPath != AppConstants.AlbumCover);
-        //        if (song == null)
-        //        {
-        //            foreach (var s in songs.Where(x => !x.IsAlbumArtSet))
-        //            {
-        //                await SaveAlbumArtFromSong(s);
-        //                if (s.CoverPath != AppConstants.AlbumCover)
-        //                {
-        //                    imagePath = s.CoverPath;
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            imagePath = song.CoverPath;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        imagePath = album.ImagePath;
-        //    }
-
-        //    return imagePath;
-        //}
-
-        ///// <summary>
-        ///// UI Thread
-        ///// Search for album art in tags, folder, thumbnail
-        ///// If no album art is find return null
-        ///// </summary>
-        ///// <param name="path">Path to file</param>
-        ///// <returns></returns>
-        //public static async Task<WriteableBitmap> GetAlbumArtBitmap(string path)
-        //{
-        //    try
-        //    {
-        //        int picturesCount = 0;
-        //        WriteableBitmap bitmap = new WriteableBitmap(1, 1);
-
-        //        try
-        //        {
-        //            //Stopwatch st = new Stopwatch();
-        //            //st.Start();
-        //            StorageFile songFile = await StorageFile.GetFileFromPathAsync(path);
-        //            Stream fileStream = await songFile.OpenStreamForReadAsync();
-        //            TagLib.File tagFile = TagLib.File.Create(new StreamFileAbstraction(songFile.Name, fileStream, fileStream));
-        //            picturesCount = tagFile.Tag.Pictures.Length;
-        //            fileStream.Dispose();
-        //            if (picturesCount > 0)
-        //            {
-        //                IPicture pic = tagFile.Tag.Pictures[0];
-        //                using (MemoryStream stream = new MemoryStream(pic.Data.Data))
-        //                {
-        //                    using (IRandomAccessStream istream = stream.AsRandomAccessStream())
-        //                    {
-        //                        bitmap = await WriteableBitmapExtensions.FromStream(new WriteableBitmap(1, 1), istream);
-        //                    }
-        //                }
-        //                //st.Stop();
-        //                //Debug.WriteLine("Tag {0}ms", st.ElapsedMilliseconds);
-        //            }
-        //            else
-        //            {
-        //                StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
-        //                try
-        //                {
-        //                    // not  exist
-        //                    // 15ms 30 ms
-        //                    QueryOptions q = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { ".jpg", ".png", ".jpeg" });
-        //                    var res = folder.CreateFileQueryWithOptions(q);
-        //                    var files2 = await res.GetFilesAsync();
-        //                    if (files2.Count > 0)
-        //                    {
-        //                        //Stopwatch s = new Stopwatch();
-        //                        //s.Start();
-        //                        //using (IRandomAccessStream istream = await files2.FirstOrDefault().OpenAsync(FileAccessMode.Read))
-        //                        //{
-        //                        //    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
-        //                        //    bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-        //                        //    istream.Seek(0);
-        //                        //    bitmap.SetSource(istream);
-        //                        //}
-        //                        //s.Stop();
-        //                        //var b = s.ElapsedMilliseconds;
-        //                        //s.Restart();
-        //                        using (IRandomAccessStream istream = await files2.FirstOrDefault().OpenAsync(FileAccessMode.Read))
-        //                        {
-        //                            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
-        //                            bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-        //                            istream.Seek(0);
-        //                            await bitmap.SetSourceAsync(istream);
-        //                        }
-        //                        //s.Stop();
-        //                        //Debug.WriteLine("Folder 1 {0}ms 2 {1}ms", b, s.ElapsedMilliseconds);
-        //                    }
-        //                    //25ms 50ms
-        //                    //IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
-        //                    //var file = files.FirstOrDefault(f => f.Path.EndsWith("jpg") || f.Path.EndsWith("png") || f.Path.EndsWith("jpeg"));
-        //                    //if (file != null)
-        //                    //{
-        //                    //    using (IRandomAccessStream istream = await file.OpenAsync(FileAccessMode.Read)) //5-20ms
-        //                    //    {
-        //                    //        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
-        //                    //        bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-        //                    //        istream.Seek(0);
-        //                    //        bitmap.SetSource(istream);
-        //                    //    }
-        //                    //}
-        //                }
-        //                catch (Exception e)
-        //                {
-
-        //                }
-        //                //st.Stop();
-        //                //Debug.WriteLine("Folder {0}ms", st.ElapsedMilliseconds);
-        //            }
-        //            if (bitmap.PixelHeight == 1)
-        //            {
-        //                //Stopwatch s = new Stopwatch();
-        //                //s.Start();
-        //                try // <5ms
-        //                {
-        //                    var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
-        //                    if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
-        //                    {
-        //                        using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
-        //                        {
-        //                            bitmap = new WriteableBitmap((int)thumb.OriginalWidth, (int)thumb.OriginalHeight);
-        //                            istream.Seek(0);
-        //                            bitmap.SetSource(istream);
-        //                        }
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-
-        //                }
-        //                //s.Stop();
-        //                //Debug.WriteLine("Thumb {0}ms", s.ElapsedMilliseconds);
-        //            }
-        //            //else
-        //            //{
-        //            //    var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
-        //            //    if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
-        //            //    {
-        //            //        Debug.WriteLine("Sizes Tag: {0}x{1} Thumb: {2}x{3}", bitmap.PixelHeight, bitmap.PixelWidth, thumb.OriginalHeight, thumb.OriginalWidth);
-        //            //    }
-        //            //    else
-        //            //    {
-        //            //        Debug.WriteLine("no thumbnail");
-        //            //    }
-        //            //}
-
-        //        }
-        //        catch (Exception e)
-        //        {
-
-        //        }
-        //        return bitmap;
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //    }
-        //    return null;
-        //}
-        #endregion
+            }
+            return null;
+        }
     }
 }
