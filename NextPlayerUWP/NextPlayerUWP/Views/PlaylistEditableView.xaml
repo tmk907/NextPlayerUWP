@@ -34,13 +34,17 @@
                             Click="{x:Bind ViewModel.DeleteFromPlaylistClick}" CommandParameter="{Binding}" />
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=gotoalbum}"
                             Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=gotoalbum}"
                             Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details"
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=showdetails}"
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
+            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit"
+                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=edittags}"
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->

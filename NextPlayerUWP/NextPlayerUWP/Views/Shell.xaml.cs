@@ -42,15 +42,8 @@ namespace NextPlayerUWP.Views
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
             ReviewReminder();
-            test();
         }
 
-        public async void test()
-        {
-            ColorsHelper ch = new ColorsHelper();
-            string name = ch.GetAlbumCoverAssetWithCurrentAccentColor();
-            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri(name));
-        } 
         public Shell(INavigationService navigationService) : this()
         {
             SetNavigationService(navigationService);
@@ -159,7 +152,7 @@ namespace NextPlayerUWP.Views
 
         private async Task ReviewReminder()
         {
-            await Task.Delay(3000);
+            await Task.Delay(4000);
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
             if (!settings.Values.ContainsKey(AppConstants.IsReviewed))

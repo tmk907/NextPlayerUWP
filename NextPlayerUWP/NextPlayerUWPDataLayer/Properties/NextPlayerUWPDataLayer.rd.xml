@@ -29,5 +29,6 @@
 
   	<!-- add directives for your library here -->
 	<Namespace Name="NextPlayerUWPDataLayer.Tables" Dynamic="Required All" /> 
+	<Namespace Name="Microsoft.OneDrive.Sdk" Dynamic="Required All" />
   </Library>
 </Directives>

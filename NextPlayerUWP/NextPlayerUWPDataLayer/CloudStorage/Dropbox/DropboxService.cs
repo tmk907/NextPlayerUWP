@@ -259,7 +259,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             foreach (var item in content.Entries.Where(i => i.IsFolder))
             {
                 var f = item.AsFolder;
-                folders.Add(new CloudFolder(f.Name, f.PathDisplay, 0, f.PathLower, (path == "") ? "" : System.IO.Path.GetDirectoryName(path), CloudStorageType.Dropbox, userId));
+                folders.Add(new CloudFolder(f.Name, f.PathDisplay, 0, f.PathLower, (path == "") ? "" : GetDirectoryName(path), CloudStorageType.Dropbox, userId));
             }
             return folders;
         }
@@ -277,7 +277,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             {
                 var item = await dropboxClient.Files.GetMetadataAsync(path);
                 if (item == null) return null;
-                CloudFolder folder = new CloudFolder(item.Name, item.PathDisplay, 0, item.PathLower, (path == "") ? "" : System.IO.Path.GetDirectoryName(item.PathLower), CloudStorageType.Dropbox, userId);
+                CloudFolder folder = new CloudFolder(item.Name, item.PathDisplay, 0, item.PathLower, (path == "") ? "" : GetDirectoryName(item.PathLower), CloudStorageType.Dropbox, userId);
                 return folder;
             }
             catch (Microsoft.Graph.ServiceException ex)
@@ -360,6 +360,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             song.Tag.Year = 0;
 
             return song;
+        }
+
+        private string GetDirectoryName(string path)
+        {
+            int last = path.LastIndexOf('/');
+            if (last == 0 || last == -1) return "";
+            return path.Substring(0, last - 1);
         }
     }
 }

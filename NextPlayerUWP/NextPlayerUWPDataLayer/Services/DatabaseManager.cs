@@ -42,15 +42,7 @@ namespace NextPlayerUWPDataLayer.Services
         
         //public string OldDBFilePath { get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName); } }
         public string DBFilePath { get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName); } }
-
-        private TableQuery<SongsTable> songsConnection
-        {
-            get
-            {
-                return connection.Table<SongsTable>().Where(available => available.IsAvailable > 0);
-            }
-        }
-
+      
         private AsyncTableQuery<SongsTable> songsConnectionAsync
         {
             get
@@ -225,7 +217,7 @@ namespace NextPlayerUWPDataLayer.Services
         //Albums, Artists, Genres
         public async Task UpdateTables()
         {
-            var songsList = songsConnection.ToList();
+            var songsList = await connectionAsync.Table<SongsTable>().Where(available => available.IsAvailable > 0).ToListAsync();
 
             await connectionAsync.ExecuteAsync("UPDATE ArtistsTable SET SongsNumber = 0");
             await connectionAsync.ExecuteAsync("UPDATE AlbumsTable SET SongsNumber = 0");
@@ -434,18 +426,6 @@ namespace NextPlayerUWPDataLayer.Services
             });
         }
 
-        public Dictionary<string, Tuple<int, int>> GetFilePaths()
-        {
-            Dictionary<string, Tuple<int, int>> dict = new Dictionary<string, Tuple<int, int>>();
-            var result = connection.Table<SongsTable>().ToList();
-            foreach (var x in result)
-            {
-
-                dict.Add(x.Path, new Tuple<int, int>(x.IsAvailable, x.SongId));
-            }
-            return dict;
-        }
-
         private static SongsTable CreateSongsTable(SongData song)
         {
             //if (song.Path == c:\) (root directory) GetDirectoryName == null
@@ -611,11 +591,11 @@ namespace NextPlayerUWPDataLayer.Services
             return songs;
         }
 
-        public async Task<ObservableCollection<SongItem>> GetSongItemsWithoutStreamsAsync()
+        public async Task<ObservableCollection<SongItem>> GetLocalSongItemsAsync()
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
             var result = await songsConnectionAsync.
-                Where(s => s.MusicSourceType != (int)MusicSource.OnlineFile && s.MusicSourceType != (int)MusicSource.RadioJamendo).
+                Where(s => s.MusicSourceType == (int)MusicSource.LocalFile || s.MusicSourceType == (int)MusicSource.LocalNotMusicLibrary).
                 OrderBy(s => s.Title).ToListAsync();
             foreach (var item in result)
             {
@@ -866,7 +846,7 @@ namespace NextPlayerUWPDataLayer.Services
 
                 List<SongsTable> q = await connectionAsync.QueryAsync<SongsTable>(builder.ToString());
 
-                foreach (var song in q)
+                foreach (var song in q.Where(s=>s.MusicSourceType == (int)Enums.MusicSource.LocalFile || s.MusicSourceType == (int)Enums.MusicSource.OnlineFile))
                 {
                     songs.Add(new SongItem(song));
                 }
@@ -2204,6 +2184,11 @@ namespace NextPlayerUWPDataLayer.Services
             connection.Execute("DELETE FROM ImportedPlaylistsTable");
             connection.Execute("UPDATE PlainPlaylistsTable SET IsHidden = 0");
             connection.Execute("UPDATE SmartPlaylistsTable SET IsHidden = 0");
+        }
+
+        public void UpdateToVersion10()
+        {
+            connection.Execute("UPDATE SongsTable SET IsAvailable = 1 WHERE MusicSourceType = 5 OR MusicSourceType = 6 OR MusicSourceType = 8");
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()

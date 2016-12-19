@@ -30,13 +30,37 @@ namespace NextPlayerUWP.Views
 
         Uri imageUri;
         NowPlayingViewModel ViewModel;
+        PointerEventHandler pointerpressedhandler;
+        PointerEventHandler pointerreleasedhandler;
+
         public NowPlayingView()
         {
             this.InitializeComponent();
             ViewModel = (NowPlayingViewModel)DataContext;
-            this.Loaded += LoadSlider;
-            NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Required;
-            //this.Loaded += delegate { ((NowPlayingView)DataContext).OnLoaded(FoldersListView); };
+            this.Loaded += NowPlayingView_Loaded;
+            this.Unloaded += NowPlayingView_Unloaded;
+            pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
+            pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
+        }
+
+        private void NowPlayingView_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadSliderEvents(sender, e);
+            Init();
+            if (ViewModel.CoverUri != null)
+            {
+                if (first)
+                {
+                    imageUri = GetAlbumUri();
+                    PrimaryImage.Source = imageUri;
+                    first = false;
+                }
+            }
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
+
+        private void Init()
+        {
             first = true;
             _compositor = ElementCompositionPreview.GetElementVisual(PortraitGrid).Compositor;
             PrimaryImage.ImageOpened += PrimaryImage_FirstOpened;
@@ -56,27 +80,44 @@ namespace NextPlayerUWP.Views
             };
             CompositionEffectFactory factory = _compositor.CreateEffectFactory(graphicsEffect, new[] { "CrossFade.Source1Amount", "CrossFade.Source2Amount" });
             _crossFadeBrushPrimary = factory.CreateBrush();
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
+
+        private void NowPlayingView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            PrimaryImage.ImageOpened -= PrimaryImage_FirstOpened;
+            PrimaryImage = null;
+            _compositor = null;
+            if (_crossFadeBatchPrimary != null)
+            {
+                _crossFadeBatchPrimary.Dispose();
+                _crossFadeBatchPrimary = null;
+
+            }
+            if (_crossFadeBrushPrimary != null)
+            {
+                _crossFadeBrushPrimary.Dispose();
+                _crossFadeBrushPrimary = null;
+            }
+            if (_previousSurfaceBrushPrimary != null)
+            {
+                _previousSurfaceBrushPrimary.Dispose();
+                _previousSurfaceBrushPrimary = null;
+            }
+            UnloadSliderEvents();
         }
 
         #region Slider 
-        private void LoadSlider(object sender, RoutedEventArgs e)
+        private void LoadSliderEvents(object sender, RoutedEventArgs e)
         {
-            PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
             timeslider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
+            timeslider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);            
+        }
 
-            PointerEventHandler pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
-            timeslider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
-
-            if (ViewModel.CoverUri != null)
-            {
-                if (first)
-                {
-                    imageUri = GetAlbumUri();
-                    PrimaryImage.Source = imageUri;
-                    first = false;
-                }
-            }
+        private void UnloadSliderEvents()
+        {
+            timeslider.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
+            timeslider.RemoveHandler(Control.PointerPressedEvent, pointerreleasedhandler);
         }
 
         void slider_PointerEntered(object sender, PointerRoutedEventArgs e)

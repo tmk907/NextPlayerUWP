@@ -44,7 +44,7 @@ namespace NextPlayerUWP
             MemoryUsageReduced?.Invoke(null, null);
         }
 
-        private const int dbVersion = 9;
+        private const int dbVersion = 10;
 
         public static bool IsLightThemeOn = false;
 
@@ -657,6 +657,12 @@ namespace NextPlayerUWP
                 DatabaseManager.Current.UpdateToVersion9();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 9);
                 version = "9";
+            }
+            if (version.ToString() == "9")
+            {
+                DatabaseManager.Current.UpdateToVersion10();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 10);
+                version = "10";
             }
             // change  private const int dbVersion
         }

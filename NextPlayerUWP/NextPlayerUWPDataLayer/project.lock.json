@@ -17434,6 +17434,7 @@
     "Microsoft.OneDriveSDK/2.0.6": {
       "sha512": "3FBkCa5cVuUe/YP23mSwbzNsenzRJAeOwIk45nXfFfaTz6mYtOWNj490xKRttoCn0IT0UZy1a3YjWRxBkN3l0g==",
       "type": "package",
+      "path": "Microsoft.OneDriveSDK/2.0.6",
       "files": [
         "Microsoft.OneDriveSDK.2.0.6.nupkg.sha512",
         "Microsoft.OneDriveSDK.nuspec",

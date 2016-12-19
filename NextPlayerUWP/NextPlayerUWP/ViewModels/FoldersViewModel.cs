@@ -87,13 +87,7 @@ namespace NextPlayerUWP.ViewModels
                             dir = f1.Directory;
                             roots.Add(dir);
                         }
-                    }
-                    CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
-                    var items = await fact.GetAllRootFolders();
-                    foreach(var item in items)
-                    {
-                        Items.Add(item);
-                    }
+                    }                  
                 }
                 else
                 {
@@ -109,6 +103,15 @@ namespace NextPlayerUWP.ViewModels
                     {
                         Items.Add(s);
                     }
+                }
+            }
+            if (directory == null)
+            {
+                CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
+                var items = await fact.GetAllRootFolders();
+                foreach (var item in items)
+                {
+                    Items.Add(item);
                 }
             }
             SortMusicItems();
