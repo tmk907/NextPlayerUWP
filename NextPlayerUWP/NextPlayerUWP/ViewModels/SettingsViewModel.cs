@@ -38,7 +38,9 @@ namespace NextPlayerUWP.ViewModels
             PackageId packageId = package.Id;
             PackageVersion version = packageId.Version;
             AppVersion = string.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
-
+#if DEBUG
+            AppVersion = AppVersion + " Debug";
+#endif
             Languages = new ObservableCollection<LanguageItem>();
             foreach (var code in Windows.Globalization.ApplicationLanguages.ManifestLanguages)
             {

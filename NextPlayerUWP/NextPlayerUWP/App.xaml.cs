@@ -87,6 +87,10 @@ namespace NextPlayerUWP
                 FirstRunSetup();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
             }
+            else
+            {
+                PerformUpdate();
+            }
 
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
             if (t != null)
@@ -274,11 +278,6 @@ namespace NextPlayerUWP
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             Debug.WriteLine("OnInitializeAsync " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-
-            if (!isFirstRun && args.PreviousExecutionState != ApplicationExecutionState.Running && args.PreviousExecutionState != ApplicationExecutionState.Suspended)
-            {
-                PerformUpdate();
-            }
 
             if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
             {
