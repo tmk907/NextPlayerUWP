@@ -60,9 +60,9 @@ namespace NextPlayerUWPDataLayer.Services
         
         public LastFmManager()
         {
-            Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) ?? String.Empty).ToString();
-            Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) ?? String.Empty).ToString();
-            SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) ?? String.Empty).ToString();
+            Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string ?? String.Empty).ToString();
+            Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) as string ?? String.Empty).ToString();
+            SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) as string ?? String.Empty).ToString();
         }
 
         public async Task<bool> Login(string login, string password)
