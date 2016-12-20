@@ -1041,6 +1041,10 @@ namespace NextPlayerUWPDataLayer.Services
         {
             var list = await connectionAsync.Table<PlainPlaylistsTable>().Where(s => s.PlainPlaylistId.Equals(id)).ToListAsync();
             var p = list.FirstOrDefault();
+            if (p == null)
+            {
+                return new PlaylistItem();
+            }
             return new PlaylistItem(p);
         }
 

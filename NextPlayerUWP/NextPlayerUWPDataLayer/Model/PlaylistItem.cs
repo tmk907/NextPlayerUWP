@@ -79,6 +79,17 @@ namespace NextPlayerUWPDataLayer.Model
             }
         }
 
+        public PlaylistItem()
+        {
+            isHidden = true;
+            id = -1;
+            name = "";
+            isSmart = false;
+            isNotDefault = true;
+            path = "";
+            dateModified = DateTime.MaxValue;
+        }
+
         public PlaylistItem(int id, bool issmart, string _name)
         {
             this.id = id;
