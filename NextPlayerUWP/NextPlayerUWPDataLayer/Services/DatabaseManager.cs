@@ -215,7 +215,7 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         //Albums, Artists, Genres
-        public async Task UpdateTables()
+        public async Task UpdateTables()//Error null reference
         {
             var songsList = await connectionAsync.Table<SongsTable>().Where(available => available.IsAvailable > 0).ToListAsync();
 
@@ -400,7 +400,7 @@ namespace NextPlayerUWPDataLayer.Services
             await ClearEntryWithNoSongs();
         }
 
-        private async Task ClearEntryWithNoSongs()
+        private async Task ClearEntryWithNoSongs()// error DoSavePointExecute
         {
             //przed update tables ustawic songscount na 0 w tabelach album, artist, genre
             //nowe wiersze beda mialy songcount>0, updatowane tez
@@ -1234,18 +1234,6 @@ namespace NextPlayerUWPDataLayer.Services
             return newplaylist.PlainPlaylistId;
         }
 
-        public async Task InsertPlainPlaylistEntryAsync(int _playlistId, int _songId, int _place)
-        {
-            var newEntry = new PlainPlaylistEntryTable
-            {
-                PlaylistId = _playlistId,
-                SongId = _songId,
-                Place = _place,
-            };
-            await connectionAsync.InsertAsync(newEntry);//error
-        }
-
-
         /// <summary>
         /// InsertPlainPlaylistEntryAsync
         /// </summary>
@@ -1861,7 +1849,7 @@ namespace NextPlayerUWPDataLayer.Services
                 UserId = userId,
                 UserName = username
             };
-            await connectionAsync.InsertAsync(item);
+            int i = await connectionAsync.InsertAsync(item);
             return item.Id;
         }
 

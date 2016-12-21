@@ -72,6 +72,7 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref groupedSongs, value); }
         }
 
+        //error outofrange https://developer.microsoft.com/dashboard/analytics/reports/apphealth/details?productId=9NBLGGH67N4F&failureHash=f3fffdeb-bebc-599e-1c0f-d242a9875317
         protected override async Task LoadData()
         {               
             if (songs.Count == 0)

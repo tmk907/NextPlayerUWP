@@ -249,7 +249,7 @@ namespace NextPlayerUWP.Common
 
         private static MediaPlaybackItem PrepareFromOnlineFile(SongItem song)
         {
-            var source = MediaSource.CreateFromUri(new Uri(song.Path));
+            var source = MediaSource.CreateFromUri(new Uri(song.Path));//error opened from file?
             var playbackItem = new MediaPlaybackItem(source);
             playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
             UpdateDisplayProperties(playbackItem, song);
@@ -307,6 +307,7 @@ namespace NextPlayerUWP.Common
 
         private static void UpdateDisplayProperties(MediaPlaybackItem playbackItem, SongItem song)
         {
+            if (playbackItem == null) return;//TODO catch error null reference?
             var displayProperties = playbackItem.GetDisplayProperties();
             displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
             displayProperties.MusicProperties.Artist = song.Artist;

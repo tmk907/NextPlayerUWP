@@ -67,7 +67,7 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
             }
 
             string updated = "";
-            using(Stream stream = await file.OpenStreamForWriteAsync())
+            using(Stream stream = await file.OpenStreamForWriteAsync())//error unauthorized
             {
                 updated = wplContent.Update(playlist, stream);
             }

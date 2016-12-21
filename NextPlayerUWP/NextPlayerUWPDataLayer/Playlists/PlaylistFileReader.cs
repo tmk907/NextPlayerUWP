@@ -95,6 +95,7 @@ namespace NextPlayerUWPDataLayer.Playlists
             return playlist;
         }
 
+        //error https://developer.microsoft.com/dashboard/analytics/reports/apphealth/details?productId=9NBLGGH67N4F&failureHash=c69459a7-1d77-1cdb-6e6e-71677cb5b9d8
         public async Task<ZplPlaylist> OpenZplPlaylist(StorageFile file)
         {
             ZplPlaylist playlist;

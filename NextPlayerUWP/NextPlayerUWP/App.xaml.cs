@@ -384,10 +384,6 @@ namespace NextPlayerUWP
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
             }
-            else
-            {
-                if (PlaybackService.Instance.PlayerState != Windows.Media.Playback.MediaPlaybackState.Playing) Common.Tiles.TileUpdateHelper.ClearTile();//!!
-            }
 
             var fileArgs = args as FileActivatedEventArgs;
             if (fileArgs != null && fileArgs.Files.Any())

@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -241,8 +242,19 @@ namespace NextPlayerUWP.ViewModels
             genres = tagsData.Genres;
             albumArtist = tagsData.AlbumArtist;
             TagsManager tm = new TagsManager();
-            var file = await StorageFile.GetFileFromPathAsync(songData.Path);
-            AlbumArt = await tm.GetAlbumArt(file);
+            try
+            {
+                var file = await StorageFile.GetFileFromPathAsync(songData.Path);
+                AlbumArt = await tm.GetAlbumArt(file);
+            }
+            catch (Exception ex)
+            {
+                var file = await FutureAccessHelper.GetFileFromPathAsync(songData.Path);
+                if (file != null)
+                {
+                    AlbumArt = await tm.GetAlbumArt(file);
+                }
+            }
             IsAlbumArtVisible = IsAlbumArtSet();
             await LoadSongs();
             TelemetryAdapter.TrackPageView(this.GetType().ToString());

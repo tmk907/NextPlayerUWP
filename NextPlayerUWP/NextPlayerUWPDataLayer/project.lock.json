@@ -17169,6 +17169,7 @@
     "Microsoft.Graph.Core/1.2.1": {
       "sha512": "ZVfBio42uIrKT7P2AmUDb5FQiY27hayaeJ1aSj3eocRojkqs15dcjk6+iuVb2qxgK2Re3raJHE31BZUK/+mB/A==",
       "type": "package",
+      "path": "Microsoft.Graph.Core/1.2.1",
       "files": [
         "Microsoft.Graph.Core.1.2.1.nupkg.sha512",
         "Microsoft.Graph.Core.nuspec",
@@ -17182,6 +17183,7 @@
     "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727": {
       "sha512": "mDOzGImSD32AD7JIqLBwFFfkRbTPybSyFILn+zKgPFAWJCw88/EkGLijnJFv+BJbE/wvYDmV7dcLuhZ8zi6n3Q==",
       "type": "package",
+      "path": "Microsoft.IdentityModel.Clients.ActiveDirectory/2.22.302111727",
       "files": [
         "Microsoft.IdentityModel.Clients.ActiveDirectory.2.22.302111727.nupkg.sha512",
         "Microsoft.IdentityModel.Clients.ActiveDirectory.nuspec",
@@ -17444,6 +17446,7 @@
     "Microsoft.OneDriveSDK.Authentication/1.0.8": {
       "sha512": "sN3kPp58/nHmwQJpA3WREWrojKOblDsXpRRW//NyKhaXuq1+NJoQILst5cC+uuvH0pL3afsD6bIANjH0Tytzgg==",
       "type": "package",
+      "path": "Microsoft.OneDriveSDK.Authentication/1.0.8",
       "files": [
         "Microsoft.OneDriveSDK.Authentication.1.0.8.nupkg.sha512",
         "Microsoft.OneDriveSDK.Authentication.nuspec",

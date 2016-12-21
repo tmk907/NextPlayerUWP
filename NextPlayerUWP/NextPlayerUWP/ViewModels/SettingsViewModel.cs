@@ -271,19 +271,26 @@ namespace NextPlayerUWP.ViewModels
 
         public async void RemoveFolder(MusicFolder musicFolder)
         {
-            var musicLibrary = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Music);
-            var folder = musicLibrary.Folders.Where(f => f.Path.Equals(musicFolder.Path)).FirstOrDefault();
-            //var fi = await f.GetFilesAsync();
-            //var fp = fi.FirstOrDefault().Properties;
-            //var mp =  await fp.GetMusicPropertiesAsync();
-
-            bool confirmDeletion = await musicLibrary.RequestRemoveFolderAsync(folder);
-            if (confirmDeletion)
+            try
             {
-                MusicLibraryFolders.Remove(musicFolder);
-                //usun utwory z biblioteki
-                await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
-                MediaImport.OnMediaImported("FolderRemoved");
+                var musicLibrary = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Music);
+                var folder = musicLibrary.Folders.Where(f => f.Path.Equals(musicFolder.Path)).FirstOrDefault();
+                //var fi = await f.GetFilesAsync();
+                //var fp = fi.FirstOrDefault().Properties;
+                //var mp =  await fp.GetMusicPropertiesAsync();
+
+                bool confirmDeletion = await musicLibrary.RequestRemoveFolderAsync(folder);
+                if (confirmDeletion)
+                {
+                    MusicLibraryFolders.Remove(musicFolder);
+                    //usun utwory z biblioteki
+                    await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
+                    MediaImport.OnMediaImported("FolderRemoved");
+                }
+            }
+            catch (Exception ex)
+            {
+                
             }
         }
 

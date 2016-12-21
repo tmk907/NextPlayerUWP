@@ -40,6 +40,7 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
             return content;
         }
 
+        //error System.UnauthorizedAccessException
         public async Task UpdateContent(PlaylistItem item, IEnumerable<SongItem> songs, StorageFile file)
         {
             PlaylistFileReader pr = new PlaylistFileReader();
