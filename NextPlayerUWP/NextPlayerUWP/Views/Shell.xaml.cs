@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Diagnostics;
 using System;
 using System.Threading.Tasks;
 using Template10.Controls;
@@ -41,7 +42,9 @@ namespace NextPlayerUWP.Views
             {
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
+            Logger2.Current.CreateErrorFile();
             ReviewReminder();
+            SendLogs();
         }
 
         public Shell(INavigationService navigationService) : this()
@@ -116,6 +119,11 @@ namespace NextPlayerUWP.Views
             {
                 return (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop");
             }
+        }
+
+        private async Task SendLogs()
+        {
+            await Logger2.Current.SendLogs();
         }
 
         #region Slider 

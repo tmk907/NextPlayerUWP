@@ -231,8 +231,8 @@ namespace NextPlayerUWP
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Logger.SaveInSettings("App_UnhandledException " + e.Exception);
-            HockeyClient.Current.TrackEvent("App_UnhandledException " + e.Exception.Message);
+            //Logger.SaveInSettings("App_UnhandledException " + e.Exception);
+            Logger2.Current.LogAppUnhadledException(e);
         }
 
         public enum Pages
