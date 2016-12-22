@@ -65,7 +65,7 @@ namespace NextPlayerUWP.Views
 
         private void AdControl_AdLoadingError(object sender, AdDuplex.Common.Models.AdLoadingErrorEventArgs e)
         {
-            NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage(e.Error.Message, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.Warning);
+            NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage(e.Error.Message, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.Debug);
         }
     }
 }
