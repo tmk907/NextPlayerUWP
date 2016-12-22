@@ -35,7 +35,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public NowPlayingManager()
         {
-            Logger.DebugWrite("NowPlayingManager", "");
+            Logger2.DebugWrite("NowPlayingManager", "");
             //Stopwatch s1 = new Stopwatch();
             //s1.Start();
             playlist = new CurrentPlaylistHelper();
@@ -605,7 +605,7 @@ namespace NextPlayerUWPDataLayer.Services
             repeat = Repeat.CurrentState();
             isPlaylistRepeated = false;
             isSongRepeated = false;
-            Logger.DebugWrite("Playlist()", "finished");
+            Logger2.DebugWrite("Playlist()", "finished");
         }
 
         public bool IsFirst()

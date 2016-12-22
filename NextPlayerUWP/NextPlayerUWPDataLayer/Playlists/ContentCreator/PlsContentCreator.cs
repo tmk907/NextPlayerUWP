@@ -44,7 +44,14 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
                 }
             }
             string content = CreateContent(item, songs);
-            await FileIO.WriteTextAsync(file, content);
+            try
+            {
+                await FileIO.WriteTextAsync(file, content);
+            }
+            catch (Exception ex)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage(ex.ToString());
+            }
         }
     }
 }

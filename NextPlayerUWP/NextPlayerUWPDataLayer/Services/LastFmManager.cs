@@ -140,7 +140,7 @@ namespace NextPlayerUWPDataLayer.Services
                     }
                     catch (Exception ex)
                     {
-                        Logger.SaveLastFm("LastFmManager SendMessage" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
+                        Logger2.Current.WriteMessage("LastFmManager SendMessage" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
                     }
                 }
             }
@@ -200,7 +200,6 @@ namespace NextPlayerUWPDataLayer.Services
             }
             else if (response.Contains("<error code="))
             {
-                Logger.SaveLastFm(response);
                 int i1 = response.IndexOf("code=\"") + "code=\"".Length;
                 int i2 = response.IndexOf("\"", i1);
                 int code;
@@ -243,6 +242,7 @@ namespace NextPlayerUWPDataLayer.Services
                 {
 
                 }
+                Logger2.Current.WriteMessage(response, Logger2.Level.Warning);
             }
             else
             {
@@ -286,7 +286,7 @@ namespace NextPlayerUWPDataLayer.Services
                         info = "nowplaying";
                         break;
                 }
-                Logger.SaveLastFm("Error Last.fm " + function + Environment.NewLine + info);
+                Logger2.Current.WriteMessage("Error Last.fm " + function + Environment.NewLine + info);
             }
         }
 

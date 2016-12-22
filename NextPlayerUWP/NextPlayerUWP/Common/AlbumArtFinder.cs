@@ -38,7 +38,7 @@ namespace NextPlayerUWP.Common
 
         public async Task StartLooking()
         {
-            Logger.DebugWrite("AlbumArtFinder", "StartLooking");
+            Logger2.DebugWrite("AlbumArtFinder", "StartLooking");
 
             if (isRunning) return;
             var dispatcher = Template10.Common.DispatcherWrapper.Current();
@@ -54,13 +54,13 @@ namespace NextPlayerUWP.Common
             albums.Clear();
             isRunning = false;
 
-            Logger.DebugWrite("AlbumArtFinder", "StartLooking finished");
+            Logger2.DebugWrite("AlbumArtFinder", "StartLooking finished");
         }
         
         private async Task FindAlbumArtOfEverySong()
         {
             Debug.WriteLine("AlbumArtFinder FindAlbumArtOfEverySong()");
-            //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
+            //Logger2.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
             //Stopwatch st = new Stopwatch();
             //st.Start();
 
@@ -87,7 +87,7 @@ namespace NextPlayerUWP.Common
 
             //st.Stop();
             //Debug.WriteLine("FindSongsAlbumArt {0}ms", st.ElapsedMilliseconds);
-            //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
+            //Logger2.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
         }
 
         private async Task UpdateAlbumsWithNoArt()
@@ -241,7 +241,7 @@ namespace NextPlayerUWP.Common
         //private async Task FindAlbumArtOfEverySongRemoveSame()
         //{
         //    Debug.WriteLine("AlbumArtFinder FindAlbumArtOfEverySong()");
-        //    //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
+        //    //Logger2.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
         //    //Stopwatch st = new Stopwatch();
         //    //st.Start();
 
@@ -268,7 +268,7 @@ namespace NextPlayerUWP.Common
 
         //    //st.Stop();
         //    //Debug.WriteLine("FindSongsAlbumArt {0}ms", st.ElapsedMilliseconds);
-        //    //Logger.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
+        //    //Logger2.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
         //}
         //private static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumsTable album)
         //{

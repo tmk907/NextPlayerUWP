@@ -200,13 +200,11 @@ namespace NextPlayerUWPDataLayer.Services
             }
             catch (FileNotFoundException ex)
             {
-                Logger.Save("CreateSongFromFile FileNotFound" + Environment.NewLine + ex.Message);
-                Logger.SaveToFile();
+                Logger2.Current.WriteMessage("CreateSongFromFile FileNotFound" + Environment.NewLine + ex.Message, Logger2.Level.Information);
             }
             catch (Exception ex)
             {
-                Logger.Save("CreateSongFromFile" + Environment.NewLine + ex.Message);
-                Logger.SaveToFile();
+                Logger2.Current.WriteMessage("CreateSongFromFile" + Environment.NewLine + ex.Message, Logger2.Level.Information);
             }
         }
 
@@ -612,8 +610,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
             catch (FileNotFoundException ex)
             {
-                Logger.Save("CreateSongFromFile FileNotFound" + Environment.NewLine + ex.Message);
-                Logger.SaveToFile();
+                Logger2.Current.WriteMessage("CreateSongFromFile FileNotFound" + Environment.NewLine + ex.Message, Logger2.Level.Debug);
                 song.FileSize = 0;
                 song.IsAvailable = 0;
 
@@ -640,8 +637,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
             catch (Exception ex)
             {
-                Logger.Save("CreateSongFromFile" + Environment.NewLine + ex.Message);
-                Logger.SaveToFile();
+                Logger2.Current.WriteMessage("CreateSongFromFile" + Environment.NewLine + ex.Message, Logger2.Level.Debug);
                 song.FileSize = 0;
             }
             return song;

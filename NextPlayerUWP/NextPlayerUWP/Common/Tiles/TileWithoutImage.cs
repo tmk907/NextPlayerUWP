@@ -103,8 +103,7 @@ namespace NextPlayerUWP.Common.Tiles
                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                     }
                 }
-            };
-            NextPlayerUWPDataLayer.Diagnostics.Logger.Save(mediumBindingContent.ToString());
+            };           
             return mediumBindingContent;
         }
 

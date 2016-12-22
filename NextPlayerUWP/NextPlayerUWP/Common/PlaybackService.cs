@@ -73,7 +73,7 @@ namespace NextPlayerUWP.Common
 
         public PlaybackService()
         {
-            Logger.DebugWrite("PlaybackService","");
+            Logger2.DebugWrite("PlaybackService","");
             
             // Create the player instance
             Player = new MediaPlayer();
@@ -598,6 +598,10 @@ namespace NextPlayerUWP.Common
             if (mediaList.CurrentItemIndex > mediaList.Items.Count)
             {
                 j = (uint)mediaList.Items.IndexOf(mediaList.StartingItem);
+            }
+            if (j == UInt32.MaxValue)
+            {
+                j = 0;
             }
             for (int i = 0; i < mediaList.Items.Count; i++)
             {

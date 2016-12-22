@@ -27,8 +27,7 @@ namespace NextPlayerUWP.Helpers
                 string[] a = r.ToString().Split(new char[]{ '|' }, StringSplitOptions.RemoveEmptyEntries);
                 if (a.Length % 2 != 0)
                 {
-                    Logger.Save("SaveLater blad modulo");
-                    Logger.SaveToFile();
+                    //log
                 }
                 else
                 {

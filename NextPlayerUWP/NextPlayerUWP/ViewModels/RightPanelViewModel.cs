@@ -25,7 +25,7 @@ namespace NextPlayerUWP.ViewModels
 
         public RightPanelViewModel()
         {
-            Logger.DebugWrite("RightPanelViewModel()", "");
+            Logger2.DebugWrite("RightPanelViewModel()", "");
             sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
@@ -45,7 +45,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async void TrackChanged(int index)
         {
-            Logger.DebugWrite("RightPanelViewModel", $"TrackChanged {index}");
+            Logger2.DebugWrite("RightPanelViewModel", $"TrackChanged {index}");
             await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
             {
                 if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
@@ -182,13 +182,13 @@ namespace NextPlayerUWP.ViewModels
 
         private void UpdatePlaylist()
         {
-            Logger.DebugWrite("RightPanelViewModel", "UpdatePlaylist");
+            Logger2.DebugWrite("RightPanelViewModel", "UpdatePlaylist");
             Songs = NowPlayingPlaylistManager.Current.songs;
         }
 
         public async void OnLoaded(ListView p, WebView webView)
         {
-            Logger.DebugWrite("RightPanelViewModel", "OnLoaded");
+            Logger2.DebugWrite("RightPanelViewModel", "OnLoaded");
 
             lyricsWebview = webView;
             lyricsWebview.ContentLoading += webView1_ContentLoading;
@@ -217,7 +217,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void OnUnLoaded()
         {
-            Logger.DebugWrite("RightPanelViewModel", "OnUnLoaded");
+            Logger2.DebugWrite("RightPanelViewModel", "OnUnLoaded");
             positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
             firstVisibleIndex = isp.FirstVisibleIndex;
@@ -225,7 +225,7 @@ namespace NextPlayerUWP.ViewModels
 
         private void ScrollAfterTrackChanged(int index)
         {
-            Logger.DebugWrite("RightPanelViewModel", $"ScrollAfterTrackChanged {index}");
+            Logger2.DebugWrite("RightPanelViewModel", $"ScrollAfterTrackChanged {index}");
 
             if (listView == null)
             {
@@ -639,8 +639,7 @@ namespace NextPlayerUWP.ViewModels
             }
             catch (Exception ex)
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Lyrics ParseLyrics() " + "\n" + address + " " + artist + " " + title + "\n" + ex.Message);
-                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+                Logger2.Current.WriteMessage("Lyrics ParseLyrics() " + "\n" + address + " " + artist + " " + title + "\n" + ex.Message);
             }
         }
 

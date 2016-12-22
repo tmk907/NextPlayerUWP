@@ -71,7 +71,8 @@ namespace NextPlayerUWP
             MemoryManager.AppMemoryUsageLimitChanging += MemoryManager_AppMemoryUsageLimitChanging;
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_AppMemoryUsageIncreased;
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
-
+            Logger2.Current.CreateErrorFile();
+            Logger2.Current.SetLevel(Logger2.Level.Information);
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (null == o)
             {               
@@ -113,18 +114,6 @@ namespace NextPlayerUWP
             }
 
             SplashFactory = (e) => new Views.Splash(e);
-#if DEBUG
-            try
-            {
-                Logger.SaveFromSettingsToFile();
-            }
-            catch (Exception ex)
-            {
-
-            }
-#else
-            Logger.ClearSettingsLogs();
-#endif
 
             //if (IsXbox())
             //{
@@ -133,6 +122,7 @@ namespace NextPlayerUWP
 
             //DatabaseManager.Current.resetdb();
             FileFormatsHelper = new FileFormatsHelper(false);
+            
             this.UnhandledException += App_UnhandledException;
 
             //var gcTimer = new DispatcherTimer();
@@ -372,7 +362,6 @@ namespace NextPlayerUWP
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-
             if (startKind == StartKind.Launch)
             {
                 TelemetryAdapter.TrackAppLaunch();
@@ -497,14 +486,15 @@ namespace NextPlayerUWP
             }
         }
         
-        public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
+        public override async Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
         {
             if (OnNewTilePinned != null)
             {
                 OnNewTilePinned();
                 OnNewTilePinned = null;
             }
-            return base.OnSuspendingAsync(s, e, prelaunch);
+            await Logger2.Current.WriteToFile();
+            await base.OnSuspendingAsync(s, e, prelaunch);
         }
 
         //public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
@@ -703,28 +693,6 @@ namespace NextPlayerUWP
         }
 
         #endregion
-
-        private async Task SendLogs()
-        {
-            try
-            {
-                string log = await Logger.Read();
-                if (!string.IsNullOrEmpty(log))
-                {
-                    
-                }
-                log = await Logger.ReadBG();
-                if (!string.IsNullOrEmpty(log))
-                {
-                    
-                }
-                await Logger.ClearAll();
-            }
-            catch (Exception ex)
-            {
-                HockeyClient.Current.TrackEvent("Cant send logs: " + ex);
-            }
-        }
 
         private void Resetdb()
         {

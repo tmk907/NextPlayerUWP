@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.CloudStorage;
+using NextPlayerUWPDataLayer.Diagnostics;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -517,7 +518,7 @@ namespace NextPlayerUWPDataLayer.Services
             var q = l.FirstOrDefault();
             if (q == null)
             {
-                Diagnostics.Logger.Save("GetSongData null id=" + songId);
+                Logger2.Current.WriteMessage("GetSongData null id=" + songId);
             }//!
             SongData s = CreateSongData(q);
             return s;
@@ -530,7 +531,7 @@ namespace NextPlayerUWPDataLayer.Services
             SongData s;
             if (q == null)
             {
-                Diagnostics.Logger.Save("GetSongDataAsync null id=" + songId);
+                Logger2.Current.WriteMessage("GetSongDataAsync null id=" + songId);
 
                 s = GetEmptySongData();//!
             }

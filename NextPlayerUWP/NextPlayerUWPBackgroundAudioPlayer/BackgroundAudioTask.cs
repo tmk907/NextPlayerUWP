@@ -31,7 +31,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            Logger.DebugWrite("BackgroundAudioTask", "");
+            Logger2.DebugWrite("BackgroundAudioTask", "");
             //Stopwatch s1 = new Stopwatch();
             //s1.Start();
             nowPlayingManager = new NowPlayingManager();
@@ -138,7 +138,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             }
             else if (sender.CurrentState == MediaPlayerState.Closed)
             {
-                Logger.DebugWrite("BGAudio()", "CurrentStateChanged Closed");
+                Logger2.DebugWrite("BGAudio()", "CurrentStateChanged Closed");
                 smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             }
         }

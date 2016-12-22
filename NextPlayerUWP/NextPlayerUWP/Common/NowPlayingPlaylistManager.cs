@@ -29,7 +29,7 @@ namespace NextPlayerUWP.Common
 
         private NowPlayingPlaylistManager()
         {
-            Logger.DebugWrite("NowPlayingPlaylistManager()","");
+            Logger2.DebugWrite("NowPlayingPlaylistManager()","");
             songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
             songs.CollectionChanged += Songs_CollectionChanged;
             PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
@@ -532,7 +532,7 @@ namespace NextPlayerUWP.Common
 
         private async Task NotifyChange(bool newPlaylist = false)
         {
-            Logger.DebugWrite("NowPlayingPlaylistManager()", "NotifyChange");
+            Logger2.DebugWrite("NowPlayingPlaylistManager()", "NotifyChange");
             OnNPChanged();
             if (!newPlaylist)
             {

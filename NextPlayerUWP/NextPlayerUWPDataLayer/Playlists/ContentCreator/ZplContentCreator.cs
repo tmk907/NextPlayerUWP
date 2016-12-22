@@ -66,11 +66,18 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
             }
 
             string updated = "";
-            using (Stream stream = await file.OpenStreamForWriteAsync())
+            using (Stream stream = await file.OpenStreamForReadAsync())
             {
                 updated = zplContent.Update(playlist, stream);
             }
-            await FileIO.WriteTextAsync(file, updated);
+            try
+            {
+                await FileIO.WriteTextAsync(file, updated);
+            }
+            catch (Exception ex)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage(ex.ToString());
+            }
         }
     }
 }

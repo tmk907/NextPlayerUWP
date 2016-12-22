@@ -331,8 +331,7 @@ namespace NextPlayerUWP.ViewModels
             }
             catch (Exception ex)
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Lyrics ParseLyrics() " + "\n" + address + " " + artist + " " + title + "\n" + ex.Message);
-                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("Lyrics ParseLyrics() " + "\n" + address + " " + artist + " " + title + "\n" + ex.Message);
             }
         }
 

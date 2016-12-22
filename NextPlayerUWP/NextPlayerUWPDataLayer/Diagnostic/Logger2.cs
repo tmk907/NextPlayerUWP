@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -24,7 +25,10 @@ namespace NextPlayerUWPDataLayer.Diagnostics
         private Logger2()
         {
             minLevel = Level.Error;
+            cache = new StringBuilder();
         }
+
+        private StringBuilder cache;
 
         public enum Level
         {
@@ -43,7 +47,8 @@ namespace NextPlayerUWPDataLayer.Diagnostics
 
         public void LogAppUnhadledException(UnhandledExceptionEventArgs e)
         {
-            Task t = WriteMessage(string.Format("UnhandledException - Exit - {0}", e.Exception.ToString()));
+            WriteMessage(string.Format("UnhandledException - Exit - {0}", e.Exception.ToString()));
+            Task t = WriteToFile();
             t.Wait(3000);
             // Give the application 3 seconds to write to the log file. Should be enough time. 
             SaveAppdata();
@@ -84,22 +89,32 @@ namespace NextPlayerUWPDataLayer.Diagnostics
             }
         }
 
-        public async Task WriteMessage(string strMessage, Level level = Level.Error)
+        public void WriteMessage(string strMessage, Level level = Level.Error)
         {
             if ((int)level >= (int)minLevel)
             {
-                if (ErrorFile != null)
+                try
                 {
-                    try
-                    {
-                        // Run asynchronously
-                        await FileIO.AppendTextAsync(ErrorFile, string.Format("{0} - {1} - {2}\r\n", DateTime.Now.ToLocalTime().ToString(), level.ToString(), strMessage));
-                    }
-                    catch (Exception)
-                    {
-                        // If another option is available to the app to log error(i.e. Azure Mobile Service, etc...) then try that here 
-                        //TelemetryAdapter.TrackEvent("SaveToLogFailure");
-                    }
+                    cache.Append(string.Format("{0} - {1} - {2}\r\n", DateTime.Now.ToLocalTime().ToString(), level.ToString(), strMessage));
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        public async Task WriteToFile()
+        {
+            if (ErrorFile != null)
+            {
+                try
+                {
+                    await FileIO.AppendTextAsync(ErrorFile, cache.ToString());
+                }
+                catch (Exception)
+                {
+                    // If another option is available to the app to log error(i.e.Azure Mobile Service, etc...) then try that here
+                    //TelemetryAdapter.TrackEvent("SaveToLogFailure");
                 }
             }
         }
@@ -137,6 +152,13 @@ namespace NextPlayerUWPDataLayer.Diagnostics
                 }
                 catch (Exception) { }
             }
+        }
+
+        public static void DebugWrite(string caller, string data)
+        {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("{0} {1} {2}", DateTime.Now.TimeOfDay, caller, data);
+#endif
         }
     }
 }
