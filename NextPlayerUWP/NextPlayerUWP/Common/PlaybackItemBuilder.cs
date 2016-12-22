@@ -249,6 +249,11 @@ namespace NextPlayerUWP.Common
 
         private static MediaPlaybackItem PrepareFromOnlineFile(SongItem song)
         {
+            if (String.IsNullOrEmpty(song.Path))
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("PrepareFromOnlineFile path error");
+                return PrepareDefaultItem();
+            }
             var source = MediaSource.CreateFromUri(new Uri(song.Path));//error opened from file?
             var playbackItem = new MediaPlaybackItem(source);
             playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;

@@ -5,6 +5,7 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:adduplex="using:AdDuplex"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
@@ -331,7 +332,7 @@
                         </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="GridAdControlRightPanel.Visibility" Value="Visible"/>
+                        <!--<Setter Target="GridAdControlRightPanel.Visibility" Value="Visible"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="HideAd">
@@ -342,7 +343,7 @@
                         </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="GridAdControlRightPanel.Visibility" Value="Collapsed"/>
+                        <!--<Setter Target="GridAdControlRightPanel.Visibility" Value="Collapsed"/>-->
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -514,8 +515,15 @@
                 </Grid>
             </PivotItem>
         </Pivot>
-        <Grid 
+        <adduplex:AdControl
             Grid.Row="2"
-            x:Name="GridAdControlRightPanel"/>
+            BorderBrush="Gray"
+            BorderThickness="1,0,0,0"
+            AdLoadingError="AdControl_AdLoadingError"
+            AdUnitId="202211" 
+            AppKey="bfe9d689-7cf7-4add-84fe-444dc72e6f36" />
+        <!--<Grid 
+            Grid.Row="2"
+            x:Name="GridAdControlRightPanel"/>-->
     </Grid>
 </UserControl>

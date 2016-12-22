@@ -5,8 +5,9 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:adduplex="using:AdDuplex"
     xmlns:controls="using:Template10.Controls"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
     xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -184,6 +185,7 @@
                     <VisualState.Setters>
                         <Setter Target="PlaylistsListView.ItemTemplate" Value="{StaticResource PlaylistItemTemplateMobile}"/>
                         <Setter Target="PlaylistsListView.CanDragItems" Value="False"/>
+                        <Setter Target="AdDuplexAdControl.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -270,6 +272,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
                 <RowDefinition/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <ContentDialog x:Name="ContentDialogNewPlaylist"
                 Grid.Row="1"
@@ -402,6 +405,13 @@
                     </ItemsPanelTemplate>
                 </mycontrols:AlternatingRowListView.ItemsPanel>
             </mycontrols:AlternatingRowListView>
+            <adduplex:AdControl
+                x:Name="AdDuplexAdControl"
+                Grid.Row="2"
+                x:DeferLoadStrategy="Lazy"
+                Visibility="Collapsed"
+                AdUnitId="202211" 
+                AppKey="bfe9d689-7cf7-4add-84fe-444dc72e6f36" />
         </Grid>
     </Grid>
 </Page>

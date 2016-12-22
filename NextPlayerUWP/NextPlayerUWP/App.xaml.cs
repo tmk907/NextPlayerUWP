@@ -353,6 +353,9 @@ namespace NextPlayerUWP
                 //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
             }
             //await MediaImport.CheckChanges();
+
+            AdDuplex.AdDuplexClient.Initialize("bfe9d689-7cf7-4add-84fe-444dc72e6f36");
+
             if (!isFirstRun)
             {
                 AlbumArtFinder.StartLooking().ConfigureAwait(false);

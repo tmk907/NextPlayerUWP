@@ -41,7 +41,8 @@ namespace NextPlayerUWP.Views
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
             {
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
-            }           
+            }
+
             ReviewReminder();
             SendLogs();
         }

@@ -10,6 +10,8 @@ namespace NextPlayerUWPDataLayer.Diagnostics
 {
     public sealed class Logger2
     {
+        private string serverAddress;
+
         private static readonly Logger2 current = new Logger2();
 
         static Logger2() { }
@@ -26,6 +28,11 @@ namespace NextPlayerUWPDataLayer.Diagnostics
         {
             minLevel = Level.Error;
             cache = new StringBuilder();
+#if DEBUG
+            serverAddress = "http://ttt907.nazwa.pl/nextplayerbetalogs/logs.php";
+#else
+            serverAddress = "http://ttt907.nazwa.pl/next-player-logs/logs.php";
+#endif
         }
 
         private StringBuilder cache;
@@ -132,7 +139,7 @@ namespace NextPlayerUWPDataLayer.Diagnostics
                 if (String.IsNullOrEmpty(text)) return;
                 try
                 {
-                    Uri uri = new Uri("http://ttt907.nazwa.pl/nextplayerbetalogs/logs.php");
+                    Uri uri = new Uri(serverAddress);
                     var data = new List<KeyValuePair<string, string>>();
                     data.Add(new KeyValuePair<string, string>("log", text));
                     using (var httpclient = new HttpClient())
