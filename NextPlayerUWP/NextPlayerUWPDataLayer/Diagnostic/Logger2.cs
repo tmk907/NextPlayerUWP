@@ -26,7 +26,7 @@ namespace NextPlayerUWPDataLayer.Diagnostics
 
         private Logger2()
         {
-            minLevel = Level.Error;
+            minLevel = Level.Warning;
             cache = new StringBuilder();
 #if DEBUG
             serverAddress = "http://ttt907.nazwa.pl/nextplayerbetalogs/logs.php";

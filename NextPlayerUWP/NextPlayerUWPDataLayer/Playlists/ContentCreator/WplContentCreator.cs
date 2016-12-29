@@ -39,7 +39,16 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
         {
             var wplContent = new WplContent();
             PlaylistFileReader pr = new PlaylistFileReader();
-            var playlist = await pr.OpenWplPlaylist(file);
+            WplPlaylist playlist;
+            try
+            {
+                playlist = await pr.OpenWplPlaylist(file);
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.Logger2.Current.WriteMessage(ex.ToString());
+                return;
+            }
             playlist.Title = item.Name;
             if (playlist.PlaylistEntries.Count > 0)
             {
@@ -67,13 +76,17 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
             }
 
             string updated = "";
-            using(Stream stream = await file.OpenStreamForReadAsync())//error unauthorized
-            {
-                updated = wplContent.Update(playlist, stream);
-            }
             try
             {
+                using (Stream stream = await file.OpenStreamForReadAsync())
+                {
+                    updated = wplContent.Update(playlist, stream);
+                }
                 await FileIO.WriteTextAsync(file, updated);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage(ex.ToString());
             }
             catch (Exception ex)
             {

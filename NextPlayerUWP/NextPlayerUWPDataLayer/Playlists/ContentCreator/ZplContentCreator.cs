@@ -38,7 +38,16 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
         {
             var zplContent = new ZplContent();
             PlaylistFileReader pr = new PlaylistFileReader();
-            var playlist = await pr.OpenZplPlaylist(file);
+            ZplPlaylist playlist;
+            try
+            {
+                playlist = await pr.OpenZplPlaylist(file);
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.Logger2.Current.WriteMessage(ex.ToString());
+                return;
+            }
             playlist.Title = item.Name;
             if (playlist.PlaylistEntries.Count > 0)
             {
@@ -66,13 +75,17 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
             }
 
             string updated = "";
-            using (Stream stream = await file.OpenStreamForReadAsync())
-            {
-                updated = zplContent.Update(playlist, stream);
-            }
             try
             {
+                using (Stream stream = await file.OpenStreamForReadAsync())
+                {
+                    updated = zplContent.Update(playlist, stream);
+                }
                 await FileIO.WriteTextAsync(file, updated);
+            }
+            catch(UnauthorizedAccessException ex)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage(ex.ToString());
             }
             catch (Exception ex)
             {

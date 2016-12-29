@@ -84,7 +84,7 @@ namespace NextPlayerUWPDataLayer.Playlists
             return playlist;
         }
 
-        //error https://rink.hockeyapp.net/manage/apps/308671/app_versions/56/crash_reasons/151334432
+        //error https://rink.hockeyapp.net/manage/apps/308671/app_versions/56/crash_reasons/151334432 fixed in try catch
         public async Task<WplPlaylist> OpenWplPlaylist(StorageFile file)
         {
             WplPlaylist playlist;
@@ -96,7 +96,7 @@ namespace NextPlayerUWPDataLayer.Playlists
             return playlist;
         }
 
-        //error https://developer.microsoft.com/dashboard/analytics/reports/apphealth/details?productId=9NBLGGH67N4F&failureHash=c69459a7-1d77-1cdb-6e6e-71677cb5b9d8
+        //error https://developer.microsoft.com/dashboard/analytics/reports/apphealth/details?productId=9NBLGGH67N4F&failureHash=c69459a7-1d77-1cdb-6e6e-71677cb5b9d8 fixed in try catch
         public async Task<ZplPlaylist> OpenZplPlaylist(StorageFile file)
         {
             ZplPlaylist playlist;

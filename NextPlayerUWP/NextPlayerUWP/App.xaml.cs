@@ -72,7 +72,11 @@ namespace NextPlayerUWP
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_AppMemoryUsageIncreased;
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
             Logger2.Current.CreateErrorFile();
-            Logger2.Current.SetLevel(Logger2.Level.Information);
+#if DEBUG
+            Logger2.Current.SetLevel(Logger2.Level.Debug);
+#else
+            Logger2.Current.SetLevel(Logger2.Level.Warning);
+#endif
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (null == o)
             {               
@@ -252,7 +256,7 @@ namespace NextPlayerUWP
             TagsEditor
         }
 
-        #region Template10 overrides
+#region Template10 overrides
 
         public override UIElement CreateRootElement(IActivatedEventArgs e)
         {
@@ -288,7 +292,7 @@ namespace NextPlayerUWP
             ThemeHelper.ApplyThemeToStatusBar(isLightTheme);
             ThemeHelper.ApplyThemeToTitleBar(isLightTheme);
 
-            #region AddPageKeys
+#region AddPageKeys
             var keys = PageKeys<Pages>();
             if (!keys.ContainsKey(Pages.AddToPlaylist))
                 keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
@@ -336,7 +340,7 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Songs, typeof(SongsView));
             if (!keys.ContainsKey(Pages.TagsEditor))
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
-            #endregion
+#endregion
 
             try
             {
@@ -517,11 +521,11 @@ namespace NextPlayerUWP
         //    return Task.CompletedTask;
         //}
 
-        #endregion
+#endregion
 
         public static Action OnNewTilePinned { get; set; }
 
-        #region Setup and update
+#region Setup and update
 
         private void FirstRunSetup()
         {
@@ -695,7 +699,7 @@ namespace NextPlayerUWP
             }
         }
 
-        #endregion
+#endregion
 
         private void Resetdb()
         {

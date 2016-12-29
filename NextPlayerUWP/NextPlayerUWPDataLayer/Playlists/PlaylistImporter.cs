@@ -28,11 +28,18 @@ namespace NextPlayerUWPDataLayer.Playlists
             }
             else if (type == ".wpl")
             {
-                var p = await pr.OpenWplPlaylist(file);
-                foreach (var entry in p.PlaylistEntries)
+                try
                 {
-                    GeneralPlaylistEntry m = new GeneralPlaylistEntry(entry);
-                    newPlaylist.Entries.Add(m);
+                    var p = await pr.OpenWplPlaylist(file);
+                    foreach (var entry in p.PlaylistEntries)
+                    {
+                        GeneralPlaylistEntry m = new GeneralPlaylistEntry(entry);
+                        newPlaylist.Entries.Add(m);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Diagnostics.Logger2.Current.WriteMessage(ex.ToString());
                 }
             }
             else if (type == ".pls")
@@ -46,11 +53,18 @@ namespace NextPlayerUWPDataLayer.Playlists
             }
             else if (type == ".zpl")
             {
-                var p = await pr.OpenZplPlaylist(file);
-                foreach (var entry in p.PlaylistEntries)
+                try
                 {
-                    GeneralPlaylistEntry m = new GeneralPlaylistEntry(entry);
-                    newPlaylist.Entries.Add(m);
+                    var p = await pr.OpenZplPlaylist(file);
+                    foreach (var entry in p.PlaylistEntries)
+                    {
+                        GeneralPlaylistEntry m = new GeneralPlaylistEntry(entry);
+                        newPlaylist.Entries.Add(m);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Diagnostics.Logger2.Current.WriteMessage(ex.ToString());
                 }
             }
 

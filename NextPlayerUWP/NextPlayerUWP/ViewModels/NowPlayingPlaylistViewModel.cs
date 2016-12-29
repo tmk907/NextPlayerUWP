@@ -121,9 +121,18 @@ namespace NextPlayerUWP.ViewModels
         {
             //App.ChangeRightPanelVisibility(true);
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
-            positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-            firstVisibleIndex = isp.FirstVisibleIndex;
+            if (isp == null)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NPPVM OnNavigatedFromAsync isp null");
+                positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
+            
+                firstVisibleIndex = isp.FirstVisibleIndex;
+            }
+            else
+            {
+                firstVisibleIndex = 0;
+            }
 
             if (suspending)
             {
