@@ -201,7 +201,11 @@ namespace NextPlayerUWP.ViewModels
             }
             songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(editedAlbum.AlbumParam, editedAlbum.AlbumArtist);
             Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.Disc).ThenBy(t => t.TrackNumber));
-            App.OnSongUpdated(songs.FirstOrDefault().SongId);   
+            var firstSong = songs.FirstOrDefault();
+            if (firstSong != null)//error kiedy jest null?
+            {
+                App.OnSongUpdated(firstSong.SongId);
+            }
         }
 
         public async void PlayAlbum()

@@ -46,7 +46,17 @@ namespace NextPlayerUWP.ViewModels
 
         private void TrackChanged(int index)
         {
-            Dispatcher.Dispatch(() =>
+            Template10.Common.IDispatcherWrapper d = Dispatcher;
+            if (d == null)
+            {
+                d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            }
+            if (d == null)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NowPlayingPlaylistViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.Warning);
+                return;
+            }
+            d.Dispatch(() =>
             {
                 if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
                 CurrentSong = songs[index];
@@ -154,17 +164,24 @@ namespace NextPlayerUWP.ViewModels
 
         private void ScrollAfterTrackChanged(int index)
         {
-            var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-            int firstVisibleIndex = isp.FirstVisibleIndex;
-            int lastVisibleIndex = isp.LastVisibleIndex;
-            if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;
-            if (index < firstVisibleIndex)
+            try
             {
-                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+                var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
+                int firstVisibleIndex = isp.FirstVisibleIndex;
+                int lastVisibleIndex = isp.LastVisibleIndex;
+                if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;
+                if (index < firstVisibleIndex)
+                {
+                    listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+                }
+                else if (index > lastVisibleIndex)
+                {
+                    listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
+                }
             }
-            else if (index > lastVisibleIndex)
+            catch (Exception ex)
             {
-                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NowPlayingPlaylsitViewModel ScrollAfterTrackChanged " + ex.ToString());
             }
         }
 

@@ -171,7 +171,6 @@ namespace NextPlayerUWP.ViewModels
                 list.Insert(0, folder);
                 SdCardFolders = new ObservableCollection<SdCardFolder>(list);
             }
-            PlaylistsFolder = Windows.Storage.KnownFolders.Playlists.Path;
 
             //Last.fm
             string login = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string;
@@ -294,7 +293,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        public async void AddSdCardFolder()
+        public async void AddSdCardFolder()//error element not found
         {
             var folderPicker = new Windows.Storage.Pickers.FolderPicker();
             folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
@@ -309,7 +308,8 @@ namespace NextPlayerUWP.ViewModels
                     Path = folder.Path,
                     IncludeSubFolders = includeSubFolders,
                 });
-                var list = new List<SdCardFolder>(sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:")));
+                var ff = sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:"));
+                var list = new List<SdCardFolder>(ff);
                 await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
             }
         }
@@ -321,13 +321,6 @@ namespace NextPlayerUWP.ViewModels
             SdCardFolders.Remove(musicFolder);
             await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
             MediaImport.OnMediaImported("FolderRemoved");
-        }
-
-        private string playlistsFolder;
-        public string PlaylistsFolder
-        {
-            get { return playlistsFolder; }
-            set { Set(ref playlistsFolder, value); }
         }
 
         #endregion

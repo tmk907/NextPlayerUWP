@@ -147,7 +147,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         public async Task Logout()
         {
             Debug.WriteLine("OneDriveService Logout()");
-            await msaAuthenticationProvider.SignOutAsync();
+            if (IsAuthenticated) await msaAuthenticationProvider.SignOutAsync();
             await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.OneDrive);
         }
 
@@ -214,7 +214,11 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             if (musicFolderId == null)
             {
                 var rootChildrens = await oneDriveClient.Drive.Root.Children.Request().GetAsync();
-                var item = rootChildrens.FirstOrDefault(i => i.SpecialFolder.Name.Equals("music"));
+                var item = rootChildrens.FirstOrDefault(i => (i?.SpecialFolder?.Name ?? "").Equals("music"));
+                if (item == null)
+                {
+                    Diagnostics.Logger2.Current.WriteMessage($"OneDrive GetRootFolderId item == null, rootChildrens.Count = {rootChildrens.Count}", Diagnostics.Logger2.Level.Warning);
+                }
                 musicFolderId = item.Id;
             }
             var rootTask = cachedFolders.GetOrAdd(musicFolderId, GetRootMusicFolder);
@@ -230,7 +234,12 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             try
             {
                 var rootChildrens = await oneDriveClient.Drive.Root.Children.Request().GetAsync();
-                var item = rootChildrens.FirstOrDefault(i => i.SpecialFolder.Name.Equals("music"));
+                var item = rootChildrens.FirstOrDefault(i => (i?.SpecialFolder?.Name ?? "").Equals("music"));
+                if (item == null)
+                {
+                    Diagnostics.Logger2.Current.WriteMessage($"OneDrive GetRootMusicFolder item == null, rootChildrens.Count = {rootChildrens.Count}", Diagnostics.Logger2.Level.Warning);
+                    return null;
+                }
                 CloudFolder folder = new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, item.ParentReference.Id, CloudStorageType.OneDrive, userId);
                 return folder;
             }

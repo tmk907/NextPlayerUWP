@@ -46,7 +46,7 @@ namespace NextPlayerUWP.Common
             return (int)command.Id == 0;
         }
 
-        public async Task<bool> ShowExcludeFolderConfirmation()
+        public async Task<bool> ShowExcludeFolderConfirmation()// error UnauthorizedAccessException
         {
             string content = translator.GetTranslation(TranslationHelper.DoYouWantExcludeFolderFromLibrary);
             var dialog = PrepareMessageDialog(content);

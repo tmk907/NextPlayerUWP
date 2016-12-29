@@ -27,7 +27,17 @@ namespace NextPlayerUWP.ViewModels
 
         private async void MediaImport_MediaImported(string s)
         {
-            await Dispatcher.DispatchAsync(() => ReloadData());
+            Template10.Common.IDispatcherWrapper d = Dispatcher;
+            if (d == null)
+            {
+                d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            }
+            if (d == null)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("FoldersViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.Warning);
+                return;
+            }
+            await d.DispatchAsync(() => ReloadData());
         }
 
         private async Task ReloadData()

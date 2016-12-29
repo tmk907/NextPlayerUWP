@@ -199,10 +199,9 @@ namespace NextPlayerUWPDataLayer.Helpers
         {
             LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
             bool exists = await helper.FileExistsAsync(sdCardFoldersFileName);
-            List<SdCardFolder> folders;
+            List<SdCardFolder> folders = new List<SdCardFolder>();
             if (!exists)
             {
-                folders = new List<SdCardFolder>();
                 await SaveSdCardFoldersToScan(folders);
             }
             else

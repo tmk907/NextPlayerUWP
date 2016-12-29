@@ -57,6 +57,7 @@ namespace NextPlayerUWP.Controls
                     }
                     else if (DataContext.GetType() == typeof(ArtistViewModel))
                     {
+                        //error argsNullReferenceException
                         var dt = DataContext as ArtistViewModel;
                         var o = Items[index];
                         var i = dt.Albums.FirstOrDefault(g => g.Contains(o)).IndexOf(o);

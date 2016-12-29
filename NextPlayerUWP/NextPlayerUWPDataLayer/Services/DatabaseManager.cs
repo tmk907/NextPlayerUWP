@@ -228,7 +228,7 @@ namespace NextPlayerUWPDataLayer.Services
             List <SongsTable> asongs = new List<SongsTable>();
             foreach(var song in songsList)
             {
-                if (song.Artists.Contains("; "))
+                if (song.Artists.Contains("; "))//error null reference
                 {
                     string[] artists = song.Artists.Split(new string[] { "; " },StringSplitOptions.RemoveEmptyEntries);
                     foreach (var a in artists)
@@ -435,36 +435,36 @@ namespace NextPlayerUWPDataLayer.Services
             //string folderName = Path.GetFileName(dir);
             return new SongsTable()
             {
-                Album = song.Tag.Album,
-                AlbumArtist = song.Tag.AlbumArtist,
+                Album = song.Tag.Album ?? "",
+                AlbumArtist = song.Tag.AlbumArtist ?? "",
                 AlbumArt = song.AlbumArtPath ?? "",
-                Artists = song.Tag.Artists,
+                Artists = song.Tag.Artists ?? "",
                 Bitrate = song.Bitrate,
-                CloudUserId = song.CloudUserId,
-                Comment = song.Tag.Comment,
-                Composers = song.Tag.Composers,
-                Conductor = song.Tag.Conductor,
+                CloudUserId = song.CloudUserId ?? "",
+                Comment = song.Tag.Comment ?? "",
+                Composers = song.Tag.Composers ?? "",
+                Conductor = song.Tag.Conductor ?? "",
                 DateAdded = song.DateAdded,
                 DateModified = song.DateModified,
-                DirectoryName = song.DirectoryPath,
+                DirectoryName = song.DirectoryPath ?? "",
                 Duration = song.Duration,
                 Disc = song.Tag.Disc,
                 DiscCount = song.Tag.DiscCount,
-                Filename = song.Filename,
+                Filename = song.Filename ?? "",
                 FileSize = (long)song.FileSize,
-                FirstArtist = song.Tag.FirstArtist,
-                FirstComposer = song.Tag.FirstComposer,
-                FolderName = song.FolderName,
-                Genres = song.Tag.Genres,
+                FirstArtist = song.Tag.FirstArtist ?? "",
+                FirstComposer = song.Tag.FirstComposer ?? "",
+                FolderName = song.FolderName ?? "",
+                Genres = song.Tag.Genres ?? "",
                 IsAvailable = song.IsAvailable,
                 LastPlayed = song.LastPlayed,
-                Lyrics = song.Tag.Lyrics,
+                Lyrics = song.Tag.Lyrics ?? "",
                 MusicSourceType = song.MusicSourceType,
-                Path = song.Path,
+                Path = song.Path ?? "",
                 PlayCount = song.PlayCount,
                 Rating = song.Tag.Rating,
                 SongId = song.SongId,
-                Title = song.Tag.Title,
+                Title = song.Tag.Title ?? "",
                 Track = song.Tag.Track,
                 TrackCount = song.Tag.TrackCount,
                 Year = song.Tag.Year
@@ -1256,7 +1256,7 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.InsertAllAsync(l);
         }
 
-        public async Task InsertNewNowPlayingPlaylistAsync(IEnumerable<SongItem> songs)
+        public async Task InsertNewNowPlayingPlaylistAsync(IEnumerable<SongItem> songs)//error constraint https://rink.hockeyapp.net/manage/apps/308671/app_versions/56/crash_reasons/151334480
         {
             List<NowPlayingTable> list = new List<NowPlayingTable>();
             connection.DeleteAll<NowPlayingTable>();
@@ -2182,6 +2182,11 @@ namespace NextPlayerUWPDataLayer.Services
         public void UpdateToVersion10()
         {
             connection.Execute("UPDATE SongsTable SET IsAvailable = 1 WHERE MusicSourceType = 5 OR MusicSourceType = 6 OR MusicSourceType = 8");
+        }
+
+        public void UpdateToVersion11()
+        {
+            //update SongsTable set "" instead of null
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()

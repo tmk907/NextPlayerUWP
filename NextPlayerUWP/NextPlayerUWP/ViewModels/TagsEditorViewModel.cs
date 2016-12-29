@@ -340,7 +340,8 @@ namespace NextPlayerUWP.ViewModels
 
         private bool IsAlbumArtSet()
         {
-            return albumArt.PixelHeight != 1 || albumArt.PixelWidth != 1;
+            if (albumArt == null) return false;
+            else return albumArt.PixelHeight != 1 || albumArt.PixelWidth != 1;
         }
 
         public async void SaveToFile()

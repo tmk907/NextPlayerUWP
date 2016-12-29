@@ -84,13 +84,14 @@ namespace NextPlayerUWPDataLayer.Playlists
             return playlist;
         }
 
+        //error https://rink.hockeyapp.net/manage/apps/308671/app_versions/56/crash_reasons/151334432
         public async Task<WplPlaylist> OpenWplPlaylist(StorageFile file)
         {
             WplPlaylist playlist;
             using (var stream = await file.OpenStreamForReadAsync())
             {
                 var content = new WplContent();
-                playlist = content.GetFromStream(stream);
+                playlist = content.GetFromStream(stream);//error null reference
             }
             return playlist;
         }

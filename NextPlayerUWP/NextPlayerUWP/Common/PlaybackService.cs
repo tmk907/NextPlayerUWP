@@ -603,6 +603,10 @@ namespace NextPlayerUWP.Common
             {
                 j = 0;
             }
+            if (j!= CurrentSongIndex)//??
+            {
+
+            }
             for (int i = 0; i < mediaList.Items.Count; i++)
             {
                 if (i != j)
@@ -634,6 +638,7 @@ namespace NextPlayerUWP.Common
                 }
                 else
                 {
+                    //out of range exception
                     mediaList.Items[i].Source.CustomProperties[propertyIndex] = i;
                 }
             }

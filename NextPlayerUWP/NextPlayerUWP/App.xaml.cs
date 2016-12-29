@@ -704,13 +704,13 @@ namespace NextPlayerUWP
 
         public static void ChangeRightPanelVisibility(bool visible)
         {
-            if (Window.Current.Content == null) return;
+            if (Window.Current == null || Window.Current.Content == null) return;
             ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeRightPanelVisibility(visible);
         }
 
         public static void OnNavigatedToNewView(bool visible, bool isNowPlayingDesktopActive = false)
         {
-            if (Window.Current.Content == null) return;
+            if (Window.Current == null || Window.Current.Content == null) return;
             ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
             ((Shell)((ModalDialog)Window.Current.Content).Content).OnDesktopViewActiveChange(isNowPlayingDesktopActive);
         }

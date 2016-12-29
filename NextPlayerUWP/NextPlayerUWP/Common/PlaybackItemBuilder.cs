@@ -315,9 +315,9 @@ namespace NextPlayerUWP.Common
             if (playbackItem == null) return;//TODO catch error null reference?
             var displayProperties = playbackItem.GetDisplayProperties();
             displayProperties.Type = Windows.Media.MediaPlaybackType.Music;
-            displayProperties.MusicProperties.Artist = song.Artist;
-            displayProperties.MusicProperties.AlbumTitle = song.Album;
-            displayProperties.MusicProperties.Title = song.Title;
+            displayProperties.MusicProperties.Artist = song.Artist ?? ""; // is it neccesarry?
+            displayProperties.MusicProperties.AlbumTitle = song.Album ?? "";
+            displayProperties.MusicProperties.Title = song.Title ?? "";
             try
             {
                 displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromUri(song.AlbumArtUri);

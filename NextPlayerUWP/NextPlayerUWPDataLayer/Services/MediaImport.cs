@@ -556,11 +556,11 @@ namespace NextPlayerUWPDataLayer.Services
                             }
                             if (file.FileType == ".wav")
                             {
-                                if (musicProperties.Album != "" && musicProperties.Album != song.Tag.Album)
+                                if (!String.IsNullOrEmpty(musicProperties.Album) && musicProperties.Album != song.Tag.Album)
                                 {
                                     song.Tag.Album = musicProperties.Album;
                                 }
-                                if (musicProperties.Title != "" && musicProperties.Title != song.Tag.Title)
+                                if (!String.IsNullOrEmpty(musicProperties.Title) && musicProperties.Title != song.Tag.Title)
                                 {
                                     song.Tag.Title = musicProperties.Title;
                                 }
@@ -580,7 +580,7 @@ namespace NextPlayerUWPDataLayer.Services
                             song.Tag.FirstComposer = "";
                             song.Tag.Genres = "";
                             song.Tag.Lyrics = "";
-                            song.Tag.Title = file.DisplayName;
+                            song.Tag.Title = file.DisplayName ?? "";
                             song.Tag.Track = 0;
                             song.Tag.TrackCount = 0;
                             song.Tag.Year = 0;
@@ -601,7 +601,7 @@ namespace NextPlayerUWPDataLayer.Services
                         song.Tag.FirstComposer = "";
                         song.Tag.Genres = "";
                         song.Tag.Lyrics = "";
-                        song.Tag.Title = file.DisplayName;
+                        song.Tag.Title = file.DisplayName ?? "";
                         song.Tag.Track = 0;
                         song.Tag.TrackCount = 0;
                         song.Tag.Year = 0;
@@ -628,7 +628,7 @@ namespace NextPlayerUWPDataLayer.Services
                 song.Tag.FirstComposer = "";
                 song.Tag.Genres = "";
                 song.Tag.Lyrics = "";
-                song.Tag.Title = file.DisplayName;
+                song.Tag.Title = file.DisplayName ?? "";
                 song.Tag.Track = 0;
                 song.Tag.TrackCount = 0;
                 song.Tag.Year = 0;
@@ -639,6 +639,10 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 Logger2.Current.WriteMessage("CreateSongFromFile" + Environment.NewLine + ex.Message, Logger2.Level.Debug);
                 song.FileSize = 0;
+            }
+            if (file.DisplayName == null)
+            {
+                Logger2.Current.WriteMessage("CreateSongFromFile file.DisplayName == null", Logger2.Level.Information);
             }
             return song;
         }

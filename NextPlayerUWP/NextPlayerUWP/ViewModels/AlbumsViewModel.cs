@@ -43,7 +43,17 @@ namespace NextPlayerUWP.ViewModels
 
         private void AlbumArtFinder_AlbumArtUpdatedEvent(int albumId, string albumArtPath)
         {
-            Dispatcher.Dispatch(() => 
+            Template10.Common.IDispatcherWrapper d = Dispatcher;
+            if (d == null)
+            {
+                d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            }
+            if (d == null)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("AlbumsViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.Warning);
+                return;
+            }
+            d.Dispatch(() => 
             {
                 var alb = Albums.FirstOrDefault(a => a.AlbumId == albumId);
                 if (alb != null)
