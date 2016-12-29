@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Xaml;
 
@@ -144,6 +145,15 @@ namespace NextPlayerUWPDataLayer.Diagnostics
                     Uri uri = new Uri(serverAddress);
                     var data = new List<KeyValuePair<string, string>>();
                     data.Add(new KeyValuePair<string, string>("log", text));
+
+                    Package package = Package.Current;
+                    PackageVersion version = package.Id.Version;
+                    string ver = string.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
+                    string arch = package.Id.Architecture.ToString();
+
+                    data.Add(new KeyValuePair<string, string>("architecture", arch));
+                    data.Add(new KeyValuePair<string, string>("version", ver));
+
                     using (var httpclient = new HttpClient())
                     {
                         using (var content = new FormUrlEncodedContent(data))

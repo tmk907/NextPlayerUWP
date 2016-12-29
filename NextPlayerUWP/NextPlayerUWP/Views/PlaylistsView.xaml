@@ -272,7 +272,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
                 <RowDefinition/>
-                <RowDefinition Height="Auto"/>
+                <!--<RowDefinition Height="Auto"/>-->
             </Grid.RowDefinitions>
             <ContentDialog x:Name="ContentDialogNewPlaylist"
                 Grid.Row="1"
@@ -405,13 +405,13 @@
                     </ItemsPanelTemplate>
                 </mycontrols:AlternatingRowListView.ItemsPanel>
             </mycontrols:AlternatingRowListView>
-            <adduplex:AdControl
+            <!--<adduplex:AdControl
                 x:Name="AdDuplexAdControl"
                 Grid.Row="2"
                 x:DeferLoadStrategy="Lazy"
                 Visibility="Collapsed"
                 AdUnitId="202211" 
-                AppKey="bfe9d689-7cf7-4add-84fe-444dc72e6f36" />
+                AppKey="bfe9d689-7cf7-4add-84fe-444dc72e6f36" />-->
         </Grid>
     </Grid>
 </Page>

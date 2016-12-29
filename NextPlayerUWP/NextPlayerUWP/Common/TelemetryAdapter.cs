@@ -37,6 +37,7 @@ namespace NextPlayerUWP.Common
 
             Package package = Package.Current;
             TimeSpan period =  DateTime.Now - package.InstalledDate;
+            int daysPast = period.Days;
 
             int appLaunchCount = (int)(ApplicationSettingsHelper.ReadSettingsValue(appLaunchCountKey) ?? 0);
             ApplicationSettingsHelper.SaveSettingsValue(appLaunchCountKey, appLaunchCount + 1);
@@ -49,7 +50,7 @@ namespace NextPlayerUWP.Common
             }
             else
             {
-                if (period.TotalDays == 2)
+                if (daysPast == 2)
                 {
                     if (lastEventTracked != "D2")
                     {
@@ -57,7 +58,7 @@ namespace NextPlayerUWP.Common
                         TrackEvent("D2");
                     }
                 }
-                if (period.TotalDays == 3)
+                if (daysPast == 3)
                 {
                     if (lastEventTracked != "D3")
                     {
@@ -65,7 +66,7 @@ namespace NextPlayerUWP.Common
                         TrackEvent("D3");
                     }
                 }
-                else if (period.TotalDays > 3 && period.TotalDays <= 7)
+                else if (daysPast > 3 && daysPast <= 7)
                 {
                     if (lastEventTracked != "D7")
                     {
@@ -73,7 +74,7 @@ namespace NextPlayerUWP.Common
                         TrackEvent("D7");
                     }
                 }
-                else if (period.TotalDays > 7 && period.TotalDays <= 14)
+                else if (daysPast > 7 && daysPast <= 14)
                 {
                     if (lastEventTracked != "D14")
                     {
@@ -81,7 +82,7 @@ namespace NextPlayerUWP.Common
                         TrackEvent("D14");
                     }
                 }
-                else if (period.TotalDays > 14 && period.TotalDays <= 30)
+                else if (daysPast > 14 && daysPast <= 30)
                 {
                     if (lastEventTracked != "D30")
                     {
