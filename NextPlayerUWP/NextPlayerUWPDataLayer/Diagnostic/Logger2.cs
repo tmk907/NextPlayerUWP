@@ -10,6 +10,8 @@ namespace NextPlayerUWPDataLayer.Diagnostics
 {
     public sealed class Logger2
     {
+        private const string addressBeta = "http://ttt907.nazwa.pl/nextplayerbetalogs/logs.php";
+        private const string addressNormal = "http://ttt907.nazwa.pl/next-player-logs/logs.php";
         private string serverAddress;
 
         private static readonly Logger2 current = new Logger2();
@@ -29,9 +31,9 @@ namespace NextPlayerUWPDataLayer.Diagnostics
             minLevel = Level.Warning;
             cache = new StringBuilder();
 #if DEBUG
-            serverAddress = "http://ttt907.nazwa.pl/nextplayerbetalogs/logs.php";
+            serverAddress = addressBeta;
 #else
-            serverAddress = "http://ttt907.nazwa.pl/next-player-logs/logs.php";
+            serverAddress = addressNormal;
 #endif
         }
 
