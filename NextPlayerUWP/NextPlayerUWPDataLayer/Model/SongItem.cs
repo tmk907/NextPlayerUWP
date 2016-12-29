@@ -364,9 +364,9 @@ namespace NextPlayerUWPDataLayer.Model
 
         public SongItem(SongsTable table)
         {
-            album = table.Album;
-            albumArtist = table.AlbumArtist;
-            artist = table.Artists;
+            album = table.Album ?? "";
+            albumArtist = table.AlbumArtist ?? "";
+            artist = table.Artists ?? "";
             composer = table.Composers;
             duration = table.Duration;
             path = table.Path;
