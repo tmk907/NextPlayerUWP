@@ -193,6 +193,10 @@ namespace NextPlayerUWP.ViewModels
                 FeedbackVisibility = true;
             }
             initialization = false;
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
+            }
         }
 
         #region Library

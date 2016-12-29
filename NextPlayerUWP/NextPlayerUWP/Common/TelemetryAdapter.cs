@@ -1,6 +1,10 @@
-﻿using Microsoft.Services.Store.Engagement;
+﻿using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.HockeyApp;
+using Microsoft.Services.Store.Engagement;
 using NextPlayerUWPDataLayer.Helpers;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Windows.ApplicationModel;
 
 namespace NextPlayerUWP.Common
@@ -14,8 +18,14 @@ namespace NextPlayerUWP.Common
             StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
             logger.Log(eventName);
 #endif
-            //Microsoft.HockeyApp.HockeyClient.Current.TrackEvent(eventName);
+            HockeyClient.Current.TrackEvent(eventName);
+
             System.Diagnostics.Debug.WriteLine("TrackEvent: " + eventName);
+        }
+
+        public static void TrackMetrics(string name, double value, IDictionary<string,string> properties = null)
+        {
+            HockeyClient.Current.TrackMetric(name, value, properties);
         }
 
         public static void TrackEventException(string exception)
@@ -27,7 +37,7 @@ namespace NextPlayerUWP.Common
         public static void TrackPageView(string name)
         {
             System.Diagnostics.Debug.WriteLine("TrackPageView " + name);
-            //Microsoft.HockeyApp.HockeyClient.Current.TrackPageView(name);
+            HockeyClient.Current.TrackPageView(name);
         }
 
         public static void TrackAppLaunch()
