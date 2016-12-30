@@ -217,7 +217,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 var item = rootChildrens.FirstOrDefault(i => (i?.SpecialFolder?.Name ?? "").Equals("music"));
                 if (item == null)
                 {
-                    Diagnostics.Logger2.Current.WriteMessage($"OneDrive GetRootFolderId item == null, rootChildrens.Count = {rootChildrens.Count}", Diagnostics.Logger2.Level.Warning);
+                    Diagnostics.Logger2.Current.WriteMessage($"OneDrive GetRootFolderId item == null, rootChildrens.Count = {rootChildrens.Count}", Diagnostics.Logger2.Level.WarningError);
                 }
                 musicFolderId = item.Id;
             }
@@ -237,7 +237,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 var item = rootChildrens.FirstOrDefault(i => (i?.SpecialFolder?.Name ?? "").Equals("music"));
                 if (item == null)
                 {
-                    Diagnostics.Logger2.Current.WriteMessage($"OneDrive GetRootMusicFolder item == null, rootChildrens.Count = {rootChildrens.Count}", Diagnostics.Logger2.Level.Warning);
+                    Diagnostics.Logger2.Current.WriteMessage($"OneDrive GetRootMusicFolder item == null, rootChildrens.Count = {rootChildrens.Count}", Diagnostics.Logger2.Level.WarningError);
                     return null;
                 }
                 CloudFolder folder = new CloudFolder(item.Name, item.ParentReference.Path, item.Folder.ChildCount ?? 0, item.Id, item.ParentReference.Id, CloudStorageType.OneDrive, userId);

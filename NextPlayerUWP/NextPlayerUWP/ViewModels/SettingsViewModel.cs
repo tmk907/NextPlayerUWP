@@ -259,6 +259,10 @@ namespace NextPlayerUWP.ViewModels
             await Task.Run(() => m.UpdateDatabase(progress));
             IsUpdating = false;
             ScannedFolder = "";
+            int songsAdded = m.GetLastSongsAddedCount();
+            int playlistsAdded = m.GetLastPlaylistsAddedCount();
+            int durationSeconds = unchecked((int)m.GetLastUpdateDuration());
+            TelemetryAdapter.TrackLibraryUpdate(songsAdded, playlistsAdded, durationSeconds);
             TelemetryAdapter.TrackEvent("Library updated");
         }
 

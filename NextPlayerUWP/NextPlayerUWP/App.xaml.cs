@@ -75,7 +75,7 @@ namespace NextPlayerUWP
 #if DEBUG
             Logger2.Current.SetLevel(Logger2.Level.Debug);
 #else
-            Logger2.Current.SetLevel(Logger2.Level.Warning);
+            Logger2.Current.SetLevel(Logger2.Level.WarningError);
 #endif
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (null == o)

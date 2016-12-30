@@ -53,7 +53,7 @@ namespace NextPlayerUWP.ViewModels
             }
             if (d == null)
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NowPlayingPlaylistViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.Warning);
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NowPlayingPlaylistViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
                 return;
             }
             d.Dispatch(() =>
@@ -124,7 +124,7 @@ namespace NextPlayerUWP.ViewModels
             var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
             if (isp == null)
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NPPVM OnNavigatedFromAsync isp null");
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NPPVM OnNavigatedFromAsync isp null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
                 positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
             
                 firstVisibleIndex = isp.FirstVisibleIndex;
@@ -168,6 +168,10 @@ namespace NextPlayerUWP.ViewModels
                 positionKey = (string)state[nameof(positionKey)];
             }
             selectedComboBoxItem = ComboBoxItemValues.FirstOrDefault(c => c.Option.Equals(sortingHelper.SelectedSortOption.Option));
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
+            }
             await Task.CompletedTask;
         }
 
@@ -190,7 +194,7 @@ namespace NextPlayerUWP.ViewModels
             }
             catch (Exception ex)
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NowPlayingPlaylsitViewModel ScrollAfterTrackChanged " + ex.ToString());
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NowPlayingPlaylsitViewModel ScrollAfterTrackChanged " + ex.ToString(), NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
             }
         }
 

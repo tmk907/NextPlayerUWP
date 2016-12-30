@@ -539,6 +539,7 @@ namespace NextPlayerUWP.Common
                 await PlaybackService.Instance.UpdateMediaListWithoutPausing();
             }
             await SaveNowPlayingInDB();
+            TelemetryAdapter.TrackMetrics("nowPlayingLength", songs.Count);
             //SendMessage(AppConstants.NowPlayingListChanged);
             //await PlaybackService.Instance.NewPlaylists(songs);
         }

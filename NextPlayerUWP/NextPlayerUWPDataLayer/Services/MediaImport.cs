@@ -51,8 +51,10 @@ namespace NextPlayerUWPDataLayer.Services
 
         private FileFormatsHelper fileFormatsHelper;
         string currentScanningFolderPath;
-        private int songsAdded;
+        private int songsAdded = 0;
         private int modifiedSongs;
+        private int playlistsAdded = 0;
+        private long updateDurationSeconds = 0;
         private IProgress<string> progress;
         private List<ImportedPlaylist> oldImportedPlaylists;
         private List<ImportedPlaylist> newImportedPlaylists;
@@ -328,6 +330,7 @@ namespace NextPlayerUWPDataLayer.Services
             newImportedPlaylists = new List<ImportedPlaylist>();
             updatedPlaylists = new List<ImportedPlaylist>();
             withoutChangePlaylists = new List<ImportedPlaylist>();
+            playlistsAdded = 0;
 
             var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
 
@@ -369,12 +372,16 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
             var toDelete = oldImportedPlaylists.Except(withoutChangePlaylists).Except(updatedPlaylists, new ImportedPlaylistComparer()).ToList();
-
+            playlistsAdded = newImportedPlaylists.Count;
             await DatabaseManager.Current.UpdateImportedPlaylists(toDelete, newImportedPlaylists, updatedPlaylists);
         }
 
         public async Task UpdateDatabase(IProgress<string> p)
         {
+            Stopwatch s1 = new Stopwatch();
+            updateDurationSeconds = 0;
+            s1.Start();
+
             songsAdded = 0;
             modifiedSongs = 0;
             progress = p;
@@ -411,10 +418,28 @@ namespace NextPlayerUWPDataLayer.Services
             }
 
             await UpdatePlaylists(playlistFiles);
+
+            s1.Stop();
+            updateDurationSeconds = s1.ElapsedMilliseconds / 1000;
             Debug.WriteLine("New songs: {0} updated songs: {1}", songsAdded, modifiedSongs);
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             OnMediaImported("Update");
             SendToast();
+        }
+
+        public int GetLastSongsAddedCount()
+        {
+            return songsAdded;
+        }
+
+        public int GetLastPlaylistsAddedCount()
+        {
+            return playlistsAdded;
+        }
+
+        public long GetLastUpdateDuration()
+        {
+            return updateDurationSeconds;
         }
 
         private async Task<SongData> CreateSongFromFile(StorageFile file)

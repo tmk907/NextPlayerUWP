@@ -23,6 +23,24 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("TrackEvent: " + eventName);
         }
 
+        public static void TrackEvent(string eventName, IDictionary<string,string> properties, IDictionary<string,double> metrics)
+        {
+            HockeyClient.Current.TrackEvent(eventName, properties, metrics);
+        }
+
+        public static void TrackLibraryUpdate(int songsCount, int playlistsCount, double durationSeconds)
+        {
+            var metrics = new Dictionary<string, double> {
+                { "updateDuration", durationSeconds },
+                { "songsCount", songsCount },
+                { "playlistsCount", playlistsCount }
+            };
+            var properties = new Dictionary<string, string> {
+                { "libraryUpdateP", "libraryUpdated" }
+            };
+            HockeyClient.Current.TrackEvent("libraryUpdate", properties, metrics);
+        }
+
         public static void TrackMetrics(string name, double value, IDictionary<string,string> properties = null)
         {
             HockeyClient.Current.TrackMetric(name, value, properties);

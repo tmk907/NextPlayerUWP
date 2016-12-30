@@ -431,7 +431,10 @@ namespace NextPlayerUWP.ViewModels
             TimeEnd = song.Duration;
             SliderValue = 0.0;
             SliderMaxValue = (int)Math.Round(song.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
-
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
+            }
             await Task.CompletedTask;
         }
 

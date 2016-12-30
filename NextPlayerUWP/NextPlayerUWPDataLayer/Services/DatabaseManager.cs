@@ -518,7 +518,7 @@ namespace NextPlayerUWPDataLayer.Services
             var q = l.FirstOrDefault();
             if (q == null)
             {
-                Logger2.Current.WriteMessage("GetSongData null id=" + songId);
+                Logger2.Current.WriteMessage("GetSongData null id=" + songId, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
             }//!
             SongData s = CreateSongData(q);
             return s;
@@ -531,7 +531,7 @@ namespace NextPlayerUWPDataLayer.Services
             SongData s;
             if (q == null)
             {
-                Logger2.Current.WriteMessage("GetSongDataAsync null id=" + songId);
+                Logger2.Current.WriteMessage("GetSongDataAsync null id=" + songId, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
 
                 s = GetEmptySongData();//!
             }

@@ -100,6 +100,10 @@ namespace NextPlayerUWP.ViewModels
             {
                 CurrentSong = songs[i];
             }
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
+            }
             await Task.CompletedTask;
         }
         

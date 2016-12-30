@@ -246,7 +246,11 @@ namespace NextPlayerUWP.ViewModels
                 id = Int32.Parse(parameter.ToString());
                 PlaylistRules.Clear();
                 await LoadPlaylist();
-            }   
+            }
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
+            }
             //PlaylistName = (suspensionState.ContainsKey(nameof(PlaylistName))) ? suspensionState[nameof(PlaylistName)]?.ToString() : "";
             await Task.CompletedTask;
         }

@@ -46,6 +46,8 @@ namespace NextPlayerUWPDataLayer.Diagnostics
             Information = 1,
             Warning = 2,
             Error = 3,
+            WarningError = 6,
+            DontLog = 10,
         }
 
         private Level minLevel;

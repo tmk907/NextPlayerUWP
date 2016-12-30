@@ -152,7 +152,7 @@ namespace NextPlayerUWPDataLayer.Helpers
                 }
                 catch(Exception ex)
                 {
-                    Diagnostics.Logger2.Current.WriteMessage("ReadTileData " + Environment.NewLine + ex.Message);
+                    Diagnostics.Logger2.Current.WriteMessage("ReadTileData " + Environment.NewLine + ex.Message, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
                 }
                 string[] ids = id.ToString().Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
                 string[] names = name.ToString().Split(new string[] { separator }, StringSplitOptions.None);

@@ -140,7 +140,7 @@ namespace NextPlayerUWPDataLayer.Services
                     }
                     catch (Exception ex)
                     {
-                        Logger2.Current.WriteMessage("LastFmManager SendMessage" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
+                        Logger2.Current.WriteMessage("LastFmManager SendMessage" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
                     }
                 }
             }
@@ -242,7 +242,7 @@ namespace NextPlayerUWPDataLayer.Services
                 {
 
                 }
-                Logger2.Current.WriteMessage(response, Logger2.Level.Warning);
+                Logger2.Current.WriteMessage(response, Logger2.Level.WarningError, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
             }
             else
             {
@@ -286,7 +286,7 @@ namespace NextPlayerUWPDataLayer.Services
                         info = "nowplaying";
                         break;
                 }
-                Logger2.Current.WriteMessage("Error Last.fm " + function + Environment.NewLine + info);
+                Logger2.Current.WriteMessage("Error Last.fm " + function + Environment.NewLine + info, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
             }
         }
 

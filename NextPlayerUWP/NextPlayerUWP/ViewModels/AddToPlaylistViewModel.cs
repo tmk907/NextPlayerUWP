@@ -48,6 +48,10 @@ namespace NextPlayerUWP.ViewModels
             Playlists = await DatabaseManager.Current.GetPlainPlaylistsAsync();
             type = MusicItem.ParseType((string)parameter);
             values = MusicItem.SplitParameter((string)parameter);
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
+            }
         }
 
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
