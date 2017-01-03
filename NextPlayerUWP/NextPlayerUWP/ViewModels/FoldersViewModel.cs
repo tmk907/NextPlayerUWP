@@ -35,6 +35,7 @@ namespace NextPlayerUWP.ViewModels
             if (d == null)
             {
                 NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("FoldersViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("Dispatcher null");
                 return;
             }
             await d.DispatchAsync(() => ReloadData());

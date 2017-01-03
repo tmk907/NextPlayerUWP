@@ -252,6 +252,7 @@ namespace NextPlayerUWP.Common
             if (String.IsNullOrEmpty(song.Path))
             {
                 NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("PrepareFromOnlineFile path error", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("PrepareFromOnlineFile path error");
                 return PrepareDefaultItem();
             }
             var source = MediaSource.CreateFromUri(new Uri(song.Path));//error opened from file?

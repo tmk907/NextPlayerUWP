@@ -242,7 +242,7 @@ namespace NextPlayerUWPDataLayer.Services
                 {
 
                 }
-                Logger2.Current.WriteMessage(response, Logger2.Level.WarningError, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                Logger2.Current.WriteMessage(response, Logger2.Level.WarningError);
             }
             else
             {

@@ -1,2 +1,2 @@
-MainPackage=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\x86\Release\NextPlayerUWP_2.7.0.0_x86.appx
-SymbolPackage=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\NextPlayerUWP_2.7.0.0_Test\NextPlayerUWP_2.7.0.0_x86.appxsym
+MainPackage=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\x86\Release\NextPlayerUWP_2.7.3.0_x86.appx
+SymbolPackage=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\NextPlayerUWP_2.7.3.0_Test\NextPlayerUWP_2.7.3.0_x86.appxsym

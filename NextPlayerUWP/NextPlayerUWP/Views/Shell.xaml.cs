@@ -44,7 +44,7 @@ namespace NextPlayerUWP.Views
             }
 
             ReviewReminder();
-            SendLogs();
+            //SendLogs();
         }
 
         public Shell(INavigationService navigationService) : this()

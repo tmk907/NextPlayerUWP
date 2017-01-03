@@ -51,6 +51,7 @@ namespace NextPlayerUWP.ViewModels
             if (d == null)
             {
                 NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("AlbumsViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("Dispatcher null");
                 return;
             }
             d.Dispatch(() => 
