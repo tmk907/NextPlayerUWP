@@ -3,7 +3,7 @@
   "version": 1,
   "targets": {
     "UAP,Version=v10.0": {
-      "AdDuplexWin10/10.1.0.1": {
+      "AdDuplexWin10/10.1.0.2": {
         "compile": {
           "lib/uap10.0/AdDuplex.winmd": {}
         },
@@ -2359,7 +2359,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
-      "AdDuplexWin10/10.1.0.1": {
+      "AdDuplexWin10/10.1.0.2": {
         "compile": {
           "lib/uap10.0/AdDuplex.winmd": {}
         },
@@ -4784,7 +4784,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
-      "AdDuplexWin10/10.1.0.1": {
+      "AdDuplexWin10/10.1.0.2": {
         "compile": {
           "lib/uap10.0/AdDuplex.winmd": {}
         },
@@ -7248,7 +7248,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
-      "AdDuplexWin10/10.1.0.1": {
+      "AdDuplexWin10/10.1.0.2": {
         "compile": {
           "lib/uap10.0/AdDuplex.winmd": {}
         },
@@ -9682,7 +9682,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
-      "AdDuplexWin10/10.1.0.1": {
+      "AdDuplexWin10/10.1.0.2": {
         "compile": {
           "lib/uap10.0/AdDuplex.winmd": {}
         },
@@ -12155,7 +12155,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
-      "AdDuplexWin10/10.1.0.1": {
+      "AdDuplexWin10/10.1.0.2": {
         "compile": {
           "lib/uap10.0/AdDuplex.winmd": {}
         },
@@ -14589,7 +14589,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
-      "AdDuplexWin10/10.1.0.1": {
+      "AdDuplexWin10/10.1.0.2": {
         "compile": {
           "lib/uap10.0/AdDuplex.winmd": {}
         },
@@ -17063,12 +17063,12 @@
     }
   },
   "libraries": {
-    "AdDuplexWin10/10.1.0.1": {
-      "sha512": "/oqmdjT48j85KUvykKX4NzSmWgjte0s40oFXPlpa4v1tF3lfwBSuhon2AzNmo6FwJeeRRd0kCCN7uqEgHdw0BA==",
+    "AdDuplexWin10/10.1.0.2": {
+      "sha512": "zo9Ag7drYtyGCJrTYemfFPVLC3vf63Oet0XfBIpYusjyoWIHvsM0JRXwJ7cwUtrXhzxIYoZZh1SaDWRP5SmyJQ==",
       "type": "package",
-      "path": "AdDuplexWin10/10.1.0.1",
+      "path": "AdDuplexWin10/10.1.0.2",
       "files": [
-        "AdDuplexWin10.10.1.0.1.nupkg.sha512",
+        "AdDuplexWin10.10.1.0.2.nupkg.sha512",
         "AdDuplexWin10.nuspec",
         "lib/uap10.0/AdDuplex.pri",
         "lib/uap10.0/AdDuplex.winmd",
@@ -23864,7 +23864,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "AdDuplexWin10 >= 10.1.0.1",
+      "AdDuplexWin10 >= 10.1.0.2",
       "HockeySDK.UWP >= 4.1.5",
       "Microsoft.ApplicationInsights >= 1.2.3",
       "Microsoft.ApplicationInsights.PersistenceChannel >= 1.2.3",

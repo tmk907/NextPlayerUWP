@@ -75,7 +75,7 @@ namespace NextPlayerUWP
 #if DEBUG
             Logger2.Current.SetLevel(Logger2.Level.Debug);
 #else
-            Logger2.Current.SetLevel(Logger2.Level.WarningError);
+            Logger2.Current.SetLevel(Logger2.Level.DontLog);
 #endif
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (null == o)
@@ -113,8 +113,14 @@ namespace NextPlayerUWP
             }
             else
             {
-                RequestedTheme = ApplicationTheme.Light;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+                if (RequestedTheme == ApplicationTheme.Light)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, false);
+                }
             }
 
             SplashFactory = (e) => new Views.Splash(e);
@@ -358,7 +364,14 @@ namespace NextPlayerUWP
             }
             //await MediaImport.CheckChanges();
 
-            AdDuplex.AdDuplexClient.Initialize("bfe9d689-7cf7-4add-84fe-444dc72e6f36");
+            try
+            {
+                AdDuplex.AdDuplexClient.Initialize("bfe9d689-7cf7-4add-84fe-444dc72e6f36");
+            }
+            catch (Exception ex)
+            {
+                Logger2.Current.WriteMessage("Adduplex initialize fail", Logger2.Level.WarningError);
+            }
 
             if (!isFirstRun)
             {
@@ -536,7 +549,7 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
             var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
             ColorsHelper ch = new ColorsHelper();
             ch.SaveUserAccentColor(color);

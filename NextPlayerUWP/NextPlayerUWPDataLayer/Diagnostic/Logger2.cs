@@ -117,7 +117,7 @@ namespace NextPlayerUWPDataLayer.Diagnostics
 
         public async Task WriteToFile()
         {
-            if (ErrorFile != null)
+            if (ErrorFile != null && cache.Length > 0)
             {
                 try
                 {

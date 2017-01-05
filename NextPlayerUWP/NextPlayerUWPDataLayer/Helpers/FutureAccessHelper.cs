@@ -28,14 +28,18 @@ namespace NextPlayerUWPDataLayer.Helpers
 
         public static async Task<StorageFile> GetFileFromPathAsync(string path)
         {
-            string token = await DatabaseManager.Current.GetAccessToken(path);
             StorageFile file = null;
-            try
+            string token = await DatabaseManager.Current.GetAccessToken(path);
+            if (!String.IsNullOrEmpty(token))
             {
-                file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
-            }
-            catch (Exception ex)
-            {
+
+                try
+                {
+                    file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
+                }
+                catch (Exception ex)
+                {
+                }
             }
             return file;
         } 
