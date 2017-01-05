@@ -22,6 +22,30 @@ namespace NextPlayerUWPDataLayer.Model
             CloudType = type;
         }
 
+        public override string GetParameter()
+        {
+            MusicItemTypes type;
+            switch (CloudType)
+            {
+                case CloudStorageType.Dropbox:
+                    type = MusicItemTypes.dropboxfolder;
+                    break;
+                case CloudStorageType.GoogleDrive:
+                    type = MusicItemTypes.googledrivefolder;
+                    break;
+                case CloudStorageType.OneDrive:
+                    type = MusicItemTypes.onedrivefolder;
+                    break;
+                case CloudStorageType.pCloud:
+                    type = MusicItemTypes.pcloudfolder;
+                    break;
+                default:
+                    type = MusicItemTypes.unknown;
+                    break;
+            }
+            return type + separator + UserId + separator + "";
+        }
+
         public static string ToParameter(string userId, CloudStorageType type)
         {
             return "root" + "%%%" + ((int)type).ToString() + "%%%" + userId;

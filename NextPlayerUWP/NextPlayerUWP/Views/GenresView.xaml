@@ -10,6 +10,7 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=GenresVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -50,23 +51,61 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
-        <DataTemplate x:Key="GenreItemTemplate" x:DataType="data:GenreItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="2*" MinWidth="80"/>
-                    <ColumnDefinition Width="*"  MinWidth="40"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
+        <DataTemplate x:Key="GenreItemTemplateMobile" x:DataType="data:GenreItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}" 
+	              LeftLabel="{ThemeResource SlideableListItemLeftLabel}" 
+	              LeftBackground="{StaticResource UserAccentBrush}" 
+	              LeftForeground="White" 
+	              ActivationWidth="100"
+                Background="Transparent"
+	              LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*" MinWidth="80"/>
+                        <ColumnDefinition Width="*"  MinWidth="40"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
                     Text="{x:Bind Genre}"
                     Style="{StaticResource ItemStyleLeft}"/>
-                <TextBlock Grid.Column="1"
+                    <TextBlock Grid.Column="1"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>
-                <TextBlock Grid.Column="2"
+                    <TextBlock Grid.Column="2"
                     Text="{x:Bind SongsNumber}"
                     Style="{StaticResource ItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
+        <DataTemplate x:Key="GenreItemTemplateDesktop" x:DataType="data:GenreItem">
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}" 
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*" MinWidth="80"/>
+                        <ColumnDefinition Width="*"  MinWidth="40"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                    Text="{x:Bind Genre}"
+                    Style="{StaticResource ItemStyleLeft}"/>
+                    <TextBlock Grid.Column="1"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                    Style="{StaticResource ItemStyleRight}"/>
+                    <TextBlock Grid.Column="2"
+                    Text="{x:Bind SongsNumber}"
+                    Style="{StaticResource ItemStyleRight}"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -77,8 +116,10 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="GenresListView.ItemTemplate" Value="{StaticResource GenreItemTemplateMobile}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="GenresListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -86,8 +127,21 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="GenresListView.ItemTemplate" Value="{StaticResource GenreItemTemplateDesktop}"/>
                         <Setter Target="Column1.Width" Value="*"/>
                         <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="GenresListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="GenresListView.ItemTemplate" Value="{StaticResource GenreItemTemplateDesktop}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="GenresListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -145,13 +199,12 @@
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                     ItemsSource="{Binding Genres}"
-                    ItemTemplate="{StaticResource GenreItemTemplate}"
                     Margin="12,0,0,0"
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     SelectionMode="None"
                     ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
-                    CanDragItems="True"
+                    CanDragItems="False"
                     DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                     <mycontrols:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate>

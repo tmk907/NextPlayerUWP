@@ -1,4 +1,7 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -16,24 +19,48 @@ namespace NextPlayerUWP.Views
         public CloudStorageFoldersView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((CloudStorageFoldersViewModel)DataContext).OnLoaded(FoldersListView); };
+            this.Loaded += View_Loaded;
+            //this.Unloaded += View_Unloaded;
             ViewModel = (CloudStorageFoldersViewModel)DataContext;
         }
-
-        private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        //~CloudStorageFoldersView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+        private void View_Unloaded(object sender, RoutedEventArgs e)
         {
-            //FrameworkElement senderElement = sender as FrameworkElement;
-            //var menu = this.Resources["ContextMenuFolder"] as MenuFlyout;
-            //var position = e.GetPosition(senderElement);
-            //menu.ShowAt(senderElement, position);
+            ViewModel.OnUnloaded();
+            ViewModel = null;
+            DataContext = null;
+            this.Loaded -= View_Loaded;
+            this.Unloaded -= View_Unloaded;
         }
 
-        private void ListViewItem2_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(FoldersListView);
+        }
+
+        private void ListViewFolderItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenuFolder"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
+        }
+
+        private void ListViewSongItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
             var menu = this.Resources["ContextMenuFile"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
+        {
+            var item = (sender as SlidableListItem).DataContext as MusicItem;
+            await ViewModel.SlidableListItemLeftCommandRequested(item);
         }
     }
 }

@@ -2,7 +2,6 @@
 using NextPlayerUWPDataLayer.Helpers;
 using System;
 using Windows.UI;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP.Common
@@ -10,7 +9,7 @@ namespace NextPlayerUWP.Common
     public class ColorsHelper
     {
         private string[] Win10HexAccentColors = new string[] {
-            "#FFFFB900", "#FFE74856", "#FF0078D7", "#FF0099BC", "#FF767676", "#FF767676",
+            "#FFFFB900", "#FFE74856", "#FF0078D7", "#FF0099BC", "#FF7A7574", "#FF767676",
             "#FFFF8C00", "#FFE81123", "#FF0063B1", "#FF2D7D9A", "#FF5D5A58", "#FF4C4A48",
             "#FFF7630C", "#FFEA005E", "#FF8E8CD8", "#FF00B7C3", "#FF68768A", "#FF69797E",
             "#FFCA5010", "#FFC30052", "#FF6B69D6", "#FF038387", "#FF515C6B", "#FF4A5459",
@@ -103,6 +102,11 @@ namespace NextPlayerUWP.Common
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppAccent, color.ToString());
         }
 
+        public string GetAlbumCoverAssetWithCurrentAccentColor()
+        {
+            string hexColor = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppAccent) as string;
+            return "ms-appx:///Assets/Albums/Colors/" + hexColor.Substring(1) + "-min.png";
+        }
 
 
         public double GetHue(Color color)

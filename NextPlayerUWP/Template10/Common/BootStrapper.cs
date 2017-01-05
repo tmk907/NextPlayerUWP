@@ -722,6 +722,23 @@ namespace Template10.Common
             }
         }
 
+        public async Task OnReduceMemoryUsage()
+        {
+            try
+            {
+                //allow only main view NavigationService as others won't be able to use Dispatcher and processing will stuck
+                var services = WindowWrapper.ActiveWrappers.SelectMany(x => x.NavigationServices).Where(x => x.IsInMainView);
+                foreach (INavigationService nav in services)
+                {
+                    // date the cache (which marks the date/time it was suspended)
+                    nav.FrameFacade.SetFrameState(CacheDateKey, DateTime.Now.ToString());
+                    // call view model suspend (OnNavigatedfrom)
+                    await(nav as INavigationService).GetDispatcherWrapper().DispatchAsync(async () => await nav.SuspendingAsync());
+                }
+            }
+            catch { /* do nothing */ }
+        }
+
         #endregion
 
         // The default frame is automatically wrapped in a modal dialog.

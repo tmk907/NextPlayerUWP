@@ -1,4 +1,6 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,8 +29,26 @@ namespace NextPlayerUWP.Views
         public FoldersView()
         {
             this.InitializeComponent();
-            this.Loaded += delegate { ((FoldersViewModel)DataContext).OnLoaded(FoldersListView); };
+            this.Loaded += View_Loaded;
+            //this.Unloaded += View_Unloaded;
             ViewModel = (FoldersViewModel)DataContext;
+        }
+        //~FoldersView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+        private void View_Unloaded(object sender, RoutedEventArgs e)
+        {
+            //ViewModel.OnUnloaded();
+            ViewModel = null;
+            DataContext = null;
+            this.Loaded -= View_Loaded;
+            this.Unloaded -= View_Unloaded;
+        }
+
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(FoldersListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -45,6 +65,12 @@ namespace NextPlayerUWP.Views
             var menu = this.Resources["ContextMenuFile"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
+        {
+            var item = (sender as SlidableListItem).DataContext as MusicItem;
+            await ViewModel.SlidableListItemLeftCommandRequested(item);
         }
     }
 }

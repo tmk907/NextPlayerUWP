@@ -367,7 +367,8 @@
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>60490polApki.KomunikatyRSO</MainPackageIdentityName>
     <MainPackageIdentityName>60490polApki.279685DD06499</MainPackageIdentityName>
+    <MainPackageIdentityName>60490polApki.Next-PlayerBeta</MainPackageIdentityName>
     <MainPackageIdentityName>60490polApki.NextPlayer</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://dev.windows.com/dashboard/Application?appId=9NBLGGH67N4F" />
+  <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9NBLGGH67N4F" />
 </StoreAssociation>

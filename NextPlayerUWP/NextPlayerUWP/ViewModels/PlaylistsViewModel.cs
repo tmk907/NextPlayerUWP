@@ -1,22 +1,22 @@
-﻿using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Model;
+﻿using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
-using System.IO;
+using Windows.Storage;
+using Windows.Storage.Provider;
+using NextPlayerUWPDataLayer.Playlists;
+using System.Linq;
+using NextPlayerUWP.Common;
 
 namespace NextPlayerUWP.ViewModels
 {
     public class PlaylistsViewModel : MusicViewModelBase
     {
+        private ObservableCollection<PlaylistItem> allPlaylists = new ObservableCollection<PlaylistItem>();
         private ObservableCollection<PlaylistItem> playlists = new ObservableCollection<PlaylistItem>();
         public ObservableCollection<PlaylistItem> Playlists
         {
@@ -31,7 +31,7 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref name, value); }
         }
 
-        private PlaylistItem editPlaylist = new PlaylistItem(-1,false,"");
+        private PlaylistItem editPlaylist = new PlaylistItem(-1, false, "");
         public PlaylistItem EditPlaylist
         {
             get { return editPlaylist; }
@@ -45,23 +45,57 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref relativePaths, value); }
         }
 
-        protected override async Task LoadData()
+        private ObservableCollection<PlaylistFilterElement> filters = new ObservableCollection<PlaylistFilterElement>();
+        public ObservableCollection<PlaylistFilterElement> Filters
         {
-            Playlists = await DatabaseManager.Current.GetPlaylistItemsAsync();
+            get { return filters; }
+            set { Set(ref filters, value); }
         }
 
-        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
+        protected override async Task LoadData()
         {
-            if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
+            var p = await DatabaseManager.Current.GetPlaylistItemsAsync();
+            if (p.Count != allPlaylists.Count)
             {
-                playlists = new ObservableCollection<PlaylistItem>();
+                Playlists.Clear();
+                allPlaylists = p;
+                foreach(var item in allPlaylists.Where(i => !i.IsHidden))
+                {
+                    Playlists.Add(item);
+                }
             }
-            await base.OnNavigatingFromAsync(args);
+            TranslationHelper tr = new TranslationHelper();
+            if (filters.Count == 0)
+            {
+                Filters.Add(new PlaylistFilterElement(FilterPlaylists)
+                {
+                    IsChecked = true,
+                    Name = tr.GetTranslation("Smart playlists")
+                });
+                Filters.Add(new PlaylistFilterElement(FilterPlaylists)
+                {
+                    IsChecked = true,
+                    Name = tr.GetTranslation("Normal playlists")
+                });
+                Filters.Add(new PlaylistFilterElement(FilterPlaylists)
+                {
+                    IsChecked = false,
+                    Name = tr.GetTranslation("Show hidden")
+                });
+            }
         }
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.Playlist, ((PlaylistItem)e.ClickedItem).GetParameter());
+            var item = (PlaylistItem)e.ClickedItem;
+            if (item.IsSmart)
+            {
+                NavigationService.Navigate(App.Pages.Playlist, item.GetParameter());
+            }
+            else
+            {
+                NavigationService.Navigate(App.Pages.PlaylistEditable, item.GetParameter());
+            }
         }
 
         public void NewSmartPlaylist()
@@ -69,36 +103,26 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.NewSmartPlaylist);
         }
 
-        public void Save()
+        public async void Save()
         {
             int id = DatabaseManager.Current.InsertPlainPlaylist(name);
-            Playlists.Add(new PlaylistItem(id, false, name));
+            var playlist = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
+            Playlists.Add(playlist);
             Name = "";
         }
 
         public async void ConfirmDelete(object e)
         {
             PlaylistItem p = (PlaylistItem)e;
-            if (p.IsSmart)
-            {
-                if (p.IsNotDefault)
-                {
-                    Playlists.Remove(p);
-                    await DatabaseManager.Current.DeleteSmartPlaylistAsync(p.Id);
-                }
-            }
-            else
-            {
-                Playlists.Remove(p);
-                PlaylistExporter pe = new PlaylistExporter();
-                await pe.DeletePlaylist(p).ConfigureAwait(false);
-                await DatabaseManager.Current.DeletePlainPlaylistAsync(p.Id).ConfigureAwait(false);
-            }
+            Playlists.Remove(p);
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.DeletePlaylistItem(p);
         }
 
         public void EditSmartPlaylist(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.NewSmartPlaylist,((PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter).Id);
+            var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            NavigationService.Navigate(App.Pages.NewSmartPlaylist,playlist.Id);
         }
 
         public async void SaveEditedName()
@@ -107,61 +131,128 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (p.Id == editPlaylist.Id && !p.IsSmart)
                 {
-                    p.Name = editPlaylist.Name;
+                    PlaylistHelper ph = new PlaylistHelper();
+                    await ph.EditName(p,editPlaylist.Name);
                     break;
                 }
             }
-            await DatabaseManager.Current.UpdatePlaylistName(editPlaylist.Id, editPlaylist.Name);
-            PlaylistExporter pe = new PlaylistExporter();
-            await pe.ChangePlaylistName(editPlaylist).ConfigureAwait(false);
             //await LoadData();
         }
+
+        public void FilterPlaylists()
+        {
+            if (filters.Count < 3) return;
+            bool showSmart = filters[0].IsChecked;
+            bool showNormal = filters[1].IsChecked;
+            bool showHidden = filters[2].IsChecked;
+            Playlists = new ObservableCollection<PlaylistItem>(allPlaylists.Where(p => ((p.IsSmart && showSmart) || (!p.IsSmart && showNormal)) && (!p.IsHidden || showHidden)));
+        }
+
+        public void ShowAllPlaylists()
+        {
+            Playlists = new ObservableCollection<PlaylistItem>(allPlaylists);
+        }
+
+        public async void ShowPlaylist(object sender, RoutedEventArgs e)
+        {
+            var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.EditPlaylist(playlist, false);
+            Playlists.Insert(allPlaylists.IndexOf(playlist), playlist);
+        }
+
+        public async void HidePlaylist(object sender, RoutedEventArgs e)
+        {
+            var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.EditPlaylist(playlist, true);
+            Playlists.Remove(playlist);
+        }
+
+        
 
         public async void ExportPlaylist()
         {
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation =  Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
             // Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Playlist", new List<string>() { ".m3u" });
+            savePicker.FileTypeChoices.Add("m3u playlist", new List<string>() { ".m3u" });
+            savePicker.FileTypeChoices.Add("pls playlist", new List<string>() { ".pls" });
+            savePicker.FileTypeChoices.Add("wpl playlist", new List<string>() { ".wpl" });
+            savePicker.FileTypeChoices.Add("zpl playlist", new List<string>() { ".zpl" });
             savePicker.SuggestedFileName = editPlaylist.Name;
 
-            Windows.Storage.StorageFile file = await savePicker.PickSaveFileAsync();
+            StorageFile file = await savePicker.PickSaveFileAsync();
             if (file != null)
             {
                 // Prevent updates to the remote version of the file until
                 // we finish making changes and call CompleteUpdatesAsync.
-                Windows.Storage.CachedFileManager.DeferUpdates(file);
+                CachedFileManager.DeferUpdates(file);
 
-                string folderPath = Path.GetDirectoryName(file.Path);
-                PlaylistExporter pe = new PlaylistExporter();
-                string content = await pe.ExportAsM3U(editPlaylist, relativePaths, folderPath);
-
-                await Windows.Storage.FileIO.WriteTextAsync(file, content);
+                PlaylistHelper ph = new PlaylistHelper();
+                await ph.ExportPlaylistToFile(editPlaylist, file, false, relativePaths);
                 // Let Windows know that we're finished changing the file so
                 // the other app can update the remote version of the file.
                 // Completing updates may require Windows to ask for user input.
-                Windows.Storage.Provider.FileUpdateStatus status = await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
-                if (status == Windows.Storage.Provider.FileUpdateStatus.Complete)
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                if (status == FileUpdateStatus.Complete)
                 {
-                    //this.textBlock.Text = "File " + file.Name + " was saved.";
-                    if (editPlaylist.IsSmart)
-                    {
-                        DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, -1);
-                    }
-                    else
-                    {
-                        DatabaseManager.Current.InsertImportedPlaylist(editPlaylist.Name, file.Path, editPlaylist.Id);
-                    }
+                    
                 }
                 else
                 {
-                    //this.textBlock.Text = "File " + file.Name + " couldn't be saved.";
+                    //"File couldn't be saved.";
                 }
             }
             else
             {
-                //this.textBlock.Text = "Operation cancelled.";
+                //"Operation cancelled.";
             }
+        }
+
+        public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                string query = sender.Text.ToLower();
+                var matching = playlists.Where(s => s.Name.ToLower().StartsWith(query));
+                var matching2 = playlists.Where(s => s.Name.ToLower().Contains(query));
+                var result = matching.Concat(matching2).Distinct();
+                sender.ItemsSource = result.ToList();
+            }
+        }
+
+        public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            int index;
+            if (args.ChosenSuggestion != null)
+            {
+                index = playlists.IndexOf((PlaylistItem)args.ChosenSuggestion);
+            }
+            else
+            {
+                var list = playlists.Where(s => s.Name.ToLower().StartsWith(sender.Text)).OrderBy(s => s.Name).ToList();
+                if (list.Count == 0) return;
+                index = 0;
+                bool find = false;
+                foreach (var g in playlists)
+                {
+                    if (g.Name.Equals(list.FirstOrDefault().Name))
+                    {
+                        find = true;
+                        break;
+                    }
+                    index++;
+                }
+                if (!find) return;
+            }
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+        }
+
+        public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var item = args.SelectedItem as PlaylistItem;
+            sender.Text = item.Name;
         }
     }
 }

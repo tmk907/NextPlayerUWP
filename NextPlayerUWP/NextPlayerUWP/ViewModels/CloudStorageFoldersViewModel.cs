@@ -16,6 +16,15 @@ namespace NextPlayerUWP.ViewModels
 {
     public class CloudStorageFoldersViewModel : MusicViewModelBase
     {
+        public CloudStorageFoldersViewModel()
+        {
+            sortingHelper = new SortingHelperForSongItems("Folders");
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
+        }
+
+        SortingHelperForSongItems sortingHelper;
+
         private string pageHeader = "";
         public string PageHeader
         {
@@ -51,6 +60,7 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
+            FolderName = "";
             Loading = true;
             currentFolder = null;
             if (folderId == null)
@@ -86,7 +96,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 Items.Add(song);
             }
-
+            SortMusicItems();
             Loading = false;
         }
 
@@ -165,8 +175,74 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
+        }
+
+        protected override void SortMusicItems()
+        {
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            var orderSelector = sortingHelper.GetOrderBySelector();
+
+            var folderItems = items.Where(i => i.GetType() == typeof(CloudFolder));
+            var sortedSongs = items.OfType<SongItem>().OrderBy(orderSelector);
+
+            Items = new ObservableCollection<MusicItem>(folderItems);
+            foreach (var song in sortedSongs)
+            {
+                Items.Add(song);
+            }
+        }
+
+        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem, object> groupSelector, string propertyName)
+        {
+            
+
+            
+        }
+
+
+        public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                string query = sender.Text.ToLower();
+                var matchingSongs = items.OfType<SongItem>().Where(s => s.Title.ToLower().StartsWith(query));
+                var m2 = items.OfType<SongItem>().Where(s => s.Title.ToLower().Contains(query));
+                var m3 = items.OfType<SongItem>().Where(s => (s.Album.ToLower().Contains(query) || s.Artist.ToLower().Contains(query)));
+                var m4 = matchingSongs.Concat(m2).Concat(m3).Distinct();
+                sender.ItemsSource = m4.ToList();
+            }
+        }
+
+        public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            int id;
+            if (args.ChosenSuggestion != null)
+            {
+                id = ((SongItem)args.ChosenSuggestion).SongId;
+            }
+            else
+            {
+                var list = items.OfType<SongItem>().Where(s => s.Title.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Title).ToList();
+                if (list.Count == 0) return;
+                id = list.FirstOrDefault().SongId;
+            }
+            int index = 0;
+            foreach (var item in items)
+            {
+                if (item.GetType() == typeof(SongItem) && ((SongItem)item).SongId == id)
+                {
+                    break;
+                }
+                index++;
+            }
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+        }
+
+        public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var song = args.SelectedItem as SongItem;
+            sender.Text = song.Title;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -7,11 +6,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -19,12 +17,14 @@ namespace NextPlayerUWP.ViewModels
     {
         public SongsViewModel()
         {
-            SortNames si = new SortNames(MusicItemTypes.song);
-            ComboBoxItemValues = si.GetSortNames();
-            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            sortingHelper = new SortingHelperForSongItems("Songs");
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
         }
+
+        SortingHelperForSongItems sortingHelper;
 
         private async void MediaImport_MediaImported(string s)
         {
@@ -41,13 +41,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get
             {
-                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-                {
-                    for(int i = 0; i < 10; i++)
-                    {
-                        Songs.Add(new SongItem());
-                    }
-                }
+                //if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                //{
+                //    for(int i = 0; i < 10; i++)
+                //    {
+                //        Songs.Add(new SongItem());
+                //    }
+                //}
                 return songs; }
             set { Set(ref songs, value); }
         }
@@ -57,16 +57,16 @@ namespace NextPlayerUWP.ViewModels
         {
             get
             {
-                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-                {
-                    string[] t = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "K" };
-                    for (int i = 0; i < 10; i++)
-                    {
-                        GroupList group = new GroupList();
-                        group.Key = t[i];
-                        groupedSongs.Add(group);
-                    }
-                }
+                //if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                //{
+                //    string[] t = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "K" };
+                //    for (int i = 0; i < 10; i++)
+                //    {
+                //        GroupList group = new GroupList();
+                //        group.Key = t[i];
+                //        groupedSongs.Add(group);
+                //    }
+                //}
                 return groupedSongs;
             }
             set { Set(ref groupedSongs, value); }
@@ -76,7 +76,7 @@ namespace NextPlayerUWP.ViewModels
         {               
             if (songs.Count == 0)
             {
-                Songs = await DatabaseManager.Current.GetSongItemsAsync();
+                Songs = await DatabaseManager.Current.GetLocalSongItemsAsync();
             }
             if (groupedSongs.Count == 0)
             {
@@ -99,7 +99,7 @@ namespace NextPlayerUWP.ViewModels
                     }
                     GroupedSongs.Add(group);
                 }
-
+                SortMusicItems();
                 //var characterGroupings = new Windows.Globalization.Collation.CharacterGroupings();
                 //foreach (var c in characterGroupings)
                 //{
@@ -111,6 +111,14 @@ namespace NextPlayerUWP.ViewModels
                 //    GroupedSongs.FirstOrDefault(e => e.Key.Equals(a)).Add(item);
                 //}
             }
+        }
+
+        public override void FreeResources()
+        {
+            groupedSongs = null;
+            songs = null;
+            groupedSongs = new ObservableCollection<GroupList>();
+            songs = new ObservableCollection<SongItem>();
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)
@@ -131,8 +139,7 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(groupedSongs);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
@@ -157,74 +164,37 @@ namespace NextPlayerUWP.ViewModels
             }
 
             await NowPlayingPlaylistManager.Current.NewPlaylist(list);
-            ApplicationSettingsHelper.SaveSongIndex(0);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(0);
         }
 
         private async Task ReloadData()
         {
-            Songs = await DatabaseManager.Current.GetSongItemsAsync();
+            Songs = await DatabaseManager.Current.GetLocalSongItemsAsync();
             SortMusicItems();
         }
 
         protected override void SortMusicItems()
         {
-            string option = selectedComboBoxItem.Option;
-            switch (option)
-            {
-                case SortNames.Title:
-                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
-                    break;
-                case SortNames.Album:
-                    Sort(s => s.Album, t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower(), "Album");
-                    break;
-                case SortNames.Artist:
-                    Sort(s => s.Artist, t => (t.Artist == "") ? "" : t.Artist[0].ToString().ToLower(), "Artist");
-                    break;
-                case SortNames.AlbumArtist:
-                    Sort(s => s.AlbumArtist, t => (t.AlbumArtist == "") ? "" : t.AlbumArtist[0].ToString().ToLower(), "AlbumArtist");
-                    break;
-                case SortNames.Year:
-                    Sort(s => s.Year, t => t.Year, "SongId", "year");
-                    break;
-                case SortNames.Duration:
-                    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "SongId", "duration");
-                    break;
-                case SortNames.Rating:
-                    Sort(s => s.Rating, t => t.Rating, "SongId");
-                    break;
-                case SortNames.Composer:
-                    Sort(s => s.Composer, t => (t.Composer == "") ? "" : t.Composer[0].ToString().ToLower(), "Composer");
-                    break;
-                case SortNames.LastAdded:
-                    Sort(s => s.DateAdded.Ticks, t => String.Format("{0:d}", t.DateAdded), "SongId", "date");
-                    break;
-                case SortNames.LastPlayed:
-                    Sort(s => s.LastPlayed.Ticks, t => String.Format("{0:d}", t.LastPlayed), "SongId", "date");
-                    break;
-                case SortNames.PlayCount:
-                    Sort(s => s.PlayCount, t => t.PlayCount, "SongId");
-                    break;
-                case SortNames.TrackNumber:
-                    Sort(s => s.TrackNumber, s => s.TrackNumber, "SongId");
-                    break;
-                default:
-                    Sort(s => s.Title, t => (t.Title == "") ? "" : t.Title[0].ToString().ToLower(), "SongId");
-                    break;
-            }
-        }
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            var orderSelector = sortingHelper.GetOrderBySelector();
+            var groupSelector = sortingHelper.GetGroupBySelector();
+            string propertyName = sortingHelper.GetPropertyName();
+            string format = sortingHelper.GetFormat();
 
-        private void Sort(Func<SongItem, object> orderSelector, Func<SongItem,object> groupSelector, string propertyName, string format = "no")
-        {
             var query = songs.OrderBy(orderSelector).ThenBy(a => a.Title).
                 GroupBy(groupSelector).
                 OrderBy(g => g.Key).
-                Select(group => new { GroupName = (format != "duration") ? group.Key.ToString().ToUpper() 
-                : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss") 
-                : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss") 
-                : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"), Items = group });
+                Select(group => new {
+                    GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
+                    : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")
+                    : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss")
+                    : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"),
+                    Items = group
+                });
+
             int i = 0;
             string s;
+
             GroupedSongs.Clear();
             foreach (var g in query)
             {
@@ -236,7 +206,6 @@ namespace NextPlayerUWP.ViewModels
                 //(t.Duration.TotalMinutes < 1) ? "0" + t.Duration.ToString(@"\:ss") :
                 //        (t.Duration.Hours == 0) ? t.Duration.ToString(@"m\:ss") :
                 //        (t.Duration.Days == 0) ? t.Duration.ToString(@"h\:mm\:ss") : t.Duration.ToString(@"d\.hh\:mm\:ss"),
-
                 foreach (var item in g.Items)
                 {
                     string prop = item.GetType().GetProperty(propertyName).GetValue(item, null).ToString();
@@ -246,6 +215,27 @@ namespace NextPlayerUWP.ViewModels
                     group.Add(item);
                 }
                 GroupedSongs.Add(group);
+            }
+        }
+
+        public async void DeleteSong(object sender, RoutedEventArgs e)
+        {
+            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            MessageDialogHelper msg = new MessageDialogHelper();
+            bool delete = await msg.ShowDeleteSongConfirmationDialog();
+            if (delete)
+            {
+                Songs.Remove(item);
+                await DatabaseManager.Current.DeleteSong(item.SongId);
+                try
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(item.Path);
+                    await file.DeleteAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
         }
 

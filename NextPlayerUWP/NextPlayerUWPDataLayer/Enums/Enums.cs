@@ -37,5 +37,6 @@
         Dropbox = 6,
         GoogleDrive = 7,
         PCloud = 8,
+        Unknown = 9,
     }
 }

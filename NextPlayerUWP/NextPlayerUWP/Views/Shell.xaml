@@ -81,6 +81,77 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="BottomPlayerRepeatButtonStyle" TargetType="RepeatButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="MinWidth" Value="40"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="TimeSliderStyle" TargetType="Slider">
             <Setter Property="Background" Value="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
             <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}"/>
@@ -414,13 +485,12 @@
                     <VisualState.Setters>
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
-                        <Setter Target="SliderGrid.Opacity" Value="0" />
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed"/>
-                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>
+                        <!--<Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>-->
+                        
                     </VisualState.Setters>
                 </VisualState>
-                <!--VisualState to be triggered when window width is >=720 effective pixels.-->
                 <VisualState x:Name="VisualStateWide">
                     <VisualState.StateTriggers>
                         <winstatetriggers:CompositeStateTrigger Operator="And">
@@ -433,9 +503,10 @@
                         <Setter Target="RightPanel.Width" Value="300" />
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
-                        <Setter Target="SliderGrid.Opacity" Value="1" />
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
-                        <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SongInfoColumn.Width" Value="*"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState  x:Name="VisualStateNormal">
@@ -450,26 +521,94 @@
                         <Setter Target="RightPanel.Width" Value="250" />
                         <Setter Target="SliderGrid.Visibility" Value="Visible"/>
                         <Setter Target="SliderColumn.Width" Value="*"/>
-                        <Setter Target="SliderGrid.Opacity" Value="1" />
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
-                        <!--<Setter Target="NPButton.Visibility" Value="Collapsed"/>-->
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SongInfoColumn.Width" Value="*"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="VisualStateNarrow">
                     <VisualState.StateTriggers>
                         <winstatetriggers:CompositeStateTrigger Operator="And">
                             <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
-                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="500" />
+                            <winstatetriggers:CompareStateTrigger Value="{x:Bind ShellVM.IsNowPlayingDesktopViewActive, Mode=OneWay}" Comparison="Equal" CompareTo="false"/>
                         </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RightPanel.Visibility" Value="Visible"/>
+                        <Setter Target="RightPanel.Visibility" Value="Collapsed"/>
                         <Setter Target="RightPanel.Width" Value="0"/>
                         <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
-                        <Setter Target="SliderGrid.Opacity" Value="0" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SongInfoColumn.Width" Value="*"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
+                        <!--<Setter Target="ShuffleButton.Visibility" Value="Visible"/>
+                        <Setter Target="RepeatButton.Visibility" Value="Visible"/>-->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateNarrowNP">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="500" />
+                            <winstatetriggers:CompareStateTrigger Value="{x:Bind ShellVM.IsNowPlayingDesktopViewActive, Mode=OneWay}" Comparison="Equal" CompareTo="true"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RightPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="RightPanel.Width" Value="0"/>
+                        <Setter Target="SliderGrid.Visibility" Value="Visible"/>
+                        <Setter Target="SliderColumn.Width" Value="*"/>
                         <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
-                        <!--<Setter Target="NPButton.Visibility" Value="Visible"/>-->
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SongInfoColumn.Width" Value="0"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
+                        <!--<Setter Target="ShuffleButton.Visibility" Value="Visible"/>
+                        <Setter Target="RepeatButton.Visibility" Value="Visible"/>-->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateCompact">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                            <winstatetriggers:CompareStateTrigger Value="{x:Bind ShellVM.IsNowPlayingDesktopViewActive, Mode=OneWay}" Comparison="Equal" CompareTo="false"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RightPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="RightPanel.Width" Value="0"/>
+                        <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SliderColumn.Width" Value="0"/>
+                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SongInfoColumn.Width" Value="*"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
+                        <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
+                        <Setter Target="RepeatButton.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateCompactNP">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                            <winstatetriggers:CompareStateTrigger Value="{x:Bind ShellVM.IsNowPlayingDesktopViewActive, Mode=OneWay}" Comparison="Equal" CompareTo="true"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RightPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="RightPanel.Width" Value="0"/>
+                        <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SliderColumn.Width" Value="0"/>
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
+                        <Setter Target="ShowHideGrid.Visibility" Value="Visible"/>
+                        <Setter Target="SongInfoColumn.Width" Value="0"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
+                        <Setter Target="ShuffleButton.Visibility" Value="Visible"/>
+                        <Setter Target="RepeatButton.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -535,7 +674,7 @@
                         <TextBlock x:Uid="TBSongs" Text="Songs" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
-                <controls:HamburgerButtonInfo x:Name="NPButton" PageType="views:NowPlayingPlaylistView" >
+                <controls:HamburgerButtonInfo x:Name="NPButton" Tapped="NPButton_Tapped" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="Play" Width="48" Height="48" />
                         <TextBlock x:Uid="TBNowPlaying" Text="Now playing" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
@@ -544,7 +683,7 @@
                 <controls:HamburgerButtonInfo PageType="views:RadiosView" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="View" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBRadio" Text="Radio" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TBOnline" Text="Online" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
             </controls:HamburgerMenu.PrimaryButtons>
@@ -560,232 +699,305 @@
             </controls:HamburgerMenu.SecondaryButtons>
 
         </controls:HamburgerMenu>
-        <Grid Grid.Row="1" x:Name="BottomPlayerGrid" 
-              Height="68"
-              Grid.ColumnSpan="3"
-              Background="{StaticResource UserAccentBrush}"
-              DataContext="{Binding Source={StaticResource Locator}, Path=BottomPlayerVM}"
-              >
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition x:Name="VolumeColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="SliderColumn" Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+        <Grid 
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            Background="{StaticResource UserAccentBrush}"
+            DataContext="{Binding Source={StaticResource Locator}, Path=BottomPlayerVM}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" 
+                  x:Name="BottomPlayerGrid" 
+                  Height="68">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="68"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition x:Name="SongInfoColumn" Width="*"/>
+                    <ColumnDefinition x:Name="ShowHideColumn" Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition x:Name="VolumeColumn" Width="Auto"/>
+                    <ColumnDefinition x:Name="SliderColumn" Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Image Grid.RowSpan="2" Grid.Column="0" 
-                       Margin="4"
-                       Tapped="GoToNowPlaying">
-                    <Image.Source>
-                        <BitmapImage UriSource="{Binding CoverUri}"
-                                     DecodePixelType="Logical"
-                                     DecodePixelHeight="60" 
-                                     DecodePixelWidth="60"/>
-                    </Image.Source>
-                </Image>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="68"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.RowSpan="2" Grid.Column="0" 
+                           Margin="4"
+                           Tapped="GoToNowPlaying">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding CoverUri}"
+                                         DecodePixelType="Logical"
+                                         DecodePixelHeight="60" 
+                                         DecodePixelWidth="60"/>
+                        </Image.Source>
+                    </Image>
 
-                <Grid Grid.Column="1" Grid.Row="0"
-                      Background="Transparent"
-                      Tapped="GoToNowPlaying">
-                    <TextBlock Margin="4,4,4,4"
-                           Tapped="GoToNowPlaying"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           FontSize="16"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           VerticalAlignment="Bottom"
-                           HorizontalAlignment="Left"
-                           TextTrimming="CharacterEllipsis"
-                           Text="{Binding Song.Title}"/>
+                    <Grid Grid.Column="1" Grid.Row="0"
+                          Background="Transparent"
+                          Tapped="GoToNowPlaying">
+                        <TextBlock Margin="4,4,0,4"
+                               Tapped="GoToNowPlaying"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               FontSize="16"
+                               Foreground="{ThemeResource BottomPlayerTextForeground}"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Left"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="NoWrap"
+                               Text="{Binding Song.Title}"/>
+                    </Grid>
+                    <Grid Grid.Column="1" Grid.Row="1"
+                          Background="Transparent"
+                          Tapped="GoToNowPlaying">
+                        <TextBlock Margin="4,4,0,4"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               FontSize="14"
+                               Foreground="{ThemeResource BottomPlayerTextForeground}"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Stretch"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="NoWrap"
+                               Text="{Binding Song.Artist}"/>
+                    </Grid>
                 </Grid>
-                <Grid Grid.Column="1" Grid.Row="1"
-                      Background="Transparent"
-                      Tapped="GoToNowPlaying">
-                    <TextBlock Margin="4,4,4,4"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           FontSize="14"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           VerticalAlignment="Top"
-                           HorizontalAlignment="Left"
-                           TextTrimming="CharacterEllipsis"
-                           Text="{Binding Song.Artist}"/>
+                <Grid Grid.Column="1" x:Name="ShowHideGrid" 
+                      x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
+                    <Button Style="{StaticResource BottomPlayerButtonStyle}"
+                            Click="{x:Bind BPViewModel.ShowHideSlider}"
+                            Width="48" 
+                            Height="60">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock x:Name="ShowHideButtonText"
+                                        Text="{Binding ShowHideSliderButtonContent}" 
+                                        VerticalAlignment="Center" 
+                                        HorizontalAlignment="Center" 
+                                        FontSize="20" 
+                                        FontFamily="Segoe MDL2 Assets" 
+                                        Foreground="White"/>
+                                </Grid>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
                 </Grid>
-            </Grid>
-            <Grid Grid.Column="1" Width="Auto" FlowDirection="LeftToRight">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Button x:Name="ShuffleButton"
-                    Grid.Column="0"
-                    Click="{x:Bind BPViewModel.ShuffleCommand}" 
-                    Width="48" Height="48"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE14B;" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontSize="20" 
-                                           FontFamily="Segoe MDL2 Assets" 
-                                           Foreground="{Binding ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-                <Button Grid.Column="1"
-                    Click="{x:Bind BPViewModel.Previous}"
-                    Width="48" Height="60"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE892;" 
-                                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                                           FontSize="30" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-                <Button Grid.Column="2"
-                    Click="{x:Bind BPViewModel.Play}"
-                    Width="48" Height="60"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="{Binding PlayButtonContent}" 
-                                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                                           FontSize="30" 
-                                           FontFamily="Segoe MDL2 Assets"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,0,0,0"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-                <Button Grid.Column="3"
-                    Click="{x:Bind BPViewModel.Next}"
-                    Width="48" Height="60"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE893;" 
-                                           FontSize="30" 
-                                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-                <Button Grid.Column="4"
-                        x:Name="RepeatButton"
-                    Click="{x:Bind BPViewModel.RepeatCommand}"
-                    Width="48" 
-                    Height="60"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="{Binding RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
-                                           Foreground="{Binding RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
-                                           FontSize="18" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-            </Grid>
-            <Grid Grid.Column="3" x:Name="SliderGrid" FlowDirection="LeftToRight">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="60"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                           FontSize="17"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"
-                           Margin="0,0,8,0"
-                           Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
-                <Slider x:Name="timeslider" Grid.Column="1"
-                        StepFrequency="1.0"
-                        Margin="4,8,4,0"
-                        Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
-                        Value="{Binding SliderValue, Mode=TwoWay}"
-                        ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
-                <TextBlock Grid.Column="2"
-                           Style="{StaticResource SubtitleTextBlockStyle}"
-                           Foreground="{ThemeResource BottomPlayerTextForeground}"
-                           FontSize="17"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"
-                           Margin="0,0,8,0"
-                           Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
-            </Grid>
-            <Grid Grid.Column="2" x:Name="VolumeGrid">
-                <Button Style="{StaticResource BottomPlayerButtonStyle}"
-                        x:Name="VolumeButton"
-                        RightTapped="{x:Bind BPViewModel.MuteVolume}"
+                <Grid Grid.Column="2" Width="Auto" FlowDirection="LeftToRight">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="ShuffleButton"
+                        Grid.Column="0"
+                        Click="{x:Bind BPViewModel.PlayerVM.ShuffleCommand}" 
+                        Width="48" Height="48"
+                        Style="{StaticResource BottomPlayerButtonStyle}">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="&#xE14B;" 
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center" 
+                                               FontSize="20" 
+                                               FontFamily="Segoe MDL2 Assets" 
+                                               Foreground="{Binding PlayerVM.ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                    <RepeatButton Grid.Column="1"
+                        Click="{x:Bind BPViewModel.PreviousOrSeek}"
+                        Interval="{x:Bind BPViewModel.RepeatButtonInterval}"
+                        Width="48" Height="60"
+                        Style="{StaticResource BottomPlayerRepeatButtonStyle}">
+                        <RepeatButton.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="&#xE892;" 
+                                               Foreground="{ThemeResource BottomPlayerTextForeground}"
+                                               FontSize="30" 
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center" 
+                                               FontFamily="Segoe MDL2 Assets"/>
+                                </Grid>
+                            </DataTemplate>
+                        </RepeatButton.ContentTemplate>
+                    </RepeatButton>
+                    <Button Grid.Column="2"
+                        Click="{x:Bind BPViewModel.PlayerVM.Play}"
+                        Width="48" Height="60"
+                        Style="{StaticResource BottomPlayerButtonStyle}">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding PlayButtonContent}" 
+                                               Foreground="{ThemeResource BottomPlayerTextForeground}"
+                                               FontSize="30" 
+                                               FontFamily="Segoe MDL2 Assets"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,0,0,0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                    <RepeatButton Grid.Column="3"
+                        Click="{x:Bind BPViewModel.NextOrSeek}"
+                        Interval="{x:Bind BPViewModel.RepeatButtonInterval}"
+                        Width="48" Height="60"
+                        Style="{StaticResource BottomPlayerRepeatButtonStyle}">
+                        <RepeatButton.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="&#xE893;" 
+                                               FontSize="30" 
+                                               Foreground="{ThemeResource BottomPlayerTextForeground}"
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center" 
+                                               FontFamily="Segoe MDL2 Assets"/>
+                                </Grid>
+                            </DataTemplate>
+                        </RepeatButton.ContentTemplate>
+                    </RepeatButton>
+                    <Button Grid.Column="4"
+                            x:Name="RepeatButton"
+                        Click="{x:Bind BPViewModel.PlayerVM.RepeatCommand}"
                         Width="48" 
-                        Height="60">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <SymbolIcon Symbol="{Binding Volume, Converter={StaticResource VolumeSymbolConverter}}"
-                                            Foreground="White"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                    <Button.Flyout>
-                        <Flyout Placement="Bottom" FlyoutPresenterStyle="{StaticResource VolumeFlyoutStyle}">
-                            <Flyout.Content>
-                            <Slider
-                                Orientation="Vertical"
-                                Minimum="0"
-                                Maximum="100"
-                                Height="200"
-                                Width="36"
-                                StepFrequency="1.0"
-                                Value="{Binding Volume, Mode=TwoWay}"
-                                Style="{StaticResource VolumeSliderStyle}"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Stretch"/>
-                            </Flyout.Content>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
+                        Height="60"
+                        Style="{StaticResource BottomPlayerButtonStyle}">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
+                                               Foreground="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
+                                               FontSize="18" 
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center" 
+                                               FontFamily="Segoe MDL2 Assets"/>
+                                </Grid>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                </Grid>
+                <Grid Grid.Column="3" x:Name="VolumeGrid" 
+                      x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
+                    <Button Style="{StaticResource BottomPlayerButtonStyle}"
+                            RightTapped="{x:Bind BPViewModel.PlayerVM.MuteVolume}"
+                            Width="48" 
+                            Height="60">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <SymbolIcon Symbol="{Binding PlayerVM.Volume, Converter={StaticResource VolumeSymbolConverter}}"
+                                                Foreground="White"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                        <Button.Flyout>
+                            <Flyout Placement="Bottom" FlyoutPresenterStyle="{StaticResource VolumeFlyoutStyle}">
+                                <Flyout.Content>
+                                <Slider
+                                    Orientation="Vertical"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Height="200"
+                                    Width="36"
+                                    StepFrequency="1.0"
+                                    Value="{Binding PlayerVM.Volume, Mode=TwoWay}"
+                                    Style="{StaticResource VolumeSliderStyle}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Stretch"/>
+                                </Flyout.Content>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </Grid>
+                <Grid Grid.Column="4" x:Name="SliderGrid" FlowDirection="LeftToRight" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               FontSize="17"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               Foreground="{ThemeResource BottomPlayerTextForeground}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Margin="0,0,8,0"
+                               Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
+                    <Slider x:Name="timeslider" 
+                            Grid.Column="1"
+                            StepFrequency="1.0"
+                            Margin="4,8,4,0"
+                            Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
+                            Value="{Binding SliderValue, Mode=TwoWay}"
+                            ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
+                    <TextBlock Grid.Column="2"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               Foreground="{ThemeResource BottomPlayerTextForeground}"
+                               FontSize="17"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Margin="0,0,8,0"
+                               Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
+                </Grid>
             </Grid>
+            <Grid Grid.Row="3" 
+                x:Name="BottomSlider"
+                x:DeferLoadStrategy="Lazy"
+                Loaded="BottomSlider_Loaded"
+                Visibility="{Binding IsSliderVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"
+                Height="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock 
+                Grid.Column="0"
+                FontSize="17"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Foreground="{ThemeResource BottomPlayerTextForeground}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Margin="0,0,8,0"
+                Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
+            <Slider 
+                x:Name="durationSliderBottom" 
+                Grid.Column="1"
+                StepFrequency="1.0"
+                Margin="4,8,4,0"
+                Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
+                Value="{Binding SliderValue, Mode=TwoWay}"
+                ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
+            <TextBlock 
+                Grid.Column="2"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Foreground="{ThemeResource BottomPlayerTextForeground}"
+                FontSize="17"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Margin="0,0,8,0"
+                Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
+        </Grid>
         </Grid>
         <UserControl Grid.Row="0" Grid.Column="1">
-            <local:RightPanelControl x:Name="RightPanel" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Width="250"/>
+            <local:RightPanelControl x:Name="RightPanel" x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
         </UserControl>
     </Grid>
 

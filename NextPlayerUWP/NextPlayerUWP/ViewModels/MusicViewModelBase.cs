@@ -13,11 +13,25 @@ using NextPlayerUWPDataLayer.Helpers;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.DataTransfer;
 using Template10.Services.NavigationService;
+using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.ViewModels
 {
     public abstract class MusicViewModelBase:Template10.Mvvm.ViewModelBase
     {
+        //public MusicViewModelBase()
+        //{
+        //    App.MemoryUsageReduced += App_MemoryUsageReduced;
+        //}
+
+        private void App_MemoryUsageReduced(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Before: {0}", Windows.System.MemoryManager.AppMemoryUsage);
+            FreeResources();
+            GC.Collect();
+            System.Diagnostics.Debug.WriteLine("After: {0}", Windows.System.MemoryManager.AppMemoryUsage);
+        }
+
         protected ListView listView;
         protected int firstVisibleItemIndex;
         protected string positionKey;
@@ -39,11 +53,7 @@ namespace NextPlayerUWP.ViewModels
             get { return comboBoxItemValues; }
             set
             {
-                if (value!= comboBoxItemValues)
-                {
-                    comboBoxItemValues = value;
-                }
-                //Set(ref comboBoxItemValues, value);
+                comboBoxItemValues = value;
             }
         }
 
@@ -53,9 +63,12 @@ namespace NextPlayerUWP.ViewModels
             get { return selectedComboBoxItem; }
             set
             {
-                bool different = value != selectedComboBoxItem;
+                bool diff = selectedComboBoxItem != value;
                 Set(ref selectedComboBoxItem, value);
-                if (different && value != null) SortMusicItems();
+                if (value != null && diff)
+                {
+                    SortMusicItems();
+                }
             }
         }
 
@@ -67,8 +80,7 @@ namespace NextPlayerUWP.ViewModels
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             await NowPlayingPlaylistManager.Current.NewPlaylist(item);
-            ApplicationSettingsHelper.SaveSongIndex(0);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(0);
         }
 
         public async void PlayNext(object sender, RoutedEventArgs e)
@@ -127,10 +139,34 @@ namespace NextPlayerUWP.ViewModels
             App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
         }
 
+        public async Task SlidableListItemLeftCommandRequested(MusicItem item)
+        {
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            switch (swipeAction)
+            {
+                case AppConstants.SwipeActionPlayNow:
+                    await NowPlayingPlaylistManager.Current.NewPlaylist(item);
+                    await PlaybackService.Instance.PlayNewList(0);
+                    break;
+                case AppConstants.SwipeActionPlayNext:
+                    await NowPlayingPlaylistManager.Current.AddNext(item);
+                    break;
+                case AppConstants.SwipeActionAddToNowPlaying:
+                    await NowPlayingPlaylistManager.Current.Add(item);
+                    break;
+                case AppConstants.SwipeActionAddToPlaylist:
+                    NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+                    break;
+                default:
+                    break;
+            }
+        }
+
         #endregion
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            App.OnNavigatedToNewView(true);
             isBack = false;
             firstVisibleItemIndex = 0;
             selectedItemIndex = 0;
@@ -182,13 +218,13 @@ namespace NextPlayerUWP.ViewModels
 
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
-                TelemetryAdapter.TrackEvent("Navigated to " + this.GetType());
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
         }
 
         virtual public bool RestoreListPosition(NavigationMode mode)
         {
-            if (NavigationMode.Back == mode) return true;
+            if (NavigationMode.Back == mode || NavigationMode.Refresh == mode) return true;
             else return false;
         }
 
@@ -197,7 +233,11 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
             firstVisibleItemIndex = 0;
-            if (listView.ItemsPanelRoot != null)
+            if (listView == null)
+            {
+
+            }
+            if (listView != null && listView.ItemsPanelRoot != null)
             {
                 positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
 
@@ -236,15 +276,22 @@ namespace NextPlayerUWP.ViewModels
             await Task.CompletedTask;
         }
 
-        public void OnLoaded(ListView p)
+        public async void OnLoaded(ListView p)
         {
             listView = p;
             if (onNavigatedCompleted)
             {
                 System.Diagnostics.Debug.WriteLine("OnLoaded LoadAndScroll()");
-                LoadAndScroll();
+                await LoadAndScroll();
             }
             else onLoadedCompleted = true;//zanim zostanie zmieniona wartosc, w OnNavigatedToAsync moze przeskoczyc do if(onloadedcomplete) ?
+        }
+
+        virtual public void FreeResources() { }
+
+        public void OnUnloaded()
+        {
+            listView = null;
         }
 
         protected async Task LoadAndScroll()
@@ -256,7 +303,7 @@ namespace NextPlayerUWP.ViewModels
             onLoadedCompleted = false;
         }
 
-        protected virtual async Task LoadData() { }
+        protected virtual async Task LoadData() { await Task.CompletedTask; }
 
         protected async Task SetScrollPosition()
         {
@@ -315,11 +362,11 @@ namespace NextPlayerUWP.ViewModels
             }).AsAsyncOperation();           
         }
 
-        public void DragStarting(object sender, DragItemsStartingEventArgs args)
+        public void DragStarting(object sender, DragItemsStartingEventArgs e)
         {
-            args.Data.RequestedOperation = DataPackageOperation.Copy;
-            object item = args.Items.FirstOrDefault();
-            args.Data.Properties.Add(item.GetType().ToString(), item);
+            e.Data.RequestedOperation = DataPackageOperation.Copy;
+            object item = e.Items.FirstOrDefault();
+            e.Data.Properties.Add(item.GetType().ToString(), item);
         }
 
         private string TimeSpanFormat(TimeSpan span)

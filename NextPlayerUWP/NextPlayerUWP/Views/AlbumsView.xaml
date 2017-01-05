@@ -8,6 +8,8 @@
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -61,7 +63,12 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Image Grid.Row="0" Width="132" Height="132" Margin="4">
+                <Image Grid.Row="0" 
+                       Width="132" 
+                       Height="132" 
+                       Margin="4" 
+                       Opacity="0" 
+                       ImageOpened="Image_ImageOpened">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind ImageUri}"
                                      DecodePixelType="Logical"
@@ -77,12 +84,6 @@
                     Text="{x:Bind AlbumArtist}"
                     Style="{StaticResource AlbumArtistStyle}"
                     />
-                <!--<TextBlock 
-                        Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                        x:Phase="0"/>-->
-                <!--<TextBlock Grid.Row="3"
-                    Text="{x:Bind SongsNumber}"
-                    x:Phase="0"/>-->
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="GroupHeaderItemTemplate" x:DataType="data:GroupList">
@@ -134,6 +135,7 @@
                     <VisualState.Setters>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="AlbumsListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -143,6 +145,17 @@
                     <VisualState.Setters>
                         <Setter Target="Column1.Width" Value="*"/>
                         <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="AlbumsListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="AlbumsListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -195,7 +208,6 @@
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
                 </StackPanel>
             </Grid>
-
             <Grid Grid.Row="1">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
@@ -236,39 +248,6 @@
                         </ListView>
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
-                <!--<ListView x:Name="AlbumsListView"
-                            ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
-                            ItemTemplate="{StaticResource AlbumItemTemplate}"
-                            IsItemClickEnabled="True"
-                            ItemClick="{x:Bind ViewModel.ItemClicked }"
-                            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                            SelectionMode="None">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsStackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                -->
-                <!--<ListView.GroupStyle>
-                    <GroupStyle >
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate x:DataType="data:GroupList">
-                                <TextBlock Text="{x:Bind Key}" 
-                                            Style="{StaticResource GroupHeaderTextBlockStyle}"/>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListView.GroupStyle>-->
-                <!--
-            </ListView>-->
             </Grid>
         </Grid>
     </Grid>

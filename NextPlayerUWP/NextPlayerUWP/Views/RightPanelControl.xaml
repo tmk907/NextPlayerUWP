@@ -5,8 +5,12 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:adduplex="using:AdDuplex"
+    xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:UI="using:Microsoft.Advertising.WinRT.UI"
+    xmlns:winstatetriggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=RightPanelVM}"
     mc:Ignorable="d"
     d:DesignHeight="600"
@@ -318,16 +322,85 @@
     </UserControl.Resources>
     <!--Background="Black"-->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="ShowAd">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="1008"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowHeight="908"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--<Setter Target="GridAdControlRightPanel.Visibility" Value="Visible"/>-->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HideAd">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowHeight="0"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--<Setter Target="GridAdControlRightPanel.Visibility" Value="Collapsed"/>-->
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Rectangle Grid.Row="0" Height="48" Fill="{ThemeResource SystemChromeMediumColor}"/>
-        <!--<CommandBar Grid.Row="0" 
-                    Height="48"
-                    Background="{ThemeResource SystemChromeMediumColor}">
-            --><!--<AppBarButton x:Uid="AppBarButtonSave" Icon="Save" Click="{x:Bind ViewModel.SavePlaylist}" Label="Save playlist"/>--><!--
-        </CommandBar>-->
+        <controls:PageHeader
+            Grid.Row="0"
+            BackButtonVisibility="Collapsed">
+            <AppBarButton 
+                x:Uid="AppBarButtonSort"
+                Icon="Sort" 
+                Label="Sort">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        <ListView
+                            ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
+                            SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
+                            DisplayMemberPath="Label"
+                            Padding="4"
+                            HorizontalContentAlignment="Stretch">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="MinHeight" Value="10"/>
+                                    <Setter Property="Height" Value="30"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="AppBarButtonSave"
+                Icon="Save"
+                Label="Save"
+                Click="{x:Bind ViewModel.SavePlaylist}"/>
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton
+                    x:Uid="AppBarButtonAudioSettings"
+                    Label="Audio settings"
+                    Click="{x:Bind ViewModel.ShowAudioSettings}"/>
+            </controls:PageHeader.SecondaryCommands>
+        </controls:PageHeader>
         <Pivot Grid.Row="1" 
                
                Style="{StaticResource RightPanelPivotStyle}" 
@@ -442,6 +515,15 @@
                 </Grid>
             </PivotItem>
         </Pivot>
-
+        <adduplex:AdControl
+            Grid.Row="2"
+            BorderBrush="Gray"
+            BorderThickness="1,0,0,0"
+            AdLoadingError="AdControl_AdLoadingError"
+            AdUnitId="202211" 
+            AppKey="bfe9d689-7cf7-4add-84fe-444dc72e6f36" />
+        <!--<Grid 
+            Grid.Row="2"
+            x:Name="GridAdControlRightPanel"/>-->
     </Grid>
 </UserControl>

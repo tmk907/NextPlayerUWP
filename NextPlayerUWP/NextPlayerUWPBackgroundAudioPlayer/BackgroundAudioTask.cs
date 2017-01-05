@@ -1,4 +1,4 @@
-﻿using FFmpegInterop;
+﻿//using FFmpegInterop;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
@@ -27,11 +27,11 @@ namespace NextPlayerUWPBackgroundAudioPlayer
         private AppState foregroundAppState = AppState.Unknown;
         private NowPlayingManager nowPlayingManager;
         private bool shutdown;
-        private TileUpdater myTileUpdater;    
+        //private TileUpdater myTileUpdater;    
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            Logger.DebugWrite("BackgroundAudioTask", "");
+            Logger2.DebugWrite("BackgroundAudioTask", "");
             //Stopwatch s1 = new Stopwatch();
             //s1.Start();
             nowPlayingManager = new NowPlayingManager();
@@ -67,7 +67,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
                 //SetTimer();//!
             }
 
-            myTileUpdater = new TileUpdater();
+            //myTileUpdater = new TileUpdater();
 
             deferral = taskInstance.GetDeferral(); // This must be retrieved prior to subscribing to events below which use it
             //s1.Stop();
@@ -138,7 +138,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             }
             else if (sender.CurrentState == MediaPlayerState.Closed)
             {
-                Logger.DebugWrite("BGAudio()", "CurrentStateChanged Closed");
+                Logger2.DebugWrite("BGAudio()", "CurrentStateChanged Closed");
                 smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             }
         }
@@ -239,7 +239,7 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             }
         }
 
-        private FFmpegInteropMSS FFmpegMSS;
+        //private FFmpegInteropMSS FFmpegMSS;
 
         private async Task OpenUsingFFmpeg(string path, bool fromAccessList)
         {
@@ -248,10 +248,10 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             StorageFile file;
             if (fromAccessList)
             {
-                string token = await FutureAccessHelper.GetTokenFromPath(path);
-                if (token != null)
+                file = await FutureAccessHelper.GetFileFromPathAsync(path);
+                if (file != null)
                 {
-                    file = await Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.GetFileAsync(path);
+                    
                 }
                 else
                 {
@@ -270,19 +270,19 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             try
             {
                 // Instantiate FFmpegInteropMSS using the opened local file stream
-                FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
-                MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
+                //FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(readStream, true, false);
+                //MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
 
-                if (mss != null)
-                {
-                    BackgroundMediaPlayer.Current.AutoPlay = false;
-                    // Pass MediaStreamSource to Media Element
-                    BackgroundMediaPlayer.Current.SetMediaSource(mss);
-                }
-                else
-                {
+                //if (mss != null)
+                //{
+                //    BackgroundMediaPlayer.Current.AutoPlay = false;
+                //    // Pass MediaStreamSource to Media Element
+                //    BackgroundMediaPlayer.Current.SetMediaSource(mss);
+                //}
+                //else
+                //{
 
-                }
+                //}
             }
             catch (Exception ex)
             {
@@ -344,14 +344,14 @@ namespace NextPlayerUWPBackgroundAudioPlayer
             //    smtc.DisplayUpdater.Thumbnail = null;
 
             smtc.DisplayUpdater.Update();
-            if (path != AppConstants.AlbumCover)
-            {
-                myTileUpdater.UpdateAppTileBG(title, artist, path);
-            }
-            else
-            {
-                myTileUpdater.UpdateAppTileBG(title, artist, AppConstants.AppLogoMedium);
-            }
+            //if (path != AppConstants.AlbumCover)
+            //{
+            //    myTileUpdater.UpdateAppTileBG(title, artist, path);
+            //}
+            //else
+            //{
+            //    myTileUpdater.UpdateAppTileBG(title, artist, AppConstants.AppLogoMedium);
+            //}
         }
 
         private void ChangeVolume(double volume)

@@ -9,6 +9,7 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=FoldersVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -100,72 +101,80 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FolderItemTemplateMobile" x:DataType="data:FolderItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="44"/>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="44"/>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
                     Symbol="Copy"
                     Width="44"
                     Height="44"/>
-                <TextBlock Grid.Column="1" Grid.Row="0"
+                    <TextBlock Grid.Column="1" Grid.Row="0"
                     Text="{x:Bind Folder}"
                     Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
+                    <TextBlock Grid.Column="1" Grid.Row="1"
                     Text="{x:Bind Directory}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <!--<TextBlock Grid.Column="2"
+                    <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
-                <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
                     Text="{x:Bind SongsNumber}"
                     Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
         <DataTemplate x:Key="FolderItemTemplateMobileWide" x:DataType="data:FolderItem">
-            <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="44"/>
-                    <ColumnDefinition Width="6*" MinWidth="250"/>
-                    <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="*" MinWidth="30"/>
-                </Grid.ColumnDefinitions>
-                <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="44"/>
+                        <ColumnDefinition Width="6*" MinWidth="250"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="*" MinWidth="30"/>
+                    </Grid.ColumnDefinitions>
+                    <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
                     Symbol="Copy"
                     Width="44"
                     Height="44"/>
-                <TextBlock Grid.Column="1"
+                    <TextBlock Grid.Column="1"
                     Text="{x:Bind Folder}"
                     Style="{StaticResource SongItemStyleLeft}"/>
-                <TextBlock Grid.Column="2"
+                    <TextBlock Grid.Column="2"
                     Text="{x:Bind Directory}"
                     Style="{StaticResource SongItemStyleCenter}"/>
-                <!--<TextBlock Grid.Column="2"
+                    <!--<TextBlock Grid.Column="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource ItemStyleRight}"/>-->
-                <TextBlock Grid.Column="3"
+                    <TextBlock Grid.Column="3"
                     Text="{x:Bind SongsNumber}"
                     Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorDesktop"
-            FileTemplate="{StaticResource FileItemTemplateDesktop}"
-            FolderTemplate="{StaticResource FolderItemTemplateDesktop}">
-        </mycontrols:FolderDataTemplateSelector>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobile"
-            FileTemplate="{StaticResource FileItemTemplateMobile}"
-            FolderTemplate="{StaticResource FolderItemTemplateMobile}">
-        </mycontrols:FolderDataTemplateSelector>
-        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobileWide"
-            FileTemplate="{StaticResource FileItemTemplateMobileWide}"
-            FolderTemplate="{StaticResource FolderItemTemplateMobileWide}">
-        </mycontrols:FolderDataTemplateSelector>
         <DataTemplate x:Key="FileItemTemplateDesktop" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
@@ -194,61 +203,93 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FileItemTemplateMobile" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="44"/>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}" 
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="44"/>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
                     Symbol="Audio"
                     Width="44"
                     Height="44"/>
-                <TextBlock Grid.Column="1" Grid.Row="0"
+                    <TextBlock Grid.Column="1" Grid.Row="0"
                     Text="{x:Bind Title}"
                     Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
+                    <TextBlock Grid.Column="1" Grid.Row="1"
                     Text="{x:Bind Artist}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="2" Grid.RowSpan="2"
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
         <DataTemplate x:Key="FileItemTemplateMobileWide" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="44"/>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
+            <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}"
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem2_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="44"/>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <SymbolIcon Grid.Column="0" Grid.RowSpan="2"
                     Symbol="Audio"
                     Width="44"
                     Height="44"/>
-                <TextBlock Grid.Column="1" Grid.Row="0"
+                    <TextBlock Grid.Column="1" Grid.Row="0"
                     Text="{x:Bind Title}"
                     Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
+                    <TextBlock Grid.Column="1" Grid.Row="1"
                     Text="{x:Bind Artist}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="2" Grid.Row="1"
+                    <TextBlock Grid.Column="2" Grid.Row="1"
                     Text="{x:Bind Album}"
                     Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="3" Grid.RowSpan="2"
+                    <TextBlock Grid.Column="3" Grid.RowSpan="2"
                     Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
                     Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
         </DataTemplate>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorDesktop"
+            FileTemplate="{StaticResource FileItemTemplateDesktop}"
+            FolderTemplate="{StaticResource FolderItemTemplateDesktop}">
+        </mycontrols:FolderDataTemplateSelector>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobile"
+            FileTemplate="{StaticResource FileItemTemplateMobile}"
+            FolderTemplate="{StaticResource FolderItemTemplateMobile}">
+        </mycontrols:FolderDataTemplateSelector>
+        <mycontrols:FolderDataTemplateSelector x:Key="FolderDataTemplateSelectorMobileWide"
+            FileTemplate="{StaticResource FileItemTemplateMobileWide}"
+            FolderTemplate="{StaticResource FolderItemTemplateMobileWide}">
+        </mycontrols:FolderDataTemplateSelector>
     </Page.Resources>
     <!--{ThemeResource ApplicationPageBackgroundThemeBrush}-->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -265,6 +306,7 @@
                         <Setter Target="FoldersListView.ItemTemplateSelector" Value="{StaticResource FolderDataTemplateSelectorMobileWide}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="FoldersListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -278,6 +320,7 @@
                         <Setter Target="FoldersListView.ItemTemplateSelector" Value="{StaticResource FolderDataTemplateSelectorMobile}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
+                        <Setter Target="FoldersListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -288,6 +331,18 @@
                         <Setter Target="FoldersListView.ItemTemplateSelector" Value="{StaticResource FolderDataTemplateSelectorDesktop}"/>
                         <Setter Target="Column1.Width" Value="*"/>
                         <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="FoldersListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FoldersListView.ItemTemplateSelector" Value="{StaticResource FolderDataTemplateSelectorDesktop}"/>
+                        <Setter Target="Column1.Width" Value="*"/>
+                        <Setter Target="Column3Search.Width" Value="200"/>
+                        <Setter Target="FoldersListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -325,7 +380,17 @@
                         FontSize="17" 
                         TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
-                <!--<AutoSuggestBox  Grid.Column="2" 
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
+                    <ComboBox Margin="4,0,8,0" 
+                            BorderThickness="0" 
+                            Width="Auto" 
+                            VerticalAlignment="Center"
+                            ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
+                            DisplayMemberPath="Label"
+                            SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
+                </StackPanel>
+                <AutoSuggestBox  Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
@@ -336,20 +401,10 @@
                     SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
                     <AutoSuggestBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Folder}"/>
+                            <TextBlock Text="{Binding Title}"/>
                         </DataTemplate>
                     </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>-->
-                <!--<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
-                    <ComboBox Margin="4,0,8,0" 
-                            BorderThickness="0" 
-                            Width="Auto" 
-                            VerticalAlignment="Center"
-                            ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
-                            DisplayMemberPath="Label"
-                            SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
-                </StackPanel>-->
+                </AutoSuggestBox>
             </Grid>
             <Grid Grid.Row="1">
                 <mycontrols:AlternatingRowListView x:Name="FoldersListView"

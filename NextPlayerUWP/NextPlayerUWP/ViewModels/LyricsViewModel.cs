@@ -21,16 +21,19 @@ namespace NextPlayerUWP.ViewModels
         public LyricsViewModel()
         {
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            translationHelper = new TranslationHelper();
         }
 
         private SongItem song;
 
-        private void TrackChanged(int index)
+        private async void TrackChanged(int index)
         {
             int prevId = song.SongId;
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            if (song.SongId != prevId) ChangeLyrics();
+            await Dispatcher.DispatchAsync(async () =>
+            {
+                if (song.SongId != prevId) await ChangeLyrics();
+            });
         }
 
         public void OnLoaded(WebView webView)
@@ -50,7 +53,8 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
-            PlaybackManager.MediaPlayerTrackChanged += TrackChanged;
+            App.OnNavigatedToNewView(true);
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             if (suspensionState.ContainsKey(nameof(song.SongId)))
             {
                 int id = (int)suspensionState[nameof(song.SongId)];
@@ -82,7 +86,7 @@ namespace NextPlayerUWP.ViewModels
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
-            PlaybackManager.MediaPlayerTrackChanged -= TrackChanged;
+            PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
             if (suspending)
             {
                 suspensionState[nameof(song.SongId)] = song.SongId;
@@ -157,7 +161,7 @@ namespace NextPlayerUWP.ViewModels
         //}
         private string address;
         private bool original = true;
-        private Windows.ApplicationModel.Resources.ResourceLoader loader;
+        private TranslationHelper translationHelper;
         private bool lyricsNotLoaded = false;
         private int cachedIndex = 0;
 
@@ -211,7 +215,7 @@ namespace NextPlayerUWP.ViewModels
             string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?action=lyrics&artist=" + artist + "&song=" + title + "&fmt=realjson");
             if (result == null || result == "")
             {
-                StatusText = loader.GetString("ConnectionError");
+                StatusText = translationHelper.GetTranslation(TranslationHelper.ConnectionError);
                 ShowProgressBar = false;
                 return;
             }
@@ -222,7 +226,7 @@ namespace NextPlayerUWP.ViewModels
                 string l = jsonList.GetObject().GetNamedString("lyrics");
                 if (l == "Not found")
                 {
-                    StatusText = loader.GetString("CantFindLyrics");
+                    StatusText = translationHelper.GetTranslation(TranslationHelper.CantFindLyrics);
                     ShowProgressBar = false;
                 }
                 else
@@ -237,14 +241,14 @@ namespace NextPlayerUWP.ViewModels
                     }
                     catch (FormatException e)
                     {
-                        StatusText = loader.GetString("ConnectionError");
+                        StatusText = translationHelper.GetTranslation(TranslationHelper.ConnectionError);
                         ShowProgressBar = false;
                     }
                 }
             }
             else
             {
-                StatusText = loader.GetString("ConnectionError");
+                StatusText = translationHelper.GetTranslation(TranslationHelper.ConnectionError);
                 ShowProgressBar = false;
             }
         }
@@ -327,8 +331,7 @@ namespace NextPlayerUWP.ViewModels
             }
             catch (Exception ex)
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger.Save("Lyrics ParseLyrics() " + "\n" + address + " " + artist + " " + title + "\n" + ex.Message);
-                NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("Lyrics ParseLyrics() " + "\n" + address + " " + artist + " " + title + "\n" + ex.Message);
             }
         }
 

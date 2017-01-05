@@ -239,13 +239,18 @@ namespace NextPlayerUWP.ViewModels
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
-        {           
+        {
+            App.OnNavigatedToNewView(true);
             if (parameter != null)
             {
                 id = Int32.Parse(parameter.ToString());
                 PlaylistRules.Clear();
                 await LoadPlaylist();
-            }   
+            }
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
+            }
             //PlaylistName = (suspensionState.ContainsKey(nameof(PlaylistName))) ? suspensionState[nameof(PlaylistName)]?.ToString() : "";
             await Task.CompletedTask;
         }

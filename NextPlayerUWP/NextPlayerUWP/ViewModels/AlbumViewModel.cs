@@ -1,5 +1,4 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -113,8 +112,7 @@ namespace NextPlayerUWP.ViewModels
                 index++;
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
             //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
@@ -139,8 +137,7 @@ namespace NextPlayerUWP.ViewModels
             }
 
             await NowPlayingPlaylistManager.Current.NewPlaylist(list);
-            ApplicationSettingsHelper.SaveSongIndex(0);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(0);
         }
 
         public async void EditAlbum()
@@ -204,15 +201,18 @@ namespace NextPlayerUWP.ViewModels
             }
             songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(editedAlbum.AlbumParam, editedAlbum.AlbumArtist);
             Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.Disc).ThenBy(t => t.TrackNumber));
-            App.OnSongUpdated(songs.FirstOrDefault().SongId);   
+            var firstSong = songs.FirstOrDefault();
+            if (firstSong != null)//error kiedy jest null?
+            {
+                App.OnSongUpdated(firstSong.SongId);
+            }
         }
 
         public async void PlayAlbum()
         {
             int index = 0;
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
         }
 
         public async void PlayAlbumNext()

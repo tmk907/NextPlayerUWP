@@ -2,7 +2,6 @@
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,31 +10,41 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.CloudStorage.OneDrive;
-using NextPlayerUWPDataLayer.CloudStorage.DropboxStorage;
 using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
 {
     public class FoldersViewModel : MusicViewModelBase
     {
+        SortingHelperForSongItems sortingHelper;
         public FoldersViewModel()
         {
-            SortNames si = new SortNames(MusicItemTypes.folder);
-            ComboBoxItemValues = si.GetSortNames();
-            SelectedComboBoxItem = ComboBoxItemValues.FirstOrDefault();
+            sortingHelper = new SortingHelperForSongItems("Folders");
+            ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             MediaImport.MediaImported += MediaImport_MediaImported;
         }
 
         private async void MediaImport_MediaImported(string s)
         {
-            await Dispatcher.DispatchAsync(() => ReloadData());
+            Template10.Common.IDispatcherWrapper d = Dispatcher;
+            if (d == null)
+            {
+                d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            }
+            if (d == null)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("FoldersViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("Dispatcher null");
+                return;
+            }
+            await d.DispatchAsync(() => ReloadData());
         }
 
         private async Task ReloadData()
         {
             Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-            SortItems(null, null);
+            SortMusicItems();
         }
 
         private string folderName = "";
@@ -66,8 +75,13 @@ namespace NextPlayerUWP.ViewModels
             //if (folders.Count == 0)
             //{
             Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-                //SortItems(null, null);
+            //SortItems(null, null);
             //}
+            if (items.Count != 0)
+            {
+                items = new ObservableCollection<MusicItem>();
+            }
+
             if (folders.Count > 0)
             {
                 if (directory == null)
@@ -84,13 +98,7 @@ namespace NextPlayerUWP.ViewModels
                             dir = f1.Directory;
                             roots.Add(dir);
                         }
-                    }
-                    CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
-                    var items = await fact.GetAllRootFolders();
-                    foreach(var item in items)
-                    {
-                        Items.Add(item);
-                    }
+                    }                  
                 }
                 else
                 {
@@ -108,13 +116,29 @@ namespace NextPlayerUWP.ViewModels
                     }
                 }
             }
+            if (directory == null)
+            {
+                CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
+                var items = await fact.GetAllRootFolders();
+                foreach (var item in items)
+                {
+                    Items.Add(item);
+                }
+            }
+            SortMusicItems();
+        }
+
+        public override void FreeResources()
+        {
+            folders = null;
+            items = null;
+            folders = new ObservableCollection<FolderItem>();
+            items = new ObservableCollection<MusicItem>();
         }
 
         string directory;
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        {
-            sortAfterOnNavigated = true;
-            
+        {   
             directory = parameter as string;
         }
 
@@ -148,7 +172,7 @@ namespace NextPlayerUWP.ViewModels
             int index = 0;
             int i = 0;
             List<SongItem> songs = new List<SongItem>();
-            foreach (var item in items.Where(s=>s.GetType() == typeof(SongItem)))
+            foreach (var item in items.Where(s => s.GetType() == typeof(SongItem)))
             {
                 if (typeof(SongItem) == item.GetType())
                 {
@@ -158,46 +182,23 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
-            ApplicationSettingsHelper.SaveSongIndex(index);
-            App.PlaybackManager.PlayNew();
+            await PlaybackService.Instance.PlayNewList(index);
         }
 
-        private bool sortAfterOnNavigated = false;
-        public void SortItems(object sender, SelectionChangedEventArgs e)
+        protected override void SortMusicItems()
         {
-            if (sortAfterOnNavigated)
-            {
-                sortAfterOnNavigated = false;
-                return;
-            }
-            ComboBoxItemValue value = SelectedComboBoxItem;
-            switch (value.Option)
-            {
-                case SortNames.FolderName:
-                    Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
-                    break;
-                case SortNames.Directory:
-                    Sort(s => s.Directory, t => (t.Directory == "") ? "" : t.Directory[0].ToString().ToLower(), "Folder");
-                    break;
-                //case SortNames.Duration:
-                //    Sort(s => s.Duration.TotalSeconds, t => new TimeSpan(t.Duration.Hours, t.Duration.Minutes, t.Duration.Seconds), "AlbumId");
-                //    break;
-                case SortNames.SongCount:
-                    Sort(s => s.SongsNumber, t => t.SongsNumber, "Folder");
-                    break;
-                case SortNames.LastAdded:
-                    Sort(s => s.LastAdded.Ticks, t => String.Format("{0:d}", t.LastAdded), "Folder");
-                    break;
-                default:
-                    Sort(s => s.Folder, t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower(), "Folder");
-                    break;
-            }
-        }
+            sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            var orderSelector = sortingHelper.GetOrderBySelector();
 
-        private void Sort(Func<FolderItem, object> orderSelector, Func<FolderItem, object> groupSelector, string propertyName)
-        {
-            var query = folders.OrderBy(orderSelector);
-            Folders = new ObservableCollection<FolderItem>(query);
+            var folderItems = items.Where(i => i.GetType() != typeof(SongItem));
+            var sortedSongs = items.OfType<SongItem>().OrderBy(orderSelector);
+
+            Items = new ObservableCollection<MusicItem>(folderItems);
+
+            foreach (var song in sortedSongs)
+            {
+                Items.Add(song);
+            }
         }
 
         public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -205,46 +206,52 @@ namespace NextPlayerUWP.ViewModels
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
                 string query = sender.Text.ToLower();
-                var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(query)).OrderBy(f => f.Folder);
-                var m2 = folders.Where(f => f.Folder.ToLower().Contains(query));
-                var m3 = folders.Where(f => f.Directory.ToLower().Contains(query));
-                var result = matchingFolders.Concat(m2).Concat(m3).Distinct();
-                sender.ItemsSource = result.ToList();
+                var matchingSongs = items.OfType<SongItem>().Where(s => s.Title.ToLower().StartsWith(query));
+                var m2 = items.OfType<SongItem>().Where(s => s.Title.ToLower().Contains(query));
+                var m3 = items.OfType<SongItem>().Where(s => (s.Album.ToLower().Contains(query) || s.Artist.ToLower().Contains(query)));
+                var m4 = matchingSongs.Concat(m2).Concat(m3).Distinct();
+                sender.ItemsSource = m4.ToList();
             }
+            //if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            //{
+            //    string query = sender.Text.ToLower();
+            //    var matchingFolders = folders.Where(s => s.Folder.ToLower().StartsWith(query)).OrderBy(f => f.Folder);
+            //    var m2 = folders.Where(f => f.Folder.ToLower().Contains(query));
+            //    var m3 = folders.Where(f => f.Directory.ToLower().Contains(query));
+            //    var result = matchingFolders.Concat(m2).Concat(m3).Distinct();
+            //    sender.ItemsSource = result.ToList();
+            //}
         }
 
         public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            int index;
+            int id;
             if (args.ChosenSuggestion != null)
             {
-                index = folders.IndexOf((FolderItem)args.ChosenSuggestion);
+                id = ((SongItem)args.ChosenSuggestion).SongId;
             }
             else
             {
-                var list = folders.Where(s => s.Folder.ToLower().StartsWith(sender.Text.ToLower())).OrderBy(s => s.Folder).ToList();
+                var list = items.OfType<SongItem>().Where(s => s.Title.ToLower().StartsWith(args.QueryText.ToLower())).OrderBy(s => s.Title).ToList();
                 if (list.Count == 0) return;
-                index = 0;
-                bool find = false;
-                foreach (var g in folders)
+                id = list.FirstOrDefault().SongId;
+            }
+            int index = 0;
+            foreach (var item in items)
+            {
+                if (item.GetType() == typeof(SongItem) &&  ((SongItem)item).SongId == id)
                 {
-                    if (g.Folder.Equals(list.FirstOrDefault().Folder))
-                    {
-                        find = true;
-                        break;
-                    }
-                    index++;
+                    break;
                 }
-                if (!find) return;
-                sender.ItemsSource = list;
+                index++;
             }
             listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            var item = args.SelectedItem as FolderItem;
-            sender.Text = item.Folder;
+            var song = args.SelectedItem as SongItem;
+            sender.Text = song.Title;
         }
     }
 }

@@ -11,8 +11,8 @@
     <AssemblyName>NextPlayerUWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
@@ -25,7 +25,8 @@
     <PackageCertificateThumbprint>32A43A2CE81645C4906F3F3D9D792A0AEE6F7091</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <AppxPackageDir>C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -37,6 +38,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
@@ -49,6 +52,8 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +65,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -72,6 +79,8 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -83,6 +92,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -95,6 +106,8 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
@@ -120,26 +133,47 @@
     <Compile Include="Common\BackgroundTaskHelper.cs" />
     <Compile Include="Common\ColorsHelper.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
-    <Compile Include="Common\HockeyAdapter.cs" />
+    <Compile Include="Common\MessageDialogHelper.cs" />
+    <Compile Include="Common\TelemetryAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
-    <Compile Include="Common\PlaybackManager.cs" />
+    <Compile Include="Common\PlaybackItemBuilder.cs" />
+    <Compile Include="Common\PlaybackService.cs" />
+    <Compile Include="Common\PlaybackService2.cs" />
+    <Compile Include="Common\PlaybackServiceBase.cs" />
+    <Compile Include="Common\PlaybackTimer.cs" />
+    <Compile Include="Common\SeekButtonsHelper.cs" />
     <Compile Include="Common\SongCoverManager.cs" />
-    <Compile Include="Common\SortEnums.cs" />
+    <Compile Include="Common\SortingHelper.cs" />
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="Common\TagsManager.cs" />
     <Compile Include="Common\Test2.cs" />
     <Compile Include="Common\ThemeHelper.cs" />
     <Compile Include="Common\TileManager.cs" />
+    <Compile Include="Common\Tiles\ITileContentFactory.cs" />
+    <Compile Include="Common\Tiles\ITileXml.cs" />
+    <Compile Include="Common\Tiles\TileWithImage.cs" />
+    <Compile Include="Common\Tiles\TileImageHelper.cs" />
+    <Compile Include="Common\Tiles\TileUpdateHelper.cs" />
+    <Compile Include="Common\Tiles\TileWithImageXml.cs" />
+    <Compile Include="Common\Tiles\TileWithoutImage.cs" />
+    <Compile Include="Common\Tiles\TileWithoutImageXml.cs" />
+    <Compile Include="Common\TranslationHelper.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
+    <Compile Include="Controls\CompositionImage.cs" />
+    <Compile Include="Controls\ConnectedTransition.cs" />
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
+    <Compile Include="Controls\SizeNotifyPanel.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
       <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SurfaceLoader.cs" />
+    <Compile Include="Controls\VisualTreeHelperExtensions.cs" />
     <Compile Include="Converters\BackgroundConverter.cs" />
     <Compile Include="Converters\BoolToBackground.cs" />
     <Compile Include="Converters\BoolToHighlightedItemForeground.cs" />
     <Compile Include="Converters\BoolToInvertedVisibility.cs" />
     <Compile Include="Converters\BoolToNullableBool.cs" />
+    <Compile Include="Converters\BoolToSubfoldersDescription.cs" />
     <Compile Include="Converters\BoolToVisibility.cs" />
     <Compile Include="Converters\ComboBoxItemValueConverter.cs" />
     <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
@@ -176,6 +210,7 @@
     <Compile Include="ViewModels\AlbumViewModel.cs" />
     <Compile Include="ViewModels\ArtistsViewModel.cs" />
     <Compile Include="ViewModels\ArtistViewModel.cs" />
+    <Compile Include="ViewModels\AudioSettingsViewModel.cs" />
     <Compile Include="ViewModels\CloudStorageFoldersViewModel.cs" />
     <Compile Include="ViewModels\FileInfoViewModel.cs" />
     <Compile Include="ViewModels\FoldersViewModel.cs" />
@@ -183,14 +218,17 @@
     <Compile Include="ViewModels\LyricsViewModel.cs" />
     <Compile Include="ViewModels\MusicViewModelBase.cs" />
     <Compile Include="ViewModels\NewSmartPlaylistViewModel.cs" />
+    <Compile Include="ViewModels\NowPlayingDesktopViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingPlaylistViewModel.cs" />
     <Compile Include="ViewModels\BottomPlayerViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
+    <Compile Include="ViewModels\PlayerViewModelBase.cs" />
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\RadiosViewModel.cs" />
     <Compile Include="ViewModels\RightPanelViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SongsViewModel.cs" />
     <Compile Include="ViewModels\TagsEditorViewModel.cs" />
     <Compile Include="ViewModels\TestViewModel.cs" />
@@ -209,6 +247,9 @@
     </Compile>
     <Compile Include="Views\ArtistView.xaml.cs">
       <DependentUpon>ArtistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AudioSettingsView.xaml.cs">
+      <DependentUpon>AudioSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BottomPlayerControl.xaml.cs">
       <DependentUpon>BottomPlayerControl.xaml</DependentUpon>
@@ -237,11 +278,17 @@
     <Compile Include="Views\NewSmartPlaylistView.xaml.cs">
       <DependentUpon>NewSmartPlaylistView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NowPlayingDesktopView.xaml.cs">
+      <DependentUpon>NowPlayingDesktopView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NowPlayingPlaylistView.xaml.cs">
       <DependentUpon>NowPlayingPlaylistView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NowPlayingView.xaml.cs">
       <DependentUpon>NowPlayingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaylistEditableView.xaml.cs">
+      <DependentUpon>PlaylistEditableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlaylistsView.xaml.cs">
       <DependentUpon>PlaylistsView.xaml</DependentUpon>
@@ -281,6 +328,55 @@
     <None Include="NextPlayerUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Albums\Colors\FF0063B1-min.png" />
+    <Content Include="Assets\Albums\Colors\FF0078D7-min.png" />
+    <Content Include="Assets\Albums\Colors\FF0099BC-min.png" />
+    <Content Include="Assets\Albums\Colors\FF00B294-min.png" />
+    <Content Include="Assets\Albums\Colors\FF00B7C3-min.png" />
+    <Content Include="Assets\Albums\Colors\FF00CC6A-min.png" />
+    <Content Include="Assets\Albums\Colors\FF018574-min.png" />
+    <Content Include="Assets\Albums\Colors\FF038387-min.png" />
+    <Content Include="Assets\Albums\Colors\FF107C10-min.png" />
+    <Content Include="Assets\Albums\Colors\FF10893E-min.png" />
+    <Content Include="Assets\Albums\Colors\FF2D7D9A-min.png" />
+    <Content Include="Assets\Albums\Colors\FF486860-min.png" />
+    <Content Include="Assets\Albums\Colors\FF498205-min.png" />
+    <Content Include="Assets\Albums\Colors\FF4A5459-min.png" />
+    <Content Include="Assets\Albums\Colors\FF4C4A48-min.png" />
+    <Content Include="Assets\Albums\Colors\FF515C6B-min.png" />
+    <Content Include="Assets\Albums\Colors\FF525E54-min.png" />
+    <Content Include="Assets\Albums\Colors\FF567C73-min.png" />
+    <Content Include="Assets\Albums\Colors\FF5D5A58-min.png" />
+    <Content Include="Assets\Albums\Colors\FF647C64-min.png" />
+    <Content Include="Assets\Albums\Colors\FF68768A-min.png" />
+    <Content Include="Assets\Albums\Colors\FF69797E-min.png" />
+    <Content Include="Assets\Albums\Colors\FF6B69D6-min.png" />
+    <Content Include="Assets\Albums\Colors\FF744DA9-min.png" />
+    <Content Include="Assets\Albums\Colors\FF767676-min.png" />
+    <Content Include="Assets\Albums\Colors\FF7A7574-min.png" />
+    <Content Include="Assets\Albums\Colors\FF7E735F-min.png" />
+    <Content Include="Assets\Albums\Colors\FF847545-min.png" />
+    <Content Include="Assets\Albums\Colors\FF8764B8-min.png" />
+    <Content Include="Assets\Albums\Colors\FF881798-min.png" />
+    <Content Include="Assets\Albums\Colors\FF8E8CD8-min.png" />
+    <Content Include="Assets\Albums\Colors\FF9A0089-min.png" />
+    <Content Include="Assets\Albums\Colors\FFB146C2-min.png" />
+    <Content Include="Assets\Albums\Colors\FFBF0077-min.png" />
+    <Content Include="Assets\Albums\Colors\FFC239B3-min.png" />
+    <Content Include="Assets\Albums\Colors\FFC30052-min.png" />
+    <Content Include="Assets\Albums\Colors\FFCA5010-min.png" />
+    <Content Include="Assets\Albums\Colors\FFD13438-min.png" />
+    <Content Include="Assets\Albums\Colors\FFDA3B01-min.png" />
+    <Content Include="Assets\Albums\Colors\FFE3008C-min.png" />
+    <Content Include="Assets\Albums\Colors\FFE74856-min.png" />
+    <Content Include="Assets\Albums\Colors\FFE81123-min.png" />
+    <Content Include="Assets\Albums\Colors\FFEA005E-min.png" />
+    <Content Include="Assets\Albums\Colors\FFEF6950-min.png" />
+    <Content Include="Assets\Albums\Colors\FFF7630C-min.png" />
+    <Content Include="Assets\Albums\Colors\FFFF4343-min.png" />
+    <Content Include="Assets\Albums\Colors\FFFF8C00-min.png" />
+    <Content Include="Assets\Albums\Colors\FFFFB900-min.png" />
+    <Content Include="Assets\Sounds\Empty.mp3" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.png" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-16.png" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-24.png" />
@@ -291,6 +387,11 @@
     <Content Include="Assets\Visual Assets\Square150\Square150b.scale-150.png" />
     <Content Include="Assets\Visual Assets\Square150\Square150b.scale-200.png" />
     <Content Include="Assets\Visual Assets\Square150\Square150b.scale-400.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-100.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-125.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-150.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-200.png" />
+    <Content Include="Assets\Visual Assets\Square310\Square310.scale-400.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-16.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-24.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.targetsize-256.png" />
@@ -338,13 +439,13 @@
     <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-150.png" />
     <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-200.png" />
     <Content Include="Assets\Visual Assets\Wide310\Wide3.scale-400.png" />
-    <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avcodec-56.dll" />
+    <!-- <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avcodec-56.dll" />
     <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avdevice-56.dll" />
     <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avfilter-5.dll" />
     <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avformat-56.dll" />
     <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avutil-54.dll" />
     <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\swresample-1.dll" />
-    <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\swscale-3.dll" />
+    <Content Include="$(SolutionDir)ffmpeg\Build\Windows10\$(PlatformTarget)\bin\swscale-3.dll" /> -->
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -372,6 +473,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ArtistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AudioSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -411,11 +516,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\NowPlayingDesktopView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\NowPlayingPlaylistView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NowPlayingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaylistEditableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -478,20 +591,28 @@
       <Name>Template10 %28Library%29</Name>
     </ProjectReference>
   </ItemGroup>
+  <!-- <ItemGroup>
+    <Reference Include="FFmpegInterop, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FFmpegInterop\$(PlatformTarget)\FFmpegInterop.winmd</HintPath>
+    </Reference>
+  </ItemGroup> -->
   <ItemGroup>
+    <SDKReference Include="Microsoft.Advertising.Xaml, Version=10.0">
+      <Name>Microsoft Advertising SDK for XAML</Name>
+    </SDKReference>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Store Engagement SDK</Name>
     </SDKReference>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="WindowsMobile, Version=10.0.10586.0">
+    <SDKReference Include="WindowsMobile, Version=10.0.14393.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\doc\" />
-    <Folder Include="Assets\Visual Assets\Square310\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
@@ -506,7 +627,8 @@
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
@@ -520,7 +642,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET Native|x86'">
@@ -533,7 +656,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
@@ -547,7 +671,8 @@
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Debug|x64'">
@@ -560,7 +685,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Debug|x86'">
@@ -573,7 +699,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />

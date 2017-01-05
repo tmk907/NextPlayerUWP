@@ -8,6 +8,8 @@
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
+    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=PlaylistsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -32,30 +34,178 @@
             <MenuFlyoutItem x:Uid="MFIEditPlainName" Text="Edit name"
                             Visibility="{Binding IsSmart, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
                             Click="MFIEditName_Click" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIExport" Text="Export" 
+                            Click="MFIExportChoosePathKind" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details"
+                            Visibility="{Binding IsSmart, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
+                            Click="MenuFlyoutItemShowDetails_Click" CommandParameter="{Binding}" />
+            <MenuFlyoutItem x:Uid="MFIHide" Text="Hide"
+                            Visibility="{Binding IsHidden, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
+                            Click="{x:Bind ViewModel.HidePlaylist}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShow" Text="Show"
+                            Visibility="{Binding IsHidden, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Click="{x:Bind ViewModel.ShowPlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
                             Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"
                             Click="MenuFlyoutItemDelete_Click" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIExport" Text="Export" 
-                            Click="MFIExportChoosePathKind" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIPin" Text="Pin" 
                             Click="{x:Bind ViewModel.Pin}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
-        <DataTemplate x:Key="PlaylistItemTemplate" x:DataType="data:PlaylistItem">
+        <DataTemplate x:Key="PlaylistItemTemplateMobile" x:DataType="data:PlaylistItem">
+          <toolkitcontrols:SlidableListItem
+                LeftIcon="{ThemeResource SlideableListItemLeftIcon}" 
+	            LeftLabel="{ThemeResource SlideableListItemLeftLabel}"
+	            LeftBackground="{StaticResource UserAccentBrush}" 
+	            LeftForeground="White" 
+	            ActivationWidth="100"
+                Background="Transparent"
+	            LeftCommandRequested="SlidableListItem_LeftCommandRequested"
+                IsRightCommandEnabled="False">
+                <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <SymbolIcon Grid.Column="0"
+                            Symbol="Tag"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="40"
+                            Height="40"
+                            Margin="0"
+                            Visibility="{x:Bind IsHidden, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                    <TextBlock Grid.Column="1"
+                           Text="{x:Bind Name, Mode=OneWay}"
+                           VerticalAlignment="Center"/>
+                </Grid>
+            </toolkitcontrols:SlidableListItem>
+        </DataTemplate>
+        <DataTemplate x:Key="PlaylistItemTemplateDesktop" x:DataType="data:PlaylistItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                           Text="{x:Bind Name, Mode=OneWay}"
-                           VerticalAlignment="Center"/>
+                <SymbolIcon Grid.Column="0"
+                            Symbol="Tag"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="40"
+                            Height="40"
+                            Margin="0"
+                            Visibility="{x:Bind IsHidden, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                <TextBlock Grid.Column="1"
+                        Text="{x:Bind Name, Mode=OneWay}"
+                        VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>
+        <Style x:Key="FilterButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="MinWidth" Value="40"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Mobile">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistsListView.ItemTemplate" Value="{StaticResource PlaylistItemTemplateMobile}"/>
+                        <Setter Target="PlaylistsListView.CanDragItems" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistsListView.ItemTemplate" Value="{StaticResource PlaylistItemTemplateDesktop}"/>
+                        <Setter Target="PlaylistsListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistsListView.ItemTemplate" Value="{StaticResource PlaylistItemTemplateDesktop}"/>
+                        <Setter Target="PlaylistsListView.CanDragItems" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -65,12 +215,45 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-			BackButtonVisibility="Collapsed" 
-			Frame="{x:Bind Frame, Mode=OneWay}"
-			Content="Playlists"
-			x:Uid="PageHeaderPlaylists"
-			VisualStateNarrowMinWidth="0"
-			VisualStateNormalMinWidth="720">
+			      BackButtonVisibility="Collapsed" 
+			      Frame="{x:Bind Frame, Mode=OneWay}"
+			      Content="Playlists"
+			      x:Uid="PageHeaderPlaylists"
+			      VisualStateNarrowMinWidth="0"
+			      VisualStateNormalMinWidth="720">
+            <AppBarButton 
+                    x:Uid="AppBarButtonFilter"
+                    Label="Filter"
+                    Icon="Filter">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <ListView
+                                ItemsSource="{x:Bind ViewModel.Filters, Mode=OneWay}"
+                                SelectionMode="None"
+                                >
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="data:PlaylistFilterElement">
+                                    <Grid Background="Transparent" Tapped="{x:Bind Clicked}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center"
+                                                      MinWidth="32"
+                                                      IsChecked="{x:Bind IsChecked, Mode=OneWay}"/>
+                                        <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Left"
+                                                       VerticalAlignment="Center"
+                                                       Text="{x:Bind Name}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
             <AppBarButton 
                 Icon="Add"
                 x:Uid="AppBarButtonAddPlaylist"
@@ -85,8 +268,9 @@
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="0"/>
+                <RowDefinition Height="48"/>
                 <RowDefinition/>
+                <!--<RowDefinition Height="Auto"/>-->
             </Grid.RowDefinitions>
             <ContentDialog x:Name="ContentDialogNewPlaylist"
                 Grid.Row="1"
@@ -132,6 +316,25 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
+            <ContentDialog x:Name="ContentDialogShowDetails"
+                  Grid.Row="1"
+                  x:Uid="ContentDialogShowDetails"
+                  VerticalAlignment="Center"
+                  Title="Details"
+                  PrimaryButtonText="OK"
+                  VerticalContentAlignment="Stretch">
+              <ContentDialog.Content>
+                <StackPanel Orientation="Vertical">
+                  <TextBlock 
+                      Margin="0,4,4,4"
+                      Text="Path"/>
+                  <TextBlock 
+                      Margin="0,4,4,0"
+                      Text="{x:Bind ViewModel.EditPlaylist.Path, Mode=OneWay}"
+                      TextWrapping="Wrap"/>
+                </StackPanel>
+              </ContentDialog.Content>
+            </ContentDialog>
             <ContentDialog x:Name="ContentDialogChoosePathKind"
                 Grid.Row="1"
                 x:Uid="ContentDialogChoosePathKind"
@@ -158,12 +361,35 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
-            <mycontrols:AlternatingRowListView x:Name="PlaylistsListView"
-                      Grid.Row="1"
+            <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
+              <Grid.ColumnDefinitions>
+                  <ColumnDefinition x:Name="Column1"/>
+                  <ColumnDefinition x:Name="Column2" Width="Auto"/>
+                  <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
+                </Grid.ColumnDefinitions>
+              <AutoSuggestBox  Grid.Column="2" 
+                    PlaceholderText="search" 
+                    QueryIcon="Find" 
+                    Margin="4,0,12,0"
+                    MinWidth="192"
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center"
+                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
+                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+            </Grid>
+            <mycontrols:AlternatingRowListView 
+                x:Name="PlaylistsListView"
+                Grid.Row="1"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                 OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                ItemsSource="{Binding Playlists, Mode=OneWay}"
-                ItemTemplate="{StaticResource PlaylistItemTemplate}"
+                ItemsSource="{Binding Playlists}"
                 SelectionMode="None"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked}"
@@ -177,6 +403,13 @@
                     </ItemsPanelTemplate>
                 </mycontrols:AlternatingRowListView.ItemsPanel>
             </mycontrols:AlternatingRowListView>
+            <!--<adduplex:AdControl
+                x:Name="AdDuplexAdControl"
+                Grid.Row="2"
+                x:DeferLoadStrategy="Lazy"
+                Visibility="Collapsed"
+                AdUnitId="202211" 
+                AppKey="bfe9d689-7cf7-4add-84fe-444dc72e6f36" />-->
         </Grid>
     </Grid>
 </Page>

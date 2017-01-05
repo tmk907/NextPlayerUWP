@@ -51,13 +51,14 @@ namespace NextPlayerUWP.Common
             int id = ApplicationSettingsHelper.ReadTileIdValue() + 1;
             ApplicationSettingsHelper.SaveTileIdValue(id);
             string tileId = AppConstants.TileId + id.ToString();
-            string parameter = item.GetParameter();            
-
+            string parameter = item.GetParameter();
+            MusicItemTypes itemType = MusicItem.ParseType(parameter);
+            TelemetryAdapter.TrackEvent("New secondary tile " + itemType.ToString());
             ResourceLoader loader = new ResourceLoader();
             string hasImage = "no";
             string name = "";
             string type = "";
-            switch (MusicItem.ParseType(parameter))
+            switch (itemType)
             {
                 case MusicItemTypes.album:
                     name = ((AlbumItem)item).Album;

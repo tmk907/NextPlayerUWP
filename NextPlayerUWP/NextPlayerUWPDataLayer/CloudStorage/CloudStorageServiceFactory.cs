@@ -9,7 +9,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage
 {
     public class CloudStorageServiceFactory
     {
-        private List<ICloudStorageService> services = new List<ICloudStorageService>();
+        private static List<ICloudStorageService> services = new List<ICloudStorageService>();
 
         public async Task<List<CloudRootFolder>> GetAllRootFolders()
         {
@@ -19,7 +19,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage
             foreach(var acc in accounts)
             {
                 string name = CloudAccounts.GetAccountName(acc.Username, acc.Type);
-                list.Add(new CloudRootFolder(name, acc.UserId,acc.Type));
+                list.Add(new CloudRootFolder(name, acc.UserId, acc.Type));
             }
 
             return list;
@@ -39,9 +39,9 @@ namespace NextPlayerUWPDataLayer.CloudStorage
                 case CloudStorageType.OneDrive:
                     service = new OneDrive.OneDriveService();
                     break;
-                //case CloudStorageType.pCloud:
-                //    service = new pCloud.PCloudService(userId);
-                //    break;
+                case CloudStorageType.pCloud:
+                    service = new pCloud.PCloudService();
+                    break;
                 default:
                     service = null;
                     break;
@@ -60,16 +60,20 @@ namespace NextPlayerUWPDataLayer.CloudStorage
             {
                 case CloudStorageType.Dropbox:
                     service = new DropboxStorage.DropboxService(userId);
+                    services.Add(service);
                     break;
                 //case CloudStorageType.GoogleDrive:
                 //    service = new GoogleDrive.GoogleDriveService(userId);
+                //    services.Add(service);
                 //    break;
                 case CloudStorageType.OneDrive:
                     service = new OneDrive.OneDriveService(userId);
+                    services.Add(service);
                     break;
-                //case CloudStorageType.pCloud:
-                //    service = new pCloud.PCloudService(userId);
-                //    break;
+                case CloudStorageType.pCloud:
+                    service = new pCloud.PCloudService(userId);
+                    services.Add(service);
+                    break;
                 default:
                     service = null;
                     break;

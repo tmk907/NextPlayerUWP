@@ -60,9 +60,9 @@ namespace NextPlayerUWPDataLayer.Services
         
         public LastFmManager()
         {
-            Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) ?? String.Empty).ToString();
-            Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) ?? String.Empty).ToString();
-            SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) ?? String.Empty).ToString();
+            Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string ?? String.Empty).ToString();
+            Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) as string ?? String.Empty).ToString();
+            SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) as string ?? String.Empty).ToString();
         }
 
         public async Task<bool> Login(string login, string password)
@@ -140,7 +140,7 @@ namespace NextPlayerUWPDataLayer.Services
                     }
                     catch (Exception ex)
                     {
-                        Logger.SaveLastFm("LastFmManager SendMessage" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
+                        Logger2.Current.WriteMessage("LastFmManager SendMessage" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
                     }
                 }
             }
@@ -200,7 +200,6 @@ namespace NextPlayerUWPDataLayer.Services
             }
             else if (response.Contains("<error code="))
             {
-                Logger.SaveLastFm(response);
                 int i1 = response.IndexOf("code=\"") + "code=\"".Length;
                 int i2 = response.IndexOf("\"", i1);
                 int code;
@@ -243,6 +242,7 @@ namespace NextPlayerUWPDataLayer.Services
                 {
 
                 }
+                Logger2.Current.WriteMessage(response, Logger2.Level.WarningError);
             }
             else
             {
@@ -286,7 +286,7 @@ namespace NextPlayerUWPDataLayer.Services
                         info = "nowplaying";
                         break;
                 }
-                Logger.SaveLastFm("Error Last.fm " + function + Environment.NewLine + info);
+                Logger2.Current.WriteMessage("Error Last.fm " + function + Environment.NewLine + info, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
             }
         }
 

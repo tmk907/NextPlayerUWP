@@ -17,6 +17,7 @@ using Template10.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP
@@ -37,7 +38,13 @@ namespace NextPlayerUWP
             AppThemeChanged?.Invoke(isLight);
         }
 
-        private const int dbVersion = 6;
+        public static event EventHandler MemoryUsageReduced;
+        public static void OnMemoryUsageReduced()
+        {
+            MemoryUsageReduced?.Invoke(null, null);
+        }
+
+        private const int dbVersion = 10;
 
         public static bool IsLightThemeOn = false;
 
@@ -50,24 +57,26 @@ namespace NextPlayerUWP
                 return albumArtFinder;
             }
         }
+        public static FileFormatsHelper FileFormatsHelper;
 
         private bool isFirstRun = false;
 
-        private static PlaybackManager playbackManager;
-        public static PlaybackManager PlaybackManager
-        {
-            get
-            {
-                if (playbackManager == null) playbackManager = new PlaybackManager();
-                return playbackManager;
-            }
-        }
+        bool _isInBackgroundMode = false;        
 
         public App()
         {
             InitializeComponent();
+            this.EnteredBackground += App_EnteredBackground;
+            this.LeavingBackground += App_LeavingBackground;
+            MemoryManager.AppMemoryUsageLimitChanging += MemoryManager_AppMemoryUsageLimitChanging;
+            MemoryManager.AppMemoryUsageIncreased += MemoryManager_AppMemoryUsageIncreased;
             HockeyClient.Current.Configure(AppConstants.HockeyAppId);
-
+            Logger2.Current.CreateErrorFile();
+#if DEBUG
+            Logger2.Current.SetLevel(Logger2.Level.Debug);
+#else
+            Logger2.Current.SetLevel(Logger2.Level.DontLog);
+#endif
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
             if (null == o)
             {               
@@ -82,6 +91,10 @@ namespace NextPlayerUWP
             {
                 FirstRunSetup();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
+            }
+            else
+            {
+                PerformUpdate();
             }
 
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
@@ -100,31 +113,126 @@ namespace NextPlayerUWP
             }
             else
             {
-                RequestedTheme = ApplicationTheme.Light;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+                if (RequestedTheme == ApplicationTheme.Light)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, false);
+                }
             }
 
             SplashFactory = (e) => new Views.Splash(e);
-#if DEBUG
+
+            //if (IsXbox())
+            //{
+            //    Application.Current.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+            //}
+
+            //DatabaseManager.Current.resetdb();
+            FileFormatsHelper = new FileFormatsHelper(false);
+            
+            this.UnhandledException += App_UnhandledException;
+
+            //var gcTimer = new DispatcherTimer();
+            //gcTimer.Tick += (sender, e) => { GC.Collect(); };
+            //gcTimer.Interval = TimeSpan.FromSeconds(1);
+            //gcTimer.Start();
+        }
+
+        private void MemoryManager_AppMemoryUsageIncreased(object sender, object e)
+        {
+            var level = MemoryManager.AppMemoryUsageLevel;
+            Debug.WriteLine("App MemoryManager_AppMemoryUsageIncreased {0}", level);
+            if (level == AppMemoryUsageLevel.OverLimit || level == AppMemoryUsageLevel.High)
+            {
+                ReduceMemoryUsage(MemoryManager.AppMemoryUsageLimit);
+            }
+        }
+
+        private void MemoryManager_AppMemoryUsageLimitChanging(object sender, AppMemoryUsageLimitChangingEventArgs e)
+        {
+            Debug.WriteLine("App MemoryManager_AppMemoryUsageLimitChanging " + (e.OldLimit) + " to " + (e.NewLimit));
+            if (MemoryManager.AppMemoryUsage >= e.NewLimit)
+            {
+                ReduceMemoryUsage(e.NewLimit);
+            }
+        }
+
+        public async void ReduceMemoryUsage(ulong limit)
+        {
+            Debug.WriteLine("App ReduceMemoryUsage {0} {1}", _isInBackgroundMode, limit);
+            TelemetryAdapter.TrackEvent("ReduceMemoryUsage");
+            OnMemoryUsageReduced();
+            if (_isInBackgroundMode && Window.Current != null && Window.Current.Content != null)
+            {
+                if (NavigationService != null)
+                {
+                    await OnReduceMemoryUsage();
+                    await NavigationService.SaveNavigationAsync();
+                    WindowWrapper.Current().NavigationServices.Clear();//.Remove(NavigationService);
+                    var a = WindowWrapper.Current().NavigationServices.Count;
+                }
+                else
+                {
+                    //?
+                }
+                Window.Current.Content = null;
+                GC.Collect();
+            }
+        }
+
+        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        {
+            Debug.WriteLine("App App_EnteredBackground");
+            Debug.WriteLine("Memory Usage={0} level={1} limit={2}", MemoryManager.AppMemoryUsage, MemoryManager.AppMemoryUsageLevel, MemoryManager.AppMemoryUsageLimit);
+
+            var deferral = e.GetDeferral();
+            _isInBackgroundMode = true;
             try
             {
-                Logger.SaveFromSettingsToFile();
-            }
-            catch (Exception ex)
-            {
+#if DEBUG
+                //If we are in debug mode free memory here because the memory limits are turned off
+                //In release builds defer the actual reduction of memory to the limit changing event so we don't 
+                //unnecessarily throw away the UI
 
-            }
-#else
-            Logger.ClearSettingsLogs();
+                //ReduceMemoryUsage(0);
 #endif
-            //DatabaseManager.Current.resetdb();
-            this.UnhandledException += App_UnhandledException;
+            }
+            finally
+            {
+                deferral.Complete();
+            }
+        }
+
+        bool isBackgroundLeavedFirstTime = true;
+        private async void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        {
+            Debug.WriteLine("App App_LeavingBackground");
+            _isInBackgroundMode = false;
+
+            // Reastore view content if it was previously unloaded.
+            if (!isBackgroundLeavedFirstTime && Window.Current != null && Window.Current.Content == null)
+            {
+                var deferral = e.GetDeferral();
+                var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+                await service.RestoreSavedNavigationAsync();
+                Window.Current.Content = new ModalDialog
+                {
+                    DisableBackButtonWhenModal = true,
+                    Content = new Views.Shell(service),
+                    ModalContent = new Views.Busy(),
+                };
+                deferral.Complete();
+            }
+            isBackgroundLeavedFirstTime = false;
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Logger.SaveInSettings("App_UnhandledException " + e.Exception);
-            HockeyClient.Current.TrackEvent("App_UnhandledException " + e.Exception.Message);
+            //Logger.SaveInSettings("App_UnhandledException " + e.Exception);
+            Logger2.Current.LogAppUnhadledException(e);
         }
 
         public enum Pages
@@ -134,6 +242,7 @@ namespace NextPlayerUWP
             Album,
             Artists,
             Artist,
+            AudioSettings,
             CloudStorageFolders,
             Genres,
             FileInfo,
@@ -142,16 +251,18 @@ namespace NextPlayerUWP
             Licenses,
             NewSmartPlaylist,
             NowPlaying,
+            NowPlayingDesktop,
             NowPlayingPlaylist,
             Playlists,
             Playlist,
+            PlaylistEditable,
             Radios,
             Settings,
             Songs,
             TagsEditor
         }
 
-        #region Template10 overrides
+#region Template10 overrides
 
         public override UIElement CreateRootElement(IActivatedEventArgs e)
         {
@@ -168,11 +279,6 @@ namespace NextPlayerUWP
         {
             Debug.WriteLine("OnInitializeAsync " + args.PreviousExecutionState + " " + DetermineStartCause(args));
 
-            if (!isFirstRun && args.PreviousExecutionState != ApplicationExecutionState.Running && args.PreviousExecutionState != ApplicationExecutionState.Suspended)
-            {
-                PerformUpdate();
-            }
-
             if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
             {
                 await SongCoverManager.Instance.Initialize(true);
@@ -184,13 +290,15 @@ namespace NextPlayerUWP
 
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
+            TranslationHelper tr = new TranslationHelper();
+            tr.ChangeSlideableItemDescription();
 
             await ChangeStatusBarVisibility();
             bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
             ThemeHelper.ApplyThemeToStatusBar(isLightTheme);
             ThemeHelper.ApplyThemeToTitleBar(isLightTheme);
 
-            #region AddPageKeys
+#region AddPageKeys
             var keys = PageKeys<Pages>();
             if (!keys.ContainsKey(Pages.AddToPlaylist))
                 keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
@@ -202,6 +310,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Artists, typeof(ArtistsView));
             if (!keys.ContainsKey(Pages.Artist))
                 keys.Add(Pages.Artist, typeof(ArtistView));
+            if (!keys.ContainsKey(Pages.AudioSettings))
+                keys.Add(Pages.AudioSettings, typeof(AudioSettingsView));
             if (!keys.ContainsKey(Pages.CloudStorageFolders))
                 keys.Add(Pages.CloudStorageFolders, typeof(CloudStorageFoldersView));
             if (!keys.ContainsKey(Pages.FileInfo))
@@ -218,12 +328,16 @@ namespace NextPlayerUWP
                 keys.Add(Pages.NewSmartPlaylist, typeof(NewSmartPlaylistView));
             if (!keys.ContainsKey(Pages.NowPlaying))
                 keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
+            if (!keys.ContainsKey(Pages.NowPlayingDesktop))
+                keys.Add(Pages.NowPlayingDesktop, typeof(NowPlayingDesktopView));
             if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
                 keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
             if (!keys.ContainsKey(Pages.Playlists))
                 keys.Add(Pages.Playlists, typeof(PlaylistsView));
             if (!keys.ContainsKey(Pages.Playlist))
                 keys.Add(Pages.Playlist, typeof(PlaylistView));
+            if (!keys.ContainsKey(Pages.PlaylistEditable))
+                keys.Add(Pages.PlaylistEditable, typeof(PlaylistEditableView));
             if (!keys.ContainsKey(Pages.Radios))
                 keys.Add(Pages.Radios, typeof(RadiosView));
             if (!keys.ContainsKey(Pages.Settings))
@@ -232,7 +346,7 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Songs, typeof(SongsView));
             if (!keys.ContainsKey(Pages.TagsEditor))
                 keys.Add(Pages.TagsEditor, typeof(TagsEditor));
-            #endregion
+#endregion
 
             try
             {
@@ -248,26 +362,36 @@ namespace NextPlayerUWP
             {
                 //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
             }
+            //await MediaImport.CheckChanges();
+
+            try
+            {
+                AdDuplex.AdDuplexClient.Initialize("bfe9d689-7cf7-4add-84fe-444dc72e6f36");
+            }
+            catch (Exception ex)
+            {
+                Logger2.Current.WriteMessage("Adduplex initialize fail", Logger2.Level.WarningError);
+            }
 
             if (!isFirstRun)
             {
-                AlbumArtFinder.StartLooking();
+                AlbumArtFinder.StartLooking().ConfigureAwait(false);
             }
-        }
+        }   
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
+            if (startKind == StartKind.Launch)
+            {
+                TelemetryAdapter.TrackAppLaunch();
+            }
 
             if (isFirstRun)
             {
                 isFirstRun = false;
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
-            }
-            else
-            {
-                if (!PlaybackManager.IsBackgroundTaskRunning()) TileUpdater.ChangeAppTileToDefaultTransparent();
             }
 
             var fileArgs = args as FileActivatedEventArgs;
@@ -276,7 +400,14 @@ namespace NextPlayerUWP
                 var file = fileArgs.Files.First() as StorageFile;
                 await OpenFileAndPlay(file);
 
-                await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
+                if (DeviceFamilyHelper.IsDesktop())
+                {
+                    await NavigationService.NavigateAsync(Pages.NowPlayingDesktop);
+                }
+                else
+                {
+                    await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
+                }
                 if (fileArgs.Files.Count > 1)
                 {
                     await OpenFilesAndAddToNowPlaying(fileArgs.Files.Skip(1));
@@ -375,42 +506,39 @@ namespace NextPlayerUWP
             }
         }
         
-        public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
+        public override async Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
         {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Suspended));
-            
             if (OnNewTilePinned != null)
             {
                 OnNewTilePinned();
                 OnNewTilePinned = null;
             }
-            return base.OnSuspendingAsync(s, e, prelaunch);
+            await Logger2.Current.WriteToFile();
+            await base.OnSuspendingAsync(s, e, prelaunch);
         }
 
-        public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
-        {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(AppState), AppState.Active));
+        //public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
+        //{
+        //    base.OnResuming(s, e, previousExecutionState);
+        //}
+
+        //public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)
+        //{
+        //    runOnStartAsync = true;
             
-            base.OnResuming(s, e, previousExecutionState);
-        }
+        //    object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
+        //    if (o == null) return Task.CompletedTask;
 
-        public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)
-        {
-            runOnStartAsync = true;
-            
-            object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
-            if (o == null) return Task.CompletedTask;
+        //    var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
 
-            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+        //    return Task.CompletedTask;
+        //}
 
-            return Task.CompletedTask;
-        }
-
-        #endregion
+#endregion
 
         public static Action OnNewTilePinned { get; set; }
 
-        #region Setup and update
+#region Setup and update
 
         private void FirstRunSetup()
         {
@@ -421,7 +549,7 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
             var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
             ColorsHelper ch = new ColorsHelper();
             ch.SaveUserAccentColor(color);
@@ -441,6 +569,12 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
 
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FlipViewSelectedIndex, 0);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeRightCommand, AppConstants.SwipeActionDelete);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, true);
+
+            ApplicationSettingsHelper.SaveSettingsValue("ImportPlaylistsAfterAppUpdate9", true);
             Debug.WriteLine("FirstRunSetup finished");
         }
 
@@ -475,6 +609,7 @@ namespace NextPlayerUWP
 
         private void UpdateDB()
         {
+            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
             object version = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DBVersion);
             if (version.ToString() == "1")
             {
@@ -510,6 +645,30 @@ namespace NextPlayerUWP
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 6);
                 version = "6";
             }
+            if (version.ToString() == "6")
+            {
+                DatabaseManager.Current.UpdateToVersion7();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 7);
+                version = "7";
+            }
+            if (version.ToString() == "7")
+            {
+                DatabaseManager.Current.UpdateToVersion8();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
+                version = "8";
+            }
+            if (version.ToString() == "8")
+            {
+                DatabaseManager.Current.UpdateToVersion9();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 9);
+                version = "9";
+            }
+            if (version.ToString() == "9")
+            {
+                DatabaseManager.Current.UpdateToVersion10();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 10);
+                version = "10";
+            }
             // change  private const int dbVersion
         }
 
@@ -535,31 +694,25 @@ namespace NextPlayerUWP
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
             }
-        }
-
-        #endregion
-
-        private async Task SendLogs()
-        {
-            try
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeRightCommand) == null)
             {
-                string log = await Logger.Read();
-                if (!string.IsNullOrEmpty(log))
-                {
-                    
-                }
-                log = await Logger.ReadBG();
-                if (!string.IsNullOrEmpty(log))
-                {
-                    
-                }
-                await Logger.ClearAll();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeRightCommand, AppConstants.SwipeActionDelete);
             }
-            catch (Exception ex)
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) == null)
             {
-                HockeyClient.Current.TrackEvent("Cant send logs: " + ex);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FlipViewSelectedIndex) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FlipViewSelectedIndex, 0);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, true);
             }
         }
+
+#endregion
 
         private void Resetdb()
         {
@@ -568,14 +721,15 @@ namespace NextPlayerUWP
 
         public static void ChangeRightPanelVisibility(bool visible)
         {
-            if (Window.Current.Content == null) return;
+            if (Window.Current == null || Window.Current.Content == null) return;
             ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeRightPanelVisibility(visible);
         }
 
-        public static void ChangeBottomPlayerVisibility(bool visible)
+        public static void OnNavigatedToNewView(bool visible, bool isNowPlayingDesktopActive = false)
         {
-            if (Window.Current.Content == null) return;
+            if (Window.Current == null || Window.Current.Content == null) return;
             ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
+            ((Shell)((ModalDialog)Window.Current.Content).Content).OnDesktopViewActiveChange(isNowPlayingDesktopActive);
         }
 
         public static async Task ChangeStatusBarVisibility()
@@ -607,27 +761,28 @@ namespace NextPlayerUWP
 
         private async Task OpenFileAndPlay(StorageFile file)
         {
-            MediaImport mi = new MediaImport();
+            MediaImport mi = new MediaImport(FileFormatsHelper);
             string type = file.FileType.ToLower();
-            if (MediaImport.IsAudioFile(type))
+            if (FileFormatsHelper.IsFormatSupported(type))
             {
                 SongItem si = await mi.OpenSingleFileAsync(file);
-                ApplicationSettingsHelper.SaveSongIndex(0);
                 await NowPlayingPlaylistManager.Current.NewPlaylist(si);
-                App.PlaybackManager.PlayNew();
+                await PlaybackService.Instance.PlayNewList(0);
             }
-            else if (MediaImport.IsPlaylistFile(type))
+            else if (FileFormatsHelper.IsPlaylistSupportedType(type))
             {
-                var list = await mi.OpenPlaylistFileAsync(file);
-                ApplicationSettingsHelper.SaveSongIndex(0);
-                await NowPlayingPlaylistManager.Current.NewPlaylist(list);
-                App.PlaybackManager.PlayNew();
+                var playlist = await mi.OpenPlaylistFileAsync(file);
+                if (playlist != null)
+                {
+                    await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
+                    await PlaybackService.Instance.PlayNewList(0);
+                }
             }
         }
 
         private async Task OpenFilesAndAddToNowPlaying(IEnumerable<IStorageItem> files)
         {
-            MediaImport mi = new MediaImport();
+            MediaImport mi = new MediaImport(FileFormatsHelper);
             List<SongItem> list = new List<SongItem>();
             int i = 0;
             const int size = 4;
@@ -650,6 +805,24 @@ namespace NextPlayerUWP
             {
                 await NowPlayingPlaylistManager.Current.Add(list);
             }
+        }
+
+        private static List<SongItem> temporaryList = new List<SongItem>();
+        public static void AddToCache(List<SongItem> songs)
+        {
+            temporaryList = new List<SongItem>();
+            foreach(var song in songs)
+            {
+                temporaryList.Add(song);
+            }
+        }
+        public static List<SongItem> GetFromCache()
+        {
+            return temporaryList;
+        }
+        public static void ClearCache()
+        {
+            temporaryList = new List<SongItem>();
         }
     }
 }

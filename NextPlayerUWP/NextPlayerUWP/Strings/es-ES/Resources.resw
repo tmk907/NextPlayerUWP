@@ -379,7 +379,7 @@
     <value>After dragging item to now playing list:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>Music folders</value>
+    <value>Choose folders containing music files</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Álbum</value>
@@ -528,7 +528,7 @@
   <data name="TBRadio.Text" xml:space="preserve">
     <value>Radio</value>
   </data>
-  <data name="PageHeaderRadios" xml:space="preserve">
+  <data name="PageHeaderRadios.Content" xml:space="preserve">
     <value>Radio</value>
   </data>
   <data name="TBOnAir.Text" xml:space="preserve">
@@ -704,5 +704,173 @@
   </data>
   <data name="TBAutoSavePlaylists.Text" xml:space="preserve">
     <value>Automatically save playlists in</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>Filename</value>
+  </data>
+  <data name="TBVolume.Text" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="ButtonReset.Content" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="TBPlaybackRate.Text" xml:space="preserve">
+    <value>Playback rate</value>
+  </data>
+  <data name="ContentDialogPlaybackRate.Title" xml:space="preserve">
+    <value>Playback rate</value>
+  </data>
+  <data name="ContentDialogPlaybackRate.PrimaryButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ContentDialogVolume.PrimaryButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ContentDialogVolume.Title" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="AppBarButtonPlaybackRate.Label" xml:space="preserve">
+    <value>Playback rate</value>
+  </data>
+  <data name="AppBarButtonVolume.Label" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="ContentDialogAudioBalance.PrimaryButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ContentDialogAudioBalance.SecondaryButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="ContentDialogVolume.SecondaryButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="ContentDialogPlaybackRate.SecondaryButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="TBAudioBalance.Text" xml:space="preserve">
+    <value>Audio balance</value>
+  </data>
+  <data name="ContentDialogAudioBalance.Title" xml:space="preserve">
+    <value>Audio balance</value>
+  </data>
+  <data name="AppBarButtonAudioBalance.Label" xml:space="preserve">
+    <value>Audio balance</value>
+  </data>
+  <data name="PageHeaderLyrics.Content" xml:space="preserve">
+    <value>Letra</value>
+  </data>
+  <data name="AppBarButtonSort.Label" xml:space="preserve">
+    <value>Separado</value>
+  </data>
+  <data name="ContentDialogAudioSettings.PrimaryButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ContentDialogAudioSettings.Title" xml:space="preserve">
+    <value>Audio settings</value>
+  </data>
+  <data name="AppBarButtonAudioSettings.Label" xml:space="preserve">
+    <value>Audio settings</value>
+  </data>
+  <data name="ContentDialogAudioSettings.SecondaryButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="TBSwipeLeftCommand.Text" xml:space="preserve">
+    <value>Swipe right:</value>
+  </data>
+  <data name="RBAddToPlaylist.Content" xml:space="preserve">
+    <value>Agregar a lista de reproducción</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="ButtonAppStretch.Content" xml:space="preserve">
+    <value>Request feature</value>
+  </data>
+  <data name="TBLiveTileWithImage.Text" xml:space="preserve">
+    <value>Show album art on live tile</value>
+  </data>
+  <data name="MFISaveToFile.Text" xml:space="preserve">
+    <value>Save to file</value>
+  </data>
+  <data name="MFIAddFromFile.Text" xml:space="preserve">
+    <value>Add from file</value>
+  </data>
+  <data name="TBAlbumCover.Text" xml:space="preserve">
+    <value>Album cover</value>
+  </data>
+  <data name="TBNoAlbumCover.Text" xml:space="preserve">
+    <value>No album cover</value>
+  </data>
+  <data name="MFIAddFromSong.Text" xml:space="preserve">
+    <value>Add from song</value>
+  </data>
+  <data name="ButtonAddFromFile.Content" xml:space="preserve">
+    <value>Add from file</value>
+  </data>
+  <data name="ButtonAddFromSong.Content" xml:space="preserve">
+    <value>Add from song</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DoYouWantToIncludeSubFolders" xml:space="preserve">
+    <value>Do you want to include subfolders?</value>
+  </data>
+  <data name="MFIHide.Text" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="MFIShow.Text" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="Play next" xml:space="preserve">
+    <value>Reproducir la siguiente</value>
+  </data>
+  <data name="Play now" xml:space="preserve">
+    <value>Jugar Ahora</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Add to now playing" xml:space="preserve">
+    <value>Añadir a jugar ahora</value>
+  </data>
+  <data name="Add to playlist" xml:space="preserve">
+    <value>Agregar a lista de reproducción</value>
+  </data>
+  <data name="AppBarButtonFilter.Label" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Smart playlists" xml:space="preserve">
+    <value>Smart playlists</value>
+  </data>
+  <data name="Normal playlists" xml:space="preserve">
+    <value>Normal playlists</value>
+  </data>
+  <data name="Show hidden" xml:space="preserve">
+    <value>Show hidden</value>
+  </data>
+  <data name="DontIncludeSubFolders" xml:space="preserve">
+    <value>without subfolders</value>
+  </data>
+  <data name="DoYouWantExcludeFolderFromLibrary" xml:space="preserve">
+    <value>Do you want to exclude this folder from library?</value>
+  </data>
+  <data name="IncludeSubfolders" xml:space="preserve">
+    <value>with subfolders</value>
+  </data>
+  <data name="TBOnline.Text" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="TBStreams.Text" xml:space="preserve">
+    <value>Streams</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="DoYouWantDeleteThisSong" xml:space="preserve">
+    <value>Do you want to delete this song from library and disk?</value>
+  </data>
+  <data name="PageHeaderNowPlaying.Content" xml:space="preserve">
+    <value>Ahora reproduciendo</value>
   </data>
 </root>
