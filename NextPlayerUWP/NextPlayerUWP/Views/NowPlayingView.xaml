@@ -505,11 +505,13 @@
                 PointerPressed="{x:Bind ViewModel.Image_Pressed}"
                 PointerReleased="{x:Bind ViewModel.Image_Released}"
                 PointerExited="{x:Bind ViewModel.Image_Exited}">
-                <mycontrols:CompositionImage
+                <mycontrols:CrossfadingImage
                     x:Name="PrimaryImage"
                     Grid.Column="0" Grid.Row="0"
                     VerticalAlignment="Bottom" 
                     HorizontalAlignment="Center"
+                    FadeInDuration="0:0:0.5"
+                    FadeOutDuration="0:0:0.5"
                     Stretch="Uniform"/>
             </Grid>
             <Grid Grid.Row="1" >

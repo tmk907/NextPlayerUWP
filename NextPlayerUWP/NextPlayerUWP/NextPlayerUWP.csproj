@@ -161,6 +161,9 @@
     <Compile Include="Controls\AlternatingRowListView.cs" />
     <Compile Include="Controls\CompositionImage.cs" />
     <Compile Include="Controls\ConnectedTransition.cs" />
+    <Compile Include="Controls\CrossfadingImage.xaml.cs">
+      <DependentUpon>CrossfadingImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
     <Compile Include="Controls\SizeNotifyPanel.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
@@ -452,6 +455,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\CrossfadingImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SongListViewItemTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

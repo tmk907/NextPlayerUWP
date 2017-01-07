@@ -98,23 +98,27 @@
                 <RowDefinition Height="13*"/>
                 <RowDefinition Height="8*"/>
             </Grid.RowDefinitions>
-            <mycontrols:CompositionImage
+            <mycontrols:CrossfadingImage
                 x:Name="BackgroundImage"
                 Grid.Row="0"
                 Grid.RowSpan="2"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
+                FadeInDuration="0:0:0.5"
+                FadeOutDuration="0:0:0.5"
                 Stretch="UniformToFill"
                 />
             <Canvas
                 x:Name="GlassHost"
                 Grid.Row="0"
                 Grid.RowSpan="2"/>
-            <mycontrols:CompositionImage
+            <mycontrols:CrossfadingImage
                 x:Name="PrimaryImage"
                 Grid.Row="0"
                 SizeChanged="PrimaryImage_SizeChanged"
                 Margin="8,4,8,0"
+                FadeInDuration="0:0:0.5"
+                FadeOutDuration="0:0:0.5"
                 Stretch="Uniform"/>
             <Grid Grid.Row="1"
                 x:Name="SongDescriptionGrid"
