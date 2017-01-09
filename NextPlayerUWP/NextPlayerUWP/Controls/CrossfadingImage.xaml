@@ -15,8 +15,7 @@
               x:Name="TopImageShowAnimation"
               Storyboard.TargetName="imageTop"
               Storyboard.TargetProperty="Opacity"
-              From="0.0" To="1.0" 
-              Duration="0:0:1"/>
+              From="0.0" To="1.0"/>
         </Storyboard>
         <Storyboard x:Name="TopImageHide">
             <DoubleAnimation
@@ -24,7 +23,6 @@
               Storyboard.TargetName="imageTop"
               Storyboard.TargetProperty="Opacity"
               From="1.0" To="0.0" 
-              Duration="0:0:0.5"
               />
         </Storyboard>
         <Storyboard x:Name="BottomImageShow">
@@ -32,14 +30,14 @@
               x:Name="BottomImageShowAnimation"
               Storyboard.TargetName="imageBottom"
               Storyboard.TargetProperty="Opacity"
-              From="0.0" To="1.0" Duration="0:0:1"/>
+              From="0.0" To="1.0"/>
         </Storyboard>
         <Storyboard x:Name="BottomImageHide">
             <DoubleAnimation
               x:Name="BottomImageHideAnimation"
               Storyboard.TargetName="imageBottom"
               Storyboard.TargetProperty="Opacity"
-              From="1.0" To="0.0" Duration="0:0:0.5"/>
+              From="1.0" To="0.0"/>
         </Storyboard>
     </UserControl.Resources>
     <Grid>

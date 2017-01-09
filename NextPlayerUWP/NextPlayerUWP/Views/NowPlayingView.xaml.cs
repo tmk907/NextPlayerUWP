@@ -111,5 +111,10 @@ namespace NextPlayerUWP.Views
                 PrimaryImage.ImageUri = imageUri;
             }
         }
+
+        private async void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            await ContentDialogAudioSettings.ShowAsync();
+        }
     }    
 }

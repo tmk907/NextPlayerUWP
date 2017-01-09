@@ -46,12 +46,12 @@ namespace NextPlayerUWP.ViewModels
                 var all = await DatabaseManager.Current.GetAllSongItemsAsync();
                 Streams = new ObservableCollection<SongItem>(all.Where(s => s.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.OnlineFile));
             }
-            if (Radios.Count == 0)
-            {
-                var jr = await GetJamendoRadios();
-                Radios = new ObservableCollection<RadioItem>(jr);
-            }
-            await UpdatePlayingNow();
+            //if (Radios.Count == 0)
+            //{
+            //    var jr = await GetJamendoRadios();
+            //    Radios = new ObservableCollection<RadioItem>(jr);
+            //}
+            //await UpdatePlayingNow();
             Updating = false;
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {

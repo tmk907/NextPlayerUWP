@@ -28,17 +28,12 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(340, 500));
-            System.Diagnostics.Debug.WriteLine("np1a");
             NavigationCacheMode = NavigationCacheMode.Required;
             ViewModel = (NowPlayingDesktopViewModel)DataContext;
             this.Loaded += NowPlayingDesktopView_Loaded;
             this.Unloaded += NowPlayingDesktopView_Unloaded;
-            System.Diagnostics.Debug.WriteLine("np1b");
-
-            System.Diagnostics.Debug.WriteLine("np1c");
             InitializedFrostedGlass(GlassHost);
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            System.Diagnostics.Debug.WriteLine("np2");
+            //ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
         private void NowPlayingDesktopView_Loaded(object sender, RoutedEventArgs e)
@@ -49,8 +44,7 @@ namespace NextPlayerUWP.Views
                 PrimaryImage.ImageUri = imageUri;
                 BackgroundImage.ImageUri = imageUri;
             }
-            //ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            System.Diagnostics.Debug.WriteLine("np3");
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -78,7 +72,9 @@ namespace NextPlayerUWP.Views
 
         private void NowPlayingDesktopView_Unloaded(object sender, RoutedEventArgs e)
         {
-            //ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            ViewModel = null;
+            var a = (NowPlayingDesktopViewModel)DataContext;
         }
 
         private void PrimaryImage_SizeChanged(object sender, SizeChangedEventArgs e)

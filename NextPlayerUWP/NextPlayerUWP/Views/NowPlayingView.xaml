@@ -612,7 +612,8 @@
             </Grid>
             <Grid Grid.Row="2" 
                   Margin="12,0,12,0" 
-                  Background="Transparent">
+                  Background="Transparent"
+                  DoubleTapped="Grid_DoubleTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>

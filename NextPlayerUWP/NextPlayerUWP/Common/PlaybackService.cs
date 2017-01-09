@@ -691,6 +691,7 @@ namespace NextPlayerUWP.Common
                 RadioTimer.SetTimerWithTask(delay, RefreshRadioTrackInfo);
             }
         }
+
         private void UpdateStats()
         {
             System.Diagnostics.Debug.WriteLine("ScrobbleTrack started at:{0} played:{1}", songStartedAt, songPlayed);
