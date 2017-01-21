@@ -303,7 +303,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
                             Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=addtoplaylist}"
@@ -326,7 +325,6 @@
                             Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=edittags}"
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
         </MenuFlyout>
-
         <DataTemplate x:Key="SongItemTemplateDesktop" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped" 
                   Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
@@ -523,7 +521,7 @@
                 x:Name="NowPlayingPlaylistListView"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                 OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                ItemsSource="{x:Bind ViewModel.Songs}"
+                ItemsSource="{x:Bind ViewModel.QueueVM.Songs}"
                 ItemTemplate="{StaticResource SongItemTemplateDesktop}"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked}"  

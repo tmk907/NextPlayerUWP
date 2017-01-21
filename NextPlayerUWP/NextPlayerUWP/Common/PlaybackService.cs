@@ -272,14 +272,14 @@ namespace NextPlayerUWP.Common
 
             mediaList.MoveNext();
 
-            if (IsLastIndex)
-            {
-                CurrentSongIndex = 0;
-            }
-            else
-            {
-                CurrentSongIndex++;
-            }
+            //if (IsLastIndex)
+            //{
+            //    CurrentSongIndex = 0;
+            //}
+            //else
+            //{
+            //    CurrentSongIndex++;
+            //}
 
             //if (repeat == RepeatEnum.NoRepeat)
             //{

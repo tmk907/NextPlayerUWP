@@ -19,22 +19,22 @@ namespace NextPlayerUWP.ViewModels
 {
     public class RightPanelViewModel : Template10.Mvvm.ViewModelBase
     {
-        int firstVisibleIndex = 0;
-        string positionKey;
-        ListView listView;
+        ListViewScrollerHelper scrollerHelper;
 
         public RightPanelViewModel()
         {
+            ViewModelLocator vml = new ViewModelLocator();
+            QueueVM = vml.QueueVM;
+            scrollerHelper = new ListViewScrollerHelper();
             Logger2.DebugWrite("RightPanelViewModel()", "");
             sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
-            NowPlayingPlaylistManager.NPListChanged += NPListChanged;
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
-            //App.SongUpdated += App_SongUpdated;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            UpdatePlaylist();
         }
+
+        public QueueViewModelBase QueueVM { get; set; }
 
         private int selectedPivotIndex = 0;
         public int SelectedPivotIndex
@@ -48,9 +48,8 @@ namespace NextPlayerUWP.ViewModels
             Logger2.DebugWrite("RightPanelViewModel", $"TrackChanged {index}");
             await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
             {
-                if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
-                ScrollAfterTrackChanged(index);
-                //await Task.Run(() => ChangeLyrics(index));
+                if (QueueVM.SongsCount == 0 || index > QueueVM.SongsCount - 1 || index < 0) return;
+                scrollerHelper.ScrollAfterTrackChanged(index);
                 await ChangeLyrics(index);
             });
         }
@@ -168,25 +167,7 @@ namespace NextPlayerUWP.ViewModels
 
         #region NowPlaying
 
-        private void NPListChanged()
-        {
-            UpdatePlaylist();
-        }
-
-        private ObservableCollection<SongItem> songs;
-        public ObservableCollection<SongItem> Songs
-        {
-            get { return songs; }
-            set { Set(ref songs, value); }
-        }
-
-        private void UpdatePlaylist()
-        {
-            Logger2.DebugWrite("RightPanelViewModel", "UpdatePlaylist");
-            Songs = NowPlayingPlaylistManager.Current.songs;
-        }
-
-        public async void OnLoaded(ListView p, WebView webView)
+        public void OnLoaded(ListView p, WebView webView)
         {
             Logger2.DebugWrite("RightPanelViewModel", "OnLoaded");
 
@@ -196,95 +177,15 @@ namespace NextPlayerUWP.ViewModels
             lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
             lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
 
-            bool scroll = false;
-            if (listView != null)
-            {
-                positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
-                var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-                firstVisibleIndex = isp.FirstVisibleIndex;
-                scroll = true;
-            }
-            listView = (ListView)p;
-            if (songs.Count == 0)
-            {
-                UpdatePlaylist();
-            }
-            if (scroll && songs.Count > 0 && firstVisibleIndex < songs.Count)
-            {
-                await SetScrollPosition();
-            }
+            scrollerHelper.listView = (ListView)p;
+            scrollerHelper.ScrollAfterTrackChanged(PlaybackService.Instance.CurrentSongIndex);
         }
 
         public void OnUnLoaded()
         {
             Logger2.DebugWrite("RightPanelViewModel", "OnUnLoaded");
-            positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
-            var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-            firstVisibleIndex = isp.FirstVisibleIndex;
-        }
-
-        private void ScrollAfterTrackChanged(int index)
-        {
-            Logger2.DebugWrite("RightPanelViewModel", $"ScrollAfterTrackChanged {index}");
-
-            if (listView == null)
-            {
-                TelemetryAdapter.TrackEvent("ScrollAfterTrackChanged listview == null");
-                return;
-            }
-            var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-            if (isp == null) return;
-            int firstVisibleIndex = isp.FirstVisibleIndex;
-            int lastVisibleIndex = isp.LastVisibleIndex;
-            if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;
-            if (index < firstVisibleIndex)
-            {
-                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
-            }
-            else if (index > lastVisibleIndex)
-            {
-                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
-            }
-        }
-
-        private async Task SetScrollPosition()
-        {
-            listView.ScrollIntoView(listView.Items[firstVisibleIndex], ScrollIntoViewAlignment.Leading);
-            if (positionKey != null)
-            {
-                await ListViewPersistenceHelper.SetRelativeScrollPositionAsync(listView, positionKey, KeyToItemHandler);
-            }
-        }
-
-        private string ItemToKeyHandler(object item)
-        {
-            if (item == null) return null;
-            MusicItem mi = (MusicItem)item;
-            return mi.GetParameter();
-        }
-
-        private IAsyncOperation<object> KeyToItemHandler(string key)
-        {
-            return Task.Run(() =>
-            {
-                if (listView.Items.Count <= 0)
-                {
-                    return null;
-                }
-                else
-                {
-                    var i = listView.Items[firstVisibleIndex];
-                    if (((MusicItem)i).GetParameter() == key)
-                    {
-                        return i;
-                    }
-                    foreach (var item in listView.Items)
-                    {
-                        if (((MusicItem)item).GetParameter() == key) return item;
-                    }
-                    return null;
-                }
-            }).AsAsyncOperation();
+            scrollerHelper.GetPositionKey();
+            scrollerHelper.GetFirstVisibleIndex();
         }
 
         #endregion
@@ -295,7 +196,7 @@ namespace NextPlayerUWP.ViewModels
         {
             int index = 0;
             int id = ((SongItem)e.ClickedItem).SongId;
-            foreach (var s in songs)
+            foreach (var s in QueueVM.Songs)
             {
                 if (s.SongId == id) break;
                 index++;
@@ -395,7 +296,7 @@ namespace NextPlayerUWP.ViewModels
         public async void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
-            if (songs!=null)
+            if (QueueVM.Songs != null)
             {
                 await NowPlayingPlaylistManager.Current.SortPlaylist();
             }
@@ -486,7 +387,7 @@ namespace NextPlayerUWP.ViewModels
 
             //appBarSave.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
-            var song = songs[index];
+            var song = QueueVM.Songs[index];
             Title = song.Title;
             Artist = song.Artist;
             Lyrics = "";

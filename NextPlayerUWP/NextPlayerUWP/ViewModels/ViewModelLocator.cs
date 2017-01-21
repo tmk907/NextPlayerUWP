@@ -34,6 +34,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<TagsEditorViewModel>();
             SimpleIoc.Default.Register<TestViewModel>();
             SimpleIoc.Default.Register<PlayerViewModelBase>();
+            SimpleIoc.Default.Register<QueueViewModelBase>();
         }
 
         public AddToPlaylistViewModel AddToPlaylistVM => ServiceLocator.Current.GetInstance<AddToPlaylistViewModel>();
@@ -61,5 +62,6 @@ namespace NextPlayerUWP.ViewModels
         public TagsEditorViewModel TagsEditorVM => ServiceLocator.Current.GetInstance<TagsEditorViewModel>();
         public TestViewModel TestVM => ServiceLocator.Current.GetInstance<TestViewModel>();
         public PlayerViewModelBase PlayerVM => ServiceLocator.Current.GetInstance<PlayerViewModelBase>();
+        public QueueViewModelBase QueueVM => ServiceLocator.Current.GetInstance<QueueViewModelBase>();
     }
 }

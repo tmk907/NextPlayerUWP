@@ -42,7 +42,6 @@ namespace NextPlayerUWP.Views
             {
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
-
             ReviewReminder();
             //SendLogs();
         }
@@ -66,6 +65,36 @@ namespace NextPlayerUWP.Views
             HamburgerMenu.RefreshStyles(App.Current.RequestedTheme);
             HamburgerMenu.IsFullScreen = false;
             HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
+        }
+
+        public void ShowNotification(string notificationText)
+        {
+            PopupNotification.ShowNotification(notificationText);
+        }
+
+        public void ShowNotification(string topText, string bottomText)
+        {
+            PopupNotification.ShowNotification(topText, bottomText);
+        }
+
+        public void HighlightMenuButton(int nr)
+        {
+            if (nr == 0)
+            {
+                HamburgerMenu.Selected = HamburgerMenu.SecondaryButtons[0];
+            }
+            else
+            {
+                if (nr <= HamburgerMenu.PrimaryButtons.Count)
+                {
+                    HamburgerMenu.Selected = HamburgerMenu.PrimaryButtons[nr - 1];
+                    if (nr == 7)
+                    {
+                        HamburgerMenu.PrimaryButtons[7].IsChecked = true;
+                    }
+                }
+            }
+            ShowNotification("Selected: " + nr);
         }
 
         private void App_AppThemeChanged(bool isLight)
@@ -218,6 +247,23 @@ namespace NextPlayerUWP.Views
             {
                 Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
             }
+        }
+
+        private void Undo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async Task AutoUpdateLibrary()
+        {
+            NextPlayerUWPDataLayer.Services.MediaImport mi = new NextPlayerUWPDataLayer.Services.MediaImport(App.FileFormatsHelper);
+            Progress<string> progress = new Progress<string>(
+                data =>
+                {
+                    var array = data.Split('|');
+                }
+            );
+            await Task.Run(() => mi.UpdateDatabaseAsync(progress));
         }
     }
 }

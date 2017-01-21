@@ -18,12 +18,6 @@ using NextPlayerUWPDataLayer.Model;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public class MusicFolder
-    {
-        public string Name { get; set; }
-        public string Path { get; set; }
-    }
-
     public class LanguageItem
     {
         public string Name { get; set; }
@@ -153,22 +147,12 @@ namespace NextPlayerUWP.ViewModels
             }
             if (musicLibraryFolders.Count == 0)
             {
-                var lib = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Music);
-                foreach (var f in lib.Folders)
-                {
-                    MusicLibraryFolders.Add(new MusicFolder() { Name = f.DisplayName, Path = f.Path });
-                }
+                var list = await GetMusicFolders();
+                MusicLibraryFolders = new ObservableCollection<SdCardFolder>(list);
             }
             if (sdCardFolders.Count == 0)
             {
-                var list = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
-                var folder = new SdCardFolder()
-                {
-                    Name = "Music",
-                    Path = @"C:\",
-                    IncludeSubFolders = true,
-                };
-                list.Insert(0, folder);
+                var list = await GetSdCardFolders();
                 SdCardFolders = new ObservableCollection<SdCardFolder>(list);
             }
 
@@ -229,8 +213,8 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref isUpdating, value); }
         }
 
-        private ObservableCollection<MusicFolder> musicLibraryFolders = new ObservableCollection<MusicFolder>();
-        public ObservableCollection<MusicFolder> MusicLibraryFolders
+        private ObservableCollection<SdCardFolder> musicLibraryFolders = new ObservableCollection<SdCardFolder>();
+        public ObservableCollection<SdCardFolder> MusicLibraryFolders
         {
             get { return musicLibraryFolders; }
             set { Set(ref musicLibraryFolders, value); }
@@ -256,13 +240,9 @@ namespace NextPlayerUWP.ViewModels
                 }
             );
             IsUpdating = true;
-            await Task.Run(() => m.UpdateDatabase(progress));
+            await Task.Run(() => m.UpdateDatabaseAsync(progress));
             IsUpdating = false;
             ScannedFolder = "";
-            int songsAdded = m.GetLastSongsAddedCount();
-            int playlistsAdded = m.GetLastPlaylistsAddedCount();
-            int durationSeconds = unchecked((int)m.GetLastUpdateDuration());
-            TelemetryAdapter.TrackLibraryUpdate(songsAdded, playlistsAdded, durationSeconds);
             TelemetryAdapter.TrackEvent("Library updated");
         }
 
@@ -272,32 +252,25 @@ namespace NextPlayerUWP.ViewModels
             Windows.Storage.StorageFolder newFolder = await musicLibrary.RequestAddFolderAsync();
             if (newFolder != null)
             {
-                MusicLibraryFolders.Add(new MusicFolder() { Name = newFolder.DisplayName, Path = newFolder.Path });
+                MusicLibraryFolders.Add(new SdCardFolder() { Name = newFolder.DisplayName, Path = newFolder.Path, IncludeSubFolders=true });
             }
         }
 
-        public async void RemoveFolder(MusicFolder musicFolder)
+        public async void RemoveFolder(SdCardFolder musicFolder)
         {
             try
             {
                 var musicLibrary = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Music);
                 var folder = musicLibrary.Folders.Where(f => f.Path.Equals(musicFolder.Path)).FirstOrDefault();
-                //var fi = await f.GetFilesAsync();
-                //var fp = fi.FirstOrDefault().Properties;
-                //var mp =  await fp.GetMusicPropertiesAsync();
-
                 bool confirmDeletion = await musicLibrary.RequestRemoveFolderAsync(folder);
                 if (confirmDeletion)
                 {
                     MusicLibraryFolders.Remove(musicFolder);
-                    //usun utwory z biblioteki
-                    await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
-                    MediaImport.OnMediaImported("FolderRemoved");
+                    await AfterFolderDelete(musicFolder.Path);
                 }
             }
             catch (Exception ex)
             {
-                
             }
         }
 
@@ -327,10 +300,38 @@ namespace NextPlayerUWP.ViewModels
             if (musicFolder.Path.ToLower().StartsWith("c:")) return;
 
             SdCardFolders.Remove(musicFolder);
-            await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(musicFolder.Path);
+            await AfterFolderDelete(musicFolder.Path);
+        }
+
+        private async Task AfterFolderDelete(string folderPath)
+        {
+            await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(folderPath);
             MediaImport.OnMediaImported("FolderRemoved");
         }
 
+        private async Task<List<SdCardFolder>> GetSdCardFolders()
+        {
+            var list = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
+            var folder = new SdCardFolder()
+            {
+                Name = "Music",
+                Path = @"C:\",
+                IncludeSubFolders = true,
+            };
+            list.Insert(0, folder);
+            return list;
+        }
+
+        private async Task<List<SdCardFolder>> GetMusicFolders()
+        {
+            List<SdCardFolder> list = new List<SdCardFolder>();
+            var lib = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Music);
+            foreach (var f in lib.Folders)
+            {
+                list.Add(new SdCardFolder { Name = f.DisplayName, Path = f.Path, IncludeSubFolders = true });
+            }
+            return list;
+        }
         #endregion
 
         #region Tools
@@ -647,6 +648,7 @@ namespace NextPlayerUWP.ViewModels
         {
             var grid = (GridView)sender;
             var brush = grid.SelectedItem as SolidColorBrush;
+            if (brush == null) return;
             ColorsHelper ch = new ColorsHelper();
             ch.ChangeCurrentAccentColor(brush.Color);
             ch.SaveUserAccentColor(brush.Color);

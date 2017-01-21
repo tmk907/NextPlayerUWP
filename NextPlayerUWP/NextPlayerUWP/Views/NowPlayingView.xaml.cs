@@ -34,12 +34,12 @@ namespace NextPlayerUWP.Views
         {
             LoadSliderEvents(sender, e);
             Init();
-            if (ViewModel.CoverUri != null)
+            if (ViewModel.QueueVM.CoverUri != null)
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
             }
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.QueueVM.PropertyChanged += ViewModel_PropertyChanged;
         }
 
         private void Init()
@@ -48,7 +48,7 @@ namespace NextPlayerUWP.Views
 
         private void NowPlayingView_Unloaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            ViewModel.QueueVM.PropertyChanged -= ViewModel_PropertyChanged;
             UnloadSliderEvents();
         }
 
@@ -92,20 +92,20 @@ namespace NextPlayerUWP.Views
 
         private Uri GetAlbumUri()
         {
-            if (ViewModel.CoverUri == new Uri(AppConstants.SongCoverBig))
+            if (ViewModel.QueueVM.CoverUri == new Uri(AppConstants.SongCoverBig))
             {
                 ColorsHelper ch = new ColorsHelper();
                 return new Uri(ch.GetAlbumCoverAssetWithCurrentAccentColor());
             }
             else
             {
-                return ViewModel.CoverUri;
+                return ViewModel.QueueVM.CoverUri;
             }
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.CoverUri))
+            if (e.PropertyName == nameof(ViewModel.QueueVM.CoverUri))
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;

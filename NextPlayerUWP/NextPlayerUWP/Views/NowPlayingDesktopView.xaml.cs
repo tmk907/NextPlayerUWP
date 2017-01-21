@@ -22,8 +22,8 @@ namespace NextPlayerUWP.Views
     public sealed partial class NowPlayingDesktopView : Page
     {
         private Uri imageUri;
-
         NowPlayingDesktopViewModel ViewModel;
+
         public NowPlayingDesktopView()
         {
             this.InitializeComponent();
@@ -33,23 +33,22 @@ namespace NextPlayerUWP.Views
             this.Loaded += NowPlayingDesktopView_Loaded;
             this.Unloaded += NowPlayingDesktopView_Unloaded;
             InitializedFrostedGlass(GlassHost);
-            //ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
         private void NowPlayingDesktopView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.CoverUri != null)
+            if (ViewModel.QueueVM.CoverUri != null)
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
                 BackgroundImage.ImageUri = imageUri;
             }
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.QueueVM.PropertyChanged += ViewModel_PropertyChanged;
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.CoverUri))
+            if (e.PropertyName == nameof(ViewModel.QueueVM.CoverUri))
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
@@ -59,22 +58,23 @@ namespace NextPlayerUWP.Views
 
         private Uri GetAlbumUri()
         {
-            if (ViewModel.CoverUri == new Uri(AppConstants.SongCoverBig))
+            if (ViewModel.QueueVM.CoverUri == new Uri(AppConstants.SongCoverBig))
             {
                 ColorsHelper ch = new ColorsHelper();
                 return new Uri(ch.GetAlbumCoverAssetWithCurrentAccentColor());
             }
             else
             {
-                return ViewModel.CoverUri;
+                return ViewModel.QueueVM.CoverUri;
             }
         }
 
         private void NowPlayingDesktopView_Unloaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
-            ViewModel = null;
-            var a = (NowPlayingDesktopViewModel)DataContext;
+            ViewModel.QueueVM.PropertyChanged -= ViewModel_PropertyChanged;
+            //ViewModel = null;
+            imageUri = null;
+            DataContext = null;
         }
 
         private void PrimaryImage_SizeChanged(object sender, SizeChangedEventArgs e)

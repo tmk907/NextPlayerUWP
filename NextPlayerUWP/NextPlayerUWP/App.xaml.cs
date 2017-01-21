@@ -3,7 +3,6 @@ using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
-using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -27,17 +26,6 @@ namespace NextPlayerUWP
 
     sealed partial class App : BootStrapper
     {
-        public static event SongUpdatedHandler SongUpdated;
-        public static void OnSongUpdated(int id)
-        {
-            SongUpdated?.Invoke(id);
-        }
-        public static event AppThemeChangedHandler AppThemeChanged;
-        public static void OnAppThemeChanged(bool isLight)
-        {
-            AppThemeChanged?.Invoke(isLight);
-        }
-
         public static event EventHandler MemoryUsageReduced;
         public static void OnMemoryUsageReduced()
         {
@@ -46,22 +34,10 @@ namespace NextPlayerUWP
 
         private const int dbVersion = 10;
 
-        public static bool IsLightThemeOn = false;
-
-        private static AlbumArtFinder albumArtFinder;
-        public static AlbumArtFinder AlbumArtFinder
-        {
-            get
-            {
-                if (albumArtFinder == null) albumArtFinder = new AlbumArtFinder();
-                return albumArtFinder;
-            }
-        }
-        public static FileFormatsHelper FileFormatsHelper;
-
         private bool isFirstRun = false;
 
-        bool _isInBackgroundMode = false;        
+        bool _isInBackgroundMode = false;
+        private AppKeyboardShortcuts appShortcuts;
 
         public App()
         {
@@ -125,13 +101,7 @@ namespace NextPlayerUWP
 
             SplashFactory = (e) => new Views.Splash(e);
 
-            //if (IsXbox())
-            //{
-            //    Application.Current.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-            //}
-
-            //DatabaseManager.Current.resetdb();
-            FileFormatsHelper = new FileFormatsHelper(false);
+            appShortcuts = new AppKeyboardShortcuts();
             
             this.UnhandledException += App_UnhandledException;
 
@@ -172,7 +142,7 @@ namespace NextPlayerUWP
                     await OnReduceMemoryUsage();
                     await NavigationService.SaveNavigationAsync();
                     WindowWrapper.Current().NavigationServices.Clear();//.Remove(NavigationService);
-                    var a = WindowWrapper.Current().NavigationServices.Count;
+                    //var a = WindowWrapper.Current().NavigationServices.Count;
                 }
                 else
                 {
@@ -190,6 +160,8 @@ namespace NextPlayerUWP
 
             var deferral = e.GetDeferral();
             _isInBackgroundMode = true;
+            
+            appShortcuts.DeregisterShortcuts();
             try
             {
 #if DEBUG
@@ -197,7 +169,7 @@ namespace NextPlayerUWP
                 //In release builds defer the actual reduction of memory to the limit changing event so we don't 
                 //unnecessarily throw away the UI
 
-                //ReduceMemoryUsage(0);
+                ReduceMemoryUsage(0);
 #endif
             }
             finally
@@ -227,6 +199,8 @@ namespace NextPlayerUWP
                 deferral.Complete();
             }
             isBackgroundLeavedFirstTime = false;
+
+            appShortcuts.RegisterShortcuts();
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -513,203 +487,9 @@ namespace NextPlayerUWP
                 OnNewTilePinned();
                 OnNewTilePinned = null;
             }
+            Logger2.Current.WriteMessage("suspending");
             await Logger2.Current.WriteToFile();
             await base.OnSuspendingAsync(s, e, prelaunch);
-        }
-
-        //public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
-        //{
-        //    base.OnResuming(s, e, previousExecutionState);
-        //}
-
-        //public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)
-        //{
-        //    runOnStartAsync = true;
-            
-        //    object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
-        //    if (o == null) return Task.CompletedTask;
-
-        //    var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-
-        //    return Task.CompletedTask;
-        //}
-
-#endregion
-
-        public static Action OnNewTilePinned { get; set; }
-
-#region Setup and update
-
-        private void FirstRunSetup()
-        {
-            DatabaseManager.Current.CreateNewDatabase();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, dbVersion);
-            CreateDefaultSmartPlaylists();
-
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
-
-            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
-            var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
-            ColorsHelper ch = new ColorsHelper();
-            ch.SaveUserAccentColor(color);
-            //ch.SetAccentColorShades(color);
-
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
-
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, 4);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSendNP, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
-
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
-
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FlipViewSelectedIndex, 0);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeRightCommand, AppConstants.SwipeActionDelete);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, true);
-
-            ApplicationSettingsHelper.SaveSettingsValue("ImportPlaylistsAfterAppUpdate9", true);
-            Debug.WriteLine("FirstRunSetup finished");
-        }
-
-        private void CreateDefaultSmartPlaylists()
-        {
-            int i;
-            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio dodane", 100, SPUtility.SortBy.MostRecentlyAdded);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString(), SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioDodane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Ostatnio odtwarzane", 100, SPUtility.SortBy.MostRecentlyPlayed);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.LastPlayed, SPUtility.Comparison.IsGreater, DateTime.MinValue.Ticks.ToString(), SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najczęściej odtwarzane", 100, SPUtility.SortBy.MostOftenPlayed);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "0", SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajczesciejOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najlepiej oceniane", 100, SPUtility.SortBy.HighestRating);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsGreater, "3", SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajlepiejOceniane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najrzadziej odtwarzane", 100, SPUtility.SortBy.LeastOftenPlayed);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "-1", SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajrzadziejOdtwarzane, i);
-            i = DatabaseManager.Current.InsertSmartPlaylist("Najgorzej oceniane", 100, SPUtility.SortBy.LowestRating);
-            DatabaseManager.Current.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4", SPUtility.Operator.Or);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
-        }
-
-        private void PerformUpdate()
-        {
-            UpdateDB();
-            UpdateApp();
-        }
-
-        private void UpdateDB()
-        {
-            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
-            object version = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DBVersion);
-            if (version.ToString() == "1")
-            {
-                DatabaseManager.Current.UpdateToVersion2();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
-                version = "2";
-            }
-            if (version.ToString() == "2")
-            {
-                bool recreate = DatabaseManager.Current.DBCorrection();
-                if (recreate)
-                {
-                    CreateDefaultSmartPlaylists();
-                }
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
-                version = "3";
-            }
-            if (version.ToString() == "3")
-            {
-                DatabaseManager.Current.UpdateToVersion4();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 4);
-                version = "4";
-            }
-            if (version.ToString() == "4")
-            {
-                DatabaseManager.Current.UpdateToVersion5();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 5);
-                version = "5";
-            }
-            if (version.ToString() == "5")
-            {
-                DatabaseManager.Current.UpdateToVersion6();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 6);
-                version = "6";
-            }
-            if (version.ToString() == "6")
-            {
-                DatabaseManager.Current.UpdateToVersion7();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 7);
-                version = "7";
-            }
-            if (version.ToString() == "7")
-            {
-                DatabaseManager.Current.UpdateToVersion8();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
-                version = "8";
-            }
-            if (version.ToString() == "8")
-            {
-                DatabaseManager.Current.UpdateToVersion9();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 9);
-                version = "9";
-            }
-            if (version.ToString() == "9")
-            {
-                DatabaseManager.Current.UpdateToVersion10();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 10);
-                version = "10";
-            }
-            // change  private const int dbVersion
-        }
-
-        private void UpdateApp()
-        {
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
-            }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
-            }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, false);
-            }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PlaylistsFolder) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
-            }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
-            }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeRightCommand) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeRightCommand, AppConstants.SwipeActionDelete);
-            }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
-            }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FlipViewSelectedIndex) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FlipViewSelectedIndex, 0);
-            }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage) == null)
-            {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, true);
-            }
         }
 
 #endregion
@@ -717,40 +497,6 @@ namespace NextPlayerUWP
         private void Resetdb()
         {
             DatabaseManager.Current.resetdb();
-        }
-
-        public static void ChangeRightPanelVisibility(bool visible)
-        {
-            if (Window.Current == null || Window.Current.Content == null) return;
-            ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeRightPanelVisibility(visible);
-        }
-
-        public static void OnNavigatedToNewView(bool visible, bool isNowPlayingDesktopActive = false)
-        {
-            if (Window.Current == null || Window.Current.Content == null) return;
-            ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
-            ((Shell)((ModalDialog)Window.Current.Content).Content).OnDesktopViewActiveChange(isNowPlayingDesktopActive);
-        }
-
-        public static async Task ChangeStatusBarVisibility()
-        {
-            bool hide = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
-            await ChangeStatusBarVisibility(hide);
-        }
-
-        public static async Task ChangeStatusBarVisibility(bool hide)
-        {
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            {
-                if (hide)
-                {
-                    await Windows.UI.ViewManagement.StatusBar.GetForCurrentView().HideAsync();
-                }
-                else
-                {
-                    await Windows.UI.ViewManagement.StatusBar.GetForCurrentView().ShowAsync();
-                }
-            }
         }
 
         private async Task RegisterBGScrobbler()
@@ -805,24 +551,6 @@ namespace NextPlayerUWP
             {
                 await NowPlayingPlaylistManager.Current.Add(list);
             }
-        }
-
-        private static List<SongItem> temporaryList = new List<SongItem>();
-        public static void AddToCache(List<SongItem> songs)
-        {
-            temporaryList = new List<SongItem>();
-            foreach(var song in songs)
-            {
-                temporaryList.Add(song);
-            }
-        }
-        public static List<SongItem> GetFromCache()
-        {
-            return temporaryList;
-        }
-        public static void ClearCache()
-        {
-            temporaryList = new List<SongItem>();
         }
     }
 }

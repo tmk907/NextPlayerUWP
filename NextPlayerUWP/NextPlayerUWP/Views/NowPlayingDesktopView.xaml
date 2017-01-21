@@ -153,7 +153,7 @@
                         Click="{x:Bind ViewModel.RateSong}"
                             Tag="1">
                         <Button.Content>
-                        <TextBlock  Text="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}" 
+                        <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}" 
                                     Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
@@ -163,7 +163,7 @@
                         Click="{x:Bind ViewModel.RateSong}"
                             Tag="2">
                         <Button.Content>
-                        <TextBlock  Text="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}" 
+                            <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}" 
                                     Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
@@ -172,7 +172,7 @@
                             Grid.Column="3"
                             Tag="3">
                         <Button.Content>
-                        <TextBlock  Text="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}" 
+                            <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}" 
                                     Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
@@ -181,7 +181,7 @@
                             Grid.Column="4"
                             Tag="4">
                         <Button.Content>
-                        <TextBlock  Text="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}" 
+                            <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}" 
                                     Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
@@ -190,7 +190,7 @@
                             Grid.Column="5"    
                                 Tag="5">
                         <Button.Content>
-                        <TextBlock  Text="{Binding CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}" 
+                            <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}" 
                                         Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
@@ -199,17 +199,17 @@
                 Grid.Row="1"
                 Margin="4,0,4,4"
                 Style="{StaticResource SongDescriptionBigStyle}"
-                Text="{Binding CurrentSong.Title}"/>
+                Text="{Binding QueueVM.CurrentSong.Title}"/>
                 <TextBlock
                 Grid.Row="2"
                 Margin="4,0,4,4"
                 Style="{StaticResource SongDescriptionMediumStyle}"
-                Text="{Binding CurrentSong.Artist}"/>
+                Text="{Binding QueueVM.CurrentSong.Artist}"/>
                 <TextBlock
                 Grid.Row="3"
                 Margin="4,0,4,0"
                 Style="{StaticResource SongDescriptionSmallStyle}"
-                Text="{Binding CurrentSong.Album}"/>
+                Text="{Binding QueueVM.CurrentSong.Album}"/>
             </Grid>
         </Grid>
     </Grid>

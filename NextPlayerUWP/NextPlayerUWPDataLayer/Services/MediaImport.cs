@@ -65,7 +65,7 @@ namespace NextPlayerUWPDataLayer.Services
         private QueryOptions queryOptions;
         private List<StorageFile> playlistFiles;
 
-        private async Task UpdateSongMusicProperties(Tables.SongsTable songTable, BasicProperties prop, StorageFile file)
+        private async Task UpdateSongMusicPropertiesAsync(Tables.SongsTable songTable, BasicProperties prop, StorageFile file)
         {
             songTable.FileSize = (long)prop.Size;
             songTable.DateModified = prop.DateModified.UtcDateTime;
@@ -210,7 +210,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        private async Task AddFilesFromFolder(StorageFolder folder, bool includeSubFolders = true)
+        private async Task AddFilesFromFolderAsync(StorageFolder folder, bool includeSubFolders = true)
         {
             progress.Report(folder.Path + "|" + songsAdded);
             var query = folder.CreateFileQueryWithOptions(queryOptions);
@@ -244,7 +244,7 @@ namespace NextPlayerUWPDataLayer.Services
                         }
                         else if (song.DateModified < prop.DateModified.UtcDateTime)//file was modified
                         {
-                            await UpdateSongMusicProperties(song, prop, file);
+                            await UpdateSongMusicPropertiesAsync(song, prop, file);
                             availableChange.Add(song.SongId);
                             modifiedSongs++;
                         }
@@ -257,7 +257,7 @@ namespace NextPlayerUWPDataLayer.Services
                     }
                     else
                     {
-                        var newSong = await CreateSongFromFile(file);
+                        var newSong = await CreateSongFromFileAsync(file);
                         newSongs.Add(newSong);
                     }
                 }
@@ -279,12 +279,12 @@ namespace NextPlayerUWPDataLayer.Services
                 var folders = await folder.GetFoldersAsync();
                 foreach (var f in folders)
                 {
-                    await AddFilesFromFolder(f);
+                    await AddFilesFromFolderAsync(f);
                 }
             }
         }
 
-        public async Task MobileUpdate()
+        public async Task MobileUpdateAsync()
         {
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
             StorageFolder externalDevices = KnownFolders.RemovableDevices;
@@ -294,7 +294,7 @@ namespace NextPlayerUWPDataLayer.Services
             {
                 if (!folder.Path.StartsWith(sdCardPath))
                 {
-                    await AddFilesFromFolder(folder);
+                    await AddFilesFromFolderAsync(folder);
                 }
             }
             if (sdCardFoldersToScan.Count > 0 && sdCard != null)
@@ -304,7 +304,7 @@ namespace NextPlayerUWPDataLayer.Services
                     try
                     {
                         var folder = await StorageFolder.GetFolderFromPathAsync(folderToScan.Path);
-                        await AddFilesFromFolder(folder, folderToScan.IncludeSubFolders);
+                        await AddFilesFromFolderAsync(folder, folderToScan.IncludeSubFolders);
                     }
                     catch (Exception ex)
                     {
@@ -314,17 +314,17 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task ScanWholeMusicLibrary()
+        public async Task ScanWholeMusicLibraryAsync()
         {
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
             
             foreach (var folder in library.Folders)
             {
-                await AddFilesFromFolder(folder);
+                await AddFilesFromFolderAsync(folder);
             }
         }
 
-        private async Task UpdatePlaylists(IEnumerable<StorageFile> playlistFiles)
+        private async Task UpdatePlaylistsAsync(IEnumerable<StorageFile> playlistFiles)
         {
             oldImportedPlaylists = await DatabaseManager.Current.GetImportedPlaylistsAsync();
             newImportedPlaylists = new List<ImportedPlaylist>();
@@ -336,7 +336,7 @@ namespace NextPlayerUWPDataLayer.Services
 
             foreach (var file in playlistFiles)
             {
-                ImportedPlaylist newPlaylist = await ImportPlaylist(file, allSongs);
+                ImportedPlaylist newPlaylist = await ImportPlaylistAsync(file, allSongs);
                 var oldPlaylist = oldImportedPlaylists.FirstOrDefault(p => p.Path.Equals(file.Path));
                 if (newPlaylist != null)
                 {
@@ -376,7 +376,17 @@ namespace NextPlayerUWPDataLayer.Services
             await DatabaseManager.Current.UpdateImportedPlaylists(toDelete, newImportedPlaylists, updatedPlaylists);
         }
 
-        public async Task UpdateDatabase(IProgress<string> p)
+        public async Task AutoUpdateDatabaseAsync(IProgress<string> p)
+        {
+            var freq = (TimeSpan)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LibraryUpdateFrequency);
+            var updatedAt = (DateTime)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LibraryUpdatedAt);
+            if (DateTime.Now > updatedAt + freq)
+            {
+                await UpdateDatabaseAsync(p);
+            }
+        }
+
+        public async Task UpdateDatabaseAsync(IProgress<string> p)
         {
             Stopwatch s1 = new Stopwatch();
             updateDurationSeconds = 0;
@@ -399,11 +409,11 @@ namespace NextPlayerUWPDataLayer.Services
             s.Start();
             if (DeviceFamilyHelper.IsMobile())
             {
-                await MobileUpdate();
+                await MobileUpdateAsync();
             }
             else
             {
-                await ScanWholeMusicLibrary();
+                await ScanWholeMusicLibraryAsync();
             }
             s.Stop();
             Debug.WriteLine("Scan {0}ms", s.ElapsedMilliseconds);
@@ -417,12 +427,13 @@ namespace NextPlayerUWPDataLayer.Services
                 await ImportPlaylistsAfterAppUpdate9();
             }
 
-            await UpdatePlaylists(playlistFiles);
+            await UpdatePlaylistsAsync(playlistFiles);
 
             s1.Stop();
             updateDurationSeconds = s1.ElapsedMilliseconds / 1000;
             Debug.WriteLine("New songs: {0} updated songs: {1}", songsAdded, modifiedSongs);
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LibraryUpdatedAt, DateTime.Now);
             OnMediaImported("Update");
             SendToast();
         }
@@ -442,7 +453,7 @@ namespace NextPlayerUWPDataLayer.Services
             return updateDurationSeconds;
         }
 
-        private async Task<SongData> CreateSongFromFile(StorageFile file)
+        private async Task<SongData> CreateSongFromFileAsync(StorageFile file)
         {
             SongData song = new SongData();
             song.CloudUserId = "";
@@ -672,7 +683,7 @@ namespace NextPlayerUWPDataLayer.Services
             return song;
         }
 
-        private async Task<ImportedPlaylist> ImportPlaylist(StorageFile file, IEnumerable<SongItem> songs)
+        private async Task<ImportedPlaylist> ImportPlaylistAsync(StorageFile file, IEnumerable<SongItem> songs)
         {
             PlaylistImporter pi = new PlaylistImporter();
             ImportedPlaylist newPlaylist = await pi.Import(file);
@@ -706,7 +717,7 @@ namespace NextPlayerUWPDataLayer.Services
                     var file = await FutureAccessHelper.GetFileFromPathAsync(entry.Path);
                     if (file != null)
                     {
-                        data = await CreateSongFromFile(file);
+                        data = await CreateSongFromFileAsync(file);
                         id = await DatabaseManager.Current.InsertSongAsync(data);
                     }
                 }
@@ -787,7 +798,7 @@ namespace NextPlayerUWPDataLayer.Services
                 if (song == null)
                 {
                     await FutureAccessHelper.AddToFutureAccessListAndSaveTokenAsync(file);
-                    var songData = await CreateSongFromFile(file);
+                    var songData = await CreateSongFromFileAsync(file);
                     await ImagesManager.SaveAlbumArtFromSong(songData);
                     songData.IsAvailable = 0;
                     int id = await DatabaseManager.Current.InsertSongAsync(songData);
@@ -808,7 +819,7 @@ namespace NextPlayerUWPDataLayer.Services
                 if (playlistItem == null || playlistItem.DateModified < prop.DateModified)
                 {
                     var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
-                    ImportedPlaylist playlist = await ImportPlaylist(file, allSongs);
+                    ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
                     if (playlist!= null)
                     {
                         int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
@@ -841,7 +852,7 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public static async Task UpdateCacheTables()
+        public static async Task UpdateCacheTablesAsync()
         {
             await DatabaseManager.Current.UpdateTables();
 
@@ -858,7 +869,7 @@ namespace NextPlayerUWPDataLayer.Services
             var files = await query.GetFilesAsync();
             foreach(var file in files)
             {
-                ImportedPlaylist newPlaylist = await ImportPlaylist(file, allSongs);
+                ImportedPlaylist newPlaylist = await ImportPlaylistAsync(file, allSongs);
                 int id = DatabaseManager.Current.InsertPlainPlaylist(newPlaylist.Name);
                 await DatabaseManager.Current.AddToPlaylist(id, newPlaylist.SongIds);
             }

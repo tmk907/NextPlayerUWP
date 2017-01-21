@@ -168,5 +168,8 @@
         public const string PlaylistsFolder = "PlaylistsFolder";
         public const string AutoSavePlaylists = "AutoSavePlaylists";
         public const string FlipViewSelectedIndex = "FlipViewSelectedIndex";
+
+        public const string LibraryUpdatedAt = "LibraryUpdatedAt";
+        public const string LibraryUpdateFrequency = "LibraryUpdateFrequency";
     }
 }

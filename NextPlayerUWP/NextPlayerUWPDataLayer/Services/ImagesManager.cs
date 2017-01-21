@@ -211,14 +211,6 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public static string GetHash(WriteableBitmap bmp)
-        {
-            var alg = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
-            var hashed = alg.HashData(bmp.PixelBuffer);
-            var res = CryptographicBuffer.EncodeToHexString(hashed);
-            return res;
-        }
-
         public static async Task SaveAlbumArtFromSong(SongItem song)
         {
             var cover = await GetAlbumArtSoftwareBitmap(song.Path);
@@ -258,120 +250,10 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         /// <summary>
-        /// UI Thread
-        /// Search for album art in tags, folder, thumbnail
-        /// If no album art is find return null
+        /// Search for album art in thumbnail, tags, folder
         /// </summary>
         /// <param name="path">Path to file</param>
-        /// <returns></returns>
-        public static async Task<WriteableBitmap> GetAlbumArtBitmap(string path, bool searchInThumbnail = false)
-        {
-            try 
-            {
-                WriteableBitmap bitmap = new WriteableBitmap(1, 1);
-                StorageFile songFile;
-                try
-                {
-                    songFile = await StorageFile.GetFileFromPathAsync(path);
-                }
-                catch (Exception ex)
-                {
-                    songFile = await FutureAccessHelper.GetFileFromPathAsync(path);
-                    if (songFile == null) throw;
-                }
-                bool set = false;
-                // <5ms
-                var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
-                if (searchInThumbnail)
-                {
-                    if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
-                    {
-                        if (thumb.OriginalWidth > 200)
-                        {
-                            using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
-                            {
-                                bitmap = new WriteableBitmap((int)thumb.OriginalWidth, (int)thumb.OriginalHeight);
-                                istream.Seek(0);
-                                bitmap.SetSource(istream);
-                            }
-                            set = true;
-                        }
-                    } 
-                }
-                if (!set)
-                {
-                    try
-                    {
-                        Stream fileStream = await songFile.OpenStreamForReadAsync();
-                        TagLib.File tagFile = TagLib.File.Create(new StreamFileAbstraction(songFile.Name, fileStream, fileStream));
-                        int picturesCount = tagFile.Tag.Pictures.Length;
-                        fileStream.Dispose();
-                        if (picturesCount > 0)
-                        {
-                            IPicture pic = tagFile.Tag.Pictures[0];
-                            using (MemoryStream stream = new MemoryStream(pic.Data.Data))
-                            {
-                                using (IRandomAccessStream istream = stream.AsRandomAccessStream())
-                                {
-                                    bitmap = await WriteableBitmapExtensions.FromStream(new WriteableBitmap(1, 1), istream);
-                                }
-                            }
-                            set = true;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                    if (!set)
-                    {
-                        try
-                        {
-                            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
-                            // not  exist
-                            // 15ms 30 ms
-                            QueryOptions q = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { ".jpg", ".png", ".jpeg" });
-                            var res = folder.CreateFileQueryWithOptions(q);
-                            var files2 = await res.GetFilesAsync();
-                            List<string> acceptedFileNames = new List<string>() { "cover", "album", "front", "albumart", "album art", "album-art" };
-                            var files3 = files2.Where(f => acceptedFileNames.Contains(f.DisplayName.ToLower()));
-                            if (files3.Count() > 0)
-                            {
-                                using (IRandomAccessStream istream = await files3.FirstOrDefault().OpenAsync(FileAccessMode.Read))
-                                {
-                                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
-                                    bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-                                    istream.Seek(0);
-                                    await bitmap.SetSourceAsync(istream);
-                                }
-                                set = true;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                    }
-                }
-                if (searchInThumbnail && !set && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && thumb.OriginalHeight > 100)
-                {
-                    using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
-                    {
-                        bitmap = new WriteableBitmap((int)thumb.OriginalWidth, (int)thumb.OriginalHeight);
-                        istream.Seek(0);
-                        bitmap.SetSource(istream);
-                    }
-                    set = true;
-                }
-                if (set) return bitmap;
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return null;
-        }
-
+        /// <returns>bitmap or null if no album art is found</returns>
         public static async Task<SoftwareBitmap> GetAlbumArtSoftwareBitmap(string path, bool searchInThumbnail = false)
         {
             try

@@ -533,7 +533,7 @@
                                     Width="36"
                                     Height="36">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -543,7 +543,7 @@
                                     Width="40"
                                     Height="40">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -553,7 +553,7 @@
                                     Width="40"
                                     Height="40">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -563,7 +563,7 @@
                                     Width="40"
                                     Height="40">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -573,7 +573,7 @@
                                     Width="40"
                                     Height="40">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -594,7 +594,7 @@
                                     Margin="0,0,4,0"
                                     HorizontalAlignment="Right"
                                     FontSize="17"
-                                    Text="{x:Bind ViewModel.CurrentIndex, Mode=OneWay}"/>
+                                    Text="{x:Bind ViewModel.QueueVM.CurrentSongNumber, Mode=OneWay}"/>
                                 <TextBlock 
                                     Grid.Column="1"
                                     FontSize="17"
@@ -604,7 +604,7 @@
                                     Margin="4,0,0,0"
                                     HorizontalAlignment="Left"
                                     FontSize="17"
-                                    Text="{x:Bind ViewModel.SongsCount, Mode=OneWay}"/>
+                                    Text="{x:Bind ViewModel.QueueVM.SongsCount, Mode=OneWay}"/>
                             </Grid>
                         </FlipViewItem>
                     </FlipView.Items>
@@ -621,13 +621,13 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" 
                            Style="{StaticResource SongTitleTextBlockStyle}"
-                           Text="{x:Bind ViewModel.Song.Title, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Title, Mode=OneWay}"/>
                 <TextBlock Grid.Row="1" 
                            Style="{StaticResource SongArtistTextBlockStyle}"
-                           Text="{x:Bind ViewModel.Song.Artist, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Artist, Mode=OneWay}"/>
                 <TextBlock Grid.Row="2" 
                            Style="{StaticResource SongAlbumTextBlockStyle}"
-                           Text="{x:Bind ViewModel.Song.Album, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Album, Mode=OneWay}"/>
             </Grid>
             <Grid Grid.Row="3" FlowDirection="LeftToRight">
                 <Grid.ColumnDefinitions>
@@ -639,7 +639,7 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="ShuffleButton"
                     Grid.Column="0"
-                    Click="{x:Bind ViewModel.PlayerVM.ShuffleCommand}"
+                    Click="{x:Bind ViewModel.PlayerVM.ToggleShuffle}"
                     Width="48" Height="48"
                     Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
@@ -656,8 +656,8 @@
                     </Button.ContentTemplate>
                 </Button>
                 <RepeatButton Grid.Column="1"
-                    Click="{x:Bind ViewModel.PreviousOrSeek}"
-                    Interval="{x:Bind ViewModel.RepeatButtonInterval, Mode=OneTime}"
+                    Click="{x:Bind ViewModel.PlayerVM.PreviousOrSeek}"
+                    Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval, Mode=OneTime}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerRepeatButtonStyle}">
                     <RepeatButton.ContentTemplate>
@@ -690,8 +690,8 @@
                     </Button.ContentTemplate>
                 </Button>
                 <RepeatButton Grid.Column="3"
-                    Click="{x:Bind ViewModel.NextOrSeek}"
-                    Interval="{x:Bind ViewModel.RepeatButtonInterval, Mode=OneTime}"
+                    Click="{x:Bind ViewModel.PlayerVM.NextOrSeek}"
+                    Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval, Mode=OneTime}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerRepeatButtonStyle}">
                     <RepeatButton.ContentTemplate>
@@ -708,7 +708,7 @@
                 </RepeatButton>
                 <Button Grid.Column="4"
                         x:Name="RepeatButton"
-                    Click="{x:Bind ViewModel.PlayerVM.RepeatCommand}"
+                    Click="{x:Bind ViewModel.PlayerVM.ToggleRepeat}"
                     Width="48" 
                     Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
@@ -790,7 +790,7 @@
                                     Width="36"
                                     Height="36">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -800,7 +800,7 @@
                                     Width="40"
                                     Height="40">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -810,7 +810,7 @@
                                     Width="40"
                                     Height="40">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -820,7 +820,7 @@
                                     Width="40"
                                     Height="40">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -830,7 +830,7 @@
                                     Width="40"
                                     Height="40">
                                     <Button.Content>
-                                        <FontIcon Glyph="{Binding Song.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
+                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
                                               Style="{StaticResource FontIconStyle}"/>
                                     </Button.Content>
                                 </Button>
@@ -877,13 +877,13 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" 
                            Style="{StaticResource SongTitleTextBlockStyle}"
-                           Text="{x:Bind ViewModel.Song.Title, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Title, Mode=OneWay}"/>
                 <TextBlock Grid.Row="1" 
                            Style="{StaticResource SongArtistTextBlockStyle}"
-                           Text="{x:Bind ViewModel.Song.Artist, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Artist, Mode=OneWay}"/>
                 <TextBlock Grid.Row="2" 
                            Style="{StaticResource SongAlbumTextBlockStyle}"
-                           Text="{x:Bind ViewModel.Song.Album, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Album, Mode=OneWay}"/>
             </Grid>
             <Grid Grid.Row="3" FlowDirection="LeftToRight">
                 <Grid.ColumnDefinitions>

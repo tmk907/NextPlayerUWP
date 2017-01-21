@@ -19,8 +19,9 @@ namespace NextPlayerUWP.Views
             this.InitializeComponent();
             WebView web = new WebView(WebViewExecutionMode.SeparateThread);
             WebGrid.Children.Add(web);
-            this.Loaded += delegate { ((RightPanelViewModel)DataContext).OnLoaded(NowPlayingPlaylistListView, web); };
             ViewModel = (RightPanelViewModel)DataContext;
+            this.Loaded += delegate { ViewModel.OnLoaded(NowPlayingPlaylistListView, web); };
+            
             //LoadAdControl();
         }
 

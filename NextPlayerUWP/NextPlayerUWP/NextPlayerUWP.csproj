@@ -129,10 +129,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppGlobalUtils.cs" />
+    <Compile Include="AppSetupUpdate.cs" />
     <Compile Include="Common\AlbumArtFinder.cs" />
+    <Compile Include="Common\AppKeyboardShortcuts.cs" />
     <Compile Include="Common\BackgroundTaskHelper.cs" />
     <Compile Include="Common\ColorsHelper.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
+    <Compile Include="Common\ListViewScrollerHelper.cs" />
     <Compile Include="Common\MessageDialogHelper.cs" />
     <Compile Include="Common\TelemetryAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
@@ -165,6 +169,9 @@
       <DependentUpon>CrossfadingImage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
+    <Compile Include="Controls\PopupNotification.xaml.cs">
+      <DependentUpon>PopupNotification.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SizeNotifyPanel.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
       <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
@@ -228,6 +235,7 @@
     <Compile Include="ViewModels\PlayerViewModelBase.cs" />
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
+    <Compile Include="ViewModels\QueueViewModelBase.cs" />
     <Compile Include="ViewModels\RadiosViewModel.cs" />
     <Compile Include="ViewModels\RightPanelViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
@@ -456,6 +464,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Controls\CrossfadingImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PopupNotification.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

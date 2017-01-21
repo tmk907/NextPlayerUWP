@@ -1,15 +1,7 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Enums;
-using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Model;
-using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Template10.Common;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -20,71 +12,15 @@ namespace NextPlayerUWP.ViewModels
     {
         public NowPlayingDesktopViewModel()
         {
-            sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
-            UpdatePlaylist();
-            NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
-            lastFmCache = new LastFmCache();
+            ViewModelLocator vml = new ViewModelLocator();
+            QueueVM = vml.QueueVM;
         }
 
-        SortingHelperForSongItemsInPlaylist sortingHelper;
-        LastFmCache lastFmCache;
-
-        private void NPListChanged()
-        {
-            UpdatePlaylist();
-        }
-
-        private void TrackChanged(int index)
-        {
-            Dispatcher.Dispatch(() =>
-            {
-                if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
-                CurrentSong = songs[index];
-                if (!CurrentSong.IsAlbumArtSet)
-                {
-
-                }
-                else
-                {
-                    CoverUri = CurrentSong.AlbumArtUri;
-                }
-            });
-        }
-
-        private ObservableCollection<SongItem> songs;
-        public ObservableCollection<SongItem> Songs
-        {
-            get { return songs; }
-            set { Set(ref songs, value); }
-        }
-
-        private SongItem currentSong = new SongItem();
-        public SongItem CurrentSong
-        {
-            get { return currentSong; }
-            set { Set(ref currentSong, value); }
-        }
-
-        private Uri coverUri;
-        public Uri CoverUri
-        {
-            get { return coverUri; }
-            set
-            {
-                Set(ref coverUri, value);
-            }
-        }
-
-        private void UpdatePlaylist()
-        {
-            Songs = NowPlayingPlaylistManager.Current.songs;
-        }
+        public QueueViewModelBase QueueVM { get; set; }
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
             //App.ChangeRightPanelVisibility(true);
-            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
 
             await Task.CompletedTask;
         }
@@ -93,13 +29,7 @@ namespace NextPlayerUWP.ViewModels
         {
             //App.ChangeRightPanelVisibility(false);
             App.OnNavigatedToNewView(true, true);
-            CoverUri = SongCoverManager.Instance.GetCurrent();
-            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
-            int i = ApplicationSettingsHelper.ReadSongIndex();
-            if (i < songs.Count && i >= 0)
-            {
-                CurrentSong = songs[i];
-            }
+            
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
@@ -110,21 +40,8 @@ namespace NextPlayerUWP.ViewModels
         public async void RateSong(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            if (currentSong.SourceType == MusicSource.LocalFile || currentSong.SourceType == MusicSource.LocalNotMusicLibrary)
-            {
-                int rating = Int32.Parse(button.Tag.ToString());
-                currentSong.Rating = rating;
-                await lastFmCache.RateSong(currentSong.Artist, currentSong.Title, rating);
-                await DatabaseManager.Current.UpdateRatingAsync(currentSong.SongId, currentSong.Rating).ConfigureAwait(false);
-            }
-        }
-
-        public void ChangeCoverUri(Uri cacheUri)
-        {
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
-            {
-                CoverUri = cacheUri;
-            });
+            int rating = Int32.Parse(button.Tag.ToString());
+            await QueueVM.RateSong(rating);
         }
     }
 }
