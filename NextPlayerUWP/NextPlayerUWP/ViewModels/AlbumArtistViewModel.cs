@@ -4,7 +4,6 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -13,45 +12,15 @@ using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public class ArtistItemHeader
+    public class AlbumArtistViewModel : MusicViewModelBase
     {
-        public string Album { get; set; }
-        public string AlbumArtist { get; set; }
-        public int Year { get; set; }
-        public Uri ImageUri { get; set; }
-    }
+        private int albumArtistId;
 
-    public class ArtistViewModel : MusicViewModelBase
-    {
-        private int artistId;
-
-        public ArtistViewModel()
+        private AlbumArtistItem albumArtist;
+        public AlbumArtistItem AlbumArtist
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                Artist = new ArtistItem();
-                Albums = new ObservableCollection<GroupList>();
-                GroupList g = new GroupList();
-                g.Key = "Nowy album";
-                g.Add(new SongItem());
-                g.Add(new SongItem());
-                g.Add(new SongItem());
-                Albums.Add(g);
-            }
-        }
-
-        private ArtistItem artist = new ArtistItem();
-        public ArtistItem Artist
-        {
-            get { return artist; }
-            set { Set(ref artist, value); }
-        }
-
-        private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-        public ObservableCollection<SongItem> Songs
-        {
-            get { return songs; }
-            set { Set(ref songs, value); }
+            get { return albumArtist; }
+            set { Set(ref albumArtist, value); }
         }
 
         private ObservableCollection<GroupList> albums = new ObservableCollection<GroupList>();
@@ -67,7 +36,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 try
                 {
-                    artistId = Int32.Parse(parameter.ToString());
+                    albumArtistId = Int32.Parse(parameter.ToString());
                 }
                 catch (Exception ex) { }
             }
@@ -75,48 +44,40 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            if (songs.Count == 0)
+            if (albums.Count == 0)
             {
-                Artist = await DatabaseManager.Current.GetArtistItemAsync(artistId);
-                Songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(artist.ArtistParam);
-                var query = songs.OrderBy(s => s.Album).ThenBy(t => t.TrackNumber).
-                    GroupBy(u => new { u.Album, u.AlbumArtist }).
-                    OrderBy(g => g.Key.Album).
-                    Select(group => new { GroupName = group.Key, Items = group });
+                AlbumArtist = await DatabaseManager.Current.GetAlbumArtistItemAsync(albumArtistId);
+                var albums = await DatabaseManager.Current.GetAlbumItemsFromAlbumArtistAsync(albumArtist.AlbumArtist);
                 int i = 0;
-                foreach (var g in query)
+                foreach (var album in albums)
                 {
-                    i = 0;
+                    var songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam, album.AlbumArtist);
                     GroupList group = new GroupList();
-                    group.Key = g.GroupName;
-
-                    var album = await DatabaseManager.Current.GetAlbumItemAsync(g.GroupName.Album, g.GroupName.AlbumArtist);
-
+                    group.Key = album.AlbumParam;
                     var header = new ArtistItemHeader();
-                    if (g.GroupName.Album == "")
+                    if (album.AlbumParam == "")
                     {
                         var helper = new TranslationHelper();
                         header.Album = helper.GetTranslation(TranslationHelper.UnknownAlbum);
                     }
                     else
                     {
-                        header.Album = g.GroupName.Album;
+                        header.Album = album.Album;
                     }
-                    if (g.GroupName.AlbumArtist == "")
+                    if (album.AlbumArtist == "")
                     {
                         var helper = new TranslationHelper();
                         header.AlbumArtist = helper.GetTranslation(TranslationHelper.UnknownAlbumArtist);
                     }
                     else
                     {
-                        header.AlbumArtist = g.GroupName.AlbumArtist;
+                        header.AlbumArtist = album.AlbumArtist;
                     }
                     header.Year = album.Year;
                     header.ImageUri = album.ImageUri;
-
                     group.Header = header;
 
-                    foreach (var item in g.Items)
+                    foreach (var item in songs)
                     {
                         item.Index = i;
                         i++;
@@ -131,8 +92,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (args.NavigationMode == NavigationMode.Back || args.NavigationMode == NavigationMode.New)
             {
-                songs = new ObservableCollection<SongItem>();
-                artist = new ArtistItem();
+                albumArtist = new AlbumArtistItem();
                 albums = new ObservableCollection<GroupList>();
             }
             await base.OnNavigatingFromAsync(args);
@@ -144,7 +104,7 @@ namespace NextPlayerUWP.ViewModels
             bool found = false;
             foreach (var album in albums)
             {
-                foreach(SongItem song in album)
+                foreach (SongItem song in album)
                 {
                     if (song.SongId == ((SongItem)e.ClickedItem).SongId)
                     {
@@ -162,11 +122,14 @@ namespace NextPlayerUWP.ViewModels
 
         public async void ShuffleAllSongs()
         {
-            if (songs.Count == 0) return;
+            if (albums.Count == 0) return;
             List<SongItem> list = new List<SongItem>();
-            foreach (var s in songs)
+            foreach (var group in albums)
             {
-                list.Add(s);
+                foreach(SongItem song in group)
+                {
+                    list.Add(song);
+                }
             }
             Random rnd = new Random();
 
@@ -188,7 +151,7 @@ namespace NextPlayerUWP.ViewModels
         {
             var group = (GroupList)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             List<SongItem> list = new List<SongItem>();
-            foreach(SongItem song in group)
+            foreach (SongItem song in group)
             {
                 list.Add(song);
             }

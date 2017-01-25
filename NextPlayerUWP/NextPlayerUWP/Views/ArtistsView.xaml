@@ -158,11 +158,6 @@
                 x:Uid="PageHeaderArtists"
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720">
-            <controls:PageHeader.Content>
-                <TextBlock Text="Artist" 
-                           FontSize="27"
-                           Style="{StaticResource TitleTextBlockStyle}"/>
-            </controls:PageHeader.Content>
         </controls:PageHeader>  
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>

@@ -679,7 +679,7 @@
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Grid>
-                                <TextBlock Text="{Binding PlayButtonContent}" 
+                                <TextBlock Text="{Binding PlayerVM.PlayButtonContent, Mode=OneWay}" 
                                            FontSize="30" 
                                            FontFamily="Segoe MDL2 Assets"
                                            VerticalAlignment="Center"

@@ -59,7 +59,7 @@ namespace NextPlayerUWP.Common.Tiles
 
         private TileNotification CreateTileNotification(string title, string artist, string coverUri)
         {
-            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
+            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.EnableLiveTileWithImage);
             ITileXml tile;
             if (enableImage)
             {
@@ -74,7 +74,7 @@ namespace NextPlayerUWP.Common.Tiles
 
         private TileNotification CreateTileNotification(List<string> titles, List<string> artists, string coverUri)
         {
-            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
+            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.EnableLiveTileWithImage);
             ITileXml tile;
             if (enableImage)
             {
@@ -102,7 +102,7 @@ namespace NextPlayerUWP.Common.Tiles
 
         private ITileContentFactory CreateFactory(string title, string artist, string coverUri)
         {
-            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
+            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.EnableLiveTileWithImage);
             if (enableImage)
             {
                 return new TileWithImage(title, artist, coverUri);
@@ -115,7 +115,7 @@ namespace NextPlayerUWP.Common.Tiles
 
         private ITileContentFactory CreateFactory(List<string> titles, List<string> artists, string coverUri)
         {
-            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
+            bool enableImage = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.EnableLiveTileWithImage);
             if (enableImage)
             {
                 return new TileWithImage(titles, artists, coverUri);

@@ -71,8 +71,8 @@ namespace NextPlayerUWP.ViewModels
             initialization = true;
             App.OnNavigatedToNewView(true);
             // Tools
-            var tt = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
-            var IsTimerOn = (bool)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn)??false);
+            var tt = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.TimerTime);
+            var IsTimerOn = (bool)(ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.TimerOn)??false);
             Time = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             if (isTimerOn)
             {
@@ -86,12 +86,12 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             
-            string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterDropItem) as string;
-            if (action.Equals(AppConstants.ActionPlayNow))
+            string action = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterDropItem) as string;
+            if (action.Equals(SettingsKeys.ActionPlayNow))
             {
                 ActionNr = 1;
             }
-            else if (action.Equals(AppConstants.ActionPlayNext))
+            else if (action.Equals(SettingsKeys.ActionPlayNext))
             {
                 ActionNr = 2;
             }
@@ -100,32 +100,32 @@ namespace NextPlayerUWP.ViewModels
                 ActionNr = 3;
             }
 
-            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand) as string;
             switch (swipeAction)
             {
-                case AppConstants.SwipeActionPlayNow:
+                case SettingsKeys.SwipeActionPlayNow:
                     SwipeActionNr = 1;
                     break;
-                case AppConstants.SwipeActionPlayNext:
+                case SettingsKeys.SwipeActionPlayNext:
                     SwipeActionNr = 2;
                     break;
-                case AppConstants.SwipeActionAddToNowPlaying:
+                case SettingsKeys.SwipeActionAddToNowPlaying:
                     SwipeActionNr = 3;
                     break;
-                case AppConstants.SwipeActionAddToPlaylist:
+                case SettingsKeys.SwipeActionAddToPlaylist:
                     SwipeActionNr = 4;
                     break;
                 default:
                     break;
             }
 
-            PreventScreenLock = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
-            HideStatusBar = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
-            LiveTileWithAlbumArt = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage);
-            IncludeSubFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+            PreventScreenLock = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.DisableLockscreen);
+            HideStatusBar = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.HideStatusBar);
+            LiveTileWithAlbumArt = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.EnableLiveTileWithImage);
+            IncludeSubFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
 
             //Personalization
-            IsLightThemeOn = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+            IsLightThemeOn = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
 
             if (accentColors.Count == 0)
             {
@@ -155,16 +155,30 @@ namespace NextPlayerUWP.ViewModels
                 var list = await GetSdCardFolders();
                 SdCardFolders = new ObservableCollection<SdCardFolder>(list);
             }
+            LastLibraryUpdate = ApplicationSettingsHelper.ReadSettingsValue<DateTimeOffset>(SettingsKeys.LibraryUpdatedAt).Date;
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.MediaScan) != null)
+            {
+                IsUpdating = true;
+            }
+
+            IgnoreArticles = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.IgnoreArticles);
+            var ignoredList = ApplicationSettingsHelper.ReadData<List<string>>(SettingsKeys.IgnoredArticlesList);
+            IgnoredArticles = "";
+            foreach(var item in ignoredList)
+            {
+                IgnoredArticles += item;
+                IgnoredArticles += " ,";
+            }
 
             //Last.fm
-            string login = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string;
+            string login = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) as string;
             LastFmLogin = login;
-            string session = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) as string;
+            string session = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmSessionKey) as string;
             if (!String.IsNullOrEmpty(session))
             {
                 IsLastFmLoggedIn = true;
             }
-            LastFmRateSongs = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
+            LastFmRateSongs = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmRateSongs);
             LastFmShowError = false;
 
             OneDriveAccounts = new ObservableCollection<CloudAccount>(CloudAccounts.Instance.GetAccountsByType(CloudStorageType.OneDrive));
@@ -213,6 +227,13 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref isUpdating, value); }
         }
 
+        private DateTime lastLibraryUpdate;
+        public DateTime LastLibraryUpdate
+        {
+            get { return lastLibraryUpdate; }
+            set { Set(ref lastLibraryUpdate, value); }
+        }
+
         private ObservableCollection<SdCardFolder> musicLibraryFolders = new ObservableCollection<SdCardFolder>();
         public ObservableCollection<SdCardFolder> MusicLibraryFolders
         {
@@ -242,6 +263,7 @@ namespace NextPlayerUWP.ViewModels
             IsUpdating = true;
             await Task.Run(() => m.UpdateDatabaseAsync(progress));
             IsUpdating = false;
+            LastLibraryUpdate = DateTime.Now;
             ScannedFolder = "";
             TelemetryAdapter.TrackEvent("Library updated");
         }
@@ -332,6 +354,48 @@ namespace NextPlayerUWP.ViewModels
             }
             return list;
         }
+
+        private bool ignoreArticles = false;
+        public bool IgnoreArticles
+        {
+            get { return ignoreArticles; }
+            set
+            {
+                Set(ref ignoreArticles, value);
+                if (!initialization) ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IgnoreArticles, value);
+            }
+        }
+
+        private string ignoredArticles = "";
+        public string IgnoredArticles
+        {
+            get { return ignoredArticles; }
+            set
+            {
+                Set(ref ignoredArticles, value);
+                SaveIgnoredArticles(value);
+            }
+        }
+
+        private void SaveIgnoredArticles(string value)
+        {
+            if (!initialization)
+            {
+                List<string> ignored = new List<string>();
+
+                if (!String.IsNullOrEmpty(value))
+                {
+                    var array = value.Split(new char[] { ';', ',', '/', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var item in array)
+                    {
+                        string toIgnore = item.Trim();
+                        if (toIgnore != "") ignored.Add(toIgnore + " ");
+                    }
+                }
+                ApplicationSettingsHelper.SaveData(SettingsKeys.IgnoredArticlesList, ignored);
+            }
+        }
+
         #endregion
 
         #region Tools
@@ -355,8 +419,8 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 ActionNr = 1;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionPlayNow);
-                TelemetryAdapter.TrackEvent("After Drop Item " + AppConstants.ActionPlayNow);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterDropItem, SettingsKeys.ActionPlayNow);
+                TelemetryAdapter.TrackEvent("After Drop Item " + SettingsKeys.ActionPlayNow);
             }
         }
 
@@ -366,8 +430,8 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 ActionNr = 2;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionPlayNext);
-                TelemetryAdapter.TrackEvent("After Drop Item " + AppConstants.ActionPlayNext);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterDropItem, SettingsKeys.ActionPlayNext);
+                TelemetryAdapter.TrackEvent("After Drop Item " + SettingsKeys.ActionPlayNext);
             }
         }
 
@@ -377,8 +441,8 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 ActionNr = 3;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
-                TelemetryAdapter.TrackEvent("After Drop Item " + AppConstants.ActionAddToNowPlaying);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterDropItem, SettingsKeys.ActionAddToNowPlaying);
+                TelemetryAdapter.TrackEvent("After Drop Item " + SettingsKeys.ActionAddToNowPlaying);
             }
         }
 
@@ -403,10 +467,10 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 SwipeActionNr = 1;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionPlayNow);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand, SettingsKeys.SwipeActionPlayNow);
                 TranslationHelper tr = new TranslationHelper();
                 tr.ChangeSlideableItemDescription();
-                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionPlayNow);
+                TelemetryAdapter.TrackEvent("After swipe " + SettingsKeys.SwipeActionPlayNow);
             }
         }
 
@@ -416,10 +480,10 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 SwipeActionNr = 2;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionPlayNext);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand, SettingsKeys.SwipeActionPlayNext);
                 TranslationHelper tr = new TranslationHelper();
                 tr.ChangeSlideableItemDescription();
-                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionPlayNext);
+                TelemetryAdapter.TrackEvent("After swipe " + SettingsKeys.SwipeActionPlayNext);
             }
         }
 
@@ -429,10 +493,10 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 SwipeActionNr = 3;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand, SettingsKeys.SwipeActionAddToNowPlaying);
                 TranslationHelper tr = new TranslationHelper();
                 tr.ChangeSlideableItemDescription();
-                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionAddToNowPlaying);
+                TelemetryAdapter.TrackEvent("After swipe " + SettingsKeys.SwipeActionAddToNowPlaying);
             }
         }
 
@@ -442,10 +506,10 @@ namespace NextPlayerUWP.ViewModels
             set
             {
                 SwipeActionNr = 4;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToPlaylist);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand, SettingsKeys.SwipeActionAddToPlaylist);
                 TranslationHelper tr = new TranslationHelper();
                 tr.ChangeSlideableItemDescription();
-                TelemetryAdapter.TrackEvent("After swipe " + AppConstants.SwipeActionAddToPlaylist);
+                TelemetryAdapter.TrackEvent("After swipe " + SettingsKeys.SwipeActionAddToPlaylist);
             }
         }
 
@@ -483,14 +547,14 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (isOn)
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, time.Ticks);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, true);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerTime, time.Ticks);
                     PlaybackService.Instance.SetPlaybackStopTimer();
                     TelemetryAdapter.TrackEvent("Timer on");
                 }
                 else
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, false);
                     PlaybackService.Instance.CancelPlaybackStopTimer();
                 }
             }
@@ -516,13 +580,13 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (isOn)
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, true);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DisableLockscreen, true);
                     displayRequestHelper.ActivateDisplay();
                     TelemetryAdapter.TrackEvent("Prevent screen dimming on");
                 }
                 else
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DisableLockscreen, false);
                     displayRequestHelper.ReleaseDisplay();
                     TelemetryAdapter.TrackEvent("Prevent screen dimming off");
                 }
@@ -545,7 +609,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ChangeStatusBarVisibility(bool hide)
         {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, hide);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.HideStatusBar, hide);
             await App.ChangeStatusBarVisibility(hide);
             if (!initialization)
             {
@@ -563,7 +627,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     if (!initialization)
                     {
-                        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, value);
+                        ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.EnableLiveTileWithImage, value);
                         TelemetryAdapter.TrackEvent("LiveImage " + ((value) ? "on" : "off"));
                         PlaybackService.Instance.UpdateLiveTile(true);
                     }
@@ -582,7 +646,7 @@ namespace NextPlayerUWP.ViewModels
                 {
                     if (!initialization)
                     {
-                        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, value);
+                        ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IncludeSubFolders, value);
                         TelemetryAdapter.TrackEvent("IncludeSubFolders " + includeSubFolders);
                     }
                 }
@@ -627,7 +691,7 @@ namespace NextPlayerUWP.ViewModels
             App.IsLightThemeOn = isLightThemeOn;
             if (isLightThemeOn)
             {               
-                //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppTheme.Light);
+                //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, AppTheme.Light);
                 App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
                 ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Light);
                 ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Light);
@@ -639,7 +703,7 @@ namespace NextPlayerUWP.ViewModels
                 ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Dark);
             }
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, isLightThemeOn);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, isLightThemeOn);
 
             App.OnAppThemeChanged(isLightThemeOn);
         }
@@ -710,7 +774,7 @@ namespace NextPlayerUWP.ViewModels
         public async void RateApp()
         {
             TelemetryAdapter.TrackEvent("Rate app button");
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsReviewed, -1);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IsReviewed, -1);
             var uri = new Uri("ms-windows-store://review/?ProductId=" + AppConstants.ProductId);
             await Launcher.LaunchUriAsync(uri);
         }
@@ -797,12 +861,12 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (isOn)
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmRateSongs, true);
                     TelemetryAdapter.TrackEvent("Last.fm rate songs on");
                 }
                 else
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, false);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmRateSongs, false);
                     TelemetryAdapter.TrackEvent("Lat.fm rate songs off");
                 }
             }
@@ -814,8 +878,8 @@ namespace NextPlayerUWP.ViewModels
             IsLastFmLoggedIn = await LastFmManager.Login(lastFmLogin, lastFmPassword);
             if (isLastFmLoggedIn)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, lastFmLogin);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, lastFmPassword);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmLogin, lastFmLogin);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmPassword, lastFmPassword);
 
                 LastFmShowError = false;
                 LastFmPassword = "";
@@ -834,9 +898,9 @@ namespace NextPlayerUWP.ViewModels
             LastFmLogin = "";
             LastFmPassword = "";
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSessionKey, "");
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmLogin, "");
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmPassword, "");
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmSessionKey, "");
 
             LastFmManager.Logout();
 

@@ -6,53 +6,55 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Template10.Common;
 
 namespace NextPlayerUWP
 {
     sealed partial class App : BootStrapper
     {
+        private const int dbVersion = 11;
+
         private void FirstRunSetup()
         {
             DatabaseManager.Current.CreateNewDatabase();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, dbVersion);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, dbVersion);
             CreateDefaultSmartPlaylists();
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, 0);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerTime, 0);
 
-            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+            //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, true);
             var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
             ColorsHelper ch = new ColorsHelper();
             ch.SaveUserAccentColor(color);
             //ch.SetAccentColorShades(color);
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterDropItem, AppConstants.ActionAddToNowPlaying);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterDropItem, SettingsKeys.ActionAddToNowPlaying);
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, 4);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSendNP, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmRateSongs, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmLove, 4);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmSendNP, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmLogin, "");
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmPassword, "");
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, false);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DisableLockscreen, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.HideStatusBar, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IncludeSubFolders, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.PlaylistsFolder, "");
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AutoSavePlaylists, true);
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FlipViewSelectedIndex, 0);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeRightCommand, AppConstants.SwipeActionDelete);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.FlipViewSelectedIndex, 0);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterSwipeRightCommand, SettingsKeys.SwipeActionDelete);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand, SettingsKeys.SwipeActionAddToNowPlaying);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.EnableLiveTileWithImage, true);
 
             ApplicationSettingsHelper.SaveSettingsValue("ImportPlaylistsAfterAppUpdate9", true);
 
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LibraryUpdatedAt, DateTime.Now - TimeSpan.FromDays(10));
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LibraryUpdateFrequency, TimeSpan.FromDays(3));
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdatedAt, DateTimeOffset.Now);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdateFrequency, TimeSpan.FromDays(2));
+
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IgnoreArticles, false);
+            ApplicationSettingsHelper.SaveData(SettingsKeys.IgnoredArticlesList, new List<string>() { "a ", "an ", "the " });
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -88,12 +90,12 @@ namespace NextPlayerUWP
 
         private void UpdateDB()
         {
-            //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
-            object version = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DBVersion);
+            //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 8);
+            object version = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.DBVersion);
             if (version.ToString() == "1")
             {
                 DatabaseManager.Current.UpdateToVersion2();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 2);
                 version = "2";
             }
             if (version.ToString() == "2")
@@ -103,99 +105,110 @@ namespace NextPlayerUWP
                 {
                     CreateDefaultSmartPlaylists();
                 }
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 3);
                 version = "3";
             }
             if (version.ToString() == "3")
             {
                 DatabaseManager.Current.UpdateToVersion4();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 4);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 4);
                 version = "4";
             }
             if (version.ToString() == "4")
             {
                 DatabaseManager.Current.UpdateToVersion5();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 5);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 5);
                 version = "5";
             }
             if (version.ToString() == "5")
             {
                 DatabaseManager.Current.UpdateToVersion6();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 6);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 6);
                 version = "6";
             }
             if (version.ToString() == "6")
             {
                 DatabaseManager.Current.UpdateToVersion7();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 7);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 7);
                 version = "7";
             }
             if (version.ToString() == "7")
             {
                 DatabaseManager.Current.UpdateToVersion8();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 8);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 8);
                 version = "8";
             }
             if (version.ToString() == "8")
             {
                 DatabaseManager.Current.UpdateToVersion9();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 9);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 9);
                 version = "9";
             }
             if (version.ToString() == "9")
             {
                 DatabaseManager.Current.UpdateToVersion10();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 10);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 10);
                 version = "10";
+            }
+            if (version.ToString() == "10")
+            {
+                DatabaseManager.Current.UpdateToVersion11();
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 11);
+                version = "11";
             }
             // change  private const int dbVersion
         }
 
         private void UpdateApp()
         {
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.DisableLockscreen) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DisableLockscreen, false);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DisableLockscreen, false);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.HideStatusBar) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.HideStatusBar, false);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.HideStatusBar, false);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IncludeSubFolders, false);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IncludeSubFolders, false);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PlaylistsFolder) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.PlaylistsFolder) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PlaylistsFolder, "");
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.PlaylistsFolder, "");
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AutoSavePlaylists) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AutoSavePlaylists) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AutoSavePlaylists, true);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AutoSavePlaylists, true);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeRightCommand) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeRightCommand) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeRightCommand, AppConstants.SwipeActionDelete);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterSwipeRightCommand, SettingsKeys.SwipeActionDelete);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ActionAfterSwipeLeftCommand, AppConstants.SwipeActionAddToNowPlaying);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand, SettingsKeys.SwipeActionAddToNowPlaying);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FlipViewSelectedIndex) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.FlipViewSelectedIndex) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FlipViewSelectedIndex, 0);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.FlipViewSelectedIndex, 0);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.EnableLiveTileWithImage) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.EnableLiveTileWithImage) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.EnableLiveTileWithImage, true);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.EnableLiveTileWithImage, true);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LibraryUpdatedAt) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LibraryUpdatedAt) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LibraryUpdatedAt, DateTime.Now - TimeSpan.FromDays(10));
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdatedAt, DateTimeOffset.Now);
             }
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LibraryUpdateFrequency) == null)
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LibraryUpdateFrequency) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LibraryUpdateFrequency, TimeSpan.FromDays(3));
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdateFrequency, TimeSpan.FromDays(2));
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IgnoreArticles) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IgnoreArticles, false);
+                ApplicationSettingsHelper.SaveData(SettingsKeys.IgnoredArticlesList, new List<string>() { "a ", "an ", "the " });
             }
         }
     }

@@ -40,7 +40,7 @@ namespace NextPlayerUWP.Common
 
         public Color GetSavedUserAccentColor()
         {
-            string hexColor = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppAccent) as string;
+            string hexColor = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppAccent) as string;
             if (hexColor == null) return Windows.UI.Color.FromArgb(255, 0, 120, 215);
             byte a = byte.Parse(hexColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
             byte r = byte.Parse(hexColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
@@ -99,12 +99,12 @@ namespace NextPlayerUWP.Common
 
         public void SaveUserAccentColor(Color color)
         {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppAccent, color.ToString());
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppAccent, color.ToString());
         }
 
         public string GetAlbumCoverAssetWithCurrentAccentColor()
         {
-            string hexColor = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppAccent) as string;
+            string hexColor = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppAccent) as string;
             return "ms-appx:///Assets/Albums/Colors/" + hexColor.Substring(1) + "-min.png";
         }
 

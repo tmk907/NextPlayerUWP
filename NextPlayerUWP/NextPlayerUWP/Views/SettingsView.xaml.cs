@@ -22,7 +22,7 @@ namespace NextPlayerUWP.Views
         
         private void RemoveFolder_Click(object sender, RoutedEventArgs e)
         {
-            MusicFolder folder = (MusicFolder)((Button)sender).Tag;
+            SdCardFolder folder = (SdCardFolder)((Button)sender).Tag;
             ViewModel.RemoveFolder(folder);
         }
 

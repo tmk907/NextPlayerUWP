@@ -22,14 +22,14 @@ namespace NextPlayerUWP.ViewModels
         private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
         {
             PlaybackService.MediaPlayerStateChanged -= ChangePlayButtonContent;
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, Volume);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.Volume, Volume);
         }
 
         private void Init()
         {
             RepeatMode = Repeat.CurrentState();
             ShuffleMode = Shuffle.CurrentState();
-            Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
+            Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.Volume) ?? 100);
             PlaybackRate = PlaybackService.Instance.PlaybackRatePercent;
             AudioBalance = PlaybackService.Instance.AudioBalance;
 

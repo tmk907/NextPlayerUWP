@@ -132,7 +132,7 @@ namespace NextPlayerUWP.Common
                 double volume = value / 100.0;
                 if (Player.Volume == volume) return;
                 Player.Volume = volume;
-                //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, value);
+                //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.Volume, value);
             }
         }
 
@@ -272,7 +272,7 @@ namespace NextPlayerUWP.Common
 
         public void SetPlaybackStopTimer()
         {
-            var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
+            var t = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.TimerTime);
             long timerTicks = 0;
             if (t != null)
             {
@@ -291,7 +291,7 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackStopTimerCallback()
         {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, false);
             Pause();
         }
 

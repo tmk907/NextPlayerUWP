@@ -56,8 +56,8 @@ namespace NextPlayerUWP.ViewModels
             if (songs.Count == 0)
             {
                 Album = await DatabaseManager.Current.GetAlbumItemAsync(albumId);
-                songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam, album.AlbumArtist);
-                Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.Disc).ThenBy(t=>t.TrackNumber));
+                Songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(album.AlbumParam, album.AlbumArtist);
+                //Songs = new ObservableCollection<SongItem>(songs.OrderBy(s => s.Disc).ThenBy(t=>t.TrackNumber));
                 if (!album.IsImageSet)
                 {
                     if (album.AlbumParam == "")

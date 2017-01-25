@@ -16,14 +16,14 @@ namespace NextPlayerUWPDataLayer.Helpers
         public static bool Change()
         {
             bool s = CurrentState();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Shuffle, !s);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.Shuffle, !s);
             return !s;
         }
 
         public static bool CurrentState()
         {
             bool b;
-            object s = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Shuffle);
+            object s = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.Shuffle);
             if (s != null)
             {
                 b = (bool)s;
@@ -41,7 +41,7 @@ namespace NextPlayerUWPDataLayer.Helpers
             {
                 if (adjustToTheme)
                 {
-                    bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                    bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
                     if (isLight)
                     {
                         return new SolidColorBrush(Windows.UI.Colors.Black);
@@ -53,7 +53,7 @@ namespace NextPlayerUWPDataLayer.Helpers
             {
                 if (adjustToTheme)
                 {
-                    bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                    bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
                     if (isLight)
                     {
                         return new SolidColorBrush(Windows.UI.Color.FromArgb(255, 204, 204, 204));

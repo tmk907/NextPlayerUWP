@@ -9,8 +9,8 @@ namespace NextPlayerUWPDataLayer.Services
     {
         public LastFmCache()
         {
-            Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) ?? String.Empty).ToString();
-            Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) ?? String.Empty).ToString();
+            Username = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) ?? String.Empty).ToString();
+            Password = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmPassword) ?? String.Empty).ToString();
         }
 
         private string Username;
@@ -35,8 +35,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void GetCredentialsFromSettings()
         {
-            Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) ?? String.Empty).ToString();
-            Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) ?? String.Empty).ToString();
+            Username = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) ?? String.Empty).ToString();
+            Password = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmPassword) ?? String.Empty).ToString();
         }
 
         public async Task CacheTrackScrobble(TrackScrobble scrobble)
@@ -66,13 +66,13 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task RateSong(string artist, string track, int rating)
         {
-            bool rate = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
+            bool rate = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmRateSongs);
             if (rate)
             {
                 GetCredentialsFromSettings();
                 if (AreCredentialsSet())
                 {
-                    int min = (int)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLove);
+                    int min = (int)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLove);
                     if (rating >= min)
                     {
                         await DatabaseManager.Current.CacheTrackLoveAsync("track.love", artist, track);

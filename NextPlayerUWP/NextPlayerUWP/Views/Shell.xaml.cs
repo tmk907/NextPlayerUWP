@@ -2,7 +2,10 @@
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
+using NextPlayerUWPDataLayer.Helpers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Template10.Controls;
 using Template10.Services.NavigationService;
@@ -192,20 +195,20 @@ namespace NextPlayerUWP.Views
             await Task.Delay(4000);
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-            if (!settings.Values.ContainsKey(AppConstants.IsReviewed))
+            if (!settings.Values.ContainsKey(SettingsKeys.IsReviewed))
             {
-                settings.Values.Add(AppConstants.IsReviewed, 0);
-                settings.Values.Add(AppConstants.LastReviewRemind, DateTime.Today.Ticks);
+                settings.Values.Add(SettingsKeys.IsReviewed, 0);
+                settings.Values.Add(SettingsKeys.LastReviewRemind, DateTime.Today.Ticks);
             }
             else
             {
-                int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
-                long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
+                int isReviewed = Convert.ToInt32(settings.Values[SettingsKeys.IsReviewed]);
+                long dateticks = (long)(settings.Values[SettingsKeys.LastReviewRemind]);
                 TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
                 if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(7) <= elapsed)//!!!!!!!!! <=
                 {
-                    settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
-                    settings.Values[AppConstants.IsReviewed] = isReviewed++;
+                    settings.Values[SettingsKeys.LastReviewRemind] = DateTime.Today.Ticks;
+                    settings.Values[SettingsKeys.IsReviewed] = isReviewed++;
                     ResourceLoader loader = new ResourceLoader();
 
                     MessageDialog dialog = new MessageDialog(loader.GetString("RateAppMsg"));

@@ -46,7 +46,17 @@
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
-        
+        <MenuFlyout x:Key="MultipleItemsContextMenu">
+            <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
         <Style x:Key="EmptyContentControlStyle" TargetType="ContentControl">
             <Setter Property="Template">
                 <Setter.Value>
@@ -275,6 +285,16 @@
                 Label="Shuffle all"
                 Icon="Shuffle"
                 Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
+            <AppBarButton
+                Visibility="{x:Bind ViewModel.IsClickEnabled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Select"
+                Icon="SelectAll"
+                Click="{x:Bind ViewModel.EnableMultipleSelection}"/>
+            <AppBarButton
+                Visibility="{x:Bind ViewModel.IsClickEnabled, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                Label="Cancel"
+                Icon="Cancel"
+                Click="{x:Bind ViewModel.DisableMultipleSelection}"/>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
@@ -320,8 +340,8 @@
                             OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                             ItemsSource="{Binding Source={StaticResource SongsCVS}}"
                             ItemTemplate="{StaticResource SongsListViewItemTemplateDesktop}"
-                            SelectionMode="None"
-                            IsItemClickEnabled="True"
+                            SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                            IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
                             Margin="12,4,0,0"
                                                        ShowsScrollingPlaceholders="False"

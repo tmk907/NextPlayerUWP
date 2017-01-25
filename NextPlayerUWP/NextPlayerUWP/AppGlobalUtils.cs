@@ -70,7 +70,7 @@ namespace NextPlayerUWP
 
         public static async Task ChangeStatusBarVisibility()
         {
-            bool hide = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.HideStatusBar);
+            bool hide = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.HideStatusBar);
             await ChangeStatusBarVisibility(hide);
         }
 

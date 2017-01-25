@@ -12,7 +12,7 @@ namespace NextPlayerUWP.Converters
             {
                 return App.Current.Resources["UserAccentBrush"] as SolidColorBrush;
                 //SolidColorBrush brush;
-                //if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme))
+                //if ((bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme))
                 //{
                 //    brush = App.Current.Resources["UserAccentBrush1Lighter"] as SolidColorBrush;
                 //}

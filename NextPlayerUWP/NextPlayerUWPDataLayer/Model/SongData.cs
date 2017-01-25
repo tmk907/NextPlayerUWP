@@ -11,6 +11,7 @@ namespace NextPlayerUWPDataLayer.Model
         public string FolderName { get; set; }
         public string DirectoryPath { get; set; }
         public DateTime DateModified { get; set; }
+        public DateTime DateCreated { get; set; }
 
         public uint Bitrate { get; set; }
         public TimeSpan Duration { get; set; }

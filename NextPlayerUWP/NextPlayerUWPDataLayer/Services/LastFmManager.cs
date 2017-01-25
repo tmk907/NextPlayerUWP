@@ -60,9 +60,9 @@ namespace NextPlayerUWPDataLayer.Services
         
         public LastFmManager()
         {
-            Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) as string ?? String.Empty).ToString();
-            Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) as string ?? String.Empty).ToString();
-            SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) as string ?? String.Empty).ToString();
+            Username = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) as string ?? String.Empty).ToString();
+            Password = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmPassword) as string ?? String.Empty).ToString();
+            SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmSessionKey) as string ?? String.Empty).ToString();
         }
 
         public async Task<bool> Login(string login, string password)
@@ -105,7 +105,7 @@ namespace NextPlayerUWPDataLayer.Services
                 int i1 = response.IndexOf("<key>") + "<key>".Length;
                 int i2 = response.IndexOf("</key>");
                 SessionKey = response.Substring(i1, i2 - i1);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSessionKey, SessionKey);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmSessionKey, SessionKey);
                 return StatusCode.Success;
             }
             else
@@ -256,7 +256,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (code == StatusCode.ReAuth)
             {
                 SessionKey = "";
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSessionKey, "");
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmSessionKey, "");
                 await SetMobileSession();
             }
             else if (code == StatusCode.Cache || code == StatusCode.Nothing)

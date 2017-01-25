@@ -196,20 +196,20 @@
                     </Button>
                 </Grid>
                 <TextBlock
-                Grid.Row="1"
-                Margin="4,0,4,4"
-                Style="{StaticResource SongDescriptionBigStyle}"
-                Text="{Binding QueueVM.CurrentSong.Title}"/>
+                    Grid.Row="1"
+                    Margin="4,0,4,4"
+                    Style="{StaticResource SongDescriptionBigStyle}"
+                    Text="{Binding QueueVM.CurrentSong.Title}"/>
                 <TextBlock
-                Grid.Row="2"
-                Margin="4,0,4,4"
-                Style="{StaticResource SongDescriptionMediumStyle}"
-                Text="{Binding QueueVM.CurrentSong.Artist}"/>
+                    Grid.Row="2"
+                    Margin="4,0,4,4"
+                    Style="{StaticResource SongDescriptionMediumStyle}"
+                    Text="{Binding QueueVM.CurrentSong.Artist}"/>
                 <TextBlock
-                Grid.Row="3"
-                Margin="4,0,4,0"
-                Style="{StaticResource SongDescriptionSmallStyle}"
-                Text="{Binding QueueVM.CurrentSong.Album}"/>
+                    Grid.Row="3"
+                    Margin="4,0,4,0"
+                    Style="{StaticResource SongDescriptionSmallStyle}"
+                    Text="{Binding QueueVM.CurrentSong.Album}"/>
             </Grid>
         </Grid>
     </Grid>

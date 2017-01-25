@@ -74,7 +74,7 @@ namespace NextPlayerUWP.ViewModels
         public async void DropItem(object sender, DragEventArgs e)
         {
             object item;
-            string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterDropItem) as string;
+            string action = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterDropItem) as string;
 
             if (e.DataView.Properties.TryGetValue(typeof(AlbumItem).ToString(), out item))
             {
@@ -117,15 +117,15 @@ namespace NextPlayerUWP.ViewModels
                             {
                                 SongItem newSong = await mi.OpenSingleFileAsync(storageFile);
 
-                                if (action.Equals(AppConstants.ActionAddToNowPlaying))
+                                if (action.Equals(SettingsKeys.ActionAddToNowPlaying))
                                 {
                                     await NowPlayingPlaylistManager.Current.Add(newSong);
                                 }
-                                else if (action.Equals(AppConstants.ActionPlayNext))
+                                else if (action.Equals(SettingsKeys.ActionPlayNext))
                                 {
                                     await NowPlayingPlaylistManager.Current.AddNext(newSong);
                                 }
-                                else if (action.Equals(AppConstants.ActionPlayNow))//!
+                                else if (action.Equals(SettingsKeys.ActionPlayNow))//!
                                 {
                                     if (first)
                                     {
@@ -149,15 +149,15 @@ namespace NextPlayerUWP.ViewModels
             }
             if (item != null)
             {
-                if (action.Equals(AppConstants.ActionAddToNowPlaying))
+                if (action.Equals(SettingsKeys.ActionAddToNowPlaying))
                 {
                     await NowPlayingPlaylistManager.Current.Add((MusicItem)item);
                 }
-                else if (action.Equals(AppConstants.ActionPlayNext))
+                else if (action.Equals(SettingsKeys.ActionPlayNext))
                 {
                     await NowPlayingPlaylistManager.Current.AddNext((MusicItem)item);
                 }
-                else if (action.Equals(AppConstants.ActionPlayNow))
+                else if (action.Equals(SettingsKeys.ActionPlayNow))
                 {
                     await NowPlayingPlaylistManager.Current.NewPlaylist((MusicItem)item);
                     await PlaybackService.Instance.PlayNewList(0);

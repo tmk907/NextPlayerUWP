@@ -272,19 +272,16 @@ namespace NextPlayerUWPDataLayer.Services
                 bool set = false;
                 // <5ms
                 var thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
-                if (searchInThumbnail)
+                if (searchInThumbnail && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
                 {
-                    if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
+                    if (thumb.OriginalWidth > 192 || thumb.OriginalHeight > 192)
                     {
-                        if (thumb.OriginalWidth > 200)
+                        using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
                         {
-                            using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
-                            {
-                                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
-                                softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                            }
-                            set = true;
+                            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                            softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                         }
+                        set = true;
                     }
                 }
                 if (!set)
@@ -341,14 +338,18 @@ namespace NextPlayerUWPDataLayer.Services
                         }
                     }
                 }
-                if (searchInThumbnail && !set && thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && thumb.OriginalHeight > 100)
+                if (!set && searchInThumbnail)
                 {
-                    using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                    thumb = await songFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView, 256);
+                    if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && (thumb.OriginalHeight > 48 || thumb.OriginalWidth > 48))
                     {
-                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
-                        softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                        using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
+                        {
+                            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
+                            softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                        }
+                        set = true;
                     }
-                    set = true;
                 }
                 if (set) return softwareBitmap;
             }

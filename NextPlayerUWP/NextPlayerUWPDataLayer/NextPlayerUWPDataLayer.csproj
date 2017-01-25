@@ -118,7 +118,9 @@
     <Compile Include="CloudStorage\CloudAccounts.cs" />
     <Compile Include="Diagnostic\Logger2.cs" />
     <Compile Include="Helpers\DeviceFamilyHelper.cs" />
+    <Compile Include="Helpers\SettingsKeys.cs" />
     <Compile Include="Helpers\TaskCache.cs" />
+    <Compile Include="Model\AlbumArtistItem.cs" />
     <Compile Include="Model\CloudRootFolder.cs" />
     <Compile Include="CloudStorage\CloudStorageServiceFactory.cs" />
     <Compile Include="CloudStorage\CloudStorageType.cs" />
@@ -208,11 +210,12 @@
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\ImagesManager.cs" />
     <Compile Include="Services\IRadioService.cs" />
+    <Compile Include="Helpers\ISerializationService.cs" />
     <Compile Include="Services\JamendoRadioService.cs" />
+    <Compile Include="Helpers\JsonSerializationService.cs" />
     <Compile Include="Services\LastFmCache.cs" />
     <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
-    <Compile Include="Services\NowPlayingManager.cs" />
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="SoundCloud\Enums\License.cs" />
     <Compile Include="SoundCloud\Enums\SCPlaylistType.cs" />
@@ -262,6 +265,7 @@
     <Compile Include="Spotify\SpotifyWebBuilder.cs" />
     <Compile Include="Spotify\SpotifyWebClient.cs" />
     <Compile Include="Spotify\Util.cs" />
+    <Compile Include="Tables\AlbumArtistsTable.cs" />
     <Compile Include="Tables\AlbumsTable.cs" />
     <Compile Include="Tables\ArtistsTable.cs" />
     <Compile Include="Tables\CachedScrobble.cs" />

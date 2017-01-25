@@ -32,7 +32,6 @@ namespace NextPlayerUWP
             MemoryUsageReduced?.Invoke(null, null);
         }
 
-        private const int dbVersion = 10;
 
         private bool isFirstRun = false;
 
@@ -53,7 +52,7 @@ namespace NextPlayerUWP
 #else
             Logger2.Current.SetLevel(Logger2.Level.DontLog);
 #endif
-            object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
+            object o = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.FirstRun);
             if (null == o)
             {               
                 isFirstRun = true;
@@ -66,14 +65,14 @@ namespace NextPlayerUWP
             if (isFirstRun)
             {
                 FirstRunSetup();
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.FirstRun, false);
             }
             else
             {
                 PerformUpdate();
             }
 
-            var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+            var t = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
             if (t != null)
             {
                 if ((bool)t)
@@ -91,11 +90,11 @@ namespace NextPlayerUWP
             {
                 if (RequestedTheme == ApplicationTheme.Light)
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, true);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, true);
                 }
                 else
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, false);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, false);
                 }
             }
 
@@ -214,6 +213,8 @@ namespace NextPlayerUWP
             AddToPlaylist,
             Albums,
             Album,
+            AlbumArtists,
+            AlbumArtist,
             Artists,
             Artist,
             AudioSettings,
@@ -268,7 +269,7 @@ namespace NextPlayerUWP
             tr.ChangeSlideableItemDescription();
 
             await ChangeStatusBarVisibility();
-            bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+            bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
             ThemeHelper.ApplyThemeToStatusBar(isLightTheme);
             ThemeHelper.ApplyThemeToTitleBar(isLightTheme);
 
@@ -280,6 +281,10 @@ namespace NextPlayerUWP
                 keys.Add(Pages.Albums, typeof(AlbumsView));
             if (!keys.ContainsKey(Pages.Album))
                 keys.Add(Pages.Album, typeof(AlbumView));
+            if (!keys.ContainsKey(Pages.AlbumArtists))
+                keys.Add(Pages.AlbumArtists, typeof(AlbumArtistsView));
+            if (!keys.ContainsKey(Pages.AlbumArtist))
+                keys.Add(Pages.AlbumArtist, typeof(AlbumArtistView));
             if (!keys.ContainsKey(Pages.Artists))
                 keys.Add(Pages.Artists, typeof(ArtistsView));
             if (!keys.ContainsKey(Pages.Artist))
@@ -393,7 +398,7 @@ namespace NextPlayerUWP
                 {
                     case AdditionalKinds.SecondaryTile:
                         LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
-                        if (!eventArgs.TileId.Contains(AppConstants.TileId))
+                        if (!eventArgs.TileId.Contains(SettingsKeys.TileId))
                         {
                             //Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
                             //Logger.SaveToFile();
@@ -408,6 +413,10 @@ namespace NextPlayerUWP
                         {
                             case MusicItemTypes.album:
                                 page = Pages.Album;
+                                parameter = MusicItem.SplitParameter(parameter)[1];
+                                break;
+                            case MusicItemTypes.albumartist:
+                                page = Pages.AlbumArtist;
                                 parameter = MusicItem.SplitParameter(parameter)[1];
                                 break;
                             case MusicItemTypes.artist:

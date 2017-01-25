@@ -17,7 +17,7 @@ using NextPlayerUWPDataLayer.Constants;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public abstract class MusicViewModelBase:Template10.Mvvm.ViewModelBase
+    public abstract class MusicViewModelBase : Template10.Mvvm.ViewModelBase
     {
         //public MusicViewModelBase()
         //{
@@ -141,20 +141,20 @@ namespace NextPlayerUWP.ViewModels
 
         public async Task SlidableListItemLeftCommandRequested(MusicItem item)
         {
-            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand) as string;
             switch (swipeAction)
             {
-                case AppConstants.SwipeActionPlayNow:
+                case SettingsKeys.SwipeActionPlayNow:
                     await NowPlayingPlaylistManager.Current.NewPlaylist(item);
                     await PlaybackService.Instance.PlayNewList(0);
                     break;
-                case AppConstants.SwipeActionPlayNext:
+                case SettingsKeys.SwipeActionPlayNext:
                     await NowPlayingPlaylistManager.Current.AddNext(item);
                     break;
-                case AppConstants.SwipeActionAddToNowPlaying:
+                case SettingsKeys.SwipeActionAddToNowPlaying:
                     await NowPlayingPlaylistManager.Current.Add(item);
                     break;
-                case AppConstants.SwipeActionAddToPlaylist:
+                case SettingsKeys.SwipeActionAddToPlaylist:
                     NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
                     break;
                 default:
@@ -389,6 +389,33 @@ namespace NextPlayerUWP.ViewModels
                 return span.ToString(@"d\.hh\:mm\:ss");
             }
         }
+
+        private bool isClickEnabled = true;
+        public bool IsClickEnabled
+        {
+            get { return isClickEnabled; }
+            set { Set(ref isClickEnabled, value); }
+        }
+
+        private ListViewSelectionMode selectionMode = ListViewSelectionMode.None;
+        public ListViewSelectionMode SelectionMode
+        {
+            get { return selectionMode; }
+            set { Set(ref selectionMode, value); }
+        }
+
+        public void EnableMultipleSelection()
+        {
+            IsClickEnabled = false;
+            SelectionMode = ListViewSelectionMode.Multiple;
+        }
+
+        public void DisableMultipleSelection()
+        {
+            IsClickEnabled = true;
+            SelectionMode = ListViewSelectionMode.None;
+        }
+
 
     }
 }

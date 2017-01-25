@@ -205,7 +205,7 @@
             <converters:ShuffleForeground x:Key="ShuffleForegroundConverter"/>
             <converters:ThumbToolTipValue x:Key="ThumbToolTipValueConverter"/>
             <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>
-            <converters:YearConverter x:Key="YearConverter"/>
+            <converters:YearToVisibilityConverter x:Key="YearToVisibilityConverter"/>
             <converters:ZoomedOutItemWidthConverter x:Key="ZoomedOutItemWidthConverter"/>
             <converters:VolumeSymbolConverter x:Key="VolumeSymbolConverter"/>
             <converters:IntToDouble x:Key="IntToDoubleConverter"/>

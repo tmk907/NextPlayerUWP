@@ -175,12 +175,15 @@ namespace NextPlayerUWP.Common
                 case MusicItemTypes.album:
                     list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
+                case MusicItemTypes.albumartist:
+                    list = await DatabaseManager.Current.GetSongItemsFromAlbumArtistAsync(((AlbumArtistItem)item).AlbumArtist);
+                    break;
                 case MusicItemTypes.artist:
                     var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
                     list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
-                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
                     list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory, subFolders);
                     break;
                 case MusicItemTypes.genre:
@@ -256,12 +259,16 @@ namespace NextPlayerUWP.Common
                 case MusicItemTypes.album:
                     list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
+                case MusicItemTypes.albumartist:
+                    var temp = await DatabaseManager.Current.GetSongItemsFromAlbumArtistAsync(((AlbumArtistItem)item).AlbumArtist);
+                    list = new ObservableCollection<SongItem>(temp.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
+                    break;
                 case MusicItemTypes.artist:
                     var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
                     list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
-                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
                     list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory, subFolders);
                     break;
                 case MusicItemTypes.genre:
@@ -352,12 +359,16 @@ namespace NextPlayerUWP.Common
                 case MusicItemTypes.album:
                     list = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(((AlbumItem)item).AlbumParam, ((AlbumItem)item).AlbumArtist);
                     break;
+                case MusicItemTypes.albumartist:
+                    var temp = await DatabaseManager.Current.GetSongItemsFromAlbumArtistAsync(((AlbumArtistItem)item).AlbumArtist);
+                    list = new ObservableCollection<SongItem>(temp.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
+                    break;
                 case MusicItemTypes.artist:
                     var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
                     list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.folder:
-                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
                     list = await DatabaseManager.Current.GetSongItemsFromFolderAsync(((FolderItem)item).Directory, subFolders);
                     break;
                 case MusicItemTypes.genre:

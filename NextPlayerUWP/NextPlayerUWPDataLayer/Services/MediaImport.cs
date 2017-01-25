@@ -222,6 +222,8 @@ namespace NextPlayerUWPDataLayer.Services
             List<int> availableNotChange = new List<int>();
             libraryDirectories.Add(folder.Path);
 
+            DateTime defaultDateCreated = new DateTime(2016, 4, 26);
+
             foreach (var file in files)
             {
                 string type = file.FileType.ToLower();
@@ -239,19 +241,28 @@ namespace NextPlayerUWPDataLayer.Services
                         {
                             song.DateModified = prop.DateModified.UtcDateTime;
                             song.FileSize = (long)prop.Size;
-                            if (song.IsAvailable == 1) availableNotChange.Add(song.SongId);
-                            else availableChange.Add(song.SongId);
+                            if (song.IsAvailable == 1 && song.DateCreated != defaultDateCreated) availableNotChange.Add(song.SongId);
+                            else
+                            {
+                                song.DateCreated = file.DateCreated.UtcDateTime;
+                                availableChange.Add(song.SongId);
+                            }
                         }
                         else if (song.DateModified < prop.DateModified.UtcDateTime)//file was modified
                         {
                             await UpdateSongMusicPropertiesAsync(song, prop, file);
+                            song.DateCreated = file.DateCreated.UtcDateTime;
                             availableChange.Add(song.SongId);
                             modifiedSongs++;
                         }
                         else
                         {
-                            if (song.IsAvailable == 1) availableNotChange.Add(song.SongId);
-                            else availableChange.Add(song.SongId);
+                            if (song.IsAvailable == 1 && song.DateCreated != defaultDateCreated) availableNotChange.Add(song.SongId);
+                            else
+                            {
+                                song.DateCreated = file.DateCreated.UtcDateTime;
+                                availableChange.Add(song.SongId);
+                            }
                         }
                         song.IsAvailable = 1;
                     }
@@ -378,9 +389,9 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task AutoUpdateDatabaseAsync(IProgress<string> p)
         {
-            var freq = (TimeSpan)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LibraryUpdateFrequency);
-            var updatedAt = (DateTime)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LibraryUpdatedAt);
-            if (DateTime.Now > updatedAt + freq)
+            var freq = (TimeSpan)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LibraryUpdateFrequency);
+            var updatedAt = (DateTimeOffset)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LibraryUpdatedAt);
+            if (DateTimeOffset.Now > updatedAt + freq)
             {
                 await UpdateDatabaseAsync(p);
             }
@@ -388,6 +399,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task UpdateDatabaseAsync(IProgress<string> p)
         {
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScan, true);
+
             Stopwatch s1 = new Stopwatch();
             updateDurationSeconds = 0;
             s1.Start();
@@ -398,7 +411,7 @@ namespace NextPlayerUWPDataLayer.Services
             libraryDirectories = new List<string>();
             playlistFiles = new List<StorageFile>();
             sdCardFoldersToScan = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
+            
 
             var propertiesToRetrieve = new List<string>();
             queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileFormatsHelper.SupportedAudioAndPlaylistFormats());
@@ -432,10 +445,10 @@ namespace NextPlayerUWPDataLayer.Services
             s1.Stop();
             updateDurationSeconds = s1.ElapsedMilliseconds / 1000;
             Debug.WriteLine("New songs: {0} updated songs: {1}", songsAdded, modifiedSongs);
-            ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LibraryUpdatedAt, DateTime.Now);
+            ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.MediaScan);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdatedAt, DateTimeOffset.Now);
             OnMediaImported("Update");
-            SendToast();
+            if (songsAdded > 0) SendToast();
         }
 
         public int GetLastSongsAddedCount()
@@ -470,7 +483,7 @@ namespace NextPlayerUWPDataLayer.Services
             song.FileSize = 0;
             var prop = await file.GetBasicPropertiesAsync();
             song.DateModified = prop.DateModified.UtcDateTime;
-
+            song.DateCreated = file.DateCreated.UtcDateTime;
             try
             {
                 using (Stream fileStream = await file.OpenStreamForReadAsync())

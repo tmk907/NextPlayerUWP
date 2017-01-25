@@ -31,7 +31,7 @@ namespace NextPlayerUWP.Common
             {
                 // image name = id + ".jpg"
                 // secondary tile id = AppConstants.TileId + id.ToString()
-                if (file.FileType.Equals(".jpg") && file.DisplayName.StartsWith(AppConstants.TileId))
+                if (file.FileType.Equals(".jpg") && file.DisplayName.StartsWith(SettingsKeys.TileId))
                 {
                     exist = false;
                     foreach (var tile in tiles)
@@ -50,7 +50,7 @@ namespace NextPlayerUWP.Common
         {
             int id = ApplicationSettingsHelper.ReadTileIdValue() + 1;
             ApplicationSettingsHelper.SaveTileIdValue(id);
-            string tileId = AppConstants.TileId + id.ToString();
+            string tileId = SettingsKeys.TileId + id.ToString();
             string parameter = item.GetParameter();
             MusicItemTypes itemType = MusicItem.ParseType(parameter);
             TelemetryAdapter.TrackEvent("New secondary tile " + itemType.ToString());

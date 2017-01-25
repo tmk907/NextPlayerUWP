@@ -40,22 +40,22 @@ namespace NextPlayerUWPDataLayer.Helpers
             }
         }
 
-        //public static T ReadSettingsValue<T>(string key)
-        //{
-        //    if (ApplicationData.Current.LocalSettings.Values.ContainsKey(key))
-        //    {
-        //        try
-        //        {
-        //            T value = (T)ApplicationData.Current.LocalSettings.Values[key];
-        //            return value;
-        //        }
-        //        catch (Exception ex)
-        //        {
+        public static T ReadSettingsValue<T>(string key)
+        {
+            if (ApplicationData.Current.LocalSettings.Values.ContainsKey(key))
+            {
+                try
+                {
+                    object value = ApplicationData.Current.LocalSettings.Values[key];
+                    return (T)value;
+                }
+                catch (Exception ex)
+                {
 
-        //        }
-        //    }
-        //    return null;
-        //}
+                }
+            }
+            return default(T);
+        }
 
         /// <summary>
         /// Save a key value pair in settings. Create if it doesn't exist
@@ -75,15 +75,15 @@ namespace NextPlayerUWPDataLayer.Helpers
         public static void SaveSongIndex(int index)
         {
             int i = -1;
-            object value = ReadSettingsValue(AppConstants.SongIndex);
+            object value = ReadSettingsValue(SettingsKeys.SongIndex);
             if (value != null) i = Int32.Parse(value.ToString());
-            SaveSettingsValue(AppConstants.PrevSongIndex, i);
-            SaveSettingsValue(AppConstants.SongIndex, index);
+            SaveSettingsValue(SettingsKeys.PrevSongIndex, i);
+            SaveSettingsValue(SettingsKeys.SongIndex, index);
         }
 
         public static int ReadSongIndex()
         {
-            object value = ReadSettingsValue(AppConstants.SongIndex);
+            object value = ReadSettingsValue(SettingsKeys.SongIndex);
             if (value != null)
             {
                 return Int32.Parse(value.ToString());
@@ -105,7 +105,7 @@ namespace NextPlayerUWPDataLayer.Helpers
 
         public static int ReadTileIdValue()
         {
-            object value = ReadSettingsValue(AppConstants.TileIdValue);
+            object value = ReadSettingsValue(SettingsKeys.TileIdValue);
             if (value != null)
             {
                 return Int32.Parse(value.ToString());
@@ -119,30 +119,30 @@ namespace NextPlayerUWPDataLayer.Helpers
 
         public static void SaveTileIdValue(int id)
         {
-            SaveSettingsValue(AppConstants.TileIdValue,id);
+            SaveSettingsValue(SettingsKeys.TileIdValue,id);
         }
 
         private const string separator = "|!@#$|";
 
         public static void SaveTileData(TileData tileData)
         {
-            string val = (ReadSettingsValue(AppConstants.TileId) ?? "").ToString() + tileData.Id + separator;
-            SaveSettingsValue(AppConstants.TileId, val);
-            val = (ReadSettingsValue(AppConstants.TileName) ?? "").ToString() + tileData.Name + separator;
-            SaveSettingsValue(AppConstants.TileName, val);
-            val = (ReadSettingsValue(AppConstants.TileType) ?? "").ToString() + tileData.Type + separator;
-            SaveSettingsValue(AppConstants.TileType, val);
-            val = (ReadSettingsValue(AppConstants.TileImage) ?? "").ToString() + tileData.HasImage + separator;
-            SaveSettingsValue(AppConstants.TileImage, val);
+            string val = (ReadSettingsValue(SettingsKeys.TileId) ?? "").ToString() + tileData.Id + separator;
+            SaveSettingsValue(SettingsKeys.TileId, val);
+            val = (ReadSettingsValue(SettingsKeys.TileName) ?? "").ToString() + tileData.Name + separator;
+            SaveSettingsValue(SettingsKeys.TileName, val);
+            val = (ReadSettingsValue(SettingsKeys.TileType) ?? "").ToString() + tileData.Type + separator;
+            SaveSettingsValue(SettingsKeys.TileType, val);
+            val = (ReadSettingsValue(SettingsKeys.TileImage) ?? "").ToString() + tileData.HasImage + separator;
+            SaveSettingsValue(SettingsKeys.TileImage, val);
         }
 
         public static List<TileData> ReadTileData()
         {
             List<TileData> list = new List<TileData>();
-            object id = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileId);
-            object name = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileName);
-            object type = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileType);
-            object image = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileImage);
+            object id = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.TileId);
+            object name = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.TileName);
+            object type = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.TileType);
+            object image = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.TileImage);
 
             if (id != null)
             {
@@ -173,21 +173,7 @@ namespace NextPlayerUWPDataLayer.Helpers
             return list;
         }
 
-
         private const string sdCardFoldersFileName = "sdCard.txt";
-
-        //public static async Task SaveSdCardFoldersToScan(Dictionary<string,bool> folders)
-        //{
-        //    LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
-        //    await helper.SaveFileAsync(sdCardFoldersFileName, folders);
-        //}
-
-        //public static async Task<Dictionary<string,bool>> GetSdCardFoldersToScan()
-        //{
-        //    LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
-        //    Dictionary<string, bool> folders = await helper.ReadFileAsync<Dictionary<string,bool>>(sdCardFoldersFileName);
-        //    return folders;
-        //}
 
         public static async Task SaveSdCardFoldersToScan(List<SdCardFolder> folders)
         {
@@ -209,6 +195,20 @@ namespace NextPlayerUWPDataLayer.Helpers
                 folders = await helper.ReadFileAsync<List<SdCardFolder>>(sdCardFoldersFileName);
             }
             return folders;
+        }
+
+        public static void SaveData(string key, object data)
+        {
+            string serialized = JsonSerializationService.Instance.Serialize(data);
+            SaveSettingsValue(key, serialized);
+        }
+
+        public static T ReadData<T>(string key)
+        {
+            string value = ReadSettingsValue(key) as string;
+            if (value == null) return default(T);
+            T data = JsonSerializationService.Instance.Deserialize<T>(value);
+            return data;
         }
     }
 }

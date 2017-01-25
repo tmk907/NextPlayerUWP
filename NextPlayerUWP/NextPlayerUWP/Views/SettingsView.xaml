@@ -214,10 +214,18 @@
                                         IsActive="{Binding IsUpdating}" 
                                         Visibility="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal"  Margin="4,0,4,4">
+                    <StackPanel Orientation="Vertical"  Margin="4,0,4,4">
                             <TextBlock VerticalAlignment="Center"
                                     Text="{Binding ScannedFolder}"
                                     Margin="0,0,8,0"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Uid="TBLastLibraryUpdate"
+                                           VerticalAlignment="Center"
+                                           Text="Last update:"/>
+                                <TextBlock Text="{Binding LastLibraryUpdate, Converter={StaticResource DateTimeToStringConverter}}"
+                                           Margin="8,0,0,0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="AddMusicFoldersStackPanel"
@@ -258,6 +266,24 @@
                           Margin="0,4,4,4"
                           MinWidth="128"/>
                 </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock x:Uid="TBIgnoreFollowingArticles"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Ignore following articles, when sorting by album name, artist or title:"/>
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="8,0,0,0">
+                        <ToggleSwitch 
+                            IsOn="{x:Bind ViewModel.IgnoreArticles, Mode=TwoWay}"
+                            VerticalAlignment="Center"/>
+                        <TextBox 
+                            Width="256"
+                            VerticalAlignment="Center"
+                            Text="{x:Bind ViewModel.IgnoredArticles, Mode=TwoWay}"/>
+                    </StackPanel>
+                    </StackPanel>
                 <TextBlock x:Uid="TBPersonalize"
                         Style="{StaticResource TitleTextBlockStyle}" 
                         Margin="0,12,0,12"

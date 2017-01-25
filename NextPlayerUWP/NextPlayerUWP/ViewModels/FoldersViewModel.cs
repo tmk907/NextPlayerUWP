@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
@@ -70,7 +69,7 @@ namespace NextPlayerUWP.ViewModels
 
         protected override async Task LoadData()
         {
-            bool subfolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+            bool subfolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
             FolderName = directory ?? "";
             //if (folders.Count == 0)
             //{

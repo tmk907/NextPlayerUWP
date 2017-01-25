@@ -5,6 +5,7 @@ namespace NextPlayerUWPDataLayer.Model
     public enum MusicItemTypes
     {
         album,
+        albumartist,
         artist,
         folder,
         genre,

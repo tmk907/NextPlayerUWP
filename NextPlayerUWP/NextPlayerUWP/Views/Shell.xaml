@@ -640,6 +640,12 @@
                         <TextBlock x:Uid="TBAlbums" Text="Albums" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:HamburgerButtonInfo>
+                <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:AlbumArtistsView"  >
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Contact2" Width="48" Height="48" />
+                        <TextBlock x:Uid="TBAlbumArtists" Text="Album Artists" Margin="12, 0, 0, 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:HamburgerButtonInfo>
                 <controls:HamburgerButtonInfo ClearHistory="True" PageType="views:ArtistsView"  >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <SymbolIcon Symbol="People" Width="48" Height="48" />

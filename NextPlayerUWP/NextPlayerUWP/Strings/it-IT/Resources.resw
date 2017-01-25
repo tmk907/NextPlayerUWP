@@ -873,4 +873,16 @@
   <data name="PageHeaderNowPlaying.Content" xml:space="preserve">
     <value>In riproduzione</value>
   </data>
+  <data name="PageHeaderAlbumArtists.Content" xml:space="preserve">
+    <value>Album Artists</value>
+  </data>
+  <data name="TBAlbumArtists" xml:space="preserve">
+    <value>Album Artists</value>
+  </data>
+  <data name="PageHeaderAlbumArtist.Content" xml:space="preserve">
+    <value>Artista dell'album</value>
+  </data>
+  <data name="UnknownAlbumArtist" xml:space="preserve">
+    <value>Unknown album artist</value>
+  </data>
 </root>

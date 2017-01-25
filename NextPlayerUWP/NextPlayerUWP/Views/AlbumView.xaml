@@ -479,7 +479,8 @@
                         Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
                         Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
                 <TextBlock Grid.Row="2"
-                            Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
+                            Text="{Binding Album.Year}"
+                            Visibility="{Binding Album.Year, Converter={StaticResource YearToVisibilityConverter}}"
                             Style="{StaticResource AlbumDescription2TBStyle}"/>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
@@ -577,8 +578,9 @@
                             Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
                             Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
                         <TextBlock Grid.Row="2"
-                                Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
-                                Style="{StaticResource AlbumDescription2TBStyle}"/>
+                            Text="{Binding Album.Year}"
+                            Visibility="{Binding Album.Year, Converter={StaticResource YearToVisibilityConverter}}"
+                            Style="{StaticResource AlbumDescription2TBStyle}"/>
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>

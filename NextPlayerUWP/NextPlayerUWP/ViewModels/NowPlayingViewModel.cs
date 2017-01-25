@@ -85,7 +85,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (flipViewSelectedIndex != value)
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FlipViewSelectedIndex, value);
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.FlipViewSelectedIndex, value);
                 }
                 Set(ref flipViewSelectedIndex, value);
             }
@@ -289,7 +289,7 @@ namespace NextPlayerUWP.ViewModels
 
             App.OnNavigatedToNewView(false);
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
-            FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FlipViewSelectedIndex);
+            FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.FlipViewSelectedIndex);
             StartTimer();
             
             TimeEnd = QueueVM.CurrentSong.Duration;
