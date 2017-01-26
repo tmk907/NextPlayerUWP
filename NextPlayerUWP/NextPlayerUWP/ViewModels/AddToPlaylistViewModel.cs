@@ -3,13 +3,11 @@ using NextPlayerUWPDataLayer.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.CloudStorage;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Playlists;
@@ -141,8 +139,12 @@ namespace NextPlayerUWP.ViewModels
                     await servicep.GetSongItems(folderId);
                     await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.PCloud), s => s.Title);
                     break;
-                case MusicItemTypes.listofsongs:
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, App.GetFromCache());
+                case MusicItemTypes.listofitems:
+                    var temp = App.GetFromCache();
+                    SongItemsFactory factory = new SongItemsFactory();
+                    songs = await factory.GetSongItems(temp);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, songs); 
+                    App.ClearCache();
                     break;
                 default:
                     break;

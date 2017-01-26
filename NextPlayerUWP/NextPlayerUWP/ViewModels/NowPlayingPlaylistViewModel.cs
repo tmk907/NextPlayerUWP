@@ -172,6 +172,71 @@ namespace NextPlayerUWP.ViewModels
 
         #endregion
 
+        #region Multiple selection
+        private bool isClickEnabled = true;
+        public bool IsClickEnabled
+        {
+            get { return isClickEnabled; }
+            set
+            {
+                Set(ref isClickEnabled, value);
+                IsMultiSelection = !isClickEnabled && selectionMode == ListViewSelectionMode.Multiple;
+            }
+        }
+
+        private ListViewSelectionMode selectionMode = ListViewSelectionMode.None;
+        public ListViewSelectionMode SelectionMode
+        {
+            get { return selectionMode; }
+            set
+            {
+                Set(ref selectionMode, value);
+                IsMultiSelection = !isClickEnabled && selectionMode == ListViewSelectionMode.Multiple;
+            }
+        }
+
+        private bool isMultiSelection = false;
+        public bool IsMultiSelection
+        {
+            get { return isMultiSelection; }
+            set { Set(ref isMultiSelection, value); }
+        }
+
+        public void EnableMultipleSelection()
+        {
+            IsClickEnabled = false;
+            SelectionMode = ListViewSelectionMode.Multiple;
+        }
+
+        public void DisableMultipleSelection()
+        {
+            IsClickEnabled = true;
+            SelectionMode = ListViewSelectionMode.None;
+        }
+
+        public async Task PlayNowMany(IEnumerable<MusicItem> items)
+        {
+            await NowPlayingPlaylistManager.Current.NewPlaylist(items);
+            await PlaybackService.Instance.PlayNewList(0);
+        }
+
+        public async Task PlayNextMany(IEnumerable<MusicItem> items)
+        {
+            await NowPlayingPlaylistManager.Current.AddNext(items);
+        }
+
+        public async Task AddToNowPlayingMany(IEnumerable<MusicItem> items)
+        {
+            await NowPlayingPlaylistManager.Current.Add(items);
+        }
+
+        public void AddToPlaylistMany(IEnumerable<MusicItem> items)
+        {
+            App.AddToCache(items);
+            NavigationService.Navigate(App.Pages.AddToPlaylist, new ListOfMusicItems().GetParameter());
+        }
+        #endregion
+
         public void SavePlaylist()
         {
             NowPlayingListItem item = new NowPlayingListItem();

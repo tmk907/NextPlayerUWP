@@ -2,6 +2,9 @@
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -45,16 +48,10 @@ namespace NextPlayerUWP.Views
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            if (ViewModel.IsClickEnabled)
+            if (!ViewModel.IsMultiSelection)
             {
+                FrameworkElement senderElement = sender as FrameworkElement;
                 var menu = this.Resources["ContextMenu"] as MenuFlyout;
-                var position = e.GetPosition(senderElement);
-                menu.ShowAt(senderElement, position);
-            }
-            else
-            {
-                var menu = this.Resources["MultipleItemsContextMenu"] as MenuFlyout;
                 var position = e.GetPosition(senderElement);
                 menu.ShowAt(senderElement, position);
             }
@@ -64,6 +61,35 @@ namespace NextPlayerUWP.Views
         {
             var song = (sender as SlidableListItem).DataContext as SongItem;
             await ViewModel.SlidableListItemLeftCommandRequested(song);
+        }
+
+        private async void PlayNowMultiple(object sender, RoutedEventArgs e)
+        {
+            var items = SongsListView.GetSelectedItems<MusicItem>();
+            if (items.Count > 0) await ViewModel.PlayNowMany(items);
+        }
+
+        private async void PlayNextMultiple(object sender, RoutedEventArgs e)
+        {
+            var items = SongsListView.GetSelectedItems<MusicItem>();
+            if (items.Count > 0) await ViewModel.PlayNextMany(items);
+        }
+
+        private async void AddToNowPlayingMultiple(object sender, RoutedEventArgs e)
+        {
+            var items = SongsListView.GetSelectedItems<MusicItem>();
+            if (items.Count > 0) await ViewModel.AddToNowPlayingMany(items);
+        }
+
+        private void AddToPlaylistMultiple(object sender, RoutedEventArgs e)
+        {
+            var items = SongsListView.GetSelectedItems<MusicItem>();
+            if (items.Count > 0) ViewModel.AddToPlaylistMany(items);
+        }
+
+        private void SelectAll(object sender, RoutedEventArgs e)
+        {
+            SongsListView.SelectAll();
         }
     }
 }

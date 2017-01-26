@@ -138,6 +138,7 @@
     <Compile Include="Common\DisplayRequestHelper.cs" />
     <Compile Include="Common\ListViewScrollerHelper.cs" />
     <Compile Include="Common\MessageDialogHelper.cs" />
+    <Compile Include="Common\SongItemsFactory.cs" />
     <Compile Include="Common\TelemetryAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
     <Compile Include="Common\PlaybackItemBuilder.cs" />

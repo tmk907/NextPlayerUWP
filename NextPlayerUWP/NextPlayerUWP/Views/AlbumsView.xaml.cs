@@ -7,6 +7,7 @@ using NextPlayerUWPDataLayer.Model;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.Generic;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -46,10 +47,13 @@ namespace NextPlayerUWP.Views
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            var menu = this.Resources["ContextMenu"] as MenuFlyout;
-            var position = e.GetPosition(senderElement);
-            menu.ShowAt(senderElement, position);
+            if (!ViewModel.IsMultiSelection)
+            {
+                FrameworkElement senderElement = sender as FrameworkElement;
+                var menu = this.Resources["ContextMenu"] as MenuFlyout;
+                var position = e.GetPosition(senderElement);
+                menu.ShowAt(senderElement, position);
+            }
         }
 
         private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
@@ -62,6 +66,48 @@ namespace NextPlayerUWP.Views
         {
             var image = (Image)sender;
             image.Fade(1, 500, 0).Start();
+        }
+
+        private List<MusicItem> GetSelectedItems()
+        {
+            List<MusicItem> list = new List<MusicItem>();
+            if (AlbumsListView.SelectedItems != null)
+            {
+                foreach(var item in AlbumsListView.SelectedItems)
+                {
+                    list.Add((MusicItem)item);
+                }
+            }
+            return list;
+        }
+
+        private async void PlayNowMultiple(object sender, RoutedEventArgs e)
+        {
+            var items = GetSelectedItems();
+            if (items.Count > 0) await ViewModel.PlayNowMany(items);
+        }
+
+        private async void PlayNextMultiple(object sender, RoutedEventArgs e)
+        {
+            var items = GetSelectedItems();
+            if (items.Count > 0) await ViewModel.PlayNextMany(items);
+        }
+
+        private async void AddToNowPlayingMultiple(object sender, RoutedEventArgs e)
+        {
+            var items = GetSelectedItems();
+            if (items.Count > 0) await ViewModel.AddToNowPlayingMany(items);
+        }
+
+        private void AddToPlaylistMultiple(object sender, RoutedEventArgs e)
+        {
+            var items = GetSelectedItems();
+            if (items.Count > 0) ViewModel.AddToPlaylistMany(items);
+        }
+
+        private void SelectAll(object sender, RoutedEventArgs e)
+        {
+            AlbumsListView.SelectAll();
         }
     }
 }

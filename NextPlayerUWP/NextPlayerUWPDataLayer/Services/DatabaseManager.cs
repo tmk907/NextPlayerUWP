@@ -730,6 +730,7 @@ namespace NextPlayerUWPDataLayer.Services
 
             var result = await songsConnectionAsync.Where(a => (a.Album.Equals(album) && a.AlbumArtist.Equals(albumArtist))).ToListAsync();
             var list = result.OrderBy(s => s.Disc).ThenBy(t => t.Track).ThenBy(u => u.Title);
+            
             foreach (var item in list)
             {
                 songs.Add(new SongItem(item));
@@ -757,9 +758,9 @@ namespace NextPlayerUWPDataLayer.Services
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
             try
             {
-                List<SongsTable> list = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists = ? OR Artists LIKE ? OR Artists LIKE ? OR Artists LIKE ?", artist, artist + "; %", "%; " + artist, "%; " + artist + "; %");
-
-                foreach (var item in list)
+                var result = await connectionAsync.QueryAsync<SongsTable>("SELECT * FROM SongsTable WHERE Artists = ? OR Artists LIKE ? OR Artists LIKE ? OR Artists LIKE ?", artist, artist + "; %", "%; " + artist, "%; " + artist + "; %");
+                
+                foreach (var item in result.OrderBy(s => s.Album).ThenBy(t => t.Track))
                 {
                     if (item.IsAvailable == 1)
                     {

@@ -95,22 +95,18 @@ namespace NextPlayerUWP
             ((Shell)((ModalDialog)Window.Current.Content).Content).HighlightMenuButton(nr);
         }
 
-        private static List<SongItem> temporaryList = new List<SongItem>();
-        public static void AddToCache(List<SongItem> songs)
+        private static IEnumerable<MusicItem> cacheList = new List<MusicItem>();
+        public static void AddToCache(IEnumerable<MusicItem> items)
         {
-            temporaryList = new List<SongItem>();
-            foreach (var song in songs)
-            {
-                temporaryList.Add(song);
-            }
+            cacheList = items;
         }
-        public static List<SongItem> GetFromCache()
+        public static IEnumerable<MusicItem> GetFromCache()
         {
-            return temporaryList;
+            return cacheList;
         }
         public static void ClearCache()
         {
-            temporaryList = new List<SongItem>();
+            cacheList = new List<MusicItem>();
         }
     }
 }

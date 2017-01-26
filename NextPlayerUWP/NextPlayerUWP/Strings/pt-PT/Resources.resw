@@ -885,4 +885,25 @@
   <data name="UnknownAlbumArtist" xml:space="preserve">
     <value>Unknown album artist</value>
   </data>
+  <data name="AppBarButtonSelect.Label" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="AppBarButtonSelectAll.Label" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="AppBarButtonClearSelection.Label" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="AppBarButtonAddToNowPlaying.Label" xml:space="preserve">
+    <value>Adicionar a execução agora</value>
+  </data>
+  <data name="AppBarButtonAddToPlaylist.Label" xml:space="preserve">
+    <value>Adicionar à lista de execução</value>
+  </data>
+  <data name="AppBarButtonPlayNow.Label" xml:space="preserve">
+    <value>Tocar</value>
+  </data>
+  <data name="AppBarButtonPlayNext.Label" xml:space="preserve">
+    <value>Tocar próximo</value>
+  </data>
 </root>

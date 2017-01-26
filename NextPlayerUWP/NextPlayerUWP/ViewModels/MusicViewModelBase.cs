@@ -267,6 +267,7 @@ namespace NextPlayerUWP.ViewModels
                     state[nameof(SelectedComboBoxItem)] = ComboBoxItemValues.IndexOf(SelectedComboBoxItem);
                 }
             }
+            DisableMultipleSelection();
             await Task.CompletedTask;
         }
 
@@ -394,14 +395,29 @@ namespace NextPlayerUWP.ViewModels
         public bool IsClickEnabled
         {
             get { return isClickEnabled; }
-            set { Set(ref isClickEnabled, value); }
+            set
+            {
+                Set(ref isClickEnabled, value);
+                IsMultiSelection = !isClickEnabled && selectionMode == ListViewSelectionMode.Multiple;
+            }
         }
 
         private ListViewSelectionMode selectionMode = ListViewSelectionMode.None;
         public ListViewSelectionMode SelectionMode
         {
             get { return selectionMode; }
-            set { Set(ref selectionMode, value); }
+            set
+            {
+                Set(ref selectionMode, value);
+                IsMultiSelection = !isClickEnabled && selectionMode == ListViewSelectionMode.Multiple;
+            }
+        }
+
+        private bool isMultiSelection = false;
+        public bool IsMultiSelection
+        {
+            get { return isMultiSelection; }
+            set { Set(ref isMultiSelection, value); }
         }
 
         public void EnableMultipleSelection()
@@ -416,6 +432,31 @@ namespace NextPlayerUWP.ViewModels
             SelectionMode = ListViewSelectionMode.None;
         }
 
+        public async Task PlayNowMany(IEnumerable<MusicItem> items)
+        {
+            DisableMultipleSelection();
+            await NowPlayingPlaylistManager.Current.NewPlaylist(items);
+            await PlaybackService.Instance.PlayNewList(0);
+        }
+
+        public async Task PlayNextMany(IEnumerable<MusicItem> items)
+        {
+            DisableMultipleSelection();
+            await NowPlayingPlaylistManager.Current.AddNext(items);
+        }
+
+        public async Task AddToNowPlayingMany(IEnumerable<MusicItem> items)
+        {
+            DisableMultipleSelection();
+            await NowPlayingPlaylistManager.Current.Add(items);
+        }
+
+        public void AddToPlaylistMany(IEnumerable<MusicItem> items)
+        {
+            App.AddToCache(items);
+            DisableMultipleSelection();
+            NavigationService.Navigate(App.Pages.AddToPlaylist, new ListOfMusicItems().GetParameter());
+        }
 
     }
 }

@@ -179,8 +179,7 @@ namespace NextPlayerUWP.Common
                     list = await DatabaseManager.Current.GetSongItemsFromAlbumArtistAsync(((AlbumArtistItem)item).AlbumArtist);
                     break;
                 case MusicItemTypes.artist:
-                    var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
-                    list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
+                    list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
                     break;
                 case MusicItemTypes.folder:
                     bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
@@ -242,11 +241,26 @@ namespace NextPlayerUWP.Common
             await NotifyChange();
         }
 
-        public async Task Add(IEnumerable<SongItem> newSongs)
+        public async Task Add(IEnumerable<MusicItem> items)
         {
-            foreach(var s in newSongs)
+            if (items.FirstOrDefault().GetType() == typeof(SongItem))
             {
-                songs.Add(s);
+                foreach (SongItem song in items)
+                {
+                    songs.Add(song);
+                }
+            }
+            else
+            {
+                SongItemsFactory factory = new SongItemsFactory();
+                foreach(var item in items)
+                {
+                    var list = await factory.GetSongItems(item);
+                    foreach(var song in list)
+                    {
+                        songs.Add(song);
+                    }
+                }
             }
             await NotifyChange();
         }
@@ -264,8 +278,7 @@ namespace NextPlayerUWP.Common
                     list = new ObservableCollection<SongItem>(temp.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.artist:
-                    var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
-                    list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
+                    list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
                     break;
                 case MusicItemTypes.folder:
                     bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
@@ -315,13 +328,29 @@ namespace NextPlayerUWP.Common
             await NotifyChange();
         }
 
-        public async Task AddNext(IEnumerable<SongItem> list)
+        public async Task AddNext(IEnumerable<MusicItem> items)
         {
             int index = ApplicationSettingsHelper.ReadSongIndex();
-            foreach (var n in list)
+            if (items.FirstOrDefault().GetType() == typeof(SongItem))
             {
-                index++;
-                songs.Insert(index, n);
+                foreach (SongItem n in items)
+                {
+                    index++;
+                    songs.Insert(index, n);
+                }
+            }
+            else
+            {
+                SongItemsFactory factory = new SongItemsFactory();
+                foreach (var item in items)
+                {
+                    var list = await factory.GetSongItems(item);
+                    foreach (var song in list)
+                    {
+                        index++;
+                        songs.Insert(index, song);
+                    }
+                }
             }
             await NotifyChange();
         }
@@ -364,8 +393,7 @@ namespace NextPlayerUWP.Common
                     list = new ObservableCollection<SongItem>(temp.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
                     break;
                 case MusicItemTypes.artist:
-                    var c = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
-                    list = new ObservableCollection<SongItem>(c.OrderBy(a => a.Album).ThenBy(b => b.TrackNumber));
+                    list = await DatabaseManager.Current.GetSongItemsFromArtistAsync(((ArtistItem)item).ArtistParam);
                     break;
                 case MusicItemTypes.folder:
                     bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
@@ -411,6 +439,32 @@ namespace NextPlayerUWP.Common
             {
                 songs.Add(song);
             }
+            await NotifyChange(true);
+        }
+
+        public async Task NewPlaylist(IEnumerable<MusicItem> items)
+        {
+            songs.Clear();
+
+            if (items.FirstOrDefault().GetType() == typeof(SongItem))
+            {
+                foreach (SongItem song in items)
+                {
+                    songs.Add(song);
+                }
+            }
+            else
+            {
+                SongItemsFactory factory = new SongItemsFactory();
+                foreach (var item in items)
+                {
+                    var list = await factory.GetSongItems(item);
+                    foreach (var song in list)
+                    {
+                        songs.Add(song);
+                    }
+                }
+            }   
             await NotifyChange(true);
         }
 

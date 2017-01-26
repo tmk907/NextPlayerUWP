@@ -156,7 +156,57 @@
                 x:Uid="PageHeaderAlbumArtists"
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720">
-            </controls:PageHeader>
+            <AppBarButton
+                x:Uid="AppBarButtonSelect"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                Label="Select"
+                Click="{x:Bind ViewModel.EnableMultipleSelection}">
+                <AppBarButton.Content>
+                    <Viewbox Height="22">
+                        <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
+                    </Viewbox>
+                </AppBarButton.Content>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="AppBarButtonSelectAll"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Select all"
+                Icon="SelectAll"
+                Click="SelectAll"
+                />
+            <AppBarButton
+                x:Uid="AppBarButtonClearSelection"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Clear selection"
+                Icon="ClearSelection"
+                Click="{x:Bind ViewModel.DisableMultipleSelection}"/>
+            <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+            <AppBarButton
+                x:Uid="AppBarButtonPlayNow"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Play"
+                Icon="Play"
+                Click="PlayNowMultiple"/>
+            <AppBarButton
+                x:Uid="AppBarButtonPlayNext"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Play next"
+                Icon="Next"
+                Click="PlayNextMultiple"/>
+            <AppBarButton
+                x:Uid="AppBarButtonAddToNowPlaying"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Add to queueu"
+                Icon="Add"
+                Click="AddToNowPlayingMultiple"/>
+            <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+            <AppBarButton
+                x:Uid="AppBarButtonAddToPlaylist"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Add to playlist"
+                Icon="Add"
+                Click="AddToPlaylistMultiple"/>
+        </controls:PageHeader>
             <Grid Grid.Column="0" Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="48"/>
@@ -203,10 +253,10 @@
                                 OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                                 ItemsSource="{Binding Source={StaticResource AlbumArtistsCVS}}"
                                 ItemTemplate="{StaticResource AlbumArtistItemTemplate}"
-                                IsItemClickEnabled="True"
+                                SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                                IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                                 ItemClick="{x:Bind ViewModel.ItemClicked }"
                                 ShowsScrollingPlaceholders="False"
-                                SelectionMode="None"
                                 Margin="12,0,0,0"
                                 ItemContainerStyle="{StaticResource ZoomedInListViewItemContainerStyle}"
                                 CanDragItems="True"

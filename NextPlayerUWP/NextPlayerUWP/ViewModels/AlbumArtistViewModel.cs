@@ -190,7 +190,7 @@ namespace NextPlayerUWP.ViewModels
                 list.Add(song);
             }
             App.AddToCache(list);
-            var item = new ListOfSongs();
+            var item = new ListOfMusicItems();
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
         }
     }

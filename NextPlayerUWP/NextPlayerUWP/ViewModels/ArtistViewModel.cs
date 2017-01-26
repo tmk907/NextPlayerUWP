@@ -79,7 +79,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 Artist = await DatabaseManager.Current.GetArtistItemAsync(artistId);
                 Songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(artist.ArtistParam);
-                var query = songs.OrderBy(s => s.Album).ThenBy(t => t.TrackNumber).
+                var query = songs.
                     GroupBy(u => new { u.Album, u.AlbumArtist }).
                     OrderBy(g => g.Key.Album).
                     Select(group => new { GroupName = group.Key, Items = group });
@@ -227,7 +227,7 @@ namespace NextPlayerUWP.ViewModels
                 list.Add(song);
             }
             App.AddToCache(list);
-            var item = new ListOfSongs();
+            var item = new ListOfMusicItems();
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
         }
     }

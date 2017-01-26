@@ -27,6 +27,19 @@ namespace NextPlayerUWP.Controls
             set { SetValue(EvenRowBackgroundProperty, (Brush)value); }
         }
 
+        public List<T> GetSelectedItems<T>()
+        {
+            List<T> list = new List<T>();
+            if (SelectedItems != null)
+            {
+                foreach (var item in SelectedItems)
+                {
+                    list.Add((T)item);
+                }
+            }
+            return list;
+        }
+
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);
