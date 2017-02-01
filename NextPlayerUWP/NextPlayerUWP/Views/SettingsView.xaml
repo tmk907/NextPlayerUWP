@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Template10.Controls"
     xmlns:data="using:NextPlayerUWP.ViewModels"
+    xmlns:common="using:NextPlayerUWP.Common"
     xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=SettingsVM}"
     mc:Ignorable="d">
@@ -472,6 +473,44 @@
                         FontSize="14"
                         Margin="4,0,4,4"
                         Text="Please restart app to apply changes."/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Menu"/>
+                        <ListView
+                            ItemsSource="{x:Bind ViewModel.MenuButtons, Mode=TwoWay}"
+                            SelectionMode="Single"
+                            AllowDrop="True"
+                            IsItemClickEnabled="False"
+                            CanReorderItems="True"
+                            IsSwipeEnabled="True">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="common:MenuButtonItem">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,0,8,0"
+                                                   MinWidth="128"
+                                                   Text="{x:Bind Name}"/>
+                                        <ToggleSwitch Grid.Column="1"
+                                                      VerticalAlignment="Center"
+                                                      IsOn="{x:Bind ShowButton, Mode=TwoWay}"
+                                                      Tag="{x:Bind PageType}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    <Button x:Uid="ButtonSave"
+                        Content="Save"
+                        Click="{x:Bind ViewModel.SaveMenuItems}"
+                        MinWidth="128"/>
                 </StackPanel>
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}" 

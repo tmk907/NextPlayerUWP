@@ -32,7 +32,7 @@ namespace NextPlayerUWP.Views
 
         private void NowPlayingView_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadSliderEvents(sender, e);
+            LoadSliderEvents();
             Init();
             if (ViewModel.QueueVM.CoverUri != null)
             {
@@ -53,7 +53,7 @@ namespace NextPlayerUWP.Views
         }
 
         #region Slider 
-        private void LoadSliderEvents(object sender, RoutedEventArgs e)
+        private void LoadSliderEvents()
         {
             timeslider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
             timeslider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);            
@@ -62,7 +62,7 @@ namespace NextPlayerUWP.Views
         private void UnloadSliderEvents()
         {
             timeslider.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
-            timeslider.RemoveHandler(Control.PointerPressedEvent, pointerreleasedhandler);
+            timeslider.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
         }
 
         void slider_PointerEntered(object sender, PointerRoutedEventArgs e)

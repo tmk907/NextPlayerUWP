@@ -175,31 +175,31 @@
             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
             <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Margin" Value="0,0,12,4"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
             <Setter Property="Padding" Value="0,8,12,0"/>
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="VerticalContentAlignment" Value="Top" />
-            <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}"/>
+            <Setter Property="MinHeight" Value="32"/>
             <Setter Property="UseSystemFocusVisuals" Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListViewHeaderItem">
                         <StackPanel Background="{TemplateBinding Background}"
-                  BorderBrush="{TemplateBinding BorderBrush}"
-                  BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
                             <ContentPresenter x:Name="ContentPresenter"
-                          Margin="{TemplateBinding Padding}"
-                          Content="{TemplateBinding Content}"
-                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                Margin="{TemplateBinding Padding}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
                             <Rectangle Stroke="{ThemeResource UserAccentBrush}"
-                   StrokeThickness="0.5"
-                   Height="1"
-                   VerticalAlignment="Bottom"
-                   HorizontalAlignment="Stretch"
-                   Margin="0,8,0,0"/>
+                                StrokeThickness="0.5"
+                                Height="1"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Stretch"
+                                Margin="0,8,0,0"/>
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
@@ -349,6 +349,7 @@
                     <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <AutoSuggestBox  Grid.Column="2" 
+                    x:Name="SearchBox"
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
@@ -384,8 +385,8 @@
                             SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                             IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
-                            Margin="12,4,0,0"
-                                                       ShowsScrollingPlaceholders="False"
+                            Margin="12,0,0,0"
+                            ShowsScrollingPlaceholders="False"
                             ItemContainerStyle="{StaticResource ZoomedInListViewItemContainerStyle}"
                             CanDragItems="True"
                             DragItemsStarting="{x:Bind ViewModel.DragStarting}">

@@ -358,15 +358,16 @@
     <Language Code="zu-za" InMinimumRequirementSet="true" />
   </SupportedLocales>
   <ProductReservedInfo>
-    <MainPackageIdentityName>60490polApki.Next-PlayerBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>60490polApki.Next-Player</MainPackageIdentityName>
     <ReservedNames>
-      <ReservedName>Next-Player Beta</ReservedName>
+      <ReservedName>Next-Player</ReservedName>
+      <ReservedName>Next-Player Pro</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>60490polApki.KomunikatyRSO</MainPackageIdentityName>
     <MainPackageIdentityName>60490polApki.279685DD06499</MainPackageIdentityName>
-    <MainPackageIdentityName>60490polApki.Next-Player</MainPackageIdentityName>
+    <MainPackageIdentityName>60490polApki.Next-PlayerBeta</MainPackageIdentityName>
     <MainPackageIdentityName>60490polApki.PlaylistsConverter</MainPackageIdentityName>
     <MainPackageIdentityName>60490polApki.NextPlayer</MainPackageIdentityName>
   </AccountPackageIdentityNames>

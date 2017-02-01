@@ -55,6 +55,21 @@ namespace NextPlayerUWP
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IgnoreArticles, false);
             ApplicationSettingsHelper.SaveData(SettingsKeys.IgnoredArticlesList, new List<string>() { "a ", "an ", "the " });
+            
+            var menuEntries = new List<MenuButtonItem>()
+            {
+                new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Albums },
+                new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.AlbumArtists },
+                new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Artists },
+                new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Folders },
+                new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Genres },
+                new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Playlists },
+                new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Songs },
+                new MenuButtonItem() { ShowButton = !IsDesktop, PageType = MenuItemType.NowPlayingPlaylist },
+                new MenuButtonItem() { ShowButton = IsDesktop, PageType = MenuItemType.NowPlayingSong },
+                new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Online },
+            };
+            ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -209,6 +224,31 @@ namespace NextPlayerUWP
             {
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IgnoreArticles, false);
                 ApplicationSettingsHelper.SaveData(SettingsKeys.IgnoredArticlesList, new List<string>() { "a ", "an ", "the " });
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.MenuEntries) == null)
+            {
+                var menuEntries = new List<MenuButtonItem>()
+                {
+                    new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Albums },
+                    new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.AlbumArtists },
+                    new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Artists },
+                    new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Folders },
+                    new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Genres },
+                    new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Playlists },
+                    new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Songs },
+                    new MenuButtonItem() { ShowButton = !IsDesktop, PageType = MenuItemType.NowPlayingPlaylist },
+                    new MenuButtonItem() { ShowButton = IsDesktop, PageType = MenuItemType.NowPlayingSong },
+                    new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Online },
+                };
+                ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
+            }
+        }
+
+        private bool IsDesktop
+        {
+            get
+            {
+                return (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop");
             }
         }
     }

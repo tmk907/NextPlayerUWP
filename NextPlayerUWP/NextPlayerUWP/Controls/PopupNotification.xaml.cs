@@ -89,19 +89,19 @@ namespace NextPlayerUWP.Controls
             }
         }
 
-        public void ShowNotification(string message)
-        {
-            Text = message;
-            TextBottom = "";
-            BottomRow.Height = new GridLength(0);
-            ShowNotification();
-        }
-
-        public void ShowNotification(string messageTop, string messageBottom)
+        public void ShowNotification(string messageTop, string messageBottom = null)
         {
             Text = messageTop;
-            TextBottom = messageBottom;
-            BottomRow.Height = new GridLength(1, GridUnitType.Star);
+            if (messageBottom == null)
+            {
+                TextBottom = "";
+                BottomRow.Height = new GridLength(0);
+            }
+            else
+            {
+                TextBottom = messageBottom;
+                BottomRow.Height = new GridLength(1, GridUnitType.Star);
+            }
             ShowNotification();
         }
 

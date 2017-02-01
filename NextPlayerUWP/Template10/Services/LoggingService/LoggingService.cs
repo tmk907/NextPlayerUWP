@@ -15,7 +15,7 @@ namespace Template10.Services.LoggingService
 
     public static class LoggingService
     {
-        public static bool Enabled { get; set; } = true;
+        public static bool Enabled { get; set; } = false;
 
         public static DebugWriteDelegate WriteLine { get; set; } = new DebugWriteDelegate(WriteLineInternal);
 
@@ -26,7 +26,7 @@ namespace Template10.Services.LoggingService
                 case Targets.Debug:
                     if (Enabled)
                     {
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.TimeOfDay.ToString()} {severity} {caller} {text}");
+                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.TimeOfDay.ToString()} {severity} {caller} {text}");
                     }
                     break;
                 case Targets.Log:

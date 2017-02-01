@@ -1,6 +1,7 @@
-﻿using NextPlayerUWP.Common;
+﻿using GalaSoft.MvvmLight.Messaging;
+using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
 using NextPlayerUWP.ViewModels;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using System;
@@ -31,22 +32,54 @@ namespace NextPlayerUWP.Views
 
         ShellViewModel ShellVM = new ShellViewModel();
 
+        PointerEventHandler pointerpressedhandler;
+        PointerEventHandler pointerreleasedhandler;
+
         public Shell()
         {
             Instance = this;
             InitializeComponent();
             this.DataContext = ShellVM;
-            this.Loaded += LoadSlider;
-            //HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
+            this.Loaded += Shell_Loaded;
+            this.Unloaded += Shell_Unloaded;
+
+            pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
+            pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
+
+            ShellVM.RefreshMenuButtons();
             //SetNavigationService(navigationService);
-            App.AppThemeChanged += App_AppThemeChanged;
             BPViewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
+            if (DeviceFamilyHelper.IsDesktop())
             {
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
+
             ReviewReminder();
             //SendLogs();
+        }
+
+        private void Shell_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadSliderEvents();
+            Messenger.Default.Register<NotificationMessage<InAppNotification>>(this, (message) =>
+            {
+                var content = message.Content;
+                PopupNotification.ShowNotification(content.FirstTextLine, content.SecondTextLine);
+            });
+            Messenger.Default.Register<NotificationMessage<ThemeChange>>(this, (message) =>
+            {
+                AppThemeChanged(message.Content.IsLightTheme);
+            });
+            Messenger.Default.Register<NotificationMessage<MenuButtonSelected>>(this, (message) =>
+            {
+                PressMenuButton(message.Content.Nr);
+            });
+        }
+
+        private void Shell_Unloaded(object sender, RoutedEventArgs e)
+        {
+            UnloadSliderEvents();
+            Messenger.Default.Unregister(this);
         }
 
         public Shell(INavigationService navigationService) : this()
@@ -70,17 +103,7 @@ namespace NextPlayerUWP.Views
             HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
         }
 
-        public void ShowNotification(string notificationText)
-        {
-            PopupNotification.ShowNotification(notificationText);
-        }
-
-        public void ShowNotification(string topText, string bottomText)
-        {
-            PopupNotification.ShowNotification(topText, bottomText);
-        }
-
-        public void HighlightMenuButton(int nr)
+        private void PressMenuButton(int nr)
         {
             if (nr == 0)
             {
@@ -88,19 +111,15 @@ namespace NextPlayerUWP.Views
             }
             else
             {
-                if (nr <= HamburgerMenu.PrimaryButtons.Count)
+                nr--;
+                if (nr >= 0 && nr < HamburgerMenu.PrimaryButtons.Count)
                 {
-                    HamburgerMenu.Selected = HamburgerMenu.PrimaryButtons[nr - 1];
-                    if (nr == 7)
-                    {
-                        HamburgerMenu.PrimaryButtons[7].IsChecked = true;
-                    }
+                    HamburgerMenu.Selected = HamburgerMenu.PrimaryButtons[nr];
                 }
             }
-            ShowNotification("Selected: " + nr);
         }
 
-        private void App_AppThemeChanged(bool isLight)
+        private void AppThemeChanged(bool isLight)
         {
             if (isLight)
             {
@@ -145,44 +164,44 @@ namespace NextPlayerUWP.Views
             ShellVM.IsNowPlayingDesktopViewActive = isActive;
         }
 
-        private bool IsDesktop
-        {
-            get
-            {
-                return (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop");
-            }
-        }
-
         private async Task SendLogs()
         {            
             await Logger2.Current.SendLogs();
         }
 
         #region Slider 
-        private void LoadSlider(object sender, RoutedEventArgs e)
-        {
-            PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
-            timeslider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
 
-            PointerEventHandler pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
+        private void LoadSliderEvents()
+        {
+            timeslider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
             timeslider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
+        }
+
+        private void UnloadSliderEvents()
+        {
+            timeslider.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
+            timeslider.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
         }
 
         private void BottomSlider_Loaded(object sender, RoutedEventArgs e)
         {
-            PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
             durationSliderBottom.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
-
-            PointerEventHandler pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
             durationSliderBottom.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
         }
 
-        void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
+
+        private void BottomSlider_Unloaded(object sender, RoutedEventArgs e)
+        {
+            durationSliderBottom.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
+            durationSliderBottom.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
+        }
+
+        private void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             BPViewModel.sliderpressed = true;
         }
 
-        void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        private void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
             BPViewModel.sliderpressed = false;
             PlaybackService.Instance.Position = TimeSpan.FromSeconds(((Slider)sender).Value);
@@ -225,11 +244,10 @@ namespace NextPlayerUWP.Views
 
         private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
         {
-            if (IsDesktop)
+            if (DeviceFamilyHelper.IsDesktop())
             {
 #if DEBUG
                 Menu.NavigationService.Navigate(App.Pages.NowPlaying);
-                //Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
 #endif
             }
             else
@@ -238,27 +256,9 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        private void NPButton_Tapped(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("npgo");
-
-            if (IsDesktop)
-            {
-                Menu.NavigationService.Navigate(App.Pages.NowPlayingDesktop);
-            }
-            else
-            {
-                Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
-            }
-        }
-
-        private void Undo_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private async Task AutoUpdateLibrary()
         {
+            await Task.Delay(TimeSpan.FromMinutes(1));
             NextPlayerUWPDataLayer.Services.MediaImport mi = new NextPlayerUWPDataLayer.Services.MediaImport(App.FileFormatsHelper);
             Progress<string> progress = new Progress<string>(
                 data =>

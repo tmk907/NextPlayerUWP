@@ -1,5 +1,6 @@
-﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Constants;
+﻿using GalaSoft.MvvmLight.Messaging;
+using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -11,7 +12,6 @@ using System.Threading.Tasks;
 using Template10.Common;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Json;
-using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -23,15 +23,42 @@ namespace NextPlayerUWP.ViewModels
 
         public RightPanelViewModel()
         {
+            Logger2.DebugWrite("RightPanelViewModel()", "");
+
             ViewModelLocator vml = new ViewModelLocator();
             QueueVM = vml.QueueVM;
             scrollerHelper = new ListViewScrollerHelper();
-            Logger2.DebugWrite("RightPanelViewModel()", "");
             sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
-            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            Init();
+            App.Current.EnteredBackground += Current_EnteredBackground;
+            App.Current.LeavingBackground += Current_LeavingBackground;
+        }
+
+        private void Init()
+        {
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
+            Messenger.Default.Register<NotificationMessage<ShowLyrics>>(this, (message) =>
+            {
+                SelectedPivotIndex = 1;
+            });
+            Messenger.Default.Register<NotificationMessage<ShowNowPlayingList>>(this, (message) =>
+            {
+                SelectedPivotIndex = 0;
+            });
+        }
+
+        private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
+        {
+            Init();
+        }
+
+        private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
+        {
+            PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
+            Messenger.Default.Unregister(this);
         }
 
         public QueueViewModelBase QueueVM { get; set; }

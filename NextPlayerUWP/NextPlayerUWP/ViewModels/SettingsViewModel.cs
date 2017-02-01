@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using NextPlayerUWPDataLayer.CloudStorage;
 using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWP.Messages;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -135,6 +136,11 @@ namespace NextPlayerUWP.ViewModels
                 {
                     AccentColors.Add(new SolidColorBrush(c));
                 }
+            }
+
+            if (menuButtons.Count == 0)
+            {
+                GetMenuButtons();
             }
 
             //Library
@@ -705,7 +711,7 @@ namespace NextPlayerUWP.ViewModels
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, isLightThemeOn);
 
-            App.OnAppThemeChanged(isLightThemeOn);
+            AppMessenger.ChangeTheme(isLightThemeOn);
         }
 
         public void ChangeAccentColor(object sender, RoutedEventArgs e)
@@ -754,6 +760,51 @@ namespace NextPlayerUWP.ViewModels
                 Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = selectedLanguage.Code;
             }
         }
+
+        private ObservableCollection<MenuButtonItem> menuButtons = new ObservableCollection<MenuButtonItem>();
+        public ObservableCollection<MenuButtonItem> MenuButtons
+        {
+            get { return menuButtons; }
+            set { Set(ref menuButtons, value); }
+        }
+
+        private void GetMenuButtons()
+        {
+            var menuList = ApplicationSettingsHelper.ReadData<List<MenuButtonItem>>(SettingsKeys.MenuEntries);
+            HamburgerMenuBuilder builder = new HamburgerMenuBuilder();
+            foreach (var item in menuList)
+            {
+                if (item.PageType == MenuItemType.NowPlayingPlaylist && DeviceFamilyHelper.IsDesktop())
+                {
+                    continue;
+                }
+                if (item.PageType == MenuItemType.NowPlayingSong && DeviceFamilyHelper.IsMobile())
+                {
+                    continue;
+                }
+                item.Name = builder.GetMenuItemText(item.PageType);
+                MenuButtons.Add(item);
+            }
+        }
+
+        public void SaveMenuItems()
+        {
+            var previous = ApplicationSettingsHelper.ReadData<List<MenuButtonItem>>(SettingsKeys.MenuEntries);
+            var newOrder = new List<MenuButtonItem>();
+            foreach(var item in menuButtons)
+            {
+                newOrder.Add(item);
+            }
+            var diff = previous.Where(p => !newOrder.Any(n => n.PageType == p.PageType));
+            foreach(var item in diff)
+            {
+                item.ShowButton = false;
+                newOrder.Add(item);
+            }
+            ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, newOrder);
+            App.OnMenuItemVisibilityChange();
+        }
+
         #endregion
 
         #region About

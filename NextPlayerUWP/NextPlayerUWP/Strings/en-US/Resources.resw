@@ -879,7 +879,7 @@
   <data name="PageHeaderAlbumArtists.Content" xml:space="preserve">
     <value>Album Artists</value>
   </data>
-  <data name="TBAlbumArtists" xml:space="preserve">
+  <data name="TBAlbumArtists.Text" xml:space="preserve">
     <value>Album Artists</value>
   </data>
   <data name="UnknownAlbumArtist" xml:space="preserve">

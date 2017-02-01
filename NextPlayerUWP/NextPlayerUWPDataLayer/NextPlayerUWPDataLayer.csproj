@@ -164,7 +164,6 @@
     <Compile Include="Model\PlaylistFilterElement.cs" />
     <Compile Include="Model\PlaylistItem.cs" />
     <Compile Include="Model\RadioItem.cs" />
-    <Compile Include="Model\SCSong.cs" />
     <Compile Include="Model\SdCardFolder.cs" />
     <Compile Include="Model\SmartPlaylistItem.cs" />
     <Compile Include="Model\SongData.cs" />

@@ -199,17 +199,17 @@
                     Grid.Row="1"
                     Margin="4,0,4,4"
                     Style="{StaticResource SongDescriptionBigStyle}"
-                    Text="{Binding QueueVM.CurrentSong.Title}"/>
+                    Text="{x:Bind ViewModel.QueueVM.CurrentSong.Title, Mode=OneWay}"/>
                 <TextBlock
                     Grid.Row="2"
                     Margin="4,0,4,4"
                     Style="{StaticResource SongDescriptionMediumStyle}"
-                    Text="{Binding QueueVM.CurrentSong.Artist}"/>
+                    Text="{x:Bind ViewModel.QueueVM.CurrentSong.Artist, Mode=OneWay}"/>
                 <TextBlock
                     Grid.Row="3"
                     Margin="4,0,4,0"
                     Style="{StaticResource SongDescriptionSmallStyle}"
-                    Text="{Binding QueueVM.CurrentSong.Album}"/>
+                    Text="{x:Bind ViewModel.QueueVM.CurrentSong.Album, Mode=OneWay}"/>
             </Grid>
         </Grid>
     </Grid>

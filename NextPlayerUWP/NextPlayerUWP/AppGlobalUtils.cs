@@ -1,6 +1,5 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -15,6 +14,9 @@ using Windows.UI.Xaml;
 
 namespace NextPlayerUWP
 {
+    public delegate void SongUpdatedHandler(int id);
+    public delegate void MenuItemVisibilityChangedHandler();
+
     sealed partial class App : BootStrapper
     {
         public static event SongUpdatedHandler SongUpdated;
@@ -22,10 +24,11 @@ namespace NextPlayerUWP
         {
             SongUpdated?.Invoke(id);
         }
-        public static event AppThemeChangedHandler AppThemeChanged;
-        public static void OnAppThemeChanged(bool isLight)
+
+        public static event MenuItemVisibilityChangedHandler MenuItemVisibilityChange;
+        public static void OnMenuItemVisibilityChange()
         {
-            AppThemeChanged?.Invoke(isLight);
+            MenuItemVisibilityChange?.Invoke();
         }
 
         public static Action OnNewTilePinned { get; set; }
@@ -87,12 +90,6 @@ namespace NextPlayerUWP
                     await Windows.UI.ViewManagement.StatusBar.GetForCurrentView().ShowAsync();
                 }
             }
-        }
-
-        public static void Highlight(int nr)
-        {
-            if (Window.Current == null || Window.Current.Content == null) return;
-            ((Shell)((ModalDialog)Window.Current.Content).Content).HighlightMenuButton(nr);
         }
 
         private static IEnumerable<MusicItem> cacheList = new List<MusicItem>();

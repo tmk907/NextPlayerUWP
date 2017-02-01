@@ -1,4 +1,6 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.Messages;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -32,18 +34,22 @@ namespace NextPlayerUWP.Views
         //{
         //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
         //}
-        private void View_Unloaded(object sender, RoutedEventArgs e)
-        {
-            ViewModel.OnUnloaded();
-            //ViewModel = null;
-            //DataContext = null;
-            //this.Loaded -= View_Loaded;
-            //this.Unloaded -= View_Unloaded;
-        }
-
+        
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(SongsListView);
+            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
+            {
+                SearchBox.Focus(FocusState.Programmatic);
+            });
+        }
+
+        private void View_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Messenger.Default.Unregister(this);
+            ViewModel.OnUnloaded();
+            //ViewModel = null;
+            //DataContext = null;
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

@@ -1,8 +1,14 @@
-﻿using Windows.System;
+﻿using NextPlayerUWP.Messages;
+using Windows.System;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.Common
 {
+    public class KeyboardShortcutSettings
+    {
+        //public const string playPauseKey
+    }
+
     public class AppKeyboardShortcuts
     {
         //Ctrl+
@@ -20,9 +26,16 @@ namespace NextPlayerUWP.Common
         private bool isCtrlPressed = false;
         private bool isAltPressed = false;
 
+        private PlayerCommands playerCommands = new PlayerCommands();
+
         public void RegisterShortcuts()
         {
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+        }
+
+        public void DeregisterShortcuts()
+        {
+            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
         }
 
         private void Dispatcher_AcceleratorKeyActivated(Windows.UI.Core.CoreDispatcher sender, Windows.UI.Core.AcceleratorKeyEventArgs args)
@@ -44,31 +57,34 @@ namespace NextPlayerUWP.Common
                     switch (args.VirtualKey)
                     {
                         case VirtualKey.Number1:
-                            App.Highlight(1);
+                            AppMessenger.MenuButtonSelected(1);
                             break;
                         case VirtualKey.Number2:
-                            App.Highlight(2);
+                            AppMessenger.MenuButtonSelected(2);
                             break;
                         case VirtualKey.Number3:
-                            App.Highlight(3);
+                            AppMessenger.MenuButtonSelected(3);
                             break;
                         case VirtualKey.Number4:
-                            App.Highlight(4);
+                            AppMessenger.MenuButtonSelected(4);
                             break;
                         case VirtualKey.Number5:
-                            App.Highlight(5);
+                            AppMessenger.MenuButtonSelected(5);
                             break;
                         case VirtualKey.Number6:
-                            App.Highlight(6);
+                            AppMessenger.MenuButtonSelected(6);
                             break;
                         case VirtualKey.Number7:
-                            App.Highlight(7);
+                            AppMessenger.MenuButtonSelected(7);
                             break;
                         case VirtualKey.Number8:
-                            App.Highlight(8);
+                            AppMessenger.MenuButtonSelected(8);
+                            break;
+                        case VirtualKey.Number9:
+                            AppMessenger.MenuButtonSelected(9);
                             break;
                         case VirtualKey.Number0:
-                            App.Highlight(0);
+                            AppMessenger.MenuButtonSelected(0);
                             break;
                     }
                 }
@@ -76,25 +92,27 @@ namespace NextPlayerUWP.Common
                 {
                     if (args.VirtualKey == previousSongKey)
                     {
-                        PlaybackService.Instance.Previous();
+                        playerCommands.Previous();
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == playPauseKey)
                     {
-                        PlaybackService.Instance.TogglePlayPause();
+                        playerCommands.TogglePlayPause();
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == nextSongKey)
                     {
-                        PlaybackService.Instance.Next();
+                        playerCommands.Next();
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == changeShuffleKey)
                     {
+                        playerCommands.ToggleShuffle();
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == changeRepeatKey)
                     {
+                        playerCommands.ToggleRepeat();
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == showAudioSettingsKey)
@@ -103,14 +121,17 @@ namespace NextPlayerUWP.Common
                     }
                     else if (args.VirtualKey == showNowPlayingListKey)
                     {
+                        AppMessenger.ShowNowPlayingList();
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == showLyricsKey)
                     {
+                        AppMessenger.ShowLyrics();
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == searchKey)
                     {
+                        AppMessenger.EnableSearching();
                         args.Handled = true;
                     }
                 }
@@ -129,11 +150,6 @@ namespace NextPlayerUWP.Common
                     isCtrlPressed = false;
                 }
             }
-        }
-
-        public void DeregisterShortcuts()
-        {
-            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
         }
     }
 }

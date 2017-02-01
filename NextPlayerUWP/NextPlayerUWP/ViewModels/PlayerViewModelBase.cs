@@ -1,5 +1,4 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using Windows.Media.Playback;
 
@@ -48,7 +47,7 @@ namespace NextPlayerUWP.ViewModels
             get { return volume; }
             set
             {
-                if (volume != value)
+                if (volume != value && volume >= 0 && volume <= 100)
                 {
                     if (value == 0) isMuted = true;
                     else isMuted = false;

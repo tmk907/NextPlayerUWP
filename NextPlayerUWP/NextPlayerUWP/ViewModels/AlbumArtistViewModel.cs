@@ -77,6 +77,7 @@ namespace NextPlayerUWP.ViewModels
                     header.ImageUri = album.ImageUri;
                     group.Header = header;
 
+                    i = 0;
                     foreach (var item in songs)
                     {
                         item.Index = i;

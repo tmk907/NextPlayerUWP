@@ -20,10 +20,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP
-{
-    public delegate void SongUpdatedHandler(int id);
-    public delegate void AppThemeChangedHandler(bool isLight);
-
+{    
     sealed partial class App : BootStrapper
     {
         public static event EventHandler MemoryUsageReduced;
@@ -97,6 +94,8 @@ namespace NextPlayerUWP
                     ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, false);
                 }
             }
+
+            ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.MediaScan);
 
             SplashFactory = (e) => new Views.Splash(e);
 

@@ -136,8 +136,11 @@
     <Compile Include="Common\BackgroundTaskHelper.cs" />
     <Compile Include="Common\ColorsHelper.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
+    <Compile Include="Common\HamburgerMenuBuilder.cs" />
     <Compile Include="Common\ListViewScrollerHelper.cs" />
+    <Compile Include="Common\MenuButtonItem.cs" />
     <Compile Include="Common\MessageDialogHelper.cs" />
+    <Compile Include="Common\PlayerCommands.cs" />
     <Compile Include="Common\SongItemsFactory.cs" />
     <Compile Include="Common\TelemetryAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
@@ -215,6 +218,15 @@
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
     <Compile Include="Helpers\PlaylistRule.cs" />
     <Compile Include="Helpers\SaveLater.cs" />
+    <Compile Include="Messages\AppMessenger.cs" />
+    <Compile Include="Messages\EnableSearching.cs" />
+    <Compile Include="Messages\KeyboardShortcut.cs" />
+    <Compile Include="Messages\MenuButtonSelected.cs" />
+    <Compile Include="Messages\MessageNames.cs" />
+    <Compile Include="Messages\InAppNotification.cs" />
+    <Compile Include="Messages\ShowLyrics.cs" />
+    <Compile Include="Messages\ShowNowPlayingList.cs" />
+    <Compile Include="Messages\ThemeChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddToPlaylistViewModel.cs" />
     <Compile Include="ViewModels\AlbumArtistsViewModel.cs" />
@@ -645,6 +657,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\doc\" />
+    <Folder Include="Services\" />
+    <Folder Include="ViewModels\Settings\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

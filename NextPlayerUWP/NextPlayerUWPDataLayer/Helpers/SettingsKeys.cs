@@ -73,5 +73,7 @@
 
         public const string IgnoreArticles = "IgnoreArticles";
         public const string IgnoredArticlesList = "IgnoredArticlesList";
+
+        public const string MenuEntries = "MenuEntries";
     }
 }
