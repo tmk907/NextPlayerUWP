@@ -195,13 +195,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         #endregion
 
         private string musicFolderId;
-        private ConcurrentDictionary<string, Task<IItemChildrenCollectionPage>> cache = new ConcurrentDictionary<string, Task<IItemChildrenCollectionPage>>();
+        private ConcurrentDictionary<string, Task<IList<Item>>> cache = new ConcurrentDictionary<string, Task<IList<Item>>>();
         private ConcurrentDictionary<string, Task<CloudFolder>> cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
 
         public void ClearCache()
         {
             Debug.WriteLine("OneDriveService ClearCache()");
-            cache = new ConcurrentDictionary<string, Task<IItemChildrenCollectionPage>>();
+            cache = new ConcurrentDictionary<string, Task<IList<Item>>>();
             cachedFolders = new ConcurrentDictionary<string, Task<CloudFolder>>();
             musicFolderId = null;
         }
@@ -332,7 +332,8 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             return null;
         }
 
-        private async Task<IItemChildrenCollectionPage> GetFolderContentInternalAsync(string folderId)
+
+        private async Task<IList<Item>> GetFolderContentInternalAsync(string folderId)
         {
             Debug.WriteLine("OneDrive GetFolderContentInternalAsync() {0}", new object[] { folderId });
             await LoginSilently();
@@ -340,7 +341,16 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             try
             {
                 var children = await oneDriveClient.Drive.Items[folderId].Children.Request().GetAsync();
-                return children;
+                var allItems = children.CurrentPage;
+                while(children.NextPageRequest != null)
+                {
+                    children = await children.NextPageRequest.GetAsync();
+                    foreach(var item in children.CurrentPage)
+                    {
+                        allItems.Add(item);
+                    }
+                }
+                return allItems;
             }
             catch (Microsoft.Graph.ServiceException ex)
             {

@@ -68,12 +68,13 @@ namespace NextPlayerUWP.Views
             });
             Messenger.Default.Register<NotificationMessage<ThemeChange>>(this, (message) =>
             {
-                AppThemeChanged(message.Content.IsLightTheme);
+                ApplyTheme(message.Content.IsLightTheme);
             });
             Messenger.Default.Register<NotificationMessage<MenuButtonSelected>>(this, (message) =>
             {
                 PressMenuButton(message.Content.Nr);
             });
+            ApplyTheme(ThemeHelper.IsLightTheme);
         }
 
         private void Shell_Unloaded(object sender, RoutedEventArgs e)
@@ -119,7 +120,7 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        private void AppThemeChanged(bool isLight)
+        private void ApplyTheme(bool isLight)
         {
             if (isLight)
             {

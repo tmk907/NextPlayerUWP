@@ -219,12 +219,15 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                Content="{Binding PageTitle}" 
-                VisualStateNarrowMinWidth="0"
-                VisualStateNormalMinWidth="720">
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
+            x:Name="PageHeader"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            Content="{Binding PageTitle}" 
+            VisualStateNarrowMinWidth="0"
+            VisualStateNormalMinWidth="720">
             <AppBarButton
                 x:Uid="AppBarButtonShuffleAll"
                 Label="Shuffle all"
@@ -235,7 +238,7 @@
                 x:Uid="AppBarButtonSelect"
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
                 Label="Select"
-                Click="{x:Bind ViewModel.EnableMultipleSelection}">
+                Click="EnableMultipleSelection">
                 <AppBarButton.Content>
                     <Viewbox Height="22">
                         <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
@@ -254,33 +257,7 @@
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                 Label="Clear selection"
                 Icon="ClearSelection"
-                Click="{x:Bind ViewModel.DisableMultipleSelection}"/>
-            <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-            <AppBarButton
-                x:Uid="AppBarButtonPlayNow"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Play"
-                Icon="Play"
-                Click="PlayNowMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonPlayNext"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Play next"
-                Icon="Next"
-                Click="PlayNextMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonAddToNowPlaying"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Add to queueu"
-                Icon="Add"
-                Click="AddToNowPlayingMultiple"/>
-            <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-            <AppBarButton
-                x:Uid="AppBarButtonAddToPlaylist"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Add to playlist"
-                Icon="Add"
-                Click="AddToPlaylistMultiple"/>
+                Click="DisableMultipleSelection"/>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
@@ -300,21 +277,19 @@
                         FontSize="17" 
                         TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
-                <AutoSuggestBox  Grid.Column="2" 
+                <AutoSuggestBox  
+                    Grid.Column="2" 
+                    x:Name="SearchBox"
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
+                    DisplayMemberPath="Title"
+                    TextMemberPath="Title"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
-                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Title}"/>
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 

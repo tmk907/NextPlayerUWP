@@ -638,8 +638,17 @@ namespace NextPlayerUWP.Common
                 }
                 else
                 {
-                    //out of range exception
-                    mediaList.Items[i].Source.CustomProperties[propertyIndex] = i;
+                    if (mediaList.Items.Count == 0)
+                    {
+                        var song = NowPlayingPlaylistManager.Current.songs[i];
+                        var playbackItem = await PreparePlaybackItem(song);
+                        playbackItem.Source.CustomProperties[propertyIndex] = i;
+                        mediaList.Items.Add(playbackItem);
+                    }
+                    else
+                    {
+                        mediaList.Items[i].Source.CustomProperties[propertyIndex] = i;
+                    }
                 }
             }
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;

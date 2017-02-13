@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using NextPlayerUWP.Common;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -21,6 +22,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<CloudStorageFoldersViewModel>();
             SimpleIoc.Default.Register<FileInfoViewModel>();
             SimpleIoc.Default.Register<FoldersViewModel>();
+            SimpleIoc.Default.Register<FoldersRootViewModel>();
             SimpleIoc.Default.Register<GenresViewModel>();
             SimpleIoc.Default.Register<LyricsViewModel>();
             SimpleIoc.Default.Register<NewSmartPlaylistViewModel>();          
@@ -37,6 +39,8 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<TestViewModel>();
             SimpleIoc.Default.Register<PlayerViewModelBase>();
             SimpleIoc.Default.Register<QueueViewModelBase>();
+
+            SimpleIoc.Default.Register<SettingsVMService>();
         }
 
         public AddToPlaylistViewModel AddToPlaylistVM => ServiceLocator.Current.GetInstance<AddToPlaylistViewModel>();
@@ -51,6 +55,7 @@ namespace NextPlayerUWP.ViewModels
         public CloudStorageFoldersViewModel CloudStorageFoldersVM => ServiceLocator.Current.GetInstance<CloudStorageFoldersViewModel>();
         public FileInfoViewModel FileInfoVM => ServiceLocator.Current.GetInstance<FileInfoViewModel>();
         public FoldersViewModel FoldersVM => ServiceLocator.Current.GetInstance<FoldersViewModel>();
+        public FoldersRootViewModel FoldersRootVM => ServiceLocator.Current.GetInstance<FoldersRootViewModel>();
         public GenresViewModel GenresVM => ServiceLocator.Current.GetInstance<GenresViewModel>();
         public LyricsViewModel LyricsVM => ServiceLocator.Current.GetInstance<LyricsViewModel>();
         public NewSmartPlaylistViewModel NewSmartPlaylistVM => ServiceLocator.Current.GetInstance<NewSmartPlaylistViewModel>();
@@ -67,5 +72,7 @@ namespace NextPlayerUWP.ViewModels
         public TestViewModel TestVM => ServiceLocator.Current.GetInstance<TestViewModel>();
         public PlayerViewModelBase PlayerVM => ServiceLocator.Current.GetInstance<PlayerViewModelBase>();
         public QueueViewModelBase QueueVM => ServiceLocator.Current.GetInstance<QueueViewModelBase>();
+
+        public SettingsVMService SettingsVMService => ServiceLocator.Current.GetInstance<SettingsVMService>();
     }
 }

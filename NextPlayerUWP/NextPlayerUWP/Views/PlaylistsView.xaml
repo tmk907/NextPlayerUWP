@@ -214,13 +214,16 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-			      BackButtonVisibility="Collapsed" 
-			      Frame="{x:Bind Frame, Mode=OneWay}"
-			      Content="Playlists"
-			      x:Uid="PageHeaderPlaylists"
-			      VisualStateNarrowMinWidth="0"
-			      VisualStateNormalMinWidth="720">
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
+            x:Name="PageHeader"
+			BackButtonVisibility="Collapsed" 
+			Frame="{x:Bind Frame, Mode=OneWay}"
+			Content="Playlists"
+			x:Uid="PageHeaderPlaylists"
+			VisualStateNarrowMinWidth="0"
+			VisualStateNormalMinWidth="720">
             <AppBarButton 
                     x:Uid="AppBarButtonFilter"
                     Label="Filter"
@@ -367,22 +370,20 @@
                   <ColumnDefinition x:Name="Column2" Width="Auto"/>
                   <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
                 </Grid.ColumnDefinitions>
-              <AutoSuggestBox  Grid.Column="2" 
+              <AutoSuggestBox  
+                    x:Name="SearchBox"
+                    Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0"
                     MinWidth="192"
-                    HorizontalAlignment="Left" 
+                    HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
+                    DisplayMemberPath="Name"
+                    TextMemberPath="Name"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
-                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}"/>
             </Grid>
             <mycontrols:AlternatingRowListView 
                 x:Name="PlaylistsListView"

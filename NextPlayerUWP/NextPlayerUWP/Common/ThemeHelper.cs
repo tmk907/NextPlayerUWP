@@ -1,4 +1,5 @@
-﻿using Windows.Foundation.Metadata;
+﻿using NextPlayerUWPDataLayer.Helpers;
+using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -7,14 +8,47 @@ namespace NextPlayerUWP.Common
 {
     public class ThemeHelper
     {
+        public static bool IsLightTheme
+        {
+            get
+            {
+                return (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
+            }
+        }
+
+        public static void ApplyAppTheme(bool isLightTheme)
+        {
+            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyAppTheme");
+            if (isLightTheme)
+            {
+                if (App.Current.NavigationService != null)
+                {
+                    App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
+                }
+                ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Light);
+                ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Light);
+            }
+            else
+            {
+                if (App.Current.NavigationService != null)
+                {
+                    App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Dark;
+                }
+                ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Dark);
+                ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Dark);
+            }
+        }
+
         public static void ApplyThemeToStatusBar(bool isLightTheme)
         {
+            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToStatusBar");
             if (isLightTheme) ApplyThemeToStatusBar(ElementTheme.Light);
             else ApplyThemeToStatusBar(ElementTheme.Dark);
         }
 
         public static void ApplyThemeToStatusBar(ElementTheme theme)
         {
+            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToStatusBar");
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 var statusBar = StatusBar.GetForCurrentView();
@@ -41,12 +75,14 @@ namespace NextPlayerUWP.Common
 
         public static void ApplyThemeToTitleBar(bool isLightTheme)
         {
+            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToTitleBar");
             if (isLightTheme) ApplyThemeToTitleBar(ElementTheme.Light);
             else ApplyThemeToTitleBar(ElementTheme.Dark);
         }
 
         public static void ApplyThemeToTitleBar(ElementTheme theme)
         {
+            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToTitleBar");
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
             {
                 var titleBar = ApplicationView.GetForCurrentView().TitleBar;

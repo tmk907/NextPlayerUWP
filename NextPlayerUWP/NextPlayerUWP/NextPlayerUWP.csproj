@@ -141,6 +141,7 @@
     <Compile Include="Common\MenuButtonItem.cs" />
     <Compile Include="Common\MessageDialogHelper.cs" />
     <Compile Include="Common\PlayerCommands.cs" />
+    <Compile Include="Common\SettingsVMService.cs" />
     <Compile Include="Common\SongItemsFactory.cs" />
     <Compile Include="Common\TelemetryAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
@@ -167,15 +168,19 @@
     <Compile Include="Common\Tiles\TileWithoutImageXml.cs" />
     <Compile Include="Common\TranslationHelper.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
+    <Compile Include="Controls\ButtonsForMultipleSelection.cs" />
     <Compile Include="Controls\CompositionImage.cs" />
     <Compile Include="Controls\ConnectedTransition.cs" />
     <Compile Include="Controls\CrossfadingImage.xaml.cs">
       <DependentUpon>CrossfadingImage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
+    <Compile Include="Controls\IGetSelectedItems.cs" />
+    <Compile Include="Controls\MyListView.cs" />
     <Compile Include="Controls\PopupNotification.xaml.cs">
       <DependentUpon>PopupNotification.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SettingsItemTemplateSelector.cs" />
     <Compile Include="Controls\SizeNotifyPanel.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
       <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
@@ -238,8 +243,10 @@
     <Compile Include="ViewModels\AudioSettingsViewModel.cs" />
     <Compile Include="ViewModels\CloudStorageFoldersViewModel.cs" />
     <Compile Include="ViewModels\FileInfoViewModel.cs" />
+    <Compile Include="ViewModels\FoldersRootViewModel.cs" />
     <Compile Include="ViewModels\FoldersViewModel.cs" />
     <Compile Include="ViewModels\GenresViewModel.cs" />
+    <Compile Include="ViewModels\IGroupedItemsList.cs" />
     <Compile Include="ViewModels\LyricsViewModel.cs" />
     <Compile Include="ViewModels\MusicViewModelBase.cs" />
     <Compile Include="ViewModels\NewSmartPlaylistViewModel.cs" />
@@ -254,6 +261,12 @@
     <Compile Include="ViewModels\RadiosViewModel.cs" />
     <Compile Include="ViewModels\RightPanelViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ISettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsAboutViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsAccountsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsLibraryViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsPersonalizationViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsToolsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SongsViewModel.cs" />
     <Compile Include="ViewModels\TagsEditorViewModel.cs" />
@@ -295,6 +308,9 @@
     <Compile Include="Views\FileInfoView.xaml.cs">
       <DependentUpon>FileInfoView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\FoldersRootView.xaml.cs">
+      <DependentUpon>FoldersRootView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FoldersView.xaml.cs">
       <DependentUpon>FoldersView.xaml</DependentUpon>
     </Compile>
@@ -334,8 +350,29 @@
     <Compile Include="Views\RightPanelControl.xaml.cs">
       <DependentUpon>RightPanelControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingsDetailsView.xaml.cs">
+      <DependentUpon>SettingsDetailsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView2.xaml.cs">
+      <DependentUpon>SettingsView2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsAboutControl.xaml.cs">
+      <DependentUpon>SettingsAboutControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsAccountsControl.xaml.cs">
+      <DependentUpon>SettingsAccountsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsLibraryControl.xaml.cs">
+      <DependentUpon>SettingsLibraryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsPersonalizationControl.xaml.cs">
+      <DependentUpon>SettingsPersonalizationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsToolsControl.xaml.cs">
+      <DependentUpon>SettingsToolsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
@@ -544,6 +581,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\FoldersRootView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FoldersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -596,7 +637,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsAboutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsAccountsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsLibraryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsPersonalizationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsToolsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -658,7 +727,6 @@
   <ItemGroup>
     <Folder Include="Assets\doc\" />
     <Folder Include="Services\" />
-    <Folder Include="ViewModels\Settings\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

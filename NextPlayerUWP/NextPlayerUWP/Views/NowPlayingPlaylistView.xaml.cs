@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using NextPlayerUWP.Controls;
+using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace NextPlayerUWP.Views
     public sealed partial class NowPlayingPlaylistView : Page
     {
         public NowPlayingPlaylistViewModel ViewModel;
+
         public NowPlayingPlaylistView()
         {
             this.InitializeComponent();
@@ -59,30 +61,6 @@ namespace NextPlayerUWP.Views
                 var position = e.GetPosition(senderElement);
                 menu.ShowAt(senderElement, position);
             }
-        }
-
-        private async void PlayNowMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = NowPlayingPlaylistListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.PlayNowMany(items);
-        }
-
-        private async void PlayNextMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = NowPlayingPlaylistListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.PlayNextMany(items);
-        }
-
-        private async void AddToNowPlayingMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = NowPlayingPlaylistListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.AddToNowPlayingMany(items);
-        }
-
-        private void AddToPlaylistMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = NowPlayingPlaylistListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) ViewModel.AddToPlaylistMany(items);
         }
 
         private void SelectAll(object sender, RoutedEventArgs e)

@@ -1,17 +1,12 @@
 ﻿using NextPlayerUWP.ViewModels;
-using NextPlayerUWPDataLayer.Model;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP.Controls
 {
-    public class AlternatingRowListView : ListView
+    public class AlternatingRowListView : ListView, IGetSelectedItems
     {
         public static readonly DependencyProperty OddRowBackgroundProperty = DependencyProperty.Register("OddRowBackground", typeof(Brush), typeof(AlternatingRowListView), null);
         public Brush OddRowBackground
@@ -54,26 +49,11 @@ namespace NextPlayerUWP.Controls
 
                 if (this.IsGrouping)
                 {
-                    if (DataContext.GetType() == typeof(SongsViewModel))
+                    var dt = DataContext as IGroupedItemsList;
+                    if (dt != null)
                     {
-                        var dt = DataContext as SongsViewModel;
                         var o = Items[index];
-                        var i = dt.GroupedSongs.FirstOrDefault(g => g.Contains(o)).IndexOf(o);
-                        isEven = i % 2 == 0;
-                    }
-                    else if (DataContext.GetType() == typeof(ArtistsViewModel))
-                    {
-                        var dt = DataContext as ArtistsViewModel;
-                        var o = Items[index];
-                        var i = dt.GroupedArtists.FirstOrDefault(g => g.Contains(o)).IndexOf(o);
-                        isEven = i % 2 == 0;
-                    }
-                    else if (DataContext.GetType() == typeof(ArtistViewModel))
-                    {
-                        //error argsNullReferenceException
-                        var dt = DataContext as ArtistViewModel;
-                        var o = Items[index];
-                        var i = dt.Albums.FirstOrDefault(g => g.Contains(o)).IndexOf(o);
+                        var i = dt.GetIndexFromGroup(o);
                         isEven = i % 2 == 0;
                     }
                 }

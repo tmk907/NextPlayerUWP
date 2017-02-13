@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public class AlbumArtistsViewModel : MusicViewModelBase
+    public class AlbumArtistsViewModel : MusicViewModelBase, IGroupedItemsList
     {
         SortingHelperForAlbumArtistItems sortingHelper;
 
@@ -180,6 +180,11 @@ namespace NextPlayerUWP.ViewModels
         {
             var item = args.SelectedItem as AlbumArtistItem;
             sender.Text = item.DisplayAlbumArtist;
+        }
+
+        public int GetIndexFromGroup(object item)
+        {
+            return GroupedAlbumArtists.FirstOrDefault(g => g.Contains(item)).IndexOf(item);
         }
     }
 }

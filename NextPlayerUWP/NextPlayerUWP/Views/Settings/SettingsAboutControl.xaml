@@ -1,0 +1,58 @@
+﻿<UserControl
+    x:Class="NextPlayerUWP.Views.Settings.SettingsAboutControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerUWP.Views.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Orientation="Vertical" Margin="4">
+            <TextBlock x:Uid="TBAbout"
+                Style="{StaticResource TitleTextBlockStyle}" 
+                Margin="0,12,0,12"
+                Text="About"/>
+            <StackPanel Orientation="Vertical" Margin="4">
+                <StackPanel Orientation="Horizontal" Margin="0,0,4,8">
+                    <TextBlock 
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="0,0,8,0"
+                        Text="Next-Player"/>
+                    <TextBlock
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Text="{x:Bind ViewModel.AppVersion}"/>
+                </StackPanel>
+                <Button  
+                    x:Uid="ButtonRateApp"
+                    Content="Rate app"
+                    Margin="0,4,0,8"
+                    MinWidth="128"
+                    Click="{x:Bind ViewModel.RateApp}"/>
+                <Button  
+                    x:Uid="ButtonFeedback"
+                    Margin="0,4,0,8"
+                    MinWidth="128"
+                    Content="Feedback"
+                    Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                    Click="{x:Bind ViewModel.LeaveFeedback}"/>
+                <Button  
+                    x:Uid="ButtonEmail"
+                    Content="Support"
+                    MinWidth="128"
+                    Margin="0,4,0,8"
+                    Click="{x:Bind ViewModel.ContactWithSupport}"/>
+                <Button  
+                    x:Uid="ButtonLicenses"
+                    Content="Licenses"
+                    Margin="0,4,0,8"
+                    MinWidth="128"
+                    Click="{x:Bind ViewModel.Licenses}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

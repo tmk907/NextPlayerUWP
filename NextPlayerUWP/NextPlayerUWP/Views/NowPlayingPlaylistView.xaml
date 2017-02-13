@@ -454,13 +454,15 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <controls:PageHeader Grid.Row="0"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderNowPlayingPlaylist"
-                Content="Now playing" 
-                VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720">
+        <controls:PageHeader 
+            Grid.Row="0"
+            x:Name="PageHeader"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            x:Uid="PageHeaderNowPlayingPlaylist"
+            Content="Now playing" 
+            VisualStateNarrowMinWidth="0" 
+            VisualStateNormalMinWidth="720">
             <AppBarButton 
                 x:Uid="AppBarButtonSort"
                 x:Name="AppBarButtonSort"

@@ -60,40 +60,7 @@
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <Style x:Key="GroupHeaderContainerStyle" TargetType="ListViewHeaderItem">
-            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-            <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Margin" Value="0,0,12,4"/>
-            <Setter Property="Padding" Value="0,8,12,0"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="VerticalContentAlignment" Value="Top" />
-            <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}"/>
-            <Setter Property="UseSystemFocusVisuals" Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListViewHeaderItem">
-                        <StackPanel Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter x:Name="ContentPresenter"
-                                Margin="{TemplateBinding Padding}"
-                                Content="{TemplateBinding Content}"
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                ContentTransitions="{TemplateBinding ContentTransitions}"
-                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                            <Rectangle Stroke="{ThemeResource UserAccentBrush}"
-                                StrokeThickness="0.5"
-                                Height="1"
-                                VerticalAlignment="Bottom"
-                                HorizontalAlignment="Stretch"
-                                Margin="0,8,0,0"/>
-                        </StackPanel>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        
         <DataTemplate x:Key="GroupHeaderTemplate">
             <Grid Margin="0,0,0,4" 
                     RightTapped="AlbumGroupHeader_RightTapped" 
@@ -107,7 +74,9 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Image Grid.Column="0" Grid.RowSpan="2"
-                        ImageOpened="AlbumCoverImage_ImageOpened">
+                    Tapped="AlbumCoverImage_Tapped"
+                    Tag="{Binding Header.AlbumId}"
+                    ImageOpened="AlbumCoverImage_ImageOpened">
                     <Image.Source>
                         <BitmapImage UriSource="{Binding Header.ImageUri, Mode=OneWay}"
                                      DecodePixelType="Logical"
@@ -306,7 +275,10 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
+            x:Name="PageHeader"
             BackButtonVisibility="Collapsed" 
             Frame="{x:Bind Frame, Mode=OneWay}"
             x:Uid="PageHeaderAlbumArtist"
@@ -323,7 +295,7 @@
                 x:Uid="AppBarButtonSelect"
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
                 Label="Select"
-                Click="{x:Bind ViewModel.EnableMultipleSelection}">
+                Click="EnableMultipleSelection">
                 <AppBarButton.Content>
                     <Viewbox Height="22">
                         <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
@@ -342,35 +314,13 @@
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                 Label="Clear selection"
                 Icon="ClearSelection"
-                Click="{x:Bind ViewModel.DisableMultipleSelection}"/>
+                Click="DisableMultipleSelection"/>
             <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-            <AppBarButton
-                x:Uid="AppBarButtonPlayNow"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Play"
-                Icon="Play"
-                Click="PlayNowMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonPlayNext"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Play next"
-                Icon="Next"
-                Click="PlayNextMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonAddToNowPlaying"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Add to queueu"
-                Icon="Add"
-                Click="AddToNowPlayingMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonAddToPlaylist"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Add to playlist"
-                Icon="Add"
-                Click="AddToPlaylistMultiple"/>
         </controls:PageHeader>
-        <Grid Grid.Row="1" Grid.Column="0"
-            x:Name="PortraitView">
+        <Grid 
+            x:Name="PortraitView"
+            Grid.Row="1" 
+            Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
@@ -406,9 +356,10 @@
             </mycontrols:AlternatingRowListView>
         </Grid>
         <ScrollViewer 
-            Grid.Row="1" Grid.Column="0"
             x:Name="MobileLandscapeView"
             x:DeferLoadStrategy="Lazy" 
+            Grid.Row="1" 
+            Grid.Column="0"
             Visibility="Collapsed"
             ScrollViewer.VerticalScrollMode="Enabled" >
             <Grid>
@@ -417,7 +368,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
-                    Text="{Binding AlbumArtist.DisplayAlbumArtist}"
+                    Text="{x:Bind ViewModel.AlbumArtist.DisplayAlbumArtist}"
                     Style="{StaticResource ArtistDescriptionTextBlockStyle}"
                     Margin="12,12,12,12"/>
                 <mycontrols:AlternatingRowListView 

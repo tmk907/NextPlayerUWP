@@ -1,0 +1,247 @@
+﻿<UserControl
+    x:Class="NextPlayerUWP.Views.Settings.SettingsLibraryControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerUWP.Views.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:triggers="using:WindowsStateTriggers"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <DataTemplate x:Key="MusicFolderTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MinWidth="192" Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <FontIcon Grid.Column="0" Grid.RowSpan="2"
+                          FontFamily="Segoe MDL2 Assets"
+                          Glyph="&#xE8B7;" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,12,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Name}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           FontSize="13"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Path}"/>
+                <Button Grid.Column="3" Grid.RowSpan="2"
+                        Click="RemoveFolder_Click"
+                        Width="40"
+                        Height="40"
+                        Background="Transparent"
+                        Tag="{Binding}"
+                        VerticalAlignment="Center">
+                    <Button.Content>
+                        <SymbolIcon Symbol="Cancel"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="SdCardFolderTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MinWidth="192" Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <FontIcon Grid.Column="0" Grid.RowSpan="3"
+                          FontFamily="Segoe MDL2 Assets"
+                          Glyph="&#xE8B7;" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,12,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Name}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           FontSize="13"
+                           VerticalAlignment="Bottom"
+                           Text="{Binding Path}"/>
+                <TextBlock Grid.Column="1" Grid.Row="2"
+                           FontSize="13"
+                           VerticalAlignment="Bottom"
+                           Visibility="{Binding IncludeSubFolders, Converter={StaticResource BoolToVisibilityConverter}}"
+                           Text="{Binding IncludeSubFolders, Converter={StaticResource BoolToSubfoldersDescriptionConverter}}"/>
+                <Button Grid.Column="3" Grid.RowSpan="3"
+                        Click="RemoveSdCardFolder_Click"
+                        Width="40"
+                        Height="40"
+                        Background="Transparent"
+                        Tag="{Binding}"
+                        VerticalAlignment="Center">
+                    <Button.Content>
+                        <SymbolIcon Symbol="Cancel"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Phone">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <ScrollViewer Padding="12,0,12,0">
+            <StackPanel Orientation="Vertical" Margin="4">
+                <TextBlock 
+                    x:Uid="TBLibrary"
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,0,0,12"
+                    Text="Library"/>
+                <TextBlock 
+                    x:Uid="TBUpdateLibrary"
+                    Style="{StaticResource BodyTextBlockStyle}"
+                    FontSize="17"
+                    Margin="4,4,4,4"
+                    Text="Update library"/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Margin="4,4,4,4">
+                        <Button 
+                            x:Uid="ButtonUpdate"
+                            Content="Update" 
+                            Margin="0,0,12,0"
+                            MinWidth="128"
+                            IsEnabled="{x:Bind ViewModel.IsUpdating, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.UpdateLibrary}"/>
+                        <TextBlock 
+                            x:Uid="TBNewSongs"
+                            VerticalAlignment="Center"
+                            Text="new songs:"
+                            Margin="0,0,8,0"
+                            Visibility="{x:Bind ViewModel.UpdateProgressTextVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <TextBlock 
+                            Text="{x:Bind ViewModel.UpdateProgressText, Mode=OneWay}"
+                            VerticalAlignment="Center"/>
+                        <ProgressRing 
+                            VerticalAlignment="Center"
+                            Width="28"
+                            Height="28"
+                            Margin="12,0,4,0"
+                            IsActive="{x:Bind ViewModel.IsUpdating, Mode=OneWay}" 
+                            Visibility="{x:Bind ViewModel.IsUpdating, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical"  Margin="4,0,4,4">
+                        <TextBlock 
+                            VerticalAlignment="Center"
+                            Text="{x:Bind ViewModel.ScannedFolder, Mode=OneWay}"
+                            Margin="0,0,8,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock 
+                                x:Uid="TBLastLibraryUpdate"
+                                VerticalAlignment="Center"
+                                Text="Last update:"/>
+                            <TextBlock 
+                                Text="{x:Bind ViewModel.LastLibraryUpdate, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}"
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel 
+                    x:Name="AddMusicFoldersStackPanel"
+                    Orientation="Vertical" 
+                    Margin="4,4,4,4">
+                    <TextBlock 
+                        x:Uid="TBAddMusicLibraryFolders"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Text="Folders, where app looks for music"/>
+                    <ListView 
+                        Margin="0,4,4,4"
+                        ItemsSource="{x:Bind ViewModel.MusicLibraryFolders, Mode=OneWay}"
+                        ItemTemplate="{StaticResource MusicFolderTemplate}"
+                        SelectionMode="None"
+                        IsItemClickEnabled="False">
+                    </ListView>
+                    <Button 
+                        x:Uid="ButtonAddFolder"
+                        Content="Add folder" 
+                        Click="{x:Bind ViewModel.AddFolder}"
+                        Margin="0,4,4,4"
+                        MinWidth="128"/>
+                </StackPanel>
+                <StackPanel x:Name="AddSdCardFoldersStackPanel"
+                              Orientation="Vertical" 
+                              Margin="4,4,4,4">
+                    <TextBlock 
+                        x:Uid="TBAddMusicLibraryFolders"
+                                  Style="{StaticResource BodyTextBlockStyle}"
+                                  FontSize="17"
+                                  Text="Folders, where app looks for music"/>
+                    <ListView 
+                        Margin="0,4,4,4"
+                        ItemsSource="{x:Bind ViewModel.SdCardFolders, Mode=OneWay}"
+                        ItemTemplate="{StaticResource SdCardFolderTemplate}"
+                        SelectionMode="None"
+                        IsItemClickEnabled="False">
+                    </ListView>
+                    <Button 
+                        x:Uid="ButtonAddFolder"
+                        Content="Add folder" 
+                        Click="{x:Bind ViewModel.AddSdCardFolder}"
+                        Margin="0,4,4,4"
+                        MinWidth="128"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock 
+                        x:Uid="TBIgnoreFollowingArticles"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Ignore following articles, when sorting by album name, artist or title:"/>
+                    <StackPanel
+                            Orientation="Horizontal"
+                            Margin="8,0,0,0">
+                        <ToggleSwitch 
+                                IsOn="{x:Bind ViewModel.IgnoreArticles, Mode=TwoWay}"
+                                VerticalAlignment="Center"/>
+                        <TextBox 
+                                Width="256"
+                                VerticalAlignment="Center"
+                                Text="{x:Bind ViewModel.IgnoredArticles, Mode=TwoWay}"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

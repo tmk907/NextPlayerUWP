@@ -1,4 +1,7 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.Controls;
+using NextPlayerUWP.Messages;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -17,6 +20,8 @@ namespace NextPlayerUWP.Views
     public sealed partial class GenresView : Page
     {
         public GenresViewModel ViewModel;
+        private ButtonsForMultipleSelection selectionButtons;
+
         public GenresView()
         {
             this.InitializeComponent();
@@ -24,6 +29,7 @@ namespace NextPlayerUWP.Views
             this.Loaded += View_Loaded;
             this.Unloaded += View_Unloaded;
             ViewModel = (GenresViewModel)DataContext;
+            selectionButtons = new ButtonsForMultipleSelection();
         }
 
         //~GenresView()
@@ -31,18 +37,25 @@ namespace NextPlayerUWP.Views
         //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
         //}
 
+        private void View_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(GenresListView);
+            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
+            {
+                SearchBox.Focus(FocusState.Programmatic);
+            });
+            selectionButtons.OnLoaded(ViewModel, PageHeader, GenresListView);
+        }
+
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
+            selectionButtons.OnUnloaded();
+            Messenger.Default.Unregister(this);
             ViewModel.OnUnloaded();
             //ViewModel = null;
             //DataContext = null;
             //this.Loaded -= View_Loaded;
             //this.Unloaded -= View_Unloaded;
-        }
-
-        private void View_Loaded(object sender, RoutedEventArgs e)
-        {
-            ViewModel.OnLoaded(GenresListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -62,28 +75,16 @@ namespace NextPlayerUWP.Views
             await ViewModel.SlidableListItemLeftCommandRequested(song);
         }
 
-        private async void PlayNowMultiple(object sender, RoutedEventArgs e)
+        private void EnableMultipleSelection(object sender, RoutedEventArgs e)
         {
-            var items = GenresListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.PlayNowMany(items);
+            ViewModel.EnableMultipleSelection();
+            selectionButtons.ShowMultipleSelectionButtons();
         }
 
-        private async void PlayNextMultiple(object sender, RoutedEventArgs e)
+        private void DisableMultipleSelection(object sender, RoutedEventArgs e)
         {
-            var items = GenresListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.PlayNextMany(items);
-        }
-
-        private async void AddToNowPlayingMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = GenresListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.AddToNowPlayingMany(items);
-        }
-
-        private void AddToPlaylistMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = GenresListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) ViewModel.AddToPlaylistMany(items);
+            ViewModel.DisableMultipleSelection();
+            selectionButtons.HideMultipleSelectionButtons();
         }
 
         private void SelectAll(object sender, RoutedEventArgs e)

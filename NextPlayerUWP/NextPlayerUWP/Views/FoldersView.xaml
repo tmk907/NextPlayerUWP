@@ -59,21 +59,6 @@
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
-        <Style x:Key="ItemStyleLeft" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundSolid}"/>
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-        </Style>
-        <Style x:Key="ItemStyleCenter" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-        </Style>
-        <Style x:Key="ItemStyleRight" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{ThemeResource ListItemForegroundLight}"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-        </Style>
         <DataTemplate x:Key="FolderItemTemplateDesktop" x:DataType="data:FolderItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                 <Grid.ColumnDefinitions>
@@ -355,13 +340,40 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderFolders"
-                Content="Folders" 
-                VisualStateNarrowMinWidth="0"
-                VisualStateNormalMinWidth="720"/>
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
+            x:Name="PageHeader"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            x:Uid="PageHeaderFolders"
+            Content="Folders" 
+            VisualStateNarrowMinWidth="0"
+            VisualStateNormalMinWidth="720">
+            <AppBarButton
+                x:Uid="AppBarButtonSelect"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                Label="Select"
+                Click="EnableMultipleSelection">
+                <AppBarButton.Content>
+                    <Viewbox Height="22">
+                        <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
+                    </Viewbox>
+                </AppBarButton.Content>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="AppBarButtonSelectAll"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Select all"
+                Icon="SelectAll"
+                Click="SelectAll"/>
+            <AppBarButton
+                x:Uid="AppBarButtonClearSelection"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Clear selection"
+                Icon="ClearSelection"
+                Click="DisableMultipleSelection"/>
+        </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
@@ -390,21 +402,19 @@
                             DisplayMemberPath="Label"
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
                 </StackPanel>
-                <AutoSuggestBox  Grid.Column="2" 
+                <AutoSuggestBox  
+                    x:Name="SearchBox"
+                    Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
+                    DisplayMemberPath="Title"
+                    TextMemberPath="Title"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
-                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Title}"/>
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}"/>
             </Grid>
             <Grid Grid.Row="1">
                 <mycontrols:AlternatingRowListView x:Name="FoldersListView"
@@ -412,11 +422,11 @@
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                     ItemsSource="{Binding Items}"
                     ItemTemplateSelector="{StaticResource FolderDataTemplateSelectorDesktop}"
-                    IsItemClickEnabled="True"
+                    SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                    IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     Margin="12,4,0,0"
                     ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}"
-                    SelectionMode="None"
                     CanDragItems="True"
                     DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                         <mycontrols:AlternatingRowListView.ItemsPanel>

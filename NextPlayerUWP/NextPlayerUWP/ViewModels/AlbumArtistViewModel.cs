@@ -9,10 +9,11 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
+using System.Linq;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public class AlbumArtistViewModel : MusicViewModelBase
+    public class AlbumArtistViewModel : MusicViewModelBase, IGroupedItemsList
     {
         private int albumArtistId;
 
@@ -55,6 +56,7 @@ namespace NextPlayerUWP.ViewModels
                     GroupList group = new GroupList();
                     group.Key = album.AlbumParam;
                     var header = new ArtistItemHeader();
+                    header.AlbumId = album.AlbumId;
                     if (album.AlbumParam == "")
                     {
                         var helper = new TranslationHelper();
@@ -193,6 +195,11 @@ namespace NextPlayerUWP.ViewModels
             App.AddToCache(list);
             var item = new ListOfMusicItems();
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
+
+        public int GetIndexFromGroup(object item)
+        {
+            return Albums.FirstOrDefault(g => g.Contains(item)).IndexOf(item);
         }
     }
 }

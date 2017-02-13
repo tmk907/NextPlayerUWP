@@ -8,6 +8,9 @@ using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using GalaSoft.MvvmLight.Messaging;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -19,13 +22,16 @@ namespace NextPlayerUWP.Views
     public sealed partial class AlbumsView : Page
     {
         public AlbumsViewModel ViewModel;
+        private ButtonsForMultipleSelection selectionButtons;
+
         public AlbumsView()
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
-            //this.Unloaded += View_Unloaded;
+            this.Unloaded += View_Unloaded;
             ViewModel = (AlbumsViewModel)DataContext;
+            selectionButtons = new ButtonsForMultipleSelection();
         }
         //~AlbumsView()
         //{
@@ -33,16 +39,23 @@ namespace NextPlayerUWP.Views
         //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
+            selectionButtons.OnUnloaded();
+            Messenger.Default.Unregister(this);
             ViewModel.OnUnloaded();
-            ViewModel = null;
-            DataContext = null;
-            this.Loaded -= View_Loaded;
-            this.Unloaded -= View_Unloaded;
+            //ViewModel = null;
+            //DataContext = null;
+            //this.Loaded -= View_Loaded;
+            //this.Unloaded -= View_Unloaded;
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(AlbumsListView);
+            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
+            {
+                SearchBox.Focus(FocusState.Programmatic);
+            });
+            selectionButtons.OnLoaded(ViewModel, PageHeader, AlbumsListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -81,28 +94,16 @@ namespace NextPlayerUWP.Views
             return list;
         }
 
-        private async void PlayNowMultiple(object sender, RoutedEventArgs e)
+        private void EnableMultipleSelection(object sender, RoutedEventArgs e)
         {
-            var items = GetSelectedItems();
-            if (items.Count > 0) await ViewModel.PlayNowMany(items);
+            ViewModel.EnableMultipleSelection();
+            selectionButtons.ShowMultipleSelectionButtons();
         }
 
-        private async void PlayNextMultiple(object sender, RoutedEventArgs e)
+        private void DisableMultipleSelection(object sender, RoutedEventArgs e)
         {
-            var items = GetSelectedItems();
-            if (items.Count > 0) await ViewModel.PlayNextMany(items);
-        }
-
-        private async void AddToNowPlayingMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = GetSelectedItems();
-            if (items.Count > 0) await ViewModel.AddToNowPlayingMany(items);
-        }
-
-        private void AddToPlaylistMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = GetSelectedItems();
-            if (items.Count > 0) ViewModel.AddToPlaylistMany(items);
+            ViewModel.DisableMultipleSelection();
+            selectionButtons.HideMultipleSelectionButtons();
         }
 
         private void SelectAll(object sender, RoutedEventArgs e)

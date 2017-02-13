@@ -1137,8 +1137,8 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
 
-            var query = await connectionAsync.Table<PlainPlaylistsTable>().OrderBy(p => p.Name).ToListAsync();
-            foreach (var item in query)
+            var query = await connectionAsync.Table<PlainPlaylistsTable>().ToListAsync();
+            foreach (var item in query.OrderBy(p => p.Name.ToLower()))
             {
                 playlists.Add(new PlaylistItem(item));
             }

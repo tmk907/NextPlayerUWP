@@ -906,4 +906,10 @@
   <data name="AppBarButtonPlayNext.Label" xml:space="preserve">
     <value>Играть следующую</value>
   </data>
+  <data name="Added next" xml:space="preserve">
+    <value>Added next</value>
+  </data>
+  <data name="Added to now playing" xml:space="preserve">
+    <value>Added to now playing</value>
+  </data>
 </root>

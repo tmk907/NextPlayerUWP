@@ -15,13 +15,14 @@ namespace NextPlayerUWP.ViewModels
 {
     public class ArtistItemHeader
     {
+        public int AlbumId { get; set; }
         public string Album { get; set; }
         public string AlbumArtist { get; set; }
         public int Year { get; set; }
         public Uri ImageUri { get; set; }
     }
 
-    public class ArtistViewModel : MusicViewModelBase
+    public class ArtistViewModel : MusicViewModelBase, IGroupedItemsList
     {
         private int artistId;
 
@@ -93,6 +94,7 @@ namespace NextPlayerUWP.ViewModels
                     var album = await DatabaseManager.Current.GetAlbumItemAsync(g.GroupName.Album, g.GroupName.AlbumArtist);
 
                     var header = new ArtistItemHeader();
+                    header.AlbumId = album.AlbumId;
                     if (g.GroupName.Album == "")
                     {
                         var helper = new TranslationHelper();
@@ -229,6 +231,11 @@ namespace NextPlayerUWP.ViewModels
             App.AddToCache(list);
             var item = new ListOfMusicItems();
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
+
+        public int GetIndexFromGroup(object item)
+        {
+            return Albums.FirstOrDefault(g => g.Contains(item)).IndexOf(item);
         }
     }
 }

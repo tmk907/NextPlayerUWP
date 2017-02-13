@@ -911,25 +911,61 @@ namespace NextPlayerUWP.Common
 
         public override Func<FolderItem, object> GetGroupBySelector()
         {
-            throw new NotImplementedException();
+            switch (SortOption)
+            {
+                case SortNames.FolderName:
+                    return t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower();
+                case SortNames.Directory:
+                    return t => (t.Directory == "") ? "" : t.Directory[0].ToString().ToLower();
+                case SortNames.SongCount:
+                    return t => t.SongsNumber;
+                case SortNames.LastAdded:
+                    return t => String.Format("{0:d}", t.LastAdded);
+                default:
+                    return t => (t.Folder == "") ? "" : t.Folder[0].ToString().ToLower();
+            }
         }
 
         public override Func<FolderItem, object> GetOrderBySelector()
         {
-            throw new NotImplementedException();
+            switch (SortOption)
+            {
+                case SortNames.FolderName:
+                    return s => s.Folder;
+                case SortNames.Directory:
+                    return s => s.Directory;
+                case SortNames.SongCount:
+                    return s => s.SongsNumber;
+                case SortNames.LastAdded:
+                    return s => s.LastAdded.Ticks * -1;
+                default:
+                    return s => s.Folder;
+            }
         }
 
         public override string GetPropertyName()
         {
-            throw new NotImplementedException();
+            switch (SortOption)
+            {
+                case SortNames.FolderName:
+                    return "FolderName";
+                case SortNames.Directory:
+                    return "Directory";
+                case SortNames.SongCount:
+                    return "SongsNumber";
+                case SortNames.LastAdded:
+                    return "LastAdded";
+                default:
+                    return "FolderName";
+            }
         }
 
         protected override ObservableCollection<ComboBoxItemValue> GetComboBoxValues()
         {
             ResourceLoader loader = new ResourceLoader();
             ObservableCollection<ComboBoxItemValue> comboboxItems = new ObservableCollection<ComboBoxItemValue>();
-            comboboxItems.Add(new ComboBoxItemValue(SortNames.Directory, loader.GetString(SortNames.Directory)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.FolderName, loader.GetString(SortNames.FolderName)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.Directory, loader.GetString(SortNames.Directory)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.SongCount, loader.GetString(SortNames.SongCount)));
             //comboboxItems.Add(new ComboBoxItemValue(Duration, loader.GetString(Duration)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.LastAdded, loader.GetString(SortNames.LastAdded)));

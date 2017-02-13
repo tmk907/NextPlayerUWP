@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using Windows.ApplicationModel.DataTransfer;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWP.Messages;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -142,6 +143,7 @@ namespace NextPlayerUWP.ViewModels
         public async Task SlidableListItemLeftCommandRequested(MusicItem item)
         {
             string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand) as string;
+            TranslationHelper helper = new TranslationHelper();
             switch (swipeAction)
             {
                 case SettingsKeys.SwipeActionPlayNow:
@@ -150,9 +152,13 @@ namespace NextPlayerUWP.ViewModels
                     break;
                 case SettingsKeys.SwipeActionPlayNext:
                     await NowPlayingPlaylistManager.Current.AddNext(item);
+                    string text = helper.GetTranslation(TranslationHelper.AddedNext);
+                    AppMessenger.ShowInAppNotification(text);
                     break;
                 case SettingsKeys.SwipeActionAddToNowPlaying:
                     await NowPlayingPlaylistManager.Current.Add(item);
+                    string text2 = helper.GetTranslation(TranslationHelper.AddedToNowPlaying);
+                    AppMessenger.ShowInAppNotification(text2);
                     break;
                 case SettingsKeys.SwipeActionAddToPlaylist:
                     NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
@@ -312,7 +318,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 return;
             }
-            if(listView.Items.Count <= firstVisibleItemIndex)
+            if(listView == null || listView.Items.Count <= firstVisibleItemIndex)
             {
                 return;
             }

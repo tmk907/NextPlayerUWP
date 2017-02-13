@@ -7,6 +7,7 @@ using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Animations;
+using NextPlayerUWP.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -18,6 +19,8 @@ namespace NextPlayerUWP.Views
     public sealed partial class ArtistView : Page
     {
         public ArtistViewModel ViewModel;
+        private ButtonsForMultipleSelection selectionButtons;
+
         public ArtistView()
         {
             this.InitializeComponent();
@@ -25,6 +28,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += View_Unloaded;
             ViewModel = (ArtistViewModel)DataContext;
             //NavigationCacheMode = NavigationCacheMode.Required;
+            selectionButtons = new ButtonsForMultipleSelection();
         }
         //~ArtistView()
         //{
@@ -32,6 +36,7 @@ namespace NextPlayerUWP.Views
         //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
+            selectionButtons.OnUnloaded();
             ShuffleAppBarButton.Click -= ShuffleAppBarButton_Click;
             //ViewModel.OnUnloaded();
             //ViewModel = null;
@@ -44,6 +49,7 @@ namespace NextPlayerUWP.Views
         {
             ShuffleAppBarButton.Click += ShuffleAppBarButton_Click;
             ViewModel.OnLoaded(ArtistSongsListView);
+            selectionButtons.OnLoaded(ViewModel, PageHeader, ArtistSongsListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -82,33 +88,28 @@ namespace NextPlayerUWP.Views
             ViewModel.ShuffleAllSongs();
         }
 
-        private async void PlayNowMultiple(object sender, RoutedEventArgs e)
+        private void EnableMultipleSelection(object sender, RoutedEventArgs e)
         {
-            var items = ArtistSongsListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.PlayNowMany(items);
+            ViewModel.EnableMultipleSelection();
+            selectionButtons.ShowMultipleSelectionButtons();
         }
 
-        private async void PlayNextMultiple(object sender, RoutedEventArgs e)
+        private void DisableMultipleSelection(object sender, RoutedEventArgs e)
         {
-            var items = ArtistSongsListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.PlayNextMany(items);
-        }
-
-        private async void AddToNowPlayingMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = ArtistSongsListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) await ViewModel.AddToNowPlayingMany(items);
-        }
-
-        private void AddToPlaylistMultiple(object sender, RoutedEventArgs e)
-        {
-            var items = ArtistSongsListView.GetSelectedItems<MusicItem>();
-            if (items.Count > 0) ViewModel.AddToPlaylistMany(items);
+            ViewModel.DisableMultipleSelection();
+            selectionButtons.HideMultipleSelectionButtons();
         }
 
         private void SelectAll(object sender, RoutedEventArgs e)
         {
             ArtistSongsListView.SelectAll();
+        }
+
+        private void AlbumCoverImage_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var image = sender as Image;
+            int id = (int)image.Tag;
+            App.Current.NavigationService.Navigate(App.Pages.Album, id);
         }
     }
 }

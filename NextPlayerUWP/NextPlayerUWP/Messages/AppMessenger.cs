@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using System;
 
 namespace NextPlayerUWP.Messages
 {

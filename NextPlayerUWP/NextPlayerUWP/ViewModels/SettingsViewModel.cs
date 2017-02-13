@@ -669,6 +669,7 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return isLightThemeOn; }
             set {
+                System.Diagnostics.Debug.WriteLine("Settings IsLightThemeOn {0}", value);
                 Set(ref isLightThemeOn, value);
                 if (value) ChangeAppTheme(); //only one radiobutton is true, so ChangeAppTheme is executed once
             }
@@ -679,6 +680,7 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return isDarkThemeOn; }
             set {
+                System.Diagnostics.Debug.WriteLine("Settings IsDarkThemeOn {0}", value);
                 Set(ref isDarkThemeOn, value);
                 if (value) ChangeAppTheme();
             }
@@ -694,20 +696,9 @@ namespace NextPlayerUWP.ViewModels
         public void ChangeAppTheme()
         {
             if (initialization) return;
+            System.Diagnostics.Debug.WriteLine("Settings ChangeAppTheme");
             App.IsLightThemeOn = isLightThemeOn;
-            if (isLightThemeOn)
-            {               
-                //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, AppTheme.Light);
-                App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
-                ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Light);
-                ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Light);
-            }
-            else
-            {
-                App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Dark;
-                ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Dark);
-                ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Dark);
-            }
+            ThemeHelper.ApplyAppTheme(isLightThemeOn);
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, isLightThemeOn);
 
@@ -1112,5 +1103,25 @@ namespace NextPlayerUWP.ViewModels
         }
 
         #endregion
+
+        //public SettingsAboutViewModel SettingsAboutVM { get; } = new SettingsAboutViewModel();
+        private bool aboutVisibility = false;
+        public bool AboutVisibility
+        {
+            get { return aboutVisibility; }
+            set
+            {
+                Set(ref aboutVisibility, value);
+            }
+        }
+        public void Expand()
+        {
+            AboutVisibility = true;
+        }
+        //public SettingsAccountsViewModel SettingsAccountsVM { get; } = new SettingsAccountsViewModel();
     }
+
+    
+
+    
 }

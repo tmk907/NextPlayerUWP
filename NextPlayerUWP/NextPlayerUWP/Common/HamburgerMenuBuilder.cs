@@ -333,7 +333,7 @@ namespace NextPlayerUWP.Common
             //{ MenuItemType.AudioSettings, typeof(AudioSettingsView)},
             //{ MenuItemType.CloudStorageFolders, typeof(CloudStorageFoldersView)},
             //{ MenuItemType.FileInfo, typeof(FileInfoView)},
-            { MenuItemType.Folders, typeof(FoldersView)},
+            { MenuItemType.Folders, typeof(FoldersRootView)},
             { MenuItemType.Genres, typeof(GenresView)},
             //{ MenuItemType.Licenses, typeof(Licences)},
             //{ MenuItemType.Lyrics, typeof(LyricsView)},

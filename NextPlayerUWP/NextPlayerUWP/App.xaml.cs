@@ -1,5 +1,6 @@
 ﻿using Microsoft.HockeyApp;
 using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
@@ -18,6 +19,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP
 {    
@@ -28,7 +30,6 @@ namespace NextPlayerUWP
         {
             MemoryUsageReduced?.Invoke(null, null);
         }
-
 
         private bool isFirstRun = false;
 
@@ -147,8 +148,8 @@ namespace NextPlayerUWP
                     //?
                 }
                 Window.Current.Content = null;
-                GC.Collect();
             }
+            GC.Collect();
         }
 
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
@@ -160,6 +161,11 @@ namespace NextPlayerUWP
             _isInBackgroundMode = true;
             
             appShortcuts.DeregisterShortcuts();
+            if (OnNewTilePinned != null)
+            {
+                OnNewTilePinned();
+                OnNewTilePinned = null;
+            }
             try
             {
 #if DEBUG
@@ -187,7 +193,8 @@ namespace NextPlayerUWP
             {
                 var deferral = e.GetDeferral();
                 var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-                await service.RestoreSavedNavigationAsync();
+                service.Frame.RequestedTheme = ThemeHelper.IsLightTheme ? ElementTheme.Light : ElementTheme.Dark;
+                await service.RestoreSavedNavigationAsync();               
                 Window.Current.Content = new ModalDialog
                 {
                     DisableBackButtonWhenModal = true,
@@ -221,6 +228,7 @@ namespace NextPlayerUWP
             Genres,
             FileInfo,
             Folders,
+            FoldersRoot,
             Lyrics,
             Licenses,
             NewSmartPlaylist,
@@ -268,9 +276,10 @@ namespace NextPlayerUWP
             tr.ChangeSlideableItemDescription();
 
             await ChangeStatusBarVisibility();
-            bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
-            ThemeHelper.ApplyThemeToStatusBar(isLightTheme);
-            ThemeHelper.ApplyThemeToTitleBar(isLightTheme);
+            //bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
+            //ThemeHelper.ApplyThemeToStatusBar(isLightTheme);
+            //ThemeHelper.ApplyThemeToTitleBar(isLightTheme);
+            ThemeHelper.ApplyAppTheme(ThemeHelper.IsLightTheme);
 
 #region AddPageKeys
             var keys = PageKeys<Pages>();
@@ -296,6 +305,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.FileInfo, typeof(FileInfoView));
             if (!keys.ContainsKey(Pages.Folders))
                 keys.Add(Pages.Folders, typeof(FoldersView));
+            if (!keys.ContainsKey(Pages.FoldersRoot))
+                keys.Add(Pages.FoldersRoot, typeof(FoldersRootView));
             if (!keys.ContainsKey(Pages.Genres))
                 keys.Add(Pages.Genres, typeof(GenresView));
             if (!keys.ContainsKey(Pages.Licenses))
@@ -319,7 +330,7 @@ namespace NextPlayerUWP
             if (!keys.ContainsKey(Pages.Radios))
                 keys.Add(Pages.Radios, typeof(RadiosView));
             if (!keys.ContainsKey(Pages.Settings))
-                keys.Add(Pages.Settings, typeof(SettingsView));
+                keys.Add(Pages.Settings, typeof(SettingsView2));
             if (!keys.ContainsKey(Pages.Songs))
                 keys.Add(Pages.Songs, typeof(SongsView));
             if (!keys.ContainsKey(Pages.TagsEditor))
@@ -489,13 +500,8 @@ namespace NextPlayerUWP
         }
         
         public override async Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
-        {
-            if (OnNewTilePinned != null)
-            {
-                OnNewTilePinned();
-                OnNewTilePinned = null;
-            }
-            Logger2.Current.WriteMessage("suspending");
+        {            
+            Logger2.Current.WriteMessage("OnSuspendingAsync");
             await Logger2.Current.WriteToFile();
             await base.OnSuspendingAsync(s, e, prelaunch);
         }

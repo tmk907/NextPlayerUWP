@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public class SongsViewModel : MusicViewModelBase
+    public class SongsViewModel : MusicViewModelBase, IGroupedItemsList
     {
         public SongsViewModel()
         {
@@ -287,6 +287,11 @@ namespace NextPlayerUWP.ViewModels
         {
             var song = args.SelectedItem as SongItem;
             sender.Text = song.Title;
+        }
+
+        public int GetIndexFromGroup(object item)
+        {
+            return GroupedSongs.FirstOrDefault(g => g.Contains(item)).IndexOf(item);
         }
     }
 }

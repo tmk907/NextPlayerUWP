@@ -378,7 +378,10 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
+            x:Name="PageHeader"
             BackButtonVisibility="Collapsed" 
             Frame="{x:Bind Frame, Mode=OneWay}"
             x:Uid="PageHeaderAlbum"
@@ -395,7 +398,7 @@
                 x:Uid="AppBarButtonSelect"
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
                 Label="Select"
-                Click="{x:Bind ViewModel.EnableMultipleSelection}">
+                Click="EnableMultipleSelection">
                 <AppBarButton.Content>
                     <Viewbox Height="22">
                         <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
@@ -414,33 +417,7 @@
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                 Label="Clear selection"
                 Icon="ClearSelection"
-                Click="{x:Bind ViewModel.DisableMultipleSelection}"/>
-            <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-            <AppBarButton
-                x:Uid="AppBarButtonPlayNow"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Play"
-                Icon="Play"
-                Click="PlayNowMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonPlayNext"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Play next"
-                Icon="Next"
-                Click="PlayNextMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonAddToNowPlaying"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Add to queueu"
-                Icon="Add"
-                Click="AddToNowPlayingMultiple"/>
-            <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-            <AppBarButton
-                x:Uid="AppBarButtonAddToPlaylist"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Add to playlist"
-                Icon="Add"
-                Click="AddToPlaylistMultiple"/>
+                Click="DisableMultipleSelection"/>
         </controls:PageHeader>
         <Image x:Name="AlbumCoverImageBG" Grid.Row="1" 
                 Stretch="UniformToFill"

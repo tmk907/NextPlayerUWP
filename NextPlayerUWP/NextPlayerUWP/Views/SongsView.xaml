@@ -46,25 +46,6 @@
             <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
         </MenuFlyout>
-        <MenuFlyout x:Key="MultipleItemsContextMenu">
-            <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
-                            Click="PlayNowMultiple"/>
-            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
-                            Click="PlayNextMultiple"/>
-            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
-                            Click="AddToNowPlayingMultiple"/>
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
-                            Click="AddToPlaylistMultiple"/>
-        </MenuFlyout>
-        <Style x:Key="EmptyContentControlStyle" TargetType="ContentControl">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ContentControl" />
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <DataTemplate x:Key="SongsListViewItemTemplateDesktop" x:DataType="data:SongItem">
               <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
                   <Grid.ColumnDefinitions>
@@ -107,14 +88,14 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Column="0" Grid.Row="0"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleTop}"/>
+                        Text="{x:Bind Title}"
+                        Style="{StaticResource SongItemStyleTop}"/>
                     <TextBlock Grid.Column="0" Grid.Row="1"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleBottom}"/>
+                        Text="{x:Bind Artist}"
+                        Style="{StaticResource SongItemStyleBottom}"/>
                     <TextBlock Grid.Column="1" Grid.RowSpan="2"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
+                        Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                        Style="{StaticResource SongItemStyleRight}"/>
                 </Grid>
             </toolkitcontrols:SlidableListItem>
         </DataTemplate>
@@ -171,40 +152,6 @@
             <TextBlock Text="{x:Bind Key}" 
                        Style="{StaticResource GroupHeaderTextBlockStyle}"/>
         </DataTemplate>
-        <Style x:Key="GroupHeaderContainerStyle" TargetType="ListViewHeaderItem">
-            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-            <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Margin" Value="0,0,12,0"/>
-            <Setter Property="Padding" Value="0,8,12,0"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="VerticalContentAlignment" Value="Top" />
-            <Setter Property="MinHeight" Value="32"/>
-            <Setter Property="UseSystemFocusVisuals" Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListViewHeaderItem">
-                        <StackPanel Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter x:Name="ContentPresenter"
-                                Margin="{TemplateBinding Padding}"
-                                Content="{TemplateBinding Content}"
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                ContentTransitions="{TemplateBinding ContentTransitions}"
-                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                            <Rectangle Stroke="{ThemeResource UserAccentBrush}"
-                                StrokeThickness="0.5"
-                                Height="1"
-                                VerticalAlignment="Bottom"
-                                HorizontalAlignment="Stretch"
-                                Margin="0,8,0,0"/>
-                        </StackPanel>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Page.Resources>
     <Grid x:Name="ContentGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -273,13 +220,16 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                Content="Songs"
-                x:Uid="PageHeaderSongs"
-                VisualStateNarrowMinWidth="0"
-                VisualStateNormalMinWidth="720">
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
+            x:Name="PageHeader"
+            x:Uid="PageHeaderSongs"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            Content="Songs"
+            VisualStateNarrowMinWidth="0"
+            VisualStateNormalMinWidth="720">
             <AppBarButton
                 x:Uid="AppBarButtonShuffleAll"
                 Label="Shuffle all"
@@ -290,7 +240,7 @@
                 x:Uid="AppBarButtonSelect"
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
                 Label="Select"
-                Click="{x:Bind ViewModel.EnableMultipleSelection}">
+                Click="EnableMultipleSelection">
                 <AppBarButton.Content>
                     <Viewbox Height="22">
                         <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
@@ -302,40 +252,13 @@
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                 Label="Select all"
                 Icon="SelectAll"
-                Click="SelectAll"
-                />
+                Click="SelectAll"/>
             <AppBarButton
                 x:Uid="AppBarButtonClearSelection"
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                 Label="Clear selection"
                 Icon="ClearSelection"
-                Click="{x:Bind ViewModel.DisableMultipleSelection}"/>
-            <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-            <AppBarButton
-                x:Uid="AppBarButtonPlayNow"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Play"
-                Icon="Play"
-                Click="PlayNowMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonPlayNext"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Play next"
-                Icon="Next"
-                Click="PlayNextMultiple"/>
-            <AppBarButton
-                x:Uid="AppBarButtonAddToNowPlaying"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Add to queueu"
-                Icon="Add"
-                Click="AddToNowPlayingMultiple"/>
-            <AppBarSeparator Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-            <AppBarButton
-                x:Uid="AppBarButtonAddToPlaylist"
-                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                Label="Add to playlist"
-                Icon="Add"
-                Click="AddToPlaylistMultiple"/>
+                Click="DisableMultipleSelection"/>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
@@ -348,22 +271,19 @@
                     <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
                     <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <AutoSuggestBox  Grid.Column="2" 
+                <AutoSuggestBox  
+                    Grid.Column="2" 
                     x:Name="SearchBox"
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
+                    DisplayMemberPath="Title"
+                    TextMemberPath="Title"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
-                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Title}"/>
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
