@@ -451,7 +451,7 @@
     <value>Nowe utwory:</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
-    <value>Personalizuj</value>
+    <value>Personalizacja</value>
   </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
     <value>Liczba odtworzeń</value>
@@ -911,5 +911,11 @@
   </data>
   <data name="Added to now playing" xml:space="preserve">
     <value>Dodano do teraz odtwarzane</value>
+  </data>
+  <data name="TBAccounts.Text" xml:space="preserve">
+    <value>Konta</value>
+  </data>
+  <data name="ButtonAddAccount.Content" xml:space="preserve">
+    <value>Dodaj konto</value>
   </data>
 </root>

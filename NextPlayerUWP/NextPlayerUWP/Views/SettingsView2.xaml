@@ -10,57 +10,83 @@
     xmlns:settingsviews="using:NextPlayerUWP.Views.Settings"
     xmlns:settingsvm="using:NextPlayerUWP.ViewModels.Settings"
     xmlns:t10controls="using:Template10.Controls"
+    xmlns:winstatetriggers="using:WindowsStateTriggers"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="MasterListViewItemTemplate" x:DataType="local:SettingsMenuItem">
-            <Grid Width="240" Height="48">
+        <DataTemplate x:Key="NarrowItemTemplate" x:DataType="local:SettingsMenuItem">
+            <Grid Height="60">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition Width="60" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <SymbolIcon Grid.Column="0" Symbol="{x:Bind Icon, Mode=OneWay}" Foreground="{StaticResource UserAccentBrush}"/>
-                <TextBlock Grid.Column="1" Text="{x:Bind Name, Mode=OneWay}" FontSize="16" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="0" 
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{x:Bind Icon, Mode=OneWay}" 
+                           Foreground="{StaticResource UserAccentBrush}"
+                           FontFamily="Segoe MDL2 Assets"
+                           FontSize="24"/>
+                <TextBlock Grid.Column="1" 
+                           Text="{x:Bind Name, Mode=OneWay}" 
+                           VerticalAlignment="Center"
+                           FontSize="16"
+                           Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="LibraryDataTemplate" x:DataType="settingsvm:SettingsLibraryViewModel">
-            <settingsviews:SettingsLibraryControl/>
+        <DataTemplate x:Key="WideItemTemplate" x:DataType="local:SettingsMenuItem">
+            <Grid Height="192" Width="192">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" 
+                            Text="{x:Bind Icon, Mode=OneWay}" 
+                            FontSize="48"
+                            FontWeight="SemiLight"
+                            FontFamily="Segoe MDL2 Assets"
+                            Foreground="{StaticResource UserAccentBrush}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"/>
+                <TextBlock Grid.Row="1" 
+                           Text="{x:Bind Name, Mode=OneWay}" 
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           FontSize="16"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Center"/>
+            </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="PersonalizationDataTemplate" x:DataType="settingsvm:SettingsPersonalizationViewModel">
-            <settingsviews:SettingsPersonalizationControl/>
-        </DataTemplate>
-        <DataTemplate x:Key="ToolsDataTemplate" x:DataType="settingsvm:SettingsToolsViewModel">
-            <settingsviews:SettingsToolsControl/>
-        </DataTemplate>
-        <DataTemplate x:Key="AccountsDataTemplate" x:DataType="settingsvm:SettingsAccountsViewModel">
-            <settingsviews:SettingsAccountsControl/>
-        </DataTemplate>
-        <DataTemplate x:Key="AboutDataTemplate" x:DataType="settingsvm:SettingsAboutViewModel">
-            <settingsviews:SettingsAboutControl/>
-        </DataTemplate>
-        <mycontrols:SettingsItemTemplateSelector x:Key="SettingsDataTemplateSelector"
-            AboutTemplate="{StaticResource AboutDataTemplate}"
-            AccountsTemplate="{StaticResource AccountsDataTemplate}"
-            LibraryTemplate="{StaticResource LibraryDataTemplate}"
-            PersonalizationTemplate="{StaticResource PersonalizationDataTemplate}"
-            ToolsTemplate="{StaticResource ToolsDataTemplate}">
-        </mycontrols:SettingsItemTemplateSelector>
+        <ItemsPanelTemplate x:Key="WideItemsPanel">
+            <ItemsWrapGrid Orientation="Horizontal"/>
+        </ItemsPanelTemplate>
+        <ItemsPanelTemplate x:Key="NarrowItemsPanel">
+            <ItemsStackPanel/>
+        </ItemsPanelTemplate>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  Loaded="LayoutRoot_Loaded">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="AdaptiveStates" CurrentStateChanged="AdaptiveStates_CurrentStateChanged">
-                <VisualState x:Name="DefaultState">
+            <VisualStateGroup x:Name="AdaptiveStates">
+                <VisualState x:Name="WideState">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800" />
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="720" />
+                        </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MasterListView.ItemTemplate" Value="{StaticResource WideItemTemplate}"/>
+                        <Setter Target="MasterListView.ItemsPanel" Value="{StaticResource WideItemsPanel}"/>
+                    </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="NarrowState">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                        </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MasterColumn.Width" Value="*" />
-                        <Setter Target="DetailColumn.Width" Value="0" />
-                        <Setter Target="MasterListView.SelectionMode" Value="None" />
+                        <Setter Target="MasterListView.ItemTemplate" Value="{StaticResource NarrowItemTemplate}"/>
+                        <Setter Target="MasterListView.ItemsPanel" Value="{StaticResource NarrowItemsPanel}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -78,16 +104,12 @@
 			VisualStateNarrowMinWidth="0"
 			VisualStateNormalMinWidth="720">
         </t10controls:PageHeader>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="MasterColumn" Width="200" />
-                <ColumnDefinition x:Name="DetailColumn" Width="*" />
-            </Grid.ColumnDefinitions>
-            <ListView
+        <ListView
                 x:Name="MasterListView"
                 Grid.Row="1"
                 ItemContainerTransitions="{x:Null}"
-                ItemTemplate="{StaticResource MasterListViewItemTemplate}"
+                ItemsPanel="{StaticResource NarrowItemsPanel}"
+                ItemTemplate="{StaticResource NarrowItemTemplate}"
                 IsItemClickEnabled="True"
                 ItemClick="MasterListView_ItemClick">
                 <ListView.ItemContainerStyle>
@@ -96,34 +118,5 @@
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
-
-            <ContentControl
-                x:Name="DetailContentPresenter"
-                Grid.Column="1"
-                BorderThickness="1,0,0,0"
-                Padding="24,0"
-                BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
-                HorizontalContentAlignment="Stretch"
-                ContentTemplateSelector="{StaticResource SettingsDataTemplateSelector}">
-                <ContentControl.ContentTransitions>
-                    <!-- Empty by default. See MasterListView_ItemClick -->
-                    <TransitionCollection />
-                </ContentControl.ContentTransitions>
-            </ContentControl>
-        </Grid>
-        <!--<controls:HamburgerMenu
-            x:Name="hamburgerMenuControl"
-            Grid.Row="1"
-            Margin="0,8,0,0"
-            DisplayMode="Inline"
-            Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
-            HamburgerHeight="0"
-            HamburgerWidth="0"
-            IsPaneOpen="True"
-            ItemClick="OnMenuItemClick"
-            ItemTemplate="{StaticResource DefaultTemplate}"
-            >
-            <Frame x:Name="contentFrame"/>
-        </controls:HamburgerMenu>-->
     </Grid>
 </Page>

@@ -40,113 +40,126 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer Padding="12,0,12,0">
             <StackPanel Orientation="Vertical" Margin="4">
+                <TextBlock 
+                    x:Uid="TBAccounts"
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="Accounts"/>
+                <StackPanel Margin="4" Orientation="Vertical">
                 <TextBlock
-                Style="{StaticResource TitleTextBlockStyle}" 
-                Margin="0,12,0,12"
-                Text="Last.fm"/>
-                <StackPanel Orientation="Vertical" Margin="4">
-                    <TextBox 
-                    Text="{x:Bind ViewModel.LastFmLogin, Mode=TwoWay}"
-                    HorizontalAlignment="Left"
-                    Margin="0,4,0,0"
-                    Width="256"/>
-                    <PasswordBox 
-                    Password="{x:Bind ViewModel.LastFmPassword, Mode=TwoWay}"
-                    HorizontalAlignment="Left"
-                    Margin="0,4,0,0"
-                    Width="256"/>
-                    <Button 
-                    x:Uid="ButtonLogin"
-                    Content="Login"
-                    Margin="0,8,0,0"
-                    MinWidth="128"
-                    Click="{x:Bind ViewModel.LastFmLogIn}"
-                    IsEnabled="{x:Bind ViewModel.IsLoginButtonEnabled, Mode=OneWay}"
-                    Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"/>
-                    <Button 
-                    x:Uid="ButtonLogout"
-                    Content="Logout"
-                    MinWidth="128"
-                    Margin="0,8,0,0"
-                    Click="{x:Bind ViewModel.LastFmLogOut}"
-                    Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                    <TextBlock 
-                    x:Uid="TBLoginError"
-                    Text="Can't log in. Check your login and password and make sure you have internet connection"
-                    TextWrapping="WrapWholeWords"
-                    Margin="0,4,0,0"
-                    Visibility="{x:Bind ViewModel.LastFmShowError, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                    <TextBlock 
-                    x:Uid="TBAddSongToLoved"
-                    Style="{StaticResource BodyTextBlockStyle}"
+                    Style="{StaticResource BodyTextBlockStyle}" 
                     FontSize="17"
-                    Margin="0,8,0,0"
-                    Text="Scrobble loved tracks"
-                    Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                    <ToggleSwitch 
-                    IsOn="{x:Bind ViewModel.LastFmRateSongs, Mode=TwoWay}"
-                    Margin="0,4,0,0"
-                    Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                    Margin="4,4,4,4"
+                    Text="Last.fm"/>
+                    <StackPanel Orientation="Vertical" Margin="4">
+                        <TextBox 
+                            Text="{x:Bind ViewModel.LastFmLogin, Mode=TwoWay}"
+                            HorizontalAlignment="Left"
+                            Margin="0,4,0,0"
+                            Width="256"/>
+                        <PasswordBox 
+                            Password="{x:Bind ViewModel.LastFmPassword, Mode=TwoWay}"
+                            HorizontalAlignment="Left"
+                            Margin="0,4,0,0"
+                            Width="256"/>
+                        <Button 
+                            x:Uid="ButtonLogin"
+                            Content="Login"
+                            Margin="0,8,0,0"
+                            MinWidth="128"
+                            Click="{x:Bind ViewModel.LastFmLogIn}"
+                            IsEnabled="{x:Bind ViewModel.IsLoginButtonEnabled, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"/>
+                        <Button 
+                            x:Uid="ButtonLogout"
+                            Content="Logout"
+                            MinWidth="128"
+                            Margin="0,8,0,0"
+                            Click="{x:Bind ViewModel.LastFmLogOut}"
+                            Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <TextBlock 
+                            x:Uid="TBLoginError"
+                            Text="Can't log in. Check your login and password and make sure you have internet connection"
+                            TextWrapping="WrapWholeWords"
+                            Margin="0,4,0,0"
+                            Visibility="{x:Bind ViewModel.LastFmShowError, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <TextBlock 
+                            x:Uid="TBAddSongToLoved"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            FontSize="17"
+                            Margin="0,8,0,0"
+                            Text="Scrobble loved tracks"
+                            Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <ToggleSwitch 
+                            IsOn="{x:Bind ViewModel.LastFmRateSongs, Mode=TwoWay}"
+                            Margin="0,4,0,0"
+                            Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                    </StackPanel>
                 </StackPanel>
-                <TextBlock
-                Style="{StaticResource TitleTextBlockStyle}" 
-                Margin="0,12,0,12"
-                Text="OneDrive"/>
-                <StackPanel Orientation="Vertical" Margin="4">
-                    <ListView
-                    ItemsSource="{x:Bind ViewModel.OneDriveAccounts, Mode=OneWay}"
-                    ItemTemplate="{StaticResource CloudAccountTemplate}"
-                    ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
-                    SelectionMode="None"
-                    IsItemClickEnabled="False">
-                    </ListView>
-                    <Button 
-                    x:Uid="ButtonAddAccount"
-                    Content="Add account"
-                    Margin="0,0,0,0"
-                    MinWidth="128"
-                    IsEnabled="{x:Bind ViewModel.IsOneDriveLoginEnabled, Mode=OneWay}"
-                    Click="{x:Bind ViewModel.AddOneDriveAccount}"/>
-                </StackPanel>
-                <TextBlock
-                Style="{StaticResource TitleTextBlockStyle}" 
-                Margin="0,12,0,12"
-                Text="Dropbox"/>
-                <StackPanel Orientation="Vertical" Margin="4">
-                    <ListView
-                    ItemsSource="{x:Bind ViewModel.DropboxAccounts, Mode=OneWay}"
-                    ItemTemplate="{StaticResource CloudAccountTemplate}"
-                    ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
-                    SelectionMode="None"
-                    IsItemClickEnabled="False">
-                    </ListView>
-                    <Button 
-                    x:Uid="ButtonAddAccount"
-                    Content="Add account"
-                    Margin="0,0,0,0"
-                    MinWidth="128"
-                    IsEnabled="{x:Bind ViewModel.IsDropboxLoginEnabled, Mode=OneWay}"
-                    Click="{x:Bind ViewModel.AddDropboxAccount}"/>
-                </StackPanel>
-                <TextBlock
-                Style="{StaticResource TitleTextBlockStyle}" 
-                Margin="0,12,0,12"
-                Text="pCloud"/>
-                <StackPanel Orientation="Vertical" Margin="4">
-                    <ListView
-                    ItemsSource="{x:Bind ViewModel.PCloudAccounts, Mode=OneWay}"
-                    ItemTemplate="{StaticResource CloudAccountTemplate}"
-                    ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
-                    SelectionMode="None"
-                    IsItemClickEnabled="False">
-                    </ListView>
-                    <Button 
-                    x:Uid="ButtonAddAccount"
-                    Content="Add account"
-                    Margin="0,0,0,0"
-                    MinWidth="128"
-                    IsEnabled="{x:Bind ViewModel.IsPCloudLoginEnabled, Mode=OneWay}"
-                    Click="{x:Bind ViewModel.AddPCloudAccount}"/>
+                <StackPanel Margin="4" Orientation="Vertical">
+                    <TextBlock
+                        Style="{StaticResource BodyTextBlockStyle}" 
+                        FontSize="17"
+                        Margin="0,12,0,12"
+                        Text="OneDrive"/>
+                    <StackPanel Orientation="Vertical" Margin="4">
+                        <ListView
+                            ItemsSource="{x:Bind ViewModel.OneDriveAccounts, Mode=OneWay}"
+                            ItemTemplate="{StaticResource CloudAccountTemplate}"
+                            ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
+                            SelectionMode="None"
+                            IsItemClickEnabled="False">
+                        </ListView>
+                        <Button 
+                            x:Uid="ButtonAddAccount"
+                            Content="Add account"
+                            Margin="0,0,0,0"
+                            MinWidth="128"
+                            IsEnabled="{x:Bind ViewModel.IsOneDriveLoginEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.AddOneDriveAccount}"/>
+                    </StackPanel>
+                    <TextBlock
+                        Style="{StaticResource BodyTextBlockStyle}" 
+                        FontSize="17"
+                        Margin="0,12,0,12"
+                        Text="Dropbox"/>
+                    <StackPanel Orientation="Vertical" Margin="4">
+                        <ListView
+                            ItemsSource="{x:Bind ViewModel.DropboxAccounts, Mode=OneWay}"
+                            ItemTemplate="{StaticResource CloudAccountTemplate}"
+                            ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
+                            SelectionMode="None"
+                            IsItemClickEnabled="False">
+                        </ListView>
+                        <Button 
+                            x:Uid="ButtonAddAccount"
+                            Content="Add account"
+                            Margin="0,0,0,0"
+                            MinWidth="128"
+                            IsEnabled="{x:Bind ViewModel.IsDropboxLoginEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.AddDropboxAccount}"/>
+                    </StackPanel>
+                    <TextBlock
+                        Style="{StaticResource BodyTextBlockStyle}" 
+                        FontSize="17"
+                        Margin="0,12,0,12"
+                        Text="pCloud"/>
+                    <StackPanel Orientation="Vertical" Margin="4">
+                        <ListView
+                            ItemsSource="{x:Bind ViewModel.PCloudAccounts, Mode=OneWay}"
+                            ItemTemplate="{StaticResource CloudAccountTemplate}"
+                            ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
+                            SelectionMode="None"
+                            IsItemClickEnabled="False">
+                        </ListView>
+                        <Button 
+                            x:Uid="ButtonAddAccount"
+                            Content="Add account"
+                            Margin="0,0,0,0"
+                            MinWidth="128"
+                            IsEnabled="{x:Bind ViewModel.IsPCloudLoginEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.AddPCloudAccount}"/>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

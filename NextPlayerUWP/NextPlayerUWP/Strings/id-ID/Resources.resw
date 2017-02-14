@@ -448,7 +448,7 @@
     <value>Lirik</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
-    <value>Pengaturan diri</value>
+    <value>Personalization</value>
   </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
     <value>Jumlah main</value>
@@ -911,5 +911,11 @@
   </data>
   <data name="Added to now playing" xml:space="preserve">
     <value>Added to now playing</value>
+  </data>
+  <data name="TBAccounts.Text" xml:space="preserve">
+    <value>Accounts</value>
+  </data>
+  <data name="ButtonAddAccount.Content" xml:space="preserve">
+    <value>Add account</value>
   </data>
 </root>

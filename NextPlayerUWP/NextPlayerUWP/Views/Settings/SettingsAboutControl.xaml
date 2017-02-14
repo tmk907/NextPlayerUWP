@@ -10,49 +10,51 @@
     d:DesignWidth="400">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Orientation="Vertical" Margin="4">
-            <TextBlock x:Uid="TBAbout"
-                Style="{StaticResource TitleTextBlockStyle}" 
-                Margin="0,12,0,12"
-                Text="About"/>
+        <ScrollViewer Padding="12,0,12,0">
             <StackPanel Orientation="Vertical" Margin="4">
-                <StackPanel Orientation="Horizontal" Margin="0,0,4,8">
-                    <TextBlock 
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        FontSize="17"
-                        Margin="0,0,8,0"
-                        Text="Next-Player"/>
-                    <TextBlock
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        FontSize="17"
-                        Text="{x:Bind ViewModel.AppVersion}"/>
+                <TextBlock x:Uid="TBAbout"
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="About"/>
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,4,8">
+                        <TextBlock 
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            FontSize="17"
+                            Margin="0,0,8,0"
+                            Text="Next-Player"/>
+                        <TextBlock
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            FontSize="17"
+                            Text="{x:Bind ViewModel.AppVersion}"/>
+                    </StackPanel>
+                    <Button  
+                        x:Uid="ButtonRateApp"
+                        Content="Rate app"
+                        Margin="0,4,0,8"
+                        MinWidth="128"
+                        Click="{x:Bind ViewModel.RateApp}"/>
+                    <Button  
+                        x:Uid="ButtonFeedback"
+                        Margin="0,4,0,8"
+                        MinWidth="128"
+                        Content="Feedback"
+                        Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.LeaveFeedback}"/>
+                    <Button  
+                        x:Uid="ButtonEmail"
+                        Content="Support"
+                        MinWidth="128"
+                        Margin="0,4,0,8"
+                        Click="{x:Bind ViewModel.ContactWithSupport}"/>
+                    <Button  
+                        x:Uid="ButtonLicenses"
+                        Content="Licenses"
+                        Margin="0,4,0,8"
+                        MinWidth="128"
+                        Click="{x:Bind ViewModel.Licenses}"/>
                 </StackPanel>
-                <Button  
-                    x:Uid="ButtonRateApp"
-                    Content="Rate app"
-                    Margin="0,4,0,8"
-                    MinWidth="128"
-                    Click="{x:Bind ViewModel.RateApp}"/>
-                <Button  
-                    x:Uid="ButtonFeedback"
-                    Margin="0,4,0,8"
-                    MinWidth="128"
-                    Content="Feedback"
-                    Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                    Click="{x:Bind ViewModel.LeaveFeedback}"/>
-                <Button  
-                    x:Uid="ButtonEmail"
-                    Content="Support"
-                    MinWidth="128"
-                    Margin="0,4,0,8"
-                    Click="{x:Bind ViewModel.ContactWithSupport}"/>
-                <Button  
-                    x:Uid="ButtonLicenses"
-                    Content="Licenses"
-                    Margin="0,4,0,8"
-                    MinWidth="128"
-                    Click="{x:Bind ViewModel.Licenses}"/>
             </StackPanel>
-        </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

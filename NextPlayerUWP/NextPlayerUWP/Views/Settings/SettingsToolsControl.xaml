@@ -41,22 +41,27 @@
         </VisualStateManager.VisualStateGroups>
         <ScrollViewer Padding="12,0,12,0">
             <StackPanel Orientation="Vertical" Margin="4">
+                <TextBlock 
+                    x:Uid="TBTools"
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="Tools"/>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <TextBlock 
-                    x:Uid="TBTimer"
-                    Style="{StaticResource BodyTextBlockStyle}"
-                    FontSize="17"
-                    Margin="4,4,4,4"
-                    Text="Timer:"/>
+                        x:Uid="TBTimer"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Timer:"/>
                     <StackPanel 
-                    x:Name="TimerStackPanel" 
-                    Orientation="Horizontal"
-                    Margin="8,0,0,0">
+                        x:Name="TimerStackPanel" 
+                        Orientation="Horizontal"
+                        Margin="8,0,0,0">
                         <ToggleSwitch 
-                        IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"/>
+                            IsOn="{x:Bind ViewModel.IsTimerOn, Mode=TwoWay}"/>
                         <TimePicker 
-                        Time="{x:Bind ViewModel.Time, Mode=TwoWay}"
-                        IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=OneWay}"/>
+                            Time="{x:Bind ViewModel.Time, Mode=TwoWay}"
+                            IsEnabled="{x:Bind ViewModel.IsTimerOn, Mode=OneWay}"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

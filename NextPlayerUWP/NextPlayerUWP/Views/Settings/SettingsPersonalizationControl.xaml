@@ -104,11 +104,6 @@
                         </GridView.ItemsPanel>
                     </GridView>
                 </StackPanel>
-                <TextBlock 
-                    x:Uid="TBTools"
-                    Style="{StaticResource TitleTextBlockStyle}" 
-                    Margin="0,12,0,12"
-                    Text="Tools"/>
                 <StackPanel 
                     x:Name="DragDropActionStackPanel"
                     Orientation="Vertical" 
