@@ -41,7 +41,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" 
                             Text="{x:Bind Icon, Mode=OneWay}" 
-                            FontSize="48"
+                            FontSize="44"
                             FontWeight="SemiLight"
                             FontFamily="Segoe MDL2 Assets"
                             Foreground="{StaticResource UserAccentBrush}"

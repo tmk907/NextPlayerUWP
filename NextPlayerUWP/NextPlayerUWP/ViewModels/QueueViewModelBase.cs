@@ -109,7 +109,7 @@ namespace NextPlayerUWP.ViewModels
             if (CurrentSong.SourceType == MusicSource.LocalFile || CurrentSong.SourceType == MusicSource.LocalNotMusicLibrary)
             {
                 CurrentSong.Rating = rating;
-                await lastFmCache.CacheTrackLove(CurrentSong.Artist, CurrentSong.Title, rating);
+                await lastFmCache.RateSong(CurrentSong.Artist, CurrentSong.Title, rating);
                 await DatabaseManager.Current.UpdateRatingAsync(CurrentSong.SongId, CurrentSong.Rating).ConfigureAwait(false);
             }
         }

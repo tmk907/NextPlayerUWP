@@ -1,5 +1,4 @@
-﻿using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Helpers;
+﻿using NextPlayerUWPDataLayer.Helpers;
 using System;
 using System.Threading.Tasks;
 
@@ -9,31 +8,18 @@ namespace NextPlayerUWPDataLayer.Services
     {
         public LastFmCache()
         {
-            Username = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) ?? String.Empty).ToString();
-            Password = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmPassword) ?? String.Empty).ToString();
+            RefreshCredentialsFromSettings();
         }
 
         private string Username;
         private string Password;
 
-        public bool AreCredentialsSet()
+        private bool IsUserLoggedIn
         {
-            return Username != "" && Password != "";
+            get { return Username != "" && Password != ""; }
         }
 
-        private void Login()
-        {
-            Username = "a";
-            Password = "a";
-        }
-
-        private void Logout()
-        {
-            Username = "";
-            Password = "";
-        }
-
-        public void GetCredentialsFromSettings()
+        private void RefreshCredentialsFromSettings()
         {
             Username = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) ?? String.Empty).ToString();
             Password = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmPassword) ?? String.Empty).ToString();
@@ -41,36 +27,36 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task CacheTrackScrobble(TrackScrobble scrobble)
         {
-            GetCredentialsFromSettings();
-            if (AreCredentialsSet())
+            RefreshCredentialsFromSettings();
+            if (IsUserLoggedIn)
             {
                 await DatabaseManager.Current.CacheTrackScrobbleAsync("track.scrobble", scrobble.Artist, scrobble.Track, scrobble.Timestamp);
             }
         }
 
-        public async Task CacheTrackLove(string artist, string track, int rating)
-        {
-            if (AreCredentialsSet())
-            {
-                await DatabaseManager.Current.CacheTrackLoveAsync("track.love", artist, track);
-            }
-        }
+        //public async Task CacheTrackLove(string artist, string track)
+        //{
+        //    if (AreCredentialsSet())
+        //    {
+        //        await DatabaseManager.Current.CacheTrackLoveAsync("track.love", artist, track);
+        //    }
+        //}
 
-        public async Task CacheTrackUnlove(string artist, string track, int rating)
-        {
-            if (AreCredentialsSet())
-            {
-                await DatabaseManager.Current.CacheTrackLoveAsync("track.unlove", artist, track);
-            }
-        }
+        //public async Task CacheTrackUnlove(string artist, string track)
+        //{
+        //    if (AreCredentialsSet())
+        //    {
+        //        await DatabaseManager.Current.CacheTrackLoveAsync("track.unlove", artist, track);
+        //    }
+        //}
 
         public async Task RateSong(string artist, string track, int rating)
         {
             bool rate = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmRateSongs);
             if (rate)
             {
-                GetCredentialsFromSettings();
-                if (AreCredentialsSet())
+                RefreshCredentialsFromSettings();
+                if (IsUserLoggedIn)
                 {
                     int min = (int)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLove);
                     if (rating >= min)

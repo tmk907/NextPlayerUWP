@@ -723,7 +723,7 @@ namespace NextPlayerUWP.Common
             {
 
             }
-            if (songPlayed.TotalSeconds >= duration.TotalSeconds*0.5 || duration.TotalSeconds >= 4 * 60)
+            if (songPlayed.TotalSeconds >= duration.TotalSeconds * 0.5 || duration.TotalSeconds >= 4 * 60)
             {
                 UpdateStats2(songId, duration);
             }
