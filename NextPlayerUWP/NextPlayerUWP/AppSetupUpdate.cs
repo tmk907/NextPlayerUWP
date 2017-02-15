@@ -6,6 +6,7 @@ using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Template10.Common;
 
 namespace NextPlayerUWP
@@ -34,8 +35,6 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmRateSongs, true);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmLove, 4);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmSendNP, false);
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmLogin, "");
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmPassword, "");
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DisableLockscreen, false);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.HideStatusBar, false);

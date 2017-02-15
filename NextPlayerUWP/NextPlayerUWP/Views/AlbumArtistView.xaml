@@ -326,7 +326,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"
-                Text="{x:Bind ViewModel.AlbumArtist.DisplayAlbumArtist}"
+                Text="{x:Bind ViewModel.AlbumArtist.DisplayAlbumArtist, Mode=OneWay}"
                 Style="{StaticResource ArtistDescriptionTextBlockStyle}"
                 Margin="12,12,12,12"/>
             <mycontrols:AlternatingRowListView
@@ -368,7 +368,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
-                    Text="{x:Bind ViewModel.AlbumArtist.DisplayAlbumArtist}"
+                    Text="{x:Bind ViewModel.AlbumArtist.DisplayAlbumArtist, Mode=OneWay}"
                     Style="{StaticResource ArtistDescriptionTextBlockStyle}"
                     Margin="12,12,12,12"/>
                 <mycontrols:AlternatingRowListView 

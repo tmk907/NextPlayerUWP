@@ -48,7 +48,7 @@ namespace NextPlayerUWP.Controls
             }
             else
             {
-                PageHeader.PrimaryCommands.Add(new AppBarSeparator());
+                PageHeader.PrimaryCommands.Add(new AppBarSeparator() { Tag = ButtonForMultipleSelection });
                 foreach (var item in list)
                 {
                     PageHeader.PrimaryCommands.Add(item);

@@ -12,6 +12,13 @@
     xmlns:t10controls="using:Template10.Controls"
     xmlns:winstatetriggers="using:WindowsStateTriggers"
     mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Page.Resources>
         <DataTemplate x:Key="NarrowItemTemplate" x:DataType="local:SettingsMenuItem">
             <Grid Height="60">
@@ -112,11 +119,16 @@
                 ItemTemplate="{StaticResource NarrowItemTemplate}"
                 IsItemClickEnabled="True"
                 ItemClick="MasterListView_ItemClick">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <!--<ListView.Transitions>
+                <NavigationThemeTransition>
+                    <DrillInNavigationTransitionInfo/>
+                </NavigationThemeTransition>
+            </ListView.Transitions>-->
+        </ListView>
     </Grid>
 </Page>

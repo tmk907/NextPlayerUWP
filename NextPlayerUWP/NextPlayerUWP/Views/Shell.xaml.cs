@@ -4,6 +4,7 @@ using NextPlayerUWP.Messages;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,7 @@ namespace NextPlayerUWP.Views
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
 
+            MigrateCredentialsAsync();
             ReviewReminder();
             //SendLogs();
         }
@@ -207,8 +209,45 @@ namespace NextPlayerUWP.Views
             BPViewModel.sliderpressed = false;
             PlaybackService.Instance.Position = TimeSpan.FromSeconds(((Slider)sender).Value);
         }
-        
+
         #endregion
+
+        private async Task MigrateCredentialsAsync()
+        {
+            if (!String.IsNullOrEmpty(ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) as string))
+            {
+                var accounts = await DatabaseManager.Current.GetAllCloudAccountsAsync();
+
+                CredentialLockerService dropbox = new CredentialLockerService(CredentialLockerService.DropboxVault);
+                CredentialLockerService pcloud = new CredentialLockerService(CredentialLockerService.PCloudVault);
+
+                foreach (var account in accounts)
+                {
+                    string token = await DatabaseManager.Current.GetCloudAccountTokenAsync(account.UserId);
+                    switch (account.Type)
+                    {
+                        case NextPlayerUWPDataLayer.CloudStorage.CloudStorageType.Dropbox:
+                            dropbox.AddCredentials(account.UserId, token);
+                            break;
+                        case NextPlayerUWPDataLayer.CloudStorage.CloudStorageType.OneDrive:
+                            break;
+                        case NextPlayerUWPDataLayer.CloudStorage.CloudStorageType.pCloud:
+                            pcloud.AddCredentials(account.UserId, token);
+                            break;
+                        default:
+                            break;
+                    }
+                    await DatabaseManager.Current.SaveCloudAccountTokenAsync(account.UserId, "");
+                }
+
+                string login = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.LfmLogin) as string;
+                string password = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.LfmPassword) as string;
+                string session = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.LfmSessionKey) as string;
+                CredentialLockerService locker = new CredentialLockerService(CredentialLockerService.LastFmVault);
+                locker.AddCredentials(login, password);
+                locker.AddCredentials(SettingsKeys.LfmSessionKey, session);
+            }
+        }
 
         private async Task ReviewReminder()
         {

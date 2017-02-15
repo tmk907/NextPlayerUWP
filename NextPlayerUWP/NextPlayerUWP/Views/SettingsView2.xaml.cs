@@ -3,20 +3,10 @@ using NextPlayerUWP.ViewModels;
 using NextPlayerUWP.ViewModels.Settings;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Template10.Common;
-using Template10.Services.NavigationService;
 using Template10.Services.SerializationService;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -59,7 +49,7 @@ namespace NextPlayerUWP.Views
                 catch (Exception ex)
                 {
                     var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
-                    nav.Navigate(typeof(SettingsDetailsView), name, new DrillInNavigationTransitionInfo());
+                    nav.Navigate(typeof(SettingsDetailsView), name);
                 }
             }
         }

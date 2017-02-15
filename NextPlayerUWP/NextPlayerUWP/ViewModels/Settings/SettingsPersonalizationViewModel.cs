@@ -11,6 +11,12 @@ using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP.ViewModels.Settings
 {
+    public class LanguageItem
+    {
+        public string Name { get; set; }
+        public string Code { get; set; }
+    }
+
     public class SettingsPersonalizationViewModel : Template10.Mvvm.ViewModelBase, ISettingsViewModel
     {
         public SettingsPersonalizationViewModel()

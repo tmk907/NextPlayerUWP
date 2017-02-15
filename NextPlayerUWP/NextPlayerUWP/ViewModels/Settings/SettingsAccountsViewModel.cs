@@ -27,13 +27,8 @@ namespace NextPlayerUWP.ViewModels.Settings
 
         private void OnLoaded()
         {
-            string login = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) as string;
-            LastFmLogin = login;
-            string session = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmSessionKey) as string;
-            if (!String.IsNullOrEmpty(session))
-            {
-                IsLastFmLoggedIn = true;
-            }
+            LastFmLogin = LastFmManager.GetUsername();
+            IsLastFmLoggedIn = LastFmManager.IsUserLoggedIn();
             LastFmRateSongs = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmRateSongs);
             LastFmShowError = false;
 
@@ -126,9 +121,6 @@ namespace NextPlayerUWP.ViewModels.Settings
             IsLastFmLoggedIn = await LastFmManager.Login(lastFmLogin, lastFmPassword);
             if (isLastFmLoggedIn)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmLogin, lastFmLogin);
-                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmPassword, lastFmPassword);
-
                 LastFmShowError = false;
                 LastFmPassword = "";
                 TelemetryAdapter.TrackEvent("LastFm log in");
@@ -145,10 +137,6 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             LastFmLogin = "";
             LastFmPassword = "";
-
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmLogin, "");
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmPassword, "");
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmSessionKey, "");
 
             LastFmManager.Logout();
 

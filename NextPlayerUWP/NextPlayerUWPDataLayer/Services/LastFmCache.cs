@@ -1,13 +1,14 @@
 ﻿using NextPlayerUWPDataLayer.Helpers;
-using System;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.Services
 {
     public class LastFmCache
     {
+        private CredentialLockerService credentials;
         public LastFmCache()
         {
+            credentials = new CredentialLockerService(CredentialLockerService.LastFmVault);
             RefreshCredentialsFromSettings();
         }
 
@@ -21,8 +22,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         private void RefreshCredentialsFromSettings()
         {
-            Username = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) ?? String.Empty).ToString();
-            Password = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmPassword) ?? String.Empty).ToString();
+            Username = credentials.GetFirstUserName();
+            Password = credentials.GetPassword(Username);
         }
 
         public async Task CacheTrackScrobble(TrackScrobble scrobble)

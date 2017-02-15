@@ -11,9 +11,7 @@
     xmlns:t10controls="using:Template10.Controls"
     mc:Ignorable="d"
     x:Name="PageRoot"
-    NavigationCacheMode="Enabled"
-    Loaded="PageRoot_Loaded"
-    Unloaded="PageRoot_Unloaded">
+    NavigationCacheMode="Enabled">
     <Page.Resources>
         <DataTemplate x:Key="LibraryDataTemplate" x:DataType="settingsvm:SettingsLibraryViewModel">
             <settingsviews:SettingsLibraryControl/>
@@ -40,7 +38,9 @@
     </Page.Resources>
     <Page.Transitions>
         <TransitionCollection>
-            <NavigationThemeTransition />
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
         </TransitionCollection>
     </Page.Transitions>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -65,8 +65,11 @@
                 BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
                 ContentTemplateSelector="{StaticResource SettingsDataTemplateSelector}">
             <ContentControl.ContentTransitions>
-                <!-- Empty by default. See MasterListView_ItemClick -->
-                <TransitionCollection />
+                <TransitionCollection>
+                    <NavigationThemeTransition>
+                        <DrillInNavigationTransitionInfo/>
+                    </NavigationThemeTransition>
+                </TransitionCollection>
             </ContentControl.ContentTransitions>
         </ContentControl>
     </Grid>

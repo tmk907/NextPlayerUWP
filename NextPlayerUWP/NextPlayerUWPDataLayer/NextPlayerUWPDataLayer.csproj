@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="CloudStorage\CloudAccount.cs" />
     <Compile Include="CloudStorage\CloudAccounts.cs" />
+    <Compile Include="CloudStorage\OneDrive\OneDriveCredentialVault.cs" />
     <Compile Include="Diagnostic\Logger2.cs" />
     <Compile Include="Helpers\DeviceFamilyHelper.cs" />
     <Compile Include="Helpers\SettingsKeys.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="Playlists\PlaylistFileSaver.cs" />
     <Compile Include="Playlists\PlaylistImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CredentialLockerService.cs" />
     <Compile Include="Services\FileFormatsHelper.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\ImagesManager.cs" />

@@ -17,18 +17,21 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         public DropboxService()
         {
             Debug.WriteLine("DropboxService()");
+            credentials = new CredentialLockerService(CredentialLockerService.DropboxVault);
         }
 
         public DropboxService(string userId)
         {
             Debug.WriteLine("DropboxService() {0}", new object[] { userId });
             this.userId = userId;
+            credentials = new CredentialLockerService(CredentialLockerService.DropboxVault);
         }
 
         private DropboxClient dropboxClient;
         private string refreshToken;
         private static readonly Uri redirectUri = new Uri("http://localhost/next-player/dropbox/authorize");
         private string userId;
+        private CredentialLockerService credentials;
 
         private async Task Authorize()
         {
@@ -113,7 +116,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
                 return true;
             }
             Debug.WriteLine("DropboxService LoginSilently()");
-            refreshToken = await GetSavedToken();
+            refreshToken = GetSavedToken();
             dropboxClient = new DropboxClient(refreshToken);
             return IsAuthenticated;
         }
@@ -146,7 +149,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
                     {
                         return false;
                     }
-                    await SaveToken(refreshToken);
+                    SaveToken(userId, refreshToken);
                 }
             }
             return isLoggedIn;
@@ -163,18 +166,19 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
             refreshToken = null;
             await dropboxClient.Auth.TokenRevokeAsync();
             await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.Dropbox);
+            credentials.DeleteCredentials(userId);
         }
 
-        private async Task SaveToken(string refreshToken)
+        private void SaveToken(string userId, string refreshToken)
         {
             Debug.WriteLine("DropboxService SaveToken()");
-            await DatabaseManager.Current.SaveCloudAccountTokenAsync(userId, refreshToken);
+            credentials.AddCredentials(userId, refreshToken);
         }
 
-        private async Task<string> GetSavedToken()
+        private string GetSavedToken()
         {
             Debug.WriteLine("DropboxService GetSavedToken()");
-            return await DatabaseManager.Current.GetCloudAccountTokenAsync(userId);
+            return credentials.GetPassword(userId);
         }
 
         public async Task<CloudAccount> GetAccountInfo()

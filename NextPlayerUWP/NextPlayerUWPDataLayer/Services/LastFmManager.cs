@@ -39,8 +39,9 @@ namespace NextPlayerUWPDataLayer.Services
 
         private string Username = "";
         private string Password = "";
-
         private string SessionKey = "";
+
+        private CredentialLockerService credentials;
 
         //private static readonly LastFmManager current = new LastFmManager();
 
@@ -57,24 +58,27 @@ namespace NextPlayerUWPDataLayer.Services
         //        return current;
         //    }
         //}
-        
+
         public LastFmManager()
         {
-            Username = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) as string ?? String.Empty).ToString();
-            Password = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmPassword) as string ?? String.Empty).ToString();
-            SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmSessionKey) as string ?? String.Empty).ToString();
+            credentials = new CredentialLockerService(CredentialLockerService.LastFmVault);
+            Username = credentials.GetFirstUserName();
+            Password = credentials.GetPassword(Username);
+            SessionKey = credentials.GetPassword(SettingsKeys.LfmSessionKey);
         }
 
         public async Task<bool> Login(string login, string password)
         {
             Username = login;
             Password = password;
+            credentials.AddCredentials(login, password);
             await SetMobileSession();
-            return IsSessionOn();
+            return IsUserLoggedIn();
         }
 
         public void Logout()
         {
+            credentials.DeleteAllCredentials();
             Username = "";
             Password = "";
             SessionKey = "";
@@ -82,7 +86,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         private async Task SetSession()
         {
-            if (!IsSessionOn())
+            if (!IsUserLoggedIn())
             {
                 await SetMobileSession();
             }
@@ -105,7 +109,7 @@ namespace NextPlayerUWPDataLayer.Services
                 int i1 = response.IndexOf("<key>") + "<key>".Length;
                 int i2 = response.IndexOf("</key>");
                 SessionKey = response.Substring(i1, i2 - i1);
-                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmSessionKey, SessionKey);
+                credentials.AddCredentials(SettingsKeys.LfmSessionKey, SessionKey);
                 return StatusCode.Success;
             }
             else
@@ -148,7 +152,7 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
 
-        private bool IsSessionOn()
+        public bool IsUserLoggedIn()
         {
             return SessionKey != "";
         }
@@ -156,6 +160,11 @@ namespace NextPlayerUWPDataLayer.Services
         private bool AreCredentialsSet()
         {
             return Username != "" && Password != "";
+        }
+
+        public string GetUsername()
+        {
+            return Username;
         }
 
         private bool IsStatusOK(string response)
@@ -256,7 +265,7 @@ namespace NextPlayerUWPDataLayer.Services
             if (code == StatusCode.ReAuth)
             {
                 SessionKey = "";
-                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LfmSessionKey, "");
+                credentials.AddCredentials(SettingsKeys.LfmSessionKey, "");
                 await SetMobileSession();
             }
             else if (code == StatusCode.Cache || code == StatusCode.Nothing)
