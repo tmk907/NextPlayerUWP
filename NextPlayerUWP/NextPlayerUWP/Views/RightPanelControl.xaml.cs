@@ -21,29 +21,38 @@ namespace NextPlayerUWP.Views
             WebGrid.Children.Add(web);
             ViewModel = (RightPanelViewModel)DataContext;
             this.Loaded += delegate { ViewModel.OnLoaded(NowPlayingPlaylistListView, web); };
-            
+            //this.Unloaded += (sender, e) =>
+            //{
+            //    ViewModel = null;
+            //    Bindings.StopTracking();
+            //};
             //LoadAdControl();
         }
 
-//        private async Task LoadAdControl()
-//        {
-//            await Task.Delay(1000);
-//            var adControl = new AdControl();
-//            adControl.Width = 300;
-//            adControl.Height = 250;
-//            adControl.VerticalAlignment = VerticalAlignment.Top;
-//            adControl.HorizontalAlignment = HorizontalAlignment.Left;
-//            adControl.AdRefreshed += AdControl_AdRefreshed;
-//            adControl.ErrorOccurred += AdControl_ErrorOccurred;
-//#if DEBUG
-//            adControl.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
-//            adControl.AdUnitId = "10865270";
-//#else
-//            adControl.ApplicationId = "bc203ea3-080a-4a87-bd1d-fdf2aab1740d";
-//            adControl.AdUnitId = "11647976";
-//#endif
-//            GridAdControlRightPanel.Children.Add(adControl);
-//        }
+        //        private async Task LoadAdControl()
+        //        {
+        //            await Task.Delay(1000);
+        //            var adControl = new AdControl();
+        //            adControl.Width = 300;
+        //            adControl.Height = 250;
+        //            adControl.VerticalAlignment = VerticalAlignment.Top;
+        //            adControl.HorizontalAlignment = HorizontalAlignment.Left;
+        //            adControl.AdRefreshed += AdControl_AdRefreshed;
+        //            adControl.ErrorOccurred += AdControl_ErrorOccurred;
+        //#if DEBUG
+        //            adControl.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
+        //            adControl.AdUnitId = "10865270";
+        //#else
+        //            adControl.ApplicationId = "bc203ea3-080a-4a87-bd1d-fdf2aab1740d";
+        //            adControl.AdUnitId = "11647976";
+        //#endif
+        //            GridAdControlRightPanel.Children.Add(adControl);
+        //        }
+
+        ~RightPanelControl()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {

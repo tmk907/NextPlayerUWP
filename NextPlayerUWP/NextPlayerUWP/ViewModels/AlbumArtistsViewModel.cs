@@ -63,7 +63,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 var query = from item in albumArtists
                             orderby item.DisplayAlbumArtist.ToLower()
-                            group item by item.DisplayAlbumArtist[0].ToString().ToLower() into g
+                            group item by item.DisplayAlbumArtist.FirstOrDefault().ToString().ToLower() into g
                             orderby g.Key
                             select new { GroupName = g.Key.ToUpper(), Items = g };
                 foreach (var g in query)

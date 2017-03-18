@@ -1,14 +1,13 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using NextPlayerUWP.Controls;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,37 +24,31 @@ namespace NextPlayerUWP.Views
         public GenresView()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            //NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
             this.Unloaded += View_Unloaded;
             ViewModel = (GenresViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
 
-        //~GenresView()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        //}
+        ~GenresView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
 
+        Guid token;
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(GenresListView);
-            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
-            {
-                SearchBox.Focus(FocusState.Programmatic);
-            });
             selectionButtons.OnLoaded(ViewModel, PageHeader, GenresListView);
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
+
         }
 
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();
-            Messenger.Default.Unregister(this);
-            ViewModel.OnUnloaded();
-            //ViewModel = null;
-            //DataContext = null;
-            //this.Loaded -= View_Loaded;
-            //this.Unloaded -= View_Unloaded;
+            MessageHub.Instance.UnSubscribe(token);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -90,6 +83,12 @@ namespace NextPlayerUWP.Views
         private void SelectAll(object sender, RoutedEventArgs e)
         {
             GenresListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            System.Diagnostics.Debug.WriteLine(GetType().Name + " OnSearchMessage");
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

@@ -1,14 +1,13 @@
 ﻿using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
+using NextPlayerUWP.Views;
+using System.Linq;
+using Template10.Common;
 using Windows.System;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.Common
 {
-    public class KeyboardShortcutSettings
-    {
-        //public const string playPauseKey
-    }
-
     public class AppKeyboardShortcuts
     {
         //Ctrl+
@@ -57,34 +56,34 @@ namespace NextPlayerUWP.Common
                     switch (args.VirtualKey)
                     {
                         case VirtualKey.Number1:
-                            AppMessenger.MenuButtonSelected(1);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 1 });
                             break;
                         case VirtualKey.Number2:
-                            AppMessenger.MenuButtonSelected(2);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 2 });
                             break;
                         case VirtualKey.Number3:
-                            AppMessenger.MenuButtonSelected(3);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 3 });
                             break;
                         case VirtualKey.Number4:
-                            AppMessenger.MenuButtonSelected(4);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 4 });
                             break;
                         case VirtualKey.Number5:
-                            AppMessenger.MenuButtonSelected(5);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 5 });
                             break;
                         case VirtualKey.Number6:
-                            AppMessenger.MenuButtonSelected(6);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 6 });
                             break;
                         case VirtualKey.Number7:
-                            AppMessenger.MenuButtonSelected(7);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 7 });
                             break;
                         case VirtualKey.Number8:
-                            AppMessenger.MenuButtonSelected(8);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 8 });
                             break;
                         case VirtualKey.Number9:
-                            AppMessenger.MenuButtonSelected(9);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 9 });
                             break;
                         case VirtualKey.Number0:
-                            AppMessenger.MenuButtonSelected(0);
+                            MessageHub.Instance.Publish<MenuButtonSelected>(new MenuButtonSelected() { Nr = 0 });
                             break;
                     }
                 }
@@ -117,21 +116,30 @@ namespace NextPlayerUWP.Common
                     }
                     else if (args.VirtualKey == showAudioSettingsKey)
                     {
+                        try
+                        {
+                            var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+                            nav.Navigate(typeof(AudioSettingsView));
+                        }
+                        catch (System.Exception ex)
+                        {
+
+                        }
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == showNowPlayingListKey)
                     {
-                        AppMessenger.ShowNowPlayingList();
+                        MessageHub.Instance.Publish<ShowNowPlayingList>(new ShowNowPlayingList());
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == showLyricsKey)
                     {
-                        AppMessenger.ShowLyrics();
+                        MessageHub.Instance.Publish<ShowLyrics>(new ShowLyrics());
                         args.Handled = true;
                     }
                     else if (args.VirtualKey == searchKey)
                     {
-                        AppMessenger.EnableSearching();
+                        MessageHub.Instance.Publish<EnableSearching>(new EnableSearching());
                         args.Handled = true;
                     }
                 }

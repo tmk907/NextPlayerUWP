@@ -34,10 +34,10 @@ namespace NextPlayerUWP.Views
             //this.Unloaded += View_Unloaded;
             ViewModel = (NowPlayingPlaylistViewModel)DataContext;
         }
-        //~NowPlayingPlaylistView()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        //}
+        ~NowPlayingPlaylistView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnUnloaded();

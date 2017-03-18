@@ -20,7 +20,7 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
-        <MenuFlyout x:Key="ContextMenuPlain">
+        <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
                             Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 

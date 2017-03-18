@@ -1,14 +1,13 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using NextPlayerUWP.Controls;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,16 +20,23 @@ namespace NextPlayerUWP.Views
     {
         public ArtistsViewModel ViewModel;
         private ButtonsForMultipleSelection selectionButtons;
+        private Guid token;
 
         public ArtistsView()
         {
             System.Diagnostics.Debug.WriteLine(GetType().Name + "()");
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            //NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
             this.Unloaded += View_Unloaded;
             ViewModel = (ArtistsViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
+            //var weakEvent = new WeakEventListener<ISearchMessage, AppKeyboardShortcuts, object>(this)
+            //{
+            //    OnEventAction = (instance, source, eventArgs) => OnSearchMessage(),
+            //    OnDetachAction = (instance, weakEventListener) => AppKeyboardShortcuts.KeyEnableSearching -= weakEventListener.OnEvent
+            //};
+            //AppKeyboardShortcuts.KeyEnableSearching += weakEvent.OnEvent;
         }
 
         ~ArtistsView()
@@ -42,19 +48,15 @@ namespace NextPlayerUWP.Views
         {
             System.Diagnostics.Debug.WriteLine(GetType().Name + " Unloaded");
             selectionButtons.OnUnloaded();
-            Messenger.Default.Unregister(this);
-            ViewModel.OnUnloaded();
-            //ViewModel = null;
+            MessageHub.Instance.UnSubscribe(token);
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(GetType().Name + "Loaded");
             ViewModel.OnLoaded(ArtistsListView);
-            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
-            {
-                SearchBox.Focus(FocusState.Programmatic);
-            });
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
+
             selectionButtons.OnLoaded(ViewModel, PageHeader, ArtistsListView);
         }
 
@@ -90,6 +92,12 @@ namespace NextPlayerUWP.Views
         private void SelectAll(object sender, RoutedEventArgs e)
         {
             ArtistsListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            System.Diagnostics.Debug.WriteLine(GetType().Name + " OnSearchMessage");
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

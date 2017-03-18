@@ -1,10 +1,8 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using NextPlayerUWP.Common;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using NextPlayerUWP.Controls;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections;
@@ -26,39 +24,34 @@ namespace NextPlayerUWP.Views
     {
         public SongsViewModel ViewModel;
         private ButtonsForMultipleSelection selectionButtons;
+        private Guid token;
 
         public SongsView()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            //NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
             this.Unloaded += View_Unloaded;
             ViewModel = (SongsViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
 
-        //~SongsView()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        //}      
+        ~SongsView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(SongsListView);
-            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
-            {
-                SearchBox.Focus(FocusState.Programmatic);
-            });
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
             selectionButtons.OnLoaded(ViewModel, PageHeader, SongsListView);
         }
 
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();
-            Messenger.Default.Unregister(this);
-            ViewModel.OnUnloaded();
-            //ViewModel = null;
-            //DataContext = null;
+            MessageHub.Instance.UnSubscribe(token);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -93,6 +86,11 @@ namespace NextPlayerUWP.Views
         private void SelectAll(object sender, RoutedEventArgs e)
         {
             SongsListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

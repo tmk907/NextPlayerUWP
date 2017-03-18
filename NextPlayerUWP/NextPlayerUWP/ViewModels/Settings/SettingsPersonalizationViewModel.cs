@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Helpers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -90,7 +91,7 @@ namespace NextPlayerUWP.ViewModels.Settings
             IncludeSubFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
 
             //Personalization
-            IsLightThemeOn = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
+            ThemeNr = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme) ? 1 : 2;
 
             if (accentColors.Count == 0)
             {
@@ -319,27 +320,53 @@ namespace NextPlayerUWP.ViewModels.Settings
             }
         }
 
+        private int themeNr = default(int);
+        public int ThemeNr
+        {
+            get { return themeNr; }
+            set
+            {
+                Set(ref themeNr, value);
+                RaisePropertyChanged("IsLightThemeOn");
+                RaisePropertyChanged("IsDarkThemeOn");
+            }
+        }
+
         private bool isLightThemeOn = true;
         public bool IsLightThemeOn
         {
-            get { return isLightThemeOn; }
+            get { return themeNr.Equals(1); }
             set
             {
                 System.Diagnostics.Debug.WriteLine("Settings IsLightThemeOn {0}", value);
-                Set(ref isLightThemeOn, value);
-                if (value) ChangeAppTheme(); //only one radiobutton is true, so ChangeAppTheme is executed once
+                ThemeNr = 1;
+                ChangeAppTheme(); //only one radiobutton is true, so ChangeAppTheme is executed once
             }
         }
 
         private bool isDarkThemeOn = true;
         public bool IsDarkThemeOn
         {
-            get { return isDarkThemeOn; }
+            get { return themeNr.Equals(2); }
             set
             {
                 System.Diagnostics.Debug.WriteLine("Settings IsDarkThemeOn {0}", value);
-                Set(ref isDarkThemeOn, value);
-                if (value) ChangeAppTheme();
+                ThemeNr = 2;
+                ChangeAppTheme();
+            }
+        }
+        
+        public void ChangeAppTheme()
+        {
+            if (isLoaded)
+            {
+                System.Diagnostics.Debug.WriteLine("Settings ChangeAppTheme");
+                App.IsLightThemeOn = IsLightThemeOn;
+                ThemeHelper.ApplyAppTheme(IsLightThemeOn);
+
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, IsLightThemeOn);
+
+                MessageHub.Instance.Publish<ThemeChange>(new ThemeChange() { IsLightTheme = IsLightThemeOn });
             }
         }
 
@@ -348,20 +375,6 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             get { return accentColors; }
             set { Set(ref accentColors, value); }
-        }
-
-        public void ChangeAppTheme()
-        {
-            if (isLoaded)
-            {
-                System.Diagnostics.Debug.WriteLine("Settings ChangeAppTheme");
-                App.IsLightThemeOn = isLightThemeOn;
-                ThemeHelper.ApplyAppTheme(isLightThemeOn);
-
-                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, isLightThemeOn);
-
-                AppMessenger.ChangeTheme(isLightThemeOn);
-            }
         }
 
         public void ChangeAccentColor(object sender, RoutedEventArgs e)

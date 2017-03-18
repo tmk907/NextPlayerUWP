@@ -22,9 +22,14 @@
       the application package. The asterisks are not wildcards.
     -->
     <Assembly Name="*Application*" Dynamic="Required All" />
-    
-    
+	
     <!-- Add your application specific runtime directives here. -->	
-
+	
+	<!-- Messenger -->
+	<!-- <Type Name="NextPlayerUWP.ViewModels.RightPanelViewModel" Dynamic="Required All"> -->
+		<!-- <Method Name="ShowLyrics" Dynamic="Required"/> -->
+	<!-- </Type> -->
+	<Namespace Name="NextPlayerUWP.ViewModels" Browse="Required Public" Dynamic="Required Public" /> />
+	
   </Application>
 </Directives>

@@ -10,8 +10,7 @@
     xmlns:settingsvm="using:NextPlayerUWP.ViewModels.Settings"
     xmlns:t10controls="using:Template10.Controls"
     mc:Ignorable="d"
-    x:Name="PageRoot"
-    NavigationCacheMode="Enabled">
+    x:Name="PageRoot">
     <Page.Resources>
         <DataTemplate x:Key="LibraryDataTemplate" x:DataType="settingsvm:SettingsLibraryViewModel">
             <settingsviews:SettingsLibraryControl/>

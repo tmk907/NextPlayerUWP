@@ -196,7 +196,7 @@ namespace Template10.Common
             if (e.PreviousExecutionState != ApplicationExecutionState.Running)
             {
                 try
-                {
+                 {
                     await InitializeFrameAsync(e);
                 }
                 catch (Exception)

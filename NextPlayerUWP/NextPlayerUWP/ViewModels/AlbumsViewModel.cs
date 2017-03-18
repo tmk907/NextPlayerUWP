@@ -107,7 +107,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 var query = from item in albums
                             orderby item.Album.ToLower()
-                            group item by item.Album[0].ToString().ToLower() into g
+                            group item by item.Album.FirstOrDefault().ToString().ToLower() into g
                             orderby g.Key
                             select new { GroupName = g.Key.ToUpper(), Items = g };
                 ObservableCollection<GroupList> gr = new ObservableCollection<GroupList>();

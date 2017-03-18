@@ -2,5 +2,6 @@
 {
     public class ShowLyrics
     {
+        public bool isTrue { get; set; }
     }
 }

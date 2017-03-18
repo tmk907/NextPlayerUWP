@@ -38,19 +38,15 @@ namespace NextPlayerUWP.Views
             ViewModel = (AlbumViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        //~AlbumView()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        //}
+        ~AlbumView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();
             ShuffleAppBarButton.Click -= ShuffleAppBarButton_Click;
-            //ViewModel.OnUnloaded();
-            //ViewModel = null;
-            //DataContext = null;
-            //this.Loaded -= View_Loaded;
-            //this.Unloaded -= View_Unloaded;
+            ViewModel.OnUnloaded();
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)

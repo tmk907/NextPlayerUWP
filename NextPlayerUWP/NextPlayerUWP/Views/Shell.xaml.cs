@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
@@ -36,8 +36,13 @@ namespace NextPlayerUWP.Views
         PointerEventHandler pointerpressedhandler;
         PointerEventHandler pointerreleasedhandler;
 
+        private Guid tokenMenu;
+        private Guid tokenTheme;
+        private Guid tokenNotification;
+
         public Shell()
         {
+            System.Diagnostics.Debug.WriteLine("Shell()");
             Instance = this;
             InitializeComponent();
             this.DataContext = ShellVM;
@@ -60,29 +65,28 @@ namespace NextPlayerUWP.Views
             //SendLogs();
         }
 
+        ~Shell()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
+
         private void Shell_Loaded(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("Shell_Loaded");
             LoadSliderEvents();
-            Messenger.Default.Register<NotificationMessage<InAppNotification>>(this, (message) =>
-            {
-                var content = message.Content;
-                PopupNotification.ShowNotification(content.FirstTextLine, content.SecondTextLine);
-            });
-            Messenger.Default.Register<NotificationMessage<ThemeChange>>(this, (message) =>
-            {
-                ApplyTheme(message.Content.IsLightTheme);
-            });
-            Messenger.Default.Register<NotificationMessage<MenuButtonSelected>>(this, (message) =>
-            {
-                PressMenuButton(message.Content.Nr);
-            });
+            tokenMenu = MessageHub.Instance.Subscribe<MenuButtonSelected>(OnMenuButtonMessage);
+            tokenNotification = MessageHub.Instance.Subscribe<InAppNotification>(OnInAppNotificationMessage);
+            tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
             ApplyTheme(ThemeHelper.IsLightTheme);
         }
 
         private void Shell_Unloaded(object sender, RoutedEventArgs e)
         {
             UnloadSliderEvents();
-            Messenger.Default.Unregister(this);
+            MessageHub.Instance.UnSubscribe(tokenMenu);
+            MessageHub.Instance.UnSubscribe(tokenNotification);
+            MessageHub.Instance.UnSubscribe(tokenTheme);
+            //Bindings.StopTracking();
         }
 
         public Shell(INavigationService navigationService) : this()
@@ -106,8 +110,24 @@ namespace NextPlayerUWP.Views
             HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
         }
 
+        private void OnMenuButtonMessage(MenuButtonSelected msg)
+        {
+            PressMenuButton(msg.Nr);
+        }
+
+        private void OnThemeChangeMessage(ThemeChange msg)
+        {
+            ApplyTheme(msg.IsLightTheme);
+        }
+
+        private void OnInAppNotificationMessage(InAppNotification msg)
+        {
+            PopupNotification.ShowNotification(msg.FirstTextLine, msg.SecondTextLine);
+        }
+
         private void PressMenuButton(int nr)
         {
+            System.Diagnostics.Debug.WriteLine("PressMenuButton {0}", nr);
             if (nr == 0)
             {
                 HamburgerMenu.Selected = HamburgerMenu.SecondaryButtons[0];
@@ -299,7 +319,7 @@ namespace NextPlayerUWP.Views
         private async Task AutoUpdateLibrary()
         {
             await Task.Delay(TimeSpan.FromMinutes(1));
-            NextPlayerUWPDataLayer.Services.MediaImport mi = new NextPlayerUWPDataLayer.Services.MediaImport(App.FileFormatsHelper);
+            MediaImport mi = new MediaImport(App.FileFormatsHelper);
             Progress<string> progress = new Progress<string>(
                 data =>
                 {

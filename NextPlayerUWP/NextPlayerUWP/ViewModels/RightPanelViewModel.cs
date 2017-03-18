@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -35,19 +35,27 @@ namespace NextPlayerUWP.ViewModels
             Init();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
+            //AppMessenger2.RegisterShowLyrics(this);
+            //AppMessenger2.RegisterShowNowPlayingList(this);
+            //AppMessenger.Instance.Subscribe<ShowLyrics>(OnShowLyricsMessage);
+            //AppMessenger.Instance.Subscribe<ShowNowPlayingList>(OnShowNowPlayingListMessage);
+            MessageHub.Instance.Subscribe<ShowLyrics>(OnShowLyricsMessage);
+            MessageHub.Instance.Subscribe<ShowNowPlayingList>(OnShowNowPlayingListMessage);
         }
-
+        
         private void Init()
         {
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
-            Messenger.Default.Register<NotificationMessage<ShowLyrics>>(this, (message) =>
-            {
-                SelectedPivotIndex = 1;
-            });
-            Messenger.Default.Register<NotificationMessage<ShowNowPlayingList>>(this, (message) =>
-            {
-                SelectedPivotIndex = 0;
-            });
+        }
+        
+        public void OnShowLyricsMessage(ShowLyrics msg)
+        {
+            SelectedPivotIndex = 1;
+        }
+
+        public void OnShowNowPlayingListMessage(ShowNowPlayingList msg)
+        {
+            SelectedPivotIndex = 0;
         }
 
         private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
@@ -58,7 +66,6 @@ namespace NextPlayerUWP.ViewModels
         private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
         {
             PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
-            Messenger.Default.Unregister(this);
         }
 
         public QueueViewModelBase QueueVM { get; set; }

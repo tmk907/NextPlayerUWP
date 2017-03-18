@@ -13,8 +13,8 @@ using NextPlayerUWPDataLayer.Helpers;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.DataTransfer;
 using Template10.Services.NavigationService;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -153,12 +153,12 @@ namespace NextPlayerUWP.ViewModels
                 case SettingsKeys.SwipeActionPlayNext:
                     await NowPlayingPlaylistManager.Current.AddNext(item);
                     string text = helper.GetTranslation(TranslationHelper.AddedNext);
-                    AppMessenger.ShowInAppNotification(text);
+                    MessageHub.Instance.Publish<InAppNotification>(new InAppNotification() { FirstTextLine = text });
                     break;
                 case SettingsKeys.SwipeActionAddToNowPlaying:
                     await NowPlayingPlaylistManager.Current.Add(item);
                     string text2 = helper.GetTranslation(TranslationHelper.AddedToNowPlaying);
-                    AppMessenger.ShowInAppNotification(text2);
+                    MessageHub.Instance.Publish<InAppNotification>(new InAppNotification() { FirstTextLine = text2 });
                     break;
                 case SettingsKeys.SwipeActionAddToPlaylist:
                     NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());

@@ -98,6 +98,7 @@ namespace NextPlayerUWP.Common
             ComboBoxItemValues = GetComboBoxValues();
             if (SortOption == null) SortOption = ComboBoxItemValues.FirstOrDefault().Option;
             IgnoreArticles = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.IgnoreArticles);
+            //ApplicationSettingsHelper.SaveData(SettingsKeys.IgnoredArticlesList, new List<string>() { "a", "an", "the" });
             Articles = ApplicationSettingsHelper.ReadData<List<string>>(SettingsKeys.IgnoredArticlesList);
         }
 

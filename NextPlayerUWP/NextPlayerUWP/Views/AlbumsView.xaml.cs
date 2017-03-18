@@ -8,9 +8,9 @@ using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
-using GalaSoft.MvvmLight.Messaging;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Controls;
+using NextPlayerUWP.Messages.Hub;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,38 +23,32 @@ namespace NextPlayerUWP.Views
     {
         public AlbumsViewModel ViewModel;
         private ButtonsForMultipleSelection selectionButtons;
+        private Guid token;
 
         public AlbumsView()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            //NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
             this.Unloaded += View_Unloaded;
             ViewModel = (AlbumsViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        //~AlbumsView()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        //}
+        ~AlbumsView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();
-            Messenger.Default.Unregister(this);
+            MessageHub.Instance.UnSubscribe(token);
             ViewModel.OnUnloaded();
-            //ViewModel = null;
-            //DataContext = null;
-            //this.Loaded -= View_Loaded;
-            //this.Unloaded -= View_Unloaded;
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(AlbumsListView);
-            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
-            {
-                SearchBox.Focus(FocusState.Programmatic);
-            });
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
             selectionButtons.OnLoaded(ViewModel, PageHeader, AlbumsListView);
         }
 
@@ -109,6 +103,11 @@ namespace NextPlayerUWP.Views
         private void SelectAll(object sender, RoutedEventArgs e)
         {
             AlbumsListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

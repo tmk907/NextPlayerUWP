@@ -19,7 +19,12 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
         }
-        
+
+        //~SettingsDetailsView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);

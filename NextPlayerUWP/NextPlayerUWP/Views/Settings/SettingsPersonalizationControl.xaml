@@ -65,13 +65,13 @@
                         Margin="8,0,4,0"
                         GroupName="AppThemeGroup"
                         Content="Light"
-                        IsChecked="{x:Bind ViewModel.IsLightThemeOn, Mode=TwoWay, Converter={StaticResource BoolToNullableBoolConverter}}"/>
+                        IsChecked="{Binding IsLightThemeOn, Mode=TwoWay}"/>
                     <RadioButton 
                         x:Uid="RBDark"
                         Margin="8,0,4,0"
                         GroupName="AppThemeGroup"
                         Content="Dark"
-                        IsChecked="{x:Bind ViewModel.IsDarkThemeOn, Mode=TwoWay, Converter={StaticResource BoolToNullableBoolConverter}}"/>
+                        IsChecked="{Binding IsDarkThemeOn, Mode=TwoWay}"/>
                     <TextBlock 
                         x:Uid="TBAppAccentColor"
                         Style="{StaticResource BodyTextBlockStyle}"
@@ -119,18 +119,18 @@
                         Margin="4,0,4,0"
                         GroupName="DragDropAction"
                         Content="Play"
-                        IsChecked="{x:Bind ViewModel.ActionNr1, Mode=TwoWay}"/>
+                        IsChecked="{Binding ActionNr1, Mode=TwoWay}"/>
                     <RadioButton 
                         x:Uid="RBPlayNext"
                         Margin="4,0,4,0"
                         GroupName="DragDropAction"
                         Content="Play next"
-                        IsChecked="{x:Bind ViewModel.ActionNr2, Mode=TwoWay}"/>
+                        IsChecked="{Binding ActionNr2, Mode=TwoWay}"/>
                     <RadioButton x:Uid="RBAddToNowPlaying"
                         Margin="4,0,4,0"
                         GroupName="DragDropAction"
                         Content="Add to now playing"
-                        IsChecked="{x:Bind ViewModel.ActionNr3, Mode=TwoWay}"/>
+                        IsChecked="{Binding ActionNr3, Mode=TwoWay}"/>
                 </StackPanel>
                 <StackPanel 
                     x:Name="SwipeLeftCommandActionStackPanel"
@@ -147,25 +147,25 @@
                         Margin="4,0,4,0"
                         GroupName="SwipeLeftCommandAction"
                         Content="Play"
-                        IsChecked="{x:Bind ViewModel.SwipeActionNr1, Mode=TwoWay}"/>
+                        IsChecked="{Binding SwipeActionNr1, Mode=TwoWay}"/>
                     <RadioButton 
                         x:Uid="RBPlayNext"
                         Margin="4,0,4,0"
                         GroupName="SwipeLeftCommandAction"
                         Content="Play next"
-                        IsChecked="{x:Bind ViewModel.SwipeActionNr2, Mode=TwoWay}"/>
+                        IsChecked="{Binding SwipeActionNr2, Mode=TwoWay}"/>
                     <RadioButton 
                         x:Uid="RBAddToNowPlaying"
                         Margin="4,0,4,0"
                         GroupName="SwipeLeftCommandAction"
                         Content="Add to now playing"
-                        IsChecked="{x:Bind ViewModel.SwipeActionNr3, Mode=TwoWay}"/>
+                        IsChecked="{Binding SwipeActionNr3, Mode=TwoWay}"/>
                     <RadioButton 
                         x:Uid="RBAddToPlaylist"
                         Margin="4,0,4,0"
                         GroupName="SwipeLeftCommandAction"
                         Content="Add to playlist"
-                        IsChecked="{x:Bind ViewModel.SwipeActionNr4, Mode=TwoWay}"/>
+                        IsChecked="{Binding SwipeActionNr4, Mode=TwoWay}"/>
                 </StackPanel>
                 <StackPanel 
                     Orientation="Vertical" Margin="4">

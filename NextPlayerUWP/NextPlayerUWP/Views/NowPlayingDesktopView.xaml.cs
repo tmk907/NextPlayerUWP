@@ -28,13 +28,16 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(340, 500));
-            NavigationCacheMode = NavigationCacheMode.Required;
+            //NavigationCacheMode = NavigationCacheMode.Required;
             ViewModel = (NowPlayingDesktopViewModel)DataContext;
             this.Loaded += NowPlayingDesktopView_Loaded;
             this.Unloaded += NowPlayingDesktopView_Unloaded;
             InitializedFrostedGlass(GlassHost);
         }
-
+        ~NowPlayingDesktopView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
         private void NowPlayingDesktopView_Loaded(object sender, RoutedEventArgs e)
         {
             if (ViewModel.QueueVM.CoverUri != null)

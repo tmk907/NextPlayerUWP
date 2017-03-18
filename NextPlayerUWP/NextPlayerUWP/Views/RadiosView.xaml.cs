@@ -29,7 +29,12 @@ namespace NextPlayerUWP.Views
             this.InitializeComponent();
             ViewModel = (RadiosViewModel)DataContext;
         }
-       
+
+        ~RadiosView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
+
         private void JamendoListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;

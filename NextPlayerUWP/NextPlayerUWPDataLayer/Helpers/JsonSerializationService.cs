@@ -86,6 +86,7 @@ namespace NextPlayerUWPDataLayer.Helpers
                 return string.Empty;
 
             // Deserialize from json
+           
             var container = JsonConvert.DeserializeObject<Container>(value);
             var type = Type.GetType(container.Type);
             return JsonConvert.DeserializeObject(container.Data, type, settings);
@@ -99,6 +100,7 @@ namespace NextPlayerUWPDataLayer.Helpers
             object result = this.Deserialize(value);
             if (result != null)
             {
+                var r = result.GetType();
                 return (T)result;
             }
             return default(T);

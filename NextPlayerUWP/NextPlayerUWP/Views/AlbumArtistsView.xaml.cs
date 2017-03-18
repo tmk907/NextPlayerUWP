@@ -1,7 +1,7 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using NextPlayerUWP.Controls;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -21,13 +21,13 @@ namespace NextPlayerUWP.Views
     {
         public AlbumArtistsViewModel ViewModel;
         private ButtonsForMultipleSelection selectionButtons;
+        private Guid token;
 
         public AlbumArtistsView()
         {
             System.Diagnostics.Debug.WriteLine(GetType().Name + "()");
-
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            //NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
             this.Unloaded += View_Unloaded;
             ViewModel = (AlbumArtistsViewModel)DataContext;
@@ -43,18 +43,14 @@ namespace NextPlayerUWP.Views
         {
             System.Diagnostics.Debug.WriteLine(GetType().Name + " Unloaded");
             selectionButtons.OnUnloaded();
-            Messenger.Default.Unregister(this);
-            ViewModel.OnUnloaded();
+            MessageHub.Instance.UnSubscribe(token);
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(GetType().Name + " Loaded");
             ViewModel.OnLoaded(AlbumArtistsListView);
-            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
-            {
-                SearchBox.Focus(FocusState.Programmatic);
-            });
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
             selectionButtons.OnLoaded(ViewModel, PageHeader, AlbumArtistsListView);
         }
 
@@ -90,6 +86,11 @@ namespace NextPlayerUWP.Views
         private void SelectAll(object sender, RoutedEventArgs e)
         {
             AlbumArtistsListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

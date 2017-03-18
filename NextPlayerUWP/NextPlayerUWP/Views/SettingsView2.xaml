@@ -20,7 +20,7 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
-        <DataTemplate x:Key="NarrowItemTemplate" x:DataType="local:SettingsMenuItem">
+        <DataTemplate x:Key="NarrowItemTemplate" x:DataType="mycontrols:SettingsMenuItem">
             <Grid Height="60">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60" />
@@ -40,7 +40,7 @@
                            Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="WideItemTemplate" x:DataType="local:SettingsMenuItem">
+        <DataTemplate x:Key="WideItemTemplate" x:DataType="mycontrols:SettingsMenuItem">
             <Grid Height="192" Width="192">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -124,11 +124,6 @@
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
-            <!--<ListView.Transitions>
-                <NavigationThemeTransition>
-                    <DrillInNavigationTransitionInfo/>
-                </NavigationThemeTransition>
-            </ListView.Transitions>-->
         </ListView>
     </Grid>
 </Page>

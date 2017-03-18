@@ -795,6 +795,7 @@ namespace NextPlayerUWPDataLayer.Services
                         data.FolderName = entry.Path;
                         data.MusicSourceType = (int)Enums.MusicSource.Unknown;
                     }
+                    if (data.Tag.Title == "") data.Tag.Title = "Unknown title";
                     id = await DatabaseManager.Current.InsertSongAsync(data);
                 }
             }

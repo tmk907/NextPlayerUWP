@@ -40,6 +40,8 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<QueueViewModelBase>();
 
             SimpleIoc.Default.Register<SettingsVMService>();
+
+            
         }
 
         public AddToPlaylistViewModel AddToPlaylistVM => ServiceLocator.Current.GetInstance<AddToPlaylistViewModel>();

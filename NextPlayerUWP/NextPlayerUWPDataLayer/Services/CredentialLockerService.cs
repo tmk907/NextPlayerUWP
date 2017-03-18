@@ -83,12 +83,19 @@ namespace NextPlayerUWPDataLayer.Services
         public string GetFirstUserName()
         {
             var vault = new PasswordVault();
-            var creds = vault.FindAllByResource(VaultResourceName);
-            if (creds.Count > 0)
+            try
             {
-                return creds[0].UserName;
+                var creds = vault.FindAllByResource(VaultResourceName);
+                if (creds.Count > 0)
+                {
+                    return creds[0].UserName;
+                }
+                else
+                {
+                    return "";
+                }
             }
-            else
+            catch (Exception)
             {
                 return "";
             }

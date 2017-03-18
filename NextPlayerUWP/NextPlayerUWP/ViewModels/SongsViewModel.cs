@@ -82,7 +82,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 var query = from item in songs
                             orderby item.Title.ToLower()
-                            group item by item.Title[0].ToString().ToLower() into g
+                            group item by item.Title.FirstOrDefault().ToString().ToLower() into g
                             orderby g.Key
                             select new { GroupName = g.Key.ToUpper(), Items = g };
                 int i = 0;

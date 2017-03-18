@@ -1,7 +1,7 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using NextPlayerUWP.Controls;
 using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -20,6 +20,7 @@ namespace NextPlayerUWP.Views
     {
         public CloudStorageFoldersViewModel ViewModel;
         private ButtonsForMultipleSelection selectionButtons;
+        private Guid token;
 
         public CloudStorageFoldersView()
         {
@@ -29,28 +30,21 @@ namespace NextPlayerUWP.Views
             ViewModel = (CloudStorageFoldersViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        //~CloudStorageFoldersView()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        //}
+        ~CloudStorageFoldersView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();
-            Messenger.Default.Unregister(this);
             ViewModel.OnUnloaded();
-            //ViewModel = null;
-            //DataContext = null;
-            //this.Loaded -= View_Loaded;
-            //this.Unloaded -= View_Unloaded;
+            MessageHub.Instance.UnSubscribe(token);
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(FoldersListView);
-            Messenger.Default.Register<NotificationMessage<EnableSearching>>(this, (message) =>
-            {
-                SearchBox.Focus(FocusState.Programmatic);
-            });
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
             selectionButtons.OnLoaded(ViewModel, PageHeader, FoldersListView);
         }
 
@@ -97,6 +91,11 @@ namespace NextPlayerUWP.Views
         private void SelectAll(object sender, RoutedEventArgs e)
         {
             FoldersListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

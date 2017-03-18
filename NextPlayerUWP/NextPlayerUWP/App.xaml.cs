@@ -1,4 +1,5 @@
-﻿using Microsoft.HockeyApp;
+﻿using GalaSoft.MvvmLight.Threading;
+using Microsoft.HockeyApp;
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Views;
@@ -149,6 +150,7 @@ namespace NextPlayerUWP
                 }
                 Window.Current.Content = null;
             }
+            Debug.WriteLine("App ReduceMemoryUsage GC.Collect()");
             GC.Collect();
         }
 
@@ -269,16 +271,13 @@ namespace NextPlayerUWP
             {
                 await SongCoverManager.Instance.Initialize();
             }
-
+            DispatcherHelper.Initialize();
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
             TranslationHelper tr = new TranslationHelper();
             tr.ChangeSlideableItemDescription();
 
             await ChangeStatusBarVisibility();
-            //bool isLightTheme = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
-            //ThemeHelper.ApplyThemeToStatusBar(isLightTheme);
-            //ThemeHelper.ApplyThemeToTitleBar(isLightTheme);
             ThemeHelper.ApplyAppTheme(ThemeHelper.IsLightTheme);
 
 #region AddPageKeys

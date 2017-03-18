@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Controls;
@@ -84,6 +83,20 @@ namespace NextPlayerUWP.ViewModels
                             roots.Add(dir);
                         }
                     }
+                }
+                CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
+                var cloudFolders = await fact.GetAllRootFolders();
+                foreach (var item in cloudFolders)
+                {
+                    Folders.Add(item);
+                }
+            }
+            else
+            {
+                var toRemove = Folders.OfType<CloudRootFolder>().ToList();
+                foreach(var item in toRemove)
+                {
+                    Folders.Remove(item);
                 }
                 CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
                 var cloudFolders = await fact.GetAllRootFolders();

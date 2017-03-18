@@ -192,7 +192,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="Column1"/>
                     <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
-                    <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
+                    <ColumnDefinition x:Name="Column3Search" Width="200"/>
                 </Grid.ColumnDefinitions>
                 <AutoSuggestBox  
                     x:Name="SearchBox"
@@ -223,6 +223,7 @@
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                     ItemsSource="{Binding Genres}"
+                    ItemTemplate="{StaticResource GenreItemTemplateDesktop}"
                     Margin="12,0,0,0"
                     SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                     IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"

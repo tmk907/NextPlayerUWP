@@ -27,22 +27,16 @@ namespace NextPlayerUWP.Views
             this.Loaded += View_Loaded;
             this.Unloaded += View_Unloaded;
             ViewModel = (ArtistViewModel)DataContext;
-            //NavigationCacheMode = NavigationCacheMode.Required;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        //~ArtistView()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        //}
+        ~ArtistView()
+        {
+            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        }
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();
             ShuffleAppBarButton.Click -= ShuffleAppBarButton_Click;
-            //ViewModel.OnUnloaded();
-            //ViewModel = null;
-            //DataContext = null;
-            //this.Loaded -= View_Loaded;
-            //this.Unloaded -= View_Unloaded;
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
