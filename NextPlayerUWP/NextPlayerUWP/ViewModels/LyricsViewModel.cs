@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Extensions;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -18,10 +19,13 @@ namespace NextPlayerUWP.ViewModels
 {
     public class LyricsViewModel : ViewModelBase
     {
+        LyricsExtensionsClient lyricsExtensions;
         public LyricsViewModel()
         {
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             translationHelper = new TranslationHelper();
+            var helper = new LyricsExtensions();
+            lyricsExtensions = new LyricsExtensionsClient(helper);
         }
 
         private SongItem song;
@@ -186,13 +190,22 @@ namespace NextPlayerUWP.ViewModels
             
             if (string.IsNullOrEmpty(dbLyrics))
             {
-                if (lyricsWebview == null)
+                string extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
+                if (extLyrics == "")
                 {
-                    changelyrics = true;
-                    return;
+                    if (lyricsWebview == null)
+                    {
+                        changelyrics = true;
+                        return;
+                    }
+                    lyricsWebview.Stop();
+                    await LoadLyricsFromWebsite();
                 }
-                lyricsWebview.Stop();
-                await LoadLyricsFromWebsite();
+                else
+                {
+                    original = false;
+                    Lyrics = extLyrics;
+                }
             }
             else
             {

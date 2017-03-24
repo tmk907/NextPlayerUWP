@@ -220,6 +220,11 @@
     <Compile Include="Converters\YearToVisibilityConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemContainerStyleConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemWidthConverter.cs" />
+    <Compile Include="Extensions\BaseExtensionsHelper.cs" />
+    <Compile Include="Extensions\Contracts.cs" />
+    <Compile Include="Extensions\ExtensionsService.cs" />
+    <Compile Include="Extensions\LyricsExtensions.cs" />
+    <Compile Include="Extensions\LyricsExtensionsClient.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
     <Compile Include="Helpers\PlaylistRule.cs" />
@@ -268,6 +273,7 @@
     <Compile Include="ViewModels\Settings\ISettingsViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsAboutViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsAccountsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsExtensionsViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsLibraryViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsPersonalizationViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsToolsViewModel.cs" />
@@ -369,6 +375,9 @@
     </Compile>
     <Compile Include="Views\Settings\SettingsAccountsControl.xaml.cs">
       <DependentUpon>SettingsAccountsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsExtensionsControl.xaml.cs">
+      <DependentUpon>SettingsExtensionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\SettingsLibraryControl.xaml.cs">
       <DependentUpon>SettingsLibraryControl.xaml</DependentUpon>
@@ -659,6 +668,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Settings\SettingsAccountsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsExtensionsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

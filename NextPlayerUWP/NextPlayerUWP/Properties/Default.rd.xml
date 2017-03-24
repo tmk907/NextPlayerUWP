@@ -29,7 +29,7 @@
 	<!-- <Type Name="NextPlayerUWP.ViewModels.RightPanelViewModel" Dynamic="Required All"> -->
 		<!-- <Method Name="ShowLyrics" Dynamic="Required"/> -->
 	<!-- </Type> -->
-	<Namespace Name="NextPlayerUWP.ViewModels" Browse="Required Public" Dynamic="Required Public" /> />
+	<!-- <Namespace Name="NextPlayerUWP.ViewModels" Browse="Required Public" Dynamic="Required Public" /> /> -->
 	
   </Application>
 </Directives>

@@ -918,4 +918,7 @@
   <data name="ButtonAddAccount.Content" xml:space="preserve">
     <value>Add account</value>
   </data>
+  <data name="TBExtensions.Text" xml:space="preserve">
+    <value>Extensions</value>
+  </data>
 </root>

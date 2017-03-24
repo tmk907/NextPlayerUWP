@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Extensions;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Diagnostics;
@@ -20,6 +21,7 @@ namespace NextPlayerUWP.ViewModels
     public class RightPanelViewModel : Template10.Mvvm.ViewModelBase
     {
         ListViewScrollerHelper scrollerHelper;
+        LyricsExtensionsClient lyricsExtensions;
 
         public RightPanelViewModel()
         {
@@ -32,6 +34,8 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            var helper = new LyricsExtensions();
+            lyricsExtensions = new LyricsExtensionsClient(helper);
             Init();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
@@ -429,10 +433,19 @@ namespace NextPlayerUWP.ViewModels
             WebVisibility = false;
             if (string.IsNullOrEmpty(dbLyrics))
             {
-                if (autoLoadFromWeb)
+                string extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
+                if (extLyrics == "")
                 {
-                    lyricsWebview.Stop();
-                    await LoadLyricsFromWebsite();
+                    if (autoLoadFromWeb)
+                    {
+                        lyricsWebview.Stop();
+                        await LoadLyricsFromWebsite();
+                    }
+                }
+                else
+                {
+                    original = false;
+                    Lyrics = extLyrics;
                 }
             }
             else

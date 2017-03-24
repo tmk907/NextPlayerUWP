@@ -75,5 +75,9 @@
         public const string IgnoredArticlesList = "IgnoredArticlesList";
 
         public const string MenuEntries = "MenuEntries";
+
+        public const string ExtensionsLyrics = "LyricsExtensions";
+        public const string ExtensionsArtistInfo = "ExtensionsArtistInfo";
+        public const string ExtensionsAlbumInfo = "ExtensionsAlbumInfo";
     }
 }

@@ -14,6 +14,7 @@ namespace NextPlayerUWP.Common
             viewModels.Add(new SettingsLibraryViewModel());
             viewModels.Add(new SettingsPersonalizationViewModel());
             viewModels.Add(new SettingsToolsViewModel());
+            viewModels.Add(new SettingsExtensionsViewModel());
             viewModels.Add(new SettingsAccountsViewModel());
             viewModels.Add(new SettingsAboutViewModel());
         }
@@ -32,6 +33,8 @@ namespace NextPlayerUWP.Common
                     return viewModels.OfType<SettingsPersonalizationViewModel>().First();
                 case nameof(SettingsToolsViewModel):
                     return viewModels.OfType<SettingsToolsViewModel>().First();
+                case nameof(SettingsExtensionsViewModel):
+                    return viewModels.OfType<SettingsExtensionsViewModel>().First();
                 default:
                     return null;
             }
