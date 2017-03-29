@@ -170,17 +170,17 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        public void ChangeBottomPlayerVisibility(bool visible)
-        {
-            if (visible)
-            {
-                BottomPlayerGrid.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                BottomPlayerGrid.Visibility = Visibility.Collapsed;
-            }
-        }
+        //public void ChangeBottomPlayerVisibility(bool visible)
+        //{
+        //    if (visible)
+        //    {
+        //        BottomPlayerGrid.Visibility = Visibility.Visible;
+        //    }
+        //    else
+        //    {
+        //        BottomPlayerGrid.Visibility = Visibility.Collapsed;
+        //    }
+        //}
 
         public void OnDesktopViewActiveChange(bool isActive)
         {

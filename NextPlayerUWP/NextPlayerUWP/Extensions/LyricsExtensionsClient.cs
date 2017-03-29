@@ -1,4 +1,7 @@
 ﻿using Newtonsoft.Json;
+using NextPlayerExtensionsAPI;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,22 +11,42 @@ namespace NextPlayerUWP.Extensions
     public class LyricsExtensionsClient
     {
         private IExtensionsHelper extensionsHelper;
+        private ConcurrentDictionary<string, LyricsResponse> cache;
 
         public LyricsExtensionsClient(IExtensionsHelper extensionsHelper)
         {
             this.extensionsHelper = extensionsHelper;
+            cache = new ConcurrentDictionary<string, LyricsResponse>();
         }
 
-        public async Task<string> GetLyrics(string album, string artist, string title)
+        public async Task<LyricsResponse> GetLyrics(string album, string artist, string title)
         {
-            string lyrics = "";
-
             var extensions = await extensionsHelper.GetExtensionsInfo();
-            if (extensions.Count == 0) return lyrics;
+            LyricsResponse res = await GetLyrics(album, artist, title, extensions);
+            return res;
+        }
 
-            ExtensionsService service = new ExtensionsService();
+        public async Task<LyricsResponse> GetLyrics(string album, string artist, string title, AppExtensionInfo extension)
+        {
+            LyricsResponse res = await GetLyrics(album, artist, title, new List<AppExtensionInfo>() { extension });
+            return res;
+        }
+
+        private async Task<LyricsResponse> GetLyrics(string album, string artist, string title, IEnumerable<AppExtensionInfo> extensions)
+        {
+            string key = ParamsToKey(album, artist, title);
+            LyricsResponse res;
+            if (cache.TryGetValue(key, out res))
+            {
+                return res;
+            }
+            else
+            {
+                res = new LyricsResponse() { Lyrics = "", Url = "" };
+            }
+
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            var data = JsonConvert.SerializeObject(new LyricsParameters()
+            var data = JsonConvert.SerializeObject(new LyricsRequest()
             {
                 Album = album,
                 Artist = artist,
@@ -31,39 +54,28 @@ namespace NextPlayerUWP.Extensions
             });
             parameters.Add(Commands.GetLyrics, data);
 
-            foreach (var ext in extensions.OrderBy(e => e.Priority))
+            ExtensionsService service = new ExtensionsService();
+
+            foreach (var ext in extensions.Where(e => e.Enabled).OrderBy(e => e.Priority))
             {
                 var response = await service.InvokeExtension(ext, parameters);
-                if (response != null && response.ContainsKey(Responses.Lyrics))
+                if (response != null && response.ContainsKey(Responses.Result))
                 {
-                    lyrics = response[Responses.Lyrics] as string;
-                    break;
+                    res = JsonConvert.DeserializeObject<LyricsResponse>(response[Responses.Result] as string);
+                    if (!String.IsNullOrEmpty(res.Lyrics) || !String.IsNullOrEmpty(res.Url))
+                    {
+                        cache.TryAdd(key, res);
+                        break;
+                    }
                 }
             }
 
-            return lyrics;
+            return res;
         }
 
-        public async Task<string> GetLyrics(string album, string artist, string title, AppExtensionInfo extension)
+        private string ParamsToKey(string p1, string p2, string p3)
         {
-            string lyrics = "";
-            ExtensionsService service = new ExtensionsService();
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            var data = JsonConvert.SerializeObject(new LyricsParameters()
-            {
-                Album = album,
-                Artist = artist,
-                Title = title,
-            });
-            parameters.Add(Commands.GetLyrics, data);
-
-            var response = await service.InvokeExtension(extension, parameters);
-            if (response != null && response.ContainsKey(Responses.Lyrics))
-            {
-                lyrics = response[Responses.Lyrics] as string;
-            }
-
-            return lyrics;
+            return p1 + "/" + p2 + "/" + p3;
         }
     }
 }

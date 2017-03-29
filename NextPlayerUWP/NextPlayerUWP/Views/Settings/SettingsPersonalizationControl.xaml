@@ -10,7 +10,17 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-
+    <UserControl.Resources>
+        <Style x:Key="KeyShortDescTBStyle" TargetType="TextBlock"  BasedOn="{StaticResource BodyTextBlockStyle}">
+            <Setter Property="MinWidth" Value="128"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+        <Style x:Key="KeyShortValueTBStyle" TargetType="TextBlock"  BasedOn="{StaticResource BodyTextBlockStyle}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+    </UserControl.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -250,6 +260,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <TextBlock
+                        x:Uid="TBMenu"
                         Style="{StaticResource BodyTextBlockStyle}"
                         FontSize="17"
                         Margin="4,4,4,4"
@@ -288,6 +299,95 @@
                         Content="Save"
                         Click="{x:Bind ViewModel.SaveMenuItems}"
                         MinWidth="128"/>
+                </StackPanel>
+                <StackPanel x:Name="KeyboardShortcutsSP" Orientation="Vertical" Margin="4">
+                    <TextBlock
+                        x:Uid="TBKeyboardShortcuts"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4"
+                        Text="Keyboard shortcuts"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBPlay"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Play"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + Space"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBNext"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Next"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + Right arrow"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBPrevious"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Previous"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + Left arrow"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBShuffle"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Shuffle"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + N"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBRepeat"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Repeat"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + M"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBAudioSettings"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="AudioSettings"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + J"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBNowPlayingList"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Now playing list"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + K"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBLyrics"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Lyrics"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + L"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Uid="TBMenu"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Menu"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Left alt + number"/>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

@@ -46,11 +46,11 @@
                     Margin="0,12,0,12"
                     Text="Accounts"/>
                 <StackPanel Margin="4" Orientation="Vertical">
-                <TextBlock
-                    Style="{StaticResource BodyTextBlockStyle}" 
-                    FontSize="17"
-                    Margin="4,4,4,4"
-                    Text="Last.fm"/>
+                    <TextBlock
+                        Style="{StaticResource BodyTextBlockStyle}" 
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Last.fm"/>
                     <StackPanel Orientation="Vertical" Margin="4">
                         <TextBox 
                             Text="{x:Bind ViewModel.LastFmLogin, Mode=TwoWay}"

@@ -45,7 +45,8 @@ namespace NextPlayerUWP.Extensions
                             PackageName = extension.Package.Id.FamilyName,
                             ServiceName = service["#text"].ToString(),
                             Type = ExtensionType.Lyrics,
-                            Priority = -1
+                            Priority = -1,
+                            Enabled = true,
                         });
                     }
                 }

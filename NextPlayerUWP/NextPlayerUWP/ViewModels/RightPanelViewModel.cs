@@ -34,8 +34,7 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            var helper = new LyricsExtensions();
-            lyricsExtensions = new LyricsExtensionsClient(helper);
+            lyricsExtensions = new LyricsExtensionsClient(vml.LyricsExtensionsService);
             Init();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
@@ -433,19 +432,37 @@ namespace NextPlayerUWP.ViewModels
             WebVisibility = false;
             if (string.IsNullOrEmpty(dbLyrics))
             {
-                string extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
-                if (extLyrics == "")
+                ShowProgressBar = true;
+                var extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
+                ShowProgressBar = false;
+
+                if (extLyrics.Lyrics == "")
                 {
-                    if (autoLoadFromWeb)
+                    if (extLyrics.Url != "")
                     {
-                        lyricsWebview.Stop();
-                        await LoadLyricsFromWebsite();
+                        try
+                        {
+                            ShowProgressBar = true;
+                            lyricsWebview.Navigate(new Uri(extLyrics.Url));
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowProgressBar = false;
+                        }
+                    }
+                    else
+                    {
+                        if (autoLoadFromWeb)
+                        {
+                            lyricsWebview.Stop();
+                            await LoadLyricsFromWebsite();
+                        }
                     }
                 }
                 else
                 {
                     original = false;
-                    Lyrics = extLyrics;
+                    Lyrics = extLyrics.Lyrics;
                 }
             }
             else
@@ -478,7 +495,7 @@ namespace NextPlayerUWP.ViewModels
             if (isJson)
             {
                 string l = jsonList.GetObject().GetNamedString("lyrics");
-                if (l== "Not found")
+                if (l == "Not found")
                 {
                     StatusText = loader.GetString("CantFindLyrics");
                     ShowProgressBar = false;

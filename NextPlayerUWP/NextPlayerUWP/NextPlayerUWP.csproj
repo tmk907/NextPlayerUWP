@@ -221,7 +221,6 @@
     <Compile Include="Converters\ZoomedOutItemContainerStyleConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemWidthConverter.cs" />
     <Compile Include="Extensions\BaseExtensionsHelper.cs" />
-    <Compile Include="Extensions\Contracts.cs" />
     <Compile Include="Extensions\ExtensionsService.cs" />
     <Compile Include="Extensions\LyricsExtensions.cs" />
     <Compile Include="Extensions\LyricsExtensionsClient.cs" />

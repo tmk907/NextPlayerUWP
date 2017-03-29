@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerExtensionsAPI;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
@@ -48,6 +49,7 @@ namespace NextPlayerUWP.Extensions
             {
                 if (connectionStatus != AppServiceConnectionStatus.Success)
                 {
+                    System.Diagnostics.Debug.WriteLine("InvokeExtension connectionStatus:{0}", connectionStatus);
                     return null;
                 }
 

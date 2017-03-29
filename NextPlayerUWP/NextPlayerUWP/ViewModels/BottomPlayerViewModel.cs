@@ -50,6 +50,14 @@ namespace NextPlayerUWP.ViewModels
         public PlayerViewModelBase PlayerVM { get; set; }
         public QueueViewModelBase QueueVM { get; set; }
 
+        private bool bottomPlayerVisibility = true;
+        public bool BottomPlayerVisibility
+        {
+            get { return bottomPlayerVisibility; }
+            set { Set(ref bottomPlayerVisibility, value); }
+        }
+
+
         #region Properties
 
         private double sliderMaxValue = 0.0;

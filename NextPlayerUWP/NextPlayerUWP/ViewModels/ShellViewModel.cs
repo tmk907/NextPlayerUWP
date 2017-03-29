@@ -17,7 +17,7 @@ namespace NextPlayerUWP.ViewModels
             get { return isNowPlayingDesktopViewActive; }
             set { Set(ref isNowPlayingDesktopViewActive, value); }
         }
-
+       
         private ObservableCollection<HamburgerButtonInfo> primaryButtons = new ObservableCollection<HamburgerButtonInfo>();
         public ObservableCollection<HamburgerButtonInfo> PrimaryButtons
         {
@@ -27,6 +27,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void RefreshMenuButtons()
         {
+            System.Diagnostics.Debug.WriteLine("Refreshmenubuttons");
             HamburgerMenuBuilder builder = new HamburgerMenuBuilder();
             PrimaryButtons.Clear();
             PrimaryButtons = builder.GetButtons();

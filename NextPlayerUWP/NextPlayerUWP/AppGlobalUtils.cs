@@ -67,7 +67,9 @@ namespace NextPlayerUWP
         public static void OnNavigatedToNewView(bool visible, bool isNowPlayingDesktopActive = false)
         {
             if (Window.Current == null || Window.Current.Content == null) return;
-            ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
+            //((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
+            ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
+            vml.BottomPlayerVM.BottomPlayerVisibility = visible;
             ((Shell)((ModalDialog)Window.Current.Content).Content).OnDesktopViewActiveChange(isNowPlayingDesktopActive);
         }
 

@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using NextPlayerUWP.Common;
+using NextPlayerUWP.Extensions;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -40,6 +41,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<QueueViewModelBase>();
 
             SimpleIoc.Default.Register<SettingsVMService>();
+            SimpleIoc.Default.Register<LyricsExtensions>();
 
             
         }
@@ -74,5 +76,6 @@ namespace NextPlayerUWP.ViewModels
         public QueueViewModelBase QueueVM => ServiceLocator.Current.GetInstance<QueueViewModelBase>();
 
         public SettingsVMService SettingsVMService => ServiceLocator.Current.GetInstance<SettingsVMService>();
+        public LyricsExtensions LyricsExtensionsService => ServiceLocator.Current.GetInstance<LyricsExtensions>();
     }
 }

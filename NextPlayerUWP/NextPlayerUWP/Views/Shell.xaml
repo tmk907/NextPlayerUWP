@@ -662,6 +662,7 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" 
                   x:Name="BottomPlayerGrid" 
+                  Visibility="{Binding BottomPlayerVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
                   Height="68">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="SongInfoColumn" Width="*"/>

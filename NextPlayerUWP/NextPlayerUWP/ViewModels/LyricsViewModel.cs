@@ -24,8 +24,8 @@ namespace NextPlayerUWP.ViewModels
         {
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             translationHelper = new TranslationHelper();
-            var helper = new LyricsExtensions();
-            lyricsExtensions = new LyricsExtensionsClient(helper);
+            ViewModelLocator vml = new ViewModelLocator();
+            lyricsExtensions = new LyricsExtensionsClient(vml.LyricsExtensionsService);
         }
 
         private SongItem song;
@@ -190,21 +190,37 @@ namespace NextPlayerUWP.ViewModels
             
             if (string.IsNullOrEmpty(dbLyrics))
             {
-                string extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
-                if (extLyrics == "")
+                ShowProgressBar = true;
+                var extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
+                ShowProgressBar = false;
+
+                if (extLyrics.Lyrics == "")
                 {
-                    if (lyricsWebview == null)
+                    if (extLyrics.Url != "")
                     {
-                        changelyrics = true;
-                        return;
+                        try
+                        {
+                            ShowProgressBar = true;
+                            lyricsWebview.Navigate(new Uri(extLyrics.Url));
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowProgressBar = false;
+                        }
                     }
-                    lyricsWebview.Stop();
-                    await LoadLyricsFromWebsite();
+                    else
+                    {
+                        if (autoLoadFromWeb)
+                        {
+                            lyricsWebview.Stop();
+                            await LoadLyricsFromWebsite();
+                        }
+                    }
                 }
                 else
                 {
                     original = false;
-                    Lyrics = extLyrics;
+                    Lyrics = extLyrics.Lyrics;
                 }
             }
             else

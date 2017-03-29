@@ -21,6 +21,9 @@
         <DataTemplate x:Key="ToolsDataTemplate" x:DataType="settingsvm:SettingsToolsViewModel">
             <settingsviews:SettingsToolsControl/>
         </DataTemplate>
+        <DataTemplate x:Key="ExtensionsDataTemplate" x:DataType="settingsvm:SettingsExtensionsViewModel">
+            <settingsviews:SettingsExtensionsControl/>
+        </DataTemplate>
         <DataTemplate x:Key="AccountsDataTemplate" x:DataType="settingsvm:SettingsAccountsViewModel">
             <settingsviews:SettingsAccountsControl/>
         </DataTemplate>
@@ -30,6 +33,7 @@
         <mycontrols:SettingsItemTemplateSelector x:Key="SettingsDataTemplateSelector"
             AboutTemplate="{StaticResource AboutDataTemplate}"
             AccountsTemplate="{StaticResource AccountsDataTemplate}"
+            ExtensionsTemplate="{StaticResource ExtensionsDataTemplate}"
             LibraryTemplate="{StaticResource LibraryDataTemplate}"
             PersonalizationTemplate="{StaticResource PersonalizationDataTemplate}"
             ToolsTemplate="{StaticResource ToolsDataTemplate}">

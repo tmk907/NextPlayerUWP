@@ -1,10 +1,6 @@
 ﻿using NextPlayerUWP.Extensions;
-using NextPlayerUWPDataLayer.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWP.ViewModels.Settings
@@ -15,7 +11,8 @@ namespace NextPlayerUWP.ViewModels.Settings
         public SettingsExtensionsViewModel()
         {
             isLoaded = false;
-            extHelper = new LyricsExtensions();
+            ViewModelLocator vml = new ViewModelLocator();
+            extHelper = vml.LyricsExtensionsService;
         }
 
         public void Load()
@@ -26,9 +23,11 @@ namespace NextPlayerUWP.ViewModels.Settings
         private bool isLoaded;
         private async Task OnLoaded()
         {
-            if (isLoaded) return;
             var list = await extHelper.GetExtensionsInfo();
-            LyricsExtensions = new ObservableCollection<AppExtensionInfo>(list);
+            LyricsExtensions = new ObservableCollection<AppExtensionInfo>(list.OrderBy(e=>e.Priority));
+
+            if (isLoaded) return;
+
             isLoaded = true;
         }
 
@@ -39,10 +38,9 @@ namespace NextPlayerUWP.ViewModels.Settings
             set { Set(ref lyricsExtensions, value); }
         }
 
-        public void ApplyLyricsExtensionOrder()
+        public void ApplyLyricsExtensionChanges()
         {
-            LyricsExtensions extHelper = new LyricsExtensions();
-            extHelper.UpdatePriorities(LyricsExtensions.ToList());
+            extHelper.UpdatePrioritiesAndSave(LyricsExtensions.ToList());
         }
     }
 }

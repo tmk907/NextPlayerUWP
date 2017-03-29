@@ -19,6 +19,7 @@ namespace NextPlayerUWP.Extensions
             foreach (var ext in extensions)
             {
                 ext.Priority = list.FirstOrDefault(e => e.Id == ext.Id)?.Priority ?? -1;
+                ext.Enabled = list.FirstOrDefault(e => e.Id == ext.Id)?.Enabled ?? true;
                 if (ext.Priority > max) max = ext.Priority;
             }
             foreach (var ext in extensions.Where(e => e.Priority == -1))
@@ -29,7 +30,7 @@ namespace NextPlayerUWP.Extensions
             ApplicationSettingsHelper.SaveData(appExtensionName, extensions);
         }
 
-        public void UpdatePriorities(List<AppExtensionInfo> reorderedList)
+        public void UpdatePrioritiesAndSave(List<AppExtensionInfo> reorderedList)
         {
             int i = 0;
             foreach (var item in reorderedList)

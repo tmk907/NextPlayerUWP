@@ -35,32 +35,24 @@
         public const string LastFmApiKey = "4737e29d26f813ceeb64aefda42ec0ac";
         public const string LastFmApiSecret = "7b3dbb57b6fda2a24b95270acc77bbc4";
         
-
         //SoundCloud
         public const string SoundCloudClientId = "1a554caaef0c755f3a794ec4c46d2ee2";
-        //public const string SoundCloudClientSecret = "292af0fae1bee4360317164d21cdf8dd";
 
         //OneDrive
         public const string OneDriveAppId = "0000000048172F05";
-        //public const string OneDriveAppSecret = "1VO9tiGE/0apI83XTSl9N9qnp/Pcnn7A";
-        //urn:ietf:wg:oauth:2.0:oob
         //https://login.live.com/oauth20_desktop.srf
 
         //Dropbox
         public const string DropboxAppKey = "cyqbr26o2vtbo8z";
-        //public const string DropboxAppSecret = "tlj5wna6iuuhfmm";
         public const string DropboxAuthToken = "DropboxAuthToken";
 
         //Google Drive
         public const string GoogleDriveClientId = "958984549072-t7lkdmpq50crclpt356js7egc1au3p8u.apps.googleusercontent.com";
-        //public const string GoogleDriveAppSecret = "kIPQh3zCiK-X7LsD1lmPBPAJ";
 
         //pCloud
         public const string PCloudClientId = "5hl070QJ9KY";
-        //public const string PCloudAppSecret = "zt17mban1oQj8iq25n5wNbtIuhuV";
 
         //Jamendo
         public const string JamendoClientId = "8ed1da48";
-        //public const string JamendoClientSecret = "45994f52254ba988c15abee8967bbc84";
     }
 }

@@ -8,6 +8,7 @@ namespace NextPlayerUWP.Controls
     {
         public DataTemplate AboutTemplate { get; set; }
         public DataTemplate AccountsTemplate { get; set; }
+        public DataTemplate ExtensionsTemplate { get; set; }
         public DataTemplate LibraryTemplate { get; set; }
         public DataTemplate ToolsTemplate { get; set; }
         public DataTemplate PersonalizationTemplate { get; set; }
@@ -22,6 +23,8 @@ namespace NextPlayerUWP.Controls
                     return ToolsTemplate;
                 if (item.GetType() == typeof(SettingsPersonalizationViewModel))
                     return PersonalizationTemplate;
+                if (item.GetType() == typeof(SettingsExtensionsViewModel))
+                    return ExtensionsTemplate;
                 if (item.GetType() == typeof(SettingsAccountsViewModel))
                     return AccountsTemplate;
                 if (item.GetType() == typeof(SettingsAboutViewModel))

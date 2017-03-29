@@ -13,45 +13,53 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer Padding="12,0,12,0">
             <StackPanel Orientation="Vertical" Margin="4">
-                <TextBlock
+                <TextBlock 
+                    x:Uid="TBExtensions"
+                    Style="{StaticResource TitleTextBlockStyle}" 
+                    Margin="0,12,0,12"
+                    Text="Extensions"/>
+                <StackPanel Margin="4" Orientation="Vertical">
+                    <TextBlock
+                        x:Uid="TBLyrics"
                         Style="{StaticResource BodyTextBlockStyle}"
                         FontSize="17"
                         Margin="4,4,4,4"
-                        Text="Lyrics extensions"/>
-                <ListView
+                        Text="Lyrics"/>
+                    <ListView
                         ItemsSource="{x:Bind ViewModel.LyricsExtensions, Mode=TwoWay}"
                         SelectionMode="Single"
                         AllowDrop="True"
                         IsItemClickEnabled="False"
                         CanReorderItems="True"
                         IsSwipeEnabled="True">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="extensions:AppExtensionInfo">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock 
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="extensions:AppExtensionInfo">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock 
                                         Grid.Column="0"
                                         VerticalAlignment="Center"
                                         Margin="0,0,8,0"
-                                        MinWidth="128"
+                                        MinWidth="256"
                                         Text="{x:Bind DisplayName}"/>
-                                <!--<ToggleSwitch 
+                                    <ToggleSwitch 
                                         Grid.Column="1"
                                         VerticalAlignment="Center"
-                                        IsOn="{x:Bind Enable, Mode=TwoWay}"
-                                        Tag="{x:Bind Id}"/>-->
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <Button 
+                                        IsOn="{x:Bind Enabled, Mode=TwoWay}"
+                                        Tag="{x:Bind Id}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Button 
                         x:Uid="ButtonSave"
                         Content="Save"
-                        Click="{x:Bind ViewModel.ApplyLyricsExtensionOrder}"
+                        Click="{x:Bind ViewModel.ApplyLyricsExtensionChanges}"
                         MinWidth="128"/>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>
