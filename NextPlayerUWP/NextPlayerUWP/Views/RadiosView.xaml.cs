@@ -30,10 +30,10 @@ namespace NextPlayerUWP.Views
             ViewModel = (RadiosViewModel)DataContext;
         }
 
-        ~RadiosView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~RadiosView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void JamendoListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {

@@ -29,26 +29,25 @@ namespace NextPlayerUWP.Views
 
         public NowPlayingPlaylistView()
         {
+            System.Diagnostics.Debug.WriteLine(GetType().Name + "()");
             this.InitializeComponent();
             this.Loaded += View_Loaded;
-            //this.Unloaded += View_Unloaded;
+            this.Unloaded += View_Unloaded;
             ViewModel = (NowPlayingPlaylistViewModel)DataContext;
         }
-        ~NowPlayingPlaylistView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~NowPlayingPlaylistView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.OnUnloaded();
-            ViewModel = null;
-            DataContext = null;
-            this.Loaded -= View_Loaded;
-            this.Unloaded -= View_Unloaded;
+            System.Diagnostics.Debug.WriteLine(GetType().Name+"Unloaded");
+            ViewModel.OnUnloaded();           
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine(GetType().Name+"Loaded");
             ViewModel.OnLoaded(NowPlayingPlaylistListView);
         }
 

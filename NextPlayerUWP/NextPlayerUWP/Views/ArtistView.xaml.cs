@@ -29,10 +29,10 @@ namespace NextPlayerUWP.Views
             ViewModel = (ArtistViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        ~ArtistView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~ArtistView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();

@@ -31,10 +31,10 @@ namespace NextPlayerUWP.Views
             selectionButtons = new ButtonsForMultipleSelection();
             //AppMessenger2.RegisterEnableSearch(this);
         }
-        ~PlaylistEditableView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~PlaylistEditableView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();

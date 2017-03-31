@@ -30,10 +30,10 @@ namespace NextPlayerUWP.Views
             ViewModel = (FoldersRootViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        ~FoldersRootView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~FoldersRootView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();

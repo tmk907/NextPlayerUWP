@@ -19,12 +19,12 @@
                     Margin="0,12,0,12"
                     Text="Extensions"/>
                 <StackPanel Margin="4" Orientation="Vertical">
-                    <TextBlock
+                    <!--<TextBlock
                         x:Uid="TBLyrics"
                         Style="{StaticResource BodyTextBlockStyle}"
                         FontSize="17"
                         Margin="4,4,4,4"
-                        Text="Lyrics"/>
+                        Text="Lyrics"/>-->
                     <ListView
                         ItemsSource="{x:Bind ViewModel.LyricsExtensions, Mode=TwoWay}"
                         SelectionMode="Single"

@@ -20,10 +20,10 @@ namespace NextPlayerUWP.Views
             ViewModel = (TagsEditorViewModel)DataContext;
         }
 
-        ~TagsEditor()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~TagsEditor()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void Image_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {

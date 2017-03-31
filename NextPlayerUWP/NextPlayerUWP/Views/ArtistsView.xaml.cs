@@ -39,10 +39,10 @@ namespace NextPlayerUWP.Views
             //AppKeyboardShortcuts.KeyEnableSearching += weakEvent.OnEvent;
         }
 
-        ~ArtistsView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~ArtistsView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {

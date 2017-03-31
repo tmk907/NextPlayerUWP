@@ -38,10 +38,10 @@ namespace NextPlayerUWP.Views
             ViewModel = (AlbumViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        ~AlbumView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~AlbumView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();

@@ -31,10 +31,10 @@ namespace NextPlayerUWP.Views
             selectionButtons = new ButtonsForMultipleSelection();
         }
 
-        ~GenresView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~GenresView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         Guid token;
         private void View_Loaded(object sender, RoutedEventArgs e)

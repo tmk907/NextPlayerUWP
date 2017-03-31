@@ -38,14 +38,23 @@ namespace NextPlayerUWP.ViewModels
             Init();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
-            //AppMessenger2.RegisterShowLyrics(this);
-            //AppMessenger2.RegisterShowNowPlayingList(this);
-            //AppMessenger.Instance.Subscribe<ShowLyrics>(OnShowLyricsMessage);
-            //AppMessenger.Instance.Subscribe<ShowNowPlayingList>(OnShowNowPlayingListMessage);
+            
             MessageHub.Instance.Subscribe<ShowLyrics>(OnShowLyricsMessage);
             MessageHub.Instance.Subscribe<ShowNowPlayingList>(OnShowNowPlayingListMessage);
+
+            lyricsWebview = new WebView(WebViewExecutionMode.SeparateThread);
+            lyricsWebview.ContentLoading += webView1_ContentLoading;
+            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
+            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
+            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
+
         }
         
+        public WebView GetWebView()
+        {
+            return lyricsWebview;
+        }
+
         private void Init()
         {
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
@@ -204,15 +213,9 @@ namespace NextPlayerUWP.ViewModels
 
         #region NowPlaying
 
-        public void OnLoaded(ListView p, WebView webView)
+        public void OnLoaded(ListView p)
         {
             Logger2.DebugWrite("RightPanelViewModel", "OnLoaded");
-
-            lyricsWebview = webView;
-            lyricsWebview.ContentLoading += webView1_ContentLoading;
-            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
-            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
-            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
 
             scrollerHelper.listView = (ListView)p;
             scrollerHelper.ScrollAfterTrackChanged(PlaybackService.Instance.CurrentSongIndex);
@@ -221,8 +224,9 @@ namespace NextPlayerUWP.ViewModels
         public void OnUnLoaded()
         {
             Logger2.DebugWrite("RightPanelViewModel", "OnUnLoaded");
-            scrollerHelper.GetPositionKey();
-            scrollerHelper.GetFirstVisibleIndex();
+            //scrollerHelper.GetPositionKey();
+            //scrollerHelper.GetFirstVisibleIndex();
+            scrollerHelper.listView = null;
         }
 
         #endregion
@@ -454,7 +458,14 @@ namespace NextPlayerUWP.ViewModels
                     {
                         if (autoLoadFromWeb)
                         {
-                            lyricsWebview.Stop();
+                            try
+                            {
+                                lyricsWebview.Stop();
+                            }
+                            catch (InvalidOperationException ex)
+                            {
+
+                            }
                             await LoadLyricsFromWebsite();
                         }
                     }

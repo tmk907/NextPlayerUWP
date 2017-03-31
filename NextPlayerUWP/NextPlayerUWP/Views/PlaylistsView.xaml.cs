@@ -34,10 +34,10 @@ namespace NextPlayerUWP.Views
             selectionButtons = new ButtonsForMultipleSelection();
         }
 
-        ~PlaylistsView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~PlaylistsView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {

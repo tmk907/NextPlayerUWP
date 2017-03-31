@@ -30,10 +30,10 @@ namespace NextPlayerUWP.Views
             ViewModel = (PlaylistViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        ~PlaylistView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~PlaylistView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();

@@ -5,6 +5,7 @@ using NextPlayerUWPDataLayer.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.ApplicationModel;
 
 namespace NextPlayerUWP.Common
@@ -62,63 +63,79 @@ namespace NextPlayerUWP.Common
         {
             const string dayOfUseKey = "dayofuse";
             const string appLaunchCountKey = "applaunchcount";
+            //const string dayBetweenKeys = "daybetweenkeys";
+
+            string Day0 = "Day0";
+            string Day1 = "Day1";
+            string Day2 = "Day2";
+            string Day3 = "Day3";
+            string Day4 = "Day4";
+            string Day5 = "Day5";
+            string Day6 = "Day6";
+            string Day7 = "Day7";
+            string Day14 = "Day14";
+            string Day21 = "Day21";
+            string Day30 = "Day30";
+            string Day60 = "Day60";
+
+            Dictionary<string, int> days = new Dictionary<string, int>()
+            {
+                { "" , -1 },
+                { Day0, 0 },
+                { Day1, 1 },
+                { Day2, 2 },
+                { Day3, 3 },
+                { Day4, 4 },
+                { Day5, 5 },
+                { Day6, 6 },
+                { Day7, 7 },
+                { Day14, 14 },
+                { Day21, 21 },
+                { Day30, 30 },
+                { Day60, 60 },
+            };
 
             Package package = Package.Current;
             TimeSpan period =  DateTime.Now - package.InstalledDate;
-            int daysPast = period.Days;
+            int daysPastSinceInstall = period.Days;
 
             int appLaunchCount = (int)(ApplicationSettingsHelper.ReadSettingsValue(appLaunchCountKey) ?? 0);
-            ApplicationSettingsHelper.SaveSettingsValue(appLaunchCountKey, appLaunchCount + 1);
+            appLaunchCount++;
+            ApplicationSettingsHelper.SaveSettingsValue(appLaunchCountKey, appLaunchCount);
 
-            string lastEventTracked = (string)(ApplicationSettingsHelper.ReadSettingsValue(dayOfUseKey) ?? "D0");
-            if (lastEventTracked == "D0")//first time app open
+            //bool dayBetween = (bool)(ApplicationSettingsHelper.ReadSettingsValue(dayBetweenKeys) ?? false);
+
+            string lastEventTracked = (string)(ApplicationSettingsHelper.ReadSettingsValue(dayOfUseKey) ?? "");
+            int lastEventTrackedDaysPast = days[lastEventTracked];
+
+            if (daysPastSinceInstall > lastEventTrackedDaysPast)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(dayOfUseKey, "D1");
-                TrackEvent("D1");
-            }
-            else
-            {
-                if (daysPast == 2)
+                string nextLabel = lastEventTracked;
+                foreach(var k in days.OrderBy(a=>a.Value))
                 {
-                    if (lastEventTracked != "D2")
-                    {
-                        ApplicationSettingsHelper.SaveSettingsValue(dayOfUseKey, "D2");
-                        TrackEvent("D2");
-                    }
+                    nextLabel = k.Key;
+                    if (daysPastSinceInstall <= k.Value) break;
                 }
-                if (daysPast == 3)
+                if (days[nextLabel] == daysPastSinceInstall)
                 {
-                    if (lastEventTracked != "D3")
-                    {
-                        ApplicationSettingsHelper.SaveSettingsValue(dayOfUseKey, "D3");
-                        TrackEvent("D3");
-                    }
+                    ApplicationSettingsHelper.SaveSettingsValue(dayOfUseKey, nextLabel);
+                    TrackEvent(nextLabel);
+                    //ApplicationSettingsHelper.SaveSettingsValue(dayBetweenKeys, false);
                 }
-                else if (daysPast > 3 && daysPast <= 7)
-                {
-                    if (lastEventTracked != "D7")
-                    {
-                        ApplicationSettingsHelper.SaveSettingsValue(dayOfUseKey, "D7");
-                        TrackEvent("D7");
-                    }
-                }
-                else if (daysPast > 7 && daysPast <= 14)
-                {
-                    if (lastEventTracked != "D14")
-                    {
-                        ApplicationSettingsHelper.SaveSettingsValue(dayOfUseKey, "D14");
-                        TrackEvent("D14");
-                    }
-                }
-                else if (daysPast > 14 && daysPast <= 30)
-                {
-                    if (lastEventTracked != "D30")
-                    {
-                        ApplicationSettingsHelper.SaveSettingsValue(dayOfUseKey, "D30");
-                        TrackEvent("D30");
-                    }
-                }
-            }
+                //else
+                //{
+                //    bool between = true;
+                //    foreach(var k in days)
+                //    {
+                //        if (k.Value == daysPastSinceInstall)
+                //        {
+                //            between = false;
+                //            break;
+                //        }
+                //    }
+                //    ApplicationSettingsHelper.SaveSettingsValue(dayBetweenKeys, between);
+                //}
+            }                      
         }
     }
 }

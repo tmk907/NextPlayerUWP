@@ -391,13 +391,14 @@
                 Content="Now playing" 
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720">
-            <AppBarButton
+            
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton
                 x:Uid="AppBarButtonQueue"
                 Icon="List"
                 Label="Queue"
                 Click="{x:Bind ViewModel.GoToNowPlayingPlaylist}"
                 />
-            <controls:PageHeader.SecondaryCommands>
                 <AppBarButton
                     x:Uid="AppBarButtonLyrics"
                     Label="Lyrics"

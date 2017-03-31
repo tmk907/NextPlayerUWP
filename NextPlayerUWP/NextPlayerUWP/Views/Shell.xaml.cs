@@ -65,14 +65,14 @@ namespace NextPlayerUWP.Views
             //SendLogs();
         }
 
-        ~Shell()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~Shell()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void Shell_Loaded(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("Shell_Loaded");
+            System.Diagnostics.Debug.WriteLine("Shell Loaded()");
             LoadSliderEvents();
             tokenMenu = MessageHub.Instance.Subscribe<MenuButtonSelected>(OnMenuButtonMessage);
             tokenNotification = MessageHub.Instance.Subscribe<InAppNotification>(OnInAppNotificationMessage);
@@ -82,6 +82,7 @@ namespace NextPlayerUWP.Views
 
         private void Shell_Unloaded(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("Shell UnLoaded()");
             UnloadSliderEvents();
             MessageHub.Instance.UnSubscribe(tokenMenu);
             MessageHub.Instance.UnSubscribe(tokenNotification);

@@ -36,10 +36,10 @@ namespace NextPlayerUWP.Views
             selectionButtons = new ButtonsForMultipleSelection();
         }
 
-        ~SongsView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~SongsView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {

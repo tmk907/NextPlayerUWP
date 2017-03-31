@@ -34,10 +34,10 @@ namespace NextPlayerUWP.Views
             this.Unloaded += NowPlayingDesktopView_Unloaded;
             InitializedFrostedGlass(GlassHost);
         }
-        ~NowPlayingDesktopView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~NowPlayingDesktopView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private void NowPlayingDesktopView_Loaded(object sender, RoutedEventArgs e)
         {
             if (ViewModel.QueueVM.CoverUri != null)

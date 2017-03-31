@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls;
@@ -26,6 +25,11 @@ namespace NextPlayerUWP.ViewModels
             translationHelper = new TranslationHelper();
             ViewModelLocator vml = new ViewModelLocator();
             lyricsExtensions = new LyricsExtensionsClient(vml.LyricsExtensionsService);
+            lyricsWebview = new WebView();
+            lyricsWebview.ContentLoading += webView1_ContentLoading;
+            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
+            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
+            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
         }
 
         private SongItem song;
@@ -40,23 +44,14 @@ namespace NextPlayerUWP.ViewModels
             });
         }
 
-        public void OnLoaded(WebView webView)
+        public WebView GetWebView()
         {
-            lyricsWebview = webView;
-            lyricsWebview.ContentLoading += webView1_ContentLoading;
-            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
-            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
-            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
-            if (changelyrics)
-            {
-                changelyrics = false;
-                ChangeLyrics();
-            }
+            return lyricsWebview;
         }
-
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
+            System.Diagnostics.Debug.WriteLine("LyricsViewModel OnNavTo()");
             App.OnNavigatedToNewView(true);
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             if (suspensionState.ContainsKey(nameof(song.SongId)))
@@ -176,6 +171,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ChangeLyrics()
         {
+            System.Diagnostics.Debug.WriteLine("LyricsViewModel ChangeLyrics()");
             original = true;
 
             WebVisibility = false;
@@ -212,7 +208,14 @@ namespace NextPlayerUWP.ViewModels
                     {
                         if (autoLoadFromWeb)
                         {
-                            lyricsWebview.Stop();
+                            try
+                            {
+                                lyricsWebview.Stop();
+                            }
+                            catch (InvalidOperationException ex)
+                            {
+
+                            }
                             await LoadLyricsFromWebsite();
                         }
                     }

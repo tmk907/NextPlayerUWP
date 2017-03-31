@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -12,21 +13,58 @@ namespace NextPlayerUWP.Views
 {
     public sealed partial class RightPanelControl : UserControl
     {
-        RightPanelViewModel ViewModel;
+        private RightPanelViewModel ViewModel;
+        private WebView webView;
+        private AdDuplex.AdControl controlAdDuplex;
 
         public RightPanelControl()
         {
             this.InitializeComponent();
-            WebView web = new WebView(WebViewExecutionMode.SeparateThread);
-            WebGrid.Children.Add(web);
+            this.Loaded += RightPanelControl_Loaded;
+            this.Unloaded += RightPanelControl_Unloaded;
             ViewModel = (RightPanelViewModel)DataContext;
-            this.Loaded += delegate { ViewModel.OnLoaded(NowPlayingPlaylistListView, web); };
-            //this.Unloaded += (sender, e) =>
-            //{
-            //    ViewModel = null;
-            //    Bindings.StopTracking();
-            //};
-            //LoadAdControl();
+        }
+
+        private void RightPanelControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OnLoaded(NowPlayingPlaylistListView);
+            webView = ViewModel.GetWebView();
+            WebGrid.Children.Add(webView);
+            AddAdControl();
+        }
+
+        private void RightPanelControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            WebGrid.Children.Remove(webView);
+            webView = null;
+            ViewModel.OnUnLoaded();
+            RemoveAdControl();
+        }
+
+        private void AddAdControl()
+        {
+            if (Microsoft.Toolkit.Uwp.ConnectionHelper.IsInternetAvailable)
+            {
+                controlAdDuplex = new AdDuplex.AdControl()
+                {
+                    AdUnitId = "202211",
+                    AppKey = "bfe9d689-7cf7-4add-84fe-444dc72e6f36",
+                    CollapseOnError = true,
+                };
+                //controlAdDuplex.AdLoadingError += AdControl_AdLoadingError;
+
+                GridAdControlRightPanel1.Children.Add(controlAdDuplex);
+            }
+        }
+
+        private void RemoveAdControl()
+        {
+            if (controlAdDuplex != null)
+            {
+                GridAdControlRightPanel1.Children.Remove(controlAdDuplex);
+                //controlAdDuplex.AdLoadingError -= AdControl_AdLoadingError;
+                controlAdDuplex = null;
+            }
         }
 
         //        private async Task LoadAdControl()
@@ -49,10 +87,10 @@ namespace NextPlayerUWP.Views
         //            GridAdControlRightPanel.Children.Add(adControl);
         //        }
 
-        ~RightPanelControl()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~RightPanelControl()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -61,6 +99,7 @@ namespace NextPlayerUWP.Views
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
         }
+
 
         //private void AdControl_ErrorOccurred(object sender, AdErrorEventArgs e)
         //{
