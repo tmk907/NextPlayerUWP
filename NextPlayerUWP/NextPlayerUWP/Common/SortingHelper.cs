@@ -47,6 +47,7 @@ namespace NextPlayerUWP.Common
         public const string Composer = "Composer";
         public const string TrackNumber = "TrackNumber";
         public const string FileName = "FileName";
+        public const string DateCreated = "DateCreated";
         public const string Default = "Default";
     }
 
@@ -190,6 +191,8 @@ namespace NextPlayerUWP.Common
                     return t => t.TrackNumber;
                 case SortNames.FileName:
                     return t => t.FileName[0].ToString().ToLower();
+                case SortNames.DateCreated:
+                    return t => String.Format("{0:d}", t.DateCreated);
                 default:
                     if (IgnoreArticles)
                     {
@@ -254,6 +257,8 @@ namespace NextPlayerUWP.Common
                     return s => s.DateAdded.Ticks;
                 case SortNames.LastPlayed:
                     return s => s.LastPlayed.Ticks;
+                case SortNames.DateCreated:
+                    return s => s.DateCreated.Ticks;
                 case SortNames.PlayCount:
                     return s => s.PlayCount;
                 case SortNames.TrackNumber:
@@ -322,6 +327,7 @@ namespace NextPlayerUWP.Common
             comboboxItems.Add(new ComboBoxItemValue(SortNames.Composer, loader.GetString(SortNames.Composer)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.LastAdded, loader.GetString(SortNames.LastAdded)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.LastPlayed, loader.GetString(SortNames.LastPlayed)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.DateCreated, loader.GetString(SortNames.DateCreated)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.PlayCount, loader.GetString(SortNames.PlayCount)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.FileName, loader.GetString(SortNames.FileName)));
             return comboboxItems;
@@ -388,6 +394,8 @@ namespace NextPlayerUWP.Common
                     return t => String.Format("{0:d}", t.DateAdded);
                 case SortNames.LastPlayed:
                     return t => String.Format("{0:d}", t.LastPlayed);
+                case SortNames.DateCreated:
+                    return t => String.Format("{0:d}", t.DateCreated);
                 case SortNames.PlayCount:
                     return t => t.PlayCount;
                 case SortNames.TrackNumber:
@@ -460,6 +468,8 @@ namespace NextPlayerUWP.Common
                     return s => s.DateAdded.Ticks;
                 case SortNames.LastPlayed:
                     return s => s.LastPlayed.Ticks;
+                case SortNames.DateCreated:
+                    return s => s.DateCreated.Ticks;
                 case SortNames.PlayCount:
                     return s => s.PlayCount;
                 case SortNames.TrackNumber:
@@ -524,6 +534,7 @@ namespace NextPlayerUWP.Common
             comboboxItems.Add(new ComboBoxItemValue(SortNames.Composer, loader.GetString(SortNames.Composer)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.LastAdded, loader.GetString(SortNames.LastAdded)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.LastPlayed, loader.GetString(SortNames.LastPlayed)));
+            comboboxItems.Add(new ComboBoxItemValue(SortNames.DateCreated, loader.GetString(SortNames.DateCreated)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.PlayCount, loader.GetString(SortNames.PlayCount)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.FileName, loader.GetString(SortNames.FileName)));
             return comboboxItems;

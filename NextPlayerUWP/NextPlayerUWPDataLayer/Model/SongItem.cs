@@ -198,6 +198,8 @@ namespace NextPlayerUWPDataLayer.Model
         }
         private DateTime dateAdded;
         public DateTime DateAdded { get { return dateAdded; } }
+        private DateTime dateCreated;
+        public DateTime DateCreated { get { return dateCreated; } }
         private DateTime lastPlayed;
         public DateTime LastPlayed
         {
@@ -353,6 +355,7 @@ namespace NextPlayerUWPDataLayer.Model
             trackNumber = 0;
             year = 0;
             dateAdded = new DateTime();
+            dateCreated = new DateTime();
             genres = "Unknown Genres";
             lastPlayed = new DateTime();
             playCount = 0;
@@ -377,6 +380,7 @@ namespace NextPlayerUWPDataLayer.Model
             year = table.Year;
             songId = table.SongId;
             dateAdded = table.DateAdded;
+            dateCreated = table.DateCreated;
             genres = table.Genres;
             lastPlayed = table.LastPlayed;
             playCount = (int)table.PlayCount;

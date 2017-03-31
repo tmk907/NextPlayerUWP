@@ -50,7 +50,7 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue("ImportPlaylistsAfterAppUpdate9", true);
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdatedAt, DateTimeOffset.Now);
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdateFrequency, TimeSpan.FromDays(2));
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdateFrequency, TimeSpan.FromDays(1));
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.IgnoreArticles, false);
             ApplicationSettingsHelper.SaveData(SettingsKeys.IgnoredArticlesList, new List<string>() { "a ", "an ", "the " });
@@ -217,7 +217,7 @@ namespace NextPlayerUWP
             }
             if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LibraryUpdateFrequency) == null)
             {
-                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdateFrequency, TimeSpan.FromDays(2));
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.LibraryUpdateFrequency, TimeSpan.FromDays(1));
             }
             if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IgnoreArticles) == null)
             {
