@@ -26,11 +26,6 @@
         <uap:SplashScreen Image="Assets\Visual Assets\SplashScreen\Splash3.png" BackgroundColor="#0078D7" />
       </uap:VisualElements>
       <Extensions>
-        <uap3:Extension Category="windows.appExtensionHost"> 
-          <uap3:AppExtensionHost> 
-            <uap3:Name>Next-Player-Lyrics</uap3:Name> 
-          </uap3:AppExtensionHost> 
-        </uap3:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="playlist">
             <uap:Logo>Assets\Visual Assets\Icons\ScaledLogoExtensions.png</uap:Logo>
@@ -67,6 +62,11 @@
             <Task Type="timer" />
           </BackgroundTasks>
         </Extension>
+        <uap3:Extension Category="windows.appExtensionHost">
+          <uap3:AppExtensionHost>
+            <uap3:Name>Next-Player-Lyrics</uap3:Name>
+          </uap3:AppExtensionHost>
+        </uap3:Extension>
       </Extensions>
     </Application>
   </Applications>
