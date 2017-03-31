@@ -30,10 +30,10 @@ namespace NextPlayerUWP.Views
             pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
         }
 
-        ~NowPlayingView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~NowPlayingView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void NowPlayingView_Loaded(object sender, RoutedEventArgs e)
         {

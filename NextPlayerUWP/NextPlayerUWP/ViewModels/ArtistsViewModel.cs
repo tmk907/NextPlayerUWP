@@ -103,7 +103,6 @@ namespace NextPlayerUWP.ViewModels
 
             var query = artists.OrderBy(orderSelector).
                 GroupBy(groupSelector).
-                OrderBy(g => g.Key).
                 Select(group => new {
                     GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
                 : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")

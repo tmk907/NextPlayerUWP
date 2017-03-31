@@ -108,7 +108,7 @@ namespace NextPlayerUWP.Common
         public string GetFormat()
         {
             string format = "no";
-            if (SortOption == SortNames.LastAdded || SortOption == SortNames.LastPlayed)
+            if (SortOption == SortNames.LastAdded || SortOption == SortNames.LastPlayed || SortOption == SortNames.DateCreated)
             {
                 format = "date";
             }

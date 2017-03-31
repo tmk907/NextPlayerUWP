@@ -183,7 +183,6 @@ namespace NextPlayerUWP.ViewModels
 
             var query = songs.OrderBy(orderSelector).ThenBy(a => a.Title).
                 GroupBy(groupSelector).
-                OrderBy(g => g.Key).
                 Select(group => new {
                     GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
                     : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")

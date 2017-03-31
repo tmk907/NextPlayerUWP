@@ -372,7 +372,7 @@ namespace NextPlayerUWP
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
             if (startKind == StartKind.Launch)
             {
-                TelemetryAdapter.TrackAppLaunch();
+                //TelemetryAdapter.TrackAppLaunch();
             }
 
             if (isFirstRun)

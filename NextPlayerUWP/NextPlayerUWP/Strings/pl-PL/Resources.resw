@@ -921,4 +921,16 @@
   <data name="TBExtensions.Text" xml:space="preserve">
     <value>Rozszerzenia</value>
   </data>
+  <data name="DateCreated" xml:space="preserve">
+    <value>Data utworzenia</value>
+  </data>
+  <data name="DateModified" xml:space="preserve">
+    <value>Data modyfikacji</value>
+  </data>
+  <data name="TBDateModified.Text" xml:space="preserve">
+    <value>Data modyfikacji</value>
+  </data>
+  <data name="TBDateCreated.Text" xml:space="preserve">
+    <value>Data utworzenia</value>
+  </data>
 </root>

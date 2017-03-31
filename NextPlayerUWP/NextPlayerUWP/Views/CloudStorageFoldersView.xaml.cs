@@ -30,10 +30,10 @@ namespace NextPlayerUWP.Views
             ViewModel = (CloudStorageFoldersViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
         }
-        ~CloudStorageFoldersView()
-        {
-            System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
-        }
+        //~CloudStorageFoldersView()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
             selectionButtons.OnUnloaded();
