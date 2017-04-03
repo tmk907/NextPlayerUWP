@@ -1,5 +1,4 @@
-﻿using NextPlayerExtensionsAPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;

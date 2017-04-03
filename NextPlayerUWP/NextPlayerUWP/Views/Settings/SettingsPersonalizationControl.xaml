@@ -381,6 +381,15 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock
+                            x:Uid="TBFind"
+                            Style="{StaticResource KeyShortDescTBStyle}"
+                            Text="Find"/>
+                        <TextBlock
+                            Style="{StaticResource KeyShortValueTBStyle}"
+                            Text="Ctrl + F"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
                             x:Uid="TBMenu"
                             Style="{StaticResource KeyShortDescTBStyle}"
                             Text="Menu"/>

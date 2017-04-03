@@ -15,7 +15,8 @@ namespace NextPlayerUWP.Views
     {
         private RightPanelViewModel ViewModel;
         private WebView webView;
-        private AdDuplex.AdControl controlAdDuplex;
+        //private AdDuplex.AdControl controlAdDuplex;
+        //private AdControl controlMicrosoftAd;
 
         public RightPanelControl()
         {
@@ -45,26 +46,42 @@ namespace NextPlayerUWP.Views
         {
             if (Microsoft.Toolkit.Uwp.ConnectionHelper.IsInternetAvailable)
             {
-                controlAdDuplex = new AdDuplex.AdControl()
-                {
-                    AdUnitId = "202211",
-                    AppKey = "bfe9d689-7cf7-4add-84fe-444dc72e6f36",
-                    CollapseOnError = true,
-                };
-                //controlAdDuplex.AdLoadingError += AdControl_AdLoadingError;
+                //controlAdDuplex = new AdDuplex.AdControl()
+                //{
+                //    AdUnitId = "202211",
+                //    AppKey = "bfe9d689-7cf7-4add-84fe-444dc72e6f36",
+                //    CollapseOnError = true,
+                //};
+                ////controlAdDuplex.AdLoadingError += AdControl_AdLoadingError;
 
-                GridAdControlRightPanel1.Children.Add(controlAdDuplex);
+                //GridAdControlRightPanel1.Children.Add(controlAdDuplex);
+
+
+                //controlMicrosoftAd = new AdControl()
+                //{
+                //    AdUnitId = "11647976",
+                //    ApplicationId = "bc203ea3-080a-4a87-bd1d-fdf2aab1740d",
+                //    Width=300,
+                //    Height = 50
+                //};
+                //controlMicrosoftAd.ErrorOccurred += AdControl_ErrorOccurred;
+                //controlMicrosoftAd.AdRefreshed += AdControl_AdRefreshed;
+                //GridAdControlRightPanel1.Children.Add(controlMicrosoftAd);
             }
         }
 
+
         private void RemoveAdControl()
         {
-            if (controlAdDuplex != null)
-            {
-                GridAdControlRightPanel1.Children.Remove(controlAdDuplex);
-                //controlAdDuplex.AdLoadingError -= AdControl_AdLoadingError;
-                controlAdDuplex = null;
-            }
+            //if (controlAdDuplex != null)
+            //{
+            //    //GridAdControlRightPanel1.Children.Remove(controlAdDuplex);
+            //    ////controlAdDuplex.AdLoadingError -= AdControl_AdLoadingError;
+            //    //controlAdDuplex = null;
+
+            //    //GridAdControlRightPanel1.Children.Remove(controlMicrosoftAd);
+            //    //controlMicrosoftAd = null;
+            //}
         }
 
         //        private async Task LoadAdControl()
@@ -101,15 +118,15 @@ namespace NextPlayerUWP.Views
         }
 
 
-        //private void AdControl_ErrorOccurred(object sender, AdErrorEventArgs e)
-        //{
-        //    System.Diagnostics.Debug.WriteLine("AdControl error (" + ((AdControl)sender).Name + "): " + e.ErrorMessage + " ErrorCode: " + e.ErrorCode.ToString());
-        //}
+        private void AdControl_ErrorOccurred(object sender, AdErrorEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("AdControl error (" + ((AdControl)sender).Name + "): " + e.ErrorMessage + " ErrorCode: " + e.ErrorCode.ToString());
+        }
 
-        //private void AdControl_AdRefreshed(object sender, RoutedEventArgs e)
-        //{
-        //    System.Diagnostics.Debug.WriteLine("AdControl refreshed (" + ((AdControl)sender).Name + ") has ad:" + ((AdControl)sender).HasAd.ToString());
-        //}
+        private void AdControl_AdRefreshed(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("AdControl refreshed (" + ((AdControl)sender).Name + ") has ad:" + ((AdControl)sender).HasAd.ToString());
+        }
 
 
         private void AdControl_AdLoadingError(object sender, AdDuplex.Common.Models.AdLoadingErrorEventArgs e)

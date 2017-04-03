@@ -25,7 +25,7 @@
     <PackageCertificateThumbprint>32A43A2CE81645C4906F3F3D9D792A0AEE6F7091</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxPackageDir>C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
@@ -221,6 +221,7 @@
     <Compile Include="Converters\ZoomedOutItemContainerStyleConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemWidthConverter.cs" />
     <Compile Include="Extensions\BaseExtensionsHelper.cs" />
+    <Compile Include="Extensions\data.cs" />
     <Compile Include="Extensions\ExtensionsService.cs" />
     <Compile Include="Extensions\LyricsExtensions.cs" />
     <Compile Include="Extensions\LyricsExtensionsClient.cs" />

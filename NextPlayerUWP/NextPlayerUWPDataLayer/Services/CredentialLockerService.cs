@@ -24,7 +24,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void AddCredentials(string userName, string password)
         {
-            if (userName == null || password == null) return;
+            if (String.IsNullOrEmpty(userName) || String.IsNullOrEmpty(password)) return;
             DeleteCredentials(userName);
             var vault = new PasswordVault();
             var cred = new PasswordCredential(VaultResourceName, userName, password);

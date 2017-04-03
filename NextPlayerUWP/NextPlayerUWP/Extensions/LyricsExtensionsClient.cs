@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using NextPlayerExtensionsAPI;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
