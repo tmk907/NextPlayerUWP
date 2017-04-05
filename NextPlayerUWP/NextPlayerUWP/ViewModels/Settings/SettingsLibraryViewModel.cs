@@ -162,20 +162,28 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             var folderPicker = new Windows.Storage.Pickers.FolderPicker();
             folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
-            Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null)
+            //folderPicker.FileTypeFilter.Add("*"); //really needed?
+            try
             {
-                MessageDialogHelper helper = new MessageDialogHelper();
-                bool includeSubFolders = await helper.ShowIncludeAllSubFoldersQuestion();
-                SdCardFolders.Add(new SdCardFolder()
+                Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+                if (folder != null)
                 {
-                    Name = folder.Name,
-                    Path = folder.Path,
-                    IncludeSubFolders = includeSubFolders,
-                });
-                var ff = sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:"));
-                var list = new List<SdCardFolder>(ff);
-                await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
+                    MessageDialogHelper helper = new MessageDialogHelper();
+                    bool includeSubFolders = await helper.ShowIncludeAllSubFoldersQuestion();
+                    SdCardFolders.Add(new SdCardFolder()
+                    {
+                        Name = folder.Name,
+                        Path = folder.Path,
+                        IncludeSubFolders = includeSubFolders,
+                    });
+                    var ff = sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:"));
+                    var list = new List<SdCardFolder>(ff);
+                    await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+
             }
         }
 

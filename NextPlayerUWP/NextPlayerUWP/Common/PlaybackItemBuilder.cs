@@ -269,7 +269,16 @@ namespace NextPlayerUWP.Common
             int id = Int32.Parse(args.MediaBinder.Token);
             var song = NowPlayingPlaylistManager.Current.songs.FirstOrDefault(s => s.SongId == id);
             await UpdateSongContentPath(song, song.SourceType);
-            args.SetUri(new Uri(song.ContentPath));
+            if (String.IsNullOrEmpty(song.ContentPath))
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("BindSource path error", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("BindSource path error");
+                args.SetUri(new Uri(AppConstants.EmptyMP3File));
+            }
+            else
+            {
+                args.SetUri(new Uri(song.ContentPath));
+            }
 
             deferral.Complete();
         }

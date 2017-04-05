@@ -1390,7 +1390,9 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.InsertAllAsync(l);
         }
 
-        public async Task InsertNewNowPlayingPlaylistAsync(IEnumerable<SongItem> songs)//error constraint https://rink.hockeyapp.net/manage/apps/308671/app_versions/56/crash_reasons/151334480
+        //error constraint https://rink.hockeyapp.net/manage/apps/308671/app_versions/56/crash_reasons/151334480
+        //two position same ?
+        public async Task InsertNewNowPlayingPlaylistAsync(IEnumerable<SongItem> songs)
         {
             List<NowPlayingTable> list = new List<NowPlayingTable>();
             connection.DeleteAll<NowPlayingTable>();

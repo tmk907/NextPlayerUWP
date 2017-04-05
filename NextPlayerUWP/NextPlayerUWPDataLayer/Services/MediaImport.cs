@@ -750,9 +750,18 @@ namespace NextPlayerUWPDataLayer.Services
                         if (data.Path[1] == ':')//local file
                         {
                             data.MusicSourceType = (int)Enums.MusicSource.LocalNotMusicLibrary;
-                            data.DirectoryPath = Path.GetDirectoryName(entry.Path);
-                            data.Filename = Path.GetFileName(data.Path);
-                            data.FolderName = Path.GetFileName(data.DirectoryPath);
+                            try
+                            {
+                                data.DirectoryPath = Path.GetDirectoryName(entry.Path);
+                                data.Filename = Path.GetFileName(data.Path);
+                                data.FolderName = Path.GetFileName(data.DirectoryPath);
+                            }
+                            catch (ArgumentException)
+                            {
+                                data.DirectoryPath = "";
+                                data.Filename = "";
+                                data.FolderName = "";
+                            }
                         }
                         else 
                         {
