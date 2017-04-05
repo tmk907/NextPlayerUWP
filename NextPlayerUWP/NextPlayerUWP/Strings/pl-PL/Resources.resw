@@ -933,4 +933,7 @@
   <data name="TBDateCreated.Text" xml:space="preserve">
     <value>Data utworzenia</value>
   </data>
+  <data name="TBFavourites.Text" xml:space="preserve">
+    <value>Ulubione</value>
+  </data>
 </root>

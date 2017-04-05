@@ -51,31 +51,31 @@ namespace NextPlayerUWPDataLayer.Jamendo
             return JsonConvert.DeserializeObject<Response<T>>(response, JsonSettings);
         }
 
-        public async Task<List<Radio>> GetRadios()
+        public async Task<List<Models.Radio>> GetRadios()
         {
             string uri = uriBuilder.GetRadios();
-            var response = await DownloadJsonAsync<Radio>(uri);
+            var response = await DownloadJsonAsync<Models.Radio>(uri);
             if (response.Headers.Status == Enums.ResponseStatus.Success)
             {
-                List<Radio> radios = response.Results.ToList();
+                List<Models.Radio> radios = response.Results.ToList();
                 return radios;
             }
-            return new List<Radio>();
+            return new List<Models.Radio>();
         }
 
-        public async Task<Radio> GetRadio(int id)
+        public async Task<Models.Radio> GetRadio(int id)
         {
             string uri = uriBuilder.GetRadio(id);
-            var response = await DownloadJsonAsync<Radio>(uri);
+            var response = await DownloadJsonAsync<Models.Radio>(uri);
             if (response.Headers.Status == Enums.ResponseStatus.Success && response.Results.Count > 0)
             {
-                Radio radio = response.Results.FirstOrDefault();
+                Models.Radio radio = response.Results.FirstOrDefault();
                 return radio;
             }
             return null;
         }
 
-        public async Task<RadioStream> GetStream(int id)
+        public async Task<Models.RadioStream> GetStream(int id)
         {
             string uri = uriBuilder.GetStream(id);
             var response = await DownloadJsonAsync<RadioStream>(uri);

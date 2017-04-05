@@ -23,8 +23,9 @@
 
     public enum RadioType
     {
-        Jamendo,
-        Unknown
+        Unknown = 0,
+        Jamendo = 1,
+        CuteRadio = 2,
     }
 
     public enum MusicSource

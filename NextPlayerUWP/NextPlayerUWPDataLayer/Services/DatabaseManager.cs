@@ -1217,6 +1217,20 @@ namespace NextPlayerUWPDataLayer.Services
         //    return list;
         //}
 
+        public async Task<List<SimpleRadioData>> GetRadioFavouritesAsync()
+        {
+            List<SimpleRadioData> list = new List<SimpleRadioData>();
+
+            var res = await connectionAsync.Table<FavouriteRadiosTable>().ToListAsync();
+
+            foreach(var item in res)
+            {
+                list.Add(new SimpleRadioData(item.Id, (RadioType)item.RadioType, item.Name));
+            }
+
+            return list;
+        }
+
         #endregion
 
         #region Insert
@@ -1545,6 +1559,16 @@ namespace NextPlayerUWPDataLayer.Services
             return id;
         }
 
+        public async Task AddRadioToFavourites(int id, RadioType type, string name)
+        {
+            await connectionAsync.InsertAsync(new FavouriteRadiosTable()
+            {
+                RadioId = id,
+                RadioType = (int)type,
+                Name = name
+            });
+        }
+
         #endregion
 
         #region Delete
@@ -1611,6 +1635,15 @@ namespace NextPlayerUWPDataLayer.Services
             if (q.Count == 1)
             {
                 connection.Delete(q.FirstOrDefault());
+            }
+        }
+
+        public async Task DeleteRadioFromFavourites(int id, RadioType type)
+        {
+            var r = await connectionAsync.Table<FavouriteRadiosTable>().Where(a => a.RadioId == id && a.RadioType == (int)type).ToListAsync();
+            if (r.Count == 1)
+            {
+                connection.Delete(r.FirstOrDefault());
             }
         }
 
@@ -2317,6 +2350,11 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<SongsTable>();
             DateTime date = new DateTime(2016, 4, 26);
             connection.Execute("UPDATE SongsTable SET DateCreated = ?", date);
+        }
+
+        public void UpdateToVersion12()
+        {
+            connection.CreateTable<FavouriteRadiosTable>();
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()

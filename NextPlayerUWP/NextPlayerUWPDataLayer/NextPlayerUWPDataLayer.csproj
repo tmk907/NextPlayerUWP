@@ -206,6 +206,12 @@
     <Compile Include="Playlists\PlaylistFileSaver.cs" />
     <Compile Include="Playlists\PlaylistImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Radio\CuteRadio\CuteRadioService.cs" />
+    <Compile Include="Radio\CuteRadio\Model\Item.cs" />
+    <Compile Include="Radio\CuteRadio\Model\Collection.cs" />
+    <Compile Include="Radio\CuteRadio\Model\Station.cs" />
+    <Compile Include="Radio\CuteRadio\Model\Stations.cs" />
+    <Compile Include="Radio\CuteRadio\UriBuilder.cs" />
     <Compile Include="Services\CredentialLockerService.cs" />
     <Compile Include="Services\FileFormatsHelper.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
@@ -271,6 +277,7 @@
     <Compile Include="Tables\ArtistsTable.cs" />
     <Compile Include="Tables\CachedScrobble.cs" />
     <Compile Include="Tables\CloudAccountsTable.cs" />
+    <Compile Include="Tables\FavouriteRadiosTable.cs" />
     <Compile Include="Tables\FoldersTable.cs" />
     <Compile Include="Tables\FutureAccessTokensTable.cs" />
     <Compile Include="Tables\GenresTable.cs" />

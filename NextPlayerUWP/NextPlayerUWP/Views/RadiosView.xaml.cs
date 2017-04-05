@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Template10.Common;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -46,6 +47,20 @@ namespace NextPlayerUWP.Views
         {
             FrameworkElement senderElement = sender as FrameworkElement;
             var menu = this.Resources["ContextMenuStream"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
+        }
+
+        private void GoToCuteRadioView(object sender, RoutedEventArgs e)
+        {
+            var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+            nav.Navigate(typeof(CuteRadioView));
+        }
+
+        private void RadioItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenuRadio"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
         }

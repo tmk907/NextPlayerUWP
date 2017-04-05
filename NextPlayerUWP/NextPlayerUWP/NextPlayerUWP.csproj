@@ -252,6 +252,7 @@
     <Compile Include="ViewModels\ArtistViewModel.cs" />
     <Compile Include="ViewModels\AudioSettingsViewModel.cs" />
     <Compile Include="ViewModels\CloudStorageFoldersViewModel.cs" />
+    <Compile Include="ViewModels\CuteRadioViewModel.cs" />
     <Compile Include="ViewModels\FileInfoViewModel.cs" />
     <Compile Include="ViewModels\FoldersRootViewModel.cs" />
     <Compile Include="ViewModels\FoldersViewModel.cs" />
@@ -306,7 +307,6 @@
     <Compile Include="Views\AudioSettingsView.xaml.cs">
       <DependentUpon>AudioSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BasePage.cs" />
     <Compile Include="Views\BlankPage1.xaml.cs">
       <DependentUpon>BlankPage1.xaml</DependentUpon>
     </Compile>
@@ -318,6 +318,9 @@
     </Compile>
     <Compile Include="Views\CloudStorageFoldersView.xaml.cs">
       <DependentUpon>CloudStorageFoldersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CuteRadioView.xaml.cs">
+      <DependentUpon>CuteRadioView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FileInfoView.xaml.cs">
       <DependentUpon>FileInfoView.xaml</DependentUpon>
@@ -592,6 +595,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CloudStorageFoldersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CuteRadioView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

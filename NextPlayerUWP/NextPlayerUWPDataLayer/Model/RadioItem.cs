@@ -5,6 +5,53 @@ using System.ComponentModel;
 
 namespace NextPlayerUWPDataLayer.Model
 {
+    public class SimpleRadioData: INotifyPropertyChanged
+    {
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if (value != name)
+                {
+                    name = value;
+                    onPropertyChanged(this, nameof(Name));
+                }
+            }
+        }
+
+        private RadioType type;
+        public RadioType Type { get { return type; } }
+
+        private int broadcastId;
+        public int BroadcastId { get { return broadcastId; } }
+
+        public SimpleRadioData()
+        {
+            name = "";
+            type = RadioType.Unknown;
+            broadcastId = -1;
+        }
+
+        public SimpleRadioData(int id, RadioType type, string name)
+        {
+            this.name = name;
+            this.broadcastId = id;
+            this.type = type;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void onPropertyChanged(object sender, string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
     public class RadioItem: MusicItem, INotifyPropertyChanged
     {
         private int broadcastId;
@@ -19,7 +66,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != name)
                 {
                     name = value;
-                    onPropertyChanged(this, "Name");
+                    onPropertyChanged(this, nameof(Name));
                 }
             }
         }
@@ -33,7 +80,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != imagePath)
                 {
                     imagePath = value;
-                    onPropertyChanged(this, "ImagePath");
+                    onPropertyChanged(this, nameof(ImagePath));
                 }
             }
         }
@@ -47,8 +94,8 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != playingNowTitle)
                 {
                     playingNowTitle = value;
-                    onPropertyChanged(this, "PlayingNowTitle");
-                    onPropertyChanged(this, "PlayingNowArtistTitle");
+                    onPropertyChanged(this, nameof(PlayingNowTitle));
+                    onPropertyChanged(this, nameof(PlayingNowArtistTitle));
                 }
             }
         }
@@ -62,8 +109,8 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != playingNowArtist)
                 {
                     playingNowArtist = value;
-                    onPropertyChanged(this, "PlayingNowArtist");
-                    onPropertyChanged(this, "PlayingNowArtistTitle");
+                    onPropertyChanged(this, nameof(PlayingNowArtist));
+                    onPropertyChanged(this, nameof(PlayingNowArtistTitle));
                 }
             }
         }
@@ -77,7 +124,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != playingNowAlbum)
                 {
                     playingNowAlbum = value;
-                    onPropertyChanged(this, "PlayingNowAlbum");
+                    onPropertyChanged(this, nameof(PlayingNowAlbum));
                 }
             }
         }
@@ -91,7 +138,7 @@ namespace NextPlayerUWPDataLayer.Model
                 if (value != playingNowImagePath)
                 {
                     playingNowImagePath = value;
-                    onPropertyChanged(this, "PlayingNowImagePath");                  
+                    onPropertyChanged(this, nameof(PlayingNowImagePath));                  
                 }
             }
         }
@@ -179,7 +226,14 @@ namespace NextPlayerUWPDataLayer.Model
             //song.Year = DateTime.Now.Year;
             song.SongId = broadcastId;
             song.Path = streamUrl;
-            song.SourceType = MusicSource.RadioJamendo;
+            if (streamUrl.StartsWith("http"))
+            {
+                song.SourceType = MusicSource.OnlineFile;
+            }
+            else
+            {
+                song.SourceType = MusicSource.Unknown;
+            }
             song.CoverPath = playingNowImagePath;
             song.Duration = TimeSpan.Zero;
             return song;

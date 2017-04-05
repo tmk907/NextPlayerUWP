@@ -16,11 +16,11 @@ namespace NextPlayerUWP.ViewModels
 {
     public class RadiosViewModel : Template10.Mvvm.ViewModelBase
     {
-        private ObservableCollection<RadioItem> radios = new ObservableCollection<RadioItem>();
-        public ObservableCollection<RadioItem> Radios
+        private ObservableCollection<RadioItem> favouriteRadios = new ObservableCollection<RadioItem>();
+        public ObservableCollection<RadioItem> FavouriteRadios
         {
-            get { return radios; }
-            set { Set(ref radios, value); }
+            get { return favouriteRadios; }
+            set { Set(ref favouriteRadios, value); }
         }
 
         private ObservableCollection<SongItem> streams = new ObservableCollection<SongItem>();
@@ -52,6 +52,14 @@ namespace NextPlayerUWP.ViewModels
             //    Radios = new ObservableCollection<RadioItem>(jr);
             //}
             //await UpdatePlayingNow();
+            var list = await DatabaseManager.Current.GetRadioFavouritesAsync();
+            foreach(var item in list)
+            {
+                FavouriteRadios.Add(new RadioItem(item.BroadcastId,item.Type)
+                {
+                    Name = item.Name
+                });
+            }
             Updating = false;
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
@@ -80,7 +88,7 @@ namespace NextPlayerUWP.ViewModels
         private async Task UpdatePlayingNow()
         {
             JamendoRadioService jamendoService = new JamendoRadioService();
-            foreach (var radio in Radios)
+            foreach (var radio in FavouriteRadios)
             {
                 if (radio.Type == NextPlayerUWPDataLayer.Enums.RadioType.Jamendo && radio.RemainingTime < (DateTime.Now - radio.StreamUpdatedAt).TotalMilliseconds)
                 {

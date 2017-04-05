@@ -39,6 +39,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<TestViewModel>();
             SimpleIoc.Default.Register<PlayerViewModelBase>();
             SimpleIoc.Default.Register<QueueViewModelBase>();
+            SimpleIoc.Default.Register<CuteRadioViewModel>();
 
             SimpleIoc.Default.Register<SettingsVMService>();
             SimpleIoc.Default.Register<LyricsExtensions>();
@@ -74,6 +75,7 @@ namespace NextPlayerUWP.ViewModels
         public TestViewModel TestVM => ServiceLocator.Current.GetInstance<TestViewModel>();
         public PlayerViewModelBase PlayerVM => ServiceLocator.Current.GetInstance<PlayerViewModelBase>();
         public QueueViewModelBase QueueVM => ServiceLocator.Current.GetInstance<QueueViewModelBase>();
+        public CuteRadioViewModel CuteRadioVM => ServiceLocator.Current.GetInstance<CuteRadioViewModel>();
 
         public SettingsVMService SettingsVMService => ServiceLocator.Current.GetInstance<SettingsVMService>();
         public LyricsExtensions LyricsExtensionsService => ServiceLocator.Current.GetInstance<LyricsExtensions>();

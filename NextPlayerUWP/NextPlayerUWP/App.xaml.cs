@@ -227,6 +227,7 @@ namespace NextPlayerUWP
             Artist,
             AudioSettings,
             CloudStorageFolders,
+            CuteRadio,
             Genres,
             FileInfo,
             Folders,
@@ -300,6 +301,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.AudioSettings, typeof(AudioSettingsView));
             if (!keys.ContainsKey(Pages.CloudStorageFolders))
                 keys.Add(Pages.CloudStorageFolders, typeof(CloudStorageFoldersView));
+            if (!keys.ContainsKey(Pages.CuteRadio))
+                keys.Add(Pages.CuteRadio, typeof(CuteRadioView));
             if (!keys.ContainsKey(Pages.FileInfo))
                 keys.Add(Pages.FileInfo, typeof(FileInfoView));
             if (!keys.ContainsKey(Pages.Folders))
