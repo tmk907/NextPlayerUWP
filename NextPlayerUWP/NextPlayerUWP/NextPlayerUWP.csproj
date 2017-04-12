@@ -574,10 +574,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NextPlayerUWPBackgroundAudioPlayer\NextPlayerUWPBackgroundAudioPlayer.csproj">
-      <Project>{daaca509-1af5-476c-bed0-ab945229fc53}</Project>
-      <Name>NextPlayerUWPBackgroundAudioPlayer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NextPlayerUWPDataLayer\NextPlayerUWPDataLayer.csproj">
       <Project>{25899887-6252-4635-84b5-0c54c736f0fb}</Project>
       <Name>NextPlayerUWPDataLayer</Name>
