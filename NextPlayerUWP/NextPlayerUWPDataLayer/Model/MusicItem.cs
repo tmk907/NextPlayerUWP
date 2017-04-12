@@ -5,6 +5,7 @@ namespace NextPlayerUWPDataLayer.Model
     public enum MusicItemTypes
     {
         album,
+        albumartist,
         artist,
         folder,
         genre,
@@ -17,7 +18,7 @@ namespace NextPlayerUWPDataLayer.Model
         radio,
         smartplaylist,
         song,
-        listofsongs,
+        listofitems,
         unknown
     }
     public abstract class MusicItem
@@ -44,11 +45,11 @@ namespace NextPlayerUWPDataLayer.Model
         }
     }
 
-    public class ListOfSongs : MusicItem
+    public class ListOfMusicItems : MusicItem
     {
         public override string GetParameter()
         {
-            return MusicItemTypes.listofsongs + separator + "a";
+            return MusicItemTypes.listofitems + separator + "a";
         }
     }
 

@@ -1,28 +1,29 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWP.ViewModels;
+using NextPlayerUWP.ViewModels.Settings;
 using NextPlayerUWPDataLayer.Model;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
-namespace NextPlayerUWP.Views
+namespace NextPlayerUWP.Views.Settings
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class SettingsView : Page
+    public sealed partial class SettingsLibraryControl : UserControl
     {
-        SettingsViewModel ViewModel;
-        public SettingsView()
+        SettingsLibraryViewModel ViewModel { get; set; }
+        public SettingsLibraryControl()
         {
             this.InitializeComponent();
-            ViewModel = (SettingsViewModel)DataContext;
+            this.DataContextChanged += OnDataContextChanged;
         }
-        
+
+        private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            ViewModel = (SettingsLibraryViewModel)args.NewValue;
+            ViewModel.Load();
+        }
+
         private void RemoveFolder_Click(object sender, RoutedEventArgs e)
         {
-            MusicFolder folder = (MusicFolder)((Button)sender).Tag;
+            SdCardFolder folder = (SdCardFolder)((Button)sender).Tag;
             ViewModel.RemoveFolder(folder);
         }
 

@@ -205,7 +205,7 @@
             <converters:ShuffleForeground x:Key="ShuffleForegroundConverter"/>
             <converters:ThumbToolTipValue x:Key="ThumbToolTipValueConverter"/>
             <converters:TimeSpanToString x:Key="TimeSpanToStringConverter"/>
-            <converters:YearConverter x:Key="YearConverter"/>
+            <converters:YearToVisibilityConverter x:Key="YearToVisibilityConverter"/>
             <converters:ZoomedOutItemWidthConverter x:Key="ZoomedOutItemWidthConverter"/>
             <converters:VolumeSymbolConverter x:Key="VolumeSymbolConverter"/>
             <converters:IntToDouble x:Key="IntToDoubleConverter"/>
@@ -327,9 +327,45 @@
             <Style x:Key="GroupHeaderTextBlockStyle" TargetType="TextBlock">
                 <Setter Property="FontWeight" Value="Normal"/>
                 <Setter Property="FontSize" Value="20"/>
-                <Setter Property="Margin" Value="4,12,0,0"/>
+                <Setter Property="Margin" Value="0,0,0,0"/>
                 <Setter Property="Foreground" Value="{StaticResource SystemControlBackgroundAccentBrush}"/>
             </Style>
+
+            <Style x:Key="GroupHeaderContainerStyle" TargetType="ListViewHeaderItem">
+                <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+                <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Margin" Value="0,0,12,0"/>
+                <Setter Property="Padding" Value="0,8,12,0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Top" />
+                <Setter Property="MinHeight" Value="36"/>
+                <Setter Property="UseSystemFocusVisuals" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListViewHeaderItem">
+                            <StackPanel Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter x:Name="ContentPresenter"
+                                    Margin="{TemplateBinding Padding}"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    ContentTransitions="{TemplateBinding ContentTransitions}"
+                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                <Rectangle Stroke="{ThemeResource UserAccentBrush}"
+                                    StrokeThickness="0.5"
+                                    Height="1"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
 
             <Style x:Key="SongItemStyleBase" TargetType="TextBlock">
                 <Setter Property="TextTrimming" Value="CharacterEllipsis"/>

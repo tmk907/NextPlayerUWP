@@ -303,7 +303,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
                             Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=addtoplaylist}"
@@ -326,7 +325,6 @@
                             Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=edittags}"
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
         </MenuFlyout>
-
         <DataTemplate x:Key="SongItemTemplateDesktop" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped" 
                   Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
@@ -456,57 +454,56 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <controls:PageHeader Grid.Row="0"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderNowPlayingPlaylist"
-                Content="Now playing" 
-                VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720">
-            <AppBarButton 
-                x:Uid="AppBarButtonSort"
-                x:Name="AppBarButtonSort"
-                Icon="Sort" 
-                Label="Sort">
-                <AppBarButton.Flyout>
-                    <Flyout>
-                        <Flyout.FlyoutPresenterStyle>
-                            <Style TargetType="FlyoutPresenter">
-                                <Setter Property="Padding" Value="0"/>
-                            </Style>
-                        </Flyout.FlyoutPresenterStyle>
-                        <ListView
+        <controls:PageHeader 
+            Grid.Row="0"
+            x:Name="PageHeader"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            x:Uid="PageHeaderNowPlayingPlaylist"
+            Content="Now playing" 
+            VisualStateNarrowMinWidth="0" 
+            VisualStateNormalMinWidth="720">
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton 
+                    x:Uid="AppBarButtonSort"
+                    x:Name="AppBarButtonSort"
+                    Icon="Sort" 
+                    Label="Sort">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="Padding" Value="0"/>
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <ListView
                             ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
                             DisplayMemberPath="Label"
                             Padding="4"
                             HorizontalContentAlignment="Stretch">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="0"/>
-                                    <Setter Property="Padding" Value="0"/>
-                                    <Setter Property="MinHeight" Value="10"/>
-                                    <Setter Property="Height" Value="30"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
-                    </Flyout>
-                </AppBarButton.Flyout>
-                <!--<Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="Tapped">
-                        <Behaviors:OpenFlyoutAction />
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>-->
-            </AppBarButton>
-            <AppBarButton Icon="Save"
-                x:Uid="AppBarButtonSave"
-                x:Name="AppBarButtonSave"
-                Label="Save"
-                Click="{x:Bind ViewModel.SavePlaylist}"/>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="0"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="MinHeight" Value="10"/>
+                                        <Setter Property="Height" Value="30"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton Icon="Save"
+                    x:Uid="AppBarButtonSave"
+                    x:Name="AppBarButtonSave"
+                    Label="Save"
+                    Click="{x:Bind ViewModel.SavePlaylist}"/>
+            </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <Grid Grid.Row="1">
             <!--<Grid.RowDefinitions>
@@ -523,7 +520,7 @@
                 x:Name="NowPlayingPlaylistListView"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                 OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                ItemsSource="{x:Bind ViewModel.Songs}"
+                ItemsSource="{x:Bind ViewModel.QueueVM.Songs}"
                 ItemTemplate="{StaticResource SongItemTemplateDesktop}"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked}"  

@@ -20,7 +20,7 @@
         </TransitionCollection>
     </Page.Transitions>
     <Page.Resources>
-        <MenuFlyout x:Key="ContextMenuPlain">
+        <MenuFlyout x:Key="ContextMenu">
             <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
                             Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
@@ -211,17 +211,45 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                Content="{Binding PageTitle}" 
-                VisualStateNarrowMinWidth="0"
-                VisualStateNormalMinWidth="720">
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
+            x:Name="PageHeader"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            Content="{Binding PageTitle}" 
+            VisualStateNarrowMinWidth="0"
+            VisualStateNormalMinWidth="720">
             <AppBarButton
                 x:Uid="AppBarButtonShuffleAll"
                 Label="Shuffle all"
                 Icon="Shuffle"
                 Click="{x:Bind ViewModel.ShuffleAllSongs}"/>
+            <AppBarSeparator/>
+            <AppBarButton
+                x:Uid="AppBarButtonSelect"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                Label="Select"
+                Click="EnableMultipleSelection">
+                <AppBarButton.Content>
+                    <Viewbox Height="22">
+                        <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
+                    </Viewbox>
+                </AppBarButton.Content>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="AppBarButtonSelectAll"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Select all"
+                Icon="SelectAll"
+                Click="SelectAll"
+                />
+            <AppBarButton
+                x:Uid="AppBarButtonClearSelection"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Clear selection"
+                Icon="ClearSelection"
+                Click="DisableMultipleSelection"/>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
@@ -241,21 +269,19 @@
                         FontSize="17" 
                         TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
-                <AutoSuggestBox  Grid.Column="2" 
+                <AutoSuggestBox  
+                    x:Name="SearchBox"
+                    Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
+                    DisplayMemberPath="Title"
+                    TextMemberPath="Title"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
-                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Title}"/>
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
@@ -271,15 +297,15 @@
                 <mycontrols:AlternatingRowListView x:Name="PlaylistListView"
                         EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                         OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                          ItemsSource="{Binding Playlist}"
-                          ItemTemplate="{StaticResource SongItemTemplateDesktop}"
-                          IsItemClickEnabled="True"
-                          ItemClick="{x:Bind ViewModel.ItemClicked }"  
-                          Margin="12,0,0,0"
-                          ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
-                          SelectionMode="None"
-                          CanDragItems="False"
-                          DragItemsStarting="{x:Bind ViewModel.DragStarting}">
+                        ItemsSource="{Binding Playlist}"
+                        ItemTemplate="{StaticResource SongItemTemplateDesktop}"
+                        SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                        IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
+                        ItemClick="{x:Bind ViewModel.ItemClicked }"  
+                        Margin="12,0,0,0"
+                        ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
+                        CanDragItems="False"
+                        DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                     <mycontrols:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>

@@ -41,14 +41,14 @@ namespace NextPlayerUWPDataLayer.Helpers
         public static RepeatEnum Change()
         {
             RepeatEnum newEnum = Next(CurrentState());
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Repeat, newEnum.ToString());
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.Repeat, newEnum.ToString());
             return newEnum;
         }
 
         public static RepeatEnum CurrentState()
         {
             RepeatEnum repeat;
-            object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Repeat);
+            object o = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.Repeat);
             if (o != null)
             {
                repeat = (RepeatEnum)Enum.Parse(typeof(RepeatEnum), (string) o, true);
@@ -67,7 +67,7 @@ namespace NextPlayerUWPDataLayer.Helpers
                 case RepeatEnum.NoRepeat:
                     if (adjustToTheme)
                     {
-                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
                         if (isLight)
                         {
                             return new SolidColorBrush(Windows.UI.Color.FromArgb(255, 204, 204, 204));
@@ -81,7 +81,7 @@ namespace NextPlayerUWPDataLayer.Helpers
                 case RepeatEnum.RepeatOnce:
                     if (adjustToTheme)
                     {
-                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
                         if (isLight)
                         {
                             return new SolidColorBrush(Windows.UI.Colors.Black);
@@ -91,7 +91,7 @@ namespace NextPlayerUWPDataLayer.Helpers
                 case RepeatEnum.RepeatPlaylist:
                     if (adjustToTheme)
                     {
-                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+                        bool isLight = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
                         if (isLight)
                         {
                             return new SolidColorBrush(Windows.UI.Colors.Black);

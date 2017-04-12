@@ -276,6 +276,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock
                             Grid.Row="0" Grid.Column="0"
@@ -319,6 +321,28 @@
                     <TextBlock
                             Grid.Row="3" Grid.Column="1"
                             Text="{Binding FileInfo.DateAdded, Converter={StaticResource DateTimeToStringConverter}}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="4" Grid.Column="0"
+                            Text="Date created"
+                            x:Uid="TBDateCreated"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="4" Grid.Column="1"
+                            Text="{Binding FileInfo.DateCreated, Converter={StaticResource DateTimeToStringConverter}}"
+                            Style="{StaticResource ValueStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="5" Grid.Column="0"
+                            Text="Date modified"
+                            x:Uid="TBDateModified"
+                            Style="{StaticResource DescriptionStyle}"
+                            />
+                    <TextBlock
+                            Grid.Row="5" Grid.Column="1"
+                            Text="{Binding FileInfo.DateModified, Converter={StaticResource DateTimeToStringConverter}}"
                             Style="{StaticResource ValueStyle}"
                             />
                 </Grid>

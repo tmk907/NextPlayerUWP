@@ -1,4 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.Controls;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -16,12 +19,17 @@ namespace NextPlayerUWP.Views
     public sealed partial class PlaylistEditableView : Page
     {
         public PlaylistViewModel ViewModel;
+        private ButtonsForMultipleSelection selectionButtons;
+        private Guid token;
+
         public PlaylistEditableView()
         {
             this.InitializeComponent();
             this.Loaded += View_Loaded;
-            //this.Unloaded += View_Unloaded;
+            this.Unloaded += View_Unloaded;
             ViewModel = (PlaylistViewModel)DataContext;
+            selectionButtons = new ButtonsForMultipleSelection();
+            //AppMessenger2.RegisterEnableSearch(this);
         }
         //~PlaylistEditableView()
         //{
@@ -29,24 +37,27 @@ namespace NextPlayerUWP.Views
         //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
+            selectionButtons.OnUnloaded();
             ViewModel.OnUnloaded();
-            ViewModel = null;
-            DataContext = null;
-            this.Loaded -= View_Loaded;
-            this.Unloaded -= View_Unloaded;
+            MessageHub.Instance.UnSubscribe(token);
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(PlaylistListView);
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
+            selectionButtons.OnLoaded(ViewModel, PageHeader, PlaylistListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            MenuFlyout menu = this.Resources["ContextMenuPlain"] as MenuFlyout;
-            var position = e.GetPosition(senderElement);
-            menu.ShowAt(senderElement, position);
+            if (!ViewModel.IsMultiSelection)
+            {
+                FrameworkElement senderElement = sender as FrameworkElement;
+                var menu = this.Resources["ContextMenu"] as MenuFlyout;
+                var position = e.GetPosition(senderElement);
+                menu.ShowAt(senderElement, position);
+            }
         }
 
         private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
@@ -59,6 +70,28 @@ namespace NextPlayerUWP.Views
         {
             var song = (sender as SlidableListItem).DataContext as SongItem;
             await ViewModel.SlidableListItemRightCommandRequested(song);
+        }
+
+        private void EnableMultipleSelection(object sender, RoutedEventArgs e)
+        {
+            ViewModel.EnableMultipleSelection();
+            selectionButtons.ShowMultipleSelectionButtons();
+        }
+
+        private void DisableMultipleSelection(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DisableMultipleSelection();
+            selectionButtons.HideMultipleSelectionButtons();
+        }
+
+        private void SelectAll(object sender, RoutedEventArgs e)
+        {
+            PlaylistListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

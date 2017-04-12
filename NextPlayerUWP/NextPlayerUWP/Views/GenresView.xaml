@@ -5,12 +5,12 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:helpers="using:NextPlayerUWP.Helpers"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:helpers="using:NextPlayerUWP.Helpers"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
-    xmlns:triggers="using:WindowsStateTriggers"
     xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=GenresVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -150,13 +150,39 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <controls:PageHeader Grid.Row="0"
+        <controls:PageHeader 
+                Grid.Row="0"
+                x:Name="PageHeader"
+                x:Uid="PageHeaderGenres"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderGenres"
                 Content="Genres" 
                 VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720"/>
+                VisualStateNormalMinWidth="720">
+            <AppBarButton
+                x:Uid="AppBarButtonSelect"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                Label="Select"
+                Click="EnableMultipleSelection">
+                <AppBarButton.Content>
+                    <Viewbox Height="22">
+                        <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
+                    </Viewbox>
+                </AppBarButton.Content>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="AppBarButtonSelectAll"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Select all"
+                Icon="SelectAll"
+                Click="SelectAll"/>
+            <AppBarButton
+                x:Uid="AppBarButtonClearSelection"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Clear selection"
+                Icon="ClearSelection"
+                Click="DisableMultipleSelection"/>
+        </controls:PageHeader>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
@@ -166,23 +192,21 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="Column1"/>
                     <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
-                    <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
+                    <ColumnDefinition x:Name="Column3Search" Width="200"/>
                 </Grid.ColumnDefinitions>
-                <AutoSuggestBox  Grid.Column="2" 
+                <AutoSuggestBox  
+                    x:Name="SearchBox"
+                    Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
+                    DisplayMemberPath="Genre"
+                    TextMemberPath="Genre"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
-                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Genre}"/>
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
@@ -199,10 +223,11 @@
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                     ItemsSource="{Binding Genres}"
+                    ItemTemplate="{StaticResource GenreItemTemplateDesktop}"
                     Margin="12,0,0,0"
-                    IsItemClickEnabled="True"
+                    SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                    IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
-                    SelectionMode="None"
                     ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
                     CanDragItems="False"
                     DragItemsStarting="{x:Bind ViewModel.DragStarting}">

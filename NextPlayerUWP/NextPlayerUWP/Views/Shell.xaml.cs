@@ -1,8 +1,13 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
+using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Template10.Controls;
 using Template10.Services.NavigationService;
@@ -28,23 +33,61 @@ namespace NextPlayerUWP.Views
 
         ShellViewModel ShellVM = new ShellViewModel();
 
+        PointerEventHandler pointerpressedhandler;
+        PointerEventHandler pointerreleasedhandler;
+
+        private Guid tokenMenu;
+        private Guid tokenTheme;
+        private Guid tokenNotification;
+
         public Shell()
         {
+            System.Diagnostics.Debug.WriteLine("Shell()");
             Instance = this;
             InitializeComponent();
             this.DataContext = ShellVM;
-            this.Loaded += LoadSlider;
-            //HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
+            this.Loaded += Shell_Loaded;
+            this.Unloaded += Shell_Unloaded;
+
+            pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
+            pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
+
+            ShellVM.RefreshMenuButtons();
             //SetNavigationService(navigationService);
-            App.AppThemeChanged += App_AppThemeChanged;
             BPViewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
+            if (DeviceFamilyHelper.IsDesktop())
             {
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             }
 
+            MigrateCredentialsAsync();
             ReviewReminder();
             //SendLogs();
+        }
+
+        //~Shell()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
+
+        private void Shell_Loaded(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Shell Loaded()");
+            LoadSliderEvents();
+            tokenMenu = MessageHub.Instance.Subscribe<MenuButtonSelected>(OnMenuButtonMessage);
+            tokenNotification = MessageHub.Instance.Subscribe<InAppNotification>(OnInAppNotificationMessage);
+            tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
+            ApplyTheme(ThemeHelper.IsLightTheme);
+        }
+
+        private void Shell_Unloaded(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Shell UnLoaded()");
+            UnloadSliderEvents();
+            MessageHub.Instance.UnSubscribe(tokenMenu);
+            MessageHub.Instance.UnSubscribe(tokenNotification);
+            MessageHub.Instance.UnSubscribe(tokenTheme);
+            //Bindings.StopTracking();
         }
 
         public Shell(INavigationService navigationService) : this()
@@ -68,7 +111,39 @@ namespace NextPlayerUWP.Views
             HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
         }
 
-        private void App_AppThemeChanged(bool isLight)
+        private void OnMenuButtonMessage(MenuButtonSelected msg)
+        {
+            PressMenuButton(msg.Nr);
+        }
+
+        private void OnThemeChangeMessage(ThemeChange msg)
+        {
+            ApplyTheme(msg.IsLightTheme);
+        }
+
+        private void OnInAppNotificationMessage(InAppNotification msg)
+        {
+            PopupNotification.ShowNotification(msg.FirstTextLine, msg.SecondTextLine);
+        }
+
+        private void PressMenuButton(int nr)
+        {
+            System.Diagnostics.Debug.WriteLine("PressMenuButton {0}", nr);
+            if (nr == 0)
+            {
+                HamburgerMenu.Selected = HamburgerMenu.SecondaryButtons[0];
+            }
+            else
+            {
+                nr--;
+                if (nr >= 0 && nr < HamburgerMenu.PrimaryButtons.Count)
+                {
+                    HamburgerMenu.Selected = HamburgerMenu.PrimaryButtons[nr];
+                }
+            }
+        }
+
+        private void ApplyTheme(bool isLight)
         {
             if (isLight)
             {
@@ -96,29 +171,21 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        public void ChangeBottomPlayerVisibility(bool visible)
-        {
-            if (visible)
-            {
-                BottomPlayerGrid.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                BottomPlayerGrid.Visibility = Visibility.Collapsed;
-            }
-        }
+        //public void ChangeBottomPlayerVisibility(bool visible)
+        //{
+        //    if (visible)
+        //    {
+        //        BottomPlayerGrid.Visibility = Visibility.Visible;
+        //    }
+        //    else
+        //    {
+        //        BottomPlayerGrid.Visibility = Visibility.Collapsed;
+        //    }
+        //}
 
         public void OnDesktopViewActiveChange(bool isActive)
         {
             ShellVM.IsNowPlayingDesktopViewActive = isActive;
-        }
-
-        private bool IsDesktop
-        {
-            get
-            {
-                return (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop");
-            }
         }
 
         private async Task SendLogs()
@@ -127,56 +194,101 @@ namespace NextPlayerUWP.Views
         }
 
         #region Slider 
-        private void LoadSlider(object sender, RoutedEventArgs e)
-        {
-            PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
-            timeslider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
 
-            PointerEventHandler pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
+        private void LoadSliderEvents()
+        {
+            timeslider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
             timeslider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
+        }
+
+        private void UnloadSliderEvents()
+        {
+            timeslider.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
+            timeslider.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
         }
 
         private void BottomSlider_Loaded(object sender, RoutedEventArgs e)
         {
-            PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
             durationSliderBottom.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
-
-            PointerEventHandler pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
             durationSliderBottom.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
         }
 
-        void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
+
+        private void BottomSlider_Unloaded(object sender, RoutedEventArgs e)
+        {
+            durationSliderBottom.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
+            durationSliderBottom.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
+        }
+
+        private void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             BPViewModel.sliderpressed = true;
         }
 
-        void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        private void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
             BPViewModel.sliderpressed = false;
             PlaybackService.Instance.Position = TimeSpan.FromSeconds(((Slider)sender).Value);
         }
-        
+
         #endregion
+
+        private async Task MigrateCredentialsAsync()
+        {
+            if (!String.IsNullOrEmpty(ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.LfmLogin) as string))
+            {
+                var accounts = await DatabaseManager.Current.GetAllCloudAccountsAsync();
+
+                CredentialLockerService dropbox = new CredentialLockerService(CredentialLockerService.DropboxVault);
+                CredentialLockerService pcloud = new CredentialLockerService(CredentialLockerService.PCloudVault);
+
+                foreach (var account in accounts)
+                {
+                    string token = await DatabaseManager.Current.GetCloudAccountTokenAsync(account.UserId);
+                    switch (account.Type)
+                    {
+                        case NextPlayerUWPDataLayer.CloudStorage.CloudStorageType.Dropbox:
+                            dropbox.AddCredentials(account.UserId, token);
+                            break;
+                        case NextPlayerUWPDataLayer.CloudStorage.CloudStorageType.OneDrive:
+                            break;
+                        case NextPlayerUWPDataLayer.CloudStorage.CloudStorageType.pCloud:
+                            pcloud.AddCredentials(account.UserId, token);
+                            break;
+                        default:
+                            break;
+                    }
+                    await DatabaseManager.Current.SaveCloudAccountTokenAsync(account.UserId, "");
+                }
+
+                string login = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.LfmLogin) as string;
+                string password = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.LfmPassword) as string;
+                string session = ApplicationSettingsHelper.ReadResetSettingsValue(SettingsKeys.LfmSessionKey) as string;
+                CredentialLockerService locker = new CredentialLockerService(CredentialLockerService.LastFmVault);
+                locker.AddCredentials(login, password);
+                locker.AddCredentials(SettingsKeys.LfmSessionKey, session);
+            }
+        }
 
         private async Task ReviewReminder()
         {
             await Task.Delay(4000);
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-            if (!settings.Values.ContainsKey(AppConstants.IsReviewed))
+            if (!settings.Values.ContainsKey(SettingsKeys.IsReviewed))
             {
-                settings.Values.Add(AppConstants.IsReviewed, 0);
-                settings.Values.Add(AppConstants.LastReviewRemind, DateTime.Today.Ticks);
+                settings.Values.Add(SettingsKeys.IsReviewed, 0);
+                settings.Values.Add(SettingsKeys.LastReviewRemind, DateTime.Today.Ticks);
             }
             else
             {
-                int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
-                long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
+                int isReviewed = Convert.ToInt32(settings.Values[SettingsKeys.IsReviewed]);
+                long dateticks = (long)(settings.Values[SettingsKeys.LastReviewRemind]);
                 TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
                 if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(7) <= elapsed)//!!!!!!!!! <=
                 {
-                    settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
-                    settings.Values[AppConstants.IsReviewed] = isReviewed++;
+                    settings.Values[SettingsKeys.LastReviewRemind] = DateTime.Today.Ticks;
+                    settings.Values[SettingsKeys.IsReviewed] = isReviewed++;
                     ResourceLoader loader = new ResourceLoader();
 
                     MessageDialog dialog = new MessageDialog(loader.GetString("RateAppMsg"));
@@ -193,11 +305,10 @@ namespace NextPlayerUWP.Views
 
         private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
         {
-            if (IsDesktop)
+            if (DeviceFamilyHelper.IsDesktop())
             {
 #if DEBUG
                 Menu.NavigationService.Navigate(App.Pages.NowPlaying);
-                //Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
 #endif
             }
             else
@@ -206,18 +317,17 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        private void NPButton_Tapped(object sender, RoutedEventArgs e)
+        private async Task AutoUpdateLibrary()
         {
-            System.Diagnostics.Debug.WriteLine("npgo");
-
-            if (IsDesktop)
-            {
-                Menu.NavigationService.Navigate(App.Pages.NowPlayingDesktop);
-            }
-            else
-            {
-                Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
-            }
+            await Task.Delay(TimeSpan.FromMinutes(1));
+            MediaImport mi = new MediaImport(App.FileFormatsHelper);
+            Progress<string> progress = new Progress<string>(
+                data =>
+                {
+                    var array = data.Split('|');
+                }
+            );
+            await Task.Run(() => mi.UpdateDatabaseAsync(progress));
         }
     }
 }

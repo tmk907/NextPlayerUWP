@@ -132,7 +132,7 @@ namespace NextPlayerUWP.Common
                 double volume = value / 100.0;
                 if (Player.Volume == volume) return;
                 Player.Volume = volume;
-                //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, value);
+                //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.Volume, value);
             }
         }
 
@@ -272,7 +272,7 @@ namespace NextPlayerUWP.Common
 
         public void SetPlaybackStopTimer()
         {
-            var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
+            var t = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.TimerTime);
             long timerTicks = 0;
             if (t != null)
             {
@@ -291,7 +291,7 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackStopTimerCallback()
         {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, false);
             Pause();
         }
 
@@ -354,7 +354,11 @@ namespace NextPlayerUWP.Common
             {
                 System.Diagnostics.Debug.WriteLine("UpdateStats2 {0} {1}", songId, songDuration);
                 await UpdateSongStatistics(song.SongId);
-                await ScrobbleTrack(song, songDuration);
+                if (songDuration > TimeSpan.FromSeconds(30))
+                {
+                    System.Diagnostics.Debug.WriteLine("ScrobbleTrack {0} {1}", song.Path, songDuration);
+                    await CacheTrackScrobble(song);
+                }
             }
         }
 
@@ -367,15 +371,6 @@ namespace NextPlayerUWP.Common
             else
             {
                 //log error
-            }
-        }
-
-        private async Task ScrobbleTrack(SongItem song, TimeSpan duration)
-        {
-            System.Diagnostics.Debug.WriteLine("ScrobbleTrack {0} {1}", song.Path, duration);
-            if (duration > TimeSpan.FromSeconds(30) && lastFmCache.AreCredentialsSet())
-            {
-                await CacheTrackScrobble(song);
             }
         }
 
@@ -401,9 +396,7 @@ namespace NextPlayerUWP.Common
                 Timestamp = timestamp
             };
             await lastFmCache.CacheTrackScrobble(scrobble);
-            System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track);
+            System.Diagnostics.Debug.WriteLine("Scrobbled " + artist + " " + track);
         }
-
-        
     }
 }

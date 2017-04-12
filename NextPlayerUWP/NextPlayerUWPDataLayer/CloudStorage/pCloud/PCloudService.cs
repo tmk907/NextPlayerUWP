@@ -19,6 +19,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
         {
             Debug.WriteLine("PCloudService()");
             pCloudClient = new PCloudClient();
+            credentials = new CredentialLockerService(CredentialLockerService.PCloudVault);
         }
 
         public PCloudService(string userId)
@@ -26,12 +27,14 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             Debug.WriteLine("PCloudService() {0}", new object[] { userId });
             this.userId = userId;
             pCloudClient = new PCloudClient();
+            credentials = new CredentialLockerService(CredentialLockerService.PCloudVault);
         }
 
         private PCloudClient pCloudClient;
         private string accessToken;
         private string userId;
         private static readonly Uri redirectUri = new Uri("http://localhost/next-player/pcloud/authorize");
+        private CredentialLockerService credentials;
 
         private async Task Authorize()
         {
@@ -103,7 +106,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
                     {
                         return false;
                     }
-                    await SaveToken(accessToken);
+                    SaveToken(userId, accessToken);
                 }
             }
             return isLoggedIn;
@@ -121,7 +124,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             {
                 return true;
             }
-            accessToken = await GetSavedToken();
+            accessToken = GetSavedToken();
             pCloudClient = new PCloudClient(AuthType.AccessToken, accessToken);
             return IsAuthenticated;
         }
@@ -132,18 +135,19 @@ namespace NextPlayerUWPDataLayer.CloudStorage.pCloud
             accessToken = null;
             //await pCloudClient.Auth.Logout();
             await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.pCloud);
+            credentials.DeleteCredentials(userId);
         }
 
-        private async Task SaveToken(string refreshToken)
+        private void SaveToken(string userId, string refreshToken)
         {
             Debug.WriteLine("PCloudService SaveToken()");
-            await DatabaseManager.Current.SaveCloudAccountTokenAsync(userId, refreshToken);
+            credentials.AddCredentials(userId, refreshToken);
         }
 
-        private async Task<string> GetSavedToken()
+        private string GetSavedToken()
         {
             Debug.WriteLine("PCloudService GetSavedToken()");
-            return await DatabaseManager.Current.GetCloudAccountTokenAsync(userId);
+            return credentials.GetPassword(userId);
         }
 
 

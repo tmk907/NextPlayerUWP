@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWP.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,12 +28,15 @@ namespace NextPlayerUWP.Views
     public sealed partial class AlbumView : Page
     {
         public AlbumViewModel ViewModel;
+        private ButtonsForMultipleSelection selectionButtons;
+
         public AlbumView()
         {
             this.InitializeComponent();
             this.Loaded += View_Loaded;
             this.Unloaded += View_Unloaded;
             ViewModel = (AlbumViewModel)DataContext;
+            selectionButtons = new ButtonsForMultipleSelection();
         }
         //~AlbumView()
         //{
@@ -40,26 +44,27 @@ namespace NextPlayerUWP.Views
         //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
+            selectionButtons.OnUnloaded();
             ShuffleAppBarButton.Click -= ShuffleAppBarButton_Click;
-            //ViewModel.OnUnloaded();
-            //ViewModel = null;
-            //DataContext = null;
-            //this.Loaded -= View_Loaded;
-            //this.Unloaded -= View_Unloaded;
+            ViewModel.OnUnloaded();
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ShuffleAppBarButton.Click += ShuffleAppBarButton_Click;
             ViewModel.OnLoaded(AlbumSongsListView);
+            selectionButtons.OnLoaded(ViewModel, PageHeader, AlbumSongsListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            var menu = this.Resources["ContextMenu"] as MenuFlyout;
-            var position = e.GetPosition(senderElement);
-            menu.ShowAt(senderElement, position);
+            if (!ViewModel.IsMultiSelection)
+            {
+                FrameworkElement senderElement = sender as FrameworkElement;
+                var menu = this.Resources["ContextMenu"] as MenuFlyout;
+                var position = e.GetPosition(senderElement);
+                menu.ShowAt(senderElement, position);
+            }
         }
 
         private async void SlidableListItem_LeftCommandRequested(object sender, EventArgs e)
@@ -89,6 +94,23 @@ namespace NextPlayerUWP.Views
         private void ShuffleAppBarButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ShuffleAllSongs();
+        }
+
+        private void EnableMultipleSelection(object sender, RoutedEventArgs e)
+        {
+            ViewModel.EnableMultipleSelection();
+            selectionButtons.ShowMultipleSelectionButtons();
+        }
+
+        private void DisableMultipleSelection(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DisableMultipleSelection();
+            selectionButtons.HideMultipleSelectionButtons();
+        }
+
+        private void SelectAll(object sender, RoutedEventArgs e)
+        {
+            AlbumSongsListView.SelectAll();
         }
     }
 }

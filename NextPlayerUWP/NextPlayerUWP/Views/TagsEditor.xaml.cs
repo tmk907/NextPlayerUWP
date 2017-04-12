@@ -18,8 +18,12 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
             ViewModel = (TagsEditorViewModel)DataContext;
-
         }
+
+        //~TagsEditor()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
 
         private void Image_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {

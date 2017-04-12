@@ -451,7 +451,7 @@
     <value>Nowe utwory:</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
-    <value>Personalizuj</value>
+    <value>Personalizacja</value>
   </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
     <value>Liczba odtworzeń</value>
@@ -872,5 +872,65 @@
   </data>
   <data name="PageHeaderNowPlaying.Content" xml:space="preserve">
     <value>Teraz odtwarzane</value>
+  </data>
+  <data name="PageHeaderAlbumArtists.Content" xml:space="preserve">
+    <value>Wykonawcy</value>
+  </data>
+  <data name="TBAlbumArtists.Text" xml:space="preserve">
+    <value>Wykonawcy</value>
+  </data>
+  <data name="PageHeaderAlbumArtist.Content" xml:space="preserve">
+    <value>Wykonawca albumu</value>
+  </data>
+  <data name="UnknownAlbumArtist" xml:space="preserve">
+    <value>Nieznany wykonawca albumu</value>
+  </data>
+  <data name="AppBarButtonSelect.Label" xml:space="preserve">
+    <value>Zaznacz</value>
+  </data>
+  <data name="AppBarButtonSelectAll.Label" xml:space="preserve">
+    <value>Zaznacz wszystko</value>
+  </data>
+  <data name="AppBarButtonClearSelection.Label" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="AppBarButtonAddToNowPlaying.Label" xml:space="preserve">
+    <value>Dodaj do teraz odtwarzane</value>
+  </data>
+  <data name="AppBarButtonAddToPlaylist.Label" xml:space="preserve">
+    <value>Dodaj do playlisty</value>
+  </data>
+  <data name="AppBarButtonPlayNow.Label" xml:space="preserve">
+    <value>Odtwórz</value>
+  </data>
+  <data name="AppBarButtonPlayNext.Label" xml:space="preserve">
+    <value>Odtwórz jako następne</value>
+  </data>
+  <data name="Added next" xml:space="preserve">
+    <value>Dodano jako następne</value>
+  </data>
+  <data name="Added to now playing" xml:space="preserve">
+    <value>Dodano do teraz odtwarzane</value>
+  </data>
+  <data name="TBAccounts.Text" xml:space="preserve">
+    <value>Konta</value>
+  </data>
+  <data name="ButtonAddAccount.Content" xml:space="preserve">
+    <value>Dodaj konto</value>
+  </data>
+  <data name="TBExtensions.Text" xml:space="preserve">
+    <value>Rozszerzenia</value>
+  </data>
+  <data name="DateCreated" xml:space="preserve">
+    <value>Data utworzenia</value>
+  </data>
+  <data name="DateModified" xml:space="preserve">
+    <value>Data modyfikacji</value>
+  </data>
+  <data name="TBDateModified.Text" xml:space="preserve">
+    <value>Data modyfikacji</value>
+  </data>
+  <data name="TBDateCreated.Text" xml:space="preserve">
+    <value>Data utworzenia</value>
   </data>
 </root>

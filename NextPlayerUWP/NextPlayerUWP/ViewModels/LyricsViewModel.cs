@@ -1,11 +1,11 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Extensions;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls;
@@ -18,10 +18,18 @@ namespace NextPlayerUWP.ViewModels
 {
     public class LyricsViewModel : ViewModelBase
     {
+        LyricsExtensionsClient lyricsExtensions;
         public LyricsViewModel()
         {
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             translationHelper = new TranslationHelper();
+            ViewModelLocator vml = new ViewModelLocator();
+            lyricsExtensions = new LyricsExtensionsClient(vml.LyricsExtensionsService);
+            lyricsWebview = new WebView();
+            lyricsWebview.ContentLoading += webView1_ContentLoading;
+            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
+            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
+            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
         }
 
         private SongItem song;
@@ -36,23 +44,14 @@ namespace NextPlayerUWP.ViewModels
             });
         }
 
-        public void OnLoaded(WebView webView)
+        public WebView GetWebView()
         {
-            lyricsWebview = webView;
-            lyricsWebview.ContentLoading += webView1_ContentLoading;
-            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
-            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
-            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
-            if (changelyrics)
-            {
-                changelyrics = false;
-                ChangeLyrics();
-            }
+            return lyricsWebview;
         }
-
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
+            System.Diagnostics.Debug.WriteLine("LyricsViewModel OnNavTo()");
             App.OnNavigatedToNewView(true);
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             if (suspensionState.ContainsKey(nameof(song.SongId)))
@@ -172,6 +171,7 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ChangeLyrics()
         {
+            System.Diagnostics.Debug.WriteLine("LyricsViewModel ChangeLyrics()");
             original = true;
 
             WebVisibility = false;
@@ -186,13 +186,45 @@ namespace NextPlayerUWP.ViewModels
             
             if (string.IsNullOrEmpty(dbLyrics))
             {
-                if (lyricsWebview == null)
+                ShowProgressBar = true;
+                var extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
+                ShowProgressBar = false;
+
+                if (extLyrics.Lyrics == "")
                 {
-                    changelyrics = true;
-                    return;
+                    if (extLyrics.Url != "")
+                    {
+                        try
+                        {
+                            ShowProgressBar = true;
+                            lyricsWebview.Navigate(new Uri(extLyrics.Url));
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowProgressBar = false;
+                        }
+                    }
+                    else
+                    {
+                        if (autoLoadFromWeb)
+                        {
+                            try
+                            {
+                                lyricsWebview.Stop();
+                            }
+                            catch (InvalidOperationException ex)
+                            {
+
+                            }
+                            await LoadLyricsFromWebsite();
+                        }
+                    }
                 }
-                lyricsWebview.Stop();
-                await LoadLyricsFromWebsite();
+                else
+                {
+                    original = false;
+                    Lyrics = extLyrics.Lyrics;
+                }
             }
             else
             {

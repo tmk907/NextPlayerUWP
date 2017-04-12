@@ -1,20 +1,13 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using NextPlayerUWP.Controls;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,12 +19,16 @@ namespace NextPlayerUWP.Views
     public sealed partial class FoldersView : Page
     {
         public FoldersViewModel ViewModel;
+        private ButtonsForMultipleSelection selectionButtons;
+        private Guid token;
+
         public FoldersView()
         {
             this.InitializeComponent();
             this.Loaded += View_Loaded;
-            //this.Unloaded += View_Unloaded;
+            this.Unloaded += View_Unloaded;
             ViewModel = (FoldersViewModel)DataContext;
+            selectionButtons = new ButtonsForMultipleSelection();
         }
         //~FoldersView()
         //{
@@ -39,24 +36,26 @@ namespace NextPlayerUWP.Views
         //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
-            //ViewModel.OnUnloaded();
-            ViewModel = null;
-            DataContext = null;
-            this.Loaded -= View_Loaded;
-            this.Unloaded -= View_Unloaded;
+            selectionButtons.OnUnloaded();
+            MessageHub.Instance.UnSubscribe(token);
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(FoldersListView);
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
+            selectionButtons.OnLoaded(ViewModel, PageHeader, FoldersListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            var menu = this.Resources["ContextMenuFolder"] as MenuFlyout;
-            var position = e.GetPosition(senderElement);
-            menu.ShowAt(senderElement, position);
+            if (!ViewModel.IsMultiSelection)
+            {
+                FrameworkElement senderElement = sender as FrameworkElement;
+                var menu = this.Resources["ContextMenuFolder"] as MenuFlyout;
+                var position = e.GetPosition(senderElement);
+                menu.ShowAt(senderElement, position);
+            }
         }
 
         private void ListViewItem2_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -71,6 +70,28 @@ namespace NextPlayerUWP.Views
         {
             var item = (sender as SlidableListItem).DataContext as MusicItem;
             await ViewModel.SlidableListItemLeftCommandRequested(item);
+        }
+
+        private void EnableMultipleSelection(object sender, RoutedEventArgs e)
+        {
+            ViewModel.EnableMultipleSelection();
+            selectionButtons.ShowMultipleSelectionButtons();
+        }
+
+        private void DisableMultipleSelection(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DisableMultipleSelection();
+            selectionButtons.HideMultipleSelectionButtons();
+        }
+
+        private void SelectAll(object sender, RoutedEventArgs e)
+        {
+            FoldersListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

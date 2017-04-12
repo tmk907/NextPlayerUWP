@@ -24,7 +24,10 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
         }
-
+        //~BottomPlayerControl()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
+        //}
         private bool IsDesktop()
         {
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop") return true;

@@ -1,4 +1,6 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using NextPlayerUWP.Controls;
+using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,11 +26,13 @@ namespace NextPlayerUWP.Views
     public sealed partial class NowPlayingPlaylistView : Page
     {
         public NowPlayingPlaylistViewModel ViewModel;
+
         public NowPlayingPlaylistView()
         {
+            System.Diagnostics.Debug.WriteLine(GetType().Name + "()");
             this.InitializeComponent();
             this.Loaded += View_Loaded;
-            //this.Unloaded += View_Unloaded;
+            this.Unloaded += View_Unloaded;
             ViewModel = (NowPlayingPlaylistViewModel)DataContext;
         }
         //~NowPlayingPlaylistView()
@@ -37,24 +41,30 @@ namespace NextPlayerUWP.Views
         //}
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.OnUnloaded();
-            ViewModel = null;
-            DataContext = null;
-            this.Loaded -= View_Loaded;
-            this.Unloaded -= View_Unloaded;
+            System.Diagnostics.Debug.WriteLine(GetType().Name+"Unloaded");
+            ViewModel.OnUnloaded();           
         }
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine(GetType().Name+"Loaded");
             ViewModel.OnLoaded(NowPlayingPlaylistListView);
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            var menu = this.Resources["ContextMenu"] as MenuFlyout;
-            var position = e.GetPosition(senderElement);
-            menu.ShowAt(senderElement, position);
+            if (!ViewModel.IsMultiSelection)
+            {
+                FrameworkElement senderElement = sender as FrameworkElement;
+                var menu = this.Resources["ContextMenu"] as MenuFlyout;
+                var position = e.GetPosition(senderElement);
+                menu.ShowAt(senderElement, position);
+            }
+        }
+
+        private void SelectAll(object sender, RoutedEventArgs e)
+        {
+            NowPlayingPlaylistListView.SelectAll();
         }
     }
 }

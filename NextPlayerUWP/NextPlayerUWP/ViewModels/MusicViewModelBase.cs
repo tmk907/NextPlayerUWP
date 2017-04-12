@@ -13,11 +13,12 @@ using NextPlayerUWPDataLayer.Helpers;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.DataTransfer;
 using Template10.Services.NavigationService;
-using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public abstract class MusicViewModelBase:Template10.Mvvm.ViewModelBase
+    public abstract class MusicViewModelBase : Template10.Mvvm.ViewModelBase
     {
         //public MusicViewModelBase()
         //{
@@ -141,20 +142,25 @@ namespace NextPlayerUWP.ViewModels
 
         public async Task SlidableListItemLeftCommandRequested(MusicItem item)
         {
-            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand) as string;
+            TranslationHelper helper = new TranslationHelper();
             switch (swipeAction)
             {
-                case AppConstants.SwipeActionPlayNow:
+                case SettingsKeys.SwipeActionPlayNow:
                     await NowPlayingPlaylistManager.Current.NewPlaylist(item);
                     await PlaybackService.Instance.PlayNewList(0);
                     break;
-                case AppConstants.SwipeActionPlayNext:
+                case SettingsKeys.SwipeActionPlayNext:
                     await NowPlayingPlaylistManager.Current.AddNext(item);
+                    string text = helper.GetTranslation(TranslationHelper.AddedNext);
+                    MessageHub.Instance.Publish<InAppNotification>(new InAppNotification() { FirstTextLine = text });
                     break;
-                case AppConstants.SwipeActionAddToNowPlaying:
+                case SettingsKeys.SwipeActionAddToNowPlaying:
                     await NowPlayingPlaylistManager.Current.Add(item);
+                    string text2 = helper.GetTranslation(TranslationHelper.AddedToNowPlaying);
+                    MessageHub.Instance.Publish<InAppNotification>(new InAppNotification() { FirstTextLine = text2 });
                     break;
-                case AppConstants.SwipeActionAddToPlaylist:
+                case SettingsKeys.SwipeActionAddToPlaylist:
                     NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
                     break;
                 default:
@@ -267,6 +273,7 @@ namespace NextPlayerUWP.ViewModels
                     state[nameof(SelectedComboBoxItem)] = ComboBoxItemValues.IndexOf(SelectedComboBoxItem);
                 }
             }
+            DisableMultipleSelection();
             await Task.CompletedTask;
         }
 
@@ -311,7 +318,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 return;
             }
-            if(listView.Items.Count <= firstVisibleItemIndex)
+            if(listView == null || listView.Items.Count <= firstVisibleItemIndex)
             {
                 return;
             }
@@ -388,6 +395,73 @@ namespace NextPlayerUWP.ViewModels
             {
                 return span.ToString(@"d\.hh\:mm\:ss");
             }
+        }
+
+        private bool isClickEnabled = true;
+        public bool IsClickEnabled
+        {
+            get { return isClickEnabled; }
+            set
+            {
+                Set(ref isClickEnabled, value);
+                IsMultiSelection = !isClickEnabled && selectionMode == ListViewSelectionMode.Multiple;
+            }
+        }
+
+        private ListViewSelectionMode selectionMode = ListViewSelectionMode.None;
+        public ListViewSelectionMode SelectionMode
+        {
+            get { return selectionMode; }
+            set
+            {
+                Set(ref selectionMode, value);
+                IsMultiSelection = !isClickEnabled && selectionMode == ListViewSelectionMode.Multiple;
+            }
+        }
+
+        private bool isMultiSelection = false;
+        public bool IsMultiSelection
+        {
+            get { return isMultiSelection; }
+            set { Set(ref isMultiSelection, value); }
+        }
+
+        public void EnableMultipleSelection()
+        {
+            IsClickEnabled = false;
+            SelectionMode = ListViewSelectionMode.Multiple;
+        }
+
+        public void DisableMultipleSelection()
+        {
+            IsClickEnabled = true;
+            SelectionMode = ListViewSelectionMode.None;
+        }
+
+        public async Task PlayNowMany(IEnumerable<MusicItem> items)
+        {
+            DisableMultipleSelection();
+            await NowPlayingPlaylistManager.Current.NewPlaylist(items);
+            await PlaybackService.Instance.PlayNewList(0);
+        }
+
+        public async Task PlayNextMany(IEnumerable<MusicItem> items)
+        {
+            DisableMultipleSelection();
+            await NowPlayingPlaylistManager.Current.AddNext(items);
+        }
+
+        public async Task AddToNowPlayingMany(IEnumerable<MusicItem> items)
+        {
+            DisableMultipleSelection();
+            await NowPlayingPlaylistManager.Current.Add(items);
+        }
+
+        public void AddToPlaylistMany(IEnumerable<MusicItem> items)
+        {
+            App.AddToCache(items);
+            DisableMultipleSelection();
+            NavigationService.Navigate(App.Pages.AddToPlaylist, new ListOfMusicItems().GetParameter());
         }
 
     }

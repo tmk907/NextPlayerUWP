@@ -20,12 +20,12 @@ namespace ScrobblerBG
             _deferral.Complete();
         }
 
-        private void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        private async void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
             if (!completed)
             {
                 NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("BackgroundScrobbler scrobbling interrupted", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
-                //await NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteToFile();
+                await NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteToFile();
             }
             _deferral.Complete();
         }

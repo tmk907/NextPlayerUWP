@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public class SongsViewModel : MusicViewModelBase
+    public class SongsViewModel : MusicViewModelBase, IGroupedItemsList
     {
         public SongsViewModel()
         {
@@ -82,7 +82,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 var query = from item in songs
                             orderby item.Title.ToLower()
-                            group item by item.Title[0].ToString().ToLower() into g
+                            group item by item.Title.FirstOrDefault().ToString().ToLower() into g
                             orderby g.Key
                             select new { GroupName = g.Key.ToUpper(), Items = g };
                 int i = 0;
@@ -183,7 +183,6 @@ namespace NextPlayerUWP.ViewModels
 
             var query = songs.OrderBy(orderSelector).ThenBy(a => a.Title).
                 GroupBy(groupSelector).
-                OrderBy(g => g.Key).
                 Select(group => new {
                     GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
                     : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")
@@ -287,6 +286,11 @@ namespace NextPlayerUWP.ViewModels
         {
             var song = args.SelectedItem as SongItem;
             sender.Text = song.Title;
+        }
+
+        public int GetIndexFromGroup(object item)
+        {
+            return GroupedSongs.FirstOrDefault(g => g.Contains(item)).IndexOf(item);
         }
     }
 }

@@ -158,7 +158,7 @@ namespace NextPlayerUWP.ViewModels
             var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             PlaylistHelper ph = new PlaylistHelper();
             await ph.EditPlaylist(playlist, false);
-            Playlists.Insert(allPlaylists.IndexOf(playlist), playlist);
+            //Playlists.Insert(allPlaylists.IndexOf(playlist), playlist);
         }
 
         public async void HidePlaylist(object sender, RoutedEventArgs e)
@@ -166,7 +166,7 @@ namespace NextPlayerUWP.ViewModels
             var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             PlaylistHelper ph = new PlaylistHelper();
             await ph.EditPlaylist(playlist, true);
-            Playlists.Remove(playlist);
+            if (!filters[2].IsChecked) Playlists.Remove(playlist);
         }
 
         

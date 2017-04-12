@@ -1,4 +1,4 @@
-﻿using NextPlayerUWP.ViewModels;
+﻿using NextPlayerUWP.ViewModels.Settings;
 using System;
 using Windows.UI.Xaml.Data;
 

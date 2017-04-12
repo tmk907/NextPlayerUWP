@@ -18,6 +18,7 @@ namespace NextPlayerUWPDataLayer.Tables
         /// UTC
         /// </summary>
         public DateTime DateModified { get; set; }
+        public DateTime DateCreated { get; set; }
 
         public uint Bitrate { get; set; }
         public TimeSpan Duration { get; set; }

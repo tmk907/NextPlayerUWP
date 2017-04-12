@@ -768,6 +768,7 @@ namespace Template10.Controls
             DebugWrite();
 
             var button = new InfoElement(sender);
+            if (button.HamburgerButtonInfo == null) return;
             if (button.HamburgerButtonInfo.ButtonType == HamburgerButtonInfo.ButtonTypes.Toggle)
             {
                 button.HamburgerButtonInfo.IsChecked = (button.HamburgerButtonInfo.ButtonType == HamburgerButtonInfo.ButtonTypes.Toggle);
@@ -782,6 +783,7 @@ namespace Template10.Controls
             DebugWrite();
 
             var button = new InfoElement(sender);
+            if (button.HamburgerButtonInfo == null) return;
             if (button.HamburgerButtonInfo.ButtonType == HamburgerButtonInfo.ButtonTypes.Toggle)
             {
                 button.HamburgerButtonInfo.RaiseUnchecked(e);

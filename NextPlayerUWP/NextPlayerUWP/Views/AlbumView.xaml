@@ -378,7 +378,10 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
+            x:Name="PageHeader"
             BackButtonVisibility="Collapsed" 
             Frame="{x:Bind Frame, Mode=OneWay}"
             x:Uid="PageHeaderAlbum"
@@ -390,6 +393,31 @@
             x:Name="ShuffleAppBarButton"
             Label="Shuffle all"
             Icon="Shuffle"/>
+            <AppBarSeparator/>
+            <AppBarButton
+                x:Uid="AppBarButtonSelect"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                Label="Select"
+                Click="EnableMultipleSelection">
+                <AppBarButton.Content>
+                    <Viewbox Height="22">
+                        <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
+                    </Viewbox>
+                </AppBarButton.Content>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="AppBarButtonSelectAll"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Select all"
+                Icon="SelectAll"
+                Click="SelectAll"
+                />
+            <AppBarButton
+                x:Uid="AppBarButtonClearSelection"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Clear selection"
+                Icon="ClearSelection"
+                Click="DisableMultipleSelection"/>
         </controls:PageHeader>
         <Image x:Name="AlbumCoverImageBG" Grid.Row="1" 
                 Stretch="UniformToFill"
@@ -479,7 +507,8 @@
                         Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
                         Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
                 <TextBlock Grid.Row="2"
-                            Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
+                            Text="{Binding Album.Year}"
+                            Visibility="{Binding Album.Year, Converter={StaticResource YearToVisibilityConverter}}"
                             Style="{StaticResource AlbumDescription2TBStyle}"/>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
@@ -535,10 +564,10 @@
                     ItemsSource="{Binding Songs}"
                     ItemTemplate="{StaticResource AlbumSongItemTemplateDesktop}"
                     ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
-                    IsItemClickEnabled="True"
+                    SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                    IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     Margin="12,0,0,4"
-                    SelectionMode="None"
                     CanDragItems="True"
                     DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                 <mycontrols:AlternatingRowListView.ItemsPanel>
@@ -577,8 +606,9 @@
                             Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
                             Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
                         <TextBlock Grid.Row="2"
-                                Text="{Binding Album.Year, Converter={StaticResource YearConverter}, Mode=OneWay}"
-                                Style="{StaticResource AlbumDescription2TBStyle}"/>
+                            Text="{Binding Album.Year}"
+                            Visibility="{Binding Album.Year, Converter={StaticResource YearToVisibilityConverter}}"
+                            Style="{StaticResource AlbumDescription2TBStyle}"/>
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -632,10 +662,10 @@
                         ItemsSource="{Binding Songs}"
                         ItemTemplate="{StaticResource AlbumSongItemTemplateMobileWide}"
                         ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
-                        IsItemClickEnabled="True"
+                        SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                        IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                         ItemClick="{x:Bind ViewModel.ItemClicked }"
                         Margin="12,0,0,4"
-                        SelectionMode="None"
                         CanDragItems="False"
                         ScrollViewer.VerticalScrollMode="Disabled">
                         <mycontrols:AlternatingRowListView.ItemsPanel>

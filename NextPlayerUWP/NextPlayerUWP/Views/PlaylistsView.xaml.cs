@@ -1,23 +1,15 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using NextPlayerUWP.Common;
+using NextPlayerUWP.Controls;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
-using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -29,13 +21,17 @@ namespace NextPlayerUWP.Views
     public sealed partial class PlaylistsView : Page
     {
         public PlaylistsViewModel ViewModel;
+        private ButtonsForMultipleSelection selectionButtons;
+        private Guid token;
+
         public PlaylistsView()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            //NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
-            //this.Unloaded += View_Unloaded;
+            this.Unloaded += View_Unloaded;
             ViewModel = (PlaylistsViewModel)DataContext;
+            selectionButtons = new ButtonsForMultipleSelection();
         }
 
         //~PlaylistsView()
@@ -46,23 +42,26 @@ namespace NextPlayerUWP.Views
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(PlaylistsListView);
+            token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
+            selectionButtons.OnLoaded(ViewModel, PageHeader, PlaylistsListView);
         }
 
         private void View_Unloaded(object sender, RoutedEventArgs e)
         {
+            selectionButtons.OnUnloaded();
+            MessageHub.Instance.UnSubscribe(token);
             ViewModel.OnUnloaded();
-            ViewModel = null;
-            DataContext = null;
-            this.Loaded -= View_Loaded;
-            this.Unloaded -= View_Unloaded;
         }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            var menu = this.Resources["ContextMenu"] as MenuFlyout;
-            var position = e.GetPosition(senderElement);
-            menu.ShowAt(senderElement, position);
+            if (!ViewModel.IsMultiSelection)
+            {
+                FrameworkElement senderElement = sender as FrameworkElement;
+                var menu = this.Resources["ContextMenu"] as MenuFlyout;
+                var position = e.GetPosition(senderElement);
+                menu.ShowAt(senderElement, position);
+            }
         }
 
         private async void newPlainPlaylist_Click(object sender, RoutedEventArgs e)
@@ -113,6 +112,28 @@ namespace NextPlayerUWP.Views
         {
             var item = (sender as SlidableListItem).DataContext as PlaylistItem;
             await ViewModel.SlidableListItemLeftCommandRequested(item);
+        }
+
+        private void EnableMultipleSelection(object sender, RoutedEventArgs e)
+        {
+            ViewModel.EnableMultipleSelection();
+            selectionButtons.ShowMultipleSelectionButtons();
+        }
+
+        private void DisableMultipleSelection(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DisableMultipleSelection();
+            selectionButtons.HideMultipleSelectionButtons();
+        }
+
+        private void SelectAll(object sender, RoutedEventArgs e)
+        {
+            PlaylistsListView.SelectAll();
+        }
+
+        public void OnSearchMessage(EnableSearching msg)
+        {
+            SearchBox.Focus(FocusState.Programmatic);
         }
     }
 }

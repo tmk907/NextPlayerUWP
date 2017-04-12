@@ -5,8 +5,9 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
+    xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -124,6 +125,65 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="ListViewItemStyle1" TargetType="ListViewItem">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0,0,8,4"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="Background" Value="{ThemeResource ListViewItemBackground}"/>
+            <Setter Property="Foreground" Value="{ThemeResource ListViewItemForeground}"/>
+            <Setter Property="TabNavigation" Value="Local"/>
+            <Setter Property="IsHoldingEnabled" Value="True"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="MinHeight" Value="200"/>
+            <Setter Property="AllowDrop" Value="False"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FocusVisualMargin" Value="0"/>
+            <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource ListViewItemFocusVisualPrimaryBrush}"/>
+            <Setter Property="FocusVisualPrimaryThickness" Value="2"/>
+            <Setter Property="FocusVisualSecondaryBrush" Value="{ThemeResource ListViewItemFocusVisualSecondaryBrush}"/>
+            <Setter Property="FocusVisualSecondaryThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <ListViewItemPresenter 
+                            CheckBrush="{ThemeResource ListViewItemCheckBrush}" 
+                            ContentMargin="{TemplateBinding Padding}" 
+                            CheckMode="Overlay" 
+                            ContentTransitions="{TemplateBinding ContentTransitions}" 
+                            CheckBoxBrush="Transparent" 
+                            DragForeground="{ThemeResource ListViewItemDragForeground}" 
+                            DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}" 
+                            DragBackground="{ThemeResource ListViewItemDragBackground}" 
+                            DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}" 
+                            FocusVisualPrimaryBrush="{TemplateBinding FocusVisualPrimaryBrush}" 
+                            FocusVisualSecondaryThickness="{TemplateBinding FocusVisualSecondaryThickness}" 
+                            FocusBorderBrush="{ThemeResource ListViewItemFocusBorderBrush}" 
+                            FocusVisualMargin="{TemplateBinding FocusVisualMargin}" 
+                            FocusVisualPrimaryThickness="{TemplateBinding FocusVisualPrimaryThickness}" 
+                            FocusSecondaryBorderBrush="{ThemeResource ListViewItemFocusSecondaryBorderBrush}" 
+                            FocusVisualSecondaryBrush="{TemplateBinding FocusVisualSecondaryBrush}" 
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                            Control.IsTemplateFocusTarget="True" 
+                            PointerOverForeground="{ThemeResource ListViewItemForegroundPointerOver}" 
+                            PressedBackground="{ThemeResource ListViewItemBackgroundPressed}" 
+                            PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackground}" 
+                            PointerOverBackground="{ThemeResource ListViewItemBackgroundPointerOver}" 
+                            ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" 
+                            SelectedPressedBackground="{ThemeResource ListViewItemBackgroundSelectedPressed}" 
+                            SelectionCheckMarkVisualEnabled="{ThemeResource ListViewItemSelectionCheckMarkVisualEnabled}" 
+                            SelectedForeground="{ThemeResource ListViewItemForegroundSelected}" 
+                            SelectedPointerOverBackground="{ThemeResource ListViewItemBackgroundSelectedPointerOver}" 
+                            SelectedBackground="{StaticResource UserAccentBrush}" 
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -161,16 +221,43 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <controls:PageHeader Grid.Row="0"
+        <controls:PageHeader 
+                Grid.Row="0"
+                x:Name="PageHeader"
                 BackButtonVisibility="Collapsed" 
                 Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderAlbums"
                 Content="Albums" 
                 VisualStateNarrowMinWidth="0"
-                VisualStateNormalMinWidth="720"/>
+                VisualStateNormalMinWidth="720">
+            <AppBarButton
+                x:Uid="AppBarButtonSelect"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
+                Label="Select"
+                Click="EnableMultipleSelection">
+                <AppBarButton.Content>
+                    <Viewbox Height="22">
+                        <TextBlock Text="&#xE762;"  FontFamily="Segoe MDL2 Assets"/>
+                    </Viewbox>
+                </AppBarButton.Content>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="AppBarButtonSelectAll"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Select all"
+                Icon="SelectAll"
+                Click="SelectAll"
+                />
+            <AppBarButton
+                x:Uid="AppBarButtonClearSelection"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Clear selection"
+                Icon="ClearSelection"
+                Click="DisableMultipleSelection"/>
+        </controls:PageHeader>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
@@ -182,21 +269,19 @@
                     <ColumnDefinition x:Name="Column2Sort" Width="Auto"/>
                     <ColumnDefinition x:Name="Column3Search" Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <AutoSuggestBox  Grid.Column="2" 
+                <AutoSuggestBox  
+                    x:Name="SearchBox"
+                    Grid.Column="2" 
                     PlaceholderText="search" 
                     QueryIcon="Find" 
                     Margin="4,0,12,0" 
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
+                    DisplayMemberPath="Album"
+                    TextMemberPath="Album"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_TextChanged}"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_QuerySubmitted}"
-                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}">
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Album}"/>
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_SuggestionChosen}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
@@ -211,27 +296,27 @@
             <Grid Grid.Row="1">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
-                        <ListView x:Name="AlbumsListView"
+                        <mycontrols:MyListView x:Name="AlbumsListView"
                             ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
                             ItemTemplate="{StaticResource AlbumItemTemplate}"
-                            ItemContainerStyle="{StaticResource AlbumsListViewItemContainerStyle}"
-                            IsItemClickEnabled="True"
+                            ItemContainerStyle="{StaticResource ListViewItemStyle1}"
+                            SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                            IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
-                            SelectionMode="None"
                             ShowsScrollingPlaceholders="False"
                             Margin="12,0,0,0"
                             CanDragItems="True"
-                            DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                            <ListView.ItemsPanel>
+                            DragItemsStarting="{x:Bind ViewModel.DragStarting}" >
+                            <mycontrols:MyListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsWrapGrid Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.GroupStyle>
+                            </mycontrols:MyListView.ItemsPanel>
+                            <mycontrols:MyListView.GroupStyle>
                                 <GroupStyle HeaderTemplate="{StaticResource GroupHeaderItemTemplate}" 
                                             HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"/>
-                            </ListView.GroupStyle>
-                        </ListView>
+                            </mycontrols:MyListView.GroupStyle>
+                        </mycontrols:MyListView>
                     </SemanticZoom.ZoomedInView>
                     <SemanticZoom.ZoomedOutView>
                         <ListView

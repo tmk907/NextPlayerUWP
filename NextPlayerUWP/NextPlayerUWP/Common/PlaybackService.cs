@@ -272,14 +272,14 @@ namespace NextPlayerUWP.Common
 
             mediaList.MoveNext();
 
-            if (IsLastIndex)
-            {
-                CurrentSongIndex = 0;
-            }
-            else
-            {
-                CurrentSongIndex++;
-            }
+            //if (IsLastIndex)
+            //{
+            //    CurrentSongIndex = 0;
+            //}
+            //else
+            //{
+            //    CurrentSongIndex++;
+            //}
 
             //if (repeat == RepeatEnum.NoRepeat)
             //{
@@ -638,8 +638,17 @@ namespace NextPlayerUWP.Common
                 }
                 else
                 {
-                    //out of range exception
-                    mediaList.Items[i].Source.CustomProperties[propertyIndex] = i;
+                    if (mediaList.Items.Count == 0)
+                    {
+                        var song = NowPlayingPlaylistManager.Current.songs[i];
+                        var playbackItem = await PreparePlaybackItem(song);
+                        playbackItem.Source.CustomProperties[propertyIndex] = i;
+                        mediaList.Items.Add(playbackItem);
+                    }
+                    else
+                    {
+                        mediaList.Items[i].Source.CustomProperties[propertyIndex] = i;
+                    }
                 }
             }
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
@@ -691,6 +700,7 @@ namespace NextPlayerUWP.Common
                 RadioTimer.SetTimerWithTask(delay, RefreshRadioTrackInfo);
             }
         }
+
         private void UpdateStats()
         {
             System.Diagnostics.Debug.WriteLine("ScrobbleTrack started at:{0} played:{1}", songStartedAt, songPlayed);
@@ -713,7 +723,7 @@ namespace NextPlayerUWP.Common
             {
 
             }
-            if (songPlayed.TotalSeconds >= duration.TotalSeconds*0.5 || duration.TotalSeconds >= 4 * 60)
+            if (songPlayed.TotalSeconds >= duration.TotalSeconds * 0.5 || duration.TotalSeconds >= 4 * 60)
             {
                 UpdateStats2(songId, duration);
             }

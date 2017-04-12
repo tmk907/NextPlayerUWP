@@ -1,15 +1,9 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
-using NextPlayerUWPDataLayer.Enums;
-using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Model;
-using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Template10.Common;
-using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
@@ -20,31 +14,16 @@ namespace NextPlayerUWP.ViewModels
         public BottomPlayerViewModel()
         {
             Logger2.DebugWrite("BottomPlayerViewModel()", "");
-
             _timer = new DispatcherTimer();
             SetupTimer();
-            ChangePlayButtonContent(PlaybackService.Instance.PlayerState);
-            PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
-            PlaybackService.MediaPlayerTrackChanged += ChangeSong;
-            PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
-            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
-            Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            if (!song.IsAlbumArtSet)
-            {
-                CoverUri = SongCoverManager.Instance.GetCurrent();
-            }
-            else
-            {
-                CoverUri = song.AlbumArtUri;
-            }
-
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
             NowPlayingPlaylistManager.Current.SetDispatcher(WindowWrapper.Current().Dispatcher);
-            seekButtonsHelper = new SeekButtonsHelper();
             PlaybackService.Instance.Initialize().ConfigureAwait(false);
             ViewModelLocator vml = new ViewModelLocator();
             PlayerVM = vml.PlayerVM;
+            QueueVM = vml.QueueVM;
+            PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -52,14 +31,10 @@ namespace NextPlayerUWP.ViewModels
             Logger2.DebugWrite("BottomPlayerViewModel()", "Suspending");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Suspending");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
-            PlaybackService.MediaPlayerStateChanged -= ChangePlayButtonContent;
-            PlaybackService.MediaPlayerTrackChanged -= ChangeSong;
             PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
-            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             System.Diagnostics.Debug.WriteLine("BottomPlayerVM Suspending");
             StopTimer();
-            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, PlayerVM.Volume);
+            
         }
 
         private void Current_Resuming(object sender, object e)
@@ -67,33 +42,23 @@ namespace NextPlayerUWP.ViewModels
             Logger2.DebugWrite("BottomPlayerViewModel()", "Resuming");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.Save("BottomPlayerVM Resuming");
             //NextPlayerUWPDataLayer.Diagnostics.Logger.SaveToFile();
-            PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
-            PlaybackService.MediaPlayerTrackChanged += ChangeSong;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
-            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             System.Diagnostics.Debug.WriteLine("BottomPlayerVM Resuming");
             StartTimer();
-            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
-            PlayerVM.Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Volume) ?? 100);
         }
 
         public PlayerViewModelBase PlayerVM { get; set; }
+        public QueueViewModelBase QueueVM { get; set; }
+
+        private bool bottomPlayerVisibility = true;
+        public bool BottomPlayerVisibility
+        {
+            get { return bottomPlayerVisibility; }
+            set { Set(ref bottomPlayerVisibility, value); }
+        }
+
 
         #region Properties
-        private SongItem song = new SongItem();
-        public SongItem Song
-        {
-            get {
-                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-                {
-                    song = new SongItem();
-                }
-                return song;
-            }
-            set {
-                Set(ref song, value);
-            }
-        }
 
         private double sliderMaxValue = 0.0;
         public double SliderMaxValue
@@ -123,20 +88,6 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref timeEnd, value); }
         }
 
-        private string playButtonContent = "\uE768";
-        public string PlayButtonContent
-        {
-            get { return playButtonContent; }
-            set { Set(ref playButtonContent, value); }
-        }
-
-        private Uri coverUri;
-        public Uri CoverUri
-        {
-            get { return coverUri; }
-            set { Set(ref coverUri, value); }
-        }
-
         private string showHideSliderButtonContent = "\uE972";
         public string ShowHideSliderButtonContent
         {
@@ -156,66 +107,10 @@ namespace NextPlayerUWP.ViewModels
         }
         #endregion
 
-        #region Commands
-
-        private SeekButtonsHelper seekButtonsHelper;
-
-        public int RepeatButtonInterval
-        {
-            get { return seekButtonsHelper.RepeatButtonInterval; }
-        }
-
-        public void PreviousOrSeek()
-        {
-            seekButtonsHelper.Previous();
-        }
-
-        public void NextOrSeek()
-        {
-            seekButtonsHelper.Next();
-        }
-
-        #endregion
-
-        private void ChangePlayButtonContent(MediaPlaybackState state)
-        {
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
-            {
-                if (state == MediaPlaybackState.Playing || state == MediaPlaybackState.Buffering)
-                {
-                    PlayButtonContent = "\uE769";
-                }
-                else if (state == MediaPlaybackState.Paused)
-                {
-                    PlayButtonContent = "\uE768";
-                }
-                else
-                {
-                    PlayButtonContent = "\uE768";
-                }
-            });
-        }
-
-        private void ChangeSong(int index)
-        {
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
-            {
-                Song = NowPlayingPlaylistManager.Current.GetSongItem(index);
-                if (!song.IsAlbumArtSet)
-                {
-
-                }
-                else
-                {
-                    CoverUri = song.AlbumArtUri;
-                }
-            });
-        }
-
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
             await Task.Delay(400);
-            await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
                 var duration = PlaybackService.Instance.Duration;
                 if (duration == TimeSpan.MaxValue)
@@ -230,11 +125,6 @@ namespace NextPlayerUWP.ViewModels
                 TimeEnd = duration;
                 SliderValue = 0.0;
                 SliderMaxValue = (int)Math.Round(duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
-                if (song.Duration == TimeSpan.Zero && song.SourceType == MusicSource.LocalFile || song.SourceType == MusicSource.Dropbox || song.SourceType == MusicSource.OneDrive || song.SourceType == MusicSource.PCloud)
-                {
-                    song.Duration = timeEnd;
-                    await DatabaseManager.Current.UpdateSongDurationAsync(song.SongId, timeEnd);//.ConfigureAwait(false);
-                }
             });
         }
 
@@ -243,39 +133,20 @@ namespace NextPlayerUWP.ViewModels
             StopTimer();
         }
 
-        public void ChangeCoverUri(Uri cacheUri)
-        {
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
-            {
-                CoverUri = cacheUri;
-            });
-        }
-
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             Logger2.DebugWrite("BottomPlayerViewModel()", "OnNavigatedToAsync");
-            PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
-            PlaybackService.MediaPlayerTrackChanged += ChangeSong;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             StartTimer();
-            Song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            CoverUri = SongCoverManager.Instance.GetCurrent();
-            ChangePlayButtonContent(PlaybackService.Instance.PlayerState);
             await Task.CompletedTask;
         }
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
         {
             Logger2.DebugWrite("BottomPlayerViewModel()", "OnNavigatedFromAsync");
-            PlaybackService.MediaPlayerStateChanged -= ChangePlayButtonContent;
-            PlaybackService.MediaPlayerTrackChanged -= ChangeSong;
             PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
             StopTimer();
-            if (suspending)
-            {
-
-            }
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Volume, PlayerVM.Volume);
+            
             await Task.CompletedTask;
         }
 

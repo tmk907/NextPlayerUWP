@@ -1,5 +1,4 @@
-﻿using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Helpers;
+﻿using NextPlayerUWPDataLayer.Helpers;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
 
@@ -15,6 +14,7 @@ namespace NextPlayerUWP.Common
         public const string AlbumArtSaveError = "AlbumArtSaveError";
         public const string DeletePlaylistConfirmation = "DeletePlaylistConfirmation";
         public const string UnknownAlbum = "UnknownAlbum";
+        public const string UnknownAlbumArtist = "UnknownAlbumArtist";
         public const string UnknownArtist = "UnknownArtist";
         public const string ConnectionError = "ConnectionError";
         public const string CantFindLyrics = "CantFindLyrics";
@@ -23,6 +23,8 @@ namespace NextPlayerUWP.Common
         public const string DontIncludeSubFolders = "DontIncludeSubFolders";
         public const string DoYouWantExcludeFolderFromLibrary = "DoYouWantExcludeFolderFromLibrary";
         public const string DoYouWantDeleteThisSong = "DoYouWantDeleteThisSong";
+        public const string AddedNext = "Added next";
+        public const string AddedToNowPlaying = "Added to now playing";
 
         private ResourceLoader loader;
 
@@ -38,25 +40,25 @@ namespace NextPlayerUWP.Common
 
         public void ChangeSlideableItemDescription()
         {
-            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterSwipeLeftCommand) as string;
+            string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand) as string;
             string translation = "";
             Symbol symbol = Symbol.Play;
 
             switch (swipeAction)
             {
-                case AppConstants.SwipeActionPlayNow:
+                case SettingsKeys.SwipeActionPlayNow:
                     translation = GetTranslation("Play now");
                     symbol = Symbol.Play;
                     break;
-                case AppConstants.SwipeActionPlayNext:
+                case SettingsKeys.SwipeActionPlayNext:
                     translation = GetTranslation("Play next");
                     symbol = Symbol.Add;
                     break;
-                case AppConstants.SwipeActionAddToNowPlaying:
+                case SettingsKeys.SwipeActionAddToNowPlaying:
                     translation = GetTranslation("Add to now playing");
                     symbol = Symbol.Add;
                     break;
-                case AppConstants.SwipeActionAddToPlaylist:
+                case SettingsKeys.SwipeActionAddToPlaylist:
                     translation = GetTranslation("Add to playlist");
                     symbol = Symbol.Add;
                     break;

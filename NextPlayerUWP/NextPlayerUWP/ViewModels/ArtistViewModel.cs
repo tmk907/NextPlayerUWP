@@ -9,19 +9,20 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.ViewModels
 {
     public class ArtistItemHeader
     {
+        public int AlbumId { get; set; }
         public string Album { get; set; }
+        public string AlbumArtist { get; set; }
         public int Year { get; set; }
         public Uri ImageUri { get; set; }
     }
 
-    public class ArtistViewModel : MusicViewModelBase
+    public class ArtistViewModel : MusicViewModelBase, IGroupedItemsList
     {
         private int artistId;
 
@@ -79,7 +80,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 Artist = await DatabaseManager.Current.GetArtistItemAsync(artistId);
                 Songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(artist.ArtistParam);
-                var query = songs.OrderBy(s => s.Album).ThenBy(t => t.TrackNumber).
+                var query = songs.
                     GroupBy(u => new { u.Album, u.AlbumArtist }).
                     OrderBy(g => g.Key.Album).
                     Select(group => new { GroupName = group.Key, Items = group });
@@ -93,6 +94,7 @@ namespace NextPlayerUWP.ViewModels
                     var album = await DatabaseManager.Current.GetAlbumItemAsync(g.GroupName.Album, g.GroupName.AlbumArtist);
 
                     var header = new ArtistItemHeader();
+                    header.AlbumId = album.AlbumId;
                     if (g.GroupName.Album == "")
                     {
                         var helper = new TranslationHelper();
@@ -101,6 +103,15 @@ namespace NextPlayerUWP.ViewModels
                     else
                     {
                         header.Album = g.GroupName.Album;
+                    }
+                    if (g.GroupName.AlbumArtist == "")
+                    {
+                        var helper = new TranslationHelper();
+                        header.AlbumArtist = helper.GetTranslation(TranslationHelper.UnknownAlbumArtist);
+                    }
+                    else
+                    {
+                        header.AlbumArtist = g.GroupName.AlbumArtist;
                     }
                     header.Year = album.Year;
                     header.ImageUri = album.ImageUri;
@@ -218,8 +229,13 @@ namespace NextPlayerUWP.ViewModels
                 list.Add(song);
             }
             App.AddToCache(list);
-            var item = new ListOfSongs();
+            var item = new ListOfMusicItems();
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
+
+        public int GetIndexFromGroup(object item)
+        {
+            return Albums.FirstOrDefault(g => g.Contains(item)).IndexOf(item);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWP.Extensions;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -11,7 +13,6 @@ using System.Threading.Tasks;
 using Template10.Common;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Json;
-using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -19,22 +20,67 @@ namespace NextPlayerUWP.ViewModels
 {
     public class RightPanelViewModel : Template10.Mvvm.ViewModelBase
     {
-        int firstVisibleIndex = 0;
-        string positionKey;
-        ListView listView;
+        ListViewScrollerHelper scrollerHelper;
+        LyricsExtensionsClient lyricsExtensions;
 
         public RightPanelViewModel()
         {
             Logger2.DebugWrite("RightPanelViewModel()", "");
+
+            ViewModelLocator vml = new ViewModelLocator();
+            QueueVM = vml.QueueVM;
+            scrollerHelper = new ListViewScrollerHelper();
             sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
-            NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
-            //App.SongUpdated += App_SongUpdated;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            UpdatePlaylist();
+            lyricsExtensions = new LyricsExtensionsClient(vml.LyricsExtensionsService);
+            Init();
+            App.Current.EnteredBackground += Current_EnteredBackground;
+            App.Current.LeavingBackground += Current_LeavingBackground;
+            
+            MessageHub.Instance.Subscribe<ShowLyrics>(OnShowLyricsMessage);
+            MessageHub.Instance.Subscribe<ShowNowPlayingList>(OnShowNowPlayingListMessage);
+
+            lyricsWebview = new WebView(WebViewExecutionMode.SeparateThread);
+            lyricsWebview.ContentLoading += webView1_ContentLoading;
+            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
+            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
+            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
+
         }
+        
+        public WebView GetWebView()
+        {
+            return lyricsWebview;
+        }
+
+        private void Init()
+        {
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
+        }
+        
+        public void OnShowLyricsMessage(ShowLyrics msg)
+        {
+            SelectedPivotIndex = 1;
+        }
+
+        public void OnShowNowPlayingListMessage(ShowNowPlayingList msg)
+        {
+            SelectedPivotIndex = 0;
+        }
+
+        private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
+        {
+            Init();
+        }
+
+        private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
+        {
+            PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
+        }
+
+        public QueueViewModelBase QueueVM { get; set; }
 
         private int selectedPivotIndex = 0;
         public int SelectedPivotIndex
@@ -48,9 +94,8 @@ namespace NextPlayerUWP.ViewModels
             Logger2.DebugWrite("RightPanelViewModel", $"TrackChanged {index}");
             await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
             {
-                if (songs.Count == 0 || index > songs.Count - 1 || index < 0) return;
-                ScrollAfterTrackChanged(index);
-                //await Task.Run(() => ChangeLyrics(index));
+                if (QueueVM.SongsCount == 0 || index > QueueVM.SongsCount - 1 || index < 0) return;
+                scrollerHelper.ScrollAfterTrackChanged(index);
                 await ChangeLyrics(index);
             });
         }
@@ -75,7 +120,7 @@ namespace NextPlayerUWP.ViewModels
         public async void DropItem(object sender, DragEventArgs e)
         {
             object item;
-            string action = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ActionAfterDropItem) as string;
+            string action = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterDropItem) as string;
 
             if (e.DataView.Properties.TryGetValue(typeof(AlbumItem).ToString(), out item))
             {
@@ -118,15 +163,15 @@ namespace NextPlayerUWP.ViewModels
                             {
                                 SongItem newSong = await mi.OpenSingleFileAsync(storageFile);
 
-                                if (action.Equals(AppConstants.ActionAddToNowPlaying))
+                                if (action.Equals(SettingsKeys.ActionAddToNowPlaying))
                                 {
                                     await NowPlayingPlaylistManager.Current.Add(newSong);
                                 }
-                                else if (action.Equals(AppConstants.ActionPlayNext))
+                                else if (action.Equals(SettingsKeys.ActionPlayNext))
                                 {
                                     await NowPlayingPlaylistManager.Current.AddNext(newSong);
                                 }
-                                else if (action.Equals(AppConstants.ActionPlayNow))//!
+                                else if (action.Equals(SettingsKeys.ActionPlayNow))//!
                                 {
                                     if (first)
                                     {
@@ -150,15 +195,15 @@ namespace NextPlayerUWP.ViewModels
             }
             if (item != null)
             {
-                if (action.Equals(AppConstants.ActionAddToNowPlaying))
+                if (action.Equals(SettingsKeys.ActionAddToNowPlaying))
                 {
                     await NowPlayingPlaylistManager.Current.Add((MusicItem)item);
                 }
-                else if (action.Equals(AppConstants.ActionPlayNext))
+                else if (action.Equals(SettingsKeys.ActionPlayNext))
                 {
                     await NowPlayingPlaylistManager.Current.AddNext((MusicItem)item);
                 }
-                else if (action.Equals(AppConstants.ActionPlayNow))
+                else if (action.Equals(SettingsKeys.ActionPlayNow))
                 {
                     await NowPlayingPlaylistManager.Current.NewPlaylist((MusicItem)item);
                     await PlaybackService.Instance.PlayNewList(0);
@@ -168,123 +213,20 @@ namespace NextPlayerUWP.ViewModels
 
         #region NowPlaying
 
-        private void NPListChanged()
-        {
-            UpdatePlaylist();
-        }
-
-        private ObservableCollection<SongItem> songs;
-        public ObservableCollection<SongItem> Songs
-        {
-            get { return songs; }
-            set { Set(ref songs, value); }
-        }
-
-        private void UpdatePlaylist()
-        {
-            Logger2.DebugWrite("RightPanelViewModel", "UpdatePlaylist");
-            Songs = NowPlayingPlaylistManager.Current.songs;
-        }
-
-        public async void OnLoaded(ListView p, WebView webView)
+        public void OnLoaded(ListView p)
         {
             Logger2.DebugWrite("RightPanelViewModel", "OnLoaded");
 
-            lyricsWebview = webView;
-            lyricsWebview.ContentLoading += webView1_ContentLoading;
-            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
-            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
-            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
-
-            bool scroll = false;
-            if (listView != null)
-            {
-                positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
-                var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-                firstVisibleIndex = isp.FirstVisibleIndex;
-                scroll = true;
-            }
-            listView = (ListView)p;
-            if (songs.Count == 0)
-            {
-                UpdatePlaylist();
-            }
-            if (scroll && songs.Count > 0 && firstVisibleIndex < songs.Count)
-            {
-                await SetScrollPosition();
-            }
+            scrollerHelper.listView = (ListView)p;
+            scrollerHelper.ScrollAfterTrackChanged(PlaybackService.Instance.CurrentSongIndex);
         }
 
         public void OnUnLoaded()
         {
             Logger2.DebugWrite("RightPanelViewModel", "OnUnLoaded");
-            positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
-            var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-            firstVisibleIndex = isp.FirstVisibleIndex;
-        }
-
-        private void ScrollAfterTrackChanged(int index)
-        {
-            Logger2.DebugWrite("RightPanelViewModel", $"ScrollAfterTrackChanged {index}");
-
-            if (listView == null)
-            {
-                TelemetryAdapter.TrackEvent("ScrollAfterTrackChanged listview == null");
-                return;
-            }
-            var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-            if (isp == null) return;
-            int firstVisibleIndex = isp.FirstVisibleIndex;
-            int lastVisibleIndex = isp.LastVisibleIndex;
-            if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;
-            if (index < firstVisibleIndex)
-            {
-                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
-            }
-            else if (index > lastVisibleIndex)
-            {
-                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
-            }
-        }
-
-        private async Task SetScrollPosition()
-        {
-            listView.ScrollIntoView(listView.Items[firstVisibleIndex], ScrollIntoViewAlignment.Leading);
-            if (positionKey != null)
-            {
-                await ListViewPersistenceHelper.SetRelativeScrollPositionAsync(listView, positionKey, KeyToItemHandler);
-            }
-        }
-
-        private string ItemToKeyHandler(object item)
-        {
-            if (item == null) return null;
-            MusicItem mi = (MusicItem)item;
-            return mi.GetParameter();
-        }
-
-        private IAsyncOperation<object> KeyToItemHandler(string key)
-        {
-            return Task.Run(() =>
-            {
-                if (listView.Items.Count <= 0)
-                {
-                    return null;
-                }
-                else
-                {
-                    var i = listView.Items[firstVisibleIndex];
-                    if (((MusicItem)i).GetParameter() == key)
-                    {
-                        return i;
-                    }
-                    foreach (var item in listView.Items)
-                    {
-                        if (((MusicItem)item).GetParameter() == key) return item;
-                    }
-                    return null;
-                }
-            }).AsAsyncOperation();
+            //scrollerHelper.GetPositionKey();
+            //scrollerHelper.GetFirstVisibleIndex();
+            scrollerHelper.listView = null;
         }
 
         #endregion
@@ -295,7 +237,7 @@ namespace NextPlayerUWP.ViewModels
         {
             int index = 0;
             int id = ((SongItem)e.ClickedItem).SongId;
-            foreach (var s in songs)
+            foreach (var s in QueueVM.Songs)
             {
                 if (s.SongId == id) break;
                 index++;
@@ -395,7 +337,7 @@ namespace NextPlayerUWP.ViewModels
         public async void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
-            if (songs!=null)
+            if (QueueVM.Songs != null)
             {
                 await NowPlayingPlaylistManager.Current.SortPlaylist();
             }
@@ -486,7 +428,7 @@ namespace NextPlayerUWP.ViewModels
 
             //appBarSave.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
-            var song = songs[index];
+            var song = QueueVM.Songs[index];
             Title = song.Title;
             Artist = song.Artist;
             Lyrics = "";
@@ -494,10 +436,44 @@ namespace NextPlayerUWP.ViewModels
             WebVisibility = false;
             if (string.IsNullOrEmpty(dbLyrics))
             {
-                if (autoLoadFromWeb)
+                ShowProgressBar = true;
+                var extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
+                ShowProgressBar = false;
+
+                if (extLyrics.Lyrics == "")
                 {
-                    lyricsWebview.Stop();
-                    await LoadLyricsFromWebsite();
+                    if (extLyrics.Url != "")
+                    {
+                        try
+                        {
+                            ShowProgressBar = true;
+                            lyricsWebview.Navigate(new Uri(extLyrics.Url));
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowProgressBar = false;
+                        }
+                    }
+                    else
+                    {
+                        if (autoLoadFromWeb)
+                        {
+                            try
+                            {
+                                lyricsWebview.Stop();
+                            }
+                            catch (InvalidOperationException ex)
+                            {
+
+                            }
+                            await LoadLyricsFromWebsite();
+                        }
+                    }
+                }
+                else
+                {
+                    original = false;
+                    Lyrics = extLyrics.Lyrics;
                 }
             }
             else
@@ -530,7 +506,7 @@ namespace NextPlayerUWP.ViewModels
             if (isJson)
             {
                 string l = jsonList.GetObject().GetNamedString("lyrics");
-                if (l== "Not found")
+                if (l == "Not found")
                 {
                     StatusText = loader.GetString("CantFindLyrics");
                     ShowProgressBar = false;

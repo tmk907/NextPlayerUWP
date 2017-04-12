@@ -48,7 +48,7 @@ namespace NextPlayerUWP.Common
 
         public void ActivateIfEnabled()
         {
-            bool disable = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DisableLockscreen);
+            bool disable = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.DisableLockscreen);
             if (disable)
             {
                 ActivateDisplay();

@@ -3,13 +3,11 @@ using NextPlayerUWPDataLayer.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.CloudStorage;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Playlists;
@@ -72,17 +70,24 @@ namespace NextPlayerUWP.ViewModels
             string value = values[1];
             string userId;
             string folderId;
+            IEnumerable<SongItem> songs = new List<SongItem>();
             switch (type)
             {
                 case MusicItemTypes.album:
                     string albArt = values[2];
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => (a.Album.Equals(value) && a.AlbumArtist.Equals(albArt)),s=>s.Track);
+                    songs = await DatabaseManager.Current.GetSongItemsFromAlbumAsync(value, albArt);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, songs);
+                    break;
+                case MusicItemTypes.albumartist:
+                    songs = await DatabaseManager.Current.GetSongItemsFromAlbumArtistAsync(value);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, songs);
                     break;
                 case MusicItemTypes.artist:
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.Artists.Equals(value), s => s.Title);
+                    songs = await DatabaseManager.Current.GetSongItemsFromArtistAsync(value);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, songs);
                     break;
                 case MusicItemTypes.folder:
-                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IncludeSubFolders);
+                    bool subFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
                     if (subFolders)
                     {
                         await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.StartsWith(value), s => s.Title);
@@ -93,7 +98,8 @@ namespace NextPlayerUWP.ViewModels
                     }
                     break;
                 case MusicItemTypes.genre:
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.Genres.Equals(value), s => s.Title);
+                    songs = await DatabaseManager.Current.GetSongItemsFromGenreAsync(value);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, songs);
                     break;
                 case MusicItemTypes.song:
                     await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.SongId.Equals(value), s => s.Title);
@@ -133,8 +139,12 @@ namespace NextPlayerUWP.ViewModels
                     await servicep.GetSongItems(folderId);
                     await DatabaseManager.Current.AddToPlaylist(p.Id, a => a.DirectoryName.Equals(folderId) && a.CloudUserId.Equals(userId) && a.MusicSourceType.Equals((int)MusicSource.PCloud), s => s.Title);
                     break;
-                case MusicItemTypes.listofsongs:
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, App.GetFromCache());
+                case MusicItemTypes.listofitems:
+                    var temp = App.GetFromCache();
+                    SongItemsFactory factory = new SongItemsFactory();
+                    songs = await factory.GetSongItems(temp);
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, songs); 
+                    App.ClearCache();
                     break;
                 default:
                     break;

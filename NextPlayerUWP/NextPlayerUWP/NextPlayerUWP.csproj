@@ -129,11 +129,20 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppGlobalUtils.cs" />
+    <Compile Include="AppSetupUpdate.cs" />
     <Compile Include="Common\AlbumArtFinder.cs" />
+    <Compile Include="Common\AppKeyboardShortcuts.cs" />
     <Compile Include="Common\BackgroundTaskHelper.cs" />
     <Compile Include="Common\ColorsHelper.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
+    <Compile Include="Common\HamburgerMenuBuilder.cs" />
+    <Compile Include="Common\ListViewScrollerHelper.cs" />
+    <Compile Include="Common\MenuButtonItem.cs" />
     <Compile Include="Common\MessageDialogHelper.cs" />
+    <Compile Include="Common\PlayerCommands.cs" />
+    <Compile Include="Common\SettingsVMService.cs" />
+    <Compile Include="Common\SongItemsFactory.cs" />
     <Compile Include="Common\TelemetryAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
     <Compile Include="Common\PlaybackItemBuilder.cs" />
@@ -159,9 +168,20 @@
     <Compile Include="Common\Tiles\TileWithoutImageXml.cs" />
     <Compile Include="Common\TranslationHelper.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
+    <Compile Include="Controls\ButtonsForMultipleSelection.cs" />
     <Compile Include="Controls\CompositionImage.cs" />
     <Compile Include="Controls\ConnectedTransition.cs" />
+    <Compile Include="Controls\CrossfadingImage.xaml.cs">
+      <DependentUpon>CrossfadingImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
+    <Compile Include="Controls\IGetSelectedItems.cs" />
+    <Compile Include="Controls\MyListView.cs" />
+    <Compile Include="Controls\PopupNotification.xaml.cs">
+      <DependentUpon>PopupNotification.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsItemTemplateSelector.cs" />
+    <Compile Include="Controls\SettingsMenuItem.cs" />
     <Compile Include="Controls\SizeNotifyPanel.cs" />
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
       <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
@@ -197,15 +217,35 @@
     <Compile Include="Converters\ThumbToolTipValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Converters\VolumeSymbolConverter.cs" />
-    <Compile Include="Converters\YearConverter.cs" />
+    <Compile Include="Converters\YearToVisibilityConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemContainerStyleConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemWidthConverter.cs" />
+    <Compile Include="Extensions\BaseExtensionsHelper.cs" />
+    <Compile Include="Extensions\data.cs" />
+    <Compile Include="Extensions\ExtensionsService.cs" />
+    <Compile Include="Extensions\LyricsExtensions.cs" />
+    <Compile Include="Extensions\LyricsExtensionsClient.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
     <Compile Include="Helpers\PlaylistRule.cs" />
     <Compile Include="Helpers\SaveLater.cs" />
+    <Compile Include="Messages\EnableSearching.cs" />
+    <Compile Include="Messages\Hub\IMessageHub.cs" />
+    <Compile Include="Messages\Hub\MessageHub.cs" />
+    <Compile Include="Messages\Hub\MessageHubErrorEventArgs.cs" />
+    <Compile Include="Messages\Hub\Subscription.cs" />
+    <Compile Include="Messages\Hub\Subscriptions.cs" />
+    <Compile Include="Messages\KeyboardShortcut.cs" />
+    <Compile Include="Messages\MenuButtonSelected.cs" />
+    <Compile Include="Messages\MessageNames.cs" />
+    <Compile Include="Messages\InAppNotification.cs" />
+    <Compile Include="Messages\ShowLyrics.cs" />
+    <Compile Include="Messages\ShowNowPlayingList.cs" />
+    <Compile Include="Messages\ThemeChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddToPlaylistViewModel.cs" />
+    <Compile Include="ViewModels\AlbumArtistsViewModel.cs" />
+    <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\AlbumsViewModel.cs" />
     <Compile Include="ViewModels\AlbumViewModel.cs" />
     <Compile Include="ViewModels\ArtistsViewModel.cs" />
@@ -213,8 +253,10 @@
     <Compile Include="ViewModels\AudioSettingsViewModel.cs" />
     <Compile Include="ViewModels\CloudStorageFoldersViewModel.cs" />
     <Compile Include="ViewModels\FileInfoViewModel.cs" />
+    <Compile Include="ViewModels\FoldersRootViewModel.cs" />
     <Compile Include="ViewModels\FoldersViewModel.cs" />
     <Compile Include="ViewModels\GenresViewModel.cs" />
+    <Compile Include="ViewModels\IGroupedItemsList.cs" />
     <Compile Include="ViewModels\LyricsViewModel.cs" />
     <Compile Include="ViewModels\MusicViewModelBase.cs" />
     <Compile Include="ViewModels\NewSmartPlaylistViewModel.cs" />
@@ -225,9 +267,16 @@
     <Compile Include="ViewModels\PlayerViewModelBase.cs" />
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
+    <Compile Include="ViewModels\QueueViewModelBase.cs" />
     <Compile Include="ViewModels\RadiosViewModel.cs" />
     <Compile Include="ViewModels\RightPanelViewModel.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ISettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsAboutViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsAccountsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsExtensionsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsLibraryViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsPersonalizationViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsToolsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SongsViewModel.cs" />
     <Compile Include="ViewModels\TagsEditorViewModel.cs" />
@@ -235,6 +284,12 @@
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\AddToPlaylistView.xaml.cs">
       <DependentUpon>AddToPlaylistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AlbumArtistsView.xaml.cs">
+      <DependentUpon>AlbumArtistsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AlbumArtistView.xaml.cs">
+      <DependentUpon>AlbumArtistView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AlbumsView.xaml.cs">
       <DependentUpon>AlbumsView.xaml</DependentUpon>
@@ -251,6 +306,10 @@
     <Compile Include="Views\AudioSettingsView.xaml.cs">
       <DependentUpon>AudioSettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BasePage.cs" />
+    <Compile Include="Views\BlankPage1.xaml.cs">
+      <DependentUpon>BlankPage1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BottomPlayerControl.xaml.cs">
       <DependentUpon>BottomPlayerControl.xaml</DependentUpon>
     </Compile>
@@ -262,6 +321,9 @@
     </Compile>
     <Compile Include="Views\FileInfoView.xaml.cs">
       <DependentUpon>FileInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FoldersRootView.xaml.cs">
+      <DependentUpon>FoldersRootView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FoldersView.xaml.cs">
       <DependentUpon>FoldersView.xaml</DependentUpon>
@@ -302,8 +364,29 @@
     <Compile Include="Views\RightPanelControl.xaml.cs">
       <DependentUpon>RightPanelControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsView.xaml.cs">
-      <DependentUpon>SettingsView.xaml</DependentUpon>
+    <Compile Include="Views\SettingsDetailsView.xaml.cs">
+      <DependentUpon>SettingsDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView2.xaml.cs">
+      <DependentUpon>SettingsView2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsAboutControl.xaml.cs">
+      <DependentUpon>SettingsAboutControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsAccountsControl.xaml.cs">
+      <DependentUpon>SettingsAccountsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsExtensionsControl.xaml.cs">
+      <DependentUpon>SettingsExtensionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsLibraryControl.xaml.cs">
+      <DependentUpon>SettingsLibraryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsPersonalizationControl.xaml.cs">
+      <DependentUpon>SettingsPersonalizationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsToolsControl.xaml.cs">
+      <DependentUpon>SettingsToolsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
@@ -452,11 +535,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\CrossfadingImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PopupNotification.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SongListViewItemTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AddToPlaylistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AlbumArtistsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AlbumArtistView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -480,6 +579,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\BlankPage1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BottomPlayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -493,6 +596,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FileInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FoldersRootView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -548,7 +655,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsView.xaml">
+    <Page Include="Views\SettingsDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsAboutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsAccountsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsExtensionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsLibraryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsPersonalizationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsToolsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -610,6 +745,11 @@
   <ItemGroup>
     <Folder Include="Assets\doc\" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>D:\Github\mvvmlight\mvvmlight_ff4254690fed\GalaSoft.MvvmLight\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
@@ -644,7 +784,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET Native|x86'">
     <OutputPath>bin\x86\Debug .NET Native\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;</DefineConstants>
     <Optimize>false</Optimize>
     <NoWarn>;2008</NoWarn>
     <NoStdLib>true</NoStdLib>

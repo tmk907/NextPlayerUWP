@@ -355,7 +355,7 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RadiosListView.ItemTemplate" Value="{StaticResource RadioItemTemplateMobile}"/>
+                        <!--<Setter Target="RadiosListView.ItemTemplate" Value="{StaticResource RadioItemTemplateMobile}"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -363,7 +363,7 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RadiosListView.ItemTemplate" Value="{StaticResource RadioItemTemplateDesktop}"/>
+                        <!--<Setter Target="RadiosListView.ItemTemplate" Value="{StaticResource RadioItemTemplateDesktop}"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Xbox">
@@ -371,7 +371,7 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RadiosListView.ItemTemplate" Value="{StaticResource RadioItemTemplateDesktop}"/>
+                        <!--<Setter Target="RadiosListView.ItemTemplate" Value="{StaticResource RadioItemTemplateDesktop}"/>-->
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -394,7 +394,7 @@
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Pivot Style="{StaticResource RightPanelPivotStyle}">
-                <PivotItem  Style="{StaticResource PivotItemStyle}">
+                <!--<PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
                         <TextBlock Text="Jamendo" FontSize="22"/>
                     </PivotItem.Header>
@@ -429,7 +429,7 @@
                             </mycontrols:AlternatingRowListView.ItemsPanel>
                         </mycontrols:AlternatingRowListView>
                     </Grid>
-                </PivotItem>
+                </PivotItem>-->
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
                         <TextBlock x:Uid="TBStreams" Text="Streams" FontSize="22"/>
