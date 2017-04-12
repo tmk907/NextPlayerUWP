@@ -119,6 +119,7 @@
     <Compile Include="CloudStorage\OneDrive\OneDriveCredentialVault.cs" />
     <Compile Include="Diagnostic\Logger2.cs" />
     <Compile Include="Helpers\DeviceFamilyHelper.cs" />
+    <Compile Include="Helpers\LocalFileNames.cs" />
     <Compile Include="Helpers\SettingsKeys.cs" />
     <Compile Include="Helpers\TaskCache.cs" />
     <Compile Include="Model\AlbumArtistItem.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="Playlists\PlaylistFileSaver.cs" />
     <Compile Include="Playlists\PlaylistImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Radio\CuteRadio\CuteRadioCache.cs" />
     <Compile Include="Radio\CuteRadio\CuteRadioService.cs" />
     <Compile Include="Radio\CuteRadio\Model\Item.cs" />
     <Compile Include="Radio\CuteRadio\Model\Collection.cs" />

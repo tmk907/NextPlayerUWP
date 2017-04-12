@@ -73,6 +73,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<CachedScrobble>();
             connection.CreateTable<FutureAccessTokensTable>();
             connection.CreateTable<CloudAccountsTable>();
+            connection.CreateTable<FavouriteRadiosTable>();
         }
 
         public void DeleteDatabase()
@@ -91,6 +92,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<CachedScrobble>();
             connection.DropTable<FutureAccessTokensTable>();
             connection.DropTable<CloudAccountsTable>();
+            connection.DropTable<FavouriteRadiosTable>();
         }
 
         public async Task ChangeToNotAvaialble(List<string> availableDirectories)
@@ -1561,13 +1563,13 @@ namespace NextPlayerUWPDataLayer.Services
             return id;
         }
 
-        public async Task AddRadioToFavourites(int id, RadioType type, string name)
+        public async Task AddRadioToFavourites(SimpleRadioData radio)
         {
             await connectionAsync.InsertAsync(new FavouriteRadiosTable()
             {
-                RadioId = id,
-                RadioType = (int)type,
-                Name = name
+                RadioId = radio.BroadcastId,
+                RadioType = (int)radio.Type,
+                Name = radio.Name
             });
         }
 
@@ -1640,9 +1642,9 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task DeleteRadioFromFavourites(int id, RadioType type)
+        public async Task DeleteRadioFromFavourites(SimpleRadioData radio)
         {
-            var r = await connectionAsync.Table<FavouriteRadiosTable>().Where(a => a.RadioId == id && a.RadioType == (int)type).ToListAsync();
+            var r = await connectionAsync.Table<FavouriteRadiosTable>().Where(a => a.RadioId == radio.BroadcastId && a.RadioType == (int)radio.Type).ToListAsync();
             if (r.Count == 1)
             {
                 connection.Delete(r.FirstOrDefault());

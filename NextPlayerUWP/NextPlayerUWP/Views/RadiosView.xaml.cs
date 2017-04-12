@@ -51,18 +51,18 @@ namespace NextPlayerUWP.Views
             menu.ShowAt(senderElement, position);
         }
 
+        private void RadioItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenuFavouriteRadio"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
+        }
+
         private void GoToCuteRadioView(object sender, RoutedEventArgs e)
         {
             var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
             nav.Navigate(typeof(CuteRadioView));
-        }
-
-        private void RadioItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            var menu = this.Resources["ContextMenuRadio"] as MenuFlyout;
-            var position = e.GetPosition(senderElement);
-            menu.ShowAt(senderElement, position);
         }
     }
 }

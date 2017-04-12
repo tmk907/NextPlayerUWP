@@ -237,22 +237,16 @@ namespace NextPlayerUWP.ViewModels
         {
             var item = (RadioItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             var list = await DatabaseManager.Current.GetRadioFavouritesAsync();
-            if (!list.ContainsKey(item.BroadcastId))
+            var radio = list.FirstOrDefault(r => r.BroadcastId == item.BroadcastId);
+            if (radio == null)
             {
-                await DatabaseManager.Current.AddRadioToFavourites(item.BroadcastId, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio);
+                await DatabaseManager.Current.AddRadioToFavourites(radio);
             }
         }
 
         public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (args.ChosenSuggestion != null)
-            {
-                //index = genres.IndexOf((GenreItem)args.ChosenSuggestion);
-            }
-            else
-            {
-                Search(sender.Text);
-            }
+            Search(sender.Text);
         }
     }
 

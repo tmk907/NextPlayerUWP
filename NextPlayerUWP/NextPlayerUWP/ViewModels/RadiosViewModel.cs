@@ -123,5 +123,11 @@ namespace NextPlayerUWP.ViewModels
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
         }
+
+        public async void DeleteFromFavourites(object sender, RoutedEventArgs e)
+        {
+            var item = (RadioItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await DatabaseManager.Current.DeleteRadioFromFavourites(new SimpleRadioData(item.BroadcastId, item.Type, item.Name));
+        }
     }
 }

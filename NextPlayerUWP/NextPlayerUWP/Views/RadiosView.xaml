@@ -38,7 +38,7 @@
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
         </MenuFlyout>
-        <MenuFlyout x:Key="ContextMenuRadio">
+        <MenuFlyout x:Key="ContextMenuFavouriteRadio">
             <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
                             Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
@@ -49,8 +49,8 @@
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
-            <!--<MenuFlyoutItem x:Uid="MFIAddToFavourites" Text="Add to favourites"
-                            Click="{x:Bind ViewModel.AddToFavourites}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutItem x:Uid="MFIAddToFavourites" Text="Add to favourites"
+                            Click="{x:Bind ViewModel.DeleteFromFavourites}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <DataTemplate x:Key="RadioDataTemplate" x:DataType="data:RadioItem">
             <Grid RightTapped="RadioItem_RightTapped" Background="Transparent">

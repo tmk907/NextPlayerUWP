@@ -177,24 +177,34 @@ namespace NextPlayerUWPDataLayer.Helpers
 
         public static async Task SaveSdCardFoldersToScan(List<SdCardFolder> folders)
         {
-            LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
-            await helper.SaveFileAsync(sdCardFoldersFileName, folders);
+            await SaveToLocalFile<List<SdCardFolder>>(sdCardFoldersFileName, folders);
         }
 
         public static async Task<List<SdCardFolder>> GetSdCardFoldersToScan()
         {
+            return await ReadLocalFile<List<SdCardFolder>>(sdCardFoldersFileName);
+        }
+
+        public static async Task SaveToLocalFile<T>(string fileName, T data)
+        {
             LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
-            bool exists = await helper.FileExistsAsync(sdCardFoldersFileName);
-            List<SdCardFolder> folders = new List<SdCardFolder>();
+            await helper.SaveFileAsync<T>(fileName, data);
+        }
+
+        public static async Task<T> ReadLocalFile<T>(string fileName)
+        {
+            LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
+            bool exists = await helper.FileExistsAsync(fileName);
+            T data = default(T);
             if (!exists)
             {
-                await SaveSdCardFoldersToScan(folders);
+                await helper.SaveFileAsync<T>(fileName, data);
             }
             else
             {
-                folders = await helper.ReadFileAsync<List<SdCardFolder>>(sdCardFoldersFileName);
+                data = await helper.ReadFileAsync<T>(fileName);
             }
-            return folders;
+            return data;
         }
 
         public static void SaveData(string key, object data)

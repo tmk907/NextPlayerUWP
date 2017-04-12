@@ -15,10 +15,12 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
     {
         private UriBuilder uriBuilder;
         private const int limit = 20;
+        private CuteRadioCache cache;
 
         public CuteRadioService()
         {
             uriBuilder = new UriBuilder();
+            cache = new CuteRadioCache();
         }
 
         private async Task<string> DownloadAsync(string uri)
@@ -60,7 +62,9 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
 
         public async Task<List<string>> GetAllCountries()
         {
-            List<string> countries = new List<string>();
+            List<string> countries = await cache.GetCountries();
+
+            if (countries.Count != 0) return countries;
 
             int offset = 0;
             string uri = uriBuilder.GetCountries(offset);
@@ -83,13 +87,15 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 offset += 20;
                 uri = uriBuilder.GetCountries(offset);
             }
-
+            await cache.CacheCountries(countries);
             return countries;
         }
 
         public async Task<List<string>> GetAllGenres()
         {
-            List<string> genres = new List<string>();
+            List<string> genres = await cache.GetGenres();
+
+            if (genres.Count != 0) return genres;
 
             int offset = 0;
             string uri = uriBuilder.GetGenres(offset);
@@ -112,13 +118,14 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 offset += 20;
                 uri = uriBuilder.GetGenres(offset);
             }
-
+            await cache.CacheGenres(genres);
             return genres;
         }
 
         public async Task<List<string>> GetAllLanguages()
         {
-            List<string> languages = new List<string>();
+            List<string> languages = await cache.GetLanguages();
+            if (languages.Count != 0) return languages;
 
             int offset = 0;
             string uri = uriBuilder.GetLanguages(offset);
@@ -141,7 +148,7 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 offset += 20;
                 uri = uriBuilder.GetLanguages(offset);
             }
-
+            await cache.CacheLanguages(languages);
             return languages;
         }
 

@@ -229,6 +229,7 @@ namespace NextPlayerUWPDataLayer.Model
             if (streamUrl.StartsWith("http"))
             {
                 song.SourceType = MusicSource.OnlineFile;
+                song.Artist = streamUrl;
             }
             else
             {
