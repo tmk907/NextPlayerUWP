@@ -700,8 +700,10 @@ namespace NextPlayerUWPDataLayer.Services
         {
             PlaylistImporter pi = new PlaylistImporter();
             ImportedPlaylist newPlaylist = await pi.Import(file);
+            string folderPath = Path.GetDirectoryName(newPlaylist.Path);
             foreach (var m in newPlaylist.Entries)
             {
+                m.Path = PlaylistHelper.MakeAbsolutePath(folderPath, m.Path);
                 int id = await ResolvePlaylistEntryAsync(m, songs);
                 newPlaylist.SongIds.Add(id);
             }
