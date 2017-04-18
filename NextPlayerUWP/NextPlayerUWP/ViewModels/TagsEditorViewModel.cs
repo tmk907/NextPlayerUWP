@@ -178,12 +178,20 @@ namespace NextPlayerUWP.ViewModels
 
             if (isAlbumArtChanged)
             {
-                var file = await StorageFile.GetFileFromPathAsync(songData.Path);
+                StorageFile file;
+                try
+                {
+                    file = await StorageFile.GetFileFromPathAsync(songData.Path);
+                }
+                catch (System.IO.FileNotFoundException)
+                {
+                    file = null;
+                }
                 if (IsAlbumArtSet())
                 {
                     string savedPath = await ImagesManager.SaveCover(songData.SongId.ToString(), "Songs", albumArt);
                     songData.AlbumArtPath = savedPath;
-                    await tm.SaveAlbumArt(albumArtFile, file);
+                    if (file != null) await tm.SaveAlbumArt(albumArtFile, file);
                 }
                 else
                 {
@@ -196,7 +204,7 @@ namespace NextPlayerUWP.ViewModels
 
                     }
                     songData.AlbumArtPath = AppConstants.AlbumCover;
-                    await tm.DeleteAlbumArt(file);
+                    if (file != null) await tm.DeleteAlbumArt(file);
                 }
             }
             

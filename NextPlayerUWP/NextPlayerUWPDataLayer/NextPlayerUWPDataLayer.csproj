@@ -119,6 +119,7 @@
     <Compile Include="CloudStorage\OneDrive\OneDriveCredentialVault.cs" />
     <Compile Include="Diagnostic\Logger2.cs" />
     <Compile Include="Helpers\DeviceFamilyHelper.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\SettingsKeys.cs" />
     <Compile Include="Helpers\TaskCache.cs" />
     <Compile Include="Model\AlbumArtistItem.cs" />

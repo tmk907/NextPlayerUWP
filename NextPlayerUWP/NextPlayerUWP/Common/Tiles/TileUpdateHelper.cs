@@ -51,8 +51,24 @@ namespace NextPlayerUWP.Common.Tiles
                 coverUri = AppConstants.SongCoverBig;
             }
             //ITileContentFactory factory = CreateFactory(titles, artists, coverUri);
-            TileNotification notification = CreateTileNotification(titles,artists,coverUri);// PrepareTileNotification(factory);
-            SendNotification(notification);
+            //https://rink.hockeyapp.net/manage/apps/308671/app_versions/69/crash_reasons/164024936
+            try
+            {
+                TileNotification notification = CreateTileNotification(titles, artists, coverUri);// PrepareTileNotification(factory);
+                SendNotification(notification);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    TileNotification notification = CreateTileNotification(titles[1], artists[1], coverUri);// PrepareTileNotification(factory);
+                    SendNotification(notification);
+                }
+                catch (Exception ex2)
+                {
+
+                }
+            }
         }
 
         

@@ -255,7 +255,14 @@ namespace NextPlayerUWP.ViewModels
                 }
                 if (!find) return;
             }
-            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            try
+            {
+                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            }
+            catch (NullReferenceException ex)
+            {
+
+            }
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
