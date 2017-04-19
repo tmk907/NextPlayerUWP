@@ -250,10 +250,19 @@
                 Label="Clear selection"
                 Icon="ClearSelection"
                 Click="DisableMultipleSelection"/>
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton
+                    x:Uid="AppBarButtonRefresh"
+                    Visibility="{x:Bind ViewModel.IsPlainPlaylist, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                    Label="Refresh"
+                    Icon="Refresh"
+                    Click="RefreshPlaylist"/>
+            </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
@@ -293,7 +302,16 @@
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
                 </StackPanel>
             </Grid>
-            <Grid Grid.Row="1">
+            <ProgressBar Grid.Row="1"
+                Height="8"
+                Visibility="{x:Bind ViewModel.Updating, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                IsIndeterminate="True"
+                Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                IsEnabled="{x:Bind ViewModel.Updating, Mode=OneWay}"/>
+            <Grid Grid.Row="2">
                 <mycontrols:AlternatingRowListView x:Name="PlaylistListView"
                         EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                         OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"

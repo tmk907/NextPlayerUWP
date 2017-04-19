@@ -121,7 +121,7 @@
     <value>Album</value>
   </data>
   <data name="AlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Artis Album</value>
   </data>
   <data name="AppBarButtonAddPlaylist.Label" xml:space="preserve">
     <value>Playlist Baru</value>
@@ -151,7 +151,7 @@
     <value>Simpan</value>
   </data>
   <data name="ButtonSendEmail.Content" xml:space="preserve">
-    <value>Send e-mail</value>
+    <value>Kirim surel</value>
   </data>
   <data name="ButtonUpdate.Content" xml:space="preserve">
     <value>Perbarui</value>
@@ -184,7 +184,7 @@
     <value>Batal</value>
   </data>
   <data name="ContentDialogEditName.Title" xml:space="preserve">
-    <value>Edit name</value>
+    <value>Ubah nama</value>
   </data>
   <data name="ContentDialogNewPlaylist.PrimaryButtonText" xml:space="preserve">
     <value>Simpan</value>
@@ -193,7 +193,7 @@
     <value>Batal</value>
   </data>
   <data name="ContentDialogNewPlaylist.Title" xml:space="preserve">
-    <value>Playlist Baru</value>
+    <value>Daftar putar baru</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Hapus</value>
@@ -202,7 +202,7 @@
     <value>Anda yakin ingin menghapus daftar putar ini?</value>
   </data>
   <data name="Directory" xml:space="preserve">
-    <value>Directory</value>
+    <value>Direktori</value>
   </data>
   <data name="Duration" xml:space="preserve">
     <value>Durasi</value>
@@ -226,7 +226,7 @@
     <value>Nanti</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
-    <value>Library updated</value>
+    <value>Perpustakaan diperbarui</value>
   </data>
   <data name="MFIAddToNowPlaying.Text" xml:space="preserve">
     <value>Tambahkan ke sekarang main</value>
@@ -238,10 +238,10 @@
     <value>Hapus</value>
   </data>
   <data name="MFIEditPlainName.Text" xml:space="preserve">
-    <value>Edit name</value>
+    <value>Ubah nama</value>
   </data>
   <data name="MFIEditSmart.Text" xml:space="preserve">
-    <value>Edit</value>
+    <value>Ubah</value>
   </data>
   <data name="MFIEditTags.Text" xml:space="preserve">
     <value>Sunting tag</value>
@@ -256,7 +256,7 @@
     <value>Sematkan</value>
   </data>
   <data name="MFIPlayNext.Text" xml:space="preserve">
-    <value>Putar selanjutnya</value>
+    <value>Mainkan selanjutnya</value>
   </data>
   <data name="MFIPlayNow.Text" xml:space="preserve">
     <value>Putar sekarang</value>
@@ -304,7 +304,7 @@
     <value>Penyanyi</value>
   </data>
   <data name="PageHeaderFileInfo.Content" xml:space="preserve">
-    <value>File info</value>
+    <value>Info berkas</value>
   </data>
   <data name="PageHeaderFolders.Content" xml:space="preserve">
     <value>Map</value>
@@ -325,7 +325,7 @@
     <value>Lagu</value>
   </data>
   <data name="PageHeaderTagsEditor.Content" xml:space="preserve">
-    <value>Tags editor</value>
+    <value>Pengubah tag</value>
   </data>
   <data name="PivotHeaderTBLyrics.Text" xml:space="preserve">
     <value>lirik</value>
@@ -343,7 +343,7 @@
     <value>Daftar putar</value>
   </data>
   <data name="RateAppMsg" xml:space="preserve">
-    <value>If you enjoy using Next-Player, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!</value>
+    <value>Jika anda menikmati menggunakan Next-Player, maukah anda menyisakan waktu untuk menilainya? Hal itu tidak sampai satu menit. Terima kasih untuk dukungannya!</value>
   </data>
   <data name="RateAppTitle" xml:space="preserve">
     <value>Nilai apl ini</value>
@@ -364,34 +364,34 @@
     <value>Mainkan</value>
   </data>
   <data name="RBPlayNext.Content" xml:space="preserve">
-    <value>Putar selanjutnya</value>
+    <value>Mainkan selanjutnya</value>
   </data>
   <data name="Song" xml:space="preserve">
     <value>Lagu</value>
   </data>
   <data name="SongCount" xml:space="preserve">
-    <value>Song count</value>
+    <value>Penghitungan lagu</value>
   </data>
   <data name="TBAbout.Text" xml:space="preserve">
     <value>Tentang</value>
   </data>
   <data name="TBActionAfterDragDrop.Text" xml:space="preserve">
-    <value>After dragging item to now playing list:</value>
+    <value>Setelah menyeret item ke daftar dimainkan sekarang:</value>
   </data>
   <data name="TBAddMusicLibraryFolders.Text" xml:space="preserve">
-    <value>Choose folders containing music files</value>
+    <value>Folder musik</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="TBAlbumArtist.Text" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Artis Album</value>
   </data>
   <data name="TBAlbums.Text" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="TBAppAccentColor.Text" xml:space="preserve">
-    <value>Accent color:</value>
+    <value>Warna aksen:</value>
   </data>
   <data name="TBAppTheme.Text" xml:space="preserve">
     <value>Tema:</value>
@@ -412,13 +412,13 @@
     <value>Komposer</value>
   </data>
   <data name="TBConductor.Text" xml:space="preserve">
-    <value>Conductor</value>
+    <value>Konduktor</value>
   </data>
   <data name="TBDateAdded.Text" xml:space="preserve">
     <value>Tanggal ditambahkan</value>
   </data>
   <data name="TBDisc.Text" xml:space="preserve">
-    <value>Disc</value>
+    <value>Kaset</value>
   </data>
   <data name="TBDuration.Text" xml:space="preserve">
     <value>Durasi</value>
@@ -430,13 +430,13 @@
     <value>Ukuran berkas</value>
   </data>
   <data name="TBFolders.Text" xml:space="preserve">
-    <value>Map</value>
+    <value>Folder</value>
   </data>
   <data name="TBGenre.Text" xml:space="preserve">
-    <value>Genre</value>
+    <value>Aliran</value>
   </data>
   <data name="TBGenres.Text" xml:space="preserve">
-    <value>Genre</value>
+    <value>Aliran-aliran</value>
   </data>
   <data name="TBLastTimePlayed.Text" xml:space="preserve">
     <value>Terakhir dimainkan</value>
@@ -448,16 +448,16 @@
     <value>Lirik</value>
   </data>
   <data name="TBPersonalize.Text" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Pengaturan diri</value>
   </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
-    <value>Jumlah main</value>
+    <value>Penghitungan putar</value>
   </data>
   <data name="TBPlaylistName.Text" xml:space="preserve">
-    <value>Playlist name:</value>
+    <value>Nama daftar putar:</value>
   </data>
   <data name="TBPlaylistNewName.Text" xml:space="preserve">
-    <value>New name:</value>
+    <value>Nama baru:</value>
   </data>
   <data name="TBPlaylists.Text" xml:space="preserve">
     <value>Daftar putar</value>
@@ -499,10 +499,10 @@
     <value>Album Tidak Dikenal</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>Artis tidak diketahui</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>Aliran tidak diketahui</value>
   </data>
   <data name="Year" xml:space="preserve">
     <value>Tahun</value>
@@ -517,19 +517,19 @@
     <value>Kini memutar</value>
   </data>
   <data name="CantFindLyrics" xml:space="preserve">
-    <value>Can't find lyrics</value>
+    <value>Tidak dapat menemukan lirik</value>
   </data>
   <data name="TBJamendoRadio.Text" xml:space="preserve">
-    <value>Jamendo Music</value>
+    <value>Musik Jamendo</value>
   </data>
   <data name="NewSongs" xml:space="preserve">
-    <value>New songs:</value>
+    <value>Lagu baru:</value>
   </data>
   <data name="PageHeaderNowPlayingPlaylist.Content" xml:space="preserve">
-    <value>Kini memutar</value>
+    <value>Dimainkan Saat inni</value>
   </data>
   <data name="TBOnAir.Text" xml:space="preserve">
-    <value>On-air:</value>
+    <value>Mengudara:</value>
   </data>
   <data name="PageHeaderRadios.Content" xml:space="preserve">
     <value>Radio</value>
@@ -544,19 +544,19 @@
     <value>Nomor track</value>
   </data>
   <data name="TBChangesAppliedAfterRestart.Text" xml:space="preserve">
-    <value>Please restart app to apply changes.</value>
+    <value>Harap mulai ulang aplikasi untuk menerapkan perubahan.</value>
   </data>
   <data name="TBLanguage.Text" xml:space="preserve">
-    <value>Language:</value>
+    <value>Bahasa:</value>
   </data>
   <data name="PageHeaderLicenses.Content" xml:space="preserve">
-    <value>Licenses</value>
+    <value>Lisensi</value>
   </data>
   <data name="ButtonLicenses.Content" xml:space="preserve">
-    <value>Licenses</value>
+    <value>Lisensi</value>
   </data>
   <data name="ContentDialogChoosePathKind.Title" xml:space="preserve">
-    <value>Save playlist</value>
+    <value>Simpan daftar putar</value>
   </data>
   <data name="ContentDialogChoosePathKind.PrimaryButtonText" xml:space="preserve">
     <value>Simpan</value>
@@ -565,112 +565,112 @@
     <value>Batal</value>
   </data>
   <data name="RBAbsolute.Content" xml:space="preserve">
-    <value>absolute paths</value>
+    <value>jalur sebenarnya</value>
   </data>
   <data name="RBRelative.Content" xml:space="preserve">
-    <value>relative paths</value>
+    <value>jalur relatif</value>
   </data>
   <data name="TBChoosePathKind.Text" xml:space="preserve">
-    <value>Save using</value>
+    <value>Simpan menggunakan</value>
   </data>
   <data name="MFIExport.Text" xml:space="preserve">
     <value>Save as...</value>
   </data>
   <data name="TBPreventScreenLock.Text" xml:space="preserve">
-    <value>Prevent screen from dimming</value>
+    <value>Cegah peredupan layar</value>
   </data>
   <data name="ButtonLogin.Content" xml:space="preserve">
-    <value>Log in</value>
+    <value>Masuk</value>
   </data>
   <data name="ButtonLogout.Content" xml:space="preserve">
-    <value>Log out</value>
+    <value>Keluar</value>
   </data>
   <data name="TBAddSongToLoved.Text" xml:space="preserve">
-    <value>If I will rate song, add it to 'Loved tracks'</value>
+    <value>Jika aku ingin menilai lagu, tambahkan ke 'Trek disukai'</value>
   </data>
   <data name="TBNewSongs.Text" xml:space="preserve">
-    <value>New songs:</value>
+    <value>Lagu baru:</value>
   </data>
   <data name="And" xml:space="preserve">
-    <value>And</value>
+    <value>Dan</value>
   </data>
   <data name="Or" xml:space="preserve">
-    <value>Or</value>
+    <value>Atau</value>
   </data>
   <data name="FilePath" xml:space="preserve">
-    <value>Lokasi berkas</value>
+    <value>Jalur berkas</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
-    <value>Does not contain</value>
+    <value>Tidak mengandung</value>
   </data>
   <data name="EndsWith" xml:space="preserve">
-    <value>Ends with</value>
+    <value>Diakhiri dengan</value>
   </data>
   <data name="IsEqual" xml:space="preserve">
-    <value>Is equal</value>
+    <value>Sama</value>
   </data>
   <data name="IsGreater" xml:space="preserve">
-    <value>Is greater</value>
+    <value>Lebih besar</value>
   </data>
   <data name="IsLess" xml:space="preserve">
-    <value>Is less</value>
+    <value>Lebih kecil</value>
   </data>
   <data name="IsNot" xml:space="preserve">
-    <value>Is not</value>
+    <value>Tidak</value>
   </data>
   <data name="Contains" xml:space="preserve">
-    <value>Contains</value>
+    <value>Mengandung</value>
   </data>
   <data name="StartsWith" xml:space="preserve">
-    <value>Starts with</value>
+    <value>Dimulai denganHao</value>
   </data>
   <data name="HighestRating" xml:space="preserve">
-    <value>Rating (lowest first)</value>
+    <value>Peringkat (terendah lebih dulu)</value>
   </data>
   <data name="LowestRating" xml:space="preserve">
-    <value>Rating (highest first)</value>
+    <value>Peringkat (tertinggi lebih dulu)</value>
   </data>
   <data name="LeastOftenPlayed" xml:space="preserve">
-    <value>Play count (highest first)</value>
+    <value>Jumlah main (tertinggi lebih dulu)</value>
   </data>
   <data name="LeastRecentlyAdded" xml:space="preserve">
-    <value>Date added (oldest first)</value>
+    <value>Tanggal ditambahkan (terlama lebih dulu)</value>
   </data>
   <data name="LeastRecentlyPlayed" xml:space="preserve">
-    <value>Date played (oldest first)</value>
+    <value>Tanggal dimainkan (terlama lebih dulu)</value>
   </data>
   <data name="MostOftenPlayed" xml:space="preserve">
-    <value>Play count (lowest first)</value>
+    <value>Jumlah main (terendah lebih dulu)</value>
   </data>
   <data name="MostRecentlyAdded" xml:space="preserve">
-    <value>Date added (newest first)</value>
+    <value>Tanggal ditambahkan (terbaru lebih dulu)</value>
   </data>
   <data name="MostRecentlyPlayed" xml:space="preserve">
-    <value>Date played (newest first)</value>
+    <value>Tanggal dimainkan (terbaru lebih dulu)</value>
   </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Hapus</value>
   </data>
   <data name="ButtonAdd.Content" xml:space="preserve">
-    <value>Add</value>
+    <value>Tambahkan</value>
   </data>
   <data name="PageHeaderNewSmartPlaylist.Content" xml:space="preserve">
-    <value>New smart playlist</value>
+    <value>Daftar putar pintar baru</value>
   </data>
   <data name="AppBarButtonNewSmartPlaylist.Label" xml:space="preserve">
-    <value>New smart playlist</value>
+    <value>Daftar putar pintar baru</value>
   </data>
   <data name="TBName.Text" xml:space="preserve">
     <value>Nama</value>
   </data>
   <data name="TBMaxSongsNumber.Text" xml:space="preserve">
-    <value>Max number of songs</value>
+    <value>Jumlah lagu maksimal</value>
   </data>
   <data name="TBDefaultSort.Text" xml:space="preserve">
     <value>Atur menurut</value>
   </data>
   <data name="TBErrorSmartPlaylist.Text" xml:space="preserve">
-    <value>Please fill all fields correctly.</value>
+    <value>Harap isi semua bidang dengan benar.</value>
   </data>
   <data name="ShellGrid.FlowDirection" xml:space="preserve">
     <value>LeftToRight</value>
@@ -679,64 +679,64 @@
     <value>Tanggal ditambahkan</value>
   </data>
   <data name="AppBarButtonShuffleAll.Label" xml:space="preserve">
-    <value>Shuffle all</value>
+    <value>Acak semua</value>
   </data>
   <data name="AppBarButtonQueue.Label" xml:space="preserve">
-    <value>Queue</value>
+    <value>Antrian</value>
   </data>
   <data name="AppBarButtonLyrics.Label" xml:space="preserve">
     <value>Lirik</value>
   </data>
   <data name="TBHideStatusBar.Text" xml:space="preserve">
-    <value>Hide status bar</value>
+    <value>Sebunyikan bilah status</value>
   </data>
   <data name="TBIncludeSubFolders.Text" xml:space="preserve">
-    <value>Play folder with subfolders</value>
+    <value>Mainkan folder dengan subfolder</value>
   </data>
   <data name="ButtonChoosePlaylistsFolder.Content" xml:space="preserve">
-    <value>Choose</value>
+    <value>Pilih</value>
   </data>
   <data name="TBChooseFolderForPlaylists.Text" xml:space="preserve">
-    <value>Save playlists created with Next-Player in the folder</value>
+    <value>Simpan daftar putar yang dibuat dengan Next-Player di folder</value>
   </data>
   <data name="MFIPlay.Text" xml:space="preserve">
     <value>Mainkan</value>
   </data>
   <data name="TBAutoSavePlaylists.Text" xml:space="preserve">
-    <value>Automatically save playlists in</value>
+    <value>Otomatis simpan daftar putar di</value>
   </data>
   <data name="FileName" xml:space="preserve">
-    <value>Filename</value>
+    <value>Nama berkas</value>
   </data>
   <data name="TBVolume.Text" xml:space="preserve">
     <value>Volume</value>
   </data>
   <data name="ButtonReset.Content" xml:space="preserve">
-    <value>Reset</value>
+    <value>Atur ulang</value>
   </data>
   <data name="TBPlaybackRate.Text" xml:space="preserve">
-    <value>Playback rate</value>
+    <value>Penilaian pemutaran</value>
   </data>
   <data name="ContentDialogPlaybackRate.Title" xml:space="preserve">
-    <value>Playback rate</value>
+    <value>Penilaian pemutaran</value>
   </data>
   <data name="ContentDialogPlaybackRate.PrimaryButtonText" xml:space="preserve">
-    <value>OK</value>
+    <value>Oke</value>
   </data>
   <data name="ContentDialogVolume.PrimaryButtonText" xml:space="preserve">
-    <value>OK</value>
+    <value>Oke</value>
   </data>
   <data name="ContentDialogVolume.Title" xml:space="preserve">
     <value>Volume</value>
   </data>
   <data name="AppBarButtonPlaybackRate.Label" xml:space="preserve">
-    <value>Playback rate</value>
+    <value>Penilaian pemutaran</value>
   </data>
   <data name="AppBarButtonVolume.Label" xml:space="preserve">
     <value>Volume</value>
   </data>
   <data name="ContentDialogAudioBalance.PrimaryButtonText" xml:space="preserve">
-    <value>OK</value>
+    <value>Oke</value>
   </data>
   <data name="ContentDialogAudioBalance.SecondaryButtonText" xml:space="preserve">
     <value>Batal</value>
@@ -748,46 +748,46 @@
     <value>Batal</value>
   </data>
   <data name="TBAudioBalance.Text" xml:space="preserve">
-    <value>Audio balance</value>
+    <value>Keseimbangan suara</value>
   </data>
   <data name="ContentDialogAudioBalance.Title" xml:space="preserve">
-    <value>Audio balance</value>
+    <value>Keseimbangan suara</value>
   </data>
   <data name="AppBarButtonAudioBalance.Label" xml:space="preserve">
-    <value>Audio balance</value>
+    <value>Keseimbangan suara</value>
   </data>
   <data name="PageHeaderLyrics.Content" xml:space="preserve">
     <value>Lirik</value>
   </data>
   <data name="AppBarButtonSort.Label" xml:space="preserve">
-    <value>Atur menurut</value>
+    <value>Urutkan</value>
   </data>
   <data name="ContentDialogAudioSettings.PrimaryButtonText" xml:space="preserve">
-    <value>OK</value>
+    <value>Oke</value>
   </data>
   <data name="ContentDialogAudioSettings.Title" xml:space="preserve">
-    <value>Audio settings</value>
+    <value>Pengaturan suara</value>
   </data>
   <data name="AppBarButtonAudioSettings.Label" xml:space="preserve">
-    <value>Audio settings</value>
+    <value>Pengaturan suara</value>
   </data>
   <data name="ContentDialogAudioSettings.SecondaryButtonText" xml:space="preserve">
     <value>Batal</value>
   </data>
   <data name="TBSwipeLeftCommand.Text" xml:space="preserve">
-    <value>Swipe right:</value>
+    <value>Usap ke kanan:</value>
   </data>
   <data name="RBAddToPlaylist.Content" xml:space="preserve">
     <value>Tambahkan ke daftar putar</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Standar</value>
   </data>
   <data name="ButtonAppStretch.Content" xml:space="preserve">
-    <value>Request feature</value>
+    <value>Minta fitur</value>
   </data>
   <data name="TBLiveTileWithImage.Text" xml:space="preserve">
-    <value>Show album art on live tile</value>
+    <value>Tampilkan seni album pada tempat berlangsungnya</value>
   </data>
   <data name="MFISaveToFile.Text" xml:space="preserve">
     <value>Save to file</value>
@@ -932,5 +932,8 @@
   </data>
   <data name="DateModified" xml:space="preserve">
     <value>Date modified</value>
+  </data>
+  <data name="AppBarButtonRefresh.Label" xml:space="preserve">
+    <value>Refresh</value>
   </data>
 </root>

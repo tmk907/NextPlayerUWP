@@ -93,5 +93,10 @@ namespace NextPlayerUWP.Views
         {
             SearchBox.Focus(FocusState.Programmatic);
         }
+
+        private async void RefreshPlaylist(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.RefreshPlaylist();
+        }
     }
 }

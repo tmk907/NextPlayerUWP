@@ -2322,17 +2322,6 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void UpdateToVersion12()
         {
-            var playlists = connection.Table<PlainPlaylistsTable>().ToList();
-            var playlistsEntries = connection.Table<PlainPlaylistEntryTable>().ToList();
-            foreach(var playlist in playlists.Where(p => !String.IsNullOrEmpty(p.Path)))
-            {
-                playlist.DateModified = DateTime.MinValue;
-                playlistsEntries.RemoveAll(p => p.PlaylistId == playlist.PlainPlaylistId);
-            }
-            connection.DeleteAll<PlainPlaylistsTable>();
-            connection.InsertAll(playlists);
-            connection.DeleteAll<PlainPlaylistEntryTable>();
-            connection.InsertAll(playlistsEntries);
             connection.Execute("DELETE FROM SongsTable WHERE MusicSourceType = ?", 9);
         }
 

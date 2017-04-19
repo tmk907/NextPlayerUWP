@@ -933,4 +933,7 @@
   <data name="TBDateModified.Text" xml:space="preserve">
     <value>Date modified</value>
   </data>
+  <data name="AppBarButtonRefresh.Label" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
 </root>
