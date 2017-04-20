@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Template10.Common;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,6 +33,34 @@ namespace NextPlayerUWP.Views
             ViewModel = (CuteRadioViewModel)DataContext;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            BootStrapper.BackRequested += BootStrapper_BackRequested;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            BootStrapper.BackRequested -= BootStrapper_BackRequested;
+        }
+
+        private void BootStrapper_BackRequested(object sender, HandledEventArgs e)
+        {
+            e.Handled = true;
+            if (ViewModel.AreStationsVisible)
+            {
+                ViewModel.AreStationsVisible = false;
+            }
+            else
+            {
+                var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+                nav.GoBack();
+            }
+        }
+
         private void RadioItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
@@ -38,5 +68,15 @@ namespace NextPlayerUWP.Views
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
         }
+
+        private void RadioStreamItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenuRadio"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
+        }
+
+         
     }
 }

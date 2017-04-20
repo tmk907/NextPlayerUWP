@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,6 +58,14 @@ namespace NextPlayerUWP.Views
             var menu = this.Resources["ContextMenuFavouriteRadio"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private async void EditName_Click(object sender, RoutedEventArgs e)
+        {
+            RadioItem selected = (RadioItem)((MenuFlyoutItem)sender).CommandParameter;
+            ViewModel.EditedId = selected.BroadcastId;
+            ViewModel.NewName = selected.Name;
+            await ContentDialogEditName.ShowAsync();
         }
 
         private void GoToCuteRadioView(object sender, RoutedEventArgs e)

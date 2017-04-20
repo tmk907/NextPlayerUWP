@@ -4,6 +4,8 @@ using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWPDataLayer.Playlists;
+using PlaylistsNET.Content;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -247,11 +249,77 @@ namespace NextPlayerUWP.Common
             return playbackItem;
         }
 
+        private static MediaPlaybackItem PrepareFromOnlinePlaylist(SongItem song)
+        {
+            MediaBinder mb = new MediaBinder();
+            mb.Token = song.SongId.ToString();
+            mb.Binding += BindSourcePlaylist;
+
+            var source = MediaSource.CreateFromMediaBinder(mb);
+            source.CustomProperties[propertySongId] = song.SongId;
+            var playbackItem = new MediaPlaybackItem(source);
+            playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+            UpdateDisplayProperties(playbackItem, song);
+
+            return playbackItem;
+        }
+
+        private static async void BindSourcePlaylist(MediaBinder sender, MediaBindingEventArgs args)
+        {
+            var deferral = args.GetDeferral();
+            int id = Int32.Parse(args.MediaBinder.Token);
+            var song = NowPlayingPlaylistManager.Current.songs.FirstOrDefault(s => s.SongId == id);
+            try
+            {
+                using (var request = new Microsoft.Toolkit.Uwp.HttpHelperRequest(new Uri(song.Path), Windows.Web.Http.HttpMethod.Get))
+                {
+                    using (var response = await Microsoft.Toolkit.Uwp.HttpHelper.Instance.SendRequestAsync(request))
+                    {
+                        string p = await response.GetTextResultAsync();
+                        PlaylistFileReader pfr = new PlaylistFileReader();
+                        if (song.Path.EndsWith(".m3u"))
+                        {
+                            var m3u = pfr.OpenM3uPlaylist(p);
+                            if (m3u.PlaylistEntries.Count > 0)
+                            {
+                                args.SetUri(new Uri(m3u.PlaylistEntries[0].Path));
+                            }
+                            else
+                            {
+                                args.SetUri(new Uri(AppConstants.EmptyMP3File));
+                            }
+                        }
+                        else if (song.Path.EndsWith(".pls"))
+                        {
+                            var pls = pfr.OpenPlsPlaylist(p);
+                            if (pls.PlaylistEntries.Count > 0)
+                            {
+                                args.SetUri(new Uri(pls.PlaylistEntries[0].Path));
+                            }
+                            else
+                            {
+                                args.SetUri(new Uri(AppConstants.EmptyMP3File));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                args.SetUri(new Uri(AppConstants.EmptyMP3File));
+            }
+            deferral.Complete();
+        }
+
         private static MediaPlaybackItem PrepareFromOnlineFile(SongItem song)
         {
             Uri uri;
             try
             {
+                if (song.Path.EndsWith(".pls") || song.Path.EndsWith(".m3u"))
+                {
+                    return PrepareFromOnlinePlaylist(song);
+                }
                 uri = new Uri(song.Path);
             }
             catch (UriFormatException ex)

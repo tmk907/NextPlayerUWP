@@ -31,7 +31,7 @@
             <MenuFlyoutItem x:Uid="MFIEditSmart" Text="Edit"
                             Visibility="{Binding IsSmartAndNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"
                             Click="{x:Bind ViewModel.EditSmartPlaylist}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIEditPlainName" Text="Edit name"
+            <MenuFlyoutItem x:Uid="MFIEditName" Text="Edit name"
                             Visibility="{Binding IsSmart, Converter={StaticResource BoolToInvertedVisibilityConverter}}"
                             Click="MFIEditName_Click" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIExport" Text="Export" 

@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Controls;
 using NextPlayerUWP.Common;
 using Windows.UI.Xaml;
 using NextPlayerUWPDataLayer.Services;
+using NextPlayerUWPDataLayer.Radio.CuteRadio.Model;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -31,16 +32,16 @@ namespace NextPlayerUWP.ViewModels
             sourceGenre = new RadioSourceGenre(radioService);
             sourceLanguage = new RadioSourceLanguage(radioService);
             sourceSearch = new RadioSourceSearch(radioService);
-            RadiosByCountry = new IncrementalLoadingCollection<RadioSourceCountry, RadioItem>(sourceCountry, 20, OnStartLoading, OnEndLoading);
-            RadiosByGenre = new IncrementalLoadingCollection<RadioSourceGenre, RadioItem>(sourceGenre, 20, OnStartLoading, OnEndLoading);
-            RadiosByLanguage = new IncrementalLoadingCollection<RadioSourceLanguage, RadioItem>(sourceLanguage, 20, OnStartLoading, OnEndLoading);
-            RadiosSearch = new IncrementalLoadingCollection<RadioSourceSearch, RadioItem>(sourceSearch, 20, OnStartLoading, OnEndLoading);
+            RadiosByCountry = new IncrementalLoadingCollection<RadioSourceCountry, Station>(sourceCountry, 20, OnStartLoading, OnEndLoading);
+            RadiosByGenre = new IncrementalLoadingCollection<RadioSourceGenre, Station>(sourceGenre, 20, OnStartLoading, OnEndLoading);
+            RadiosByLanguage = new IncrementalLoadingCollection<RadioSourceLanguage, Station>(sourceLanguage, 20, OnStartLoading, OnEndLoading);
+            RadiosSearch = new IncrementalLoadingCollection<RadioSourceSearch, Station>(sourceSearch, 20, OnStartLoading, OnEndLoading);
         }
 
-        public IncrementalLoadingCollection<RadioSourceGenre, RadioItem> RadiosByGenre;
-        public IncrementalLoadingCollection<RadioSourceLanguage, RadioItem> RadiosByLanguage;
-        public IncrementalLoadingCollection<RadioSourceCountry, RadioItem> RadiosByCountry;
-        public IncrementalLoadingCollection<RadioSourceSearch, RadioItem> RadiosSearch;
+        public IncrementalLoadingCollection<RadioSourceGenre, Station> RadiosByGenre;
+        public IncrementalLoadingCollection<RadioSourceLanguage, Station> RadiosByLanguage;
+        public IncrementalLoadingCollection<RadioSourceCountry, Station> RadiosByCountry;
+        public IncrementalLoadingCollection<RadioSourceSearch, Station> RadiosSearch;
 
         //0 country 1 genre 2 lang
         private int selectedPivotIndex = 0;
@@ -109,11 +110,11 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref languages, value); }
         }
 
-        private ObservableCollection<RadioItem> stations = new ObservableCollection<RadioItem>();
-        public ObservableCollection<RadioItem> Stations
+        private ObservableCollection<RadioItem> streams = new ObservableCollection<RadioItem>();
+        public ObservableCollection<RadioItem> Streams
         {
-            get { return stations; }
-            set { Set(ref stations, value); }
+            get { return streams; }
+            set { Set(ref streams, value); }
         }
 
         private bool areStationsVisible = false;
@@ -201,46 +202,96 @@ namespace NextPlayerUWP.ViewModels
             Searching = false;
         }
 
-        public async void RadioClick(object sender, ItemClickEventArgs e)
+        public async void RadioNameClick(object sender, ItemClickEventArgs e)
         {
-            var item = (RadioItem)e.ClickedItem;
-            await NowPlayingPlaylistManager.Current.NewPlaylist(item);
-            await PlaybackService.Instance.PlayNewList(0);
+            var item = (Station)e.ClickedItem;
+            if (item.Source.EndsWith(".m3u") || item.Source.EndsWith(".pls"))
+            {
+                //download and parse playlist
+                RadioItem radio = new RadioItem(item.Id, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio);
+                radio.Name = item.Title;
+                radio.StreamUrl = item.Source;
+                await NowPlayingPlaylistManager.Current.NewPlaylist(radio);
+                await PlaybackService.Instance.PlayNewList(0);
+            }
+            else if (item.Source.EndsWith(".mp3") || item.Source.EndsWith(".aac"))
+            {
+                RadioItem radio = new RadioItem(item.Id, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio);
+                radio.Name = item.Title;
+                radio.StreamUrl = item.Source;
+                await NowPlayingPlaylistManager.Current.NewPlaylist(radio);
+                await PlaybackService.Instance.PlayNewList(0);
+            }
+            else
+            {
+                RadioItem radio = new RadioItem(item.Id, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio);
+                radio.Name = item.Title;
+                radio.StreamUrl = item.Source;
+                await NowPlayingPlaylistManager.Current.NewPlaylist(radio);
+                await PlaybackService.Instance.PlayNewList(0);
+            }
         }
+
+        //public async void RadioStreamClick(object sender, ItemClickEventArgs e)
+        //{
+        //    var item = (RadioItem)e.ClickedItem;
+        //    await NowPlayingPlaylistManager.Current.NewPlaylist(item);
+        //    await PlaybackService.Instance.PlayNewList(0);
+        //}
 
         public async void PlayNow(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            await NowPlayingPlaylistManager.Current.NewPlaylist(item);
+            var item = (Station)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            var radio = new RadioItem(item.Id, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio)
+            {
+                Name = item.Title,
+                StreamUrl = item.Source,
+            };
+            await NowPlayingPlaylistManager.Current.NewPlaylist(radio);
             await PlaybackService.Instance.PlayNewList(0);
         }
 
         public async void PlayNext(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            await NowPlayingPlaylistManager.Current.AddNext(item);
+            var item = (Station)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            var radio = new RadioItem(item.Id, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio)
+            {
+                Name = item.Title,
+                StreamUrl = item.Source,
+            };
+            await NowPlayingPlaylistManager.Current.AddNext(radio);
         }
 
         public async void AddToNowPlaying(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            await NowPlayingPlaylistManager.Current.Add(item);
+            var item = (Station)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            var radio = new RadioItem(item.Id, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio)
+            {
+                Name = item.Title,
+                StreamUrl = item.Source,
+            };
+            await NowPlayingPlaylistManager.Current.Add(radio);
         }
 
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+            var item = (Station)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            var radio = new RadioItem(item.Id, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio)
+            {
+                Name = item.Title,
+                StreamUrl = item.Source,
+            };
+            NavigationService.Navigate(App.Pages.AddToPlaylist, radio.GetParameter());
         }
 
         public async void AddToFavourites(object sender, RoutedEventArgs e)
         {
-            var item = (RadioItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            var item = (Station)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             var list = await DatabaseManager.Current.GetRadioFavouritesAsync();
-            var radio = list.FirstOrDefault(r => r.BroadcastId == item.BroadcastId);
+            var radio = list.FirstOrDefault(r => r.BroadcastId == item.Id);
             if (radio == null)
             {
-                await DatabaseManager.Current.AddRadioToFavourites(radio);
+                await DatabaseManager.Current.AddRadioToFavourites(new SimpleRadioData(item.Id, NextPlayerUWPDataLayer.Enums.RadioType.CuteRadio, item.Title, item.Source));
             }
         }
 
@@ -250,71 +301,71 @@ namespace NextPlayerUWP.ViewModels
         }
     }
 
-    public class RadioSourceGenre : IIncrementalSource<RadioItem>
+    public class RadioSourceGenre : IIncrementalSource<Station>
     {
         private CuteRadioService radioService;
-        private readonly List<RadioItem> radios;
+        private readonly List<Station> radios;
         public string Name = "";
         public RadioSourceGenre(CuteRadioService radioService)
         {
             this.radioService = radioService;
-            radios = new List<RadioItem>();
+            radios = new List<Station>();
         }
 
-        public async Task<IEnumerable<RadioItem>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await radioService.GetStationsByGenre(Name ,pageIndex);
         }
     }
 
-    public class RadioSourceCountry : IIncrementalSource<RadioItem>
+    public class RadioSourceCountry : IIncrementalSource<Station>
     {
         private CuteRadioService radioService;
-        private readonly List<RadioItem> radios;
+        private readonly List<Station> radios;
         public string Name = "";
         public RadioSourceCountry(CuteRadioService radioService)
         {
             this.radioService = radioService;
-            radios = new List<RadioItem>();
+            radios = new List<Station>();
         }
 
-        public async Task<IEnumerable<RadioItem>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await radioService.GetStationsByCountry(Name, pageIndex);
         }
     }
 
-    public class RadioSourceLanguage : IIncrementalSource<RadioItem>
+    public class RadioSourceLanguage : IIncrementalSource<Station>
     {
         private CuteRadioService radioService;
-        private readonly List<RadioItem> radios;
+        private readonly List<Station> radios;
         public string Name = "";
         public RadioSourceLanguage(CuteRadioService radioService)
         {
             this.radioService = radioService;
-            radios = new List<RadioItem>();
+            radios = new List<Station>();
         }
 
-        public async Task<IEnumerable<RadioItem>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await radioService.GetStationsByLanguage(Name, pageIndex);
         }
     }
 
-    public class RadioSourceSearch : IIncrementalSource<RadioItem>
+    public class RadioSourceSearch : IIncrementalSource<Station>
     {
         private CuteRadioService radioService;
-        private readonly List<RadioItem> radios;
+        private readonly List<Station> radios;
         public string Name = "";
         public RadioSourceSearch(CuteRadioService radioService)
         {
             this.radioService = radioService;
-            radios = new List<RadioItem>();
+            radios = new List<Station>();
         }
 
-        public async Task<IEnumerable<RadioItem>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (Name == "") return new List<RadioItem>();
+            if (Name == "") return new List<Station>();
             return await radioService.SearchStations(Name, pageIndex);
         }
     }

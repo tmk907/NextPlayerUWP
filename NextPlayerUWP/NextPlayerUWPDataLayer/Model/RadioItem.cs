@@ -27,18 +27,23 @@ namespace NextPlayerUWPDataLayer.Model
         private int broadcastId;
         public int BroadcastId { get { return broadcastId; } }
 
+        private string stream;
+        public string Stream { get { return stream; } set { stream = value; } }
+
         public SimpleRadioData()
         {
             name = "";
             type = RadioType.Unknown;
             broadcastId = -1;
+            stream = AppConstants.EmptyMP3File;
         }
 
-        public SimpleRadioData(int id, RadioType type, string name)
+        public SimpleRadioData(int id, RadioType type, string name, string stream)
         {
             this.name = name;
             this.broadcastId = id;
             this.type = type;
+            this.stream = stream;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

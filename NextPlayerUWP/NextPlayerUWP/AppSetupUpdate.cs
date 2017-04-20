@@ -13,7 +13,7 @@ namespace NextPlayerUWP
 {
     sealed partial class App : BootStrapper
     {
-        private const int dbVersion = 12;
+        private const int dbVersion = 13;
 
         private void FirstRunSetup()
         {
@@ -175,6 +175,12 @@ namespace NextPlayerUWP
                 DatabaseManager.Current.UpdateToVersion12();
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 12);
                 version = "12";
+            }
+            if (version.ToString() == "12")
+            {
+                DatabaseManager.Current.UpdateToVersion13();
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 13);
+                version = "13";
             }
             // change  private const int dbVersion
         }

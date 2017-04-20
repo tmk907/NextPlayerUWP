@@ -1,11 +1,8 @@
 ﻿using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json;
-using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Radio.CuteRadio.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Http;
 
@@ -34,9 +31,9 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
             }
         }
 
-        private async Task<List<RadioItem>> GetStationsList(string uri)
+        private async Task<List<Station>> GetStationsList(string uri)
         {
-            List<RadioItem> stations = new List<RadioItem>();
+            List<Station> stations = new List<Station>();
 
             try
             {
@@ -44,11 +41,7 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 Stations items = JsonConvert.DeserializeObject<Stations>(response);
                 foreach (var item in items.Items)
                 {
-                    stations.Add(new RadioItem(item.Id, Enums.RadioType.CuteRadio)
-                    {
-                        Name = item.Title,
-                        StreamUrl = item.Source,
-                    });
+                    stations.Add(item);
                 }
             }
             catch (Exception ex)
@@ -152,9 +145,9 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
             return languages;
         }
 
-        public async Task<List<RadioItem>> GetStations(int page = 0)
+        public async Task<List<Station>> GetStations(int page = 0)
         {
-            List<RadioItem> stations = new List<RadioItem>();
+            List<Station> stations = new List<Station>();
 
             string uri = uriBuilder.GetStations(page * limit);
             try
@@ -163,11 +156,7 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 Stations items = JsonConvert.DeserializeObject<Stations>(response);
                 foreach (var item in items.Items)
                 {
-                    stations.Add(new RadioItem(item.Id,Enums.RadioType.CuteRadio)
-                    {
-                        Name = item.Title,
-                        StreamUrl = item.Source,
-                    });
+                    stations.Add(item);
                 }
             }
             catch (Exception ex)
@@ -179,9 +168,9 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
             return stations;
         }
 
-        public async Task<List<RadioItem>> SearchStations(string name, int page)
+        public async Task<List<Station>> SearchStations(string name, int page)
         {
-            List<RadioItem> stations = new List<RadioItem>();
+            List<Station> stations = new List<Station>();
 
             string uri = uriBuilder.SearchStations(name, page * limit);
             try
@@ -190,11 +179,7 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 Stations items = JsonConvert.DeserializeObject<Stations>(response);
                 foreach (var item in items.Items)
                 {
-                    stations.Add(new RadioItem(item.Id, Enums.RadioType.CuteRadio)
-                    {
-                        Name = item.Title,
-                        StreamUrl = item.Source,
-                    });
+                    stations.Add(item);
                 }
             }
             catch (Exception ex)
@@ -206,41 +191,36 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
             return stations;
         }
 
-        public async Task<RadioItem> GetStation(int id)
+        public async Task<Station> GetStation(int id)
         {
-            RadioItem radio;
+            Station station;
             string uri = uriBuilder.GetStation(id);
             try
             {
                 string response = await DownloadAsync(uri);
-                Station item = JsonConvert.DeserializeObject<Station>(response);
-                radio = new RadioItem(id, Enums.RadioType.CuteRadio)
-                {
-                    Name = item.Title,
-                    StreamUrl = item.Source,
-                };    
+                station = JsonConvert.DeserializeObject<Station>(response);
+                   
             }
             catch (Exception ex)
             {
-                radio = new RadioItem();
                 throw;
             }
-            return radio;
+            return station;
         }
 
-        public async Task<List<RadioItem>> GetStationsByCountry(string country, int page)
+        public async Task<List<Station>> GetStationsByCountry(string country, int page)
         {
             string uri = uriBuilder.GetStationsByCountry(country, page * limit);
             return await GetStationsList(uri);
         }
 
-        public async Task<List<RadioItem>> GetStationsByGenre(string genre, int page)
+        public async Task<List<Station>> GetStationsByGenre(string genre, int page)
         {
             string uri = uriBuilder.GetStationsByGenre(genre, page * limit);
             return await GetStationsList(uri);
         }
 
-        public async Task<List<RadioItem>> GetStationsByLanguage(string language, int page)
+        public async Task<List<Station>> GetStationsByLanguage(string language, int page)
         {
             string uri = uriBuilder.GetStationsByLanguage(language, page * limit);
             return await GetStationsList(uri);

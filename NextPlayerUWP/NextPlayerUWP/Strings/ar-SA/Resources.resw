@@ -225,7 +225,7 @@
   <data name="MFIDelete.Text" xml:space="preserve">
     <value>حذف</value>
   </data>
-  <data name="MFIEditPlainName.Text" xml:space="preserve">
+  <data name="MFIEditName.Text" xml:space="preserve">
     <value>تعديل الاسم</value>
   </data>
   <data name="MFIEditSmart.Text" xml:space="preserve">
@@ -861,8 +861,8 @@
   <data name="TBOnline.Text" xml:space="preserve">
     <value>Online</value>
   </data>
-  <data name="TBStreams.Text" xml:space="preserve">
-    <value>Streams</value>
+  <data name="TBStreamsLower.Text" xml:space="preserve">
+    <value>streams</value>
   </data>
   <data name="Online" xml:space="preserve">
     <value>Online</value>
@@ -933,13 +933,31 @@
   <data name="DateModified" xml:space="preserve">
     <value>Date modified</value>
   </data>
-  <data name="TBFavourites.Text" xml:space="preserve">
-    <value>Favorites</value>
+  <data name="TBFavouritesLower.Text" xml:space="preserve">
+    <value>favorites</value>
   </data>
   <data name="MFIAddToFavourites.Text" xml:space="preserve">
-    <value></value>
+    <value>Add to favourites</value>
   </data>
   <data name="AppBarButtonRefresh.Label" xml:space="preserve">
     <value>Refresh</value>
+  </data>
+  <data name="TBMoreLower.Text" xml:space="preserve">
+    <value>more</value>
+  </data>
+  <data name="TBCountriesLower.Text" xml:space="preserve">
+    <value>countries</value>
+  </data>
+  <data name="TBLanguagesLower.Text" xml:space="preserve">
+    <value>languages</value>
+  </data>
+  <data name="TBSearchLower.Text" xml:space="preserve">
+    <value>search</value>
+  </data>
+  <data name="MFIRemoveFromFavourites.Text" xml:space="preserve">
+    <value>Delete from favourites</value>
+  </data>
+  <data name="TBGenresLower.Text" xml:space="preserve">
+    <value>الأنواع</value>
   </data>
 </root>

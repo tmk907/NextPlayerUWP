@@ -6,15 +6,44 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
+    xmlns:cuteradiomodel="using:NextPlayerUWPDataLayer.Radio.CuteRadio.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=CuteRadioVM}"
     mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Page.Resources>
-        <DataTemplate x:Key="RadioDataTemplate" x:DataType="data:RadioItem">
+        <DataTemplate x:Key="RadioDataTemplate" x:DataType="cuteradiomodel:Station">
             <Grid RightTapped="RadioItem_RightTapped" Background="Transparent">
                 <TextBlock 
+                    Text="{x:Bind Title}"
+                    TextTrimming="CharacterEllipsis"
+                    VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="RadioStreamDataTemplate" x:DataType="data:RadioItem">
+            <Grid RightTapped="RadioStreamItem_RightTapped" Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock 
+                    Grid.Row="0"
                     Text="{x:Bind Name}"
+                    FontSize="14"
+                    TextTrimming="CharacterEllipsis"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="1"
+                    Text="{x:Bind StreamUrl}"
+                    FontSize="11"
+                    TextTrimming="CharacterEllipsis"
                     VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>
@@ -297,7 +326,7 @@
 
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                        <TextBlock x:Uid="TBCountries" Text="countries" FontSize="22"/>
+                    <TextBlock x:Uid="TBCountriesLower" Text="countries" FontSize="22"/>
                     </PivotItem.Header>
                     <Grid>
                         <mycontrols:AlternatingRowListView 
@@ -324,7 +353,7 @@
                             Visibility="{x:Bind ViewModel.AreStationsVisible, Mode=OneWay}"
                             SelectionMode="None"
                             IsItemClickEnabled="True"
-                            ItemClick="{x:Bind ViewModel.RadioClick}"
+                            ItemClick="{x:Bind ViewModel.RadioNameClick}"
                             Margin="12,4,0,0"
                             ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}">
                             <mycontrols:AlternatingRowListView.ItemsPanel>
@@ -337,7 +366,7 @@
                 </PivotItem>
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                        <TextBlock x:Uid="TBGenres" Text="genres" FontSize="22"/>
+                        <TextBlock x:Uid="TBGenresLower" Text="genres" FontSize="22"/>
                     </PivotItem.Header>
                     <Grid>
                         <mycontrols:AlternatingRowListView 
@@ -364,7 +393,7 @@
                             Visibility="{x:Bind ViewModel.AreStationsVisible, Mode=OneWay}"
                             SelectionMode="None"
                             IsItemClickEnabled="True"
-                            ItemClick="{x:Bind ViewModel.RadioClick}"
+                            ItemClick="{x:Bind ViewModel.RadioNameClick}"
                             Margin="12,4,0,0"
                             ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}">
                             <mycontrols:AlternatingRowListView.ItemsPanel>
@@ -377,7 +406,7 @@
                 </PivotItem>
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                        <TextBlock x:Uid="TBLanguages" Text="languages" FontSize="22"/>
+                    <TextBlock x:Uid="TBLanguagesLower" Text="languages" FontSize="22"/>
                     </PivotItem.Header>
                     <Grid>
                         <mycontrols:AlternatingRowListView 
@@ -404,7 +433,7 @@
                             Visibility="{x:Bind ViewModel.AreStationsVisible, Mode=OneWay}"
                             SelectionMode="None"
                             IsItemClickEnabled="True"
-                            ItemClick="{x:Bind ViewModel.RadioClick}"
+                            ItemClick="{x:Bind ViewModel.RadioNameClick}"
                             Margin="12,4,0,0"
                             ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}">
                             <mycontrols:AlternatingRowListView.ItemsPanel>
@@ -418,7 +447,7 @@
 
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                        <TextBlock x:Uid="TBSearch" Text="search" FontSize="22"/>
+                    <TextBlock x:Uid="TBSearchLower" Text="search" FontSize="22"/>
                     </PivotItem.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -447,7 +476,7 @@
                         Visibility="{x:Bind ViewModel.Searching, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
                         SelectionMode="None"
                         IsItemClickEnabled="True"
-                        ItemClick="{x:Bind ViewModel.RadioClick}"
+                        ItemClick="{x:Bind ViewModel.RadioNameClick}"
                         Margin="12,4,0,0"
                         ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}">
                         <mycontrols:AlternatingRowListView.ItemsPanel>

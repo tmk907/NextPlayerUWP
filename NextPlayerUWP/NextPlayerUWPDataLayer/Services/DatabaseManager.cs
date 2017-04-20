@@ -73,7 +73,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<CachedScrobble>();
             connection.CreateTable<FutureAccessTokensTable>();
             connection.CreateTable<CloudAccountsTable>();
-            connection.CreateTable<FavouriteRadiosTable>();
+            connection.CreateTable<RadiosTable>();
         }
 
         public void DeleteDatabase()
@@ -92,7 +92,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<CachedScrobble>();
             connection.DropTable<FutureAccessTokensTable>();
             connection.DropTable<CloudAccountsTable>();
-            connection.DropTable<FavouriteRadiosTable>();
+            connection.DropTable<RadiosTable>();
         }
 
         public async Task ChangeToNotAvaialble(List<string> availableDirectories)
@@ -1224,14 +1224,31 @@ namespace NextPlayerUWPDataLayer.Services
         {
             List<SimpleRadioData> list = new List<SimpleRadioData>();
 
-            var res = await connectionAsync.Table<FavouriteRadiosTable>().ToListAsync();
+            var res = await connectionAsync.Table<RadiosTable>().ToListAsync();
 
             foreach(var item in res)
             {
-                list.Add(new SimpleRadioData(item.Id, (RadioType)item.RadioType, item.Name));
+                list.Add(new SimpleRadioData(item.RadioId, (RadioType)item.RadioType, item.Name, item.Source));
             }
 
             return list;
+        }
+
+        public async Task<RadioItem> GetRadioItem(int id, RadioType type)
+        {
+            var r = await connectionAsync.Table<RadiosTable>().Where(e => e.RadioId == id && e.RadioType == (int)type).ToListAsync();
+            if (r.Count > 0)
+            {
+                return new RadioItem(id, type)
+                {
+                    Name = r.FirstOrDefault().Name,
+                    StreamUrl = r.FirstOrDefault().Source,
+                };
+            }
+            else
+            {
+                return new RadioItem();
+            }
         }
 
         #endregion
@@ -1566,12 +1583,25 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task AddRadioToFavourites(SimpleRadioData radio)
         {
-            await connectionAsync.InsertAsync(new FavouriteRadiosTable()
+            await connectionAsync.InsertAsync(new RadiosTable()
             {
                 RadioId = radio.BroadcastId,
                 RadioType = (int)radio.Type,
-                Name = radio.Name
+                Name = radio.Name,
+                Source = radio.Stream,
+                IsFavourite = true,
             });
+        }
+
+        public async Task UpdateFavouriteRadioName(int id, string newName)
+        {
+            var list = await connectionAsync.Table<RadiosTable>().Where(r => r.RadioId == id).ToListAsync();
+            if (list.Count > 0)
+            {
+                var radio = list.FirstOrDefault();
+                radio.Name = newName;
+                await connectionAsync.UpdateAsync(radio);
+            }
         }
 
         #endregion
@@ -1643,12 +1673,14 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        public async Task DeleteRadioFromFavourites(SimpleRadioData radio)
+        public async Task DeleteRadioFromFavourites(int id, RadioType type)
         {
-            var r = await connectionAsync.Table<FavouriteRadiosTable>().Where(a => a.RadioId == radio.BroadcastId && a.RadioType == (int)radio.Type).ToListAsync();
+            var r = await connectionAsync.Table<RadiosTable>().Where(a => a.RadioId == id && a.RadioType == (int)type).ToListAsync();
             if (r.Count == 1)
             {
-                connection.Delete(r.FirstOrDefault());
+                var radio = r.FirstOrDefault();
+                radio.IsFavourite = false;
+                await connectionAsync.UpdateAsync(radio);
             }
         }
 
@@ -2364,7 +2396,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public void UpdateToVersion13()
         {
-            connection.CreateTable<FavouriteRadiosTable>();
+            connection.CreateTable<RadiosTable>();
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()
