@@ -69,6 +69,6 @@ namespace NextPlayerUWPDataLayer.Playlists
             }
 
             return newPlaylist;
-        }
+        }        
     }
 }

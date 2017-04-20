@@ -75,7 +75,7 @@ namespace NextPlayerUWP.Common
             switch (song.SourceType)
             {
                 case MusicSource.LocalFile:
-                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.Substring(song.Path.LastIndexOf('.'))))
+                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.GetExtension()))
                     {
                         mpi = PrepareFromLocalFile(song);
                     }
@@ -85,7 +85,7 @@ namespace NextPlayerUWP.Common
                     }
                     break;
                 case MusicSource.LocalNotMusicLibrary:
-                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.Substring(song.Path.LastIndexOf('.'))))
+                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.GetExtension()))
                     {
                         mpi = PrepareFromFutureAccessList(song);
                     }
@@ -249,13 +249,16 @@ namespace NextPlayerUWP.Common
 
         private static MediaPlaybackItem PrepareFromOnlineFile(SongItem song)
         {
-            if (String.IsNullOrEmpty(song.Path))
+            Uri uri;
+            try
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("PrepareFromOnlineFile path error", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
-                TelemetryAdapter.TrackEvent("PrepareFromOnlineFile path error");
+                uri = new Uri(song.Path);
+            }
+            catch (UriFormatException ex)
+            {
                 return PrepareDefaultItem();
             }
-            var source = MediaSource.CreateFromUri(new Uri(song.Path));//error opened from file?
+            var source = MediaSource.CreateFromUri(uri);
             var playbackItem = new MediaPlaybackItem(source);
             playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
             UpdateDisplayProperties(playbackItem, song);

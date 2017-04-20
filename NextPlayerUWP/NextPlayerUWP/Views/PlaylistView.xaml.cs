@@ -95,6 +95,6 @@ namespace NextPlayerUWP.Views
         public void OnSearchMessage(EnableSearching msg)
         {
             SearchBox.Focus(FocusState.Programmatic);
-        }
+        }       
     }
 }

@@ -696,12 +696,33 @@ namespace NextPlayerUWPDataLayer.Services
             return song;
         }
 
+        public async Task UpdatePlaylist(int playlistId)
+        {
+            var p = await DatabaseManager.Current.GetPlainPlaylistAsync(playlistId);
+            if (!String.IsNullOrEmpty(p.Path))
+            {
+                var file = await FutureAccessHelper.GetFileFromPathAsync(p.Path);
+                if (file != null)
+                {
+                    var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+                    ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
+                    if (playlist != null)
+                    {
+                        playlist.PlainPlaylistId = playlistId;
+                        int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
+                    }
+                }
+            }
+        }
+
         private async Task<ImportedPlaylist> ImportPlaylistAsync(StorageFile file, IEnumerable<SongItem> songs)
         {
             PlaylistImporter pi = new PlaylistImporter();
             ImportedPlaylist newPlaylist = await pi.Import(file);
+            string folderPath = Path.GetDirectoryName(newPlaylist.Path);
             foreach (var m in newPlaylist.Entries)
             {
+                m.Path = PlaylistHelper.MakeAbsolutePath(folderPath, m.Path);
                 int id = await ResolvePlaylistEntryAsync(m, songs);
                 newPlaylist.SongIds.Add(id);
             }

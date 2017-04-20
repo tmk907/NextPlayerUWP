@@ -93,7 +93,7 @@ namespace NextPlayerUWP.ViewModels
             
             if (state.ContainsKey("firstVisibleIndex"))
             {
-                scrollerHelper.firstVisibleIndex = (int)state["(firstVisibleIndex"];
+                scrollerHelper.firstVisibleIndex = (int)state["firstVisibleIndex"];
             }
             if (state.ContainsKey("positionKey"))
             {

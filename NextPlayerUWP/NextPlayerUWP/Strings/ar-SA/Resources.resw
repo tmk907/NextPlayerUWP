@@ -939,4 +939,7 @@
   <data name="MFIAddToFavourites.Text" xml:space="preserve">
     <value></value>
   </data>
+  <data name="AppBarButtonRefresh.Label" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
 </root>

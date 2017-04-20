@@ -52,7 +52,7 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
             playlist.Title = item.Name;
             if (playlist.PlaylistEntries.Count > 0)
             {
-                if (playlist.PlaylistEntries.FirstOrDefault(e => e.Path.Contains(Path.VolumeSeparatorChar)) == null)
+                if (playlist.PlaylistEntries.FirstOrDefault(e => e.Path.Contains(':')) == null)
                 {
                     string folderPath = Path.GetDirectoryName(file.Path);
                     foreach (var song in songs)

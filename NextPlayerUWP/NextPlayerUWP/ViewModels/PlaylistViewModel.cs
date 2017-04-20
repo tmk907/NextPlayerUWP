@@ -59,6 +59,13 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref isPlainPlaylist, value); }
         }
 
+        private bool updating = false;
+        public bool Updating
+        {
+            get { return updating; }
+            set { Set(ref updating, value); }
+        }
+
         protected override async Task LoadData()
         {
             if (playlist.Count == 0)
@@ -210,13 +217,31 @@ namespace NextPlayerUWP.ViewModels
             await ph.UpdatePlaylistFile(p).ConfigureAwait(false);
         }
 
+        public async Task RefreshPlaylist()
+        {
+            Updating = true;
+            if (IsPlainPlaylist)
+            {
+                MediaImport mi = new MediaImport(App.FileFormatsHelper);
+                await mi.UpdatePlaylist(Int32.Parse(firstParam));
+                Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
+                int i = 0;
+                foreach (var song in playlist)
+                {
+                    song.Index = i;
+                    i++;
+                }
+            }
+            Updating = false;
+        }
+
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
             var orderSelector = sortingHelper.GetOrderBySelector();
             var query = playlist.OrderBy(orderSelector);
             Playlist = new ObservableCollection<SongItem>(query);
-        }
+        }      
 
         public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
@@ -255,7 +280,14 @@ namespace NextPlayerUWP.ViewModels
                 }
                 if (!find) return;
             }
-            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            try
+            {
+                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            }
+            catch (NullReferenceException ex)
+            {
+
+            }
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

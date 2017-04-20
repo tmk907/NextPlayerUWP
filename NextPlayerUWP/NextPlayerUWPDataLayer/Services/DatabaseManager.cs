@@ -638,9 +638,10 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task<SongItem> GetSongItemAsync(int id)
         {
-            var l = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
-            var i = l.FirstOrDefault();
-            return new SongItem(i);
+            var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
+            var item = list.FirstOrDefault();
+            if (item == null) return new SongItem();
+            else return new SongItem(item);
         }
 
         public async Task<SongItem> GetSongItemIfExistAsync(string path)
@@ -2357,6 +2358,11 @@ namespace NextPlayerUWPDataLayer.Services
         }
 
         public void UpdateToVersion12()
+        {
+            connection.Execute("DELETE FROM SongsTable WHERE MusicSourceType = ?", 9);
+        }
+
+        public void UpdateToVersion13()
         {
             connection.CreateTable<FavouriteRadiosTable>();
         }
