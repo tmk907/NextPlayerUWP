@@ -960,4 +960,10 @@
   <data name="TBGenresLower.Text" xml:space="preserve">
     <value>gatunki</value>
   </data>
+  <data name="PageHeaderStreaming.Content" xml:space="preserve">
+    <value>Streaming</value>
+  </data>
+  <data name="TBRadioLower.Text" xml:space="preserve">
+    <value>radio</value>
+  </data>
 </root>

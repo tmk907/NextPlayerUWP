@@ -23,7 +23,7 @@ namespace NextPlayerUWP.Converters
                 }
                 if (command == "addtoplaylist")
                 {
-                    if (type == MusicSource.RadioJamendo || type == MusicSource.Unknown)
+                    if (type == MusicSource.RadioJamendo || type == MusicSource.Unknown || type == MusicSource.Radio)
                     {
                         return Visibility.Collapsed;
                     }

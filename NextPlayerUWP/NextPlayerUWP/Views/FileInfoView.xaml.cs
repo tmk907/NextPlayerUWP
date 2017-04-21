@@ -1,4 +1,8 @@
-﻿using Windows.ApplicationModel.DataTransfer;
+﻿using NextPlayerUWP.ViewModels;
+using Windows.ApplicationModel.DataTransfer;
+using System;
+using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -11,17 +15,29 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class FileInfoView : Page
     {
+        FileInfoViewModel ViewModel;
+
         public FileInfoView()
         {
             this.InitializeComponent();
+            ViewModel = (FileInfoViewModel)DataContext;
         }
 
-        private void CopyPath_Click(object sender, RoutedEventArgs e)
+        private async void CopyPath_Click(object sender, RoutedEventArgs e)
         {
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetText(FilePath_TextBlock.Text);
-            Clipboard.SetContent(dataPackage);
+            try
+            {
+                var folder = await StorageFolder.GetFolderFromPathAsync(ViewModel.FileInfo.DirectoryPath);
+                await Launcher.LaunchFolderAsync(folder);
+            }
+            catch (Exception ex)
+            {
+            }
+
+            //DataPackage dataPackage = new DataPackage();
+            //dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            //dataPackage.SetText(FilePath_TextBlock.Text);
+            //Clipboard.SetContent(dataPackage);
         }
     }
 }

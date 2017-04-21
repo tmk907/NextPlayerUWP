@@ -104,7 +104,7 @@ namespace NextPlayerUWP.Views
                     Source1 = new CompositionEffectSourceParameter("backdropBrush"),
                     Source2 = new ColorSourceEffect
                     {
-                        Color = Color.FromArgb(255, 192, 192, 192)
+                        Color = Color.FromArgb(255, 128, 128, 128)
                     }
                 }
             };

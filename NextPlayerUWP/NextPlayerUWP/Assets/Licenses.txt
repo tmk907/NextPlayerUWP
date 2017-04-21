@@ -1,6 +1,5 @@
 This app uses the following open-source libraries:
 
-
 Dropbox.NET  	https://github.com/dropbox
 
 Copyright (c) 2015 Dropbox Inc., http://www.dropbox.com/
@@ -465,3 +464,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 
+Radio stations data come from cuteRadio Data API http://marxoft.co.uk/projects/cuteradio-api/

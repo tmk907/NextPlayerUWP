@@ -335,7 +335,8 @@
                       Margin="0,4,4,0"
                       Text="{x:Bind ViewModel.EditPlaylist.Path, Mode=OneWay}"
                       TextWrapping="Wrap"/>
-                </StackPanel>
+                        <Button Content="Open folder" Click="{x:Bind ViewModel.OpenFolder}"/>
+                    </StackPanel>
               </ContentDialog.Content>
             </ContentDialog>
             <ContentDialog x:Name="ContentDialogChoosePathKind"

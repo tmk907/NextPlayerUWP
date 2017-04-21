@@ -100,14 +100,11 @@ namespace NextPlayerUWP.Common
                     mpi = await PrepareFromJamendo(song);
                     break;
                 case MusicSource.Dropbox:
-                    mpi = PrepareFromCloudStorage(song);
-                    break;
                 case MusicSource.OneDrive:
-                    mpi = PrepareFromCloudStorage(song);
-                    break;
                 case MusicSource.PCloud:
                     mpi = PrepareFromCloudStorage(song);
                     break;
+                case MusicSource.Radio:
                 case MusicSource.OnlineFile:
                     mpi = PrepareFromOnlineFile(song);
                     break;

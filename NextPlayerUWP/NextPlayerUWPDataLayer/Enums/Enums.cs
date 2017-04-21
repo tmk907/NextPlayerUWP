@@ -39,5 +39,6 @@
         GoogleDrive = 7,
         PCloud = 8,
         Unknown = 9,
+        Radio = 10,
     }
 }

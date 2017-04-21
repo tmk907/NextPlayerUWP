@@ -11,6 +11,7 @@ using Windows.Storage.Provider;
 using NextPlayerUWPDataLayer.Playlists;
 using System.Linq;
 using NextPlayerUWP.Common;
+using Windows.System;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -137,6 +138,20 @@ namespace NextPlayerUWP.ViewModels
                 }
             }
             //await LoadData();
+        }
+
+        public async void OpenFolder()
+        {
+            try
+            {
+                var path = System.IO.Path.GetDirectoryName(editPlaylist.Path);
+                var folder = await StorageFolder.GetFolderFromPathAsync(path);
+                await Launcher.LaunchFolderAsync(folder);
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
 
         public void FilterPlaylists()

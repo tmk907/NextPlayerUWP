@@ -27,6 +27,14 @@
                     VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="RadioCollectionDataTemplate" x:DataType="cuteradiomodel:Item">
+            <Grid RightTapped="RadioItem_RightTapped" Background="Transparent">
+                <TextBlock 
+                    Text="{x:Bind Name}"
+                    TextTrimming="CharacterEllipsis"
+                    VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="RadioStreamDataTemplate" x:DataType="data:RadioItem">
             <Grid RightTapped="RadioStreamItem_RightTapped" Background="Transparent">
                 <Grid.RowDefinitions>
@@ -55,9 +63,9 @@
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
                             Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
+            <!--<MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
+            <MenuFlyoutSeparator/>-->
             <MenuFlyoutItem x:Uid="MFIAddToFavourites" Text="Add to favourites"
                             Click="{x:Bind ViewModel.AddToFavourites}" CommandParameter="{Binding}"/>
         </MenuFlyout>
@@ -323,16 +331,16 @@
                 Style="{StaticResource RightPanelPivotStyle}"
                 SelectionChanged="{x:Bind ViewModel.PivotSelectionChanged}"
                 SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
-
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                    <TextBlock x:Uid="TBCountriesLower" Text="countries" FontSize="22"/>
+                        <TextBlock x:Uid="TBCountriesLower" Text="countries" FontSize="22"/>
                     </PivotItem.Header>
                     <Grid>
                         <mycontrols:AlternatingRowListView 
                             EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                             OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                             ItemsSource="{x:Bind ViewModel.Countries, Mode=OneWay}"
+                            ItemTemplate="{StaticResource RadioCollectionDataTemplate}"
                             Visibility="{x:Bind ViewModel.AreStationsVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
                             SelectionMode="None"
                             IsItemClickEnabled="True"
@@ -373,6 +381,7 @@
                             EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                             OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                             ItemsSource="{x:Bind ViewModel.Genres, Mode=OneWay}"
+                            ItemTemplate="{StaticResource RadioCollectionDataTemplate}"
                             Visibility="{x:Bind ViewModel.AreStationsVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
                             SelectionMode="None"
                             IsItemClickEnabled="True"
@@ -406,13 +415,14 @@
                 </PivotItem>
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                    <TextBlock x:Uid="TBLanguagesLower" Text="languages" FontSize="22"/>
+                        <TextBlock x:Uid="TBLanguagesLower" Text="languages" FontSize="22"/>
                     </PivotItem.Header>
                     <Grid>
                         <mycontrols:AlternatingRowListView 
                             EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                             OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                             ItemsSource="{x:Bind ViewModel.Languages, Mode=OneWay}"
+                            ItemTemplate="{StaticResource RadioCollectionDataTemplate}"
                             Visibility="{x:Bind ViewModel.AreStationsVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"
                             SelectionMode="None"
                             IsItemClickEnabled="True"
@@ -447,9 +457,9 @@
 
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                    <TextBlock x:Uid="TBSearchLower" Text="search" FontSize="22"/>
+                        <TextBlock x:Uid="TBSearchLower" Text="search" FontSize="22"/>
                     </PivotItem.Header>
-                <Grid>
+                    <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>

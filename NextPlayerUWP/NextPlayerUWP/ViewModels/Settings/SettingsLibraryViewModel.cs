@@ -204,6 +204,11 @@ namespace NextPlayerUWP.ViewModels.Settings
         private async Task<List<SdCardFolder>> GetSdCardFolders()
         {
             var list = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
+            if (list == null)
+            {
+                list = new List<SdCardFolder>();
+                await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
+            }
             var folder = new SdCardFolder()
             {
                 Name = "Music",

@@ -411,7 +411,11 @@ namespace NextPlayerUWPDataLayer.Services
             libraryDirectories = new List<string>();
             playlistFiles = new List<StorageFile>();
             sdCardFoldersToScan = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
-            
+            if (sdCardFoldersToScan == null)
+            {
+                sdCardFoldersToScan = new List<SdCardFolder>();
+                //await ApplicationSettingsHelper.SaveSdCardFoldersToScan(sdCardFoldersToScan);
+            }
 
             var propertiesToRetrieve = new List<string>();
             queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileFormatsHelper.SupportedAudioAndPlaylistFormats());

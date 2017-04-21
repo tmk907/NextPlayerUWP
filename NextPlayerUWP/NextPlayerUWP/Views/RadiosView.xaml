@@ -45,9 +45,9 @@
                             Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
                             Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
+            <!--<MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
-                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>-->
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="MFIEditName" Text="Edit name"
                             Click="EditName_Click" CommandParameter="{Binding}"/>
@@ -412,8 +412,8 @@
             Grid.ColumnSpan="2"
 			BackButtonVisibility="Collapsed" 
 			Frame="{x:Bind Frame, Mode=OneWay}"
-			Content="Radio"
-			x:Uid="PageHeaderRadios"
+			Content="Streaming"
+			x:Uid="PageHeaderStreaming"
 			VisualStateNarrowMinWidth="0"
 			VisualStateNormalMinWidth="720">
         </controls:PageHeader>
@@ -523,7 +523,7 @@
                 </PivotItem>
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                        <TextBlock x:Uid="TBMoreLower" Text="more" FontSize="22"/>
+                        <TextBlock x:Uid="TBRadioLower" Text="radio" FontSize="22"/>
                     </PivotItem.Header>
                     <Button 
                         Content="more radio stations" 
