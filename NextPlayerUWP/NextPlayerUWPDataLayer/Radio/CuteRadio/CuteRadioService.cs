@@ -47,7 +47,6 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
             catch (Exception ex)
             {
 
-                throw;
             }
 
             return stations;
@@ -75,7 +74,6 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 catch (Exception ex)
                 {
 
-                    throw;
                 }
                 offset += 20;
                 uri = uriBuilder.GetCountries(offset);
@@ -106,7 +104,6 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 catch (Exception ex)
                 {
 
-                    throw;
                 }
                 offset += 20;
                 uri = uriBuilder.GetGenres(offset);
@@ -136,7 +133,6 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
                 catch (Exception ex)
                 {
 
-                    throw;
                 }
                 offset += 20;
                 uri = uriBuilder.GetLanguages(offset);
@@ -162,7 +158,6 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
             catch (Exception ex)
             {
 
-                throw;
             }
 
             return stations;
@@ -185,7 +180,6 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
             catch (Exception ex)
             {
 
-                throw;
             }
 
             return stations;
@@ -203,7 +197,11 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
             }
             catch (Exception ex)
             {
-                throw;
+                station = new Station()
+                {
+                    Id = -1,
+                    Source = "",
+                };
             }
             return station;
         }

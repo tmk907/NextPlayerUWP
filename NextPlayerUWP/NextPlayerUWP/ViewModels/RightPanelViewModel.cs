@@ -8,7 +8,6 @@ using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Template10.Common;
 using Windows.ApplicationModel.DataTransfer;
@@ -535,14 +534,12 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private async Task<string> ReadDataFromWeb(string a)
+        private async Task<string> ReadDataFromWeb(string uri)
         {
-            var client = new HttpClient();
             string result = "";
             try
             {
-                var response = await client.GetAsync(new Uri(a));
-                result = await response.Content.ReadAsStringAsync();
+                result = await ClientHttp.DownloadAsync(uri);
             }
             catch (Exception ex)
             {

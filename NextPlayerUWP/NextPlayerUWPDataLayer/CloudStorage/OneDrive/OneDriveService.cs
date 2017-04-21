@@ -1,6 +1,7 @@
 ﻿using Microsoft.OneDrive.Sdk;
 using Microsoft.OneDrive.Sdk.Authentication;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -146,11 +147,9 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             var accessToken = ((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession.AccessToken;
             string username = "";
             var uri = new Uri($"https://apis.live.net/v5.0/me?access_token={accessToken}");
-            var httpClient = new System.Net.Http.HttpClient();
             try
             {
-                var result = await httpClient.GetAsync(uri);
-                string jsonUserInfo = await result.Content.ReadAsStringAsync();
+                string jsonUserInfo = await ClientHttp.DownloadAsync(uri);
                 if (jsonUserInfo != null)
                 {
                     var json = Newtonsoft.Json.Linq.JObject.Parse(jsonUserInfo);

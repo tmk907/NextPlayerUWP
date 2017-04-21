@@ -30,6 +30,7 @@ namespace NextPlayerUWP.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            App.OnNavigatedToNewView(true);
 
             var items = MasterListView.ItemsSource as List<SettingsMenuItem>;
 

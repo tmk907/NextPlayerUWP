@@ -4,15 +4,13 @@ using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls;
-using Template10.Common;
 using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using NextPlayerUWPDataLayer.Helpers;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -285,14 +283,12 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        private async Task<string> ReadDataFromWeb(string a)
+        private async Task<string> ReadDataFromWeb(string uri)
         {
-            var client = new HttpClient();
             string result = "";
             try
             {
-                var response = await client.GetAsync(new Uri(a));
-                result = await response.Content.ReadAsStringAsync();
+                result = await ClientHttp.DownloadAsync(uri);
             }
             catch (Exception ex)
             {

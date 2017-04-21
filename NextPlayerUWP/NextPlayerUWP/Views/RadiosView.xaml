@@ -56,7 +56,9 @@
         </MenuFlyout>
         <DataTemplate x:Key="RadioDataTemplate" x:DataType="data:RadioItem">
             <Grid RightTapped="RadioItem_RightTapped" Background="Transparent">
-                <TextBlock Text="{x:Bind Name}"/>
+                <TextBlock Text="{x:Bind Name}"
+                           TextTrimming="CharacterEllipsis"
+                           VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="StreamItemTemplate" x:DataType="data:SongItem">
