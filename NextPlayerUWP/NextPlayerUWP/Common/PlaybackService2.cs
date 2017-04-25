@@ -1,8 +1,6 @@
 ﻿using NextPlayerUWP.Common.Tiles;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Jamendo;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -31,7 +29,6 @@ namespace NextPlayerUWP.Common
         private DateTime songStartedAt;
         private TimeSpan songPlayed;
         private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
-        public JamendoRadiosData jRadioData;
         private LastFmCache lastFmCache;
         PlaybackTimer RadioTimer;
         PlaybackTimer MusicPlaybackTimer;
@@ -350,7 +347,7 @@ namespace NextPlayerUWP.Common
         private async Task UpdateStats2(int songId, TimeSpan songDuration)
         {
             var song = await DatabaseManager.Current.GetSongItemAsync(songId);
-            if (song.SourceType != MusicSource.RadioJamendo)
+            if (song.SourceType != MusicSource.RadioJamendo && song.SourceType != MusicSource.Radio)
             {
                 System.Diagnostics.Debug.WriteLine("UpdateStats2 {0} {1}", songId, songDuration);
                 await UpdateSongStatistics(song.SongId);

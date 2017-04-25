@@ -53,12 +53,11 @@ namespace NextPlayerUWP.Views
             pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
 
             ShellVM.RefreshMenuButtons();
-            //SetNavigationService(navigationService);
-            //BottomPlayerVM = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
-            if (DeviceFamilyHelper.IsDesktop())
-            {
-                ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
-            }
+            BottomPlayerVM = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
+            //if (DeviceFamilyHelper.IsDesktop())
+            //{
+            //    ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
+            //}
 
             MigrateCredentialsAsync();
             ReviewReminder();
@@ -73,9 +72,7 @@ namespace NextPlayerUWP.Views
         private void Shell_Loaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Shell Loaded()");
-            FindName("BPMainGrid");
-            BottomPlayerVM = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
-            //LoadSliderEvents();
+            LoadSliderEvents(timeslider);
             tokenMenu = MessageHub.Instance.Subscribe<MenuButtonSelected>(OnMenuButtonMessage);
             tokenNotification = MessageHub.Instance.Subscribe<InAppNotification>(OnInAppNotificationMessage);
             tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
@@ -85,11 +82,10 @@ namespace NextPlayerUWP.Views
         private void Shell_Unloaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Shell UnLoaded()");
-            //UnloadSliderEvents();
+            UnloadSliderEvents(timeslider);
             MessageHub.Instance.UnSubscribe(tokenMenu);
             MessageHub.Instance.UnSubscribe(tokenNotification);
             MessageHub.Instance.UnSubscribe(tokenTheme);
-            //Bindings.StopTracking();
         }
 
         public Shell(INavigationService navigationService) : this()
@@ -161,18 +157,6 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        public void ChangeRightPanelVisibility(bool visible)
-        {
-            if (visible)
-            {
-                RightPanel.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                RightPanel.Visibility = Visibility.Collapsed;
-            }
-        }
-
         //public void ChangeBottomPlayerVisibility(bool visible)
         //{
         //    if (visible)
@@ -197,29 +181,36 @@ namespace NextPlayerUWP.Views
 
         #region Slider 
 
-        private void LoadSliderEvents()
-        {
-            timeslider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
-            timeslider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
-        }
-
-        private void UnloadSliderEvents()
-        {
-            timeslider.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
-            timeslider.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
-        }
-
         private void BottomSlider_Loaded(object sender, RoutedEventArgs e)
         {
-            durationSliderBottom.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
-            durationSliderBottom.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
+            LoadSliderEvents(durationSliderBottom);
         }
-
 
         private void BottomSlider_Unloaded(object sender, RoutedEventArgs e)
         {
-            durationSliderBottom.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
-            durationSliderBottom.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
+            UnloadSliderEvents(durationSliderBottom);
+        }
+
+        private void BottomPlayerGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadSliderEvents(timeslider);
+        }
+
+        private void BottomPlayerGrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+            UnloadSliderEvents(timeslider);
+        }
+
+        private void LoadSliderEvents(Slider slider)
+        {
+            slider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
+            slider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
+        }
+
+        private void UnloadSliderEvents(Slider slider)
+        {
+            slider.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
+            slider.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
         }
 
         private void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -332,14 +323,6 @@ namespace NextPlayerUWP.Views
             await Task.Run(() => mi.UpdateDatabaseAsync(progress));
         }
 
-        private void BottomPlayerGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            LoadSliderEvents();
-        }
-
-        private void BottomPlayerGrid_Unloaded(object sender, RoutedEventArgs e)
-        {
-            UnloadSliderEvents();
-        }
+        
     }
 }

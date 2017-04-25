@@ -58,12 +58,6 @@ namespace NextPlayerUWP
             }
         }
 
-        public static void ChangeRightPanelVisibility(bool visible)
-        {
-            if (Window.Current == null || Window.Current.Content == null) return;
-            ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeRightPanelVisibility(visible);
-        }
-
         public static void OnNavigatedToNewView(bool bottomPlayerVisible, bool isNowPlayingDesktopActive = false)
         {
             if (Window.Current == null || Window.Current.Content == null) return;

@@ -2,7 +2,6 @@
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Jamendo;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -91,7 +90,6 @@ namespace NextPlayerUWP.Common
             shuffle = Shuffle.CurrentState();
             ApplyRepeatState();
 
-            jRadioData = new JamendoRadiosData();
             lastFmCache = new LastFmCache();
 
             songPlayed = TimeSpan.Zero;
@@ -108,7 +106,6 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("PlaybackService Initialize Start");
             await LoadAll(CurrentSongIndex);
             await LoadRest(info);
-            //System.Diagnostics.Debug.WriteLine("PlaybackService Initialize Loaded");
             Player.Source = mediaList;
             canPlay = true;
             System.Diagnostics.Debug.WriteLine("PlaybackService Initialize End");
@@ -659,46 +656,9 @@ namespace NextPlayerUWP.Common
 
 
         #endregion
-        private async Task RefreshRadioTrackInfo()
+        private void RefreshRadioTrackInfo()
         {
             var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            if (song.SourceType == MusicSource.RadioJamendo)
-            {
-                var stream = await jRadioData.GetRadioStream(song.SongId);
-                if (stream == null) return;
-                var radio = jRadioData.GetRadioItemFromStream(stream);
-
-                var displ = mediaList.CurrentItem.GetDisplayProperties();
-                displ.MusicProperties.AlbumTitle = stream.Album;
-                displ.MusicProperties.Artist = stream.Artist;
-                try
-                {
-                    displ.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(stream.CoverUri));
-                }
-                catch
-                {
-                    displ.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(AppConstants.AlbumCover));
-                }
-                mediaList.CurrentItem.ApplyDisplayProperties(displ);
-
-                NowPlayingSong s = new NowPlayingSong()
-                {
-                    Album = stream.Album,
-                    Artist = stream.Artist + " - " + stream.Title,
-                    ImagePath = stream.CoverUri,
-                    Path = song.Path,
-                    Position = CurrentSongIndex,
-                    SongId = song.SongId,
-                    SourceType = MusicSource.RadioJamendo,
-                    Title = song.Title,
-                };
-
-                OnStreamUpdated(s);
-
-                int ms = jRadioData.GetRemainingSeconds(stream);
-                TimeSpan delay = TimeSpan.FromMilliseconds(ms + 100);
-                RadioTimer.SetTimerWithTask(delay, RefreshRadioTrackInfo);
-            }
         }
 
         private void UpdateStats()

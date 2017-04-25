@@ -1415,7 +1415,6 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task InsertNewNowPlayingPlaylistAsync(IEnumerable<SongItem> songs)
         {
             List<NowPlayingTable> list = new List<NowPlayingTable>();
-            connection.DeleteAll<NowPlayingTable>();
             int i = 0;
             foreach (var item in songs)
             {
@@ -1432,6 +1431,7 @@ namespace NextPlayerUWPDataLayer.Services
                 });
                 i++;
             }
+            connection.DeleteAll<NowPlayingTable>();
             await connectionAsync.InsertAllAsync(list);
         }
 
