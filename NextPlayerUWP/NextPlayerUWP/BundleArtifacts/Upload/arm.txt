@@ -1,5 +1,5 @@
-MainPackage=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\ARM\Release\Upload\NextPlayerUWP_3.1.0.0_ARM.appx
-SymbolPackage=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\NextPlayerUWP_3.1.0.0\NextPlayerUWP_3.1.0.0_ARM.appxsym
+MainPackage=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\ARM\Release\Upload\NextPlayerUWP_3.1.1.0_ARM.appx
+SymbolPackage=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\NextPlayerUWP_3.1.1.0\NextPlayerUWP_3.1.1.0_ARM.appxsym
 ResourcePack=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\_language-ar.appx
 ResourcePack=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\_language-cs.appx
 ResourcePack=C:\Users\tomek\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\_language-de.appx
