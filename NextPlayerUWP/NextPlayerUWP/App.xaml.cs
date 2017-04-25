@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Threading;
-using Microsoft.HockeyApp;
+﻿using Microsoft.HockeyApp;
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Views;
@@ -20,7 +19,6 @@ using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP
 {    
@@ -36,10 +34,12 @@ namespace NextPlayerUWP
 
         bool _isInBackgroundMode = false;
         private AppKeyboardShortcuts appShortcuts;
-
+        Stopwatch s1;
         public App()
         {
             InitializeComponent();
+            s1 = new Stopwatch();
+            s1.Start();
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
             MemoryManager.AppMemoryUsageLimitChanging += MemoryManager_AppMemoryUsageLimitChanging;
@@ -104,7 +104,9 @@ namespace NextPlayerUWP
             appShortcuts = new AppKeyboardShortcuts();
             
             this.UnhandledException += App_UnhandledException;
-
+            s1.Stop();
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             //var gcTimer = new DispatcherTimer();
             //gcTimer.Tick += (sender, e) => { GC.Collect(); };
             //gcTimer.Interval = TimeSpan.FromSeconds(1);
@@ -263,7 +265,9 @@ namespace NextPlayerUWP
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             Debug.WriteLine("OnInitializeAsync " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-
+            s1.Stop();
+            Debug.WriteLine("Time SCM 1: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
             {
                 await SongCoverManager.Instance.Initialize(true);
@@ -272,7 +276,9 @@ namespace NextPlayerUWP
             {
                 await SongCoverManager.Instance.Initialize();
             }
-            DispatcherHelper.Initialize();
+            s1.Stop();
+            Debug.WriteLine("Time SCM 2: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             ColorsHelper ch = new ColorsHelper();
             ch.RestoreUserAccentColors();
             TranslationHelper tr = new TranslationHelper();
@@ -281,7 +287,11 @@ namespace NextPlayerUWP
             await ChangeStatusBarVisibility();
             ThemeHelper.ApplyAppTheme(ThemeHelper.IsLightTheme);
 
-#region AddPageKeys
+            s1.Stop();
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
+
+            #region AddPageKeys
             var keys = PageKeys<Pages>();
             if (!keys.ContainsKey(Pages.AddToPlaylist))
                 keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
@@ -363,16 +373,24 @@ namespace NextPlayerUWP
             {
                 Logger2.Current.WriteMessage("Adduplex initialize fail", Logger2.Level.WarningError);
             }
-
+            s1.Stop();
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             if (!isFirstRun)
             {
                 AlbumArtFinder.StartLooking().ConfigureAwait(false);
             }
+            s1.Stop();
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
         }   
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
+            s1.Stop();
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             if (startKind == StartKind.Launch)
             {
                 //TelemetryAdapter.TrackAppLaunch();
@@ -492,13 +510,19 @@ namespace NextPlayerUWP
                 }
             }
 
-            
+            s1.Stop();
+            Debug.WriteLine("Time Scrobbler: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
+
             if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                 args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
             {
                 await RegisterBGScrobbler();
                 await TileManager.ManageSecondaryTileImages();               
             }
+            s1.Stop();
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
         }
         
         public override async Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)

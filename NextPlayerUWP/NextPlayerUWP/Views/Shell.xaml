@@ -654,6 +654,9 @@
         <Grid 
             Grid.Row="1"
             Grid.ColumnSpan="2"
+            x:Name="BPMainGrid"
+            x:DeferLoadStrategy="Lazy"
+            Visibility="Collapsed"
             Background="{StaticResource UserAccentBrush}"
             DataContext="{Binding Source={StaticResource Locator}, Path=BottomPlayerVM}">
             <Grid.RowDefinitions>
@@ -661,7 +664,9 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" 
-                  x:Name="BottomPlayerGrid" 
+                  x:Name="BottomPlayerGrid"
+                  Loaded="BottomPlayerGrid_Loaded"
+                  Unloaded="BottomPlayerGrid_Unloaded"
                   Visibility="{Binding BottomPlayerVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
                   Height="68">
                 <Grid.ColumnDefinitions>
@@ -722,7 +727,7 @@
                 <Grid Grid.Column="1" x:Name="ShowHideGrid" 
                       x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
                     <Button Style="{StaticResource BottomPlayerButtonStyle}"
-                            Click="{x:Bind BPViewModel.ShowHideSlider}"
+                            Click="{x:Bind BottomPlayerVM.ShowHideSlider}"
                             Width="48" 
                             Height="60">
                         <Button.ContentTemplate>
@@ -750,7 +755,7 @@
                     </Grid.ColumnDefinitions>
                     <Button x:Name="ShuffleButton"
                         Grid.Column="0"
-                        Click="{x:Bind BPViewModel.PlayerVM.ToggleShuffle}" 
+                        Click="{x:Bind BottomPlayerVM.PlayerVM.ToggleShuffle}" 
                         Width="48" Height="48"
                         Style="{StaticResource BottomPlayerButtonStyle}">
                         <Button.ContentTemplate>
@@ -768,8 +773,8 @@
                     </Button>
                     <RepeatButton Grid.Column="1"
                                    AutomationProperties.AcceleratorKey="Left"
-                        Click="{x:Bind BPViewModel.PlayerVM.PreviousOrSeek}"
-                        Interval="{x:Bind BPViewModel.PlayerVM.RepeatButtonInterval}"
+                        Click="{x:Bind BottomPlayerVM.PlayerVM.PreviousOrSeek}"
+                        Interval="{x:Bind BottomPlayerVM.PlayerVM.RepeatButtonInterval}"
                         Width="48" Height="60"
                         Style="{StaticResource BottomPlayerRepeatButtonStyle}">
                         <RepeatButton.ContentTemplate>
@@ -786,7 +791,7 @@
                         </RepeatButton.ContentTemplate>
                     </RepeatButton>
                     <Button Grid.Column="2"
-                        Click="{x:Bind BPViewModel.PlayerVM.Play}"
+                        Click="{x:Bind BottomPlayerVM.PlayerVM.Play}"
                         Width="48" Height="60"
                         Style="{StaticResource BottomPlayerButtonStyle}">
                         <Button.ContentTemplate>
@@ -805,8 +810,8 @@
                     </Button>
                     <RepeatButton Grid.Column="3"
                                   AutomationProperties.AcceleratorKey="Right"
-                        Click="{x:Bind BPViewModel.PlayerVM.NextOrSeek}"
-                        Interval="{x:Bind BPViewModel.PlayerVM.RepeatButtonInterval}"
+                        Click="{x:Bind BottomPlayerVM.PlayerVM.NextOrSeek}"
+                        Interval="{x:Bind BottomPlayerVM.PlayerVM.RepeatButtonInterval}"
                         Width="48" Height="60"
                         Style="{StaticResource BottomPlayerRepeatButtonStyle}">
                         <RepeatButton.ContentTemplate>
@@ -824,7 +829,7 @@
                     </RepeatButton>
                     <Button Grid.Column="4"
                             x:Name="RepeatButton"
-                        Click="{x:Bind BPViewModel.PlayerVM.ToggleRepeat}"
+                        Click="{x:Bind BottomPlayerVM.PlayerVM.ToggleRepeat}"
                         Width="48" 
                         Height="60"
                         Style="{StaticResource BottomPlayerButtonStyle}">
@@ -845,7 +850,7 @@
                 <Grid Grid.Column="3" x:Name="VolumeGrid" 
                       x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
                     <Button Style="{StaticResource BottomPlayerButtonStyle}"
-                            RightTapped="{x:Bind BPViewModel.PlayerVM.MuteVolume}"
+                            RightTapped="{x:Bind BottomPlayerVM.PlayerVM.MuteVolume}"
                             Width="48" 
                             Height="60">
                         <Button.ContentTemplate>

@@ -192,6 +192,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 }
                 musicFolderId = item?.Id;
             }
+            if (musicFolderId == null) return null;
             var rootTask = cachedFolders.GetOrAdd(musicFolderId, GetRootMusicFolder);
             var f = await rootTask;
             return f?.Id;

@@ -338,7 +338,7 @@ namespace NextPlayerUWP.ViewModels
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
             if (QueueVM.Songs != null)
             {
-                await NowPlayingPlaylistManager.Current.SortPlaylist();
+                //await NowPlayingPlaylistManager.Current.SortPlaylist();
             }
         }
 

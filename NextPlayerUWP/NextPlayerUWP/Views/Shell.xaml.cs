@@ -26,7 +26,7 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class Shell : Page
     {
-        BottomPlayerViewModel BPViewModel;
+        BottomPlayerViewModel BottomPlayerVM;
 
         public static Shell Instance { get; set; }
         public static HamburgerMenu HamburgerMenu => Instance.Menu;
@@ -54,7 +54,7 @@ namespace NextPlayerUWP.Views
 
             ShellVM.RefreshMenuButtons();
             //SetNavigationService(navigationService);
-            BPViewModel = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
+            //BottomPlayerVM = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
             if (DeviceFamilyHelper.IsDesktop())
             {
                 ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
@@ -73,7 +73,9 @@ namespace NextPlayerUWP.Views
         private void Shell_Loaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Shell Loaded()");
-            LoadSliderEvents();
+            FindName("BPMainGrid");
+            BottomPlayerVM = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
+            //LoadSliderEvents();
             tokenMenu = MessageHub.Instance.Subscribe<MenuButtonSelected>(OnMenuButtonMessage);
             tokenNotification = MessageHub.Instance.Subscribe<InAppNotification>(OnInAppNotificationMessage);
             tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
@@ -83,7 +85,7 @@ namespace NextPlayerUWP.Views
         private void Shell_Unloaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Shell UnLoaded()");
-            UnloadSliderEvents();
+            //UnloadSliderEvents();
             MessageHub.Instance.UnSubscribe(tokenMenu);
             MessageHub.Instance.UnSubscribe(tokenNotification);
             MessageHub.Instance.UnSubscribe(tokenTheme);
@@ -222,12 +224,12 @@ namespace NextPlayerUWP.Views
 
         private void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            BPViewModel.sliderpressed = true;
+            BottomPlayerVM.sliderpressed = true;
         }
 
         private void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
-            BPViewModel.sliderpressed = false;
+            BottomPlayerVM.sliderpressed = false;
             PlaybackService.Instance.Position = TimeSpan.FromSeconds(((Slider)sender).Value);
         }
 
@@ -328,6 +330,16 @@ namespace NextPlayerUWP.Views
                 }
             );
             await Task.Run(() => mi.UpdateDatabaseAsync(progress));
+        }
+
+        private void BottomPlayerGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadSliderEvents();
+        }
+
+        private void BottomPlayerGrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+            UnloadSliderEvents();
         }
     }
 }

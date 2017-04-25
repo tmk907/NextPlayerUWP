@@ -272,7 +272,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                     <TextBlock 
-                        Text="{Binding PageSubTitle}" 
+                        Text="{x:Bind ViewModel.PageSubTitle}" 
                         Margin="16"
                         FontSize="17" 
                         TextTrimming="CharacterEllipsis"/>
@@ -305,7 +305,7 @@
                 <mycontrols:AlternatingRowListView x:Name="PlaylistListView"
                         EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                         OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                        ItemsSource="{Binding Playlist}"
+                        ItemsSource="{x:Bind ViewModel.Playlist}"
                         ItemTemplate="{StaticResource SongItemTemplateDesktop}"
                         SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                         IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"

@@ -391,7 +391,7 @@
                 Grid.Row="1"
                 EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                 OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                ItemsSource="{Binding Playlists}"
+                ItemsSource="{x:Bind ViewModel.Playlists, Mode=OneWay}"
                 SelectionMode="None"
                 IsItemClickEnabled="True"
                 ItemClick="{x:Bind ViewModel.ItemClicked}"
