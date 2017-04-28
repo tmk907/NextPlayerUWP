@@ -141,6 +141,7 @@
     <Compile Include="Common\MenuButtonItem.cs" />
     <Compile Include="Common\MessageDialogHelper.cs" />
     <Compile Include="Common\PlayerCommands.cs" />
+    <Compile Include="Common\PlayerInitializer.cs" />
     <Compile Include="Common\SettingsVMService.cs" />
     <Compile Include="Common\SongItemsFactory.cs" />
     <Compile Include="Common\TelemetryAdapter.cs" />

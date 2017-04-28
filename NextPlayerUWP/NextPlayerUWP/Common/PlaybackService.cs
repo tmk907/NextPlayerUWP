@@ -19,7 +19,7 @@ namespace NextPlayerUWP.Common
     public delegate void MediaPlayerTrackChangeHandler(int index);
     public delegate void MediaPlayerMediaOpenHandler();
     public delegate void StreamUpdatedHandler(NowPlayingSong song);
-    
+
     public class InfoForTask
     {
         public int c { get; set; }
@@ -72,7 +72,7 @@ namespace NextPlayerUWP.Common
 
         public PlaybackService()
         {
-            Logger2.DebugWrite("PlaybackService","");
+            Logger2.DebugWrite("PlaybackService()","");
             
             // Create the player instance
             Player = new MediaPlayer();
@@ -103,12 +103,12 @@ namespace NextPlayerUWP.Common
 
         public async Task Initialize()
         {
-            System.Diagnostics.Debug.WriteLine("PlaybackService Initialize Start");
+            System.Diagnostics.Debug.WriteLine("PlaybackService.Initialize() Start");
             await LoadAll(CurrentSongIndex);
             await LoadRest(info);
             Player.Source = mediaList;
             canPlay = true;
-            System.Diagnostics.Debug.WriteLine("PlaybackService Initialize End");
+            System.Diagnostics.Debug.WriteLine("PlaybackService.Initialize() End");
         }
 
         int maxCachedItems = 3;
@@ -202,7 +202,7 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("OnMediaPlayerStateChanged {0}", state);
             MediaPlayerStateChanged?.Invoke(state);
         }
-        
+
         public static event MediaPlayerMediaOpenHandler MediaPlayerMediaOpened;
         public void OnMediaPlayerMediaOpened()
         {

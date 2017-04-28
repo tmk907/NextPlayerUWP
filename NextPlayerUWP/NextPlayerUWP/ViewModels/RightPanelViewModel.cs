@@ -25,7 +25,8 @@ namespace NextPlayerUWP.ViewModels
         public RightPanelViewModel()
         {
             Logger2.DebugWrite("RightPanelViewModel()", "");
-
+            System.Diagnostics.Stopwatch s1 = new System.Diagnostics.Stopwatch();
+            s1.Start();
             ViewModelLocator vml = new ViewModelLocator();
             QueueVM = vml.QueueVM;
             scrollerHelper = new ListViewScrollerHelper();
@@ -34,6 +35,7 @@ namespace NextPlayerUWP.ViewModels
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             lyricsExtensions = new LyricsExtensionsClient(vml.LyricsExtensionsService);
+            isInitialized = false;
             Init();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
@@ -46,9 +48,11 @@ namespace NextPlayerUWP.ViewModels
             lyricsWebview.NavigationStarting += webView1_NavigationStarting;
             lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
             lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
-
+            s1.Stop();
+            System.Diagnostics.Debug.WriteLine("RightPanelViewModel() End {0}ms", s1.ElapsedMilliseconds);
         }
-        
+
+        private bool isInitialized;
         public WebView GetWebView()
         {
             return lyricsWebview;
@@ -56,7 +60,9 @@ namespace NextPlayerUWP.ViewModels
 
         private void Init()
         {
+            if (isInitialized) return;
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
+            isInitialized = true;
         }
         
         public void OnShowLyricsMessage(ShowLyrics msg)
@@ -77,6 +83,7 @@ namespace NextPlayerUWP.ViewModels
         private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
         {
             PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
+            isInitialized = false;
         }
 
         public QueueViewModelBase QueueVM { get; set; }

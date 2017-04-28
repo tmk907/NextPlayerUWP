@@ -42,7 +42,9 @@ namespace NextPlayerUWP.Views
 
         public Shell()
         {
-            System.Diagnostics.Debug.WriteLine("Shell()");
+            Logger2.DebugWrite("Shell() Start", "");
+            System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+            s.Start();
             Instance = this;
             InitializeComponent();
             this.DataContext = ShellVM;
@@ -58,10 +60,11 @@ namespace NextPlayerUWP.Views
             //{
             //    ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
             //}
-
             MigrateCredentialsAsync();
             ReviewReminder();
             //SendLogs();
+            s.Stop();
+            System.Diagnostics.Debug.WriteLine("Shell() End {0}ms", s.ElapsedMilliseconds);
         }
 
         //~Shell()
@@ -71,18 +74,19 @@ namespace NextPlayerUWP.Views
 
         private void Shell_Loaded(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("Shell Loaded()");
-            LoadSliderEvents(timeslider);
+            System.Diagnostics.Debug.WriteLine("Shell.Loaded() Start");
+            //LoadSliderEvents(timeslider);
             tokenMenu = MessageHub.Instance.Subscribe<MenuButtonSelected>(OnMenuButtonMessage);
             tokenNotification = MessageHub.Instance.Subscribe<InAppNotification>(OnInAppNotificationMessage);
             tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
             ApplyTheme(ThemeHelper.IsLightTheme);
+            System.Diagnostics.Debug.WriteLine("Shell.Loaded() End");
         }
 
         private void Shell_Unloaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Shell UnLoaded()");
-            UnloadSliderEvents(timeslider);
+            //UnloadSliderEvents(timeslider);
             MessageHub.Instance.UnSubscribe(tokenMenu);
             MessageHub.Instance.UnSubscribe(tokenNotification);
             MessageHub.Instance.UnSubscribe(tokenTheme);
@@ -191,12 +195,12 @@ namespace NextPlayerUWP.Views
             UnloadSliderEvents(durationSliderBottom);
         }
 
-        private void BottomPlayerGrid_Loaded(object sender, RoutedEventArgs e)
+        private void SliderGrid_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSliderEvents(timeslider);
         }
 
-        private void BottomPlayerGrid_Unloaded(object sender, RoutedEventArgs e)
+        private void SliderGrid_Unloaded(object sender, RoutedEventArgs e)
         {
             UnloadSliderEvents(timeslider);
         }

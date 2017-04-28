@@ -58,6 +58,19 @@ namespace NextPlayerUWP
             }
         }
 
+        private static PlayerInitializer playerInitializer;
+        public static PlayerInitializer PlayerInitializer
+        {
+            get
+            {
+                if (playerInitializer == null)
+                {
+                    playerInitializer = new PlayerInitializer();
+                }
+                return playerInitializer;
+            }
+        }
+
         public static void OnNavigatedToNewView(bool bottomPlayerVisible, bool isNowPlayingDesktopActive = false)
         {
             if (Window.Current == null || Window.Current.Content == null) return;

@@ -484,7 +484,6 @@
                         <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SliderColumn.Width" Value="0"/>
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
                         <Setter Target="ToggleRepeatButton.Visibility" Value="Collapsed"/>
@@ -871,7 +870,13 @@
                         </Button.Flyout>
                     </Button>
                 </Grid>
-                <Grid Grid.Column="4" x:Name="SliderGrid" FlowDirection="LeftToRight" >
+                <Grid Grid.Column="4" 
+                      x:Name="SliderGrid" 
+                      FlowDirection="LeftToRight" 
+                      x:DeferLoadStrategy="Lazy" 
+                      Visibility="Collapsed"
+                      Loaded="SliderGrid_Loaded"
+                      Unloaded="SliderGrid_Unloaded">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="60"/>
                         <ColumnDefinition/>

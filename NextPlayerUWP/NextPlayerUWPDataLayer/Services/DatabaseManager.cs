@@ -978,6 +978,39 @@ namespace NextPlayerUWPDataLayer.Services
             return list;
         }
 
+        public async Task<ObservableCollection<SongItem>> GetSongItemsFromNowPlayingAsync()
+        {
+            var query = await connectionAsync.Table<NowPlayingTable>().OrderBy(e => e.Position).ToListAsync();
+            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
+            foreach (var e in query)
+            {
+                var type = (MusicSource)e.SourceType;
+                if (type == MusicSource.LocalFile || type == MusicSource.LocalNotMusicLibrary || type == MusicSource.Dropbox || type == MusicSource.OneDrive || type == MusicSource.PCloud)
+                {
+                    var query2 = connection.Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
+                    if (query2 != null)
+                    {
+                        var newSong = new SongItem(query2);
+                        newSong.SourceType = type;
+                        list.Add(newSong);
+                    }
+                }
+                else if (type == MusicSource.RadioJamendo)
+                {
+                    SongItem s = new SongItem();
+                    s.SourceType = MusicSource.RadioJamendo;
+                    s.Title = e.Title;
+                    s.Artist = e.Artist;
+                    s.Album = e.Album;
+                    s.Path = e.Path;
+                    s.CoverPath = e.ImagePath;
+                    s.SongId = e.SongId;
+                    list.Add(s);
+                }
+            }
+            return list;
+        }
+
 
         public async Task<ObservableCollection<AlbumItem>> GetAlbumItemsAsync()
         {

@@ -317,7 +317,7 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("RadioSource_OpenOperationCompleted {0}", sender.IsOpen);
             if (sender.IsOpen)
             {
-                Instance.RadioTimer.SetTimerWithTask(TimeSpan.FromMilliseconds(500), Instance.RefreshRadioTrackInfo);
+                //Instance.RadioTimer.SetTimerWithTask(TimeSpan.FromMilliseconds(500), Instance.RefreshRadioTrackInfo);
             }
         }
 

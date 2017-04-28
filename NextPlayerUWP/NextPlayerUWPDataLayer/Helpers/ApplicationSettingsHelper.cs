@@ -188,7 +188,13 @@ namespace NextPlayerUWPDataLayer.Helpers
         public static async Task SaveToLocalFile<T>(string fileName, T data)
         {
             LocalObjectStorageHelper helper = new LocalObjectStorageHelper();
-            await helper.SaveFileAsync<T>(fileName, data);
+            try
+            {
+                await helper.SaveFileAsync<T>(fileName, data);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+            }
         }
 
         public static async Task<T> ReadLocalFile<T>(string fileName)
@@ -198,11 +204,24 @@ namespace NextPlayerUWPDataLayer.Helpers
             T data = default(T);
             if (!exists)
             {
-                await helper.SaveFileAsync<T>(fileName, data);
+                try
+                {
+                    await helper.SaveFileAsync<T>(fileName, data);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                }
             }
             else
             {
-                data = await helper.ReadFileAsync<T>(fileName);
+                try
+                {
+                    data = await helper.ReadFileAsync<T>(fileName);
+                }
+                catch (UnauthorizedAccessException)
+                {
+
+                }
             }
             return data;
         }

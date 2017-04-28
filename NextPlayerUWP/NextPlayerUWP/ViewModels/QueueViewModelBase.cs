@@ -16,12 +16,15 @@ namespace NextPlayerUWP.ViewModels
     {
         public QueueViewModelBase()
         {
+            System.Diagnostics.Debug.WriteLine("QueueViewModelBase");
+            isInitialized = false;
             Init();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
             lastFmCache = new LastFmCache();
         }
         private LastFmCache lastFmCache;
+        private bool isInitialized;
 
         private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
         {
@@ -33,12 +36,14 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.MediaPlayerTrackChanged -= ChangeSong;
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
-            NowPlayingPlaylistManager.NPListChanged -= NPListChanged;
-
+            NowPlayingPlaylistManager.NPListChanged -= UpdatePlaylist;
+            isInitialized = false;
         }
 
         private void Init()
         {
+            if (isInitialized) return;
+            System.Diagnostics.Debug.WriteLine("QueueViewModelBase.Init()");
             CurrentSong = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             if (!currentSong.IsAlbumArtSet)
             {
@@ -56,8 +61,8 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.MediaPlayerTrackChanged += ChangeSong;
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
-            NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-
+            NowPlayingPlaylistManager.NPListChanged += UpdatePlaylist;
+            isInitialized = true;
         }
 
         private SongItem currentSong = new SongItem();
@@ -132,15 +137,10 @@ namespace NextPlayerUWP.ViewModels
             });
         }
 
-        private void NPListChanged()
-        {
-            UpdatePlaylist();
-            SongsCount = NowPlayingPlaylistManager.Current.songs.Count;
-        }
-
         private void UpdatePlaylist()
         {
             Songs = NowPlayingPlaylistManager.Current.songs;
+            SongsCount = NowPlayingPlaylistManager.Current.songs.Count;
         }
 
         private async void PlaybackService_MediaPlayerMediaOpened()

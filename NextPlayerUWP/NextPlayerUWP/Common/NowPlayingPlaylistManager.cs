@@ -1,6 +1,4 @@
-﻿using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Enums;
-using NextPlayerUWPDataLayer.Helpers;
+﻿using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -9,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using Windows.Foundation.Collections;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.CloudStorage;
 using Template10.Common;
@@ -30,14 +27,20 @@ namespace NextPlayerUWP.Common
         private NowPlayingPlaylistManager()
         {
             Logger2.DebugWrite("NowPlayingPlaylistManager()","");
-            songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
-            songs.CollectionChanged += Songs_CollectionChanged;
             PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
             PlaybackService.StreamUpdated += PlaybackService_StreamUpdated;
             App.SongUpdated += App_SongUpdated;
-            currentIndex = ApplicationSettingsHelper.ReadSongIndex();
             SortingHelper = new SortingHelperForSongItemsInPlaylist("nowplaying");
             SortingHelper.SelectedSortOption = SortingHelper.ComboBoxItemValues.FirstOrDefault();
+        }
+
+        public async Task Init()
+        {
+            System.Diagnostics.Debug.WriteLine("NowPlayingPlaylistManager.Init()");
+            songs = await DatabaseManager.Current.GetSongItemsFromNowPlayingAsync();
+            songs.CollectionChanged += Songs_CollectionChanged;
+            OnNPChanged();
+            currentIndex = ApplicationSettingsHelper.ReadSongIndex();
         }
 
         public SortingHelperForSongItemsInPlaylist SortingHelper;
@@ -48,7 +51,7 @@ namespace NextPlayerUWP.Common
             this.dispatcher = dispatcher;
         }
 
-        private int currentIndex;
+        private int currentIndex = 0;
 
         public static event NPListChangedHandler NPListChanged;
         public static void OnNPChanged()

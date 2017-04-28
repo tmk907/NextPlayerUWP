@@ -19,7 +19,7 @@ namespace NextPlayerUWP.ViewModels
             App.Current.Resuming += Current_Resuming;
             App.Current.Suspending += Current_Suspending;
             NowPlayingPlaylistManager.Current.SetDispatcher(WindowWrapper.Current().Dispatcher);
-            PlaybackService.Instance.Initialize().ConfigureAwait(false);
+            //PlaybackService.Instance.Initialize().ConfigureAwait(false);
             ViewModelLocator vml = new ViewModelLocator();
             PlayerVM = vml.PlayerVM;
             QueueVM = vml.QueueVM;

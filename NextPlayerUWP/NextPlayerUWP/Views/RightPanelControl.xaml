@@ -411,7 +411,7 @@
                 </PivotItem.Header>
                 <ListView x:Name="NowPlayingPlaylistListView"
                         Margin="8,8,0,0" 
-                        ItemsSource="{x:Bind ViewModel.QueueVM.Songs}"
+                        ItemsSource="{x:Bind ViewModel.QueueVM.Songs, Mode=OneWay}"
                         ItemTemplate="{StaticResource SongTemplate}"
                         SelectionMode="None"
                         

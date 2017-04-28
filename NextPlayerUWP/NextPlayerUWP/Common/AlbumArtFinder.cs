@@ -47,6 +47,7 @@ namespace NextPlayerUWP.Common
                 albums = await DatabaseManager.Current.GetAlbumsTable();
                 songs = await DatabaseManager.Current.GetSongsWithoutAlbumArtAsync();
             });
+            if (songs.Count == 0) return;
             isRunning = true;
             await Task.Run(() => FindAlbumArtOfEverySong());
             songs.Clear();

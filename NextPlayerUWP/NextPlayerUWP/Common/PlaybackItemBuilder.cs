@@ -97,7 +97,8 @@ namespace NextPlayerUWP.Common
                     }
                     break;
                 case MusicSource.RadioJamendo:
-                    mpi = await PrepareFromJamendo(song);
+                    //mpi = await PrepareFromJamendo(song);
+                    mpi = PrepareDefaultItem();
                     break;
                 case MusicSource.Dropbox:
                 case MusicSource.OneDrive:
@@ -213,23 +214,23 @@ namespace NextPlayerUWP.Common
         //    return null;
         //}
 
-        private static async Task<MediaPlaybackItem> PrepareFromJamendo(SongItem song)
-        {
-            if ("" == song.Path)
-            {
-                var stream = await PlaybackService.Instance.jRadioData.GetRadioStream(song.SongId);
-                if (stream != null)
-                {
-                    song.Path = stream.Url;
-                }
-            }
-            var jamendoSource = MediaSource.CreateFromUri(new Uri(song.Path));
-            var jamendoPlaybackItem = new MediaPlaybackItem(jamendoSource);
-            jamendoPlaybackItem.Source.OpenOperationCompleted += PlaybackService.RadioSource_OpenOperationCompleted;
-            UpdateDisplayProperties(jamendoPlaybackItem, song);
-            jamendoSource.CustomProperties[propertySongId] = song.SongId;
-            return jamendoPlaybackItem;
-        }
+        //private static async Task<MediaPlaybackItem> PrepareFromJamendo(SongItem song)
+        //{
+        //    if ("" == song.Path)
+        //    {
+        //        var stream = await PlaybackService.Instance.jRadioData.GetRadioStream(song.SongId);
+        //        if (stream != null)
+        //        {
+        //            song.Path = stream.Url;
+        //        }
+        //    }
+        //    var jamendoSource = MediaSource.CreateFromUri(new Uri(song.Path));
+        //    var jamendoPlaybackItem = new MediaPlaybackItem(jamendoSource);
+        //    jamendoPlaybackItem.Source.OpenOperationCompleted += PlaybackService.RadioSource_OpenOperationCompleted;
+        //    UpdateDisplayProperties(jamendoPlaybackItem, song);
+        //    jamendoSource.CustomProperties[propertySongId] = song.SongId;
+        //    return jamendoPlaybackItem;
+        //}
 
         private static MediaPlaybackItem PrepareFromCloudStorage(SongItem song)
         {

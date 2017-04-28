@@ -253,13 +253,16 @@ namespace NextPlayerUWP
 
         public override UIElement CreateRootElement(IActivatedEventArgs e)
         {
+            s1.Stop();
+            Debug.WriteLine("Time CreateRootElement Start: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
             return new ModalDialog
             {
                 DisableBackButtonWhenModal = true,
                 Content = new Views.Shell(service),
                 ModalContent = new Views.Busy(),
-            };
+            };            
         }
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
@@ -286,10 +289,6 @@ namespace NextPlayerUWP
 
             await ChangeStatusBarVisibility();
             ThemeHelper.ApplyAppTheme(ThemeHelper.IsLightTheme);
-
-            s1.Stop();
-            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
-            s1.Start();
 
             #region AddPageKeys
             var keys = PageKeys<Pages>();
@@ -363,33 +362,26 @@ namespace NextPlayerUWP
             {
                 //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
             }
-            //await MediaImport.CheckChanges();
 
-            try
-            {
-                AdDuplex.AdDuplexClient.Initialize("bfe9d689-7cf7-4add-84fe-444dc72e6f36");
-            }
-            catch (Exception ex)
-            {
-                Logger2.Current.WriteMessage("Adduplex initialize fail", Logger2.Level.WarningError);
-            }
+            //try
+            //{
+            //    AdDuplex.AdDuplexClient.Initialize("bfe9d689-7cf7-4add-84fe-444dc72e6f36");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger2.Current.WriteMessage("Adduplex initialize fail", Logger2.Level.WarningError);
+            //}
+            
             s1.Stop();
-            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            Debug.WriteLine("Time OnInitializeAsync End: {0}ms", s1.ElapsedMilliseconds);
             s1.Start();
-            if (!isFirstRun)
-            {
-                AlbumArtFinder.StartLooking().ConfigureAwait(false);
-            }
-            s1.Stop();
-            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
-            s1.Start();
-        }   
+        }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
             s1.Stop();
-            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            Debug.WriteLine("Time OnStartAsync Start: {0}ms", s1.ElapsedMilliseconds);
             s1.Start();
             if (startKind == StartKind.Launch)
             {
@@ -402,7 +394,7 @@ namespace NextPlayerUWP
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
             }
-
+            await PlayerInitializer.Init();
             var fileArgs = args as FileActivatedEventArgs;
             if (fileArgs != null && fileArgs.Files.Any())
             {
@@ -488,8 +480,6 @@ namespace NextPlayerUWP
                         else
                         {
                             Debug.WriteLine("OnStartAsync Primary not closed");
-                            //Logger.SaveInSettings("Onstart from Primary " + args.PreviousExecutionState);
-                            //await NavigationService.NavigateAsync(Pages.Playlists);
                         }
                         break;
                     case AdditionalKinds.Toast:
@@ -499,13 +489,7 @@ namespace NextPlayerUWP
                         break;
                     default:
                         Debug.WriteLine("OnStartAsync default");
-                        //Logger.Save("OnStart default");
-                        //Logger.SaveToFile();
-                        //if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                        //    args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
-                        //{
-                            await NavigationService.NavigateAsync(Pages.Playlists);
-                        //}
+                        await NavigationService.NavigateAsync(Pages.Playlists);
                         break;
                 }
             }
@@ -517,11 +501,19 @@ namespace NextPlayerUWP
             if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                 args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
             {
-                await RegisterBGScrobbler();
-                await TileManager.ManageSecondaryTileImages();               
+                try
+                {
+                    await RegisterBGScrobbler();
+                    await TileManager.ManageSecondaryTileImages();
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }               
             }
             s1.Stop();
-            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            Debug.WriteLine("Time OnStartAsync End: {0}ms", s1.ElapsedMilliseconds);
             s1.Start();
         }
         

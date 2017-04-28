@@ -26,6 +26,7 @@ namespace NextPlayerUWP.Views
 
         public PlaylistsView()
         {
+            System.Diagnostics.Debug.WriteLine("PlaylistsView()");
             this.InitializeComponent();
             //NavigationCacheMode = NavigationCacheMode.Required;
             this.Loaded += View_Loaded;
@@ -41,6 +42,7 @@ namespace NextPlayerUWP.Views
 
         private void View_Loaded(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("PlaylistsView.Loaded()");
             ViewModel.OnLoaded(PlaylistsListView);
             token = MessageHub.Instance.Subscribe<EnableSearching>(OnSearchMessage);
             selectionButtons.OnLoaded(ViewModel, PageHeader, PlaylistsListView);
