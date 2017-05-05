@@ -423,6 +423,7 @@
                 Stretch="UniformToFill"
                 x:DeferLoadStrategy="Lazy"
                 Visibility="Collapsed"
+                Opacity="0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 ImageOpened="AlbumCoverImageBG_ImageOpened">
@@ -485,6 +486,7 @@
                     x:Name="AlbumCoverImage"
                     x:DeferLoadStrategy="Lazy" 
                     Visibility="Collapsed"
+                    Opacity="0"
                     ImageOpened="AlbumCoverImage_ImageOpened">
                 <Image.Source>
                     <BitmapImage

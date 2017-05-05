@@ -269,7 +269,7 @@ namespace NextPlayerUWP
         {
             Debug.WriteLine("OnInitializeAsync " + args.PreviousExecutionState + " " + DetermineStartCause(args));
             s1.Stop();
-            Debug.WriteLine("Time SCM 1: {0}ms", s1.ElapsedMilliseconds);
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
             s1.Start();
             if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
             {
@@ -279,11 +279,9 @@ namespace NextPlayerUWP
             {
                 await SongCoverManager.Instance.Initialize();
             }
-            s1.Stop();
-            Debug.WriteLine("Time SCM 2: {0}ms", s1.ElapsedMilliseconds);
-            s1.Start();
+           
             ColorsHelper ch = new ColorsHelper();
-            ch.RestoreUserAccentColors();
+            ch.RestoreAppAccentColors();
             TranslationHelper tr = new TranslationHelper();
             tr.ChangeSlideableItemDescription();
 
@@ -494,10 +492,6 @@ namespace NextPlayerUWP
                 }
             }
 
-            s1.Stop();
-            Debug.WriteLine("Time Scrobbler: {0}ms", s1.ElapsedMilliseconds);
-            s1.Start();
-
             if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
                 args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
             {
@@ -514,7 +508,6 @@ namespace NextPlayerUWP
             }
             s1.Stop();
             Debug.WriteLine("Time OnStartAsync End: {0}ms", s1.ElapsedMilliseconds);
-            s1.Start();
         }
         
         public override async Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)

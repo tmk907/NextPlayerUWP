@@ -172,9 +172,6 @@
     <Compile Include="Controls\ButtonsForMultipleSelection.cs" />
     <Compile Include="Controls\CompositionImage.cs" />
     <Compile Include="Controls\ConnectedTransition.cs" />
-    <Compile Include="Controls\CrossfadingImage.xaml.cs">
-      <DependentUpon>CrossfadingImage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
     <Compile Include="Controls\IGetSelectedItems.cs" />
     <Compile Include="Controls\MyListView.cs" />
@@ -189,6 +186,7 @@
     </Compile>
     <Compile Include="Controls\SurfaceLoader.cs" />
     <Compile Include="Controls\VisualTreeHelperExtensions.cs" />
+    <Compile Include="Controls\XamlBrewerBackDrop.cs" />
     <Compile Include="Converters\BackgroundConverter.cs" />
     <Compile Include="Converters\BoolToBackground.cs" />
     <Compile Include="Converters\BoolToHighlightedItemForeground.cs" />
@@ -222,7 +220,6 @@
     <Compile Include="Converters\ZoomedOutItemContainerStyleConverter.cs" />
     <Compile Include="Converters\ZoomedOutItemWidthConverter.cs" />
     <Compile Include="Extensions\BaseExtensionsHelper.cs" />
-    <Compile Include="Extensions\data.cs" />
     <Compile Include="Extensions\ExtensionsService.cs" />
     <Compile Include="Extensions\LyricsExtensions.cs" />
     <Compile Include="Extensions\LyricsExtensionsClient.cs" />
@@ -243,6 +240,7 @@
     <Compile Include="Messages\ShowLyrics.cs" />
     <Compile Include="Messages\ShowNowPlayingList.cs" />
     <Compile Include="Messages\ThemeChange.cs" />
+    <Compile Include="Messages\AppColorAccent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddToPlaylistViewModel.cs" />
     <Compile Include="ViewModels\AlbumArtistsViewModel.cs" />
@@ -539,10 +537,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\CrossfadingImage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\PopupNotification.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

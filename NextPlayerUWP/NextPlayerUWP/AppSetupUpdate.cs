@@ -27,7 +27,7 @@ namespace NextPlayerUWP
             //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, true);
             var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
             ColorsHelper ch = new ColorsHelper();
-            ch.SaveUserAccentColor(color);
+            ch.SaveAppAccentColor(color);
             //ch.SetAccentColorShades(color);
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterDropItem, SettingsKeys.ActionAddToNowPlaying);
@@ -69,6 +69,8 @@ namespace NextPlayerUWP
                 new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Online },
             };
             ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, false);
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -252,6 +254,11 @@ namespace NextPlayerUWP
                     new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Online },
                 };
                 ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AccentFromAlbumArt) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, false);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, false);
             }
         }
 

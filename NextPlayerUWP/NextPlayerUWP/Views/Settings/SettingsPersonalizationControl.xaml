@@ -29,9 +29,9 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="DragDropActionStackPanel.Visibility" Value="Collapsed"/>
                         <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Visible"/>
                         <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Visible"/>
+                        <Setter Target="PhoneNowPlayingBackgroundSP.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -40,8 +40,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="DragDropActionStackPanel.Visibility" Value="Visible"/>
-                        <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Collapsed"/>
-                        <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="KeyboardShortcutsSP.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Xbox">
@@ -50,8 +49,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="DragDropActionStackPanel.Visibility" Value="Visible"/>
-                        <Setter Target="SwipeLeftCommandActionStackPanel.Visibility" Value="Collapsed"/>
-                        <Setter Target="StatusBarVisibilityStackPanel.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -88,9 +85,23 @@
                         FontSize="17"
                         Margin="4,4,4,4"
                         Text="App accent color:"/>
+                    <StackPanel 
+                        Orientation="Vertical" Margin="8,4,8,4">
+                        <TextBlock 
+                            x:Uid="TBAlbumArtAccent"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            FontSize="16"
+                            Margin="0"
+                            Text="Match accent to album art"/>
+                        <StackPanel 
+                            Orientation="Horizontal"
+                            Margin="8,0,0,0">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AccentFromAlbumArt, Mode=TwoWay}"/>
+                        </StackPanel>
+                    </StackPanel>
                     <GridView 
                         ItemsSource="{x:Bind ViewModel.AccentColors}"
-                        Margin="4,0,4,0"
+                        Margin="8,0,4,0"
                         SelectionChanged="{x:Bind ViewModel.ChangeAccentColor}">
                         <GridView.ItemTemplate>
                             <DataTemplate>
@@ -114,8 +125,27 @@
                         </GridView.ItemsPanel>
                     </GridView>
                 </StackPanel>
+                <StackPanel x:Name="PhoneNowPlayingBackgroundSP"
+                    x:DeferLoadStrategy="Lazy"
+                    Visibility="Collapsed"
+                    Orientation="Vertical" 
+                    Margin="4">
+                    <TextBlock 
+                        x:Uid="TBNowPlayingBackgroundAlbumArt"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Show album art in background in now playing screen"/>
+                    <StackPanel 
+                        Orientation="Horizontal"
+                        Margin="8,0,0,0">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.AlbumArtInBackground, Mode=TwoWay}"/>
+                    </StackPanel>
+                </StackPanel>
                 <StackPanel 
                     x:Name="DragDropActionStackPanel"
+                    x:DeferLoadStrategy="Lazy"
+                    Visibility="Collapsed"
                     Orientation="Vertical" 
                     Margin="4">
                     <TextBlock 
@@ -144,6 +174,8 @@
                 </StackPanel>
                 <StackPanel 
                     x:Name="SwipeLeftCommandActionStackPanel"
+                    x:DeferLoadStrategy="Lazy"
+                    Visibility="Collapsed"
                     Orientation="Vertical" 
                     Margin="4">
                     <TextBlock 
@@ -207,6 +239,7 @@
                 </StackPanel>
                 <StackPanel 
                     Orientation="Vertical" Margin="4" 
+                    x:DeferLoadStrategy="Lazy"
                     Visibility="Collapsed"
                     x:Name="StatusBarVisibilityStackPanel">
                     <TextBlock 
@@ -300,7 +333,11 @@
                         Click="{x:Bind ViewModel.SaveMenuItems}"
                         MinWidth="128"/>
                 </StackPanel>
-                <StackPanel x:Name="KeyboardShortcutsSP" Orientation="Vertical" Margin="4">
+                <StackPanel x:Name="KeyboardShortcutsSP" 
+                            x:DeferLoadStrategy="Lazy" 
+                            Visibility="Collapsed" 
+                            Orientation="Vertical" 
+                            Margin="4">
                     <TextBlock
                         x:Uid="TBKeyboardShortcuts"
                         Style="{StaticResource BodyTextBlockStyle}"

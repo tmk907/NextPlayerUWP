@@ -8,6 +8,7 @@
     xmlns:views="using:NextPlayerUWP.Views"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:imagecontrol="using:SimpleCrossfadingImageUWP"
     xmlns:winstatetriggers="using:WindowsStateTriggers"
     mc:Ignorable="d">
     <Page.Resources>
@@ -673,7 +674,7 @@
                         <ColumnDefinition Width="68"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.RowSpan="2" Grid.Column="0" 
+                    <!--<Image Grid.RowSpan="2" Grid.Column="0" 
                            Margin="4"
                            Tapped="GoToNowPlaying">
                         <Image.Source>
@@ -682,8 +683,18 @@
                                          DecodePixelHeight="60" 
                                          DecodePixelWidth="60"/>
                         </Image.Source>
-                    </Image>
-
+                    </Image>-->
+                    <imagecontrol:CrossfadingImage
+                        Grid.RowSpan="2"
+                        Grid.Column="0"
+                        Margin="4"
+                        Tapped="GoToNowPlaying"
+                        DecodePixelHeight="60"
+                        DecodePixelWidth="60"
+                        FadeInDuration="0:0:0.5"
+                        FadeOutDuration="0:0:0.5"
+                        ImageUri="{x:Bind BottomPlayerVM.QueueVM.CoverUri, Mode=OneWay}"
+                        Stretch="Uniform"/>
                     <Grid Grid.Column="1" Grid.Row="0"
                           Background="Transparent"
                           Tapped="GoToNowPlaying">

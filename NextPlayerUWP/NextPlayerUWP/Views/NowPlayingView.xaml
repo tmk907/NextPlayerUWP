@@ -5,9 +5,9 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:imagecontrol="using:SimpleCrossfadingImageUWP"
     xmlns:triggers="using:WindowsStateTriggers"
     xmlns:tconverters="using:Template10.Converters"
     DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}"
@@ -356,6 +356,21 @@
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="TextLineBounds" Value="TrimToBaseline"/>
         </Style>
+
+        <Storyboard x:Name="ShowPrimaryImage">
+            <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PrimaryImage">
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Name="ShowBGImage">
+            <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundImage">
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -499,6 +514,26 @@
                     </Grid>
                 </ContentDialog.Content>
             </ContentDialog>
+            <imagecontrol:CrossfadingImage
+                x:Name="BackgroundImage"
+                x:DeferLoadStrategy="Lazy"
+                Opacity="0"
+                Grid.RowSpan="5"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                FadeInDuration="0:0:0.5"
+                FadeOutDuration="0:0:0.5"
+                ImageUri="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}"
+                Stretch="UniformToFill"
+                />
+            <mycontrols:BackDrop 
+                x:Name="BackDropControl"
+                x:DeferLoadStrategy="Lazy"
+                Grid.RowSpan="5"
+                BlurAmount="85"
+                TintAlpha="100"
+                SaturationIntensity="1.1"
+                TintColor="{x:Bind ViewModel.QueueVM.AlbumArtColor, Mode=OneWay}"/>
             <Grid Grid.Row="0"
                 Margin="12,8,12,0"
                 DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}"
@@ -506,9 +541,11 @@
                 PointerPressed="{x:Bind ViewModel.Image_Pressed}"
                 PointerReleased="{x:Bind ViewModel.Image_Released}"
                 PointerExited="{x:Bind ViewModel.Image_Exited}">
-                <mycontrols:CrossfadingImage
+                <imagecontrol:CrossfadingImage
                     x:Name="PrimaryImage"
-                    Grid.Column="0" Grid.Row="0"
+                    Grid.Column="0" 
+                    Grid.Row="0"
+                    Opacity="0"
                     VerticalAlignment="Bottom" 
                     HorizontalAlignment="Center"
                     FadeInDuration="0:0:0.5"

@@ -29,8 +29,10 @@
                     <!--ChromeLow-->
                     <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlit" Color="#FFF2F2F2"/>
 
+                    <Color x:Key="UserAccentColorTr">#80FFA500</Color>
                     <Color x:Key="UserAccentColor">#FFFFA500</Color>
                     <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="UserAccentBrushTr" Color="{StaticResource UserAccentColorTr}"/>
                     
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{StaticResource UserAccentColor}"/>
@@ -91,9 +93,11 @@
                     <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFill" Color="#FF1F1F1F"/>
                     <!--ChromeLow-->
                     <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlit" Color="#FF171717"/>
-                    
+
+                    <Color x:Key="UserAccentColorTr">#8000B7C3</Color>
                     <Color x:Key="UserAccentColor">#FF00B7C3</Color>
                     <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="UserAccentBrushTr" Color="{StaticResource UserAccentColorTr}"/>
                     
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{StaticResource UserAccentColor}"/>

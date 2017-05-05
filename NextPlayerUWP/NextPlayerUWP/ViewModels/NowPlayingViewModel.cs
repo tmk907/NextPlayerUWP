@@ -91,6 +91,13 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        private bool showAlbumArtInBackground = false;
+        public bool ShowAlbumArtInBackground
+        {
+            get { return showAlbumArtInBackground; }
+            set { Set(ref showAlbumArtInBackground, value); }
+        }
+
         #endregion
 
         #region Commands
@@ -299,6 +306,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
+            //ShowAlbumArtInBackground = ApplicationSettingsHelper.ReadData<bool>(SettingsKeys.AlbumArtInBackground);
             await Task.CompletedTask;
         }
 

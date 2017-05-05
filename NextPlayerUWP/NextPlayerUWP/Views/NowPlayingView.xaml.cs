@@ -1,7 +1,9 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Helpers;
 using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -43,8 +45,22 @@ namespace NextPlayerUWP.Views
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
+                ShowPrimaryImage.Begin();
             }
             ViewModel.QueueVM.PropertyChanged += ViewModel_PropertyChanged;
+            ShowAlbumArtInBackground();
+        }
+
+        private async Task ShowAlbumArtInBackground()
+        {
+            bool show = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AlbumArtInBackground);
+            if (show)
+            {
+                var backdrop = (Control)FindName("BackDropControl");
+                await Task.Delay(250);
+                var backgroundImage = (Control)FindName("BackgroundImage");
+                ShowBGImage.Begin();
+            }
         }
 
         private void Init()

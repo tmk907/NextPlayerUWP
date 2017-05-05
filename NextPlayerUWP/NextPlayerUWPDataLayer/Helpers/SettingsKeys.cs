@@ -19,6 +19,8 @@
         //Layout
         public const string AppTheme = "AppTheme";
         public const string AppAccent = "AppAccent";
+        public const string AccentFromAlbumArt = "AccentFromAlbumArt";
+        public const string AlbumArtInBackground = "AlbumArtInBackground";
 
         //Review
         public const string IsReviewed = "isreviewed5";
