@@ -100,6 +100,7 @@ namespace NextPlayerUWP.Views
         {
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
             ViewModel.EditPlaylist = new PlaylistItem(selected.Id, false, selected.Name);
+            ViewModel.NewPlaylistName = selected.Name;
             await ContentDialogEditName.ShowAsync();
         }
 

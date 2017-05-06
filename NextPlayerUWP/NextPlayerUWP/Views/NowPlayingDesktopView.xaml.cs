@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.ViewManagement;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWP.Common;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -24,7 +25,6 @@ namespace NextPlayerUWP.Views
         {
             this.InitializeComponent();
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(340, 500));
-            //NavigationCacheMode = NavigationCacheMode.Required;
             ViewModel = (NowPlayingDesktopViewModel)DataContext;
             this.Loaded += NowPlayingDesktopView_Loaded;
             this.Unloaded += NowPlayingDesktopView_Unloaded;
@@ -40,9 +40,9 @@ namespace NextPlayerUWP.Views
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
-                BackgroundImage.ImageUri = imageUri;
             }
             ViewModel.QueueVM.PropertyChanged += ViewModel_PropertyChanged;
+            ShowAlbumArtInBackground();
         }
 
         private void NowPlayingDesktopView_Unloaded(object sender, RoutedEventArgs e)
@@ -56,10 +56,17 @@ namespace NextPlayerUWP.Views
         {
             if (e.PropertyName == nameof(ViewModel.QueueVM.CoverUri))
             {
-                imageUri = ViewModel.QueueVM.CoverUri;
+                imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
-                BackgroundImage.ImageUri = imageUri;
             }
+        }
+
+        private async Task ShowAlbumArtInBackground()
+        {
+            FindName("BackDropControl");
+            await Task.Delay(300);
+            FindName("BackgroundImage");
+            ShowBGImage.Begin();
         }
 
         private Uri GetAlbumUri()

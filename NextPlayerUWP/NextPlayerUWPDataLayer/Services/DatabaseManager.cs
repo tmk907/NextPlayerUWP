@@ -1464,7 +1464,8 @@ namespace NextPlayerUWPDataLayer.Services
                 });
                 i++;
             }
-            connection.DeleteAll<NowPlayingTable>();
+            await connectionAsync.ExecuteAsync("DELETE FROM NowPlayingTable");
+            //connection.DeleteAll<NowPlayingTable>();
             await connectionAsync.InsertAllAsync(list);
         }
 

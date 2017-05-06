@@ -34,17 +34,15 @@ namespace NextPlayerUWP.Extensions
 
         private async Task<LyricsResponse> GetLyrics(string album, string artist, string title, IEnumerable<AppExtensionInfo> extensions)
         {
-            string key = ParamsToKey(album, artist, title);
             LyricsResponse res;
+            string key = ParamsToKey(album, artist, title);
+
             if (cache.TryGetValue(key, out res))
             {
                 return res;
             }
-            else
-            {
-                res = new LyricsResponse() { Lyrics = "", Url = "" };
-            }
 
+            ExtensionsService service = new ExtensionsService();
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             var data = JsonConvert.SerializeObject(new LyricsRequest()
             {
@@ -54,20 +52,23 @@ namespace NextPlayerUWP.Extensions
             });
             parameters.Add(Commands.GetLyrics, data);
 
-            ExtensionsService service = new ExtensionsService();
-
             foreach (var ext in extensions.Where(e => e.Enabled).OrderBy(e => e.Priority))
             {
                 var response = await service.InvokeExtension(ext, parameters);
                 if (response != null && response.ContainsKey(Responses.Result))
                 {
                     res = JsonConvert.DeserializeObject<LyricsResponse>(response[Responses.Result] as string);
-                    if (!String.IsNullOrEmpty(res.Lyrics) || !String.IsNullOrEmpty(res.Url))
+                    if (res != null && (!String.IsNullOrEmpty(res.Lyrics) || !String.IsNullOrEmpty(res.Url)))
                     {
                         cache.TryAdd(key, res);
                         break;
                     }
                 }
+            }
+
+            if (res == null)
+            {
+                res = new LyricsResponse() { Lyrics = "", Url = "" };
             }
 
             return res;

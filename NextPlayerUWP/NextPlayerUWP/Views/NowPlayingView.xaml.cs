@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Common;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using NextPlayerUWP.Common;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
@@ -40,12 +41,10 @@ namespace NextPlayerUWP.Views
         private void NowPlayingView_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSliderEvents();
-            Init();
             if (ViewModel.QueueVM.CoverUri != null)
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
-                ShowPrimaryImage.Begin();
             }
             ViewModel.QueueVM.PropertyChanged += ViewModel_PropertyChanged;
             ShowAlbumArtInBackground();
@@ -56,15 +55,11 @@ namespace NextPlayerUWP.Views
             bool show = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AlbumArtInBackground);
             if (show)
             {
-                var backdrop = (Control)FindName("BackDropControl");
-                await Task.Delay(250);
-                var backgroundImage = (Control)FindName("BackgroundImage");
+                FindName("BackDropControl");
+                await Task.Delay(300);
+                FindName("BackgroundImage");
                 ShowBGImage.Begin();
             }
-        }
-
-        private void Init()
-        {
         }
 
         private void NowPlayingView_Unloaded(object sender, RoutedEventArgs e)

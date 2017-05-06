@@ -39,6 +39,13 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref editPlaylist, value); }
         }
 
+        private string newPlaylistName = "";
+        public string NewPlaylistName
+        {
+            get { return newPlaylistName; }
+            set { Set(ref newPlaylistName, value); }
+        }
+
         private bool relativePaths = false;
         public bool RelativePaths
         {
@@ -133,7 +140,7 @@ namespace NextPlayerUWP.ViewModels
                 if (p.Id == editPlaylist.Id && !p.IsSmart)
                 {
                     PlaylistHelper ph = new PlaylistHelper();
-                    await ph.EditName(p,editPlaylist.Name);
+                    await ph.EditName(p, newPlaylistName);
                     break;
                 }
             }

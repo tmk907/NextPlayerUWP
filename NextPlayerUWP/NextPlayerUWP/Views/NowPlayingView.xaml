@@ -357,13 +357,13 @@
             <Setter Property="TextLineBounds" Value="TrimToBaseline"/>
         </Style>
 
-        <Storyboard x:Name="ShowPrimaryImage">
+        <!--<Storyboard x:Name="ShowPrimaryImage">
             <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PrimaryImage">
                 <DoubleAnimation.EasingFunction>
                     <CircleEase EasingMode="EaseIn"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
-        </Storyboard>
+        </Storyboard>-->
         <Storyboard x:Name="ShowBGImage">
             <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundImage">
                 <DoubleAnimation.EasingFunction>
@@ -521,8 +521,8 @@
                 Grid.RowSpan="5"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
-                FadeInDuration="0:0:0.5"
-                FadeOutDuration="0:0:0.5"
+                FadeInDuration="0:0:0.3"
+                FadeOutDuration="0:0:0.3"
                 ImageUri="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}"
                 Stretch="UniformToFill"
                 />
@@ -530,9 +530,9 @@
                 x:Name="BackDropControl"
                 x:DeferLoadStrategy="Lazy"
                 Grid.RowSpan="5"
-                BlurAmount="85"
+                BlurAmount="90"
                 TintAlpha="100"
-                SaturationIntensity="1.1"
+                SaturationIntensity="1"
                 TintColor="{x:Bind ViewModel.QueueVM.AlbumArtColor, Mode=OneWay}"/>
             <Grid Grid.Row="0"
                 Margin="12,8,12,0"
@@ -545,11 +545,10 @@
                     x:Name="PrimaryImage"
                     Grid.Column="0" 
                     Grid.Row="0"
-                    Opacity="0"
                     VerticalAlignment="Bottom" 
                     HorizontalAlignment="Center"
-                    FadeInDuration="0:0:0.5"
-                    FadeOutDuration="0:0:0.5"
+                    FadeInDuration="0:0:0.3"
+                    FadeOutDuration="0:0:0.3"
                     Stretch="Uniform"/>
             </Grid>
             <Grid Grid.Row="1" >

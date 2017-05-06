@@ -5,7 +5,6 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:imagecontrol="using:SimpleCrossfadingImageUWP"
@@ -81,6 +80,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Storyboard x:Name="ShowBGImage">
+            <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundImage">
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -101,12 +107,14 @@
             </Grid.RowDefinitions>
             <imagecontrol:CrossfadingImage
                 x:Name="BackgroundImage"
+                x:DeferLoadStrategy="Lazy"
                 Grid.Row="0"
                 Grid.RowSpan="2"
+                Opacity="0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
-                FadeInDuration="0:0:0.5"
-                FadeOutDuration="0:0:0.5"
+                FadeInDuration="0:0:0.3"
+                FadeOutDuration="0:0:0.3"
                 ImageUri="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}"
                 Stretch="UniformToFill"
                 />
@@ -120,6 +128,7 @@
                 TintColor="Gray"/>-->
             <mycontrols:BackDrop 
                 x:Name="BackDropControl"
+                x:DeferLoadStrategy="Lazy"
                 Grid.Row="0"
                 Grid.RowSpan="2"
                 BlurAmount="85"
@@ -131,9 +140,8 @@
                 Grid.Row="0"
                 SizeChanged="PrimaryImage_SizeChanged"
                 Margin="8,4,8,0"
-                FadeInDuration="0:0:0.5"
-                FadeOutDuration="0:0:0.5"
-                ImageUri="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}"
+                FadeInDuration="0:0:0.3"
+                FadeOutDuration="0:0:0.3"
                 Stretch="Uniform"/>
             <Grid Grid.Row="1"
                 x:Name="SongDescriptionGrid"

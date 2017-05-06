@@ -674,16 +674,6 @@
                         <ColumnDefinition Width="68"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <!--<Image Grid.RowSpan="2" Grid.Column="0" 
-                           Margin="4"
-                           Tapped="GoToNowPlaying">
-                        <Image.Source>
-                            <BitmapImage UriSource="{Binding QueueVM.CoverUri}"
-                                         DecodePixelType="Logical"
-                                         DecodePixelHeight="60" 
-                                         DecodePixelWidth="60"/>
-                        </Image.Source>
-                    </Image>-->
                     <imagecontrol:CrossfadingImage
                         Grid.RowSpan="2"
                         Grid.Column="0"
@@ -691,8 +681,8 @@
                         Tapped="GoToNowPlaying"
                         DecodePixelHeight="60"
                         DecodePixelWidth="60"
-                        FadeInDuration="0:0:0.5"
-                        FadeOutDuration="0:0:0.5"
+                        FadeInDuration="0:0:0.3"
+                        FadeOutDuration="0:0:0.3"
                         ImageUri="{x:Bind BottomPlayerVM.QueueVM.CoverUri, Mode=OneWay}"
                         Stretch="Uniform"/>
                     <Grid Grid.Column="1" Grid.Row="0"
