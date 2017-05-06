@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWP.Extensions
@@ -19,20 +20,21 @@ namespace NextPlayerUWP.Extensions
             cache = new ConcurrentDictionary<string, LyricsResponse>();
         }
 
-        public async Task<LyricsResponse> GetLyrics(string album, string artist, string title)
+        public async Task<LyricsResponse> GetLyrics(string album, string artist, string title, CancellationToken token)
         {
             var extensions = await extensionsHelper.GetExtensionsInfo();
-            LyricsResponse res = await GetLyrics(album, artist, title, extensions);
+            token.ThrowIfCancellationRequested();
+            LyricsResponse res = await GetLyrics(album, artist, title, extensions, token);
             return res;
         }
 
-        public async Task<LyricsResponse> GetLyrics(string album, string artist, string title, AppExtensionInfo extension)
+        public async Task<LyricsResponse> GetLyrics(string album, string artist, string title, AppExtensionInfo extension, CancellationToken token)
         {
-            LyricsResponse res = await GetLyrics(album, artist, title, new List<AppExtensionInfo>() { extension });
+            LyricsResponse res = await GetLyrics(album, artist, title, new List<AppExtensionInfo>() { extension }, token);
             return res;
         }
 
-        private async Task<LyricsResponse> GetLyrics(string album, string artist, string title, IEnumerable<AppExtensionInfo> extensions)
+        private async Task<LyricsResponse> GetLyrics(string album, string artist, string title, IEnumerable<AppExtensionInfo> extensions, CancellationToken token)
         {
             LyricsResponse res;
             string key = ParamsToKey(album, artist, title);
@@ -54,7 +56,9 @@ namespace NextPlayerUWP.Extensions
 
             foreach (var ext in extensions.Where(e => e.Enabled).OrderBy(e => e.Priority))
             {
+                token.ThrowIfCancellationRequested();
                 var response = await service.InvokeExtension(ext, parameters);
+                token.ThrowIfCancellationRequested();
                 if (response != null && response.ContainsKey(Responses.Result))
                 {
                     res = JsonConvert.DeserializeObject<LyricsResponse>(response[Responses.Result] as string);

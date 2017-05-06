@@ -8,7 +8,13 @@
     xmlns:controls="using:Template10.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=LyricsVM}"
     mc:Ignorable="d">
-
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,72 +29,7 @@
             VisualStateNormalMinWidth="720">
         </controls:PageHeader>
         <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <ProgressBar Grid.Row="0"
-                    Height="8"
-                    Visibility="{x:Bind ViewModel.ShowProgressBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                    IsIndeterminate="True"
-                    Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    IsEnabled="{x:Bind ViewModel.ShowProgressBar, Mode=OneWay}"/>
-            <Grid Grid.Row="1"
-                    Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" MinHeight="28"/>
-                    <RowDefinition Height="Auto" MinHeight="28"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" 
-                        x:Name="titleTB"
-                        Text="{x:Bind ViewModel.Title, Mode=OneWay}"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        FontSize="20"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        TextWrapping="WrapWholeWords"
-                        TextAlignment="Center"
-                                Margin="0,4,0,0"
-                        />
-                <TextBlock Grid.Row="1" 
-                        x:Name="artistTB"
-                        Text="{x:Bind ViewModel.Artist, Mode=OneWay}"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        FontSize="17"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        TextWrapping="WrapWholeWords"
-                        TextAlignment="Center"
-                                Margin="0,0,0,4"
-                        />
-                <ScrollViewer Grid.Row="2" 
-                                    Margin="0,0,0,4"
-                                    Visibility="{x:Bind ViewModel.StatusVisibility, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
-                    <TextBlock x:Name="lyricsTB"
-                            Text="{x:Bind ViewModel.Lyrics, Mode=OneWay}"
-                            Margin="4,0,12,0"
-                            TextWrapping="WrapWholeWords"
-                            HorizontalAlignment="Stretch"
-                            FontSize="15"
-                            FontWeight="SemiLight"
-                            TextAlignment="Center"
-                        />
-                </ScrollViewer>
-                <TextBlock Grid.Row="2" 
-                        Text="{x:Bind ViewModel.StatusText, Mode=OneWay}" 
-                        FontSize="16" 
-                        VerticalAlignment="Center" 
-                        HorizontalAlignment="Center"
-                        TextWrapping="WrapWholeWords"
-                        Visibility="{x:Bind ViewModel.StatusVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-            </Grid>
-            <Grid Grid.Row="1" x:Name="WebGrid"
-                        Visibility="{x:Bind ViewModel.WebVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-            </Grid>
+            <local:LyricsPanel/>
         </Grid>
     </Grid>
 </Page>
