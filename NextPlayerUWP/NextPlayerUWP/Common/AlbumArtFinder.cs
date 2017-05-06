@@ -41,17 +41,17 @@ namespace NextPlayerUWP.Common
             Logger2.DebugWrite("AlbumArtFinder", "StartLooking");
 
             if (isRunning) return;
-            var dispatcher = Template10.Common.DispatcherWrapper.Current();
-            await dispatcher.DispatchAsync(async () => 
-            {
-                albums = await DatabaseManager.Current.GetAlbumsTable();
-                songs = await DatabaseManager.Current.GetSongsWithoutAlbumArtAsync();
-            });
+            albums = await DatabaseManager.Current.GetAlbumsTable();
+            songs = await DatabaseManager.Current.GetSongsWithoutAlbumArtAsync();
             if (songs.Count == 0) return;
             isRunning = true;
-            await Task.Run(() => FindAlbumArtOfEverySong());
+            await FindAlbumArtOfEverySong().ConfigureAwait(false);
             songs.Clear();
-            await Task.Run(() => UpdateAlbumsWithNoArt());
+            await UpdateAlbumsWithNoArt().ConfigureAwait(false);
+            Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
+            {
+                MediaImport.OnMediaImported("AlbumsArt");
+            });
             albums.Clear();
             isRunning = false;
 
@@ -61,15 +61,12 @@ namespace NextPlayerUWP.Common
         private async Task FindAlbumArtOfEverySong()
         {
             Debug.WriteLine("AlbumArtFinder FindAlbumArtOfEverySong()");
-            //Logger2.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
-            //Stopwatch st = new Stopwatch();
-            //st.Start();
 
-            //First find album arts of albums, where Album or AlbumArtist is known. These album arts are shown in AlbumsView list.
+            //First find album arts of albums, where Album or AlbumArtist is known. These album arts are shown first in AlbumsView list.
             foreach (var group in songs.Where(a => !(a.Album == "" && a.AlbumArtist == "")).OrderBy(a => a.Album).GroupBy(s => new { s.Album, s.AlbumArtist }))
             {
                 var album = albums.FirstOrDefault(a => a.Album.Equals(group.Key.Album) && a.AlbumArtist.Equals(group.Key.AlbumArtist));
-                await UpdateAlbumUsingSoftwareBitmap(group, album);
+                await UpdateAlbumUsingSoftwareBitmap(group, album).ConfigureAwait(false);
                 if (album != null)
                 {
                     OnAlbumArtUpdated(album.AlbumId, album.ImagePath);
@@ -79,51 +76,12 @@ namespace NextPlayerUWP.Common
             if (groupUnknown != null)
             {
                 var albumUnknown = albums.FirstOrDefault(a => a.Album.Equals("") && a.AlbumArtist.Equals(""));
-                await UpdateAlbumUsingSoftwareBitmap(groupUnknown, albumUnknown);
+                await UpdateAlbumUsingSoftwareBitmap(groupUnknown, albumUnknown).ConfigureAwait(false);
                 if (albumUnknown != null)
                 {
                     OnAlbumArtUpdated(albumUnknown.AlbumId, albumUnknown.ImagePath);
                 }
             }
-
-            //st.Stop();
-            //Debug.WriteLine("FindSongsAlbumArt {0}ms", st.ElapsedMilliseconds);
-            //Logger2.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
-        }
-
-        private async Task UpdateAlbumsWithNoArt()
-        {
-            Debug.WriteLine("AlbumArtFinder UpdateAlbumsWithNoArt()");
-            await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
-            {
-                albums = await DatabaseManager.Current.GetAlbumsTable();
-            });
-            if (albums.Exists(a => a.ImagePath == ""))
-            {
-                var songs = await DatabaseManager.Current.GetAllSongItemsAsync();
-                var groups = songs.GroupBy(s => new { s.Album, s.AlbumArtist });
-                foreach (var album in albums.Where(a => a.ImagePath == ""))
-                {
-                    if (album.Album == "") album.ImagePath = AppConstants.AlbumCover;
-                    else
-                    {
-                        foreach (var song in groups.FirstOrDefault(g => g.Key.Album == album.Album && g.Key.AlbumArtist == album.AlbumArtist))
-                        {
-                            if (song.CoverPath != AppConstants.AlbumCover)
-                            {
-                                album.ImagePath = song.CoverPath;
-                                break;
-                            }
-                        }
-                        if (album.ImagePath == "") album.ImagePath = AppConstants.AlbumCover;
-                    }
-                }
-            }
-            await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
-            {
-                await DatabaseManager.Current.UpdateAlbumsTable(albums);
-                MediaImport.OnMediaImported("AlbumsArt");
-            });
         }
 
         private static async Task UpdateAlbumUsingSoftwareBitmap(IEnumerable<SongsTable> group, AlbumsTable album)
@@ -132,14 +90,14 @@ namespace NextPlayerUWP.Common
             string path = AppConstants.AlbumCover;
             foreach (var song in group)
             {
-                var songAlbumArt = await ImagesManager.GetAlbumArtSoftwareBitmap(song.Path, true);
+                var songAlbumArt = await ImagesManager.GetAlbumArtSoftwareBitmap(song.Path, true).ConfigureAwait(false);
                 if (songAlbumArt == null)
                 {
                     song.AlbumArt = AppConstants.AlbumCover;
                 }
                 else
                 {
-                    string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", songAlbumArt);
+                    string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", songAlbumArt).ConfigureAwait(false);
                     song.AlbumArt = savedPath;
                 }
                 songAlbumArt = null;
@@ -163,14 +121,64 @@ namespace NextPlayerUWP.Common
                     }
                 }
             }
-            await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
-            {
-                await DatabaseManager.Current.UpdateSongsImagePath(group);
-                await DatabaseManager.Current.UpdateAlbumTableItemAsync(album);
-            });
+            await DatabaseManager.Current.UpdateSongsImagePath(group).ConfigureAwait(false);
+            await DatabaseManager.Current.UpdateAlbumTableItemAsync(album).ConfigureAwait(false);
         }
 
-        private static async Task UpdateAlbumUsingSoftwareBitmap(IEnumerable<SongsTable> group, AlbumItem album)
+        private async Task UpdateAlbumsWithNoArt()
+        {
+            Debug.WriteLine("AlbumArtFinder UpdateAlbumsWithNoArt()");
+            albums = await DatabaseManager.Current.GetAlbumsTable();
+            if (albums.Exists(a => a.ImagePath == ""))
+            {
+                var songs = await DatabaseManager.Current.GetAllSongItemsAsync();
+                var groups = songs.GroupBy(s => new { s.Album, s.AlbumArtist });
+                foreach (var album in albums.Where(a => a.ImagePath == ""))
+                {
+                    if (album.Album == "") album.ImagePath = AppConstants.AlbumCover;
+                    else
+                    {
+                        foreach (var song in groups.FirstOrDefault(g => g.Key.Album == album.Album && g.Key.AlbumArtist == album.AlbumArtist))
+                        {
+                            if (song.CoverPath != AppConstants.AlbumCover)
+                            {
+                                album.ImagePath = song.CoverPath;
+                                break;
+                            }
+                        }
+                        if (album.ImagePath == "") album.ImagePath = AppConstants.AlbumCover;
+                    }
+                }
+            }
+            await DatabaseManager.Current.UpdateAlbumsTable(albums);
+        }
+
+        public static async Task UpdateSingleAlbumArt(AlbumItem album)
+        {
+            Debug.WriteLine("AlbumArtFinder UpdateAlbumArt() {0} {1}", album.AlbumId, album.Album);
+            if (!album.IsImageSet)
+            {
+                var songs = await DatabaseManager.Current.GetSongsFromAlbumItemAsync(album);
+                var song = songs.FirstOrDefault(s => s.AlbumArt != AppConstants.AlbumCover && s.AlbumArt != "");
+                if (song == null)
+                {
+                    await UpdateSingleAlbumUsingSoftwareBitmap(songs, album);
+                }
+                else
+                {
+                    album.ImagePath = song.AlbumArt;
+                }
+                OnAlbumArtUpdated(album.AlbumId, album.ImagePath);
+            }
+            else
+            {
+                album.ImagePath = album.ImagePath;
+            }
+
+            album.ImageUri = new Uri(album.ImagePath);
+        }
+
+        private static async Task UpdateSingleAlbumUsingSoftwareBitmap(IEnumerable<SongsTable> group, AlbumItem album)
         {
             Debug.WriteLine("AlbumArtFinder UpdateAlbum() AlbumItem: {0} {1}", album.Album, album.AlbumArtist);
             string path = AppConstants.AlbumCover;
@@ -206,181 +214,8 @@ namespace NextPlayerUWP.Common
                     }
                 }
             }
-            await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
-            {
-                await DatabaseManager.Current.UpdateSongsImagePath(group);
-                await DatabaseManager.Current.UpdateAlbumImagePath(album);
-            });
+            await DatabaseManager.Current.UpdateSongsImagePath(group);
+            await DatabaseManager.Current.UpdateAlbumImagePath(album);
         }
-
-        public static async Task UpdateAlbumArt(AlbumItem album)
-        {
-            Debug.WriteLine("AlbumArtFinder UpdateAlbumArt() {0} {1}", album.AlbumId, album.Album);
-            if (!album.IsImageSet)
-            {
-                var songs = await DatabaseManager.Current.GetSongsFromAlbumItemAsync(album);
-                var song = songs.FirstOrDefault(s => s.AlbumArt != AppConstants.AlbumCover && s.AlbumArt != "");
-                if (song == null)
-                {
-                    await UpdateAlbumUsingSoftwareBitmap(songs, album);
-                }
-                else
-                {
-                    album.ImagePath = song.AlbumArt;
-                }
-                OnAlbumArtUpdated(album.AlbumId, album.ImagePath);
-            }
-            else
-            {
-                album.ImagePath = album.ImagePath;
-            }
-
-            album.ImageUri = new Uri(album.ImagePath);
-        }
-
-
-        //private async Task FindAlbumArtOfEverySongRemoveSame()
-        //{
-        //    Debug.WriteLine("AlbumArtFinder FindAlbumArtOfEverySong()");
-        //    //Logger2.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt start");
-        //    //Stopwatch st = new Stopwatch();
-        //    //st.Start();
-
-        //    //First find album arts of albums, where Album or AlbumArtist is known. These album arts are shown in AlbumsView list.
-        //    foreach (var group in songs.Where(a => !(a.Album == "" && a.AlbumArtist == "")).OrderBy(a => a.Album).GroupBy(s => new { s.Album, s.AlbumArtist }))
-        //    {
-        //        var album = albums.FirstOrDefault(a => a.Album.Equals(group.Key.Album) && a.AlbumArtist.Equals(group.Key.AlbumArtist));
-        //        await UpdateAlbum(group, album);
-        //        if (album != null)
-        //        {
-        //            OnAlbumArtUpdated(album.AlbumId, album.ImagePath);
-        //        }
-        //    }
-        //    var groupUnknown = songs.Where(a => a.Album == "" && a.AlbumArtist == "").GroupBy(s => new { s.Album, s.AlbumArtist }).FirstOrDefault();
-        //    if (groupUnknown != null)
-        //    {
-        //        var albumUnknown = albums.FirstOrDefault(a => a.Album.Equals("") && a.AlbumArtist.Equals(""));
-        //        await UpdateAlbum(groupUnknown, albumUnknown);
-        //        if (albumUnknown != null)
-        //        {
-        //            OnAlbumArtUpdated(albumUnknown.AlbumId, albumUnknown.ImagePath);
-        //        }
-        //    }
-
-        //    //st.Stop();
-        //    //Debug.WriteLine("FindSongsAlbumArt {0}ms", st.ElapsedMilliseconds);
-        //    //Logger2.DebugWrite("AlbumArtFinder", "FindSongsAlbumArt end");
-        //}
-        //private static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumsTable album)
-        //{
-        //    //Debug.WriteLine("AlbumArtFinder UpdateAlbum() AlbumsTable: {0} {1}", album.Album, album.AlbumArtist);
-        //    string path = AppConstants.AlbumCover;
-        //    Dictionary<string, string> hashes = new Dictionary<string, string>();
-        //    foreach (var song in group)
-        //    {
-        //        await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
-        //        {
-        //            var songAlbumArt = await ImagesManager.GetAlbumArtBitmap(song.Path, true);
-        //            if (songAlbumArt == null)
-        //            {
-        //                song.AlbumArt = AppConstants.AlbumCover;
-        //            }
-        //            else
-        //            {
-        //                var hash = ImagesManager.GetHash(songAlbumArt);
-        //                if (hashes.ContainsKey(hash))
-        //                {
-        //                    song.AlbumArt = hashes[hash];
-        //                }
-        //                else
-        //                {
-        //                    string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", songAlbumArt);
-        //                    song.AlbumArt = savedPath;
-        //                    hashes.Add(hash, savedPath);
-        //                }
-        //            }
-        //            songAlbumArt = null;
-        //        });
-
-        //        if (song.AlbumArt != AppConstants.AlbumCover)
-        //        {
-        //            path = song.AlbumArt;
-        //        }
-        //    }
-        //    if (album != null)
-        //    {
-        //        if (album.Album == "")
-        //        {
-        //            album.ImagePath = AppConstants.AlbumCover;
-        //        }
-        //        else
-        //        {
-        //            if (album.ImagePath == "" || album.ImagePath == AppConstants.AlbumCover || album.ImagePath.Contains("Albums"))
-        //            {
-        //                album.ImagePath = path;
-        //            }
-        //        }
-        //    }
-        //    await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
-        //    {
-        //        await DatabaseManager.Current.UpdateSongsImagePath(group);
-        //        await DatabaseManager.Current.UpdateAlbumTableItemAsync(album);
-        //    });
-        //}
-        //private static async Task UpdateAlbum(IEnumerable<SongsTable> group, AlbumItem album)
-        //{
-        //    Debug.WriteLine("AlbumArtFinder UpdateAlbum() AlbumItem: {0} {1}", album.Album, album.AlbumArtist);
-        //    string path = AppConstants.AlbumCover;
-        //    Dictionary<string, string> hashes = new Dictionary<string, string>();
-        //    foreach (var song in group)
-        //    {
-        //        await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
-        //        {
-        //            var songAlbumArt = await ImagesManager.GetAlbumArtBitmap(song.Path, true);
-        //            if (songAlbumArt == null)
-        //            {
-        //                song.AlbumArt = AppConstants.AlbumCover;
-        //            }
-        //            else
-        //            {
-        //                var hash = ImagesManager.GetHash(songAlbumArt);
-        //                if (hashes.ContainsKey(hash))
-        //                {
-        //                    song.AlbumArt = hashes[hash];
-        //                }
-        //                else
-        //                {
-        //                    string savedPath = await ImagesManager.SaveCover(song.SongId.ToString(), "Songs", songAlbumArt);
-        //                    song.AlbumArt = savedPath;
-        //                    hashes.Add(hash, savedPath);
-        //                }
-        //            }
-        //        });
-
-        //        if (song.AlbumArt != AppConstants.AlbumCover)
-        //        {
-        //            path = song.AlbumArt;
-        //        }
-        //    }
-        //    if (album != null)
-        //    {
-        //        if (album.Album == "")
-        //        {
-        //            album.ImagePath = AppConstants.AlbumCover;
-        //        }
-        //        else
-        //        {
-        //            if (album.ImagePath == "" || album.ImagePath == AppConstants.AlbumCover || album.ImagePath.Contains("Albums"))
-        //            {
-        //                album.ImagePath = path;
-        //            }
-        //        }
-        //    }
-        //    await Template10.Common.DispatcherWrapper.Current().DispatchAsync(async () =>
-        //    {
-        //        await DatabaseManager.Current.UpdateSongsImagePath(group);
-        //        await DatabaseManager.Current.UpdateAlbumImagePath(album);
-        //    });
-        //}
     }
 }

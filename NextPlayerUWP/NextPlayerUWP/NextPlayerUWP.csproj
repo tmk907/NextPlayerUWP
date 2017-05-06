@@ -170,8 +170,6 @@
     <Compile Include="Common\TranslationHelper.cs" />
     <Compile Include="Controls\AlternatingRowListView.cs" />
     <Compile Include="Controls\ButtonsForMultipleSelection.cs" />
-    <Compile Include="Controls\CompositionImage.cs" />
-    <Compile Include="Controls\ConnectedTransition.cs" />
     <Compile Include="Controls\FolderDataTemplateSelector.cs" />
     <Compile Include="Controls\IGetSelectedItems.cs" />
     <Compile Include="Controls\MyListView.cs" />
@@ -184,7 +182,6 @@
     <Compile Include="Controls\SongListViewItemTemplate.xaml.cs">
       <DependentUpon>SongListViewItemTemplate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SurfaceLoader.cs" />
     <Compile Include="Controls\VisualTreeHelperExtensions.cs" />
     <Compile Include="Controls\XamlBrewerBackDrop.cs" />
     <Compile Include="Converters\BackgroundConverter.cs" />
