@@ -33,8 +33,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         private DatabaseManager()
         {
-            connectionAsync = new SQLiteAsyncConnection(DBFilePath, true);
-            connection = new SQLiteConnection(DBFilePath, true);
+            connectionAsync = new SQLiteAsyncConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.SharedCache, true);
+            connection = new SQLiteConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.SharedCache, true);
             connection.BusyTimeout = TimeSpan.FromSeconds(10);
         }
 
@@ -614,28 +614,6 @@ namespace NextPlayerUWPDataLayer.Services
             return s;
         }
 
-        public List<NowPlayingSong> GetNowPlayingSongs()
-        {
-            List<NowPlayingSong> songs = new List<NowPlayingSong>();
-            var query = connection.Table<NowPlayingTable>().OrderBy(s => s.Position).ToList();
-            foreach (var e in query)
-            {
-                songs.Add(CreateNowPlayingSong(e));
-            }
-            return songs;
-        }
-
-
-        public NowPlayingSong GetNowPlayingSong(int songId)
-        {
-            var list = connection.Table<NowPlayingTable>().Where(s => s.SongId.Equals(songId)).ToList();
-            if (list.Count > 0)
-            {
-                return CreateNowPlayingSong(list.FirstOrDefault());
-            }
-            return null;
-        }
-
         public async Task<SongItem> GetSongItemAsync(int id)
         {
             var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
@@ -980,33 +958,38 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task<ObservableCollection<SongItem>> GetSongItemsFromNowPlayingAsync()
         {
-            var query = await connectionAsync.Table<NowPlayingTable>().OrderBy(e => e.Position).ToListAsync();
             ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
-            foreach (var e in query)
+            Dictionary<int, SongItem> online = new Dictionary<int, SongItem>();
+
+            var songsFromDatabase = await connectionAsync.QueryAsync<SongsTable>("SELECT SongsTable.* FROM NowPlayingTable LEFT JOIN SongsTable ON NowPlayingTable.SongId = SongsTable.SongId ORDER BY NowPlayingTable.Position");
+            var radios = await connectionAsync.QueryAsync<NowPlayingTable>("SELECT NowPlayingTable.* FROM NowPlayingTable Left JOIN SongsTable ON NowPlayingTable.SongId = SongsTable.SongId WHERE SongsTable.SongId IS NULL ORDER BY NowPlayingTable.Position");
+
+            foreach (var item in radios)
             {
-                var type = (MusicSource)e.SourceType;
-                if (type == MusicSource.LocalFile || type == MusicSource.LocalNotMusicLibrary || type == MusicSource.Dropbox || type == MusicSource.OneDrive || type == MusicSource.PCloud)
+                SongItem s = new SongItem();
+                s.Album = item.Album;
+                s.Artist = item.Artist;
+                s.CoverPath = item.ImagePath;
+                s.Path = item.Path;
+                s.SongId = item.SongId;
+                s.SourceType = (MusicSource)item.SourceType;
+                s.Title = item.Title;
+                online.Add(item.Position, s);
+            }
+
+            int position = 0;
+            SongItem radio;
+            foreach (var item in songsFromDatabase)
+            {
+                if (online.TryGetValue(position, out radio))
                 {
-                    var query2 = connection.Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
-                    if (query2 != null)
-                    {
-                        var newSong = new SongItem(query2);
-                        newSong.SourceType = type;
-                        list.Add(newSong);
-                    }
+                    list.Add(radio);
                 }
-                else if (type == MusicSource.RadioJamendo)
+                else if (item?.SongId != null)
                 {
-                    SongItem s = new SongItem();
-                    s.SourceType = MusicSource.RadioJamendo;
-                    s.Title = e.Title;
-                    s.Artist = e.Artist;
-                    s.Album = e.Album;
-                    s.Path = e.Path;
-                    s.CoverPath = e.ImagePath;
-                    s.SongId = e.SongId;
-                    list.Add(s);
+                    list.Add(new SongItem(item));
                 }
+                position++;
             }
             return list;
         }
@@ -1422,12 +1405,6 @@ namespace NextPlayerUWPDataLayer.Services
             return newplaylist.PlainPlaylistId;
         }
 
-        /// <summary>
-        /// InsertPlainPlaylistEntryAsync
-        /// </summary>
-        /// <param name="_playlistId"></param>
-        /// <param name="list">SongId,Place</param>
-        /// <returns></returns>
         public async Task InsertPlainPlaylistEntryAsync(int _playlistId, List<Tuple<int,int>> list)
         {
             List<PlainPlaylistEntryTable> l = new List<PlainPlaylistEntryTable>();

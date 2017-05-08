@@ -1,6 +1,5 @@
 ﻿{
   "dependencies": {
-    "AdDuplexWin10": "10.1.1.1",
     "HockeySDK.UWP": "4.1.6",
     "ksemenenko.ColorThief": "1.1.0.3",
     "Microsoft.ApplicationInsights": "1.2.3",

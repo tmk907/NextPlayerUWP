@@ -2,7 +2,7 @@
   "version": 2,
   "targets": {
     "UAP,Version=v10.0": {
-      "Dropbox.Api/4.2.4": {
+      "Dropbox.Api/4.2.6": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -438,7 +438,7 @@
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "Playlists.NET/1.1.0": {
+      "Playlists.NET/1.2.0": {
         "type": "package",
         "compile": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
@@ -2369,7 +2369,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "WriteableBitmapEx/1.5.0": {
+      "WriteableBitmapEx/1.5.1": {
         "type": "package",
         "compile": {
           "lib/NetCore45/WriteableBitmapEx.WinRT.dll": {}
@@ -2380,7 +2380,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
-      "Dropbox.Api/4.2.4": {
+      "Dropbox.Api/4.2.6": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -2764,7 +2764,7 @@
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "Playlists.NET/1.1.0": {
+      "Playlists.NET/1.2.0": {
         "type": "package",
         "compile": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
@@ -4830,7 +4830,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "WriteableBitmapEx/1.5.0": {
+      "WriteableBitmapEx/1.5.1": {
         "type": "package",
         "compile": {
           "lib/NetCore45/WriteableBitmapEx.WinRT.dll": {}
@@ -4841,7 +4841,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
-      "Dropbox.Api/4.2.4": {
+      "Dropbox.Api/4.2.6": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -5226,7 +5226,7 @@
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "Playlists.NET/1.1.0": {
+      "Playlists.NET/1.2.0": {
         "type": "package",
         "compile": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
@@ -7330,7 +7330,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "WriteableBitmapEx/1.5.0": {
+      "WriteableBitmapEx/1.5.1": {
         "type": "package",
         "compile": {
           "lib/NetCore45/WriteableBitmapEx.WinRT.dll": {}
@@ -7341,7 +7341,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
-      "Dropbox.Api/4.2.4": {
+      "Dropbox.Api/4.2.6": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -7728,7 +7728,7 @@
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "Playlists.NET/1.1.0": {
+      "Playlists.NET/1.2.0": {
         "type": "package",
         "compile": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
@@ -9800,7 +9800,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "WriteableBitmapEx/1.5.0": {
+      "WriteableBitmapEx/1.5.1": {
         "type": "package",
         "compile": {
           "lib/NetCore45/WriteableBitmapEx.WinRT.dll": {}
@@ -9811,7 +9811,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
-      "Dropbox.Api/4.2.4": {
+      "Dropbox.Api/4.2.6": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -10199,7 +10199,7 @@
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "Playlists.NET/1.1.0": {
+      "Playlists.NET/1.2.0": {
         "type": "package",
         "compile": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
@@ -12309,7 +12309,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "WriteableBitmapEx/1.5.0": {
+      "WriteableBitmapEx/1.5.1": {
         "type": "package",
         "compile": {
           "lib/NetCore45/WriteableBitmapEx.WinRT.dll": {}
@@ -12320,7 +12320,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
-      "Dropbox.Api/4.2.4": {
+      "Dropbox.Api/4.2.6": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -12707,7 +12707,7 @@
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "Playlists.NET/1.1.0": {
+      "Playlists.NET/1.2.0": {
         "type": "package",
         "compile": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
@@ -14779,7 +14779,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "WriteableBitmapEx/1.5.0": {
+      "WriteableBitmapEx/1.5.1": {
         "type": "package",
         "compile": {
           "lib/NetCore45/WriteableBitmapEx.WinRT.dll": {}
@@ -14790,7 +14790,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
-      "Dropbox.Api/4.2.4": {
+      "Dropbox.Api/4.2.6": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -15178,7 +15178,7 @@
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
-      "Playlists.NET/1.1.0": {
+      "Playlists.NET/1.2.0": {
         "type": "package",
         "compile": {
           "lib/netstandard1.3/Playlists.NET.dll": {}
@@ -17288,7 +17288,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "WriteableBitmapEx/1.5.0": {
+      "WriteableBitmapEx/1.5.1": {
         "type": "package",
         "compile": {
           "lib/NetCore45/WriteableBitmapEx.WinRT.dll": {}
@@ -17300,13 +17300,13 @@
     }
   },
   "libraries": {
-    "Dropbox.Api/4.2.4": {
-      "sha512": "5mLRLix+bUqJHIBK354PUD6FuOBVXpo/0/Dmpo0Wj9pQHTIj0XvtFuZy7RW1WKNQTHGOurH7WTWrlujOfRyqOg==",
+    "Dropbox.Api/4.2.6": {
+      "sha512": "IHTR3wTGni4svLhftH+Nu5bcMnC9ZfvBMj/Tpf1HHAsxpZvJ2ncFI4Uclj6ZarTz0EY5gC8CmzPcJddLnN9cIQ==",
       "type": "package",
-      "path": "dropbox.api/4.2.4",
+      "path": "dropbox.api/4.2.6",
       "files": [
-        "Dropbox.Api.4.2.4.nupkg.sha512",
-        "Dropbox.Api.nuspec",
+        "dropbox.api.4.2.6.nupkg.sha512",
+        "dropbox.api.nuspec",
         "lib/net45/Dropbox.Api.dll",
         "lib/net45/Dropbox.Api.xml",
         "lib/portable-net40+sl5+wp80+win8+wpa81/Dropbox.Api.dll",
@@ -19991,14 +19991,14 @@
         "tools/install.ps1"
       ]
     },
-    "Playlists.NET/1.1.0": {
-      "sha512": "+qQdxO3jNsF06YL1r0FS9YvcLjiylEDQIuUUDPCrn4/RATLcAwW048SFPT6/1h7V4u/8znvf1xnIuNb1Bcc/PQ==",
+    "Playlists.NET/1.2.0": {
+      "sha512": "RsUhjNjkk/VVucy7g2xpwVfbH0bh4oizEW+4OiqtgRwz3ZyxCto8iKaTM4C7v6OX7aOE3h8QwkCA5mG0iKU+Jg==",
       "type": "package",
-      "path": "playlists.net/1.1.0",
+      "path": "playlists.net/1.2.0",
       "files": [
-        "Playlists.NET.1.1.0.nupkg.sha512",
-        "Playlists.NET.nuspec",
-        "lib/netstandard1.3/Playlists.NET.dll"
+        "lib/netstandard1.3/Playlists.NET.dll",
+        "playlists.net.1.2.0.nupkg.sha512",
+        "playlists.net.nuspec"
       ]
     },
     "runtime.any.System.Collections/4.0.11": {
@@ -25969,13 +25969,11 @@
         "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll"
       ]
     },
-    "WriteableBitmapEx/1.5.0": {
-      "sha512": "K4g5wN6y4RhDUcfLdOoNZrQQBdv6dbXycaOoeBcS3qrXMhXssECb4K/3cPXehi+hDSwNx5dYLhRilk49DXiFZQ==",
+    "WriteableBitmapEx/1.5.1": {
+      "sha512": "7QoF7o6TNcQy3TVOVytgyaKXgLk9+kmC7ILzKRxk2+CVT3kCU+M5rXHLTAx4TOddSmtUHer1JTU2741Lia26NA==",
       "type": "package",
-      "path": "writeablebitmapex/1.5.0",
+      "path": "writeablebitmapex/1.5.1",
       "files": [
-        "WriteableBitmapEx.1.5.0.nupkg.sha512",
-        "WriteableBitmapEx.nuspec",
         "lib/NetCore45/WriteableBitmapEx.WinRT.dll",
         "lib/NetCore45/WriteableBitmapEx.WinRT.pdb",
         "lib/NetCore45/WriteableBitmapEx.WinRT.xml",
@@ -25999,13 +25997,15 @@
         "lib/sl4/WriteableBitmapEx.pdb",
         "lib/wpa81/WriteableBitmapEx.WinRT.dll",
         "lib/wpa81/WriteableBitmapEx.WinRT.pdb",
-        "lib/wpa81/WriteableBitmapEx.WinRT.xml"
+        "lib/wpa81/WriteableBitmapEx.WinRT.xml",
+        "writeablebitmapex.1.5.1.nupkg.sha512",
+        "writeablebitmapex.nuspec"
       ]
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "Dropbox.Api >= 4.2.4",
+      "Dropbox.Api >= 4.2.6",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.3.3",
       "Microsoft.NETNative.Analyzer >= 1.0.0",
       "Microsoft.Net.Http >= 2.2.29",
@@ -26013,9 +26013,9 @@
       "Microsoft.OneDriveSDK.Authentication >= 1.0.8",
       "Microsoft.Toolkit.Uwp >= 1.4.1",
       "Newtonsoft.Json >= 9.0.1",
-      "Playlists.NET >= 1.1.0",
+      "Playlists.NET >= 1.2.0",
       "TagLib.Portable >= 1.0.4",
-      "WriteableBitmapEx >= 1.5.0",
+      "WriteableBitmapEx >= 1.5.1",
       "sqlite-net-pcl >= 1.1.1"
     ],
     "UAP,Version=v10.0": []
@@ -26032,18 +26032,18 @@
       "projectStyle": "ProjectJson"
     },
     "dependencies": {
-      "Dropbox.Api": "4.2.4",
+      "Dropbox.Api": "4.2.6",
       "Microsoft.Net.Http": "2.2.29",
-      "Microsoft.NETCore.UniversalWindowsPlatform": "[5.3.3, )",
+      "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
       "Microsoft.NETNative.Analyzer": "1.0.0",
       "Microsoft.OneDriveSDK": "2.0.6",
       "Microsoft.OneDriveSDK.Authentication": "1.0.8",
       "Microsoft.Toolkit.Uwp": "1.4.1",
       "Newtonsoft.Json": "9.0.1",
-      "Playlists.NET": "1.1.0",
+      "Playlists.NET": "1.2.0",
       "sqlite-net-pcl": "1.1.1",
       "TagLib.Portable": "1.0.4",
-      "WriteableBitmapEx": "1.5.0"
+      "WriteableBitmapEx": "[1.5.1, )"
     },
     "frameworks": {
       "uap10.0": {}

@@ -276,7 +276,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
             foreach (var item in content)
             {
-                if (item.Audio != null)
+                if (item.Audio != null && item?.Id != null)
                 {
                     songData.Add(CreateSongData(item, userId, folder));
                 }

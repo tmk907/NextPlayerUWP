@@ -11,7 +11,6 @@ namespace NextPlayerUWP.Views
     public sealed partial class RightPanelControl : UserControl
     {
         private RightPanelViewModel ViewModel;
-        //private AdDuplex.AdControl controlAdDuplex;
         //private AdControl controlMicrosoftAd;
 
         public RightPanelControl()
@@ -38,16 +37,6 @@ namespace NextPlayerUWP.Views
         {
             if (Microsoft.Toolkit.Uwp.ConnectionHelper.IsInternetAvailable)
             {
-                //controlAdDuplex = new AdDuplex.AdControl()
-                //{
-                //    AdUnitId = "202211",
-                //    AppKey = "bfe9d689-7cf7-4add-84fe-444dc72e6f36",
-                //    CollapseOnError = true,
-                //};
-                ////controlAdDuplex.AdLoadingError += AdControl_AdLoadingError;
-
-                //GridAdControlRightPanel1.Children.Add(controlAdDuplex);
-
 
                 //controlMicrosoftAd = new AdControl()
                 //{
@@ -67,9 +56,7 @@ namespace NextPlayerUWP.Views
         {
             //if (controlAdDuplex != null)
             //{
-            //    //GridAdControlRightPanel1.Children.Remove(controlAdDuplex);
-            //    ////controlAdDuplex.AdLoadingError -= AdControl_AdLoadingError;
-            //    //controlAdDuplex = null;
+            //    
 
             //    //GridAdControlRightPanel1.Children.Remove(controlMicrosoftAd);
             //    //controlMicrosoftAd = null;
@@ -118,12 +105,6 @@ namespace NextPlayerUWP.Views
         private void AdControl_AdRefreshed(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("AdControl refreshed (" + ((AdControl)sender).Name + ") has ad:" + ((AdControl)sender).HasAd.ToString());
-        }
-
-
-        private void AdControl_AdLoadingError(object sender, AdDuplex.Common.Models.AdLoadingErrorEventArgs e)
-        {
-            //NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage(e.Error.Message, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.Debug);
         }
     }
 }
