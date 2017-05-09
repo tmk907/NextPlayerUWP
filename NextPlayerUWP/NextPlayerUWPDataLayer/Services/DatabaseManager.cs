@@ -559,16 +559,6 @@ namespace NextPlayerUWPDataLayer.Services
 
         #region Get
 
-        public string GetAlbumArt(string album)
-        {
-            var q = connection.Table<AlbumsTable>().Where(a => a.Album.Equals(album)).ToList();
-            string imagepath = AppConstants.AlbumCover;
-            if (q.Count > 0)
-            {
-                imagepath = q.FirstOrDefault().ImagePath;
-            }
-            return imagepath;
-        }
 
         public string GetLyrics(int id)
         {
@@ -921,39 +911,6 @@ namespace NextPlayerUWPDataLayer.Services
             }
 
             return songs;
-        }
-
-        public ObservableCollection<SongItem> GetSongItemsFromNowPlaying()
-        {
-            var query = connection.Table<NowPlayingTable>().OrderBy(e => e.Position).ToList();
-            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
-            foreach (var e in query)
-            {
-                var type = (MusicSource)e.SourceType;
-                if (type == MusicSource.LocalFile || type == MusicSource.LocalNotMusicLibrary || type == MusicSource.Dropbox || type == MusicSource.OneDrive || type == MusicSource.PCloud)
-                {
-                    var query2 = connection.Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
-                    if (query2 != null)
-                    {
-                        var newSong = new SongItem(query2);
-                        newSong.SourceType = type;
-                        list.Add(newSong);
-                    }
-                }
-                else if (type == MusicSource.RadioJamendo)
-                {
-                    SongItem s = new SongItem();
-                    s.SourceType = MusicSource.RadioJamendo;
-                    s.Title = e.Title;
-                    s.Artist = e.Artist;
-                    s.Album = e.Album;
-                    s.Path = e.Path;
-                    s.CoverPath = e.ImagePath;
-                    s.SongId = e.SongId;
-                    list.Add(s);
-                }
-            }
-            return list;
         }
 
         public async Task<ObservableCollection<SongItem>> GetSongItemsFromNowPlayingAsync()
@@ -1391,19 +1348,6 @@ namespace NextPlayerUWPDataLayer.Services
             return newplaylist.PlainPlaylistId;
         }
 
-        public int InsertPlainPlaylist(PlaylistItem item)
-        {
-            var newplaylist = new PlainPlaylistsTable
-            {
-                Name = item.Name,
-                DateModified = item.DateModified,
-                IsHidden = item.IsHidden,
-                Path = item.Path,
-            };
-
-            connection.Insert(newplaylist);
-            return newplaylist.PlainPlaylistId;
-        }
 
         public async Task InsertPlainPlaylistEntryAsync(int _playlistId, List<Tuple<int,int>> list)
         {
@@ -1460,6 +1404,20 @@ namespace NextPlayerUWPDataLayer.Services
             return newplaylist.SmartPlaylistId;
         }
 
+        public void InsertSmartPlaylistEntry(int _playlistId, string _item, string _comparison, string _value, string _operator)
+        {
+            var newEntry = new SmartPlaylistEntryTable
+            {
+                PlaylistId = _playlistId,
+                Item = _item,
+                Comparison = _comparison,
+                Operator = _operator,
+                Value = _value,
+            };
+
+            connection.Insert(newEntry);
+        }
+
         public async Task<int> InsertSmartPlaylistAsync(string name, int songsNumber, string sorting)
         {
             var newplaylist = new SmartPlaylistsTable
@@ -1487,30 +1445,6 @@ namespace NextPlayerUWPDataLayer.Services
 
             await connectionAsync.InsertAsync(newEntry);
         }
-
-        public void InsertSmartPlaylistEntry(int _playlistId, string _item, string _comparison, string _value, string _operator)
-        {
-            var newEntry = new SmartPlaylistEntryTable
-            {
-                PlaylistId = _playlistId,
-                Item = _item,
-                Comparison = _comparison,
-                Operator = _operator,
-                Value = _value,
-            };
-
-           connection.Insert(newEntry);
-        }
-
-        //public int InsertImportedPlaylist(string name, string path, int plainId)
-        //{
-        //    var p = new ImportedPlaylistsTable() {
-        //        Name = name,
-        //        Path = path,
-        //        PlainPlaylistId = plainId
-        //    };
-        //    return connection.Insert(p);
-        //}
 
         public async Task<List<SongItem>> InsertCloudItems(IEnumerable<SongData> songsdata, MusicSource type)
         {
@@ -1621,37 +1555,24 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task DeleteSmartPlaylistEntries(int playlistId)
         {
-            var items = await connectionAsync.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(playlistId)).ToListAsync();
-            foreach (var item in items)
-            {
-                connection.Delete<SmartPlaylistEntryTable>(item.Id);
-            }
+            await connectionAsync.ExecuteAsync("DELETE FROM SmartPlaylistEntryTable WHERE PlaylistId = ?", playlistId);
         }
 
         public async Task DeleteSmartPlaylistAsync(int id)
         {
             await DeleteSmartPlaylistEntries(id);
-            var list =  await connectionAsync.Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).ToListAsync();
-            var playlist = list.FirstOrDefault();
-            await connectionAsync.DeleteAsync(playlist);
+            await connectionAsync.ExecuteAsync("DELETE FROM SmartPlaylistsTable WHERE SmartPlaylistId = ?", id);
         }
 
         public async Task DeletePlainPlaylistEntryAsync(int songId, int playlistId)
         {
-            var item = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(s => s.SongId == songId && s.PlaylistId == playlistId).ToListAsync();
-            await connectionAsync.DeleteAsync(item.FirstOrDefault());
+            await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ? AND SongId = ?", playlistId, songId);
         }
 
         public async Task DeletePlainPlaylistAsync(int playlistId)
         {
             await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlistId);
-            //connection.Execute("DELETE FROM PlainPlaylistsTable WHERE PlainPlaylistId = ?");
-            var q = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId == playlistId).FirstOrDefaultAsync();
-            await connectionAsync.DeleteAsync(q);
-            
-            //var list = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId.Equals(playlistId)).ToListAsync();
-            //var playlist = list.FirstOrDefault();
-            //await connectionAsync.DeleteAsync(playlist);
+            await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistsTable WHERE PlainPlaylistId = ?", playlistId);
         }
 
 
@@ -1677,11 +1598,7 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task DeleteSong(int songId)
         {
-            var q = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(songId)).ToListAsync();
-            if (q.Count == 1)
-            {
-                connection.Delete(q.FirstOrDefault());
-            }
+            await connectionAsync.ExecuteAsync("DELETE FROM SongsTable WHERE SongId = ?", songId);
         }
 
         public async Task DeleteRadioFromFavourites(int id, RadioType type)
@@ -1712,11 +1629,6 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task UpdateAlbumsTable(IEnumerable<AlbumsTable> albums)//error
         {
             await connectionAsync.UpdateAllAsync(albums);
-        }
-
-        public void UpdateSongImagePath(SongItem song)
-        {
-           connection.Execute("UPDATE SongsTable SET AlbumArt = ? WHERE SongId = ?", song.CoverPath, song.SongId);
         }
 
         public async Task UpdateSongsImagePath(IEnumerable<SongsTable> songs)
@@ -1874,7 +1786,7 @@ namespace NextPlayerUWPDataLayer.Services
                     Path = playlist.Path,
                     IsHidden = playlist.SongIds.Count == 0
                 };
-                connection.Insert(t);
+                await connectionAsync.InsertAsync(t);
                 int i = 0;
                 List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
                 foreach (var item in playlist.SongIds)
@@ -1991,9 +1903,9 @@ namespace NextPlayerUWPDataLayer.Services
             return list;
         }
 
-        public void DeleteCachedScrobble(int id)
+        public async Task DeleteCachedScrobbleAsync(int id)
         {
-            connection.Execute("DELETE FROM CachedScrobble WHERE id = ?", id);
+            await connectionAsync.ExecuteAsync("DELETE FROM CachedScrobble WHERE id = ?", id);
         }
 
         public async Task DeleteAllCachedScrobbles()
@@ -2084,7 +1996,7 @@ namespace NextPlayerUWPDataLayer.Services
             return list;
         }
 
-        public List<CloudAccount> GetAllCloudAccounts()
+        public List<CloudAccount> GetAllCloudAccounts()//notasync
         {
             var query = connection.Table<CloudAccountsTable>().ToList();
             List<CloudAccount> list = new List<CloudAccount>();
@@ -2258,16 +2170,6 @@ namespace NextPlayerUWPDataLayer.Services
             return s;
         }
 
-        public void ClearCoverPaths()
-        {
-            connection.Execute("UPDATE AlbumsTable SET ImagePath = ''");
-        }
-
-        public void ResetNowPlaying()
-        {
-            connection.DropTable<NowPlayingTable>();
-            connection.CreateTable<NowPlayingTable>();
-        }
         public void update1()
         {
             connection.DropTable<SmartPlaylistEntryTable>();
@@ -2275,7 +2177,6 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<SmartPlaylistsTable>();
             connection.CreateTable<SmartPlaylistEntryTable>();
         }
-
 
         public void resetdb()
         {
