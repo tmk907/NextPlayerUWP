@@ -34,6 +34,8 @@ namespace NextPlayerUWP
 
         bool _isInBackgroundMode = false;
         private AppKeyboardShortcuts appShortcuts;
+        bool isBackgroundLeavedFirstTime = true;
+
         Stopwatch s1;
         public App()
         {
@@ -102,7 +104,8 @@ namespace NextPlayerUWP
             SplashFactory = (e) => new Views.Splash(e);
 
             appShortcuts = new AppKeyboardShortcuts();
-            
+            OnStartAsyncFinished += InitAfterOnStart;
+
             this.UnhandledException += App_UnhandledException;
             s1.Stop();
             Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
@@ -186,7 +189,6 @@ namespace NextPlayerUWP
             }
         }
 
-        bool isBackgroundLeavedFirstTime = true;
         private async void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             Debug.WriteLine("App App_LeavingBackground");
@@ -358,17 +360,8 @@ namespace NextPlayerUWP
             }
             catch (Exception ex)
             {
-                //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
             }
 
-            //try
-            //{
-            //    AdDuplex.AdDuplexClient.Initialize("bfe9d689-7cf7-4add-84fe-444dc72e6f36");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger2.Current.WriteMessage("Adduplex initialize fail", Logger2.Level.WarningError);
-            //}
             
             s1.Stop();
             Debug.WriteLine("Time OnInitializeAsync End: {0}ms", s1.ElapsedMilliseconds);
@@ -392,13 +385,9 @@ namespace NextPlayerUWP
                 await NavigationService.NavigateAsync(Pages.Settings);
                 return;
             }
-            await PlayerInitializer.Init();
             var fileArgs = args as FileActivatedEventArgs;
             if (fileArgs != null && fileArgs.Files.Any())
             {
-                var file = fileArgs.Files.First() as StorageFile;
-                await OpenFileAndPlay(file);
-
                 if (DeviceFamilyHelper.IsDesktop())
                 {
                     await NavigationService.NavigateAsync(Pages.NowPlayingDesktop);
@@ -406,10 +395,6 @@ namespace NextPlayerUWP
                 else
                 {
                     await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
-                }
-                if (fileArgs.Files.Count > 1)
-                {
-                    await OpenFilesAndAddToNowPlaying(fileArgs.Files.Skip(1));
                 }
             }
             else
@@ -420,8 +405,6 @@ namespace NextPlayerUWP
                         LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
                         if (!eventArgs.TileId.Contains(SettingsKeys.TileId))
                         {
-                            //Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
-                            //Logger.SaveToFile();
                             Debug.WriteLine("OnStartAsync event arg doesn't contain tileid");
                             TelemetryAdapter.TrackEventException("event arg doesn't contain tileid");
                         }
@@ -491,9 +474,32 @@ namespace NextPlayerUWP
                         break;
                 }
             }
+            
+            OnStartAsyncFinished?.Invoke(args.PreviousExecutionState, fileArgs);
+            s1.Stop();
+            Debug.WriteLine("Time OnStartAsync End: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
+        }
 
-            if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+        private delegate void OnStartAsyncFinishedHandler(ApplicationExecutionState state, FileActivatedEventArgs fileArgs);
+        private event OnStartAsyncFinishedHandler OnStartAsyncFinished;
+
+        private async void InitAfterOnStart(ApplicationExecutionState state, FileActivatedEventArgs fileArgs)
+        {
+            s1.Stop();
+            Debug.WriteLine("InitAfterOnStart: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
+            if (fileArgs != null && fileArgs.Files.Any())
+            {
+                await PlayerInitializer.Init(fileArgs.Files);
+            }
+            else
+            {
+                await PlayerInitializer.Init();
+            }
+
+            if (state == ApplicationExecutionState.ClosedByUser ||
+                state == ApplicationExecutionState.NotRunning)
             {
                 try
                 {
@@ -503,13 +509,12 @@ namespace NextPlayerUWP
                 catch (Exception ex)
                 {
 
-                    throw;
-                }               
+                }
             }
             s1.Stop();
-            Debug.WriteLine("Time OnStartAsync End: {0}ms", s1.ElapsedMilliseconds);
+            Debug.WriteLine("InitAfterOnStart: End {0}ms", s1.ElapsedMilliseconds);
         }
-        
+
         public override async Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
         {            
             Logger2.Current.WriteMessage("OnSuspendingAsync");
@@ -528,54 +533,6 @@ namespace NextPlayerUWP
         {
             await BackgroundTaskHelper.CheckAppVersion();
             await BackgroundTaskHelper.RegisterBackgroundTasks();
-        }
-
-        private async Task OpenFileAndPlay(StorageFile file)
-        {
-            MediaImport mi = new MediaImport(FileFormatsHelper);
-            string type = file.FileType.ToLower();
-            if (FileFormatsHelper.IsFormatSupported(type))
-            {
-                SongItem si = await mi.OpenSingleFileAsync(file);
-                await NowPlayingPlaylistManager.Current.NewPlaylist(si);
-                await PlaybackService.Instance.PlayNewList(0);
-            }
-            else if (FileFormatsHelper.IsPlaylistSupportedType(type))
-            {
-                var playlist = await mi.OpenPlaylistFileAsync(file);
-                if (playlist != null)
-                {
-                    await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
-                    await PlaybackService.Instance.PlayNewList(0);
-                }
-            }
-        }
-
-        private async Task OpenFilesAndAddToNowPlaying(IEnumerable<IStorageItem> files)
-        {
-            MediaImport mi = new MediaImport(FileFormatsHelper);
-            List<SongItem> list = new List<SongItem>();
-            int i = 0;
-            const int size = 4;
-            foreach(var file in files)
-            {
-                var si = await mi.OpenSingleFileAsync(file as StorageFile);
-                list.Add(si);
-                if (i == size)
-                {
-                    await NowPlayingPlaylistManager.Current.Add(list);
-                    list.Clear();
-                    i = 0;
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            if (list.Count > 0)
-            {
-                await NowPlayingPlaylistManager.Current.Add(list);
-            }
         }
     }
 }

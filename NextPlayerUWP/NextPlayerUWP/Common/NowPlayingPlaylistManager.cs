@@ -43,6 +43,15 @@ namespace NextPlayerUWP.Common
             currentIndex = ApplicationSettingsHelper.ReadSongIndex();
         }
 
+        public async Task Init(MusicItem item)
+        {
+            System.Diagnostics.Debug.WriteLine("NowPlayingPlaylistManager.Init(MusicItem )");
+            await NewPlaylist(item);
+            songs.CollectionChanged += Songs_CollectionChanged;
+            OnNPChanged();
+            currentIndex = 0;
+        }
+
         public SortingHelperForSongItemsInPlaylist SortingHelper;
 
         private DispatcherWrapper dispatcher;
