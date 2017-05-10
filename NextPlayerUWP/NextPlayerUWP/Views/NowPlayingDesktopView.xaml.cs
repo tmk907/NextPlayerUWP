@@ -63,9 +63,9 @@ namespace NextPlayerUWP.Views
 
         private async Task ShowAlbumArtInBackground()
         {
-            FindName("BackDropControl");
+            FindName(nameof(BackDropControl));
             await Task.Delay(300);
-            FindName("BackgroundImage");
+            FindName(nameof(BackgroundImage));
             ShowBGImage.Begin();
         }
 

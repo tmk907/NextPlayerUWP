@@ -6,8 +6,6 @@ using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Template10.Controls;
 using Template10.Services.NavigationService;
@@ -15,7 +13,6 @@ using Windows.ApplicationModel.Resources;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,15 +23,10 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class Shell : Page
     {
-        BottomPlayerViewModel BottomPlayerVM;
-
         public static Shell Instance { get; set; }
         public static HamburgerMenu HamburgerMenu => Instance.Menu;
 
         ShellViewModel ShellVM = new ShellViewModel();
-
-        PointerEventHandler pointerpressedhandler;
-        PointerEventHandler pointerreleasedhandler;
 
         private Guid tokenMenu;
         private Guid tokenTheme;
@@ -50,16 +42,8 @@ namespace NextPlayerUWP.Views
             this.DataContext = ShellVM;
             this.Loaded += Shell_Loaded;
             this.Unloaded += Shell_Unloaded;
-
-            pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
-            pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
-
             ShellVM.RefreshMenuButtons();
-            BottomPlayerVM = (BottomPlayerViewModel)BottomPlayerGrid.DataContext;
-            //if (DeviceFamilyHelper.IsDesktop())
-            //{
-            //    ((RightPanelControl)(RightPanel ?? FindName("RightPanel"))).Visibility = Visibility.Visible;
-            //}
+
             MigrateCredentialsAsync();
             ReviewReminder();
             //SendLogs();
@@ -75,18 +59,29 @@ namespace NextPlayerUWP.Views
         private void Shell_Loaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Shell.Loaded() Start");
-            //LoadSliderEvents(timeslider);
             tokenMenu = MessageHub.Instance.Subscribe<MenuButtonSelected>(OnMenuButtonMessage);
             tokenNotification = MessageHub.Instance.Subscribe<InAppNotification>(OnInAppNotificationMessage);
             tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
             ApplyTheme(ThemeHelper.IsLightTheme);
+
+            LoadControls();
+
             System.Diagnostics.Debug.WriteLine("Shell.Loaded() End");
+        }
+
+        private async Task LoadControls()
+        {
+            await Task.Delay(5000);
+            FindName(nameof(BottomPlayerWrapper));
+            if (DeviceFamilyHelper.IsDesktop())
+            {
+                FindName(nameof(RightPanelWrapper));
+            }
         }
 
         private void Shell_Unloaded(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Shell UnLoaded()");
-            //UnloadSliderEvents(timeslider);
             MessageHub.Instance.UnSubscribe(tokenMenu);
             MessageHub.Instance.UnSubscribe(tokenNotification);
             MessageHub.Instance.UnSubscribe(tokenTheme);
@@ -183,52 +178,7 @@ namespace NextPlayerUWP.Views
             await Logger2.Current.SendLogs();
         }
 
-        #region Slider 
-
-        private void BottomSlider_Loaded(object sender, RoutedEventArgs e)
-        {
-            LoadSliderEvents(durationSliderBottom);
-        }
-
-        private void BottomSlider_Unloaded(object sender, RoutedEventArgs e)
-        {
-            UnloadSliderEvents(durationSliderBottom);
-        }
-
-        private void SliderGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            LoadSliderEvents(timeslider);
-        }
-
-        private void SliderGrid_Unloaded(object sender, RoutedEventArgs e)
-        {
-            UnloadSliderEvents(timeslider);
-        }
-
-        private void LoadSliderEvents(Slider slider)
-        {
-            slider.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
-            slider.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
-        }
-
-        private void UnloadSliderEvents(Slider slider)
-        {
-            slider.RemoveHandler(Control.PointerPressedEvent, pointerpressedhandler);
-            slider.RemoveHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler);
-        }
-
-        private void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            BottomPlayerVM.sliderpressed = true;
-        }
-
-        private void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
-        {
-            BottomPlayerVM.sliderpressed = false;
-            PlaybackService.Instance.Position = TimeSpan.FromSeconds(((Slider)sender).Value);
-        }
-
-        #endregion
+       
 
         private async Task MigrateCredentialsAsync()
         {
@@ -300,19 +250,19 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
-        {
-            if (DeviceFamilyHelper.IsDesktop())
-            {
-#if DEBUG
-                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
-#endif
-            }
-            else
-            {
-                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
-            }
-        }
+//        private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
+//        {
+//            if (DeviceFamilyHelper.IsDesktop())
+//            {
+//#if DEBUG
+//                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+//#endif
+//            }
+//            else
+//            {
+//                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+//            }
+//        }
 
         private async Task AutoUpdateLibrary()
         {
