@@ -11,7 +11,7 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <!--DataContext="{Binding Source={StaticResource Locator}, Path=BottomPlayerVM}"-->
+    <!--DataContext="{Binding Source={StaticResource Locator}, Path=ViewModel}"-->
     <UserControl.Resources>
         <Style x:Key="BottomPlayerButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -478,8 +478,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid 
-        Background="{StaticResource UserAccentBrush}">
+    <Grid Background="{StaticResource UserAccentBrush}" Visibility="{x:Bind ViewModel.BottomPlayerVisibility, Mode=OneWay}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Phone">
@@ -492,7 +491,7 @@
                         <Setter Target="ToggleRepeatButton.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="VisualStateWide">
+                <!--<VisualState x:Name="VisualStateWide">
                     <VisualState.StateTriggers>
                         <winstatetriggers:CompositeStateTrigger Operator="And">
                             <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
@@ -506,7 +505,7 @@
                         <Setter Target="ShowHideGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="SongInfoColumn.Width" Value="*"/>
                     </VisualState.Setters>
-                </VisualState>
+                </VisualState>-->
                 <VisualState  x:Name="VisualStateNormal">
                     <VisualState.StateTriggers>
                         <winstatetriggers:CompositeStateTrigger Operator="And">
@@ -527,6 +526,7 @@
                         <winstatetriggers:CompositeStateTrigger Operator="And">
                             <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
                             <winstatetriggers:AdaptiveTrigger MinWindowWidth="500" />
+                            <winstatetriggers:CompareStateTrigger Value="{x:Bind ViewModel.IsNowPlayingDesktopViewActive, Mode=OneWay}" Comparison="Equal" CompareTo="false"/>
                         </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
@@ -537,11 +537,30 @@
                         <Setter Target="SongInfoColumn.Width" Value="*"/>
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState x:Name="VisualStateNarrowNowPlaying">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="500" />
+                            <winstatetriggers:CompareStateTrigger Value="{x:Bind ViewModel.IsNowPlayingDesktopViewActive, Mode=OneWay}" Comparison="Equal" CompareTo="true"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderGrid.Visibility" Value="Visible"/>
+                        <Setter Target="SliderColumn.Width" Value="*"/>
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SongInfoColumn.Width" Value="0"/>
+                        <Setter Target="ShuffleButton.Visibility" Value="Visible"/>
+                        <Setter Target="ToggleRepeatButton.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
                 <VisualState x:Name="VisualStateCompact">
                     <VisualState.StateTriggers>
                         <winstatetriggers:CompositeStateTrigger Operator="And">
                             <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
                             <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                            <winstatetriggers:CompareStateTrigger Value="{x:Bind ViewModel.IsNowPlayingDesktopViewActive, Mode=OneWay}" Comparison="Equal" CompareTo="false"/>
                         </winstatetriggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
@@ -552,6 +571,24 @@
                         <Setter Target="SongInfoColumn.Width" Value="*"/>
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
                         <Setter Target="ToggleRepeatButton.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateCompactNowPlaying">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                            <winstatetriggers:CompareStateTrigger Value="{x:Bind ViewModel.IsNowPlayingDesktopViewActive, Mode=OneWay}" Comparison="Equal" CompareTo="true"/>
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SliderColumn.Width" Value="0"/>
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
+                        <Setter Target="ShowHideGrid.Visibility" Value="Visible"/>
+                        <Setter Target="SongInfoColumn.Width" Value="0"/>
+                        <Setter Target="ShuffleButton.Visibility" Value="Visible"/>
+                        <Setter Target="ToggleRepeatButton.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -590,7 +627,7 @@
                             DecodePixelWidth="60"
                             FadeInDuration="0:0:0.3"
                             FadeOutDuration="0:0:0.3"
-                            ImageUri="{x:Bind BottomPlayerVM.QueueVM.CoverUri, Mode=OneWay}"
+                            ImageUri="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}"
                             Stretch="Uniform"/>
                 <Grid Grid.Column="1" Grid.Row="0"
                               Background="Transparent"
@@ -623,7 +660,7 @@
             <Grid Grid.Column="1" x:Name="ShowHideGrid" 
                           x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
                 <Button Style="{StaticResource BottomPlayerButtonStyle}"
-                                Click="{x:Bind BottomPlayerVM.ShowHideSlider}"
+                                Click="{x:Bind ViewModel.ShowHideSlider}"
                                 Width="48" 
                                 Height="60">
                     <Button.ContentTemplate>
@@ -651,7 +688,7 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="ShuffleButton"
                             Grid.Column="0"
-                            Click="{x:Bind BottomPlayerVM.PlayerVM.ToggleShuffle}" 
+                            Click="{x:Bind ViewModel.PlayerVM.ToggleShuffle}" 
                             Width="48" Height="48"
                             Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
@@ -668,8 +705,8 @@
                     </Button.ContentTemplate>
                 </Button>
                 <RepeatButton Grid.Column="1"
-                            Click="{x:Bind BottomPlayerVM.PlayerVM.PreviousOrSeek}"
-                            Interval="{x:Bind BottomPlayerVM.PlayerVM.RepeatButtonInterval}"
+                            Click="{x:Bind ViewModel.PlayerVM.PreviousOrSeek}"
+                            Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval}"
                             Width="48" Height="60"
                             Style="{StaticResource BottomPlayerRepeatButtonStyle}">
                     <RepeatButton.ContentTemplate>
@@ -686,7 +723,7 @@
                     </RepeatButton.ContentTemplate>
                 </RepeatButton>
                 <Button Grid.Column="2"
-                            Click="{x:Bind BottomPlayerVM.PlayerVM.Play}"
+                            Click="{x:Bind ViewModel.PlayerVM.Play}"
                             Width="48" Height="60"
                             Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
@@ -704,8 +741,8 @@
                     </Button.ContentTemplate>
                 </Button>
                 <RepeatButton Grid.Column="3"
-                            Click="{x:Bind BottomPlayerVM.PlayerVM.NextOrSeek}"
-                            Interval="{x:Bind BottomPlayerVM.PlayerVM.RepeatButtonInterval}"
+                            Click="{x:Bind ViewModel.PlayerVM.NextOrSeek}"
+                            Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval}"
                             Width="48" Height="60"
                             Style="{StaticResource BottomPlayerRepeatButtonStyle}">
                     <RepeatButton.ContentTemplate>
@@ -723,7 +760,7 @@
                 </RepeatButton>
                 <Button Grid.Column="4"
                                 x:Name="ToggleRepeatButton"
-                            Click="{x:Bind BottomPlayerVM.PlayerVM.ToggleRepeat}"
+                            Click="{x:Bind ViewModel.PlayerVM.ToggleRepeat}"
                             Width="48" 
                             Height="60"
                             Style="{StaticResource BottomPlayerButtonStyle}">
@@ -744,7 +781,7 @@
             <Grid Grid.Column="3" x:Name="VolumeGrid" 
                           x:DeferLoadStrategy="Lazy" Visibility="Collapsed">
                 <Button Style="{StaticResource BottomPlayerButtonStyle}"
-                                RightTapped="{x:Bind BottomPlayerVM.PlayerVM.MuteVolume}"
+                                RightTapped="{x:Bind ViewModel.PlayerVM.MuteVolume}"
                                 Width="48" 
                                 Height="60">
                     <Button.ContentTemplate>

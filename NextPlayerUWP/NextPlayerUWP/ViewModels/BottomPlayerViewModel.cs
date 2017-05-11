@@ -57,6 +57,12 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref bottomPlayerVisibility, value); }
         }
 
+        private bool isNowPlayingDesktopViewActive = false;
+        public bool IsNowPlayingDesktopViewActive
+        {
+            get { return isNowPlayingDesktopViewActive; }
+            set { Set(ref isNowPlayingDesktopViewActive, value); }
+        }
 
         #region Properties
 

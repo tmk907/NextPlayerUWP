@@ -73,11 +73,9 @@ namespace NextPlayerUWP
 
         public static void OnNavigatedToNewView(bool bottomPlayerVisible, bool isNowPlayingDesktopActive = false)
         {
-            if (Window.Current == null || Window.Current.Content == null) return;
-            //((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
             ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
             vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
-            ((Shell)((ModalDialog)Window.Current.Content).Content).OnDesktopViewActiveChange(isNowPlayingDesktopActive);
+            vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
         }
 
         public static async Task ChangeStatusBarVisibility()

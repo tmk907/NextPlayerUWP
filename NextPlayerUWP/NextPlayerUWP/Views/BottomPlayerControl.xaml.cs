@@ -13,7 +13,7 @@ namespace NextPlayerUWP.Views
 {
     public sealed partial class BottomPlayerControl : UserControl
     {
-        BottomPlayerViewModel BottomPlayerVM;
+        BottomPlayerViewModel ViewModel;
         PointerEventHandler pointerpressedhandler;
         PointerEventHandler pointerreleasedhandler;
 
@@ -25,7 +25,7 @@ namespace NextPlayerUWP.Views
             pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
             pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
 
-            BottomPlayerVM = (BottomPlayerViewModel)DataContext;
+            ViewModel = (BottomPlayerViewModel)DataContext;
         }
         //~BottomPlayerControl()
         //{
@@ -73,12 +73,12 @@ namespace NextPlayerUWP.Views
 
         private void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            BottomPlayerVM.sliderpressed = true;
+            ViewModel.sliderpressed = true;
         }
 
         private void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
-            BottomPlayerVM.sliderpressed = false;
+            ViewModel.sliderpressed = false;
             PlaybackService.Instance.Position = TimeSpan.FromSeconds(((Slider)sender).Value);
         }
 

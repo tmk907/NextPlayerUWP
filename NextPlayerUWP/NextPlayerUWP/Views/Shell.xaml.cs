@@ -34,9 +34,7 @@ namespace NextPlayerUWP.Views
 
         public Shell()
         {
-            Logger2.DebugWrite("Shell() Start", "");
-            System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
-            s.Start();
+            Logger2.DebugWrite("Shell()", "");
             Instance = this;
             InitializeComponent();
             this.DataContext = ShellVM;
@@ -47,8 +45,6 @@ namespace NextPlayerUWP.Views
             MigrateCredentialsAsync();
             ReviewReminder();
             //SendLogs();
-            s.Stop();
-            System.Diagnostics.Debug.WriteLine("Shell() End {0}ms", s.ElapsedMilliseconds);
         }
 
         //~Shell()
@@ -71,7 +67,7 @@ namespace NextPlayerUWP.Views
 
         private async Task LoadControls()
         {
-            await Task.Delay(5000);
+            await Task.Delay(500);
             FindName(nameof(BottomPlayerWrapper));
             if (DeviceFamilyHelper.IsDesktop())
             {
@@ -156,29 +152,10 @@ namespace NextPlayerUWP.Views
             }
         }
 
-        //public void ChangeBottomPlayerVisibility(bool visible)
-        //{
-        //    if (visible)
-        //    {
-        //        BottomPlayerGrid.Visibility = Visibility.Visible;
-        //    }
-        //    else
-        //    {
-        //        BottomPlayerGrid.Visibility = Visibility.Collapsed;
-        //    }
-        //}
-
-        public void OnDesktopViewActiveChange(bool isActive)
-        {
-            ShellVM.IsNowPlayingDesktopViewActive = isActive;
-        }
-
         private async Task SendLogs()
         {            
             await Logger2.Current.SendLogs();
         }
-
-       
 
         private async Task MigrateCredentialsAsync()
         {
