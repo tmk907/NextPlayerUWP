@@ -14,6 +14,11 @@ namespace NextPlayerUWP.Converters
                 if (param == "mobile") return 48;
                 else return 84;
             }
+            else if (val == "year")
+            {
+                if (param == "mobile") return 60;
+                else return 84;
+            }
             else if (val == "duration")
             {
                 if (param == "mobile") return 96;

@@ -73,7 +73,8 @@ namespace NextPlayerUWP.ViewModels
         private SongItem currentSong = new SongItem();
         public SongItem CurrentSong
         {
-            get {
+            get
+            {
                 if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
                 {
                     currentSong = new SongItem();

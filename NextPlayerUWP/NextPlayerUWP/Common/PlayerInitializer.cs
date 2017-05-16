@@ -11,6 +11,26 @@ namespace NextPlayerUWP.Common
     {
         private bool isInitialized = false;
         private bool initializationStarted = false;
+
+        private IReadOnlyList<IStorageItem> files;
+
+        public void SetFiles(IReadOnlyList<IStorageItem> files)
+        {
+            this.files = files;
+        }
+
+        public async Task InitMain()
+        {
+            if (files!=null && files.Any())
+            {
+                await Init(files);
+            }
+            else
+            {
+                await Init();
+            }
+        }
+
         public async Task Init()
         {
             if (isInitialized) return;
@@ -22,7 +42,7 @@ namespace NextPlayerUWP.Common
 
             await NowPlayingPlaylistManager.Current.Init();
             await PlaybackService.Instance.Initialize();
-
+            System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() Middle");
             App.AlbumArtFinder.StartLooking().ConfigureAwait(false);
             s.Stop();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() End {0}ms", s.ElapsedMilliseconds);

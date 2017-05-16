@@ -24,6 +24,7 @@ namespace NextPlayerUWP.ViewModels
             PlayerVM = vml.PlayerVM;
             QueueVM = vml.QueueVM;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
+            App.IsBottomPlayerVMCreated = true;
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)

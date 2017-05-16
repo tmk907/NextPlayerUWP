@@ -71,11 +71,15 @@ namespace NextPlayerUWP
             }
         }
 
+        public static bool IsBottomPlayerVMCreated = false;
         public static void OnNavigatedToNewView(bool bottomPlayerVisible, bool isNowPlayingDesktopActive = false)
         {
-            ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
-            vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
-            vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
+            if (IsBottomPlayerVMCreated)
+            {
+                ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
+                vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
+                vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
+            }
         }
 
         public static async Task ChangeStatusBarVisibility()

@@ -1,6 +1,5 @@
 ﻿using Microsoft.HockeyApp;
 using NextPlayerUWP.Common;
-using NextPlayerUWP.Messages;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
@@ -8,7 +7,6 @@ using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +14,6 @@ using Template10.Common;
 using Template10.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 
@@ -35,6 +32,7 @@ namespace NextPlayerUWP
         bool _isInBackgroundMode = false;
         private AppKeyboardShortcuts appShortcuts;
         bool isBackgroundLeavedFirstTime = true;
+        private bool resumeAlbumArtFinder = false;
 
         Stopwatch s1;
         public App()
@@ -116,6 +114,8 @@ namespace NextPlayerUWP
             //gcTimer.Start();
         }
 
+        #region Events
+
         private void MemoryManager_AppMemoryUsageIncreased(object sender, object e)
         {
             var level = MemoryManager.AppMemoryUsageLevel;
@@ -179,7 +179,7 @@ namespace NextPlayerUWP
                 //If we are in debug mode free memory here because the memory limits are turned off
                 //In release builds defer the actual reduction of memory to the limit changing event so we don't 
                 //unnecessarily throw away the UI
-
+                resumeAlbumArtFinder = AlbumArtFinder.Cancel();
                 ReduceMemoryUsage(0);
 #endif
             }
@@ -207,6 +207,13 @@ namespace NextPlayerUWP
                     Content = new Views.Shell(service),
                     ModalContent = new Views.Busy(),
                 };
+                
+
+                if (resumeAlbumArtFinder)
+                {
+                    AlbumArtFinder.StartLooking().ConfigureAwait(false);
+                }
+
                 deferral.Complete();
             }
             isBackgroundLeavedFirstTime = false;
@@ -219,6 +226,8 @@ namespace NextPlayerUWP
             //Logger.SaveInSettings("App_UnhandledException " + e.Exception);
             Logger2.Current.LogAppUnhadledException(e);
         }
+
+        #endregion
 
         public enum Pages
         {
@@ -484,19 +493,18 @@ namespace NextPlayerUWP
         private delegate void OnStartAsyncFinishedHandler(ApplicationExecutionState state, FileActivatedEventArgs fileArgs);
         private event OnStartAsyncFinishedHandler OnStartAsyncFinished;
 
+        public static FileActivatedEventArgs FileArgs;
+
         private async void InitAfterOnStart(ApplicationExecutionState state, FileActivatedEventArgs fileArgs)
         {
             s1.Stop();
             Debug.WriteLine("InitAfterOnStart: {0}ms", s1.ElapsedMilliseconds);
             s1.Start();
-            if (fileArgs != null && fileArgs.Files.Any())
+            if (fileArgs != null)
             {
-                await PlayerInitializer.Init(fileArgs.Files);
+                PlayerInitializer.SetFiles(fileArgs.Files);
             }
-            else
-            {
-                await PlayerInitializer.Init();
-            }
+            await PlayerInitializer.InitMain();
 
             if (state == ApplicationExecutionState.ClosedByUser ||
                 state == ApplicationExecutionState.NotRunning)

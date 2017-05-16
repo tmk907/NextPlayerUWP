@@ -12,7 +12,7 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             isLoaded = false;
             ViewModelLocator vml = new ViewModelLocator();
-            extHelper = vml.LyricsExtensionsService;
+            extHelper = vml.LyricsExtensionsClient.GetHelper();
         }
 
         public void Load()
@@ -24,15 +24,15 @@ namespace NextPlayerUWP.ViewModels.Settings
         private async Task OnLoaded()
         {
             var list = await extHelper.GetExtensionsInfo();
-            LyricsExtensions = new ObservableCollection<AppExtensionInfo>(list.OrderBy(e=>e.Priority));
+            LyricsExtensions = new ObservableCollection<MyAppExtensionInfo>(list.OrderBy(e=>e.Priority));
 
             if (isLoaded) return;
 
             isLoaded = true;
         }
 
-        private ObservableCollection<AppExtensionInfo> lyricsExtensions = new ObservableCollection<AppExtensionInfo>();
-        public ObservableCollection<AppExtensionInfo> LyricsExtensions
+        private ObservableCollection<MyAppExtensionInfo> lyricsExtensions = new ObservableCollection<MyAppExtensionInfo>();
+        public ObservableCollection<MyAppExtensionInfo> LyricsExtensions
         {
             get { return lyricsExtensions; }
             set { Set(ref lyricsExtensions, value); }

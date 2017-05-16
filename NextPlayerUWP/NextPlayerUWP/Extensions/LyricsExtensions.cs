@@ -1,58 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.AppExtensions;
-using Windows.Foundation.Collections;
+using UWPMusicPlayerExtensions.Client;
+using UWPMusicPlayerExtensions.Enums;
 
 namespace NextPlayerUWP.Extensions
 {
-    public class LyricsExtensions : BaseExtensionsHelper, IExtensionsHelper
+    public class LyricsExtensions : BaseExtensionsHelper, IAppExtensionsHelper
     {
-        public LyricsExtensions()
+        private ExtensionClientHelper helper;
+        public LyricsExtensions(ExtensionClientHelper helper)
         {
-            appExtensionName = "Next-Player-Lyrics";
-            catalog = AppExtensionCatalog.Open(appExtensionName);
-            catalog.PackageInstalled += Catalog_PackageInstalled;
-            catalog.PackageUninstalling += Catalog_PackageUninstalling;
+            this.helper = helper;
+            appExtensionName = UWPMusicPlayerExtensions.ExtensionsNames.Lyrics;
         }
 
-        private void Catalog_PackageUninstalling(AppExtensionCatalog sender, AppExtensionPackageUninstallingEventArgs args)
+        public async Task<List<MyAppExtensionInfo>> GetExtensionsInfo()
         {
-            extensions = null;
-        }
+            var available = await helper.GetAvailableExtensions();
+            List<MyAppExtensionInfo> list = new List<MyAppExtensionInfo>();
 
-        private void Catalog_PackageInstalled(AppExtensionCatalog sender, AppExtensionPackageInstalledEventArgs args)
-        {
-            extensions = null;
-        }
-
-        public async Task<List<AppExtensionInfo>> GetExtensionsInfo()
-        {
-            if (extensions == null)
+            foreach(var item in available)
             {
-                extensions = new List<AppExtensionInfo>();
-                foreach (var extension in await catalog.FindAllAsync())
+                list.Add(new MyAppExtensionInfo()
                 {
-                    var properties = await extension.GetExtensionPropertiesAsync() as PropertySet;
-
-                    if (properties != null && properties.ContainsKey("Service"))
-                    {
-                        PropertySet service = properties["Service"] as PropertySet;
-                        extensions.Add(new AppExtensionInfo()
-                        {
-                            DisplayName = extension.DisplayName,
-                            Id = extension.Id,
-                            PackageName = extension.Package.Id.FamilyName,
-                            ServiceName = service["#text"].ToString(),
-                            Type = ExtensionType.Lyrics,
-                            Priority = -1,
-                            Enabled = true,
-                        });
-                    }
-                }
-                ApplyPriorities(extensions);
+                    DisplayName = item.DisplayName,
+                    Enabled = true,
+                    Id = item.Id,
+                    PackageName = item.PackageName,
+                    Priority = -1,
+                    ServiceName = item.ServiceName,
+                    Type = ExtensionTypes.Lyrics
+                });
             }
-            return extensions;
+
+            ApplyPriorities(list);
+            return list;
         }
     }
 }

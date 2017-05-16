@@ -98,5 +98,12 @@ namespace NextPlayerUWP.Views
         {
             await ViewModel.RefreshPlaylist();
         }
+
+        private async void DeleteSelected(object sender, RoutedEventArgs e)
+        {
+            var items = PlaylistListView.GetSelectedItems<MusicItem>();
+            if (items.Count > 0) await ViewModel.DeleteManyAsync(items);
+            selectionButtons.HideMultipleSelectionButtons();
+        }
     }
 }

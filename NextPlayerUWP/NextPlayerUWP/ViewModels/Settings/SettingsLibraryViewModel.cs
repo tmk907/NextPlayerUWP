@@ -49,6 +49,7 @@ namespace NextPlayerUWP.ViewModels.Settings
                 IsUpdating = true;
             }
 
+            UseIndexer = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.MediaScanUseIndexer);
             IgnoreArticles = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.IgnoreArticles);
             var ignoredList = ApplicationSettingsHelper.ReadData<List<string>>(SettingsKeys.IgnoredArticlesList);
             IgnoredArticles = "";
@@ -108,6 +109,17 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             get { return sdCardFolders; }
             set { Set(ref sdCardFolders, value); }
+        }
+
+        private bool useIndexer = false;
+        public bool UseIndexer
+        {
+            get { return useIndexer; }
+            set
+            {
+                Set(ref useIndexer, value);
+                if (isLoaded) ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, value);
+            }
         }
 
         public async void UpdateLibrary()

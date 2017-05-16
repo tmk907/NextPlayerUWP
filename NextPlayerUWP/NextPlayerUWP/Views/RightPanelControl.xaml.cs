@@ -1,5 +1,6 @@
 ﻿using Microsoft.Advertising.WinRT.UI;
 using NextPlayerUWP.ViewModels;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -31,6 +32,11 @@ namespace NextPlayerUWP.Views
         {
             ViewModel.OnUnLoaded();
             //RemoveAdControl();
+        }
+
+        private async void SearchButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await ContentDialogSearchLyrics.ShowAsync();
         }
 
         private void AddAdControl()

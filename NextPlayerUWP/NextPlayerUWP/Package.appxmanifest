@@ -64,7 +64,7 @@
         </uap:Extension>
         <uap3:Extension Category="windows.appExtensionHost">
           <uap3:AppExtensionHost>
-            <uap3:Name>Next-Player-Lyrics</uap3:Name>
+            <uap3:Name>uwp.music-player.lyrics</uap3:Name>
           </uap3:AppExtensionHost>
         </uap3:Extension>
       </Extensions>

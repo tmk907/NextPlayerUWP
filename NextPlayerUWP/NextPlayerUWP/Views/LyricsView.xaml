@@ -27,8 +27,43 @@
             Content="Lyrics" 
             VisualStateNarrowMinWidth="0" 
             VisualStateNormalMinWidth="720">
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton
+                    x:Uid="ButtonSearch"
+                    Label="Search"
+                    Icon="Find"
+                    Click="SearchButton_Click"/>
+            </controls:PageHeader.PrimaryCommands>
         </controls:PageHeader>
         <Grid Grid.Row="1">
+            <ContentDialog 
+                x:Name="ContentDialogSearchLyrics"
+                x:Uid="ContentDialogSearchLyrics"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Title="Search lyrics"
+                PrimaryButtonText="Search"
+                PrimaryButtonClick="{x:Bind ViewModel.SearchLyrics}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Uid="TBArtist"
+                            Margin="0,4,4,4"
+                            Text="Artist"/>
+                        <TextBox
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.ArtistSearch, Mode=TwoWay}"/>
+                        <TextBlock x:Uid="TBTitle"
+                            Margin="0,4,4,4"
+                            Text="Title"/>
+                        <TextBox
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.TitleSearch, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ContentDialog.Content>
+            </ContentDialog>
             <local:LyricsPanel/>
         </Grid>
     </Grid>

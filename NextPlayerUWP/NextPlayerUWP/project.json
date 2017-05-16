@@ -7,13 +7,14 @@
     "Microsoft.ApplicationInsights.WindowsApps": "1.1.1",
     "Microsoft.Net.Http": "2.2.29",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
+    "Microsoft.Services.Store.Engagement": "10.1610.0",
     "Microsoft.Toolkit.Uwp": "1.4.1",
     "Microsoft.Toolkit.Uwp.Notifications": "1.4.1",
     "Microsoft.Toolkit.Uwp.UI.Animations": "1.4.1",
     "Microsoft.Toolkit.Uwp.UI.Controls": "1.4.1",
     "MvvmLight": "5.3.0",
-    "NextPlayerExtensionsAPI": "0.9.2",
     "SimpleCrossfadingImageUWP": "0.9.3",
+    "UWPMusicPlayerExtensions": "0.9.2",
     "WindowsStateTriggers": "1.1.0"
   },
   "frameworks": {

@@ -33,7 +33,7 @@
                         CanReorderItems="True"
                         IsSwipeEnabled="True">
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="extensions:AppExtensionInfo">
+                            <DataTemplate x:DataType="extensions:MyAppExtensionInfo">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>

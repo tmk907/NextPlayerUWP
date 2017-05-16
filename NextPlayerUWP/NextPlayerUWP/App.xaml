@@ -194,11 +194,12 @@
             <converters:IntToDouble x:Key="IntToDoubleConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
-                <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"
-                     Height="84"
-                     BorderThickness="1" 
-                     BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
-                     Background="Transparent">
+                <Border  
+                    Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"
+                    Height="84"
+                    BorderThickness="0,0,0,1" 
+                    BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
+                    Background="Transparent">
                     <TextBlock Text="{Binding Group.Key}"
                            FontSize="32"
                            FontWeight="Normal"
@@ -208,20 +209,36 @@
                 </Border>
             </DataTemplate>
             <DataTemplate x:Key="ZoomedOutItemsTemplateMobile">
-                <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=mobile}"
-                     Height="48"
-                     BorderThickness="1" 
-                     BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
-                     Background="Transparent">
+                <Border  
+                    Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=mobile}"
+                    Height="48"
+                    Margin="0,0,0,4"
+                    BorderThickness="0,0,0,1" 
+                    BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}"
+                    Background="Transparent">
                     <TextBlock Text="{Binding Group.Key}"
-                           FontSize="18"
-                           FontWeight="Normal"
-                           Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                        FontSize="26"
+                        FontWeight="Normal"
+                        Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,0"
+                        VerticalAlignment="Center"/>
                 </Border>
             </DataTemplate>
 
+            <Style x:Key="ZoomedOutItemContainerStyleMobile" TargetType="ListViewItem">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+                <Setter Property="Height" Value="60" />
+                <Setter Property="MinHeight" Value="40"/>
+                <Setter Property="MinWidth" Value="40"/>
+                <Setter Property="Margin" Value="8,4,8,4"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+            
             <Style x:Key="ZoomedOutItemContainerStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -232,6 +249,21 @@
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="Padding" Value="0"/>
             </Style>
+
+            <ItemsPanelTemplate x:Key="ZoomedOutItemsPanelTemplateMobile">
+                <ItemsWrapGrid 
+                    Orientation="Horizontal"
+                    ItemHeight="60"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+            </ItemsPanelTemplate>
+
+            <ItemsPanelTemplate x:Key="ZoomedOutItemsPanelTemplateDesktop">
+                <ItemsWrapGrid 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+            </ItemsPanelTemplate>
 
             <Style x:Key="ListViewItemContainerStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>

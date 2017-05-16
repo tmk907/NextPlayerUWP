@@ -219,7 +219,7 @@
     <Compile Include="Extensions\BaseExtensionsHelper.cs" />
     <Compile Include="Extensions\ExtensionsService.cs" />
     <Compile Include="Extensions\LyricsExtensions.cs" />
-    <Compile Include="Extensions\LyricsExtensionsClient.cs" />
+    <Compile Include="Extensions\MyLyricsExtensionsClient.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
     <Compile Include="Helpers\PlaylistRule.cs" />

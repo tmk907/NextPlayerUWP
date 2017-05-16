@@ -19818,7 +19818,7 @@
       ]
     },
     "Microsoft.NETCore.UniversalWindowsPlatform/5.3.3": {
-      "sha512": "bOdvBN2PmFvUKdbRq2ZRkOdRoF1POP2+eQd/iOG5tyhQpW20q5+wFFofT3GOHvFqrq1ayiZKxZLMr9ssctTS6g==",
+      "sha512": "aCy8WhdcWqIl+gUoY905OWPCP1NqVOtT4Oejn7SIZb9KPKkB5cUfvLEmsY3xwud0TIaJaExKTUhrFluzKtSblQ==",
       "type": "package",
       "path": "microsoft.netcore.universalwindowsplatform/5.3.3",
       "files": [
@@ -26025,10 +26025,10 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj",
+      "projectUniqueName": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj",
       "projectName": "NextPlayerUWPDataLayer",
-      "projectPath": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj",
-      "projectJsonPath": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\project.json",
+      "projectPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj",
+      "projectJsonPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\project.json",
       "projectStyle": "ProjectJson"
     },
     "dependencies": {
@@ -26043,7 +26043,7 @@
       "Playlists.NET": "1.2.0",
       "sqlite-net-pcl": "1.1.1",
       "TagLib.Portable": "1.0.4",
-      "WriteableBitmapEx": "[1.5.1, )"
+      "WriteableBitmapEx": "1.5.1"
     },
     "frameworks": {
       "uap10.0": {}

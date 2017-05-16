@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using NextPlayerUWPDataLayer.Tables;
 using NextPlayerUWPDataLayer.Model;
+using System.Threading;
 
 namespace NextPlayerUWP.Common
 {
@@ -26,9 +27,12 @@ namespace NextPlayerUWP.Common
         private List<AlbumsTable> albums = new List<AlbumsTable>();
         private List<SongsTable> songs = new List<SongsTable>();
 
+        private CancellationTokenSource cts;
+
         public AlbumArtFinder()
         {
             MediaImport.MediaImported += MediaImport_MediaImported;
+            cts = new CancellationTokenSource();
         }
 
         private async void MediaImport_MediaImported(string s)
@@ -45,9 +49,22 @@ namespace NextPlayerUWP.Common
             songs = await DatabaseManager.Current.GetSongsWithoutAlbumArtAsync();
             if (songs.Count == 0) return;
             isRunning = true;
-            await FindAlbumArtOfEverySong().ConfigureAwait(false);
+            cts = new CancellationTokenSource();
+            try
+            {
+                await FindAlbumArtOfEverySong(cts.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                songs.Clear();
+                albums.Clear();
+                isRunning = false;
+                return;
+            }
+            //await Task.Run(() => FindAlbumArtOfEverySong());
             songs.Clear();
             await UpdateAlbumsWithNoArt().ConfigureAwait(false);
+            //await Task.Run(() => UpdateAlbumsWithNoArt());
             Template10.Common.DispatcherWrapper.Current().Dispatch(() =>
             {
                 MediaImport.OnMediaImported("AlbumsArt");
@@ -58,7 +75,19 @@ namespace NextPlayerUWP.Common
             Logger2.DebugWrite("AlbumArtFinder", "StartLooking finished");
         }
         
-        private async Task FindAlbumArtOfEverySong()
+        /// <summary>
+        /// return true if task was running
+        /// </summary>
+        /// <returns></returns>
+        public bool Cancel()
+        {
+            bool a = isRunning;
+            cts.Cancel();
+            cts = new CancellationTokenSource();
+            return a;
+        }
+
+        private async Task FindAlbumArtOfEverySong(CancellationToken token)
         {
             Debug.WriteLine("AlbumArtFinder FindAlbumArtOfEverySong()");
 
@@ -71,6 +100,7 @@ namespace NextPlayerUWP.Common
                 {
                     OnAlbumArtUpdated(album.AlbumId, album.ImagePath);
                 }
+                token.ThrowIfCancellationRequested();
             }
             var groupUnknown = songs.Where(a => a.Album == "" && a.AlbumArtist == "").GroupBy(s => new { s.Album, s.AlbumArtist }).FirstOrDefault();
             if (groupUnknown != null)
@@ -81,6 +111,7 @@ namespace NextPlayerUWP.Common
                 {
                     OnAlbumArtUpdated(albumUnknown.AlbumId, albumUnknown.ImagePath);
                 }
+                token.ThrowIfCancellationRequested();
             }
         }
 

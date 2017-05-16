@@ -44,7 +44,6 @@ namespace NextPlayerUWP.Views
 
             MigrateCredentialsAsync();
             ReviewReminder();
-            //SendLogs();
         }
 
         //~Shell()
@@ -67,12 +66,15 @@ namespace NextPlayerUWP.Views
 
         private async Task LoadControls()
         {
-            await Task.Delay(500);
+            System.Diagnostics.Debug.WriteLine("Shell.LoadControls()");
+            //await App.PlayerInitializer.InitMain();
+            await Task.Delay(800);
             FindName(nameof(BottomPlayerWrapper));
             if (DeviceFamilyHelper.IsDesktop())
             {
                 FindName(nameof(RightPanelWrapper));
             }
+            System.Diagnostics.Debug.WriteLine("Shell.LoadControls() End");
         }
 
         private void Shell_Unloaded(object sender, RoutedEventArgs e)
@@ -150,11 +152,6 @@ namespace NextPlayerUWP.Views
                 HamburgerMenu.RequestedTheme = ElementTheme.Dark;
                 HamburgerMenu.RefreshStyles(ApplicationTheme.Dark);
             }
-        }
-
-        private async Task SendLogs()
-        {            
-            await Logger2.Current.SendLogs();
         }
 
         private async Task MigrateCredentialsAsync()
@@ -241,19 +238,5 @@ namespace NextPlayerUWP.Views
 //            }
 //        }
 
-        private async Task AutoUpdateLibrary()
-        {
-            await Task.Delay(TimeSpan.FromMinutes(1));
-            MediaImport mi = new MediaImport(App.FileFormatsHelper);
-            Progress<string> progress = new Progress<string>(
-                data =>
-                {
-                    var array = data.Split('|');
-                }
-            );
-            await Task.Run(() => mi.UpdateDatabaseAsync(progress));
-        }
-
-        
     }
 }

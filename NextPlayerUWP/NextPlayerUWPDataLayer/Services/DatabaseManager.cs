@@ -33,8 +33,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         private DatabaseManager()
         {
-            connectionAsync = new SQLiteAsyncConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.SharedCache, true);
-            connection = new SQLiteConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.SharedCache, true);
+            connectionAsync = new SQLiteAsyncConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex, true);
+            connection = new SQLiteConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex, true);
             connection.BusyTimeout = TimeSpan.FromSeconds(10);
         }
 
@@ -1816,6 +1816,25 @@ namespace NextPlayerUWPDataLayer.Services
                 IsHidden = playlist.IsHidden
             };
             await connectionAsync.UpdateAsync(item);
+        }
+
+        public async Task UpdatePlainPlaylistAsync(int playlistId, IEnumerable<SongItem> songs)
+        {
+            await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlistId);
+            int i = 0;
+            List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
+            foreach (var item in songs)
+            {
+                var entry = new PlainPlaylistEntryTable()
+                {
+                    Place = i,
+                    PlaylistId = playlistId,
+                    SongId = item.SongId,
+                };
+                entries.Add(entry);
+                i++;
+            }
+            await connectionAsync.InsertAllAsync(entries);
         }
 
         /// <summary>

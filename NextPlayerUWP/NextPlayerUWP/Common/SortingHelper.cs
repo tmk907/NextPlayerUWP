@@ -112,6 +112,10 @@ namespace NextPlayerUWP.Common
             {
                 format = "date";
             }
+            else if (SortOption == SortNames.Year)
+            {
+                format = "year";
+            }
             else if (SortOption == SortNames.Duration)
             {
                 format = "duration";

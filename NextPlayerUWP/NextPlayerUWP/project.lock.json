@@ -452,6 +452,12 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Services.Store.Engagement/10.1610.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.Services.Store.Engagement.targets": {}
+        }
+      },
       "Microsoft.Toolkit.Uwp/1.4.1": {
         "type": "package",
         "dependencies": {
@@ -593,30 +599,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NextPlayerExtensionsAPI/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Runtime": "4.0.20"
-        },
-        "compile": {
-          "ref/uap10.0/NextPlayerExtensionsAPI.dll": {}
-        },
-        "runtimeTargets": {
-          "runtimes/win10-arm/lib/uap10.0/NextPlayerExtensionsAPI.dll": {
-            "assetType": "runtime",
-            "rid": "win10-arm"
-          },
-          "runtimes/win10-x64/lib/uap10.0/NextPlayerExtensionsAPI.dll": {
-            "assetType": "runtime",
-            "rid": "win10-x64"
-          },
-          "runtimes/win10-x86/lib/uap10.0/NextPlayerExtensionsAPI.dll": {
-            "assetType": "runtime",
-            "rid": "win10-x86"
-          }
         }
       },
       "Playlists.NET/1.2.0": {
@@ -2597,6 +2579,36 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.2": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
+            "assetType": "runtime",
+            "rid": "win10-arm"
+          },
+          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
+            "assetType": "runtime",
+            "rid": "win10-x64"
+          },
+          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
+            "assetType": "runtime",
+            "rid": "win10-x86"
+          }
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -3072,6 +3084,12 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Services.Store.Engagement/10.1610.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.Services.Store.Engagement.targets": {}
+        }
+      },
       "Microsoft.Toolkit.Uwp/1.4.1": {
         "type": "package",
         "dependencies": {
@@ -3214,19 +3232,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NextPlayerExtensionsAPI/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Runtime": "4.0.20"
-        },
-        "compile": {
-          "ref/uap10.0/NextPlayerExtensionsAPI.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-arm/lib/uap10.0/NextPlayerExtensionsAPI.dll": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -5320,6 +5325,25 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.2": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -5785,6 +5809,12 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Services.Store.Engagement/10.1610.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.Services.Store.Engagement.targets": {}
+        }
+      },
       "Microsoft.Toolkit.Uwp/1.4.1": {
         "type": "package",
         "dependencies": {
@@ -5927,19 +5957,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NextPlayerExtensionsAPI/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Runtime": "4.0.20"
-        },
-        "compile": {
-          "ref/uap10.0/NextPlayerExtensionsAPI.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-arm/lib/uap10.0/NextPlayerExtensionsAPI.dll": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -8071,6 +8088,25 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.2": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -8538,6 +8574,12 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Services.Store.Engagement/10.1610.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.Services.Store.Engagement.targets": {}
+        }
+      },
       "Microsoft.Toolkit.Uwp/1.4.1": {
         "type": "package",
         "dependencies": {
@@ -8680,19 +8722,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NextPlayerExtensionsAPI/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Runtime": "4.0.20"
-        },
-        "compile": {
-          "ref/uap10.0/NextPlayerExtensionsAPI.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-x64/lib/uap10.0/NextPlayerExtensionsAPI.dll": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -10792,6 +10821,25 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.2": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -11260,6 +11308,12 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Services.Store.Engagement/10.1610.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.Services.Store.Engagement.targets": {}
+        }
+      },
       "Microsoft.Toolkit.Uwp/1.4.1": {
         "type": "package",
         "dependencies": {
@@ -11402,19 +11456,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NextPlayerExtensionsAPI/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Runtime": "4.0.20"
-        },
-        "compile": {
-          "ref/uap10.0/NextPlayerExtensionsAPI.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-x64/lib/uap10.0/NextPlayerExtensionsAPI.dll": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -13552,6 +13593,25 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.2": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -14019,6 +14079,12 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Services.Store.Engagement/10.1610.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.Services.Store.Engagement.targets": {}
+        }
+      },
       "Microsoft.Toolkit.Uwp/1.4.1": {
         "type": "package",
         "dependencies": {
@@ -14161,19 +14227,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NextPlayerExtensionsAPI/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Runtime": "4.0.20"
-        },
-        "compile": {
-          "ref/uap10.0/NextPlayerExtensionsAPI.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-x86/lib/uap10.0/NextPlayerExtensionsAPI.dll": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -16273,6 +16326,25 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.2": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -16741,6 +16813,12 @@
           "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll": {}
         }
       },
+      "Microsoft.Services.Store.Engagement/10.1610.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.Services.Store.Engagement.targets": {}
+        }
+      },
       "Microsoft.Toolkit.Uwp/1.4.1": {
         "type": "package",
         "dependencies": {
@@ -16883,19 +16961,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NextPlayerExtensionsAPI/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Runtime": "4.0.20"
-        },
-        "compile": {
-          "ref/uap10.0/NextPlayerExtensionsAPI.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-x86/lib/uap10.0/NextPlayerExtensionsAPI.dll": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -19031,6 +19096,25 @@
         },
         "runtime": {
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
+        }
+      },
+      "UWPMusicPlayerExtensions/0.9.2": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
         }
       },
       "Win2D.uwp/1.19.0": {
@@ -21732,7 +21816,7 @@
       ]
     },
     "Microsoft.NETCore.UniversalWindowsPlatform/5.3.3": {
-      "sha512": "bOdvBN2PmFvUKdbRq2ZRkOdRoF1POP2+eQd/iOG5tyhQpW20q5+wFFofT3GOHvFqrq1ayiZKxZLMr9ssctTS6g==",
+      "sha512": "aCy8WhdcWqIl+gUoY905OWPCP1NqVOtT4Oejn7SIZb9KPKkB5cUfvLEmsY3xwud0TIaJaExKTUhrFluzKtSblQ==",
       "type": "package",
       "path": "microsoft.netcore.universalwindowsplatform/5.3.3",
       "files": [
@@ -21787,6 +21871,25 @@
         "lib/portable-win81+wpa81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll",
         "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinRT.dll",
         "lib/win81/Microsoft.OneDrive.Sdk.Authentication.WinStore.dll"
+      ]
+    },
+    "Microsoft.Services.Store.Engagement/10.1610.0": {
+      "sha512": "wHdY3PxAHD4tLYSNiLn575R7P73VZSYXM7sapyqfB4w9nbbukDvbjJS5gyzbs9NPzGhOtki9LH0CikaJ8gNFKQ==",
+      "type": "package",
+      "path": "microsoft.services.store.engagement/10.1610.0",
+      "files": [
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/Appx/ARM/Microsoft.Services.Store.Engagement.ARM.10.0.appx",
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/Appx/x64/Microsoft.Services.Store.Engagement.x64.10.0.appx",
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/Appx/x86/Microsoft.Services.Store.Engagement.x86.10.0.appx",
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/License.rtf",
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/Redist.txt",
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/References/CommonConfiguration/neutral/Microsoft.Services.Store.Engagement.winmd",
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/References/CommonConfiguration/neutral/en/Microsoft.Services.Store.Engagement.xml",
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/SDKManifest.xml",
+        "SDK/Windows Kits/10/ExtensionSDKs/Microsoft.Services.Store.Engagement/10.0/extension.vsixmanifest",
+        "build/Microsoft.Services.Store.Engagement.targets",
+        "microsoft.services.store.engagement.10.1610.0.nupkg.sha512",
+        "microsoft.services.store.engagement.nuspec"
       ]
     },
     "Microsoft.Toolkit.Uwp/1.4.1": {
@@ -22120,23 +22223,6 @@
         "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll",
         "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.xml",
         "tools/install.ps1"
-      ]
-    },
-    "NextPlayerExtensionsAPI/0.9.2": {
-      "sha512": "yiYv1qcx1dDBm5jfO1AaCurG0vQ5+e965C6s3Q2L+FhiyuwcaX/y2yGBFWY6M3UfHqySeGym/YjsXCrDgSB9gw==",
-      "type": "package",
-      "path": "nextplayerextensionsapi/0.9.2",
-      "files": [
-        "NextPlayerExtensionsAPI.0.9.2.nupkg.sha512",
-        "NextPlayerExtensionsAPI.nuspec",
-        "ref/uap10.0/NextPlayerExtensionsAPI.dll",
-        "ref/uap10.0/NextPlayerExtensionsAPI.pri",
-        "runtimes/win10-arm/lib/uap10.0/NextPlayerExtensionsAPI.dll",
-        "runtimes/win10-arm/lib/uap10.0/NextPlayerExtensionsAPI.pdb",
-        "runtimes/win10-x64/lib/uap10.0/NextPlayerExtensionsAPI.dll",
-        "runtimes/win10-x64/lib/uap10.0/NextPlayerExtensionsAPI.pdb",
-        "runtimes/win10-x86/lib/uap10.0/NextPlayerExtensionsAPI.dll",
-        "runtimes/win10-x86/lib/uap10.0/NextPlayerExtensionsAPI.pdb"
       ]
     },
     "Playlists.NET/1.2.0": {
@@ -28150,6 +28236,23 @@
         "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll"
       ]
     },
+    "UWPMusicPlayerExtensions/0.9.2": {
+      "sha512": "AnvOUL8xWORqn+llhMohUEeZdPLIXhH03/ZiDO9O8utza6d3A8/3NMfmoE7u9Ss90R26wEANqSD+drhzq2qFeA==",
+      "type": "package",
+      "path": "uwpmusicplayerextensions/0.9.2",
+      "files": [
+        "ref/uap10.0/UWPMusicPlayerExtensions.dll",
+        "ref/uap10.0/UWPMusicPlayerExtensions.pri",
+        "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll",
+        "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
+        "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll",
+        "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
+        "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll",
+        "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
+        "uwpmusicplayerextensions.0.9.2.nupkg.sha512",
+        "uwpmusicplayerextensions.nuspec"
+      ]
+    },
     "Win2D.uwp/1.19.0": {
       "sha512": "pLL/gLb3uY75IlswAKzOvQnwwiGrMxZyBl2DbJOjuzG6SOWMp0sg+tkj+HZU8uyQ8jIdAbOE0Iu5+z9zyT5E6Q==",
       "type": "package",
@@ -28262,13 +28365,14 @@
       "Microsoft.ApplicationInsights.WindowsApps >= 1.1.1",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.3.3",
       "Microsoft.Net.Http >= 2.2.29",
+      "Microsoft.Services.Store.Engagement >= 10.1610.0",
       "Microsoft.Toolkit.Uwp >= 1.4.1",
       "Microsoft.Toolkit.Uwp.Notifications >= 1.4.1",
       "Microsoft.Toolkit.Uwp.UI.Animations >= 1.4.1",
       "Microsoft.Toolkit.Uwp.UI.Controls >= 1.4.1",
       "MvvmLight >= 5.3.0",
-      "NextPlayerExtensionsAPI >= 0.9.2",
       "SimpleCrossfadingImageUWP >= 0.9.3",
+      "UWPMusicPlayerExtensions >= 0.9.2",
       "WindowsStateTriggers >= 1.1.0",
       "ksemenenko.ColorThief >= 1.1.0.3"
     ],
@@ -28279,22 +28383,22 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP.csproj",
+      "projectUniqueName": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP.csproj",
       "projectName": "NextPlayerUWP",
-      "projectPath": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP.csproj",
-      "projectJsonPath": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP\\project.json",
+      "projectPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP.csproj",
+      "projectJsonPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWP\\project.json",
       "projectStyle": "ProjectJson",
       "frameworks": {
         "uap10.0": {
           "projectReferences": {
-            "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj": {
-              "projectPath": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj"
+            "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj": {
+              "projectPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj"
             },
-            "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\ScrobblerBG\\ScrobblerBG.csproj": {
-              "projectPath": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\ScrobblerBG\\ScrobblerBG.csproj"
+            "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\ScrobblerBG\\ScrobblerBG.csproj": {
+              "projectPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\ScrobblerBG\\ScrobblerBG.csproj"
             },
-            "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\Template10\\Template10 (Library).csproj": {
-              "projectPath": "C:\\Users\\tomek\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\Template10\\Template10 (Library).csproj"
+            "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\Template10\\Template10 (Library).csproj": {
+              "projectPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\Template10\\Template10 (Library).csproj"
             }
           }
         }
@@ -28308,13 +28412,14 @@
       "Microsoft.ApplicationInsights.WindowsApps": "1.1.1",
       "Microsoft.Net.Http": "2.2.29",
       "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
+      "Microsoft.Services.Store.Engagement": "10.1610.0",
       "Microsoft.Toolkit.Uwp": "1.4.1",
       "Microsoft.Toolkit.Uwp.Notifications": "1.4.1",
       "Microsoft.Toolkit.Uwp.UI.Animations": "1.4.1",
       "Microsoft.Toolkit.Uwp.UI.Controls": "1.4.1",
       "MvvmLight": "5.3.0",
-      "NextPlayerExtensionsAPI": "0.9.2",
       "SimpleCrossfadingImageUWP": "0.9.3",
+      "UWPMusicPlayerExtensions": "0.9.2",
       "WindowsStateTriggers": "1.1.0"
     },
     "frameworks": {

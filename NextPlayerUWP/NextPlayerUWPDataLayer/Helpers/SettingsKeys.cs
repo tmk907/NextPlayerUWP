@@ -41,6 +41,7 @@
 
 
         public const string MediaScan = "mediascan";
+        public const string MediaScanUseIndexer = "mediascanuseindexer";
 
         public const string SongIndex = "songindex";
         public const string PrevSongIndex = "prevsongindex";

@@ -43,7 +43,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<CuteRadioViewModel>();
 
             SimpleIoc.Default.Register<SettingsVMService>();
-            SimpleIoc.Default.Register<LyricsExtensions>();
+            SimpleIoc.Default.Register<MyLyricsExtensionsClient>();
 
             
         }
@@ -80,6 +80,6 @@ namespace NextPlayerUWP.ViewModels
         public CuteRadioViewModel CuteRadioVM => ServiceLocator.Current.GetInstance<CuteRadioViewModel>();
 
         public SettingsVMService SettingsVMService => ServiceLocator.Current.GetInstance<SettingsVMService>();
-        public LyricsExtensions LyricsExtensionsService => ServiceLocator.Current.GetInstance<LyricsExtensions>();
+        public MyLyricsExtensionsClient LyricsExtensionsClient => ServiceLocator.Current.GetInstance<MyLyricsExtensionsClient>();
     }
 }

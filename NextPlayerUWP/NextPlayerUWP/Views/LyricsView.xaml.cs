@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.ViewModels;
+using System;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -17,10 +18,15 @@ namespace NextPlayerUWP.Views
             this.InitializeComponent();
             ViewModel = (LyricsViewModel)DataContext;
         }
+
+        private async void SearchButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await ContentDialogSearchLyrics.ShowAsync();
+        }
         //~LyricsView()
         //{
         //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);
         //}
-        
+
     }
 }

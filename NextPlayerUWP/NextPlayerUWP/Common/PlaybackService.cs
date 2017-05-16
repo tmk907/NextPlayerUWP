@@ -48,6 +48,7 @@ namespace NextPlayerUWP.Common
         }
         private InfoForTask infoForTask;
         private CancellationTokenSource cts;
+        private static SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
         private const string propertyIndex = "index";
         private const string propertySongId = "songid";
@@ -85,10 +86,29 @@ namespace NextPlayerUWP.Common
         public async Task Initialize()
         {
             System.Diagnostics.Debug.WriteLine("PlaybackService.Initialize() Start");
-            await LoadAll(CurrentSongIndex);
-            await Task.Run(() => LoadRest(infoForTask, cts.Token));
-            //await LoadRest(infoForTask, cts.Token).ConfigureAwait(false);
-            Player.Source = mediaList;
+            try
+            {
+                await semaphore.WaitAsync();
+                try
+                {
+                    await LoadAll(CurrentSongIndex, cts.Token);
+                    CancellationToken token = cts.Token;
+                    await Task.Run(async () =>
+                    {
+                        var ctoken = token;
+                        await LoadRest(infoForTask, ctoken);
+                    }, token);
+                    Player.Source = mediaList;
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("Initialize Cancelled");
+            }
             System.Diagnostics.Debug.WriteLine("PlaybackService.Initialize() End");
         }
 
@@ -241,6 +261,7 @@ namespace NextPlayerUWP.Common
             OnMediaPlayerMediaOpened();
         }
 
+
         public async Task PlayNewList(int startIndex, bool startPlaying = true)
         {
             System.Diagnostics.Debug.WriteLine("PlayNewList {0}", startIndex);
@@ -256,33 +277,46 @@ namespace NextPlayerUWP.Common
             UpdateStats(id, Duration, songPlayingStoper.ElapsedTime);
             songPlayingStoper.ResetAndStart();
 
-            Player.Source = null;
-
             shuffle = Shuffle.CurrentState();
             if (shuffle)
             {
                 startIndex = await NowPlayingPlaylistManager.Current.ShufflePlaylist(startIndex);
             }
             CurrentSongIndex = startIndex;
-
-
-            await LoadAll(startIndex);
-            Player.Source = mediaList;
-
-            if (startPlaying)
-            {
-                Player.Play();
-                OnMediaPlayerMediaOpened();
-            }
-
+            await semaphore.WaitAsync();
             try
             {
-                //await LoadRest(infoForTask, cts.Token).ConfigureAwait(false);
-                await Task.Run(() => LoadRest(infoForTask, cts.Token));
+                Player.Source = null;
+                CancellationToken token = cts.Token;
+                try
+                {
+                    await LoadAll(startIndex, cts.Token);
+                    Player.Source = mediaList;
+
+                    if (startPlaying)
+                    {
+                        Player.Play();
+                        OnMediaPlayerMediaOpened();
+                    }
+
+                    await Task.Run(async () =>
+                    {
+                        var ctoken = token;
+                        await LoadRest(infoForTask, ctoken);
+                    }, token);
+                }
+                catch (OperationCanceledException)
+                {
+                    Debug.WriteLine("PlayNewList Cancelled");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("PlayNewList ERROR");
+                }
             }
-            catch (OperationCanceledException)
+            finally
             {
-                Debug.WriteLine("PlayNewList Cancelled");
+                semaphore.Release();
             }
             s.Stop();
             Debug.WriteLine("PlayNewList End {0}ms", s.ElapsedMilliseconds);
@@ -299,22 +333,22 @@ namespace NextPlayerUWP.Common
             mediaList.Items.Clear();
         }
 
-        private async Task LoadAll(int startIndex)
+        private async Task LoadAll(int startIndex, CancellationToken token)
         {
             Stopwatch s1 = new Stopwatch();
             s1.Start();
             ClearMediaList();
-            infoForTask = await LoadMiddle(startIndex);
+            infoForTask = await LoadMiddle(startIndex, token).ConfigureAwait(false);
             mediaList.StartingItem = mediaList.Items.FirstOrDefault(i => i.Source.CustomProperties[propertyIndex].Equals(startIndex));
             mediaList.CurrentItemChanged += MediaList_CurrentItemChanged;
             s1.Stop();
             Debug.WriteLine("LoadAll {0}", s1.ElapsedMilliseconds);
         }
 
-        private const int countOfPreloadedSongs = 60;
-        private const int halfOfCount = 30; //countOfPreLoadedSongsBeforeCurrentPlaying
+        private const int countOfPreloadedSongs = 40;
+        private const int halfOfCount = 20; //countOfPreLoadedSongsBeforeCurrentPlaying
 
-        private async Task<InfoForTask> LoadMiddle(int startIndex)
+        private async Task<InfoForTask> LoadMiddle(int startIndex, CancellationToken token)
         {
             isLoaded = false;
             int maxIndex = NowPlayingPlaylistManager.Current.songs.Count - 1;
@@ -322,14 +356,14 @@ namespace NextPlayerUWP.Common
             InfoForTask info = null;
             if (maxIndex <= countOfPreloadedSongs)
             {
-                await AppendToMediaList(0, maxIndex);
+                await AppendToMediaList(0, maxIndex, token);
                 isLoaded = true;
             }
             else
             {
                 if (currentIndex < halfOfCount)
                 {
-                    await AppendToMediaList(0, countOfPreloadedSongs);
+                    await AppendToMediaList(0, countOfPreloadedSongs, token);
                     info = new InfoForTask()
                     {
                         LoadedFromIndex = 0,
@@ -340,7 +374,7 @@ namespace NextPlayerUWP.Common
                 else
                 {
                     int endBasicLoad = (currentIndex + halfOfCount < maxIndex) ? currentIndex + halfOfCount : maxIndex;
-                    await AppendToMediaList(currentIndex - halfOfCount, endBasicLoad);
+                    await AppendToMediaList(currentIndex - halfOfCount, endBasicLoad, token);
                     info = new InfoForTask()
                     {
                         LoadedFromIndex = currentIndex - halfOfCount,
@@ -359,7 +393,6 @@ namespace NextPlayerUWP.Common
             s.Start();
             if (info == null) return;
             mediaList.CurrentItemChanged -= MediaList_CurrentItemChanged;
-            //await Task.Delay(5000);
             if (info.LoadedFromIndex == 0)
             {
                 await AppendToMediaList(info.LoadedToIndex + 1, info.MaxIndex, token);
@@ -379,7 +412,7 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("LoadRest End {0}ms", s.ElapsedMilliseconds);
         }
 
-        private async Task AppendToMediaList(int startIndex, int endIndex, CancellationToken token = default(CancellationToken))
+        private async Task AppendToMediaList(int startIndex, int endIndex, CancellationToken token)
         {
             Debug.WriteLine("AddToMediaList from {0} to {1}", startIndex, endIndex);
             for (int i = startIndex; i <= endIndex; i++)

@@ -24,6 +24,25 @@ namespace NextPlayerUWP.ViewModels
         private SongItem song;
         private LyricsPanelViewModel lyricsPanelVM;
 
+        private string artistSearch = "";
+        public string ArtistSearch
+        {
+            get { return artistSearch; }
+            set { Set(ref artistSearch, value); }
+        }
+
+        private string titleSearch = "";
+        public string TitleSearch
+        {
+            get { return titleSearch; }
+            set { Set(ref titleSearch, value); }
+        }
+
+        public async void SearchLyrics()
+        {
+            await lyricsPanelVM.SearchLyrics(artistSearch, titleSearch);
+        } 
+
         private async void TrackChanged(int index)
         {
             int prevId = song.SongId;

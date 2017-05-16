@@ -91,6 +91,9 @@
                             <Setter Target="Column1.Width" Value="0"/>
                             <Setter Target="Column3Search.Width" Value="*"/>
                             <Setter Target="AlbumArtistsListView.CanDragItems" Value="False"/>
+                            <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplateMobile}"/>
+                            <Setter Target="ZoomedOutListView.ItemContainerStyle" Value="{StaticResource ZoomedOutItemContainerStyleMobile}"/>
+                            <Setter Target="ZoomedOutListView.ItemsPanel" Value="{StaticResource ZoomedOutItemsPanelTemplateMobile}"/>
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Desktop">
@@ -104,6 +107,9 @@
                             <Setter Target="Column1.Width" Value="*"/>
                             <Setter Target="Column3Search.Width" Value="200"/>
                             <Setter Target="AlbumArtistsListView.CanDragItems" Value="True"/>
+                            <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplate}"/>
+                            <Setter Target="ZoomedOutListView.ItemContainerStyle" Value="{StaticResource ZoomedOutItemContainerStyle}"/>
+                            <Setter Target="ZoomedOutListView.ItemsPanel" Value="{StaticResource ZoomedOutItemsPanelTemplateDesktop}"/>
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -214,16 +220,8 @@
                         </SemanticZoom.ZoomedInView>
                         <SemanticZoom.ZoomedOutView>
                             <ListView
-                                ItemsSource="{Binding Source={StaticResource AlbumArtistsCVS}, Path=CollectionGroups}"
-                                ItemTemplate="{StaticResource ZoomedOutItemsTemplate}"
-                                ItemContainerStyle="{StaticResource ZoomedOutItemContainerStyle}">
-                                <ListView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <ItemsWrapGrid Orientation="Horizontal"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"/>
-                                    </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
+                                x:Name="ZoomedOutListView"
+                                ItemsSource="{Binding Source={StaticResource AlbumArtistsCVS}, Path=CollectionGroups}">
                             </ListView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>

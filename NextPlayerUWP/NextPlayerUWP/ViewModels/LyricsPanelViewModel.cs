@@ -14,11 +14,11 @@ namespace NextPlayerUWP.ViewModels
         public LyricsPanelViewModel()
         {
             ViewModelLocator vml = new ViewModelLocator();
-            lyricsExtensions = new LyricsExtensionsClient(vml.LyricsExtensionsService);
+            lyricsExtensions = new MyLyricsExtensionsClient();
             cts = new CancellationTokenSource();
         }
 
-        LyricsExtensionsClient lyricsExtensions;
+        MyLyricsExtensionsClient lyricsExtensions;
         CancellationTokenSource cts;
 
         private string artist = "Artist";
@@ -77,6 +77,30 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref showProgressBar, value); }
         }
 
+        
+
+        public async Task SearchLyrics(string artist, string title)
+        {
+            cts.Cancel();
+            cts = new CancellationTokenSource();
+            try
+            {
+                ShowProgressBar = true;
+                Title = artist;
+                Artist = title;
+                Lyrics = "";
+                LyricsSourceVisibility = false;
+                Lyrics = await LoadLyrics(artist, title, cts.Token);
+                ShowProgressBar = false;
+                System.Diagnostics.Debug.WriteLine("LyricsViewModel ChangeLyrics() finished");
+                TelemetryAdapter.TrackEvent("SearchLyrics()");
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+        }
+
         public async Task ChangeLyrics(SongItem song)
         {
             System.Diagnostics.Debug.WriteLine("LyricsViewModel ChangeLyrics()");
@@ -124,6 +148,22 @@ namespace NextPlayerUWP.ViewModels
             {
                 return dbLyrics;
             }
+        }
+
+        private async Task<string> LoadLyrics(string artist, string title, CancellationToken token)
+        {
+            var extLyrics = await lyricsExtensions.GetLyrics("", artist, title, token);
+            token.ThrowIfCancellationRequested();
+            if (!String.IsNullOrEmpty(extLyrics.Url))
+            {
+                try
+                {
+                    LyricsSource = new Uri(extLyrics.Url);
+                    LyricsSourceVisibility = true;
+                }
+                catch (Exception) { }
+            }
+            return extLyrics.Lyrics;
         }
 
     }

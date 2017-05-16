@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.ViewModels;
+using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -14,6 +15,7 @@ namespace NextPlayerUWP.Views
         public TestPage()
         {
             this.InitializeComponent();
+            ZoomedOutListView.ItemsSource = new List<string>() { "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A" };
         }
     }
 }
