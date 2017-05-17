@@ -4,13 +4,10 @@ using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -23,6 +20,8 @@ namespace NextPlayerUWP.ViewModels
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             MediaImport.MediaImported += MediaImport_MediaImported;
+            ViewModelLocator vml = new ViewModelLocator();
+            helper = vml.FolderVMHelper;
         }
 
         private async void MediaImport_MediaImported(string s)
@@ -43,8 +42,8 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ReloadData()
         {
-            Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-            SortMusicItems();
+            folders.Clear();
+            await LoadData();
         }
 
         private string folderName = "";
@@ -61,29 +60,16 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref folders, value); }
         }
 
+        private FoldersVMHelper helper;
+
         protected override async Task LoadData()
         {
             bool subfolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
             FolderName = "";
             if (folders.Count == 0)
             {
-                var items = await DatabaseManager.Current.GetFolderItemsAsync();
-                if (items.Count > 0)
-                {
-                    string dir = "!";
-                    List<string> roots = new List<string>();
-                    //var f1 = folders.OrderBy(f => f.Directory).FirstOrDefault();
-                    foreach (var f1 in items.OrderBy(f => f.Directory))
-                    {
-                        if (!f1.Directory.StartsWith(dir))
-                        {
-                            if (subfolders) f1.SongsNumber = folders.Where(f => f.Directory.StartsWith(f1.Directory)).Sum(g => g.SongsNumber);
-                            Folders.Add(f1);
-                            dir = f1.Directory;
-                            roots.Add(dir);
-                        }
-                    }
-                }
+                await helper.Initialize();
+                Folders = helper.GetRootFolders();
                 CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
                 var cloudFolders = await fact.GetAllRootFolders();
                 foreach (var item in cloudFolders)
@@ -93,16 +79,25 @@ namespace NextPlayerUWP.ViewModels
             }
             else
             {
-                var toRemove = Folders.OfType<CloudRootFolder>().ToList();
-                foreach(var item in toRemove)
-                {
-                    Folders.Remove(item);
-                }
                 CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
                 var cloudFolders = await fact.GetAllRootFolders();
+
+                var toRemove = Folders.OfType<CloudRootFolder>().ToList();
+
+                foreach (var item in toRemove)
+                {
+                    if (!cloudFolders.Any(c => c.CloudType == item.CloudType && c.UserId == item.UserId))
+                    {
+                        Folders.Remove(item);
+                    }
+                }
+
                 foreach (var item in cloudFolders)
                 {
-                    Folders.Add(item);
+                    if (!Folders.OfType<CloudRootFolder>().Any(c => c.CloudType == item.CloudType && c.UserId == item.UserId))
+                    {
+                        Folders.Add(item);
+                    }
                 }
             }
             SortMusicItems();
@@ -112,16 +107,6 @@ namespace NextPlayerUWP.ViewModels
         {
             folders = null;
             folders = new ObservableCollection<FolderItem>();
-        }
-
-        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        {
-        }
-
-        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
-        {
-
-            await base.OnNavigatingFromAsync(args);
         }
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
@@ -142,10 +127,8 @@ namespace NextPlayerUWP.ViewModels
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
             var orderSelector = sortingHelper.GetOrderBySelector();
-
-            var folderItems = folders.OrderBy(orderSelector);
-
-            Folders = new ObservableCollection<FolderItem>(folderItems);
+            var query = folders.OrderBy(orderSelector);
+            Folders = new ObservableCollection<FolderItem>(query);
         }
 
         public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

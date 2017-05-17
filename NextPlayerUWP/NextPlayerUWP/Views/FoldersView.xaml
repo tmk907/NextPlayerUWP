@@ -429,11 +429,11 @@
                     ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}"
                     CanDragItems="True"
                     DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                        <mycontrols:AlternatingRowListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </mycontrols:AlternatingRowListView.ItemsPanel>
+                    <mycontrols:AlternatingRowListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </mycontrols:AlternatingRowListView.ItemsPanel>
                 </mycontrols:AlternatingRowListView>
             </Grid>
         </Grid>

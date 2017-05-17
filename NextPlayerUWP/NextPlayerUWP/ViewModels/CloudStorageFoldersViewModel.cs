@@ -1,6 +1,5 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.CloudStorage;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;

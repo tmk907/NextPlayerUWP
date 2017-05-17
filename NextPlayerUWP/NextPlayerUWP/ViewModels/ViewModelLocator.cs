@@ -44,6 +44,7 @@ namespace NextPlayerUWP.ViewModels
 
             SimpleIoc.Default.Register<SettingsVMService>();
             SimpleIoc.Default.Register<MyLyricsExtensionsClient>();
+            SimpleIoc.Default.Register<FoldersVMHelper>();
 
             
         }
@@ -81,5 +82,6 @@ namespace NextPlayerUWP.ViewModels
 
         public SettingsVMService SettingsVMService => ServiceLocator.Current.GetInstance<SettingsVMService>();
         public MyLyricsExtensionsClient LyricsExtensionsClient => ServiceLocator.Current.GetInstance<MyLyricsExtensionsClient>();
+        public FoldersVMHelper FolderVMHelper => ServiceLocator.Current.GetInstance<FoldersVMHelper>();
     }
 }

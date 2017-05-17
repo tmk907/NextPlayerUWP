@@ -195,7 +195,7 @@ namespace NextPlayerUWP.ViewModels
                 state.Clear();
             }
             if (NavigationMode.Back == mode) isBack = true;
-            if (RestoreListPosition(mode))
+            if (CanRestoreListPosition(mode))
             {
                 var navState = StateManager.Current.Read(this.GetType().ToString());
                 if (navState != null && navState.Any())
@@ -228,7 +228,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        virtual public bool RestoreListPosition(NavigationMode mode)
+        virtual public bool CanRestoreListPosition(NavigationMode mode)
         {
             if (NavigationMode.Back == mode || NavigationMode.Refresh == mode) return true;
             else return false;

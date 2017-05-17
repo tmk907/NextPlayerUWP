@@ -259,11 +259,11 @@
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                     ItemsSource="{Binding Folders}"
                     ItemTemplate="{StaticResource FolderItemTemplateDesktop}"
+                    SelectionMode="None"
                     IsItemClickEnabled="True"
                     ItemClick="{x:Bind ViewModel.ItemClicked }"
                     Margin="12,4,0,0"
                     ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}"
-                    SelectionMode="None"
                     CanDragItems="True"
                     DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                     <mycontrols:AlternatingRowListView.ItemsPanel>

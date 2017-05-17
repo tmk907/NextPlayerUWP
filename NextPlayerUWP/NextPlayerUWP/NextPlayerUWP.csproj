@@ -136,6 +136,7 @@
     <Compile Include="Common\BackgroundTaskHelper.cs" />
     <Compile Include="Common\ColorsHelper.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
+    <Compile Include="Common\FoldersVMHelper.cs" />
     <Compile Include="Common\HamburgerMenuBuilder.cs" />
     <Compile Include="Common\ListViewScrollerHelper.cs" />
     <Compile Include="Common\MenuButtonItem.cs" />
