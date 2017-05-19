@@ -40,6 +40,7 @@ namespace NextPlayerUWP.Views
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
+                ShowPrimaryImage.Begin();
             }
             ViewModel.QueueVM.PropertyChanged += ViewModel_PropertyChanged;
             ShowAlbumArtInBackground();
@@ -73,8 +74,7 @@ namespace NextPlayerUWP.Views
         {
             if (ViewModel.QueueVM.CoverUri == new Uri(AppConstants.SongCoverBig))
             {
-                ColorsHelper ch = new ColorsHelper();
-                return new Uri(ch.GetAlbumCoverAssetWithCurrentAccentColor());
+                return new Uri(colorsHelper.GetAlbumCoverAssetWithCurrentAccentColor());
             }
             else
             {

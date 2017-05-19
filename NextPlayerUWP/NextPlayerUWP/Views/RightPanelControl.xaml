@@ -41,6 +41,8 @@
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=edittags}"
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <DataTemplate x:Key="SongTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped"
@@ -368,7 +370,7 @@
                 Label="Audio settings"
                 Click="{x:Bind ViewModel.ShowAudioSettings}"/>
             <AppBarButton
-                x:Uid="ButtonSearch"
+                x:Uid="ButtonSearchLyrics"
                 Label="Search"
                 Icon="Find"
                 Click="SearchButton_Click"/>

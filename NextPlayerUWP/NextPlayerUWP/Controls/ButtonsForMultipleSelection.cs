@@ -7,6 +7,7 @@ using System.Linq;
 using Template10.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP.Controls
 {
@@ -17,6 +18,7 @@ namespace NextPlayerUWP.Controls
         private IGetSelectedItems ListView;
         private bool isLoaded = false;
         private string ButtonForMultipleSelection = "ButtonForMultipleSelection";
+        public bool ShowShareButton { get; set; } = false;
 
         public void OnLoaded(MusicViewModelBase viewModel, PageHeader pageHeader, IGetSelectedItems listView)
         {
@@ -61,15 +63,15 @@ namespace NextPlayerUWP.Controls
             if (!isLoaded) return;
             if (DeviceFamilyHelper.IsMobile())
             {
-                for (int i = 1; i <= 5; i++)
-                {
+                //for (int i = 1; i <= 5; i++)
+                //{
                     var buttons = PageHeader.SecondaryCommands.OfType<Control>().Where(a => (a?.Tag as string) != ButtonForMultipleSelection).ToList();
                     PageHeader.SecondaryCommands.Clear();
                     foreach(ICommandBarElement item in buttons)
                     {
                         PageHeader.SecondaryCommands.Add(item);
                     }
-                }
+                //}
             }
             else
             {
@@ -114,15 +116,29 @@ namespace NextPlayerUWP.Controls
                 Tag = ButtonForMultipleSelection
             };
             buttonAddToPlaylist.Click += AddToPlaylistMultiple;
+            AppBarButton buttonShare = new AppBarButton()
+            {
+                Label = tr.GetTranslation("AppBarButtonShare/Label"),
+                Icon = new FontIcon
+                {
+                    FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                    Glyph = "\uE72D"
+                },
+                Tag = ButtonForMultipleSelection
+            };
+            buttonShare.Click += ShareMultiple;
+
 
             list.Add(buttonPlay);
             list.Add(buttonPlayNext);
             list.Add(buttonAddToNowPlaying);
             list.Add(new AppBarSeparator() { Tag = ButtonForMultipleSelection });
             list.Add(buttonAddToPlaylist);
+            if (ShowShareButton) list.Add(buttonShare);
             return list;
         }
 
+        #region Events
         private async void PlayNowMultiple(object sender, RoutedEventArgs e)
         {
             HideMultipleSelectionButtons();
@@ -150,5 +166,13 @@ namespace NextPlayerUWP.Controls
             var items = ListView.GetSelectedItems<MusicItem>();
             if (items.Count > 0) ViewModel.AddToPlaylistMany(items);
         }
+
+        private void ShareMultiple(object sender, RoutedEventArgs e)
+        {
+            HideMultipleSelectionButtons();
+            var items = ListView.GetSelectedItems<MusicItem>();
+            if (items.Count > 0) ViewModel.ShareMany(items);
+        }
+        #endregion
     }
 }

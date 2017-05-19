@@ -1,7 +1,9 @@
 ﻿using NextPlayerUWP.Extensions;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.System;
 
 namespace NextPlayerUWP.ViewModels.Settings
 {
@@ -25,12 +27,13 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             var list = await extHelper.GetExtensionsInfo();
             LyricsExtensions = new ObservableCollection<MyAppExtensionInfo>(list.OrderBy(e=>e.Priority));
-
+            var list2 = await extHelper.GetAvailableExtensions();
+            AvailableLyricsExtensions = new ObservableCollection<MyAvailableExtension>(list2);
             if (isLoaded) return;
 
             isLoaded = true;
         }
-
+        
         private ObservableCollection<MyAppExtensionInfo> lyricsExtensions = new ObservableCollection<MyAppExtensionInfo>();
         public ObservableCollection<MyAppExtensionInfo> LyricsExtensions
         {
@@ -38,9 +41,21 @@ namespace NextPlayerUWP.ViewModels.Settings
             set { Set(ref lyricsExtensions, value); }
         }
 
+        private ObservableCollection<MyAvailableExtension> availableLyricsExtensions = new ObservableCollection<MyAvailableExtension>();
+        public ObservableCollection<MyAvailableExtension> AvailableLyricsExtensions
+        {
+            get { return availableLyricsExtensions; }
+            set { Set(ref availableLyricsExtensions, value); }
+        }
+
         public void ApplyLyricsExtensionChanges()
         {
             extHelper.UpdatePrioritiesAndSave(LyricsExtensions.ToList());
+        }
+
+        public async Task InstallExtension(MyAvailableExtension ext)
+        {
+            await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://pdp/?ProductId={ext.StoreId}"));
         }
     }
 }

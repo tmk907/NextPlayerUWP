@@ -43,8 +43,8 @@
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
                             Click="{x:Bind ViewModel.DeleteSong}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <DataTemplate x:Key="SongsListViewItemTemplateDesktop" x:DataType="data:SongItem">
               <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">

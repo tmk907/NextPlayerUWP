@@ -261,7 +261,7 @@ namespace NextPlayerUWP.Common
 
         public async Task Add(IEnumerable<MusicItem> items)
         {
-            if (items.FirstOrDefault().GetType() == typeof(SongItem))
+            if (items.OfType<SongItem>().Count() == items.Count())
             {
                 foreach (SongItem song in items)
                 {
@@ -349,7 +349,7 @@ namespace NextPlayerUWP.Common
         public async Task AddNext(IEnumerable<MusicItem> items)
         {
             int index = ApplicationSettingsHelper.ReadSongIndex();
-            if (items.FirstOrDefault().GetType() == typeof(SongItem))
+            if (items.OfType<SongItem>().Count() == items.Count())
             {
                 foreach (SongItem n in items)
                 {
@@ -464,7 +464,7 @@ namespace NextPlayerUWP.Common
         {
             songs.Clear();
 
-            if (items.FirstOrDefault().GetType() == typeof(SongItem))
+            if (items.OfType<SongItem>().Count() == items.Count())
             {
                 foreach (SongItem song in items)
                 {

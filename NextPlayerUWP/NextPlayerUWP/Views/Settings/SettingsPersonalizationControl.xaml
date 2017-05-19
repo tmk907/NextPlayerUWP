@@ -88,7 +88,7 @@
                     <StackPanel 
                         Orientation="Vertical" Margin="8,4,8,4">
                         <TextBlock 
-                            x:Uid="TBAlbumArtAccent"
+                            x:Uid="TBMatchAlbumArtAccent"
                             Style="{StaticResource BodyTextBlockStyle}"
                             FontSize="16"
                             Margin="0"

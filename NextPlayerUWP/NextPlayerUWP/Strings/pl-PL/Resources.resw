@@ -966,4 +966,34 @@
   <data name="TBRadioLower.Text" xml:space="preserve">
     <value>radio</value>
   </data>
+  <data name="TBUseSystemIndexing.Text" xml:space="preserve">
+    <value>Użyj systemu indeksowania (wyszukiwanie jest dużo szybsze). Wyłącz, jeśli niektóre pliki nie zostały znalezione.</value>
+  </data>
+  <data name="TBIgnoreFollowingArticles.Text" xml:space="preserve">
+    <value>Ignoruj następujące przedimki podczas sortowania wg. nazwy albumu, artysty lub tytułu:</value>
+  </data>
+  <data name="TBLastLibraryUpdate.Text" xml:space="preserve">
+    <value>Ostatnia aktualizacja:</value>
+  </data>
+  <data name="TBMatchAlbumArtAccent.Text" xml:space="preserve">
+    <value>Dopasuj kolor wiodący do okładki albumu</value>
+  </data>
+  <data name="TBNowPlayingBackgroundAlbumArt.Text" xml:space="preserve">
+    <value>Pokaż okładkę albumu w tle w widoku teraz odtwarzane</value>
+  </data>
+  <data name="TBInstalledExtensions.Text" xml:space="preserve">
+    <value>Zainstalowane:</value>
+  </data>
+  <data name="TBAvailableExtensions.Text" xml:space="preserve">
+    <value>Dostępne:</value>
+  </data>
+  <data name="ButtonInstall.Content" xml:space="preserve">
+    <value>Instaluj</value>
+  </data>
+  <data name="ButtonSearchLyrics.Label" xml:space="preserve">
+    <value>Szukaj tekstu</value>
+  </data>
+  <data name="AppBarButtonShare.Label" xml:space="preserve">
+    <value>Udostępnij</value>
+  </data>
 </root>

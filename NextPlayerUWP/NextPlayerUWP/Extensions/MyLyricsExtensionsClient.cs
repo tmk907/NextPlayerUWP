@@ -14,7 +14,7 @@ namespace NextPlayerUWP.Extensions
 
         public MyLyricsExtensionsClient()
         {
-            helper = new ExtensionClientHelper(ExtensionTypes.Lyrics);
+            helper = new ExtensionClientHelper(MusicPlayerExtensionTypes.Lyrics);
             client = new LyricsExtensionsClient(helper);
             lyricsExtensions = new LyricsExtensions(helper);
         }

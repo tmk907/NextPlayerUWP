@@ -601,6 +601,12 @@
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
         }
       },
+      "NuSpec.ReferenceGenerator/1.4.2": {
+        "type": "package",
+        "build": {
+          "build/dotnet/_._": {}
+        }
+      },
       "Playlists.NET/1.2.0": {
         "type": "package",
         "compile": {
@@ -2579,36 +2585,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Collections": "4.0.11",
-          "System.Collections.Concurrent": "4.0.12",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
-          "System.Runtime.WindowsRuntime": "4.0.11",
-          "System.Threading.Tasks": "4.0.11"
-        },
-        "compile": {
-          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        },
-        "runtimeTargets": {
-          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
-            "assetType": "runtime",
-            "rid": "win10-arm"
-          },
-          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
-            "assetType": "runtime",
-            "rid": "win10-x64"
-          },
-          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
-            "assetType": "runtime",
-            "rid": "win10-x86"
-          }
-        }
-      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -2683,6 +2659,15 @@
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
+        }
+      },
+      "UWPMusicPlayerExtensions/1.0.0": {
+        "type": "project",
+        "framework": "UAP,Version=v10.0",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+          "Newtonsoft.Json": "9.0.1",
+          "NuSpec.ReferenceGenerator": "1.4.2"
         }
       }
     },
@@ -3232,6 +3217,12 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NuSpec.ReferenceGenerator/1.4.2": {
+        "type": "package",
+        "build": {
+          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -5325,25 +5316,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Collections": "4.0.11",
-          "System.Collections.Concurrent": "4.0.12",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
-          "System.Runtime.WindowsRuntime": "4.0.11",
-          "System.Threading.Tasks": "4.0.11"
-        },
-        "compile": {
-          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        }
-      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -5407,6 +5379,15 @@
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
+        }
+      },
+      "UWPMusicPlayerExtensions/1.0.0": {
+        "type": "project",
+        "framework": "UAP,Version=v10.0",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+          "Newtonsoft.Json": "9.0.1",
+          "NuSpec.ReferenceGenerator": "1.4.2"
         }
       }
     },
@@ -5957,6 +5938,12 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NuSpec.ReferenceGenerator/1.4.2": {
+        "type": "package",
+        "build": {
+          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -8088,25 +8075,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Collections": "4.0.11",
-          "System.Collections.Concurrent": "4.0.12",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
-          "System.Runtime.WindowsRuntime": "4.0.11",
-          "System.Threading.Tasks": "4.0.11"
-        },
-        "compile": {
-          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        }
-      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -8170,6 +8138,15 @@
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
+        }
+      },
+      "UWPMusicPlayerExtensions/1.0.0": {
+        "type": "project",
+        "framework": "UAP,Version=v10.0",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+          "Newtonsoft.Json": "9.0.1",
+          "NuSpec.ReferenceGenerator": "1.4.2"
         }
       }
     },
@@ -8722,6 +8699,12 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NuSpec.ReferenceGenerator/1.4.2": {
+        "type": "package",
+        "build": {
+          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -10821,25 +10804,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Collections": "4.0.11",
-          "System.Collections.Concurrent": "4.0.12",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
-          "System.Runtime.WindowsRuntime": "4.0.11",
-          "System.Threading.Tasks": "4.0.11"
-        },
-        "compile": {
-          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        }
-      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -10903,6 +10867,15 @@
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
+        }
+      },
+      "UWPMusicPlayerExtensions/1.0.0": {
+        "type": "project",
+        "framework": "UAP,Version=v10.0",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+          "Newtonsoft.Json": "9.0.1",
+          "NuSpec.ReferenceGenerator": "1.4.2"
         }
       }
     },
@@ -11456,6 +11429,12 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NuSpec.ReferenceGenerator/1.4.2": {
+        "type": "package",
+        "build": {
+          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -13593,25 +13572,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Collections": "4.0.11",
-          "System.Collections.Concurrent": "4.0.12",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
-          "System.Runtime.WindowsRuntime": "4.0.11",
-          "System.Threading.Tasks": "4.0.11"
-        },
-        "compile": {
-          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        }
-      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -13675,6 +13635,15 @@
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
+        }
+      },
+      "UWPMusicPlayerExtensions/1.0.0": {
+        "type": "project",
+        "framework": "UAP,Version=v10.0",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+          "Newtonsoft.Json": "9.0.1",
+          "NuSpec.ReferenceGenerator": "1.4.2"
         }
       }
     },
@@ -14227,6 +14196,12 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NuSpec.ReferenceGenerator/1.4.2": {
+        "type": "package",
+        "build": {
+          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -16326,25 +16301,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Collections": "4.0.11",
-          "System.Collections.Concurrent": "4.0.12",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
-          "System.Runtime.WindowsRuntime": "4.0.11",
-          "System.Threading.Tasks": "4.0.11"
-        },
-        "compile": {
-          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        }
-      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -16408,6 +16364,15 @@
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
+        }
+      },
+      "UWPMusicPlayerExtensions/1.0.0": {
+        "type": "project",
+        "framework": "UAP,Version=v10.0",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+          "Newtonsoft.Json": "9.0.1",
+          "NuSpec.ReferenceGenerator": "1.4.2"
         }
       }
     },
@@ -16961,6 +16926,12 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NuSpec.ReferenceGenerator/1.4.2": {
+        "type": "package",
+        "build": {
+          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -19098,25 +19069,6 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.2": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1",
-          "System.Collections": "4.0.11",
-          "System.Collections.Concurrent": "4.0.12",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
-          "System.Runtime.WindowsRuntime": "4.0.11",
-          "System.Threading.Tasks": "4.0.11"
-        },
-        "compile": {
-          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        },
-        "runtime": {
-          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
-        }
-      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -19180,6 +19132,15 @@
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
+        }
+      },
+      "UWPMusicPlayerExtensions/1.0.0": {
+        "type": "project",
+        "framework": "UAP,Version=v10.0",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+          "Newtonsoft.Json": "9.0.1",
+          "NuSpec.ReferenceGenerator": "1.4.2"
         }
       }
     }
@@ -22223,6 +22184,20 @@
         "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll",
         "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.xml",
         "tools/install.ps1"
+      ]
+    },
+    "NuSpec.ReferenceGenerator/1.4.2": {
+      "sha512": "Ede6MV1IFitgCg+D1Z4ruiLyv+chR4BMjzxLm0qp0IFZHsri4m4IYD4LGwyUnb9LdADsdaWxn12BonXGyQdejA==",
+      "type": "package",
+      "path": "nuspec.referencegenerator/1.4.2",
+      "files": [
+        "build/dotnet/NuSpec.ReferenceGenerator.targets",
+        "build/portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/NuSpec.ReferenceGenerator.targets",
+        "nuspec.referencegenerator.1.4.2.nupkg.sha512",
+        "nuspec.referencegenerator.nuspec",
+        "tools/RefGen.exe",
+        "tools/RefGen.exe.config",
+        "tools/RefGen.pdb"
       ]
     },
     "Playlists.NET/1.2.0": {
@@ -28236,23 +28211,6 @@
         "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll"
       ]
     },
-    "UWPMusicPlayerExtensions/0.9.2": {
-      "sha512": "AnvOUL8xWORqn+llhMohUEeZdPLIXhH03/ZiDO9O8utza6d3A8/3NMfmoE7u9Ss90R26wEANqSD+drhzq2qFeA==",
-      "type": "package",
-      "path": "uwpmusicplayerextensions/0.9.2",
-      "files": [
-        "ref/uap10.0/UWPMusicPlayerExtensions.dll",
-        "ref/uap10.0/UWPMusicPlayerExtensions.pri",
-        "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll",
-        "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
-        "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll",
-        "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
-        "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll",
-        "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
-        "uwpmusicplayerextensions.0.9.2.nupkg.sha512",
-        "uwpmusicplayerextensions.nuspec"
-      ]
-    },
     "Win2D.uwp/1.19.0": {
       "sha512": "pLL/gLb3uY75IlswAKzOvQnwwiGrMxZyBl2DbJOjuzG6SOWMp0sg+tkj+HZU8uyQ8jIdAbOE0Iu5+z9zyT5E6Q==",
       "type": "package",
@@ -28355,6 +28313,11 @@
       "type": "project",
       "path": "../Template10/project.json",
       "msbuildProject": "../Template10/Template10 (Library).csproj"
+    },
+    "UWPMusicPlayerExtensions/1.0.0": {
+      "type": "project",
+      "path": "../../../UWPMusicPlayerExtensions/UWPMusicPlayerExtensions/project.json",
+      "msbuildProject": "../../../UWPMusicPlayerExtensions/UWPMusicPlayerExtensions/UWPMusicPlayerExtensions.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -28372,7 +28335,6 @@
       "Microsoft.Toolkit.Uwp.UI.Controls >= 1.4.1",
       "MvvmLight >= 5.3.0",
       "SimpleCrossfadingImageUWP >= 0.9.3",
-      "UWPMusicPlayerExtensions >= 0.9.2",
       "WindowsStateTriggers >= 1.1.0",
       "ksemenenko.ColorThief >= 1.1.0.3"
     ],
@@ -28391,6 +28353,9 @@
       "frameworks": {
         "uap10.0": {
           "projectReferences": {
+            "E:\\Source\\Repos\\UWPMusicPlayerExtensions\\UWPMusicPlayerExtensions\\UWPMusicPlayerExtensions.csproj": {
+              "projectPath": "E:\\Source\\Repos\\UWPMusicPlayerExtensions\\UWPMusicPlayerExtensions\\UWPMusicPlayerExtensions.csproj"
+            },
             "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj": {
               "projectPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj"
             },
@@ -28419,7 +28384,6 @@
       "Microsoft.Toolkit.Uwp.UI.Controls": "1.4.1",
       "MvvmLight": "5.3.0",
       "SimpleCrossfadingImageUWP": "0.9.3",
-      "UWPMusicPlayerExtensions": "0.9.2",
       "WindowsStateTriggers": "1.1.0"
     },
     "frameworks": {

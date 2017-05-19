@@ -1,7 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Model;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Template10.Mvvm;
 using Template10.Services.NavigationService;
@@ -11,14 +10,11 @@ namespace NextPlayerUWP.ViewModels
 {
     public class LyricsViewModel : ViewModelBase
     {
-        CancellationTokenSource cts;
-
         public LyricsViewModel()
         {
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             ViewModelLocator vml = new ViewModelLocator();
             lyricsPanelVM = vml.LyricsPanelVM;
-            cts = new CancellationTokenSource();
         }
 
         private SongItem song;

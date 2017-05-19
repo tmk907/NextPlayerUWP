@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
-using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -56,13 +55,6 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref folderName, value); }
         }
 
-        private ObservableCollection<FolderItem> folders = new ObservableCollection<FolderItem>();
-        public ObservableCollection<FolderItem> Folders
-        {
-            get { return folders; }
-            set { Set(ref folders, value); }
-        }
-
         private ObservableCollection<MusicItem> items = new ObservableCollection<MusicItem>();
         public ObservableCollection<MusicItem> Items
         {
@@ -85,55 +77,20 @@ namespace NextPlayerUWP.ViewModels
                 return;
             }
 
-            //if (directory == null)
-            //{
-            //    string dir = "!";
-            //    List<string> roots = new List<string>();
-            //    //var f1 = folders.OrderBy(f => f.Directory).FirstOrDefault();
-            //    foreach(var f1 in folders.OrderBy(f => f.Directory))
-            //    {
-            //        if (!f1.Directory.StartsWith(dir))
-            //        {
-            //            if (subfolders) f1.SongsNumber = folders.Where(f => f.Directory.StartsWith(f1.Directory)).Sum(g => g.SongsNumber);
-            //            Items.Add(f1);
-            //            dir = f1.Directory;
-            //            roots.Add(dir);
-            //        }
-            //    }                  
-            //}
-            //else
-            //{
-                //Items = new ObservableCollection<MusicItem>(helper.GetSubFolders(directory));
-                //var f = helper.GetSubFolders(directory);
-                //foreach(var fo in f)
-                //{
-                //    Items.Add(fo);
-                //}
-                ObservableCollection<MusicItem> temp = new ObservableCollection<MusicItem>(helper.GetSubFolders(directory));
-                var songs = await helper.GetSongsFromFolder(directory);
-                foreach (var s in songs)
-                {
-                    temp.Add(s);
-                }
-                Items = temp;
-            //}
-            //if (directory == null)
-            //{
-            //    CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
-            //    var items = await fact.GetAllRootFolders();
-            //    foreach (var item in items)
-            //    {
-            //        Items.Add(item);
-            //    }
-            //}
+            ObservableCollection<MusicItem> temp = new ObservableCollection<MusicItem>(helper.GetSubFolders(directory));
+            var songs = await helper.GetSongsFromFolder(directory);
+            foreach (var s in songs)
+            {
+                temp.Add(s);
+            }
+            Items = temp;
+
             SortMusicItems();
         }
 
         public override void FreeResources()
         {
-            folders = null;
             items = null;
-            folders = new ObservableCollection<FolderItem>();
             items = new ObservableCollection<MusicItem>();
         }
 

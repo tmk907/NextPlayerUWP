@@ -36,12 +36,12 @@ namespace NextPlayerUWP.Common
         //    public string FileName { get; set; } = "";
         //}
 
-        private TreeFolderNode root;
-        private List<string> rootPaths;
+        private TreeFolderNode root = new TreeFolderNode();
+        private List<string> rootPaths = new List<string>();
 
         public async Task Initialize()
         {
-            if (root == null)
+            if (root.Folders.Count == 0)
             {
                 root = new TreeFolderNode();
                 rootPaths = new List<string>();
@@ -96,11 +96,6 @@ namespace NextPlayerUWP.Common
                         }
                     }
                 }
-
-                var aa = GetRootFolders();
-                var bb = GetSubFolders(@"D:\Muzyka\Andrea Bocelli");
-                var cc = GetSubFolders(@"D:\Muzyka\Filmowa\Z Gier");
-                var dd = GetSubFolders(@"C:\Users\tomek\Music");
             }
         }
 
@@ -156,10 +151,18 @@ namespace NextPlayerUWP.Common
         private TreeFolderNode FindFolderNode(string folderDirectory)
         {
             var rootPath = GetRootPath(folderDirectory);
+            if (rootPath == "")
+            {
+                return new TreeFolderNode();
+            }
             var node = root.Folders[rootPath];
             var array = folderDirectory.Remove(0, rootPath.Length).Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var foldername in array)
             {
+                if (!node.Folders.ContainsKey(foldername))
+                {
+                    break;
+                }
                 node = node.Folders[foldername];
             }
             return node;
@@ -195,7 +198,6 @@ namespace NextPlayerUWP.Common
                 foreach (var folder in node.Folders)
                 {
                     int count = CountSubfolders(folder.Value);
-                    System.Diagnostics.Debug.WriteLine("Suma {0} {1}", count, folder.Value.Path);
                     sum += count;
                 }
                 return sum;
@@ -204,18 +206,8 @@ namespace NextPlayerUWP.Common
 
         private async void MediaImport_MediaImported(string s)//TODO
         {
-            //Template10.Common.IDispatcherWrapper d = Dispatcher;
-            //if (d == null)
-            //{
-            //    d = Template10.Common.WindowWrapper.Current().Dispatcher;
-            //}
-            //if (d == null)
-            //{
-            //    NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("FoldersViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
-            //    TelemetryAdapter.TrackEvent("Dispatcher null");
-            //    return;
-            //}
-            //await d.DispatchAsync(() => ReloadData());
+            root = new TreeFolderNode();
+            rootPaths = new List<string>();
         }
     }
 }

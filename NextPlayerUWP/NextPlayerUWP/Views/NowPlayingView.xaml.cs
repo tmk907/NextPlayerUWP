@@ -3,8 +3,10 @@ using NextPlayerUWP.Common;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -22,6 +24,8 @@ namespace NextPlayerUWP.Views
         NowPlayingViewModel ViewModel;
         PointerEventHandler pointerpressedhandler;
         PointerEventHandler pointerreleasedhandler;
+        private ColorsHelper colorsHelper;
+        
 
         public NowPlayingView()
         {
@@ -31,6 +35,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += NowPlayingView_Unloaded;
             pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
             pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
+            colorsHelper = new ColorsHelper();
         }
 
         //~NowPlayingView()
@@ -45,9 +50,31 @@ namespace NextPlayerUWP.Views
             {
                 imageUri = GetAlbumUri();
                 PrimaryImage.ImageUri = imageUri;
+                ShowPrimaryImage.Begin();
             }
             ViewModel.QueueVM.PropertyChanged += ViewModel_PropertyChanged;
             ShowAlbumArtInBackground();
+        }
+
+        private Uri GetAlbumUri()
+        {
+            if (ViewModel.QueueVM.CoverUri == new Uri(AppConstants.SongCoverBig))
+            {
+                return new Uri(colorsHelper.GetAlbumCoverAssetWithCurrentAccentColor());
+            }
+            else
+            {
+                return ViewModel.QueueVM.CoverUri;
+            }
+        }
+
+        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.QueueVM.CoverUri))
+            {
+                imageUri = GetAlbumUri();
+                PrimaryImage.ImageUri = imageUri;
+            }
         }
 
         private async Task ShowAlbumArtInBackground()
@@ -55,9 +82,9 @@ namespace NextPlayerUWP.Views
             bool show = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AlbumArtInBackground);
             if (show)
             {
-                FindName("BackDropControl");
+                FindName(nameof(BackDropControl));
                 await Task.Delay(300);
-                FindName("BackgroundImage");
+                FindName(nameof(BackgroundImage));
                 ShowBGImage.Begin();
             }
         }
@@ -66,7 +93,9 @@ namespace NextPlayerUWP.Views
         {
             ViewModel.QueueVM.PropertyChanged -= ViewModel_PropertyChanged;
             UnloadSliderEvents();
-        }
+            imageUri = null;
+            //DataContext = null;
+        }        
 
         #region Slider 
         private void LoadSliderEvents()
@@ -106,31 +135,29 @@ namespace NextPlayerUWP.Views
             await ContentDialogAudioSettings.ShowAsync();
         }
 
-        private Uri GetAlbumUri()
+        private async void SearchButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (ViewModel.QueueVM.CoverUri == new Uri(AppConstants.SongCoverBig))
-            {
-                ColorsHelper ch = new ColorsHelper();
-                return new Uri(ch.GetAlbumCoverAssetWithCurrentAccentColor());
-            }
-            else
-            {
-                return ViewModel.QueueVM.CoverUri;
-            }
-        }
-
-        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ViewModel.QueueVM.CoverUri))
-            {
-                imageUri = GetAlbumUri();
-                PrimaryImage.ImageUri = imageUri;
-            }
+            await ContentDialogSearchLyrics.ShowAsync();
         }
 
         private async void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             await ContentDialogAudioSettings.ShowAsync();
+        }
+
+        private void ImageGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void ImageGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void ImageGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            e.Handled = true;   
         }
     }    
 }

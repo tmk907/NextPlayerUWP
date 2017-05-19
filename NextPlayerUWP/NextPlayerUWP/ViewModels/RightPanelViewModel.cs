@@ -259,10 +259,11 @@ namespace NextPlayerUWP.ViewModels
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }
 
-        public void Share(object sender, RoutedEventArgs e)
+        public async void Share(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            // App.Current.NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
+            ShareHelper sh = new ShareHelper();
+            await sh.Share(item);
         }
 
         public async void Pin(object sender, RoutedEventArgs e)

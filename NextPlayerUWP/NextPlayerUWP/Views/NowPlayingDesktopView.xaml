@@ -83,7 +83,14 @@
         <Storyboard x:Name="ShowBGImage">
             <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundImage">
                 <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseIn"/>
+                    <PowerEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Name="ShowPrimaryImage">
+            <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PrimaryImage">
+                <DoubleAnimation.EasingFunction>
+                    <PowerEase EasingMode="EaseInOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
@@ -138,6 +145,7 @@
             <imagecontrol:CrossfadingImage
                 x:Name="PrimaryImage"
                 Grid.Row="0"
+                Opacity="0"
                 SizeChanged="PrimaryImage_SizeChanged"
                 Margin="8,4,8,0"
                 FadeInDuration="0:0:0.3"

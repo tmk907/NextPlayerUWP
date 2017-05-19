@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,27 +19,36 @@ namespace NextPlayerUWP.ViewModels
         {
             _timer = new DispatcherTimer();
             SetupTimer();
-            App.Current.LeavingBackground += Current_LeavingBackground;
-            App.Current.EnteredBackground += Current_EnteredBackground;
+            //App.Current.LeavingBackground += Current_LeavingBackground;
+            //App.Current.EnteredBackground += Current_EnteredBackground;
             ViewModelLocator vml = new ViewModelLocator();
             PlayerVM = vml.PlayerVM;
             QueueVM = vml.QueueVM;
+            lyricsPanelVM = vml.LyricsPanelVM;
+            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
         }
 
-        private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
-        {
-            PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
-            StopTimer();
-        }
+        //private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
+        //{
+        //    System.Diagnostics.Debug.WriteLine("NowPlayingVM EnteringBG");
+        //    PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
+        //    PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
+        //    StopTimer();
+        //}
 
-        private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
-        {
-            PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
-            StartTimer();
-        }
+        //private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
+        //{
+        //    System.Diagnostics.Debug.WriteLine("NowPlayingVM LeavingBG");
+        //    leavedBG = true;
+        //    PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
+        //    PlaybackService.MediaPlayerTrackChanged += TrackChanged;
+        //    StartTimer();            
+        //}
 
         public PlayerViewModelBase PlayerVM { get; set; }
         public QueueViewModelBase QueueVM { get; set; }
+        LyricsPanelViewModel lyricsPanelVM;
+        SongItem song;
 
         #region Properties
 
@@ -122,6 +132,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void Image_Pressed(object sender, PointerRoutedEventArgs e)
         {
+            e.Handled = true;
             isPressed = true;
             var a = e.GetCurrentPoint(null);
             x = a.Position.X;
@@ -131,12 +142,14 @@ namespace NextPlayerUWP.ViewModels
         public void Image_Released(object sender, PointerRoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Image_Released");
+            e.Handled = true;
             isPressed = false;
         }
 
         public void Image_Exited(object sender, PointerRoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Image_Exited");
+            e.Handled = true;
             var a = e.GetCurrentPoint(null);
             if (Math.Abs(x - a.Position.X) > 50)
             {
@@ -148,6 +161,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void Image_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
+            e.Handled = true;
             PlayerVM.Play();
         }
         private double iMGX;
@@ -193,13 +207,6 @@ namespace NextPlayerUWP.ViewModels
         }
         #endregion
 
-        private void PlaybackService_MediaPlayerPositionChanged(TimeSpan position, TimeSpan duration)
-        {
-            CurrentTime = position;
-            SliderValue = position.TotalSeconds;
-            //TimeEnd = duration;
-        }
-
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
             await Task.Delay(400);
@@ -226,7 +233,19 @@ namespace NextPlayerUWP.ViewModels
             StopTimer();
         }
 
-       
+        private async void TrackChanged(int index)
+        {
+            int prevId = song.SongId;
+            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
+            {
+                if (song.SongId != prevId)
+                {
+                    await lyricsPanelVM.ChangeLyrics(song);
+                };
+            });
+        }
+
         #region Slider Timer
 
         public bool sliderpressed = false;
@@ -296,6 +315,7 @@ namespace NextPlayerUWP.ViewModels
 
             App.OnNavigatedToNewView(false);
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
+            PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.FlipViewSelectedIndex);
             StartTimer();
             
@@ -307,7 +327,8 @@ namespace NextPlayerUWP.ViewModels
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
             //ShowAlbumArtInBackground = ApplicationSettingsHelper.ReadData<bool>(SettingsKeys.AlbumArtInBackground);
-            await Task.CompletedTask;
+            await lyricsPanelVM.ChangeLyrics(song);
+            //await Task.CompletedTask;
         }
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
@@ -316,6 +337,7 @@ namespace NextPlayerUWP.ViewModels
 
             //App.ChangeBottomPlayerVisibility(true);
             PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
+            PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
             StopTimer();
             
             await Task.CompletedTask;
@@ -326,9 +348,23 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
         }
 
-        public void GoToLyrics()
+        private string artistSearch = "";
+        public string ArtistSearch
         {
-            NavigationService.Navigate(App.Pages.Lyrics);
+            get { return artistSearch; }
+            set { Set(ref artistSearch, value); }
+        }
+
+        private string titleSearch = "";
+        public string TitleSearch
+        {
+            get { return titleSearch; }
+            set { Set(ref titleSearch, value); }
+        }
+
+        public async void SearchLyrics()
+        {
+            await lyricsPanelVM.SearchLyrics(artistSearch, titleSearch);
         }
     }
 }

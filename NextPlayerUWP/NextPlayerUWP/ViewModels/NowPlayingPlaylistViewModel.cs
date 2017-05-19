@@ -1,10 +1,6 @@
 ﻿using NextPlayerUWP.Common;
-using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Enums;
-using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -127,11 +123,19 @@ namespace NextPlayerUWP.ViewModels
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }
 
-        public void Share(object sender, RoutedEventArgs e)
+        public async void Share(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            // App.Current.NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
+            ShareHelper sh = new ShareHelper();
+            await sh.Share(item);
         }
+
+        //public async void ShareMany(IEnumerable<SongItem> items)
+        //{
+        //    ShareHelper sh = new ShareHelper();
+        //    await sh.Share(items);
+        //    DisableMultipleSelection();
+        //}
 
         public async void Pin(object sender, RoutedEventArgs e)
         {
@@ -168,7 +172,7 @@ namespace NextPlayerUWP.ViewModels
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
             App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
-        }
+        }        
 
         #endregion
 

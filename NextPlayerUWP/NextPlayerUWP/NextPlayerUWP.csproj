@@ -144,6 +144,7 @@
     <Compile Include="Common\PlayerCommands.cs" />
     <Compile Include="Common\PlayerInitializer.cs" />
     <Compile Include="Common\SettingsVMService.cs" />
+    <Compile Include="Common\ShareHelper.cs" />
     <Compile Include="Common\SongItemsFactory.cs" />
     <Compile Include="Common\TelemetryAdapter.cs" />
     <Compile Include="Common\NowPlayingPlaylistManager.cs" />
@@ -717,6 +718,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\UWPMusicPlayerExtensions\UWPMusicPlayerExtensions\UWPMusicPlayerExtensions.csproj">
+      <Project>{48b63867-55dc-4c74-8438-38d62d03c9c2}</Project>
+      <Name>UWPMusicPlayerExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NextPlayerUWPDataLayer\NextPlayerUWPDataLayer.csproj">
       <Project>{25899887-6252-4635-84b5-0c54c736f0fb}</Project>
       <Name>NextPlayerUWPDataLayer</Name>

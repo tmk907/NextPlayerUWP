@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using UWPMusicPlayerExtensions.Client;
 using UWPMusicPlayerExtensions.Enums;
+using UWPMusicPlayerExtensions.Store;
 
 namespace NextPlayerUWP.Extensions
 {
@@ -11,15 +12,15 @@ namespace NextPlayerUWP.Extensions
         public LyricsExtensions(ExtensionClientHelper helper)
         {
             this.helper = helper;
-            appExtensionName = UWPMusicPlayerExtensions.ExtensionsNames.Lyrics;
+            appExtensionName = ExtensionsNames.Lyrics;
         }
 
         public async Task<List<MyAppExtensionInfo>> GetExtensionsInfo()
         {
-            var available = await helper.GetAvailableExtensions();
+            var installed = await helper.GetInstalledExtensions();
             List<MyAppExtensionInfo> list = new List<MyAppExtensionInfo>();
 
-            foreach(var item in available)
+            foreach(var item in installed)
             {
                 list.Add(new MyAppExtensionInfo()
                 {
@@ -29,11 +30,29 @@ namespace NextPlayerUWP.Extensions
                     PackageName = item.PackageName,
                     Priority = -1,
                     ServiceName = item.ServiceName,
-                    Type = ExtensionTypes.Lyrics
+                    Type = MusicPlayerExtensionTypes.Lyrics
                 });
             }
 
             ApplyPriorities(list);
+            return list;
+        }
+
+        public async Task<List<MyAvailableExtension>> GetAvailableExtensions()
+        {
+            List<MyAvailableExtension> list = new List<MyAvailableExtension>();
+            AvailableExtensionsHelper ah = new AvailableExtensionsHelper();
+            var available = await ah.GetAvailableExtensions();
+            foreach(var item in available)
+            {
+                list.Add(new MyAvailableExtension()
+                {
+                    Description = item.Description,
+                    DisplayName = item.DisplayName,
+                    StoreId = item.StoreId,
+                    Type = item.Type
+                });
+            }
             return list;
         }
     }

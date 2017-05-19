@@ -9,7 +9,64 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-
+    <UserControl.Resources>
+        <DataTemplate x:Key="InstalledExtensionDataTemplate" x:DataType="extensions:MyAppExtensionInfo">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock 
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Margin="0,0,8,0"
+                    MinWidth="256"
+                    Text="{x:Bind DisplayName}"/>
+                <ToggleSwitch 
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    IsOn="{x:Bind Enabled, Mode=TwoWay}"
+                    Tag="{x:Bind Id}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="AvailableExtensionDataTemplate" x:DataType="extensions:MyAvailableExtension">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock 
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Margin="0,0,8,0"
+                    TextTrimming="CharacterEllipsis"
+                    MinWidth="256"
+                    Text="{x:Bind DisplayName}"/>
+                <TextBlock 
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    VerticalAlignment="Center"
+                    Margin="0,0,8,0"
+                    FontSize="13"
+                    TextTrimming="WordEllipsis"
+                    MinWidth="256"
+                    Text="{x:Bind Description}"/>
+                <Button 
+                    x:Uid="ButtonInstall"
+                    Grid.Column="1"
+                    Grid.RowSpan="2"
+                    VerticalAlignment="Center"
+                    Content="Install"
+                    Click="InstallExtension_Click"
+                    Tag="{Binding}"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer Padding="12,0,12,0">
             <StackPanel Orientation="Vertical" Margin="4">
@@ -19,46 +76,43 @@
                     Margin="0,12,0,12"
                     Text="Extensions"/>
                 <StackPanel Margin="4" Orientation="Vertical">
-                    <!--<TextBlock
-                        x:Uid="TBLyrics"
+                    <TextBlock
+                        x:Uid="TBInstalledExtensions"
                         Style="{StaticResource BodyTextBlockStyle}"
                         FontSize="17"
                         Margin="4,4,4,4"
-                        Text="Lyrics"/>-->
+                        Text="Installed:"/>
                     <ListView
                         ItemsSource="{x:Bind ViewModel.LyricsExtensions, Mode=TwoWay}"
+                        ItemTemplate="{StaticResource InstalledExtensionDataTemplate}"
                         SelectionMode="Single"
                         AllowDrop="True"
                         IsItemClickEnabled="False"
                         CanReorderItems="True"
                         IsSwipeEnabled="True">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="extensions:MyAppExtensionInfo">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock 
-                                        Grid.Column="0"
-                                        VerticalAlignment="Center"
-                                        Margin="0,0,8,0"
-                                        MinWidth="256"
-                                        Text="{x:Bind DisplayName}"/>
-                                    <ToggleSwitch 
-                                        Grid.Column="1"
-                                        VerticalAlignment="Center"
-                                        IsOn="{x:Bind Enabled, Mode=TwoWay}"
-                                        Tag="{x:Bind Id}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
                     </ListView>
                     <Button 
                         x:Uid="ButtonSave"
                         Content="Save"
                         Click="{x:Bind ViewModel.ApplyLyricsExtensionChanges}"
                         MinWidth="128"/>
+                </StackPanel>
+                <StackPanel Margin="4" Orientation="Vertical">
+                    <TextBlock
+                        x:Uid="TBAvailableExtensions"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        FontSize="17"
+                        Margin="4,4,4,4"
+                        Text="Available:"/>
+                    <ListView
+                        ItemsSource="{x:Bind ViewModel.AvailableLyricsExtensions, Mode=TwoWay}"
+                        ItemTemplate="{StaticResource AvailableExtensionDataTemplate}"
+                        SelectionMode="Single"
+                        AllowDrop="True"
+                        IsItemClickEnabled="False"
+                        CanReorderItems="True"
+                        IsSwipeEnabled="True">
+                    </ListView>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
