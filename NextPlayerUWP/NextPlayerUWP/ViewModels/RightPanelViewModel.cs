@@ -350,7 +350,7 @@ namespace NextPlayerUWP.ViewModels
         {
             if (((Pivot)sender).SelectedIndex == 1)
             {
-                if (!lyricsLoaded)
+                if (!lyricsLoaded && QueueVM.Songs.Count > 0)
                 {
                     var song = QueueVM.Songs[cachedIndex];
                     await lyricsPanelVM.ChangeLyrics(song);

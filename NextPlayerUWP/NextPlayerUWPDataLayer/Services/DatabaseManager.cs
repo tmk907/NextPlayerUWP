@@ -1385,9 +1385,13 @@ namespace NextPlayerUWPDataLayer.Services
                 });
                 i++;
             }
-            await connectionAsync.ExecuteAsync("DELETE FROM NowPlayingTable");
-            //connection.DeleteAll<NowPlayingTable>();
-            await connectionAsync.InsertAllAsync(list);
+            connection.RunInTransaction(() =>
+            {
+                connection.Execute("DELETE FROM NowPlayingTable");
+                connection.InsertAll(list);
+            });
+            //await connectionAsync.ExecuteAsync("DELETE FROM NowPlayingTable");
+            //await connectionAsync.InsertAllAsync(list);
         }
 
         public int InsertSmartPlaylist(string name, int songsNumber, string sorting)

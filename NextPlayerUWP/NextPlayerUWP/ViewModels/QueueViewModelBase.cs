@@ -138,7 +138,8 @@ namespace NextPlayerUWP.ViewModels
 
         private async void ChangeSong(int index)
         {
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            await d.DispatchAsync(() =>
             {
                 CurrentSong = NowPlayingPlaylistManager.Current.GetSongItem(index);
                 CoverUri = currentSong.AlbumArtUri;
@@ -149,7 +150,8 @@ namespace NextPlayerUWP.ViewModels
 
         public async void ChangeCoverUri(Uri cacheUri)
         {
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            await d.DispatchAsync(() =>
             {
                 CoverUri = cacheUri;
             });
@@ -165,7 +167,8 @@ namespace NextPlayerUWP.ViewModels
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
             await Task.Delay(400);
-            await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            await d.DispatchAsync(async () =>
             {
                 var duration = PlaybackService.Instance.Duration;
                 if (duration == TimeSpan.MaxValue)
@@ -199,7 +202,8 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (cachedColors.ContainsKey(coverUri))
                 {
-                    await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                    var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+                    await d.DispatchAsync(() =>
                     {
                         AlbumArtColor = cachedColors[coverUri];
                         colorsHelper.ChangeAppAccentColor(albumArtColor);
@@ -209,7 +213,8 @@ namespace NextPlayerUWP.ViewModels
                 {
                     var color = await colorsHelper.GetDominantColorFromSavedAlbumArt(coverUri);
                     cachedColors.TryAdd(coverUri, color);
-                    await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                    var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+                    await d.DispatchAsync(() =>
                     {
                         AlbumArtColor = color;
                         colorsHelper.ChangeAppAccentColor(albumArtColor);

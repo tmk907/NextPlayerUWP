@@ -187,6 +187,12 @@ namespace NextPlayerUWP.Common
 
         public async Task Add(MusicItem item)
         {
+            if (songs.Count == 0)
+            {
+                await NewPlaylist(item);
+                await PlaybackService.Instance.PlayNewList(0, false);
+                return;
+            }
             IEnumerable<SongItem> list = new ObservableCollection<SongItem>();
             switch (MusicItem.ParseType(item.GetParameter()))
             {
@@ -261,6 +267,12 @@ namespace NextPlayerUWP.Common
 
         public async Task Add(IEnumerable<MusicItem> items)
         {
+            if (songs.Count == 0)
+            {
+                await NewPlaylist(items);
+                await PlaybackService.Instance.PlayNewList(0, false);
+                return;
+            }
             if (items.OfType<SongItem>().Count() == items.Count())
             {
                 foreach (SongItem song in items)
@@ -285,6 +297,12 @@ namespace NextPlayerUWP.Common
 
         public async Task AddNext(MusicItem item)
         {
+            if (songs.Count == 0)
+            {
+                await NewPlaylist(item);
+                await PlaybackService.Instance.PlayNewList(0, false);
+                return;
+            }
             IEnumerable<SongItem> list = new List<SongItem>();
             switch (MusicItem.ParseType(item.GetParameter()))
             {
@@ -338,7 +356,7 @@ namespace NextPlayerUWP.Common
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
-            foreach(var n in list)
+            foreach (var n in list)
             {
                 index++;
                 songs.Insert(index, n);
@@ -348,6 +366,12 @@ namespace NextPlayerUWP.Common
 
         public async Task AddNext(IEnumerable<MusicItem> items)
         {
+            if (songs.Count == 0)
+            {
+                await NewPlaylist(items);
+                await PlaybackService.Instance.PlayNewList(0, false);
+                return;
+            }
             int index = ApplicationSettingsHelper.ReadSongIndex();
             if (items.OfType<SongItem>().Count() == items.Count())
             {
@@ -579,7 +603,7 @@ namespace NextPlayerUWP.Common
 
         private async Task SaveNowPlayingInDB()
         {
-            await DatabaseManager.Current.InsertNewNowPlayingPlaylistAsync(songs);
+            await DatabaseManager.Current.InsertNewNowPlayingPlaylistAsync(new List<SongItem>(songs));
         }
 
         public SongItem GetSongItem(int index)

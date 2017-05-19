@@ -245,6 +245,12 @@ namespace NextPlayerUWP.Common
                 }
             }
 
+            //if (Player.PlaybackSession.PlaybackState == MediaPlaybackState.Opening)
+            //{
+            //    await PlayNewList(startIndex);
+            //    return;
+            //}
+
             if (Player.PlaybackSession.PlaybackState == MediaPlaybackState.Paused)
             {
                 //mediaList.StartingItem = mediaList.Items[startIndex];

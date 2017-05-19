@@ -59,16 +59,15 @@ namespace NextPlayerUWP.Views
             tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
             ApplyTheme(ThemeHelper.IsLightTheme);
 
-            LoadControls();
+            //LoadControls();
 
             System.Diagnostics.Debug.WriteLine("Shell.Loaded() End");
         }
 
-        private async Task LoadControls()
+        public void LoadControls()
         {
             System.Diagnostics.Debug.WriteLine("Shell.LoadControls()");
-            //await App.PlayerInitializer.InitMain();
-            await Task.Delay(800);
+            //await Task.Delay(500);
             FindName(nameof(BottomPlayerWrapper));
             if (DeviceFamilyHelper.IsDesktop())
             {

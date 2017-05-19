@@ -1,9 +1,12 @@
-﻿using NextPlayerUWPDataLayer.Model;
+﻿using NextPlayerUWP.Views;
+using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Template10.Controls;
 using Windows.Storage;
+using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.Common
 {
@@ -43,7 +46,8 @@ namespace NextPlayerUWP.Common
             await NowPlayingPlaylistManager.Current.Init();
             await PlaybackService.Instance.Initialize();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() Middle");
-            App.AlbumArtFinder.StartLooking().ConfigureAwait(false);
+            LoadShellControls();
+            DelayAlbumArtFinder();
             s.Stop();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() End {0}ms", s.ElapsedMilliseconds);
             isInitialized = true;
@@ -90,11 +94,24 @@ namespace NextPlayerUWP.Common
 
             if (!isInitialized)
             {
-                App.AlbumArtFinder.StartLooking().ConfigureAwait(false);
+                LoadShellControls();
+                DelayAlbumArtFinder();
             }
             s.Stop();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() End {0}ms", s.ElapsedMilliseconds);
             isInitialized = true;
+        }
+
+        private void LoadShellControls()
+        {
+            if (Window.Current == null || Window.Current.Content == null) return;
+            ((Shell)((ModalDialog)Window.Current.Content).Content).LoadControls();
+        }
+
+        private async Task DelayAlbumArtFinder()
+        {
+            await Task.Delay(2000);
+            await App.AlbumArtFinder.StartLooking().ConfigureAwait(false);
         }
 
         private async Task<MusicItem> GetFirstItem(IReadOnlyList<IStorageItem> files)
