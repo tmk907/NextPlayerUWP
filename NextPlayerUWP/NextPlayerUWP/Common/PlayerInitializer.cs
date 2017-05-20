@@ -36,7 +36,10 @@ namespace NextPlayerUWP.Common
 
         public async Task Init()
         {
-            if (isInitialized) return;
+            if (isInitialized)
+            {
+                return;
+            }
             if (!isInitialized && initializationStarted) throw new System.Exception("PlayerInitializer failed");
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() Start");
             System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
@@ -47,6 +50,7 @@ namespace NextPlayerUWP.Common
             await PlaybackService.Instance.Initialize();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() Middle");
             LoadShellControls();
+            App.CanLoadShellControls = true;
             DelayAlbumArtFinder();
             s.Stop();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() End {0}ms", s.ElapsedMilliseconds);
@@ -95,6 +99,7 @@ namespace NextPlayerUWP.Common
             if (!isInitialized)
             {
                 LoadShellControls();
+                App.CanLoadShellControls = true;
                 DelayAlbumArtFinder();
             }
             s.Stop();

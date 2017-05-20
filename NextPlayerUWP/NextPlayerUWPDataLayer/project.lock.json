@@ -2,7 +2,7 @@
   "version": 2,
   "targets": {
     "UAP,Version=v10.0": {
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -2380,7 +2380,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -4841,7 +4841,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -7341,7 +7341,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -9811,7 +9811,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -12320,7 +12320,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -14790,7 +14790,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -17300,12 +17300,12 @@
     }
   },
   "libraries": {
-    "Dropbox.Api/4.2.6": {
-      "sha512": "IHTR3wTGni4svLhftH+Nu5bcMnC9ZfvBMj/Tpf1HHAsxpZvJ2ncFI4Uclj6ZarTz0EY5gC8CmzPcJddLnN9cIQ==",
+    "Dropbox.Api/4.3.0": {
+      "sha512": "nmXWGinLnWHpOOjJ0zPHoWmcakhrblcbVQ1d1oam06b+zfaxSBQ8/YAh8rN9JJGRXHVFP+sz2PF4Htf4pXZOjA==",
       "type": "package",
-      "path": "dropbox.api/4.2.6",
+      "path": "dropbox.api/4.3.0",
       "files": [
-        "dropbox.api.4.2.6.nupkg.sha512",
+        "dropbox.api.4.3.0.nupkg.sha512",
         "dropbox.api.nuspec",
         "lib/net45/Dropbox.Api.dll",
         "lib/net45/Dropbox.Api.xml",
@@ -26005,7 +26005,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Dropbox.Api >= 4.2.6",
+      "Dropbox.Api >= 4.3.0",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.3.3",
       "Microsoft.NETNative.Analyzer >= 1.0.0",
       "Microsoft.Net.Http >= 2.2.29",
@@ -26032,7 +26032,7 @@
       "projectStyle": "ProjectJson"
     },
     "dependencies": {
-      "Dropbox.Api": "4.2.6",
+      "Dropbox.Api": "[4.3.0, )",
       "Microsoft.Net.Http": "2.2.29",
       "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
       "Microsoft.NETNative.Analyzer": "1.0.0",

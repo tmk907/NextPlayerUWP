@@ -530,7 +530,27 @@ namespace NextPlayerUWP
             await base.OnSuspendingAsync(s, e, prelaunch);
         }
 
-#endregion
+        public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)
+        {
+            runOnStartAsync = true;
+
+            var a = NowPlayingPlaylistManager.Current;
+            var b = PlaybackService.Instance;
+            
+            ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
+
+            var c = vml.PlayerVM;
+            var d = vml.QueueVM;
+            var e = vml.RightPanelVM;
+            var f = vml.PlaylistsVM;
+            var g = vml.BottomPlayerVM;
+
+            return Task.CompletedTask;
+        }
+
+        #endregion
+
+        public static bool CanLoadShellControls = false;
 
         private void Resetdb()
         {

@@ -11,7 +11,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -599,12 +599,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NuSpec.ReferenceGenerator/1.4.2": {
-        "type": "package",
-        "build": {
-          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -2630,7 +2624,7 @@
         "type": "project",
         "framework": "UAP,Version=v10.0",
         "dependencies": {
-          "Dropbox.Api": "4.2.6",
+          "Dropbox.Api": "4.3.0",
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.NETNative.Analyzer": "1.0.0",
           "Microsoft.Net.Http": "2.2.29",
@@ -2660,15 +2654,6 @@
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
         }
-      },
-      "UWPMusicPlayerExtensions/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-          "Newtonsoft.Json": "9.0.1",
-          "NuSpec.ReferenceGenerator": "1.4.2"
-        }
       }
     },
     "UAP,Version=v10.0/win10-arm": {
@@ -2681,7 +2666,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -3217,12 +3202,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NuSpec.ReferenceGenerator/1.4.2": {
-        "type": "package",
-        "build": {
-          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -5350,7 +5329,7 @@
         "type": "project",
         "framework": "UAP,Version=v10.0",
         "dependencies": {
-          "Dropbox.Api": "4.2.6",
+          "Dropbox.Api": "4.3.0",
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.NETNative.Analyzer": "1.0.0",
           "Microsoft.Net.Http": "2.2.29",
@@ -5380,15 +5359,6 @@
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
         }
-      },
-      "UWPMusicPlayerExtensions/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-          "Newtonsoft.Json": "9.0.1",
-          "NuSpec.ReferenceGenerator": "1.4.2"
-        }
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
@@ -5401,7 +5371,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -5938,12 +5908,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NuSpec.ReferenceGenerator/1.4.2": {
-        "type": "package",
-        "build": {
-          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -8109,7 +8073,7 @@
         "type": "project",
         "framework": "UAP,Version=v10.0",
         "dependencies": {
-          "Dropbox.Api": "4.2.6",
+          "Dropbox.Api": "4.3.0",
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.NETNative.Analyzer": "1.0.0",
           "Microsoft.Net.Http": "2.2.29",
@@ -8139,15 +8103,6 @@
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
         }
-      },
-      "UWPMusicPlayerExtensions/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-          "Newtonsoft.Json": "9.0.1",
-          "NuSpec.ReferenceGenerator": "1.4.2"
-        }
       }
     },
     "UAP,Version=v10.0/win10-x64": {
@@ -8160,7 +8115,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -8699,12 +8654,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NuSpec.ReferenceGenerator/1.4.2": {
-        "type": "package",
-        "build": {
-          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -10838,7 +10787,7 @@
         "type": "project",
         "framework": "UAP,Version=v10.0",
         "dependencies": {
-          "Dropbox.Api": "4.2.6",
+          "Dropbox.Api": "4.3.0",
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.NETNative.Analyzer": "1.0.0",
           "Microsoft.Net.Http": "2.2.29",
@@ -10868,15 +10817,6 @@
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
         }
-      },
-      "UWPMusicPlayerExtensions/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-          "Newtonsoft.Json": "9.0.1",
-          "NuSpec.ReferenceGenerator": "1.4.2"
-        }
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
@@ -10889,7 +10829,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -11429,12 +11369,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NuSpec.ReferenceGenerator/1.4.2": {
-        "type": "package",
-        "build": {
-          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -13606,7 +13540,7 @@
         "type": "project",
         "framework": "UAP,Version=v10.0",
         "dependencies": {
-          "Dropbox.Api": "4.2.6",
+          "Dropbox.Api": "4.3.0",
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.NETNative.Analyzer": "1.0.0",
           "Microsoft.Net.Http": "2.2.29",
@@ -13636,15 +13570,6 @@
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
         }
-      },
-      "UWPMusicPlayerExtensions/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-          "Newtonsoft.Json": "9.0.1",
-          "NuSpec.ReferenceGenerator": "1.4.2"
-        }
       }
     },
     "UAP,Version=v10.0/win10-x86": {
@@ -13657,7 +13582,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -14196,12 +14121,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NuSpec.ReferenceGenerator/1.4.2": {
-        "type": "package",
-        "build": {
-          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -16335,7 +16254,7 @@
         "type": "project",
         "framework": "UAP,Version=v10.0",
         "dependencies": {
-          "Dropbox.Api": "4.2.6",
+          "Dropbox.Api": "4.3.0",
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.NETNative.Analyzer": "1.0.0",
           "Microsoft.Net.Http": "2.2.29",
@@ -16365,15 +16284,6 @@
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
         }
-      },
-      "UWPMusicPlayerExtensions/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-          "Newtonsoft.Json": "9.0.1",
-          "NuSpec.ReferenceGenerator": "1.4.2"
-        }
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
@@ -16386,7 +16296,7 @@
           "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.dll": {}
         }
       },
-      "Dropbox.Api/4.2.6": {
+      "Dropbox.Api/4.3.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -16926,12 +16836,6 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll": {}
-        }
-      },
-      "NuSpec.ReferenceGenerator/1.4.2": {
-        "type": "package",
-        "build": {
-          "build/dotnet/_._": {}
         }
       },
       "Playlists.NET/1.2.0": {
@@ -19103,7 +19007,7 @@
         "type": "project",
         "framework": "UAP,Version=v10.0",
         "dependencies": {
-          "Dropbox.Api": "4.2.6",
+          "Dropbox.Api": "4.3.0",
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
           "Microsoft.NETNative.Analyzer": "1.0.0",
           "Microsoft.Net.Http": "2.2.29",
@@ -19133,15 +19037,6 @@
           "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
           "Newtonsoft.Json": "9.0.1"
         }
-      },
-      "UWPMusicPlayerExtensions/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-          "Newtonsoft.Json": "9.0.1",
-          "NuSpec.ReferenceGenerator": "1.4.2"
-        }
       }
     }
   },
@@ -19158,12 +19053,12 @@
         "lib/portable-net4+sl5+netcore45+wpa81+wp8/Microsoft.Practices.ServiceLocation.pdb"
       ]
     },
-    "Dropbox.Api/4.2.6": {
-      "sha512": "IHTR3wTGni4svLhftH+Nu5bcMnC9ZfvBMj/Tpf1HHAsxpZvJ2ncFI4Uclj6ZarTz0EY5gC8CmzPcJddLnN9cIQ==",
+    "Dropbox.Api/4.3.0": {
+      "sha512": "nmXWGinLnWHpOOjJ0zPHoWmcakhrblcbVQ1d1oam06b+zfaxSBQ8/YAh8rN9JJGRXHVFP+sz2PF4Htf4pXZOjA==",
       "type": "package",
-      "path": "dropbox.api/4.2.6",
+      "path": "dropbox.api/4.3.0",
       "files": [
-        "dropbox.api.4.2.6.nupkg.sha512",
+        "dropbox.api.4.3.0.nupkg.sha512",
         "dropbox.api.nuspec",
         "lib/net45/Dropbox.Api.dll",
         "lib/net45/Dropbox.Api.xml",
@@ -22184,20 +22079,6 @@
         "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll",
         "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.xml",
         "tools/install.ps1"
-      ]
-    },
-    "NuSpec.ReferenceGenerator/1.4.2": {
-      "sha512": "Ede6MV1IFitgCg+D1Z4ruiLyv+chR4BMjzxLm0qp0IFZHsri4m4IYD4LGwyUnb9LdADsdaWxn12BonXGyQdejA==",
-      "type": "package",
-      "path": "nuspec.referencegenerator/1.4.2",
-      "files": [
-        "build/dotnet/NuSpec.ReferenceGenerator.targets",
-        "build/portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/NuSpec.ReferenceGenerator.targets",
-        "nuspec.referencegenerator.1.4.2.nupkg.sha512",
-        "nuspec.referencegenerator.nuspec",
-        "tools/RefGen.exe",
-        "tools/RefGen.exe.config",
-        "tools/RefGen.pdb"
       ]
     },
     "Playlists.NET/1.2.0": {
@@ -28313,11 +28194,6 @@
       "type": "project",
       "path": "../Template10/project.json",
       "msbuildProject": "../Template10/Template10 (Library).csproj"
-    },
-    "UWPMusicPlayerExtensions/1.0.0": {
-      "type": "project",
-      "path": "../../../UWPMusicPlayerExtensions/UWPMusicPlayerExtensions/project.json",
-      "msbuildProject": "../../../UWPMusicPlayerExtensions/UWPMusicPlayerExtensions/UWPMusicPlayerExtensions.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -28353,9 +28229,6 @@
       "frameworks": {
         "uap10.0": {
           "projectReferences": {
-            "E:\\Source\\Repos\\UWPMusicPlayerExtensions\\UWPMusicPlayerExtensions\\UWPMusicPlayerExtensions.csproj": {
-              "projectPath": "E:\\Source\\Repos\\UWPMusicPlayerExtensions\\UWPMusicPlayerExtensions\\UWPMusicPlayerExtensions.csproj"
-            },
             "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj": {
               "projectPath": "E:\\Source\\Repos\\NextPlayerUWP\\NextPlayerUWP\\NextPlayerUWPDataLayer\\NextPlayerUWPDataLayer.csproj"
             },

@@ -59,7 +59,10 @@ namespace NextPlayerUWP.Views
             tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
             ApplyTheme(ThemeHelper.IsLightTheme);
 
-            //LoadControls();
+            if (App.CanLoadShellControls)
+            {
+                LoadControls();
+            }
 
             System.Diagnostics.Debug.WriteLine("Shell.Loaded() End");
         }
