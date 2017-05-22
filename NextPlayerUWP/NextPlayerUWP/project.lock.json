@@ -2579,6 +2579,36 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.5": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
+            "assetType": "runtime",
+            "rid": "win10-arm"
+          },
+          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
+            "assetType": "runtime",
+            "rid": "win10-x64"
+          },
+          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {
+            "assetType": "runtime",
+            "rid": "win10-x86"
+          }
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -5293,6 +5323,25 @@
         },
         "runtime": {
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
+        }
+      },
+      "UWPMusicPlayerExtensions/0.9.5": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
         }
       },
       "Win2D.uwp/1.19.0": {
@@ -8039,6 +8088,25 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.5": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -10751,6 +10819,25 @@
         },
         "runtime": {
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
+        }
+      },
+      "UWPMusicPlayerExtensions/0.9.5": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
         }
       },
       "Win2D.uwp/1.19.0": {
@@ -13506,6 +13593,25 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
+      "UWPMusicPlayerExtensions/0.9.5": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        }
+      },
       "Win2D.uwp/1.19.0": {
         "type": "package",
         "compile": {
@@ -16218,6 +16324,25 @@
         },
         "runtime": {
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
+        }
+      },
+      "UWPMusicPlayerExtensions/0.9.5": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
         }
       },
       "Win2D.uwp/1.19.0": {
@@ -18971,6 +19096,25 @@
         },
         "runtime": {
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
+        }
+      },
+      "UWPMusicPlayerExtensions/0.9.5": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
+          "System.Runtime.WindowsRuntime": "4.0.11",
+          "System.Threading.Tasks": "4.0.11"
+        },
+        "compile": {
+          "ref/uap10.0/UWPMusicPlayerExtensions.dll": {}
+        },
+        "runtime": {
+          "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll": {}
         }
       },
       "Win2D.uwp/1.19.0": {
@@ -28092,6 +28236,23 @@
         "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll"
       ]
     },
+    "UWPMusicPlayerExtensions/0.9.5": {
+      "sha512": "sISDpds1jagnxNejdy9L4AzvBvGTm7BStqBW7i3lqBGBdhdvLSJWfprdn265YtG926CtoKk2/mqzC1TWvIYHBw==",
+      "type": "package",
+      "path": "uwpmusicplayerextensions/0.9.5",
+      "files": [
+        "ref/uap10.0/UWPMusicPlayerExtensions.dll",
+        "ref/uap10.0/UWPMusicPlayerExtensions.pri",
+        "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.dll",
+        "runtimes/win10-arm/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
+        "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.dll",
+        "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
+        "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll",
+        "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
+        "uwpmusicplayerextensions.0.9.5.nupkg.sha512",
+        "uwpmusicplayerextensions.nuspec"
+      ]
+    },
     "Win2D.uwp/1.19.0": {
       "sha512": "pLL/gLb3uY75IlswAKzOvQnwwiGrMxZyBl2DbJOjuzG6SOWMp0sg+tkj+HZU8uyQ8jIdAbOE0Iu5+z9zyT5E6Q==",
       "type": "package",
@@ -28211,6 +28372,7 @@
       "Microsoft.Toolkit.Uwp.UI.Controls >= 1.4.1",
       "MvvmLight >= 5.3.0",
       "SimpleCrossfadingImageUWP >= 0.9.3",
+      "UWPMusicPlayerExtensions >= 0.9.5",
       "WindowsStateTriggers >= 1.1.0",
       "ksemenenko.ColorThief >= 1.1.0.3"
     ],
@@ -28257,6 +28419,7 @@
       "Microsoft.Toolkit.Uwp.UI.Controls": "1.4.1",
       "MvvmLight": "5.3.0",
       "SimpleCrossfadingImageUWP": "0.9.3",
+      "UWPMusicPlayerExtensions": "0.9.5",
       "WindowsStateTriggers": "1.1.0"
     },
     "frameworks": {

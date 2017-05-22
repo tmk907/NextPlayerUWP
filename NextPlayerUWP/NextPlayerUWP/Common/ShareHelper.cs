@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -78,9 +77,10 @@ namespace NextPlayerUWP.Common
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             DataRequest request = args.Request;
-            request.Data.SetStorageItems(filesToShare);
             request.Data.Properties.Title = String.IsNullOrEmpty(title) ? "Next-Player" : title;
             request.Data.Properties.ApplicationName = "Next-Player";
+            IEnumerable<IStorageItem> list = new List<IStorageItem>(filesToShare);
+            request.Data.SetStorageItems(list);
         }
     }
 }
