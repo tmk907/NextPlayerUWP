@@ -64,6 +64,20 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <!--<Image 
+                    Grid.Row="0"
+                    MaxWidth="120"
+                    Width="132"
+                    Height="132"
+                    x:Phase="1"
+                    Opacity="0"
+                    Margin="4"
+                    ImageOpened="Image_ImageOpened"
+                    mycontrols:ImageExtensions.DecodePixelType="Logical"
+                    mycontrols:ImageExtensions.DecodePixelWidth="132" 
+                    mycontrols:ImageExtensions.DecodePixelHeight="132"
+                    mycontrols:ImageExtensions.DecodableUriSource="{x:Bind ImageUri}" 
+                />-->
                 <Image Grid.Row="0" 
                        Width="132" 
                        Height="132" 
@@ -79,10 +93,12 @@
                 </Image>
                 <TextBlock Grid.Row="1"
                     Text="{x:Bind Album}"
+                           x:Phase="0"
                     Style="{StaticResource AlbumNameStyle}"
                     />
                 <TextBlock Grid.Row="2"
                     Text="{x:Bind AlbumArtist}"
+                           x:Phase="0"
                     Style="{StaticResource AlbumArtistStyle}"
                     />
             </Grid>

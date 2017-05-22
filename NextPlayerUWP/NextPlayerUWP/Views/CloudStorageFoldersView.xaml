@@ -449,7 +449,7 @@
                 <mycontrols:AlternatingRowListView x:Name="FoldersListView"
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                    ItemsSource="{Binding Items}"
+                    ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
                     ItemTemplateSelector="{StaticResource FolderDataTemplateSelectorDesktop}"
                     SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                     IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"

@@ -52,7 +52,7 @@
             Grid.ColumnSpan="2">
             <local:BottomPlayerControl/>
         </UserControl>
-        <UserControl 
+        <Grid 
             x:Name="RightPanelWrapper" 
             x:DeferLoadStrategy="Lazy"
             Grid.Row="0" 
@@ -61,6 +61,6 @@
                 x:Name="RightPanel" 
                 Width="{x:Bind ShellVM.RightPanelWidth, Mode=OneWay}"
                 Visibility="{x:Bind ShellVM.IsRightPanelVisible, Mode=OneWay}" />
-        </UserControl>
+        </Grid>
     </Grid>
 </Page>

@@ -17,7 +17,7 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
 
         public CuteRadioCache()
         {
-            maxCacheDuration = TimeSpan.FromDays(1);
+            maxCacheDuration = TimeSpan.FromDays(14);
         }
 
         public async Task<List<string>> GetCountries()

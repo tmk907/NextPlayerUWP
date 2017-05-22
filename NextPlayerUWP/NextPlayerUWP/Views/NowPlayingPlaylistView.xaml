@@ -507,46 +507,35 @@
                     Click="{x:Bind ViewModel.SavePlaylist}"/>
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
-        <Grid Grid.Row="1">
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="0"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>-->
-            <!--<UserControl Grid.Row="0">
-                <local:NowPlayingDesktopView 
-                    x:Name="SongInfoGrid" 
-                  x:DeferLoadStrategy="Lazy" 
-                  Visibility="Collapsed"/>
-            </UserControl>-->
-            <mycontrols:AlternatingRowListView 
-                x:Name="NowPlayingPlaylistListView"
-                EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-                OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                ItemsSource="{x:Bind ViewModel.QueueVM.Songs}"
-                ItemTemplate="{StaticResource SongItemTemplateDesktop}"
-                IsItemClickEnabled="True"
-                ItemClick="{x:Bind ViewModel.ItemClicked}"  
-                Margin="12,12,0,4"
-                SelectionMode="None"
-                AllowDrop="True"
-                CanDragItems="True"
-                CanReorderItems="True">
-                <mycontrols:AlternatingRowListView.ItemsPanel>
+        <mycontrols:AlternatingRowListView 
+            Grid.Row="1"
+            x:Name="NowPlayingPlaylistListView"
+            EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+            OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+            ItemsSource="{x:Bind ViewModel.QueueVM.Songs}"
+            ItemTemplate="{StaticResource SongItemTemplateDesktop}"
+            IsItemClickEnabled="True"
+            ItemClick="{x:Bind ViewModel.ItemClicked}"  
+            Margin="12,12,0,4"
+            SelectionMode="None"
+            AllowDrop="True"
+            CanDragItems="True"
+            CanReorderItems="True">
+            <mycontrols:AlternatingRowListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
                 </mycontrols:AlternatingRowListView.ItemsPanel>
-                <mycontrols:AlternatingRowListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                        <Setter Property="Margin" Value="0,0,12,0"/>
-                        <Setter Property="Padding" Value="0,0,0,0"/>
-                    </Style>
-                </mycontrols:AlternatingRowListView.ItemContainerStyle>
-            </mycontrols:AlternatingRowListView>
-        </Grid>
+            <mycontrols:AlternatingRowListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="0,0,12,0"/>
+                    <Setter Property="Padding" Value="0,0,0,0"/>
+                </Style>
+            </mycontrols:AlternatingRowListView.ItemContainerStyle>
+        </mycontrols:AlternatingRowListView>
     </Grid>
 </Page>

@@ -383,107 +383,105 @@ namespace NextPlayerUWP
             s1.Stop();
             Debug.WriteLine("Time OnStartAsync Start: {0}ms", s1.ElapsedMilliseconds);
             s1.Start();
-            if (startKind == StartKind.Launch)
-            {
-                //TelemetryAdapter.TrackAppLaunch();
-            }
+
+            var fileArgs = args as FileActivatedEventArgs;
 
             if (isFirstRun)
             {
                 isFirstRun = false;
                 await NavigationService.NavigateAsync(Pages.Settings);
-                return;
-            }
-            var fileArgs = args as FileActivatedEventArgs;
-            if (fileArgs != null && fileArgs.Files.Any())
-            {
-                if (DeviceFamilyHelper.IsDesktop())
-                {
-                    await NavigationService.NavigateAsync(Pages.NowPlayingDesktop);
-                }
-                else
-                {
-                    await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
-                }
             }
             else
             {
-                switch (DetermineStartCause(args))
+                if (fileArgs != null && fileArgs.Files.Any())
                 {
-                    case AdditionalKinds.SecondaryTile:
-                        LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
-                        if (!eventArgs.TileId.Contains(SettingsKeys.TileId))
-                        {
-                            Debug.WriteLine("OnStartAsync event arg doesn't contain tileid");
-                            TelemetryAdapter.TrackEventException("event arg doesn't contain tileid");
-                        }
-                        Pages page = Pages.Playlists;
-                        string parameter = eventArgs.Arguments;
-                        MusicItemTypes type = MusicItem.ParseType(parameter);
-                        // dodac wybor w ustawieniach, czy przejsc do widoku, czy zaczac odtwarzanie i przejsc do teraz odtwarzane
-                        switch (type)
-                        {
-                            case MusicItemTypes.album:
-                                page = Pages.Album;
-                                parameter = MusicItem.SplitParameter(parameter)[1];
-                                break;
-                            case MusicItemTypes.albumartist:
-                                page = Pages.AlbumArtist;
-                                parameter = MusicItem.SplitParameter(parameter)[1];
-                                break;
-                            case MusicItemTypes.artist:
-                                page = Pages.Artist;
-                                parameter = MusicItem.SplitParameter(parameter)[1];
-                                break;
-                            case MusicItemTypes.folder:
-                                page = Pages.Playlist;
-                                break;
-                            case MusicItemTypes.genre:
-                                page = Pages.Playlist;
-                                break;
-                            case MusicItemTypes.plainplaylist:
-                                page = Pages.Playlist;
-                                break;
-                            case MusicItemTypes.smartplaylist:
-                                page = Pages.Playlist;
-                                break;
-                            case MusicItemTypes.song:
-                                //page = Pages.NowPlaying; ?
-                                break;
-                            case MusicItemTypes.unknown:
-                                TelemetryAdapter.TrackEventException("MusicItemTypes.unknown");
-                                break;
-                            default:
-                                break;
-                        }
-                        TelemetryAdapter.TrackEvent("LaunchFromSecondaryTile " + type.ToString());
-                        await NavigationService.NavigateAsync(page, parameter);
-                        break;
-                    case AdditionalKinds.Primary:
-                        if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                            args.PreviousExecutionState == ApplicationExecutionState.NotRunning || 
-                            args.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                        {
-                            Debug.WriteLine("OnStartAsync Primary closed");
+                    if (DeviceFamilyHelper.IsDesktop())
+                    {
+                        await NavigationService.NavigateAsync(Pages.NowPlayingDesktop);
+                    }
+                    else
+                    {
+                        await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
+                    }
+                }
+                else
+                {
+                    switch (DetermineStartCause(args))
+                    {
+                        case AdditionalKinds.SecondaryTile:
+                            LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
+                            if (!eventArgs.TileId.Contains(SettingsKeys.TileId))
+                            {
+                                Debug.WriteLine("OnStartAsync event arg doesn't contain tileid");
+                                TelemetryAdapter.TrackEventException("event arg doesn't contain tileid");
+                            }
+                            Pages page = Pages.Playlists;
+                            string parameter = eventArgs.Arguments;
+                            MusicItemTypes type = MusicItem.ParseType(parameter);
+                            // dodac wybor w ustawieniach, czy przejsc do widoku, czy zaczac odtwarzanie i przejsc do teraz odtwarzane
+                            switch (type)
+                            {
+                                case MusicItemTypes.album:
+                                    page = Pages.Album;
+                                    parameter = MusicItem.SplitParameter(parameter)[1];
+                                    break;
+                                case MusicItemTypes.albumartist:
+                                    page = Pages.AlbumArtist;
+                                    parameter = MusicItem.SplitParameter(parameter)[1];
+                                    break;
+                                case MusicItemTypes.artist:
+                                    page = Pages.Artist;
+                                    parameter = MusicItem.SplitParameter(parameter)[1];
+                                    break;
+                                case MusicItemTypes.folder:
+                                    page = Pages.Playlist;
+                                    break;
+                                case MusicItemTypes.genre:
+                                    page = Pages.Playlist;
+                                    break;
+                                case MusicItemTypes.plainplaylist:
+                                    page = Pages.Playlist;
+                                    break;
+                                case MusicItemTypes.smartplaylist:
+                                    page = Pages.Playlist;
+                                    break;
+                                case MusicItemTypes.song:
+                                    //page = Pages.NowPlaying; ?
+                                    break;
+                                case MusicItemTypes.unknown:
+                                    TelemetryAdapter.TrackEventException("MusicItemTypes.unknown");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            TelemetryAdapter.TrackEvent("LaunchFromSecondaryTile " + type.ToString());
+                            await NavigationService.NavigateAsync(page, parameter);
+                            break;
+                        case AdditionalKinds.Primary:
+                            if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                                args.PreviousExecutionState == ApplicationExecutionState.NotRunning ||
+                                args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                            {
+                                Debug.WriteLine("OnStartAsync Primary closed");
+                                await NavigationService.NavigateAsync(Pages.Playlists);
+                            }
+                            else
+                            {
+                                Debug.WriteLine("OnStartAsync Primary not closed");
+                            }
+                            break;
+                        case AdditionalKinds.Toast:
+                            Debug.WriteLine("OnStartAsync Toast");
+                            var toastargs = args as ToastNotificationActivatedEventArgs;
+                            await NavigationService.NavigateAsync(Pages.Settings);
+                            break;
+                        default:
+                            Debug.WriteLine("OnStartAsync default");
                             await NavigationService.NavigateAsync(Pages.Playlists);
-                        }
-                        else
-                        {
-                            Debug.WriteLine("OnStartAsync Primary not closed");
-                        }
-                        break;
-                    case AdditionalKinds.Toast:
-                        Debug.WriteLine("OnStartAsync Toast");
-                        var toastargs = args as ToastNotificationActivatedEventArgs;
-                        await NavigationService.NavigateAsync(Pages.Settings);
-                        break;
-                    default:
-                        Debug.WriteLine("OnStartAsync default");
-                        await NavigationService.NavigateAsync(Pages.Playlists);
-                        break;
+                            break;
+                    }
                 }
             }
-            
             OnStartAsyncFinished?.Invoke(args.PreviousExecutionState, fileArgs);
             s1.Stop();
             Debug.WriteLine("Time OnStartAsync End: {0}ms", s1.ElapsedMilliseconds);

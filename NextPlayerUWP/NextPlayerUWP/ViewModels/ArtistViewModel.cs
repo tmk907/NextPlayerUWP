@@ -10,18 +10,10 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
+using NextPlayerUWP.Models;
 
 namespace NextPlayerUWP.ViewModels
 {
-    public class ArtistItemHeader
-    {
-        public int AlbumId { get; set; }
-        public string Album { get; set; }
-        public string AlbumArtist { get; set; }
-        public int Year { get; set; }
-        public Uri ImageUri { get; set; }
-    }
-
     public class ArtistViewModel : MusicViewModelBase, IGroupedItemsList
     {
         private int artistId;

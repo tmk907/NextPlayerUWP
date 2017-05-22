@@ -15,7 +15,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
 
-            <Converters:ValueWhenConverter x:Name="ReverseBooleanConverter">
+            <Converters:ValueWhenConverter x:Key="ReverseBooleanConverter">
                 <Converters:ValueWhenConverter.When>
                     <x:Boolean>True</x:Boolean>
                 </Converters:ValueWhenConverter.When>
@@ -80,7 +80,7 @@
                 <Setter Property="Width" Value="48" />
             </Style>
 
-            <DataTemplate x:Name="NavButtonLiteralTemplate" x:DataType="local:HamburgerButtonInfo">
+            <DataTemplate x:Key="NavButtonLiteralTemplate" x:DataType="local:HamburgerButtonInfo">
                 <ContentPresenter x:Name="ContentPresenter"
                                   Width="{Binding PaneWidth, ElementName=ThisPage}"
                                   MinWidth="48"
@@ -93,7 +93,7 @@
                                   Visibility="{Binding Visibility, Mode=TwoWay}" />
             </DataTemplate>
 
-            <DataTemplate x:Name="NavToggleButtonTemplate" x:DataType="local:HamburgerButtonInfo">
+            <DataTemplate x:Key="NavToggleButtonTemplate" x:DataType="local:HamburgerButtonInfo">
                 <ToggleButton Width="{Binding PaneWidth, ElementName=ThisPage}"
                               MinWidth="48"
                               MaxWidth="{x:Bind MaxWidth, Mode=TwoWay}"
@@ -194,7 +194,7 @@
                 </ToggleButton>
             </DataTemplate>
 
-            <DataTemplate x:Name="NavCommandButtonTemplate" x:DataType="local:HamburgerButtonInfo">
+            <DataTemplate x:Key="NavCommandButtonTemplate" x:DataType="local:HamburgerButtonInfo">
                 <Button Width="{Binding PaneWidth, ElementName=ThisPage}"
                         MinWidth="48"
                         MaxWidth="{x:Bind MaxWidth, Mode=OneWay}"

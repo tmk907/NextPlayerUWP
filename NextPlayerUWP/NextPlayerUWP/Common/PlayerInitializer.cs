@@ -34,7 +34,7 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        public async Task Init()
+        private async Task Init()
         {
             if (isInitialized)
             {
@@ -57,7 +57,7 @@ namespace NextPlayerUWP.Common
             isInitialized = true;
         }
 
-        public async Task Init(IReadOnlyList<IStorageItem> files)
+        private async Task Init(IReadOnlyList<IStorageItem> files)
         {
             if (!isInitialized && initializationStarted) throw new System.Exception("PlayerInitializer failed");
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() Start");
@@ -95,6 +95,8 @@ namespace NextPlayerUWP.Common
                 await OpenFilesAndAddToNowPlaying(files);
                 s.Start();
             }
+
+            files = null;
 
             if (!isInitialized)
             {

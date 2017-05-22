@@ -225,7 +225,7 @@
             x:Name="PageHeader"
             BackButtonVisibility="Collapsed" 
             Frame="{x:Bind Frame, Mode=OneWay}"
-            Content="{Binding PageTitle}" 
+            Content="{x:Bind ViewModel.PageTitle, Mode=OneWay}" 
             VisualStateNarrowMinWidth="0"
             VisualStateNormalMinWidth="720">
             <AppBarButton

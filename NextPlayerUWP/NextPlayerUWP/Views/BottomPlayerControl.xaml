@@ -553,6 +553,7 @@
                         <Setter Target="SongInfoColumn.Width" Value="0"/>
                         <Setter Target="ShuffleButton.Visibility" Value="Visible"/>
                         <Setter Target="ToggleRepeatButton.Visibility" Value="Visible"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="VisualStateCompact">
@@ -571,6 +572,7 @@
                         <Setter Target="SongInfoColumn.Width" Value="*"/>
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed"/>
                         <Setter Target="ToggleRepeatButton.Visibility" Value="Collapsed"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="VisualStateCompactNowPlaying">
@@ -589,6 +591,7 @@
                         <Setter Target="SongInfoColumn.Width" Value="0"/>
                         <Setter Target="ShuffleButton.Visibility" Value="Visible"/>
                         <Setter Target="ToggleRepeatButton.Visibility" Value="Visible"/>
+                        <Setter Target="BottomSlider.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -852,46 +855,46 @@
                                    Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
             </Grid>
         </Grid>
-        <!--<Grid Grid.Row="1" 
-                    x:Name="BottomSlider"
-                    x:DeferLoadStrategy="Lazy"
-                    Loaded="BottomSlider_Loaded"
-                    Unloaded="BottomSlider_Unloaded"
-                    Visibility="{Binding IsSliderVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"
-                    Height="50">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="60"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock 
-                        Grid.Column="0"
-                        FontSize="17"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Foreground="{ThemeResource BottomPlayerTextForeground}"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,8,0"
-                        Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
-                    <Slider 
-                        x:Name="durationSliderBottom" 
-                        Grid.Column="1"
-                        StepFrequency="1.0"
-                        Margin="4,8,4,0"
-                        Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
-                        Value="{Binding SliderValue, Mode=TwoWay}"
-                        ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
-                    <TextBlock 
-                        Grid.Column="2"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Foreground="{ThemeResource BottomPlayerTextForeground}"
-                        FontSize="17"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,8,0"
-                        Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
-                </Grid>-->
+        <Grid Grid.Row="1" 
+                x:Name="BottomSlider"
+                x:DeferLoadStrategy="Lazy"
+                Loaded="BottomSlider_Loaded"
+                Unloaded="BottomSlider_Unloaded"
+                Visibility="{Binding IsSliderVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"
+                Height="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock 
+                    Grid.Column="0"
+                    FontSize="17"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Foreground="{ThemeResource BottomPlayerTextForeground}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,8,0"
+                    Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
+            <Slider 
+                    x:Name="durationSliderBottom" 
+                    Grid.Column="1"
+                    StepFrequency="1.0"
+                    Margin="4,8,4,0"
+                    Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
+                    Value="{Binding SliderValue, Mode=TwoWay}"
+                    ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center" Style="{StaticResource TimeSliderStyle}"/>
+            <TextBlock 
+                    Grid.Column="2"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Foreground="{ThemeResource BottomPlayerTextForeground}"
+                    FontSize="17"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,8,0"
+                    Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
+        </Grid>
     </Grid>
 </UserControl>

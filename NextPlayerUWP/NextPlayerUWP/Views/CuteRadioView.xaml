@@ -77,7 +77,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <Grid />
+                        <Grid/>
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
@@ -316,7 +316,6 @@
             Content="Radio" 
             VisualStateNarrowMinWidth="0"
             VisualStateNormalMinWidth="720"/>
-            
             <Pivot Grid.Row="1"
                 Style="{StaticResource RightPanelPivotStyle}"
                 SelectionChanged="{x:Bind ViewModel.PivotSelectionChanged}"

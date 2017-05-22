@@ -39,15 +39,15 @@ namespace NextPlayerUWP.Views
 
         #region Slider 
 
-        //private void BottomSlider_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    LoadSliderEvents(durationSliderBottom);
-        //}
+        private void BottomSlider_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadSliderEvents(durationSliderBottom);
+        }
 
-        //private void BottomSlider_Unloaded(object sender, RoutedEventArgs e)
-        //{
-        //    UnloadSliderEvents(durationSliderBottom);
-        //}
+        private void BottomSlider_Unloaded(object sender, RoutedEventArgs e)
+        {
+            UnloadSliderEvents(durationSliderBottom);
+        }
 
         private void SliderGrid_Loaded(object sender, RoutedEventArgs e)
         {
@@ -91,8 +91,11 @@ namespace NextPlayerUWP.Views
         {
             if (IsDesktop())
             {
-                //Menu.NavigationService.Navigate(App.Pages.NowPlaying);
-                //Menu.NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
+#if DEBUG
+                var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+                nav.Navigate(App.Pages.NowPlayingPlaylist);
+                //nav.Navigate(App.Pages.NowPlaying);
+#endif
             }
             else
             {

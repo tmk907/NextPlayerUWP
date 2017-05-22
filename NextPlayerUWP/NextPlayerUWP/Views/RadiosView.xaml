@@ -145,7 +145,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <Grid />
+                        <Grid/>
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
@@ -440,43 +440,9 @@
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
-            <Pivot Style="{StaticResource RightPanelPivotStyle}" SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
-                <!--<PivotItem  Style="{StaticResource PivotItemStyle}">
-                    <PivotItem.Header>
-                        <TextBlock Text="Jamendo" FontSize="22"/>
-                    </PivotItem.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <ProgressBar Grid.Row="0"
-                            Height="8"
-                            IsIndeterminate="True" 
-                            Foreground="{ThemeResource UserAccentBrush}"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Stretch"
-                            IsEnabled="{x:Bind ViewModel.Updating, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.Updating, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                        <mycontrols:AlternatingRowListView x:Name="RadiosListView"
-                            EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-                            OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                            ItemsSource="{Binding Radios, Mode=OneWay}"
-                            ItemTemplate="{StaticResource RadioItemTemplateDesktop}"
-                            SelectionMode="None"
-                            IsItemClickEnabled="True"
-                            ItemClick="{x:Bind ViewModel.ItemClicked}"
-                            Margin="12,4,0,4"
-                            ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}">
-                            <mycontrols:AlternatingRowListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsStackPanel Orientation="Vertical"/>
-                                </ItemsPanelTemplate>
-                            </mycontrols:AlternatingRowListView.ItemsPanel>
-                        </mycontrols:AlternatingRowListView>
-                    </Grid>
-                </PivotItem>-->
+            <Pivot
+                Style="{StaticResource RightPanelPivotStyle}" 
+                SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
                         <TextBlock x:Uid="TBStreamsLower" Text="Streams" FontSize="22"/>
