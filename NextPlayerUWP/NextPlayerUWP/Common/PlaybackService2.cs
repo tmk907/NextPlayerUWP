@@ -1,8 +1,6 @@
 ﻿using NextPlayerUWP.Common.Tiles;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Jamendo;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -10,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
-using Windows.Storage.Streams;
 
 namespace NextPlayerUWP.Common
 {
@@ -26,27 +23,16 @@ namespace NextPlayerUWP.Common
             UpdateLiveTile(false);
         }
 
-        bool shuffle;
-        RepeatEnum repeat;
-        private DateTime songStartedAt;
-        private TimeSpan songPlayed;
+        private bool shuffle;
+        private RepeatEnum repeat;
+
+        private Stoper songPlayingStoper;
+
         private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
-        public JamendoRadiosData jRadioData;
         private LastFmCache lastFmCache;
-        PlaybackTimer RadioTimer;
-        PlaybackTimer MusicPlaybackTimer;
+        private PlaybackTimer RadioTimer;
+        private PlaybackTimer MusicPlaybackTimer;
 
-        public static bool IsTypeDefaultSupported(string type)
-        {
-            return (type == ".mp3" || type == ".m4a" || type == ".wma" ||
-                    type == ".wav" || type == ".aac" || type == ".asf" || type == ".flac" ||
-                    type == ".adt" || type == ".adts" || type == ".amr" || type == ".mp4");
-        }
-
-        public static bool IsTypeFFmpegSupported(string type)
-        {
-            return (type == ".ogg" || type == ".ape" || type == ".wv" || type == ".opus" || type == ".ac3");
-        }
 
         #region Properties
 
@@ -180,6 +166,69 @@ namespace NextPlayerUWP.Common
 
         #endregion
 
+        public async Task ChangeShuffle()
+        {
+            shuffle = Shuffle.CurrentState();
+            System.Diagnostics.Debug.WriteLine("ChangeShuffle {0}", shuffle);
+            if (!shuffle)
+            {
+                //await NowPlayingPlaylistManager.Current.UnShufflePlaylist();
+                //mediaList.ShuffleEnabled = false;
+                CurrentSongIndex = await NowPlayingPlaylistManager.Current.UnShufflePlaylist();
+            }
+            else
+            {
+                CurrentSongIndex = await NowPlayingPlaylistManager.Current.ShufflePlaylist(CurrentSongIndex);
+                //mediaList.ShuffleEnabled = true;
+            }
+            await UpdateMediaListWithoutPausing();
+        }
+
+        public void ApplyRepeatState()
+        {
+            repeat = Repeat.CurrentState();
+            if (repeat == RepeatEnum.RepeatOnce)
+            {
+                Player.IsLoopingEnabled = true;
+                mediaList.AutoRepeatEnabled = false;
+            }
+            else if (repeat == RepeatEnum.RepeatPlaylist)
+            {
+                Player.IsLoopingEnabled = false;
+                mediaList.AutoRepeatEnabled = true;
+            }
+            else
+            {
+                Player.IsLoopingEnabled = false;
+                mediaList.AutoRepeatEnabled = false;
+            }
+            System.Diagnostics.Debug.WriteLine("ChangeRepeat {0}", repeat);
+        }
+
+        public void Next()
+        {
+            System.Diagnostics.Debug.WriteLine("Next");
+
+            mediaList.MoveNext();
+            OnMediaPlayerMediaOpened();
+        }
+
+        public void Previous()
+        {
+            System.Diagnostics.Debug.WriteLine("Previous");
+
+            var session = Player.PlaybackSession;
+            if (session.Position > timePreviousOrBeggining)
+            {
+                session.Position = TimeSpan.Zero;
+            }
+            else
+            {
+                mediaList.MovePrevious();
+                OnMediaPlayerMediaOpened();
+            }
+        }
+
         public void TogglePlayPause()
         {
             switch (Player.PlaybackSession.PlaybackState)
@@ -210,27 +259,20 @@ namespace NextPlayerUWP.Common
 
         public void Play()
         {
-            if (canPlay == true)
-            {
-                songStartedAt = DateTime.Now;
-                Player.Play();
-            }
-            else if (canPlay == false)
-            {
-                System.Diagnostics.Debug.WriteLine("Play() canPlay == false");
-            }
+            Player.Play();
+            songPlayingStoper.Start();
         }
 
         public void Pause()
         {
             Player.Pause();
-            songPlayed = DateTime.Now - songStartedAt + songPlayed;
+            songPlayingStoper.Stop();
         }
 
-        int fastForwardInterval = 5000;
-        int rewindInterval = 5000;
-        int fastForwardFasterInterval = 15000;
-        int rewindFasterInterval = 15000;
+        private const int fastForwardInterval = 5000;
+        private const int rewindInterval = 5000;
+        private const int fastForwardFasterInterval = 15000;
+        private const int rewindFasterInterval = 15000;
 
         public void FastForward()
         {
@@ -269,6 +311,7 @@ namespace NextPlayerUWP.Common
             }
         }
 
+        #region Timer
 
         public void SetPlaybackStopTimer()
         {
@@ -300,6 +343,7 @@ namespace NextPlayerUWP.Common
             MusicPlaybackTimer.TimerCancel();
         }
 
+        #endregion
 
         private static async Task<MediaPlaybackItem> PreparePlaybackItem(SongItem song)
         {
@@ -320,7 +364,7 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("RadioSource_OpenOperationCompleted {0}", sender.IsOpen);
             if (sender.IsOpen)
             {
-                Instance.RadioTimer.SetTimerWithTask(TimeSpan.FromMilliseconds(500), Instance.RefreshRadioTrackInfo);
+                //Instance.RadioTimer.SetTimerWithTask(TimeSpan.FromMilliseconds(500), Instance.RefreshRadioTrackInfo);
             }
         }
 
@@ -346,19 +390,36 @@ namespace NextPlayerUWP.Common
                 tileHelper.UpdateAppTile(titles, artists, song.AlbumArtUri.ToString());
             }
         }
-        
+
+        private void UpdateStats(int songId, TimeSpan songDuration, TimeSpan songPlaybackDuration)
+        {
+            System.Diagnostics.Debug.WriteLine("UpdateStats {0}", songPlaybackDuration);
+            if (songId == 1 || TimeSpan.Zero == songDuration)
+            {
+                System.Diagnostics.Debug.WriteLine("UpdateStats wrong song duration");
+                return;
+            }
+            if (songPlaybackDuration.TotalSeconds >= songDuration.TotalSeconds * 0.5 || songPlaybackDuration.TotalSeconds >= 4 * 60)
+            {
+                UpdateStats2(songId, songDuration);
+            }
+        }
+
         private async Task UpdateStats2(int songId, TimeSpan songDuration)
         {
             var song = await DatabaseManager.Current.GetSongItemAsync(songId);
-            if (song.SourceType != MusicSource.RadioJamendo)
+            if (song.SongId != -1 && song.SourceType != MusicSource.RadioJamendo && song.SourceType != MusicSource.Radio)
             {
                 System.Diagnostics.Debug.WriteLine("UpdateStats2 {0} {1}", songId, songDuration);
                 await UpdateSongStatistics(song.SongId);
                 if (songDuration > TimeSpan.FromSeconds(30))
                 {
-                    System.Diagnostics.Debug.WriteLine("ScrobbleTrack {0} {1}", song.Path, songDuration);
                     await CacheTrackScrobble(song);
                 }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("UpdateStats2 stats not updated");
             }
         }
 
@@ -370,7 +431,7 @@ namespace NextPlayerUWP.Common
             }
             else
             {
-                //log error
+                System.Diagnostics.Debug.WriteLine("UpdateSongStatistics SongId < 0");
             }
         }
 
@@ -384,19 +445,17 @@ namespace NextPlayerUWP.Common
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("CacheTrackScrobble fails to calculate song playback start time {0}", ex);
                 return;
             }
-            string artist = song.Artist;
-            string track = song.Title;
-            string timestamp = seconds.ToString();
             TrackScrobble scrobble = new TrackScrobble()
             {
-                Artist = artist,
-                Track = track,
-                Timestamp = timestamp
+                Artist = song.Artist,
+                Track = song.Title,
+                Timestamp = seconds.ToString()
             };
-            await lastFmCache.CacheTrackScrobble(scrobble);
-            System.Diagnostics.Debug.WriteLine("Scrobbled " + artist + " " + track);
+            await lastFmCache.CacheTrackScrobble(scrobble).ConfigureAwait(false);
+            System.Diagnostics.Debug.WriteLine("Scrobbled " + song.Artist + " " + song.Title);
         }
     }
 }

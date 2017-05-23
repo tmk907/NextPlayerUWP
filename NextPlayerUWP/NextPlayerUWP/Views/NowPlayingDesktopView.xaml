@@ -5,9 +5,9 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:imagecontrol="using:SimpleCrossfadingImageUWP"
     xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingDesktopVM}"
     mc:Ignorable="d">
@@ -51,7 +51,7 @@
             <Setter Property="Height" Value="36"/>
             <Setter Property="Width" Value="36"/>
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{ThemeResource UserAccentColor}"/>
+            <Setter Property="Foreground" Value="{ThemeResource UserAccentBrush}"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="0"/>
@@ -80,6 +80,20 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Storyboard x:Name="ShowBGImage">
+            <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundImage">
+                <DoubleAnimation.EasingFunction>
+                    <PowerEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Name="ShowPrimaryImage">
+            <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PrimaryImage">
+                <DoubleAnimation.EasingFunction>
+                    <PowerEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -98,27 +112,44 @@
                 <RowDefinition Height="13*"/>
                 <RowDefinition Height="8*"/>
             </Grid.RowDefinitions>
-            <mycontrols:CrossfadingImage
+            <imagecontrol:CrossfadingImage
                 x:Name="BackgroundImage"
+                x:DeferLoadStrategy="Lazy"
                 Grid.Row="0"
                 Grid.RowSpan="2"
+                Opacity="0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
-                FadeInDuration="0:0:0.5"
-                FadeOutDuration="0:0:0.5"
+                FadeInDuration="0:0:0.3"
+                FadeOutDuration="0:0:0.3"
+                ImageUri="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}"
                 Stretch="UniformToFill"
                 />
-            <Canvas
-                x:Name="GlassHost"
+            <!--<mycontrols:BackDrop 
+                x:Name="BackDropControl"
                 Grid.Row="0"
-                Grid.RowSpan="2"/>
-            <mycontrols:CrossfadingImage
+                Grid.RowSpan="2"
+                BlurAmount="{Binding ElementName=BlurAmountSlider, Path=Value, Mode=TwoWay}"
+                TintAlpha="{Binding ElementName=TintAlphaSlider, Path=Value, Mode=TwoWay}"
+                SaturationIntensity="{Binding ElementName=SaturationIntensitySlider, Path=Value, Mode=TwoWay}"
+                TintColor="Gray"/>-->
+            <mycontrols:BackDrop 
+                x:Name="BackDropControl"
+                x:DeferLoadStrategy="Lazy"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                BlurAmount="85"
+                TintAlpha="100"
+                SaturationIntensity="1.1"
+                TintColor="{x:Bind ViewModel.QueueVM.AlbumArtColor, Mode=OneWay}"/>
+            <imagecontrol:CrossfadingImage
                 x:Name="PrimaryImage"
                 Grid.Row="0"
+                Opacity="0"
                 SizeChanged="PrimaryImage_SizeChanged"
                 Margin="8,4,8,0"
-                FadeInDuration="0:0:0.5"
-                FadeOutDuration="0:0:0.5"
+                FadeInDuration="0:0:0.3"
+                FadeOutDuration="0:0:0.3"
                 Stretch="Uniform"/>
             <Grid Grid.Row="1"
                 x:Name="SongDescriptionGrid"
@@ -131,6 +162,21 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <!--<StackPanel
+                    Grid.RowSpan="4">
+                    <Slider x:Name="BlurAmountSlider"
+                        Header="Blur Amount"
+                        Value="85"/>
+                    <Slider x:Name="TintAlphaSlider"
+                        Maximum="255"
+                        Value="100"
+                        Header="Tint Alpha" />
+                    <Slider x:Name="SaturationIntensitySlider"
+                        Maximum="2"
+                        StepFrequency=".05"
+                        Value="1.1"
+                        Header="Saturation Intensity" />
+                </StackPanel>-->
                 <Grid Grid.Row="0"
                     Margin="0,0,32,0"
                     HorizontalAlignment="Stretch">

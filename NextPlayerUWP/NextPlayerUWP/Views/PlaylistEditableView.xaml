@@ -46,8 +46,8 @@
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit"
                             Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=edittags}"
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <DataTemplate x:Key="SongItemTemplateDesktop" x:DataType="data:SongItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
@@ -162,7 +162,6 @@
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobileWide}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
-                        <Setter Target="PlaylistListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MobileNarrow">
@@ -176,7 +175,6 @@
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobile}"/>
                         <Setter Target="Column1.Width" Value="0"/>
                         <Setter Target="Column3Search.Width" Value="*"/>
-                        <Setter Target="PlaylistListView.CanDragItems" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Desktop">
@@ -187,7 +185,6 @@
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
                         <Setter Target="Column1.Width" Value="*"/>
                         <Setter Target="Column3Search.Width" Value="200"/>
-                        <Setter Target="PlaylistListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Xbox">
@@ -198,7 +195,6 @@
                         <Setter Target="PlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateDesktop}"/>
                         <Setter Target="Column1.Width" Value="*"/>
                         <Setter Target="Column3Search.Width" Value="200"/>
-                        <Setter Target="PlaylistListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -250,10 +246,25 @@
                 Label="Clear selection"
                 Icon="ClearSelection"
                 Click="DisableMultipleSelection"/>
+            <AppBarButton
+                x:Uid="AppBarButtonDeleteSelected"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Label="Delete"
+                Icon="Delete"
+                Click="DeleteSelected"/>
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton
+                    x:Uid="AppBarButtonRefresh"
+                    Visibility="{x:Bind ViewModel.IsPlainPlaylist, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                    Label="Refresh"
+                    Icon="Refresh"
+                    Click="RefreshPlaylist"/>
+            </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Gray">
@@ -293,19 +304,30 @@
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
                 </StackPanel>
             </Grid>
-            <Grid Grid.Row="1">
-                <mycontrols:AlternatingRowListView x:Name="PlaylistListView"
-                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                        ItemsSource="{Binding Playlist}"
-                        ItemTemplate="{StaticResource SongItemTemplateDesktop}"
-                        SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
-                        IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
-                        ItemClick="{x:Bind ViewModel.ItemClicked }"  
-                        Margin="12,0,0,0"
-                        ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
-                        CanDragItems="False"
-                        DragItemsStarting="{x:Bind ViewModel.DragStarting}">
+            <ProgressBar Grid.Row="1"
+                Height="8"
+                Visibility="{x:Bind ViewModel.Updating, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                IsIndeterminate="True"
+                Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                IsEnabled="{x:Bind ViewModel.Updating, Mode=OneWay}"/>
+            <Grid Grid.Row="2">
+                <mycontrols:AlternatingRowListView 
+                    x:Name="PlaylistListView"
+                    EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                    OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                    ItemsSource="{x:Bind ViewModel.Playlist, Mode=OneWay}"
+                    ItemTemplate="{StaticResource SongItemTemplateDesktop}"
+                    SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                    IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
+                    ItemClick="{x:Bind ViewModel.ItemClicked }"  
+                    Margin="12,0,0,0"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
+                    AllowDrop="True"
+                    CanDragItems="True"
+                    CanReorderItems="True">
                     <mycontrols:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Vertical"/>

@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
 using System.Linq;
+using NextPlayerUWP.Models;
 
 namespace NextPlayerUWP.ViewModels
 {

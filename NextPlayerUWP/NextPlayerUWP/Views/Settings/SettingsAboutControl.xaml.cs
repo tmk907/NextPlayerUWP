@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.ViewModels.Settings;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -17,6 +18,11 @@ namespace NextPlayerUWP.Views.Settings
         {
             ViewModel = (SettingsAboutViewModel)args.NewValue;
             ViewModel.Load();
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogTranslations.ShowAsync();
         }
     }
 }

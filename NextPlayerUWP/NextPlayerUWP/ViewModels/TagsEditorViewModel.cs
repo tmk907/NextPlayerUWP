@@ -1,4 +1,6 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -178,12 +180,20 @@ namespace NextPlayerUWP.ViewModels
 
             if (isAlbumArtChanged)
             {
-                var file = await StorageFile.GetFileFromPathAsync(songData.Path);
+                StorageFile file;
+                try
+                {
+                    file = await StorageFile.GetFileFromPathAsync(songData.Path);
+                }
+                catch (System.IO.FileNotFoundException)
+                {
+                    file = null;
+                }
                 if (IsAlbumArtSet())
                 {
                     string savedPath = await ImagesManager.SaveCover(songData.SongId.ToString(), "Songs", albumArt);
                     songData.AlbumArtPath = savedPath;
-                    await tm.SaveAlbumArt(albumArtFile, file);
+                    if (file != null) await tm.SaveAlbumArt(albumArtFile, file);
                 }
                 else
                 {
@@ -196,7 +206,7 @@ namespace NextPlayerUWP.ViewModels
 
                     }
                     songData.AlbumArtPath = AppConstants.AlbumCover;
-                    await tm.DeleteAlbumArt(file);
+                    if (file != null) await tm.DeleteAlbumArt(file);
                 }
             }
             
@@ -228,6 +238,7 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             App.OnNavigatedToNewView(true);
+            MessageHub.Instance.Publish<PageNavigated>(new PageNavigated() { NavigatedTo = true, PageType = PageNavigatedType.TagsEditor });
             IsAlbumArtVisible = false;
             songId = -1;
             songData = new SongData();
@@ -258,6 +269,12 @@ namespace NextPlayerUWP.ViewModels
             IsAlbumArtVisible = IsAlbumArtSet();
             await LoadSongs();
             TelemetryAdapter.TrackPageView(this.GetType().ToString());
+        }
+
+        public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
+        {
+            MessageHub.Instance.Publish<PageNavigated>(new PageNavigated() { NavigatedTo = false, PageType = PageNavigatedType.TagsEditor });
+            return base.OnNavigatedFromAsync(pageState, suspending);
         }
 
         public void ClearAlbumArt()

@@ -1,5 +1,4 @@
-﻿using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Diagnostics;
+﻿using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Playlists;
@@ -9,7 +8,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using TagLib;
 using Windows.Data.Xml.Dom;
 using Windows.Storage;
@@ -64,6 +62,7 @@ namespace NextPlayerUWPDataLayer.Services
         private List<SdCardFolder> sdCardFoldersToScan;
         private QueryOptions queryOptions;
         private List<StorageFile> playlistFiles;
+        private bool UseWindowsIndexer = true;
 
         private async Task UpdateSongMusicPropertiesAsync(Tables.SongsTable songTable, BasicProperties prop, StorageFile file)
         {
@@ -213,6 +212,17 @@ namespace NextPlayerUWPDataLayer.Services
         private async Task AddFilesFromFolderAsync(StorageFolder folder, bool includeSubFolders = true)
         {
             progress.Report(folder.Path + "|" + songsAdded);
+            //IReadOnlyList<StorageFile> files;
+            //if (UseWindowsIndexer)
+            //{
+            //    var query = folder.CreateFileQueryWithOptions(queryOptions);
+            //    files = await query.GetFilesAsync();
+            //}
+            //else
+            //{
+            //    files = await folder.GetFilesAsync(CommonFileQuery.DefaultQuery);
+            //}
+
             var query = folder.CreateFileQueryWithOptions(queryOptions);
             var files = await query.GetFilesAsync();
 
@@ -265,6 +275,12 @@ namespace NextPlayerUWPDataLayer.Services
                             }
                         }
                         song.IsAvailable = 1;
+                        if (song.MusicSourceType == (int)Enums.MusicSource.LocalNotMusicLibrary)
+                        {
+                            await UpdateSongMusicPropertiesAsync(song, prop, file);
+                            song.MusicSourceType = (int)Enums.MusicSource.LocalFile;
+                            availableChange.Add(song.SongId);
+                        }
                     }
                     else
                     {
@@ -411,11 +427,16 @@ namespace NextPlayerUWPDataLayer.Services
             libraryDirectories = new List<string>();
             playlistFiles = new List<StorageFile>();
             sdCardFoldersToScan = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
-            
+            if (sdCardFoldersToScan == null)
+            {
+                sdCardFoldersToScan = new List<SdCardFolder>();
+                //await ApplicationSettingsHelper.SaveSdCardFoldersToScan(sdCardFoldersToScan);
+            }
 
+            UseWindowsIndexer = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.MediaScanUseIndexer);
             var propertiesToRetrieve = new List<string>();
             queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileFormatsHelper.SupportedAudioAndPlaylistFormats());
-            queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
+            queryOptions.IndexerOption = (UseWindowsIndexer) ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer;
             queryOptions.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties | PropertyPrefetchOptions.BasicProperties, propertiesToRetrieve);
 
             Stopwatch s = new Stopwatch();
@@ -696,12 +717,51 @@ namespace NextPlayerUWPDataLayer.Services
             return song;
         }
 
+        public async Task UpdatePlaylist(int playlistId)
+        {
+            var p = await DatabaseManager.Current.GetPlainPlaylistAsync(playlistId);
+            if (!String.IsNullOrEmpty(p.Path))
+            {
+                var file = await FutureAccessHelper.GetFileFromPathAsync(p.Path);
+                if (file != null)
+                {
+                    var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+                    ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
+                    if (playlist != null)
+                    {
+                        playlist.PlainPlaylistId = playlistId;
+                        int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        file = await StorageFile.GetFileFromPathAsync(p.Path);
+                        var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+                        ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
+                        if (playlist != null)
+                        {
+                            playlist.PlainPlaylistId = playlistId;
+                            int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+        }
+
         private async Task<ImportedPlaylist> ImportPlaylistAsync(StorageFile file, IEnumerable<SongItem> songs)
         {
             PlaylistImporter pi = new PlaylistImporter();
             ImportedPlaylist newPlaylist = await pi.Import(file);
+            string folderPath = Path.GetDirectoryName(newPlaylist.Path);
             foreach (var m in newPlaylist.Entries)
             {
+                m.Path = PlaylistHelper.MakeAbsolutePath(folderPath, m.Path);
                 int id = await ResolvePlaylistEntryAsync(m, songs);
                 newPlaylist.SongIds.Add(id);
             }
@@ -750,9 +810,18 @@ namespace NextPlayerUWPDataLayer.Services
                         if (data.Path[1] == ':')//local file
                         {
                             data.MusicSourceType = (int)Enums.MusicSource.LocalNotMusicLibrary;
-                            data.DirectoryPath = Path.GetDirectoryName(entry.Path);
-                            data.Filename = Path.GetFileName(data.Path);
-                            data.FolderName = Path.GetFileName(data.DirectoryPath);
+                            try
+                            {
+                                data.DirectoryPath = Path.GetDirectoryName(entry.Path);
+                                data.Filename = Path.GetFileName(data.Path);
+                                data.FolderName = Path.GetFileName(data.DirectoryPath);
+                            }
+                            catch (ArgumentException)
+                            {
+                                data.DirectoryPath = "";
+                                data.Filename = "";
+                                data.FolderName = "";
+                            }
                         }
                         else 
                         {

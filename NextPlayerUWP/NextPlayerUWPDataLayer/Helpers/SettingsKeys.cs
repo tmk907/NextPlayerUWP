@@ -19,6 +19,8 @@
         //Layout
         public const string AppTheme = "AppTheme";
         public const string AppAccent = "AppAccent";
+        public const string AccentFromAlbumArt = "AccentFromAlbumArt";
+        public const string AlbumArtInBackground = "AlbumArtInBackground";
 
         //Review
         public const string IsReviewed = "isreviewed5";
@@ -39,6 +41,7 @@
 
 
         public const string MediaScan = "mediascan";
+        public const string MediaScanUseIndexer = "mediascanuseindexer";
 
         public const string SongIndex = "songindex";
         public const string PrevSongIndex = "prevsongindex";

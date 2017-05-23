@@ -1,6 +1,7 @@
 ﻿using Microsoft.OneDrive.Sdk;
 using Microsoft.OneDrive.Sdk.Authentication;
 using NextPlayerUWPDataLayer.Constants;
+using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -146,11 +147,9 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
             var accessToken = ((MsaAuthenticationProvider)oneDriveClient.AuthenticationProvider).CurrentAccountSession.AccessToken;
             string username = "";
             var uri = new Uri($"https://apis.live.net/v5.0/me?access_token={accessToken}");
-            var httpClient = new System.Net.Http.HttpClient();
             try
             {
-                var result = await httpClient.GetAsync(uri);
-                string jsonUserInfo = await result.Content.ReadAsStringAsync();
+                string jsonUserInfo = await ClientHttp.DownloadAsync(uri);
                 if (jsonUserInfo != null)
                 {
                     var json = Newtonsoft.Json.Linq.JObject.Parse(jsonUserInfo);
@@ -191,8 +190,9 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
                 {
                     Diagnostics.Logger2.Current.WriteMessage($"OneDrive GetRootFolderId item == null, rootChildrens.Count = {rootChildrens.Count}", Diagnostics.Logger2.Level.WarningError);
                 }
-                musicFolderId = item.Id;
+                musicFolderId = item?.Id;
             }
+            if (musicFolderId == null) return null;
             var rootTask = cachedFolders.GetOrAdd(musicFolderId, GetRootMusicFolder);
             var f = await rootTask;
             return f?.Id;
@@ -232,10 +232,12 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         {
             Debug.WriteLine("OneDriveService GetSubFolders {0}", new object[] { folderId });
 
+            List<CloudFolder> folders = new List<CloudFolder>();
+            if (String.IsNullOrEmpty(folderId)) return folders;
+
             var contentTask = cache.GetOrAdd(folderId, GetFolderContentInternalAsync);
             var content = await contentTask;
 
-            List<CloudFolder> folders = new List<CloudFolder>();
             if (content == null)
             {
                 ClearCache();
@@ -255,11 +257,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         {
             Debug.WriteLine("OneDriveService GetSongItems {0}", new object[] { folderId });
 
-            var contentTask = cache.GetOrAdd(folderId, GetFolderContentInternalAsync);
-            var folderTask = cachedFolders.GetOrAdd(folderId, GetFolderInternalAsync);
-
             List<SongItem> songs = new List<SongItem>();
             List<SongData> songData = new List<SongData>();
+
+            if (String.IsNullOrEmpty(folderId)) return songs;
+
+            var contentTask = cache.GetOrAdd(folderId, GetFolderContentInternalAsync);
+            var folderTask = cachedFolders.GetOrAdd(folderId, GetFolderInternalAsync);
 
             var content = await contentTask;
             var folder = await folderTask;
@@ -272,7 +276,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
 
             foreach (var item in content)
             {
-                if (item.Audio != null)
+                if (item.Audio != null && item?.Id != null)
                 {
                     songData.Add(CreateSongData(item, userId, folder));
                 }
@@ -285,7 +289,7 @@ namespace NextPlayerUWPDataLayer.CloudStorage.OneDrive
         {
             Debug.WriteLine("OneDrive GetFolderInternalAsync() {0}", new object[] { folderId });
             await LoginSilently();
-            if (!IsAuthenticated) return null;
+            if (!IsAuthenticated || String.IsNullOrEmpty(folderId)) return null;
             try
             {
                 var item = await oneDriveClient.Drive.Items[folderId].Request().GetAsync();

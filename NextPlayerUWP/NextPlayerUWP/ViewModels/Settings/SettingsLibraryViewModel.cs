@@ -49,6 +49,7 @@ namespace NextPlayerUWP.ViewModels.Settings
                 IsUpdating = true;
             }
 
+            UseIndexer = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.MediaScanUseIndexer);
             IgnoreArticles = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.IgnoreArticles);
             var ignoredList = ApplicationSettingsHelper.ReadData<List<string>>(SettingsKeys.IgnoredArticlesList);
             IgnoredArticles = "";
@@ -110,6 +111,17 @@ namespace NextPlayerUWP.ViewModels.Settings
             set { Set(ref sdCardFolders, value); }
         }
 
+        private bool useIndexer = false;
+        public bool UseIndexer
+        {
+            get { return useIndexer; }
+            set
+            {
+                Set(ref useIndexer, value);
+                if (isLoaded) ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, value);
+            }
+        }
+
         public async void UpdateLibrary()
         {
             MediaImport m = new MediaImport(App.FileFormatsHelper);
@@ -162,20 +174,28 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             var folderPicker = new Windows.Storage.Pickers.FolderPicker();
             folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
-            Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null)
+            //folderPicker.FileTypeFilter.Add("*"); //really needed?
+            try
             {
-                MessageDialogHelper helper = new MessageDialogHelper();
-                bool includeSubFolders = await helper.ShowIncludeAllSubFoldersQuestion();
-                SdCardFolders.Add(new SdCardFolder()
+                Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+                if (folder != null)
                 {
-                    Name = folder.Name,
-                    Path = folder.Path,
-                    IncludeSubFolders = includeSubFolders,
-                });
-                var ff = sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:"));
-                var list = new List<SdCardFolder>(ff);
-                await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
+                    MessageDialogHelper helper = new MessageDialogHelper();
+                    bool includeSubFolders = await helper.ShowIncludeAllSubFoldersQuestion();
+                    SdCardFolders.Add(new SdCardFolder()
+                    {
+                        Name = folder.Name,
+                        Path = folder.Path,
+                        IncludeSubFolders = includeSubFolders,
+                    });
+                    var ff = sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:"));
+                    var list = new List<SdCardFolder>(ff);
+                    await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+
             }
         }
 
@@ -196,6 +216,11 @@ namespace NextPlayerUWP.ViewModels.Settings
         private async Task<List<SdCardFolder>> GetSdCardFolders()
         {
             var list = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
+            if (list == null)
+            {
+                list = new List<SdCardFolder>();
+                await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
+            }
             var folder = new SdCardFolder()
             {
                 Name = "Music",

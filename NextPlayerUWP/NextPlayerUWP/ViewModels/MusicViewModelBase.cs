@@ -1,20 +1,20 @@
-﻿using System;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
+using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWPDataLayer.Services;
+using NextPlayerUWPDataLayer.Helpers;
+using Windows.ApplicationModel.DataTransfer;
+using Template10.Services.NavigationService;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using NextPlayerUWPDataLayer.Model;
+using Windows.Foundation;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
-using NextPlayerUWP.Common;
-using Windows.Foundation;
-using NextPlayerUWPDataLayer.Services;
-using NextPlayerUWPDataLayer.Helpers;
-using System.Collections.ObjectModel;
-using Windows.ApplicationModel.DataTransfer;
-using Template10.Services.NavigationService;
-using NextPlayerUWP.Messages;
-using NextPlayerUWP.Messages.Hub;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -102,10 +102,11 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter()); 
         }
 
-        public void Share(object sender, RoutedEventArgs e)
+        public async void Share(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            //NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
+            ShareHelper sh = new ShareHelper();
+            await sh.Share(item);
         }
 
         public async void Pin(object sender, RoutedEventArgs e)
@@ -195,7 +196,7 @@ namespace NextPlayerUWP.ViewModels
                 state.Clear();
             }
             if (NavigationMode.Back == mode) isBack = true;
-            if (RestoreListPosition(mode))
+            if (CanRestoreListPosition(mode))
             {
                 var navState = StateManager.Current.Read(this.GetType().ToString());
                 if (navState != null && navState.Any())
@@ -228,7 +229,7 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        virtual public bool RestoreListPosition(NavigationMode mode)
+        virtual public bool CanRestoreListPosition(NavigationMode mode)
         {
             if (NavigationMode.Back == mode || NavigationMode.Refresh == mode) return true;
             else return false;
@@ -462,6 +463,13 @@ namespace NextPlayerUWP.ViewModels
             App.AddToCache(items);
             DisableMultipleSelection();
             NavigationService.Navigate(App.Pages.AddToPlaylist, new ListOfMusicItems().GetParameter());
+        }
+
+        public async void ShareMany(IEnumerable<MusicItem> items)
+        {
+            ShareHelper sh = new ShareHelper();
+            await sh.Share(items);
+            DisableMultipleSelection();
         }
 
     }

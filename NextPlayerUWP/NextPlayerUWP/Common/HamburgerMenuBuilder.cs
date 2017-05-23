@@ -323,31 +323,18 @@ namespace NextPlayerUWP.Common
 
         private readonly Dictionary<MenuItemType, Type> PageTypes = new Dictionary<MenuItemType, Type>()
         {
-            //{ MenuItemType.AddToPlaylist, typeof(AddToPlaylistView) },
             { MenuItemType.Albums, typeof(AlbumsView)},
-            //{ MenuItemType.Album, typeof(AlbumView)},
             { MenuItemType.AlbumArtists, typeof(AlbumArtistsView)},
-            //{ MenuItemType.AlbumArtist, typeof(AlbumArtistView)},
             { MenuItemType.Artists, typeof(ArtistsView)},
-            //{ MenuItemType.Artist, typeof(ArtistView)},
-            //{ MenuItemType.AudioSettings, typeof(AudioSettingsView)},
-            //{ MenuItemType.CloudStorageFolders, typeof(CloudStorageFoldersView)},
-            //{ MenuItemType.FileInfo, typeof(FileInfoView)},
             { MenuItemType.Folders, typeof(FoldersRootView)},
             { MenuItemType.Genres, typeof(GenresView)},
-            //{ MenuItemType.Licenses, typeof(Licences)},
-            //{ MenuItemType.Lyrics, typeof(LyricsView)},
-            //{ MenuItemType.NewSmartPlaylist, typeof(NewSmartPlaylistView)},
             //{ MenuItemType.NowPlaying, typeof(NowPlayingView)},
             { MenuItemType.NowPlayingSong, typeof(NowPlayingDesktopView)},
             { MenuItemType.NowPlayingPlaylist, typeof(NowPlayingPlaylistView)},
             { MenuItemType.Playlists, typeof(PlaylistsView)},
-            //{ MenuItemType.Playlist, typeof(PlaylistView)},
-            //{ MenuItemType.PlaylistEditable, typeof(PlaylistEditableView)},
             { MenuItemType.Online, typeof(RadiosView)},
             //{ MenuItemType.Settings, typeof(SettingsView)},
             { MenuItemType.Songs, typeof(SongsView)},
-            //{ MenuItemType.TagsEditor, typeof(TagsEditor)},
         };
     }
 }

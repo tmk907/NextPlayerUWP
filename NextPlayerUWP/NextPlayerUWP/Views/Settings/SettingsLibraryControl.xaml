@@ -176,6 +176,19 @@
                                 VerticalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="4,4,4,4">
+                        <TextBlock 
+                            x:Uid="TBUseSystemIndexing"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            FontSize="16"
+                            Margin="0"
+                            Text="Use system indexer (searching is much faster). Disable if some files were not found."/>
+                        <StackPanel 
+                            Orientation="Horizontal"
+                            Margin="8,0,0,0">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}"/>
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel 
                     x:Name="AddMusicFoldersStackPanel"

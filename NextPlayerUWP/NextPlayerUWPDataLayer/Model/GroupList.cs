@@ -6,11 +6,5 @@ namespace NextPlayerUWPDataLayer.Model
     {
         public object Key { get; set; }
         public object Header { get; set; } 
-        //public GroupList() { }
-
-        //public GroupList(object key)
-        //{
-        //    Key = key;
-        //}
     }
 }

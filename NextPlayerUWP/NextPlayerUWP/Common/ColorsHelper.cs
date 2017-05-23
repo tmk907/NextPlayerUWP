@@ -1,6 +1,9 @@
 ﻿using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using System;
+using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 
@@ -38,7 +41,7 @@ namespace NextPlayerUWP.Common
             //((SolidColorBrush)App.Current.Resources["UserAccentBrush3Darker"]).Color = s.GetColorValue(UIColorType.AccentDark3);
         }
 
-        public Color GetSavedUserAccentColor()
+        public Color GetSavedAppAccentColor()
         {
             string hexColor = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppAccent) as string;
             if (hexColor == null) return Windows.UI.Color.FromArgb(255, 0, 120, 215);
@@ -50,7 +53,7 @@ namespace NextPlayerUWP.Common
             return color;
         }
 
-        public Color[] GetWin10Colors()
+        public Color[] GetWin10AccentColors()
         {
             Color[] colors = new Color[48];
             for(int i = 0; i < 48; i++)
@@ -64,19 +67,27 @@ namespace NextPlayerUWP.Common
             return colors;
         }
 
-        public void RestoreUserAccentColors()
+        public void RestoreAppAccentColors()
         {
-            var accent = GetSavedUserAccentColor();
-            ChangeCurrentAccentColor(accent);          
+            var accent = GetSavedAppAccentColor();
+            ChangeAppAccentColor(accent);          
         }
  
-        public void ChangeCurrentAccentColor(Color color)
+        public void ChangeAppAccentColor(Color color)
         {
             foreach (var dict in App.Current.Resources.ThemeDictionaries)
             {
                 var theme = dict.Value as Windows.UI.Xaml.ResourceDictionary;
-                theme["UserAccentColor"] = color;
+                
                 ((SolidColorBrush)theme["UserAccentBrush"]).Color = color;
+
+                byte transparency = 128;
+                if (dict.Key as string == "Dark")
+                {
+                    transparency = 200;
+                }
+                var colorTr = Color.FromArgb(transparency, color.R, color.G, color.B);
+                ((SolidColorBrush)theme["UserAccentBrushTr"]).Color = colorTr;
 
                 ((SolidColorBrush)theme["SystemControlBackgroundAccentBrush"]).Color = color;
                 ((SolidColorBrush)theme["SystemControlDisabledAccentBrush"]).Color = color;
@@ -97,7 +108,7 @@ namespace NextPlayerUWP.Common
             //SetAccentColorShades(color);
         }
 
-        public void SaveUserAccentColor(Color color)
+        public void SaveAppAccentColor(Color color)
         {
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppAccent, color.ToString());
         }
@@ -108,6 +119,30 @@ namespace NextPlayerUWP.Common
             return "ms-appx:///Assets/Albums/Colors/" + hexColor.Substring(1) + "-min.png";
         }
 
+        private readonly Uri defaultAlbumArtUri = new Uri(AppConstants.SongCoverBig);
+        public async Task<Color> GetDominantColorFromSavedAlbumArt(Uri albumArtUri)
+        {
+            Color dominant = GetSavedAppAccentColor();
+            if (albumArtUri != defaultAlbumArtUri)
+            {
+                try
+                {
+                    var file = await StorageFile.GetFileFromApplicationUriAsync(albumArtUri);
+                    using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                    {
+                        var decoder = await BitmapDecoder.CreateAsync(stream);
+                        ColorThiefDotNet.ColorThief c = new ColorThiefDotNet.ColorThief();
+                        var q = await c.GetColor(decoder, 10, true);
+                        dominant = Color.FromArgb(q.Color.A, q.Color.R, q.Color.G, q.Color.B);
+                    }
+                }
+                catch (System.IO.FileNotFoundException ex)
+                {
+
+                }
+            }
+            return dominant;
+        }
 
         public double GetHue(Color color)
         {

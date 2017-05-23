@@ -28,7 +28,7 @@ namespace NextPlayerUWP.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
+            App.OnNavigatedToNewView(true);
             // Parameter is item ID
             ViewModelLocator vml = new ViewModelLocator();
             var service = vml.SettingsVMService;

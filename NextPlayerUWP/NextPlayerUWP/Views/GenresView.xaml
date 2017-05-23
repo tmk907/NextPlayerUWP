@@ -222,7 +222,7 @@
                 <mycontrols:AlternatingRowListView x:Name="GenresListView"
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                    ItemsSource="{Binding Genres}"
+                    ItemsSource="{x:Bind ViewModel.Genres, Mode=OneWay}"
                     ItemTemplate="{StaticResource GenreItemTemplateDesktop}"
                     Margin="12,0,0,0"
                     SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"

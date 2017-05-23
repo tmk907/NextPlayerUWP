@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,12 +29,34 @@ namespace NextPlayerUWP.ViewModels
 
         private async void MediaImport_MediaImported(string s)
         {
-            await Dispatcher.DispatchAsync(() => ReloadData());
+            Template10.Common.IDispatcherWrapper d = Dispatcher;
+            if (d == null)
+            {
+                d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            }
+            if (d == null)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("SongsViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("Dispatcher null");
+                return;
+            }
+            await d.DispatchAsync(() => ReloadData());
         }
 
         private async void App_SongUpdated(int id)
         {
-            await Dispatcher.DispatchAsync(() => ReloadData());
+            Template10.Common.IDispatcherWrapper d = Dispatcher;
+            if (d == null)
+            {
+                d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            }
+            if (d == null)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("SongsViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("Dispatcher null");
+                return;
+            }
+            await d.DispatchAsync(() => ReloadData());
         }
 
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();

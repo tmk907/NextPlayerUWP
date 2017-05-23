@@ -2,7 +2,6 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Model;
 using Microsoft.Toolkit.Uwp.UI.Controls;
@@ -28,6 +27,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += View_Unloaded;
             ViewModel = (AlbumArtistViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
+            selectionButtons.ShowShareButton = true;
         }
         //~AlbumArtistView()
         //{

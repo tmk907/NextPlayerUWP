@@ -9,19 +9,21 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
-using NextPlayerUWPDataLayer.CloudStorage;
 
 namespace NextPlayerUWP.ViewModels
 {
     public class FoldersViewModel : MusicViewModelBase
     {
         SortingHelperForSongItems sortingHelper;
+        FoldersVMHelper helper;
         public FoldersViewModel()
         {
             sortingHelper = new SortingHelperForSongItems("Folders");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             MediaImport.MediaImported += MediaImport_MediaImported;
+            ViewModelLocator vml = new ViewModelLocator();
+            helper = vml.FolderVMHelper;
         }
 
         private async void MediaImport_MediaImported(string s)
@@ -42,8 +44,8 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ReloadData()
         {
-            Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-            SortMusicItems();
+            items.Clear();
+            await LoadData();
         }
 
         private string folderName = "";
@@ -51,13 +53,6 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return folderName; }
             set { Set(ref folderName, value); }
-        }
-
-        private ObservableCollection<FolderItem> folders = new ObservableCollection<FolderItem>();
-        public ObservableCollection<FolderItem> Folders
-        {
-            get { return folders; }
-            set { Set(ref folders, value); }
         }
 
         private ObservableCollection<MusicItem> items = new ObservableCollection<MusicItem>();
@@ -71,74 +66,106 @@ namespace NextPlayerUWP.ViewModels
         {
             bool subfolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
             FolderName = directory ?? "";
-            //if (folders.Count == 0)
-            //{
-            Folders = await DatabaseManager.Current.GetFolderItemsAsync();
-            //SortItems(null, null);
-            //}
+            
             if (items.Count != 0)
             {
                 items = new ObservableCollection<MusicItem>();
             }
 
-            if (folders.Count > 0)
-            {
-                if (directory == null)
-                {
-                    string dir = "!";
-                    List<string> roots = new List<string>();
-                    //var f1 = folders.OrderBy(f => f.Directory).FirstOrDefault();
-                    foreach(var f1 in folders.OrderBy(f => f.Directory))
-                    {
-                        if (!f1.Directory.StartsWith(dir))
-                        {
-                            if (subfolders) f1.SongsNumber = folders.Where(f => f.Directory.StartsWith(f1.Directory)).Sum(g => g.SongsNumber);
-                            Items.Add(f1);
-                            dir = f1.Directory;
-                            roots.Add(dir);
-                        }
-                    }                  
-                }
-                else
-                {
-                    int numberOfSeparators = directory.Count(c=>c.Equals('\\')) + 1;
-                    var f2 = folders.Where(f => (f.Directory.StartsWith(directory+@"\") && f.Directory.Count(c => c.Equals('\\')) == numberOfSeparators));
-                    foreach(var f3 in f2)
-                    {
-                        if (subfolders) f3.SongsNumber = folders.Where(f => f.Directory.StartsWith(f3.Directory)).Sum(g => g.SongsNumber);
-                        Items.Add(f3);
-                    }
-                    var s1 = await DatabaseManager.Current.GetSongItemsFromFolderAsync(directory);
-                    foreach (var s in s1)
-                    {
-                        Items.Add(s);
-                    }
-                }
-            }
             if (directory == null)
             {
-                CloudStorageServiceFactory fact = new CloudStorageServiceFactory();
-                var items = await fact.GetAllRootFolders();
-                foreach (var item in items)
-                {
-                    Items.Add(item);
-                }
+                return;
             }
+
+            ObservableCollection<MusicItem> temp = new ObservableCollection<MusicItem>(helper.GetSubFolders(directory));
+            var songs = await helper.GetSongsFromFolder(directory);
+            foreach (var s in songs)
+            {
+                temp.Add(s);
+            }
+            Items = temp;
+
             SortMusicItems();
         }
 
         public override void FreeResources()
         {
-            folders = null;
             items = null;
-            folders = new ObservableCollection<FolderItem>();
             items = new ObservableCollection<MusicItem>();
         }
 
         string directory;
-        public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)
-        {   
+
+        private class ListPosition
+        {
+            public int FirstVisibleItemIndex;
+            public string PositionKey;
+        }
+
+        private Dictionary<string, ListPosition> scrollCache = new Dictionary<string, ListPosition>();
+
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            App.OnNavigatedToNewView(true);
+            isBack = false;
+            firstVisibleItemIndex = 0;
+            selectedItemIndex = 0;
+            positionKey = null;
             directory = parameter as string;
+
+            if (state.ContainsKey(nameof(SelectedComboBoxItem)))
+            {
+                SelectedComboBoxItem = ComboBoxItemValues.ElementAt((int)state[nameof(SelectedComboBoxItem)]);
+            }
+            //if (state.Any())
+            //{
+            //    if (state.ContainsKey(nameof(positionKey)))
+            //    {
+            //        positionKey = state[nameof(positionKey)] as string;
+            //    }
+            //    if (state.ContainsKey(nameof(firstVisibleItemIndex)))
+            //    {
+            //        firstVisibleItemIndex = (int)state[nameof(firstVisibleItemIndex)];
+            //    }
+            //    state.Clear();
+            //}
+            if (NavigationMode.Back == mode) isBack = true;
+
+            ListPosition lp = null;
+            if (scrollCache.TryGetValue(directory, out lp))
+            {
+                scrollCache.Remove(directory);
+                if (CanRestoreListPosition(mode))
+                {
+                    firstVisibleItemIndex = lp.FirstVisibleItemIndex;
+                    positionKey = lp.PositionKey;
+                    //var navState = StateManager.Current.Read(this.GetType().ToString());
+                    //if (navState != null && navState.Any())
+                    //{
+                    //    if (navState.ContainsKey(nameof(firstVisibleItemIndex)))
+                    //    {
+                    //        firstVisibleItemIndex = (int)navState[nameof(firstVisibleItemIndex)];
+                    //    }
+                    //    if (navState.ContainsKey(nameof(positionKey)))
+                    //    {
+                    //        positionKey = navState[nameof(positionKey)] as string;
+                    //    }
+                    //    StateManager.Current.Clear(this.GetType().ToString());//is it necessary?
+                    //}
+                }
+            }
+
+            onNavigatedCompleted = true;
+            if (onLoadedCompleted)
+            {
+                System.Diagnostics.Debug.WriteLine("OnNavigatedToAsync LoadAndScroll()");
+                await LoadAndScroll();
+            }
+
+            if (mode == NavigationMode.New || mode == NavigationMode.Forward)
+            {
+                TelemetryAdapter.TrackPageView(this.GetType().ToString());
+            }
         }
 
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
@@ -146,6 +173,73 @@ namespace NextPlayerUWP.ViewModels
             items = new ObservableCollection<MusicItem>();
 
             await base.OnNavigatingFromAsync(args);
+        }
+
+        public override async Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
+        {
+            firstVisibleItemIndex = 0;
+            if (listView != null && listView.ItemsPanelRoot != null)
+            {
+                positionKey = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, ItemToKeyHandler);
+
+                if (listView.ItemsPanelRoot.GetType() == typeof(ItemsStackPanel))
+                {
+                    var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
+                    firstVisibleItemIndex = isp.FirstVisibleIndex;
+                }
+                else
+                {
+                    var isp = (ItemsWrapGrid)listView.ItemsPanelRoot;
+                    firstVisibleItemIndex = isp.FirstVisibleIndex;
+                }
+            }
+
+            //Dictionary<string, object> navState = new Dictionary<string, object>();
+            //navState.Add(nameof(firstVisibleItemIndex), firstVisibleItemIndex);
+            //navState.Add(nameof(positionKey), positionKey);
+            //StateManager.Current.Save(this.GetType().ToString(), navState);
+
+            //if (suspending)
+            //{
+            //    state[nameof(firstVisibleItemIndex)] = firstVisibleItemIndex;
+            //    state[nameof(positionKey)] = positionKey;
+            //    if (ComboBoxItemValues.Count > 0)
+            //    {
+            //        state[nameof(SelectedComboBoxItem)] = ComboBoxItemValues.IndexOf(SelectedComboBoxItem);
+            //    }
+            //}
+            DisableMultipleSelection();
+            var newPosition = new ListPosition()
+            {
+                FirstVisibleItemIndex = this.firstVisibleItemIndex,
+                PositionKey = positionKey
+            };
+            if (scrollCache.ContainsKey(directory))
+            {
+                scrollCache[directory] = newPosition;
+            }
+            else
+            {
+                scrollCache.Add(directory, newPosition);
+            }
+
+            await Task.CompletedTask;
+        }
+
+        private string ItemToKeyHandler(object item)
+        {
+            if (item == null) return null;
+            MusicItem mi;
+
+            if (item.GetType() == typeof(GroupList))
+            {
+                mi = (MusicItem)(((GroupList)item)[0]);
+            }
+            else
+            {
+                mi = (MusicItem)item;
+            }
+            return mi.GetParameter();
         }
 
         public async void ItemClicked(object sender, ItemClickEventArgs e)

@@ -38,6 +38,29 @@
             <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
                             Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <MenuFlyout x:Key="ContextMenuFavouriteRadio">
+            <MenuFlyoutItem x:Uid="MFIPlayNow" Text="Play now" 
+                            Click="{x:Bind ViewModel.PlayNow}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIPlayNext" Text="Play next" 
+                            Click="{x:Bind ViewModel.PlayNext}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIAddToNowPlaying" Text="Add to now playing" 
+                            Click="{x:Bind ViewModel.AddToNowPlaying}" CommandParameter="{Binding}"/>
+            <!--<MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist"
+                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="MFIEditName" Text="Edit name"
+                            Click="EditName_Click" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem x:Uid="MFIRemoveFromFavourites" Text="Remove from favourites"
+                            Click="{x:Bind ViewModel.DeleteFromFavourites}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
+        <DataTemplate x:Key="RadioDataTemplate" x:DataType="data:RadioItem">
+            <Grid RightTapped="RadioItem_RightTapped" Background="Transparent">
+                <TextBlock Text="{x:Bind Name}"
+                           TextTrimming="CharacterEllipsis"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="StreamItemTemplate" x:DataType="data:SongItem">
             <Grid RightTapped="StreamsListViewItem_RightTapped" Background="Transparent">
                 <Grid.RowDefinitions>
@@ -122,7 +145,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <Grid />
+                        <Grid/>
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
@@ -384,58 +407,47 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
+        <controls:PageHeader 
+            Grid.Row="0" 
+            Grid.ColumnSpan="2"
 			BackButtonVisibility="Collapsed" 
 			Frame="{x:Bind Frame, Mode=OneWay}"
-			Content="Radio"
-			x:Uid="PageHeaderRadios"
+			Content="Streaming"
+			x:Uid="PageHeaderStreaming"
 			VisualStateNarrowMinWidth="0"
 			VisualStateNormalMinWidth="720">
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
-            <Pivot Style="{StaticResource RightPanelPivotStyle}">
-                <!--<PivotItem  Style="{StaticResource PivotItemStyle}">
-                    <PivotItem.Header>
-                        <TextBlock Text="Jamendo" FontSize="22"/>
-                    </PivotItem.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <ProgressBar Grid.Row="0"
-                            Height="8"
-                            IsIndeterminate="True" 
-                            Foreground="{ThemeResource UserAccentBrush}"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Stretch"
-                            IsEnabled="{x:Bind ViewModel.Updating, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.Updating, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
-                        <mycontrols:AlternatingRowListView x:Name="RadiosListView"
-                            EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-                            OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                            ItemsSource="{Binding Radios, Mode=OneWay}"
-                            ItemTemplate="{StaticResource RadioItemTemplateDesktop}"
-                            SelectionMode="None"
-                            IsItemClickEnabled="True"
-                            ItemClick="{x:Bind ViewModel.ItemClicked}"
-                            Margin="12,4,0,4"
-                            ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}">
-                            <mycontrols:AlternatingRowListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsStackPanel Orientation="Vertical"/>
-                                </ItemsPanelTemplate>
-                            </mycontrols:AlternatingRowListView.ItemsPanel>
-                        </mycontrols:AlternatingRowListView>
-                    </Grid>
-                </PivotItem>-->
+            <ContentDialog x:Name="ContentDialogEditName"
+                Grid.Row="1"
+                x:Uid="ContentDialogEditName"
+                VerticalAlignment="Center"
+                Title="Edit name"
+                PrimaryButtonText="Save"
+                IsPrimaryButtonEnabled="{Binding Text, ElementName=editradioNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
+                PrimaryButtonClick="{x:Bind ViewModel.SaveEditedName}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Uid="TBPlaylistNewName"
+                            Margin="0,4,4,4"
+                            Text="New name:"/>
+                        <TextBox x:Name="editradioNameTB"
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.NewName, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ContentDialog.Content>
+            </ContentDialog>
+            <Pivot
+                Style="{StaticResource RightPanelPivotStyle}" 
+                SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
                 <PivotItem  Style="{StaticResource PivotItemStyle}">
                     <PivotItem.Header>
-                        <TextBlock x:Uid="TBStreams" Text="Streams" FontSize="22"/>
+                        <TextBlock x:Uid="TBStreamsLower" Text="Streams" FontSize="22"/>
                     </PivotItem.Header>
                     <mycontrols:AlternatingRowListView x:Name="StreamsListView"
-                        Grid.Row="2"
                         EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                         OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
                         ItemsSource="{Binding Streams, Mode=OneWay}"
@@ -452,6 +464,39 @@
                             </ItemsPanelTemplate>
                         </mycontrols:AlternatingRowListView.ItemsPanel>
                     </mycontrols:AlternatingRowListView>
+                </PivotItem>
+                <PivotItem  Style="{StaticResource PivotItemStyle}">
+                    <PivotItem.Header>
+                        <TextBlock x:Uid="TBFavouritesLower" Text="Favourites" FontSize="22"/>
+                    </PivotItem.Header>
+                    <mycontrols:AlternatingRowListView
+                        EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                        OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                        ItemsSource="{x:Bind ViewModel.FavouriteRadios, Mode=OneWay}"
+                        ItemTemplate="{StaticResource RadioDataTemplate}"
+                        SelectionMode="None"
+                        IsItemClickEnabled="True"
+                        ItemClick="{x:Bind ViewModel.ItemClicked}"
+                        Margin="12,4,0,4"
+                        ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
+                        >
+                        <mycontrols:AlternatingRowListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </mycontrols:AlternatingRowListView.ItemsPanel>
+                    </mycontrols:AlternatingRowListView>
+                </PivotItem>
+                <PivotItem  Style="{StaticResource PivotItemStyle}">
+                    <PivotItem.Header>
+                        <TextBlock x:Uid="TBRadioLower" Text="radio" FontSize="22"/>
+                    </PivotItem.Header>
+                    <Button 
+                        Content="more radio stations" 
+                        Click="GoToCuteRadioView" 
+                        MinWidth="128" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
                 </PivotItem>
             </Pivot>
         </Grid>

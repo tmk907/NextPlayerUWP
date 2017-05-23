@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <!-- <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform> -->
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{25899887-6252-4635-84B5-0C54C736F0FB}</ProjectGuid>
@@ -14,14 +12,10 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -118,8 +112,12 @@
     <Compile Include="CloudStorage\CloudAccounts.cs" />
     <Compile Include="CloudStorage\OneDrive\OneDriveCredentialVault.cs" />
     <Compile Include="Diagnostic\Logger2.cs" />
+    <Compile Include="Helpers\ClientHttp.cs" />
     <Compile Include="Helpers\DeviceFamilyHelper.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Helpers\LocalFileNames.cs" />
     <Compile Include="Helpers\SettingsKeys.cs" />
+    <Compile Include="Helpers\Stoper.cs" />
     <Compile Include="Helpers\TaskCache.cs" />
     <Compile Include="Model\AlbumArtistItem.cs" />
     <Compile Include="Model\CloudRootFolder.cs" />
@@ -206,6 +204,13 @@
     <Compile Include="Playlists\PlaylistFileSaver.cs" />
     <Compile Include="Playlists\PlaylistImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Radio\CuteRadio\CuteRadioCache.cs" />
+    <Compile Include="Radio\CuteRadio\CuteRadioService.cs" />
+    <Compile Include="Radio\CuteRadio\Model\Item.cs" />
+    <Compile Include="Radio\CuteRadio\Model\Collection.cs" />
+    <Compile Include="Radio\CuteRadio\Model\Station.cs" />
+    <Compile Include="Radio\CuteRadio\Model\Stations.cs" />
+    <Compile Include="Radio\CuteRadio\UriBuilder.cs" />
     <Compile Include="Services\CredentialLockerService.cs" />
     <Compile Include="Services\FileFormatsHelper.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
@@ -271,6 +276,7 @@
     <Compile Include="Tables\ArtistsTable.cs" />
     <Compile Include="Tables\CachedScrobble.cs" />
     <Compile Include="Tables\CloudAccountsTable.cs" />
+    <Compile Include="Tables\FavouriteRadiosTable.cs" />
     <Compile Include="Tables\FoldersTable.cs" />
     <Compile Include="Tables\FutureAccessTokensTable.cs" />
     <Compile Include="Tables\GenresTable.cs" />
@@ -288,8 +294,8 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.UWP.2015, Version=3.15.2">
-      <Name>SQLite for Universal Windows Platform %28SQLite.UWP.2015, Version=3.15.2%29</Name>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.18.0">
+      <Name>SQLite for Universal Windows Platform %28SQLite.UWP.2015, Version=3.18.0%29</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>

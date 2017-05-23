@@ -430,7 +430,7 @@ namespace NextPlayerUWPDataLayer.Services
                         code = await TrackLove(scrobble.Artist, scrobble.Track);
                         if (code == StatusCode.Success)
                         {
-                            DatabaseManager.Current.DeleteCachedScrobble(scrobble.id);
+                            await DatabaseManager.Current.DeleteCachedScrobbleAsync(scrobble.id);
                         }
                         else
                         {
@@ -441,7 +441,7 @@ namespace NextPlayerUWPDataLayer.Services
                         code = await TrackUnlove(scrobble.Artist, scrobble.Track);
                         if (code == StatusCode.Success)
                         {
-                            DatabaseManager.Current.DeleteCachedScrobble(scrobble.id);
+                            await DatabaseManager.Current.DeleteCachedScrobbleAsync(scrobble.id);
                         }
                         else
                         {

@@ -56,8 +56,8 @@
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <DataTemplate x:Key="FolderItemTemplateDesktop" x:DataType="data:FolderItem">
             <Grid RightTapped="ListViewItem_RightTapped" Background="Transparent">
@@ -420,7 +420,7 @@
                 <mycontrols:AlternatingRowListView x:Name="FoldersListView"
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                    ItemsSource="{Binding Items}"
+                    ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
                     ItemTemplateSelector="{StaticResource FolderDataTemplateSelectorDesktop}"
                     SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                     IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
@@ -429,11 +429,11 @@
                     ItemContainerStyle="{StaticResource ListViewItemContainerStyle4b}"
                     CanDragItems="True"
                     DragItemsStarting="{x:Bind ViewModel.DragStarting}">
-                        <mycontrols:AlternatingRowListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </mycontrols:AlternatingRowListView.ItemsPanel>
+                    <mycontrols:AlternatingRowListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </mycontrols:AlternatingRowListView.ItemsPanel>
                 </mycontrols:AlternatingRowListView>
             </Grid>
         </Grid>

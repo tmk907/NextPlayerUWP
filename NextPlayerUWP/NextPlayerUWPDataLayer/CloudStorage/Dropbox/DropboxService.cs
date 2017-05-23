@@ -164,7 +164,13 @@ namespace NextPlayerUWPDataLayer.CloudStorage.DropboxStorage
         {
             Debug.WriteLine("DropboxService Logout()");
             refreshToken = null;
-            await dropboxClient.Auth.TokenRevokeAsync();
+            try
+            {
+                await dropboxClient.Auth.TokenRevokeAsync();
+            }
+            catch (BadInputException ex)
+            {
+            }
             await CloudAccounts.Instance.DeleteAccount(userId, CloudStorageType.Dropbox);
             credentials.DeleteCredentials(userId);
         }

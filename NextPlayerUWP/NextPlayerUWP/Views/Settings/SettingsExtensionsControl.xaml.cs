@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.ViewModels.Settings;
+﻿using NextPlayerUWP.Extensions;
+using NextPlayerUWP.ViewModels.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -19,6 +20,12 @@ namespace NextPlayerUWP.Views.Settings
         {
             ViewModel = (SettingsExtensionsViewModel)args.NewValue;
             ViewModel.Load();
+        }
+
+        private void InstallExtension_Click(object sender, RoutedEventArgs e)
+        {
+            MyAvailableExtension ext = (MyAvailableExtension)((Button)sender).Tag;
+            ViewModel.InstallExtension(ext);
         }
     }
 }

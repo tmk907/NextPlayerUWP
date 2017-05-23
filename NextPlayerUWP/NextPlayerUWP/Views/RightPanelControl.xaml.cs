@@ -1,11 +1,9 @@
 ﻿using Microsoft.Advertising.WinRT.UI;
 using NextPlayerUWP.ViewModels;
-using System.Threading.Tasks;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -14,8 +12,6 @@ namespace NextPlayerUWP.Views
     public sealed partial class RightPanelControl : UserControl
     {
         private RightPanelViewModel ViewModel;
-        private WebView webView;
-        //private AdDuplex.AdControl controlAdDuplex;
         //private AdControl controlMicrosoftAd;
 
         public RightPanelControl()
@@ -29,33 +25,24 @@ namespace NextPlayerUWP.Views
         private void RightPanelControl_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.OnLoaded(NowPlayingPlaylistListView);
-            webView = ViewModel.GetWebView();
-            WebGrid.Children.Add(webView);
-            AddAdControl();
+            //AddAdControl();
         }
 
         private void RightPanelControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            WebGrid.Children.Remove(webView);
-            webView = null;
             ViewModel.OnUnLoaded();
-            RemoveAdControl();
+            //RemoveAdControl();
+        }
+
+        private async void SearchButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await ContentDialogSearchLyrics.ShowAsync();
         }
 
         private void AddAdControl()
         {
             if (Microsoft.Toolkit.Uwp.ConnectionHelper.IsInternetAvailable)
             {
-                //controlAdDuplex = new AdDuplex.AdControl()
-                //{
-                //    AdUnitId = "202211",
-                //    AppKey = "bfe9d689-7cf7-4add-84fe-444dc72e6f36",
-                //    CollapseOnError = true,
-                //};
-                ////controlAdDuplex.AdLoadingError += AdControl_AdLoadingError;
-
-                //GridAdControlRightPanel1.Children.Add(controlAdDuplex);
-
 
                 //controlMicrosoftAd = new AdControl()
                 //{
@@ -75,9 +62,7 @@ namespace NextPlayerUWP.Views
         {
             //if (controlAdDuplex != null)
             //{
-            //    //GridAdControlRightPanel1.Children.Remove(controlAdDuplex);
-            //    ////controlAdDuplex.AdLoadingError -= AdControl_AdLoadingError;
-            //    //controlAdDuplex = null;
+            //    
 
             //    //GridAdControlRightPanel1.Children.Remove(controlMicrosoftAd);
             //    //controlMicrosoftAd = null;
@@ -126,12 +111,6 @@ namespace NextPlayerUWP.Views
         private void AdControl_AdRefreshed(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("AdControl refreshed (" + ((AdControl)sender).Name + ") has ad:" + ((AdControl)sender).HasAd.ToString());
-        }
-
-
-        private void AdControl_AdLoadingError(object sender, AdDuplex.Common.Models.AdLoadingErrorEventArgs e)
-        {
-            //NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage(e.Error.Message, NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.Debug);
         }
     }
 }

@@ -8,11 +8,14 @@ namespace NextPlayerUWP.ViewModels
     {
         public PlayerViewModelBase()
         {
+            System.Diagnostics.Debug.WriteLine("PlayerViewModelBase()");
+            isInitialized = false;
             Init();
+            seekButtonsHelper = new SeekButtonsHelper();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
         }
-
+        private bool isInitialized;
         private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
         {
             Init();
@@ -22,20 +25,22 @@ namespace NextPlayerUWP.ViewModels
         {
             PlaybackService.MediaPlayerStateChanged -= ChangePlayButtonContent;
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.Volume, Volume);
+            isInitialized = false;
         }
 
         private void Init()
         {
+            System.Diagnostics.Debug.WriteLine("PlayerViewModelBase.Init()");
+            if (isInitialized) return;
             RepeatMode = Repeat.CurrentState();
             ShuffleMode = Shuffle.CurrentState();
             Volume = (int)(ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.Volume) ?? 100);
             PlaybackRate = PlaybackService.Instance.PlaybackRatePercent;
             AudioBalance = PlaybackService.Instance.AudioBalance;
 
-            seekButtonsHelper = new SeekButtonsHelper();
-
             ChangePlayButtonContent(PlaybackService.Instance.PlayerState);
             PlaybackService.MediaPlayerStateChanged += ChangePlayButtonContent;
+            isInitialized = true;
         }
 
         private bool isMuted = false;

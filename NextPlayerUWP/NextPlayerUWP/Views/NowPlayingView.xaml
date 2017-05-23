@@ -5,9 +5,9 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:imagecontrol="using:SimpleCrossfadingImageUWP"
     xmlns:triggers="using:WindowsStateTriggers"
     xmlns:tconverters="using:Template10.Converters"
     DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}"
@@ -356,30 +356,264 @@
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="TextLineBounds" Value="TrimToBaseline"/>
         </Style>
+
+        <Storyboard x:Name="ShowBGImage">
+            <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundImage">
+                <DoubleAnimation.EasingFunction>
+                    <PowerEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Name="ShowPrimaryImage">
+            <DoubleAnimation Duration="0:0:1" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PrimaryImage">
+                <DoubleAnimation.EasingFunction>
+                    <PowerEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Style x:Key="NowPlayingPivotStyle" TargetType="Pivot">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="{ThemeResource PivotBackground}"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Grid/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Pivot">
+                        <Grid x:Name="RootElement" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <Grid.Resources>
+                                <Style x:Key="BaseContentControlStyle" TargetType="ContentControl">
+                                    <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="FontSize" Value="15"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ContentControl">
+                                                <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" OpticalMarginAlignment="TrimSideBearings" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <Style x:Key="TitleContentControlStyle" BasedOn="{StaticResource BaseContentControlStyle}" TargetType="ContentControl">
+                                    <Setter Property="FontFamily" Value="{ThemeResource PivotTitleFontFamily}"/>
+                                    <Setter Property="FontWeight" Value="{ThemeResource PivotTitleThemeFontWeight}"/>
+                                    <Setter Property="FontSize" Value="{ThemeResource PivotTitleFontSize}"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Orientation">
+                                    <VisualState x:Name="Portrait">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TitleContentControl">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPortraitThemePadding}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Landscape">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TitleContentControl">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotLandscapeThemePadding}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="NavigationButtonsVisibility">
+                                    <VisualState x:Name="NavigationButtonsHidden"/>
+                                    <VisualState x:Name="NavigationButtonsVisible">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="NextButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled" Storyboard.TargetName="NextButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PreviousButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled" Storyboard.TargetName="PreviousButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PreviousButtonVisible">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PreviousButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled" Storyboard.TargetName="PreviousButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="NextButtonVisible">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="NextButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled" Storyboard.TargetName="NextButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="HeaderStates">
+                                    <VisualState x:Name="HeaderDynamic"/>
+                                    <VisualState x:Name="HeaderStatic">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Header">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="StaticHeader">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentControl x:Name="TitleContentControl" ContentTemplate="{TemplateBinding TitleTemplate}" Content="{TemplateBinding Title}" IsTabStop="False" Margin="{StaticResource PivotPortraitThemePadding}" Style="{StaticResource TitleContentControlStyle}" Visibility="Collapsed"/>
+                            <Grid Grid.Row="1">
+                                <Grid.Resources>
+                                    <ControlTemplate x:Key="NextTemplate" TargetType="Button">
+                                        <Border x:Name="Root" BorderBrush="{ThemeResource PivotNextButtonBorderBrush}" BorderThickness="{ThemeResource PivotNavButtonBorderThemeThickness}" Background="{ThemeResource PivotNextButtonBackground}">
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <VisualState x:Name="Normal"/>
+                                                    <VisualState x:Name="PointerOver">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonBackgroundPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonBorderBrushPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Arrow">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonForegroundPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Pressed">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonBackgroundPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonBorderBrushPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Arrow">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonForegroundPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                            <FontIcon x:Name="Arrow" Foreground="{ThemeResource PivotNextButtonForeground}" FontSize="12" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE0E3;" HorizontalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                    <ControlTemplate x:Key="PreviousTemplate" TargetType="Button">
+                                        <Border x:Name="Root" BorderBrush="{ThemeResource PivotPreviousButtonBorderBrush}" BorderThickness="{ThemeResource PivotNavButtonBorderThemeThickness}" Background="{ThemeResource PivotPreviousButtonBackground}">
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <VisualState x:Name="Normal"/>
+                                                    <VisualState x:Name="PointerOver">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonBackgroundPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonBorderBrushPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Arrow">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonForegroundPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Pressed">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonBackgroundPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonBorderBrushPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Arrow">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonForegroundPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                            <FontIcon x:Name="Arrow" Foreground="{ThemeResource PivotPreviousButtonForeground}" FontSize="12" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE0E2;" HorizontalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Grid.Resources>
+                                <ScrollViewer x:Name="ScrollViewer" BringIntoViewOnFocusChange="False" HorizontalSnapPointsAlignment="Center" HorizontalSnapPointsType="MandatorySingle" HorizontalScrollBarVisibility="Hidden" Margin="{TemplateBinding Padding}" Template="{StaticResource ScrollViewerScrollBarlessTemplate}" VerticalSnapPointsType="None" VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled" VerticalContentAlignment="Stretch" ZoomMode="Disabled">
+                                    <PivotPanel x:Name="Panel" VerticalAlignment="Stretch">
+                                        <Grid x:Name="PivotLayoutElement">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="0"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.RenderTransform>
+                                                <CompositeTransform x:Name="PivotLayoutElementTranslateTransform"/>
+                                            </Grid.RenderTransform>
+                                            <ContentPresenter x:Name="LeftHeaderPresenter" ContentTemplate="{TemplateBinding LeftHeaderTemplate}" Content="{TemplateBinding LeftHeader}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                            <ContentControl x:Name="HeaderClipper" Grid.Column="1" HorizontalContentAlignment="Stretch" UseSystemFocusVisuals="True">
+                                                <ContentControl.Clip>
+                                                    <RectangleGeometry x:Name="HeaderClipperGeometry"/>
+                                                </ContentControl.Clip>
+                                                <Grid Background="{ThemeResource PivotHeaderBackground}">
+                                                    <Grid.RenderTransform>
+                                                        <CompositeTransform x:Name="HeaderOffsetTranslateTransform"/>
+                                                    </Grid.RenderTransform>
+                                                    <PivotHeaderPanel x:Name="StaticHeader" Visibility="Collapsed">
+                                                        <PivotHeaderPanel.RenderTransform>
+                                                            <CompositeTransform x:Name="StaticHeaderTranslateTransform"/>
+                                                        </PivotHeaderPanel.RenderTransform>
+                                                    </PivotHeaderPanel>
+                                                    <PivotHeaderPanel x:Name="Header">
+                                                        <PivotHeaderPanel.RenderTransform>
+                                                            <CompositeTransform x:Name="HeaderTranslateTransform"/>
+                                                        </PivotHeaderPanel.RenderTransform>
+                                                    </PivotHeaderPanel>
+                                                </Grid>
+                                            </ContentControl>
+                                            <Button x:Name="PreviousButton" Background="Transparent" Grid.Column="1" HorizontalAlignment="Left" Height="36" IsTabStop="False" IsEnabled="False" Margin="{ThemeResource PivotNavButtonMargin}" Opacity="0" Template="{StaticResource PreviousTemplate}" UseSystemFocusVisuals="False" VerticalAlignment="Top" Width="20"/>
+                                            <Button x:Name="NextButton" Background="Transparent" Grid.Column="1" HorizontalAlignment="Right" Height="36" IsTabStop="False" IsEnabled="False" Margin="{ThemeResource PivotNavButtonMargin}" Opacity="0" Template="{StaticResource NextTemplate}" UseSystemFocusVisuals="False" VerticalAlignment="Top" Width="20"/>
+                                            <ContentPresenter x:Name="RightHeaderPresenter" ContentTemplate="{TemplateBinding RightHeaderTemplate}" Content="{TemplateBinding RightHeader}" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                            <ItemsPresenter x:Name="PivotItemPresenter" Grid.ColumnSpan="3" Grid.Row="1">
+                                                <ItemsPresenter.RenderTransform>
+                                                    <TransformGroup>
+                                                        <TranslateTransform x:Name="ItemsPresenterTranslateTransform"/>
+                                                        <CompositeTransform x:Name="ItemsPresenterCompositeTransform"/>
+                                                    </TransformGroup>
+                                                </ItemsPresenter.RenderTransform>
+                                            </ItemsPresenter>
+                                        </Grid>
+                                    </PivotPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="Portrait">
-                    <VisualState.StateTriggers>
-                        <triggers:OrientationStateTrigger Orientation="Portrait"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!--<Setter Property="LandscapeGrid.Visibility" Value="Collapsed"/>
-                        <Setter Property="PortraitGrid.Visibility" Value="Visible"/>-->
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Landscape">
-                    <VisualState.StateTriggers>
-                        <triggers:OrientationStateTrigger Orientation="Landscape"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!--<Setter Property="PortraitGrid.Visibility" Value="Collapsed"/>
-                        <Setter Property="LandscapeGrid.Visibility" Value="Visible"/>-->
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -391,7 +625,7 @@
                 Content="Now playing" 
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720">
-            
+
             <controls:PageHeader.SecondaryCommands>
                 <AppBarButton
                 x:Uid="AppBarButtonQueue"
@@ -400,23 +634,41 @@
                 Click="{x:Bind ViewModel.GoToNowPlayingPlaylist}"
                 />
                 <AppBarButton
-                    x:Uid="AppBarButtonLyrics"
-                    Label="Lyrics"
-                    Click="{x:Bind ViewModel.GoToLyrics}"/>
+                    x:Uid="ButtonSearchLyrics"
+                    Label="Search lyrics"
+                    Icon="Find"
+                    Click="SearchButton_Click"/>
                 <AppBarButton
                     x:Uid="AppBarButtonAudioSettings"
                     Label="Audio settings"
                     Click="ButtonShowAudioSettings_Click"/>
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
-        <Grid Grid.Row="1" x:Name="PortraitGrid">
+        <Grid Grid.Row="1" x:Name="HostGrid">
             <Grid.RowDefinitions>
-                <RowDefinition Height="14*"/>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="6*"/>
-                <RowDefinition Height="5*"/>
-                <RowDefinition Height="3*"/>
+                <RowDefinition Height="23*"/>
+                <RowDefinition Height="8*"/>
             </Grid.RowDefinitions>
+            <imagecontrol:CrossfadingImage
+                x:Name="BackgroundImage"
+                x:DeferLoadStrategy="Lazy"
+                Grid.RowSpan="2"
+                Opacity="0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                FadeInDuration="0:0:0.3"
+                FadeOutDuration="0:0:0.3"
+                ImageUri="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}"
+                Stretch="UniformToFill"
+                />
+            <mycontrols:BackDrop 
+                x:Name="BackDropControl"
+                x:DeferLoadStrategy="Lazy"
+                Grid.RowSpan="2"
+                BlurAmount="80"
+                TintAlpha="100"
+                SaturationIntensity="1"
+                TintColor="{x:Bind ViewModel.QueueVM.AlbumArtColor, Mode=OneWay}"/>
             <ContentDialog x:Name="ContentDialogAudioSettings"
                 Grid.Row="1"
                 x:Uid="ContentDialogAudioSettings"
@@ -499,248 +751,300 @@
                     </Grid>
                 </ContentDialog.Content>
             </ContentDialog>
-            <Grid Grid.Row="0"
-                Margin="12,8,12,0"
-                DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}"
-                Background="Transparent"
-                PointerPressed="{x:Bind ViewModel.Image_Pressed}"
-                PointerReleased="{x:Bind ViewModel.Image_Released}"
-                PointerExited="{x:Bind ViewModel.Image_Exited}">
-                <mycontrols:CrossfadingImage
-                    x:Name="PrimaryImage"
-                    Grid.Column="0" Grid.Row="0"
-                    VerticalAlignment="Bottom" 
-                    HorizontalAlignment="Center"
-                    FadeInDuration="0:0:0.5"
-                    FadeOutDuration="0:0:0.5"
-                    Stretch="Uniform"/>
-            </Grid>
-            <Grid Grid.Row="1" >
-                <FlipView 
-                    Background="Transparent" 
-                    SelectedIndex="{x:Bind ViewModel.FlipViewSelectedIndex, Mode=TwoWay}"
-                    Visibility="{x:Bind ViewModel.IsVolumeControlVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
-                    <FlipView.Items>
-                        <FlipViewItem>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Width="36"
-                                    Height="36"
-                                    Tag="0"/>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="1"
-                                    Width="36"
-                                    Height="36">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="2"
-                                    Width="40"
-                                    Height="40">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="3"
-                                    Width="40"
-                                    Height="40">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="4"
-                                    Width="40"
-                                    Height="40">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="5"
-                                    Width="40"
-                                    Height="40">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Rectangle Fill="Transparent" Width="24" Height="36"/>
-                            </StackPanel>
-                        </FlipViewItem>
-                        <FlipViewItem>
-                            <Grid 
+            <ContentDialog 
+                x:Name="ContentDialogSearchLyrics"
+                x:Uid="ContentDialogSearchLyrics"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Title="Search lyrics"
+                PrimaryButtonText="Search"
+                PrimaryButtonClick="{x:Bind ViewModel.SearchLyrics}"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Uid="TBArtist"
+                            Margin="0,4,4,4"
+                            Text="Artist"/>
+                        <TextBox
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.ArtistSearch, Mode=TwoWay}"/>
+                        <TextBlock x:Uid="TBTitle"
+                            Margin="0,4,4,4"
+                            Text="Title"/>
+                        <TextBox
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.TitleSearch, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ContentDialog.Content>
+            </ContentDialog>
+            <Pivot Grid.Row="0" Style="{StaticResource NowPlayingPivotStyle}">
+                <PivotItem>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="14*"/>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="6*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0"
+                            Margin="12,8,12,0"
+                            DoubleTapped="{x:Bind ViewModel.Image_DoubleTapped}"
+                            Background="Transparent"
+                            ManipulationStarted="ImageGrid_ManipulationStarted"
+                            ManipulationStarting="ImageGrid_ManipulationStarting"
+                            ManipulationDelta="ImageGrid_ManipulationDelta"
+                            ManipulationMode="All"
+                            PointerPressed="{x:Bind ViewModel.Image_Pressed}"
+                            PointerReleased="{x:Bind ViewModel.Image_Released}"
+                            PointerExited="{x:Bind ViewModel.Image_Exited}">
+                            <imagecontrol:CrossfadingImage
+                                x:Name="PrimaryImage"
+                                Grid.Column="0" 
+                                Grid.Row="0"
+                                VerticalAlignment="Bottom" 
                                 HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock 
-                                    Grid.Column="0"
-                                    Margin="0,0,4,0"
-                                    HorizontalAlignment="Right"
-                                    FontSize="17"
-                                    Text="{x:Bind ViewModel.QueueVM.CurrentSongNumber, Mode=OneWay}"/>
-                                <TextBlock 
-                                    Grid.Column="1"
-                                    FontSize="17"
-                                    Text="/"/>
-                                <TextBlock 
-                                    Grid.Column="2"
-                                    Margin="4,0,0,0"
-                                    HorizontalAlignment="Left"
-                                    FontSize="17"
-                                    Text="{x:Bind ViewModel.QueueVM.SongsCount, Mode=OneWay}"/>
-                            </Grid>
-                        </FlipViewItem>
-                    </FlipView.Items>
-                </FlipView>
-            </Grid>
-            <Grid Grid.Row="2" 
-                  Margin="12,0,12,0" 
-                  Background="Transparent"
-                  DoubleTapped="Grid_DoubleTapped">
+                                FadeInDuration="0:0:0.3"
+                                FadeOutDuration="0:0:0.3"
+                                Stretch="Uniform"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <FlipView 
+                                Background="Transparent" 
+                                SelectedIndex="{x:Bind ViewModel.FlipViewSelectedIndex, Mode=TwoWay}"
+                                Visibility="{x:Bind ViewModel.IsVolumeControlVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
+                                <FlipView.Items>
+                                    <FlipViewItem>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Style="{StaticResource TransparentButtonStyle}"
+                                        Click="{x:Bind ViewModel.RateSong}"
+                                        Width="36"
+                                        Height="36"
+                                        Tag="0"/>
+                                            <Button Style="{StaticResource TransparentButtonStyle}"
+                                        Click="{x:Bind ViewModel.RateSong}"
+                                        Tag="1"
+                                        Width="36"
+                                        Height="36">
+                                                <Button.Content>
+                                                    <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
+                                                  Style="{StaticResource FontIconStyle}"/>
+                                                </Button.Content>
+                                            </Button>
+                                            <Button Style="{StaticResource TransparentButtonStyle}"
+                                        Click="{x:Bind ViewModel.RateSong}"
+                                        Tag="2"
+                                        Width="40"
+                                        Height="40">
+                                                <Button.Content>
+                                                    <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
+                                                  Style="{StaticResource FontIconStyle}"/>
+                                                </Button.Content>
+                                            </Button>
+                                            <Button Style="{StaticResource TransparentButtonStyle}"
+                                        Click="{x:Bind ViewModel.RateSong}"
+                                        Tag="3"
+                                        Width="40"
+                                        Height="40">
+                                                <Button.Content>
+                                                    <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
+                                                  Style="{StaticResource FontIconStyle}"/>
+                                                </Button.Content>
+                                            </Button>
+                                            <Button Style="{StaticResource TransparentButtonStyle}"
+                                        Click="{x:Bind ViewModel.RateSong}"
+                                        Tag="4"
+                                        Width="40"
+                                        Height="40">
+                                                <Button.Content>
+                                                    <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
+                                                  Style="{StaticResource FontIconStyle}"/>
+                                                </Button.Content>
+                                            </Button>
+                                            <Button Style="{StaticResource TransparentButtonStyle}"
+                                        Click="{x:Bind ViewModel.RateSong}"
+                                        Tag="5"
+                                        Width="40"
+                                        Height="40">
+                                                <Button.Content>
+                                                    <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
+                                                  Style="{StaticResource FontIconStyle}"/>
+                                                </Button.Content>
+                                            </Button>
+                                            <Rectangle Fill="Transparent" Width="24" Height="36"/>
+                                        </StackPanel>
+                                    </FlipViewItem>
+                                    <FlipViewItem>
+                                        <Grid 
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock 
+                                        Grid.Column="0"
+                                        Margin="0,0,4,0"
+                                        HorizontalAlignment="Right"
+                                        FontSize="17"
+                                        Text="{x:Bind ViewModel.QueueVM.CurrentSongNumber, Mode=OneWay}"/>
+                                            <TextBlock 
+                                        Grid.Column="1"
+                                        FontSize="17"
+                                        Text="/"/>
+                                            <TextBlock 
+                                        Grid.Column="2"
+                                        Margin="4,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        FontSize="17"
+                                        Text="{x:Bind ViewModel.QueueVM.SongsCount, Mode=OneWay}"/>
+                                        </Grid>
+                                    </FlipViewItem>
+                                </FlipView.Items>
+                            </FlipView>
+                        </Grid>
+                        <Grid Grid.Row="2"
+                            Margin="12,0,12,0" 
+                            Background="Transparent"
+                            DoubleTapped="Grid_DoubleTapped">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" 
+                               Style="{StaticResource SongTitleTextBlockStyle}"
+                               Text="{x:Bind ViewModel.QueueVM.CurrentSong.Title, Mode=OneWay}"/>
+                            <TextBlock Grid.Row="1" 
+                               Style="{StaticResource SongArtistTextBlockStyle}"
+                               Text="{x:Bind ViewModel.QueueVM.CurrentSong.Artist, Mode=OneWay}"/>
+                            <TextBlock Grid.Row="2" 
+                               Style="{StaticResource SongAlbumTextBlockStyle}"
+                               Text="{x:Bind ViewModel.QueueVM.CurrentSong.Album, Mode=OneWay}"/>
+                        </Grid>
+                    </Grid>
+                </PivotItem>
+                <PivotItem>
+                    <local:LyricsPanel/>
+                </PivotItem>
+            </Pivot>
+            <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" 
-                           Style="{StaticResource SongTitleTextBlockStyle}"
-                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Title, Mode=OneWay}"/>
-                <TextBlock Grid.Row="1" 
-                           Style="{StaticResource SongArtistTextBlockStyle}"
-                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Artist, Mode=OneWay}"/>
-                <TextBlock Grid.Row="2" 
-                           Style="{StaticResource SongAlbumTextBlockStyle}"
-                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Album, Mode=OneWay}"/>
-            </Grid>
-            <Grid Grid.Row="3" FlowDirection="LeftToRight">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button x:Name="ShuffleButton"
+                <Grid Grid.Row="0" FlowDirection="LeftToRight">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="ShuffleButton"
                     Grid.Column="0"
                     Click="{x:Bind ViewModel.PlayerVM.ToggleShuffle}"
                     Width="48" Height="48"
                     Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE14B;" 
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="&#xE14B;" 
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 
                                            FontSize="20" 
                                            FontFamily="Segoe MDL2 Assets" 
                                            Foreground="{Binding PlayerVM.ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}, ConverterParameter=True}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-                <RepeatButton Grid.Column="1"
+                                </Grid>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                    <RepeatButton Grid.Column="1"
                     Click="{x:Bind ViewModel.PlayerVM.PreviousOrSeek}"
                     Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval, Mode=OneTime}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerRepeatButtonStyle}">
-                    <RepeatButton.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE892;" 
+                        <RepeatButton.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="&#xE892;" 
                                            FontSize="30" 
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </RepeatButton.ContentTemplate>
-                </RepeatButton>
-                <Button Grid.Column="2"
+                                </Grid>
+                            </DataTemplate>
+                        </RepeatButton.ContentTemplate>
+                    </RepeatButton>
+                    <Button Grid.Column="2"
                     Click="{x:Bind ViewModel.PlayerVM.Play}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="{Binding PlayerVM.PlayButtonContent, Mode=OneWay}" 
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding PlayerVM.PlayButtonContent, Mode=OneWay}" 
                                            FontSize="30" 
                                            FontFamily="Segoe MDL2 Assets"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"
                                            Margin="0,0,0,0"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-                <RepeatButton Grid.Column="3"
+                                </Grid>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                    <RepeatButton Grid.Column="3"
                     Click="{x:Bind ViewModel.PlayerVM.NextOrSeek}"
                     Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval, Mode=OneTime}"
                     Width="48" Height="60"
                     Style="{StaticResource BottomPlayerRepeatButtonStyle}">
-                    <RepeatButton.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE893;" 
+                        <RepeatButton.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="&#xE893;" 
                                            FontSize="30" 
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </RepeatButton.ContentTemplate>
-                </RepeatButton>
-                <Button Grid.Column="4"
+                                </Grid>
+                            </DataTemplate>
+                        </RepeatButton.ContentTemplate>
+                    </RepeatButton>
+                    <Button Grid.Column="4"
                         x:Name="RepeatButton"
                     Click="{x:Bind ViewModel.PlayerVM.ToggleRepeat}"
                     Width="48" 
                     Height="60"
                     Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
                                            Foreground="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatForegroundConverter}, ConverterParameter=True}"
                                            FontSize="18" 
                                            VerticalAlignment="Center" 
                                            HorizontalAlignment="Center" 
                                            FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-            </Grid>
-            <Grid Grid.Row="4" x:Name="SliderGrid" FlowDirection="LeftToRight">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="60"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
+                                </Grid>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="1" x:Name="SliderGrid" FlowDirection="LeftToRight">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
                         FontSize="17"
                         Style="{StaticResource SubtitleTextBlockStyle}"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Margin="0,0,8,0"
                         Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
-                <Slider x:Name="timeslider" Grid.Column="1"
+                    <Slider x:Name="timeslider" Grid.Column="1"
                     StepFrequency="1.0"
                     Margin="4,8,4,0"
                     Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
@@ -749,270 +1053,15 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center" 
                     Style="{StaticResource TimeSliderStyle}"/>
-                <TextBlock Grid.Column="2"
+                    <TextBlock Grid.Column="2"
                         Style="{StaticResource SubtitleTextBlockStyle}"
                         FontSize="17"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Margin="0,0,8,0"
                         Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
+                </Grid>
             </Grid>
         </Grid>
-        <!--<Grid Grid.Row="1"
-              x:Name="LandscapeGrid"
-              x:DeferLoadStrategy="Lazy"
-              Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Column="1" Grid.Row="0">
-                <FlipView 
-                    Background="Transparent" 
-                    SelectedIndex="{x:Bind ViewModel.FlipViewSelectedIndex, Mode=TwoWay}"
-                    Visibility="{x:Bind ViewModel.IsVolumeControlVisible, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
-                    <FlipView.Items>
-                        <FlipViewItem>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Width="36"
-                                    Height="36"
-                                    Tag="0"/>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="1"
-                                    Width="36"
-                                    Height="36">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="2"
-                                    Width="40"
-                                    Height="40">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="3"
-                                    Width="40"
-                                    Height="40">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="4"
-                                    Width="40"
-                                    Height="40">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Button Style="{StaticResource TransparentButtonStyle}"
-                                    Click="{x:Bind ViewModel.RateSong}"
-                                    Tag="5"
-                                    Width="40"
-                                    Height="40">
-                                    <Button.Content>
-                                        <FontIcon Glyph="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}"
-                                              Style="{StaticResource FontIconStyle}"/>
-                                    </Button.Content>
-                                </Button>
-                                <Rectangle Fill="Transparent" Width="24" Height="36"/>
-                            </StackPanel>
-                        </FlipViewItem>
-                        <FlipViewItem>
-                            <Grid 
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock 
-                                    Grid.Column="0"
-                                    Margin="0,0,4,0"
-                                    HorizontalAlignment="Right"
-                                    FontSize="17"
-                                    Text="{x:Bind ViewModel.CurrentIndex, Mode=OneWay}"/>
-                                <TextBlock 
-                                    Grid.Column="1"
-                                    FontSize="17"
-                                    Text="/"/>
-                                <TextBlock 
-                                    Grid.Column="2"
-                                    Margin="4,0,0,0"
-                                    HorizontalAlignment="Left"
-                                    FontSize="17"
-                                    Text="{x:Bind ViewModel.SongsCount, Mode=OneWay}"/>
-                            </Grid>
-                        </FlipViewItem>
-                    </FlipView.Items>
-                </FlipView>
-            </Grid>
-            <Grid Grid.Row="2" 
-                  Margin="12,0,12,0" 
-                  Background="Transparent">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" 
-                           Style="{StaticResource SongTitleTextBlockStyle}"
-                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Title, Mode=OneWay}"/>
-                <TextBlock Grid.Row="1" 
-                           Style="{StaticResource SongArtistTextBlockStyle}"
-                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Artist, Mode=OneWay}"/>
-                <TextBlock Grid.Row="2" 
-                           Style="{StaticResource SongAlbumTextBlockStyle}"
-                           Text="{x:Bind ViewModel.QueueVM.CurrentSong.Album, Mode=OneWay}"/>
-            </Grid>
-            <Grid Grid.Row="3" FlowDirection="LeftToRight">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button x:Name="ShuffleButton"
-                    Grid.Column="0"
-                    Click="{x:Bind ViewModel.PlayerVM.ShuffleCommand}"
-                    Width="48" Height="48"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE14B;" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontSize="20" 
-                                           FontFamily="Segoe MDL2 Assets" 
-                                           Foreground="{Binding PlayerVM.ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}, ConverterParameter=True}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-                <RepeatButton Grid.Column="1"
-                    Click="{x:Bind ViewModel.PreviousOrSeek}"
-                    Interval="{x:Bind ViewModel.RepeatButtonInterval, Mode=OneTime}"
-                    Width="48" Height="60"
-                    Style="{StaticResource BottomPlayerRepeatButtonStyle}">
-                    <RepeatButton.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE892;" 
-                                           FontSize="30" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </RepeatButton.ContentTemplate>
-                </RepeatButton>
-                <Button Grid.Column="2"
-                    Click="{x:Bind ViewModel.PlayerVM.Play}"
-                    Width="48" Height="60"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="{Binding PlayButtonContent}" 
-                                           FontSize="30" 
-                                           FontFamily="Segoe MDL2 Assets"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,0,0,0"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-                <RepeatButton Grid.Column="3"
-                    Click="{x:Bind ViewModel.NextOrSeek}"
-                    Interval="{x:Bind ViewModel.RepeatButtonInterval, Mode=OneTime}"
-                    Width="48" Height="60"
-                    Style="{StaticResource BottomPlayerRepeatButtonStyle}">
-                    <RepeatButton.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE893;" 
-                                           FontSize="30" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </RepeatButton.ContentTemplate>
-                </RepeatButton>
-                <Button Grid.Column="4"
-                        x:Name="RepeatButton"
-                    Click="{x:Bind ViewModel.PlayerVM.RepeatCommand}"
-                    Width="48" 
-                    Height="60"
-                    Style="{StaticResource BottomPlayerButtonStyle}">
-                    <Button.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatContentConverter}}" 
-                                           Foreground="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatForegroundConverter}, ConverterParameter=True}"
-                                           FontSize="18" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           FontFamily="Segoe MDL2 Assets"/>
-                            </Grid>
-                        </DataTemplate>
-                    </Button.ContentTemplate>
-                </Button>
-            </Grid>
-            <Grid Grid.ColumnSpan="2" Grid.Row="2" x:Name="SliderGrid" FlowDirection="LeftToRight">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="60"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                        FontSize="17"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,8,0"
-                        Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"/>
-                <Slider x:Name="timeslider" Grid.Column="1"
-                    StepFrequency="1.0"
-                    Margin="4,8,4,0"
-                    Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
-                    Value="{Binding SliderValue, Mode=TwoWay}"
-                    ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center" 
-                    Style="{StaticResource TimeSliderStyle}"/>
-                <TextBlock Grid.Column="2"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        FontSize="17"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,8,0"
-                        Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}"/>
-            </Grid>
-        </Grid>-->
     </Grid>
 </Page>

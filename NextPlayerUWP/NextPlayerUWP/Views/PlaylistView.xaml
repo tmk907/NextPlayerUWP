@@ -40,8 +40,8 @@
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <MenuFlyout x:Key="ContextMenuList">
             <MenuFlyoutItem x:Uid="MFIPlay" Text="Play" 
@@ -63,8 +63,8 @@
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         
         <DataTemplate x:Key="SongItemTemplateDesktop" x:DataType="data:SongItem">
@@ -225,7 +225,7 @@
             x:Name="PageHeader"
             BackButtonVisibility="Collapsed" 
             Frame="{x:Bind Frame, Mode=OneWay}"
-            Content="{Binding PageTitle}" 
+            Content="{x:Bind ViewModel.PageTitle, Mode=OneWay}" 
             VisualStateNarrowMinWidth="0"
             VisualStateNormalMinWidth="720">
             <AppBarButton
@@ -272,7 +272,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                     <TextBlock 
-                        Text="{Binding PageSubTitle}" 
+                        Text="{x:Bind ViewModel.PageSubTitle}" 
                         Margin="16"
                         FontSize="17" 
                         TextTrimming="CharacterEllipsis"/>
@@ -305,7 +305,7 @@
                 <mycontrols:AlternatingRowListView x:Name="PlaylistListView"
                         EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                         OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                        ItemsSource="{Binding Playlist}"
+                        ItemsSource="{x:Bind ViewModel.Playlist, Mode=OneWay}"
                         ItemTemplate="{StaticResource SongItemTemplateDesktop}"
                         SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                         IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"

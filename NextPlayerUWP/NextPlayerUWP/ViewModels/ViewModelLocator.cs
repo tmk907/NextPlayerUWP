@@ -26,6 +26,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<FoldersRootViewModel>();
             SimpleIoc.Default.Register<GenresViewModel>();
             SimpleIoc.Default.Register<LyricsViewModel>();
+            SimpleIoc.Default.Register<LyricsPanelViewModel>();
             SimpleIoc.Default.Register<NewSmartPlaylistViewModel>();          
             SimpleIoc.Default.Register<NowPlayingViewModel>();
             SimpleIoc.Default.Register<NowPlayingDesktopViewModel>();
@@ -39,9 +40,11 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<TestViewModel>();
             SimpleIoc.Default.Register<PlayerViewModelBase>();
             SimpleIoc.Default.Register<QueueViewModelBase>();
+            SimpleIoc.Default.Register<CuteRadioViewModel>();
 
             SimpleIoc.Default.Register<SettingsVMService>();
-            SimpleIoc.Default.Register<LyricsExtensions>();
+            SimpleIoc.Default.Register<MyLyricsExtensionsClient>();
+            SimpleIoc.Default.Register<FoldersVMHelper>();
 
             
         }
@@ -61,6 +64,7 @@ namespace NextPlayerUWP.ViewModels
         public FoldersRootViewModel FoldersRootVM => ServiceLocator.Current.GetInstance<FoldersRootViewModel>();
         public GenresViewModel GenresVM => ServiceLocator.Current.GetInstance<GenresViewModel>();
         public LyricsViewModel LyricsVM => ServiceLocator.Current.GetInstance<LyricsViewModel>();
+        public LyricsPanelViewModel LyricsPanelVM => ServiceLocator.Current.GetInstance<LyricsPanelViewModel>();
         public NewSmartPlaylistViewModel NewSmartPlaylistVM => ServiceLocator.Current.GetInstance<NewSmartPlaylistViewModel>();
         public NowPlayingViewModel NowPlayingVM => ServiceLocator.Current.GetInstance<NowPlayingViewModel>();
         public NowPlayingPlaylistViewModel NowPlayingPlaylistVM => ServiceLocator.Current.GetInstance<NowPlayingPlaylistViewModel>();
@@ -74,8 +78,10 @@ namespace NextPlayerUWP.ViewModels
         public TestViewModel TestVM => ServiceLocator.Current.GetInstance<TestViewModel>();
         public PlayerViewModelBase PlayerVM => ServiceLocator.Current.GetInstance<PlayerViewModelBase>();
         public QueueViewModelBase QueueVM => ServiceLocator.Current.GetInstance<QueueViewModelBase>();
+        public CuteRadioViewModel CuteRadioVM => ServiceLocator.Current.GetInstance<CuteRadioViewModel>();
 
         public SettingsVMService SettingsVMService => ServiceLocator.Current.GetInstance<SettingsVMService>();
-        public LyricsExtensions LyricsExtensionsService => ServiceLocator.Current.GetInstance<LyricsExtensions>();
+        public MyLyricsExtensionsClient LyricsExtensionsClient => ServiceLocator.Current.GetInstance<MyLyricsExtensionsClient>();
+        public FoldersVMHelper FolderVMHelper => ServiceLocator.Current.GetInstance<FoldersVMHelper>();
     }
 }

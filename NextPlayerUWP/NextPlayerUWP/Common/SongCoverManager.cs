@@ -58,12 +58,12 @@ namespace NextPlayerUWP.Common
             {
                 await DeleteAllCached();
             }
-            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            if (!song.IsAlbumArtSet)
-            {
-                Uri uri = await PrepareCover(song);
-                OnCoverUriPrepared(uri);
-            }
+            //var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            //if (!song.IsAlbumArtSet)
+            //{
+            //    Uri uri = await PrepareCover(song);
+            //    OnCoverUriPrepared(uri);
+            //}
             initialized = true;
             System.Diagnostics.Debug.WriteLine("SCM Initialize end");
         }
@@ -119,11 +119,7 @@ namespace NextPlayerUWP.Common
             Uri newUri;
             if (song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.LocalFile)
             {
-                newUri = await CopyCoverFromSongFileToCacheFolder(song.Path, id);               
-            }
-            else if(song.SourceType == NextPlayerUWPDataLayer.Enums.MusicSource.RadioJamendo)
-            {
-                newUri = PrepareCoverUri(song.CoverPath);
+                newUri = await GetCoverFromSongAndSaveInCacheFolder(song.Path, id);               
             }
             else
             {
@@ -156,9 +152,9 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        private async Task<Uri> CopyCoverFromSongFileToCacheFolder(string path, int id)
+        private async Task<Uri> GetCoverFromSongAndSaveInCacheFolder(string path, int id)
         {
-            var image = await ImagesManager.GetAlbumArtSoftwareBitmap(path);
+            var image = await ImagesManager.GetAlbumArtSoftwareBitmap(path, true);
             if (image == null)
             {
                 coverPath = DefaultCover;

@@ -1,6 +1,4 @@
-﻿using NextPlayerUWPDataLayer.Constants;
-using NextPlayerUWPDataLayer.Enums;
-using NextPlayerUWPDataLayer.Helpers;
+﻿using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -9,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using Windows.Foundation.Collections;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.CloudStorage;
 using Template10.Common;
@@ -30,14 +27,29 @@ namespace NextPlayerUWP.Common
         private NowPlayingPlaylistManager()
         {
             Logger2.DebugWrite("NowPlayingPlaylistManager()","");
-            songs = DatabaseManager.Current.GetSongItemsFromNowPlaying();
-            songs.CollectionChanged += Songs_CollectionChanged;
             PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
             PlaybackService.StreamUpdated += PlaybackService_StreamUpdated;
             App.SongUpdated += App_SongUpdated;
-            currentIndex = ApplicationSettingsHelper.ReadSongIndex();
             SortingHelper = new SortingHelperForSongItemsInPlaylist("nowplaying");
             SortingHelper.SelectedSortOption = SortingHelper.ComboBoxItemValues.FirstOrDefault();
+        }
+
+        public async Task Init()
+        {
+            System.Diagnostics.Debug.WriteLine("NowPlayingPlaylistManager.Init()");
+            songs = await DatabaseManager.Current.GetSongItemsFromNowPlayingAsync();
+            songs.CollectionChanged += Songs_CollectionChanged;
+            OnNPChanged();
+            currentIndex = ApplicationSettingsHelper.ReadSongIndex();
+        }
+
+        public async Task Init(MusicItem item)
+        {
+            System.Diagnostics.Debug.WriteLine("NowPlayingPlaylistManager.Init(MusicItem )");
+            await NewPlaylist(item);
+            songs.CollectionChanged += Songs_CollectionChanged;
+            OnNPChanged();
+            currentIndex = 0;
         }
 
         public SortingHelperForSongItemsInPlaylist SortingHelper;
@@ -48,7 +60,7 @@ namespace NextPlayerUWP.Common
             this.dispatcher = dispatcher;
         }
 
-        private int currentIndex;
+        private int currentIndex = 0;
 
         public static event NPListChangedHandler NPListChanged;
         public static void OnNPChanged()
@@ -140,35 +152,47 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackService_MediaPlayerTrackChanged(int index)
         {
-            //dispatcher.Dispatch(() =>
-            //{
-
-            currentIndex = index;
-            int i = 0;
-            foreach (var song in songs)
+            if (currentIndex != index)
             {
-                if (i != index && song.IsPlaying)
+                currentIndex = index;
+                int i = 0;
+                if (dispatcher == null)
                 {
-                    dispatcher.Dispatch(() =>
+                    if (WindowWrapper.Current().Dispatcher == null)
                     {
-                        song.IsPlaying = false;
-                    });
+                        System.Diagnostics.Debug.WriteLine("Dispatcher null");
+                        return;
+                    }
                 }
-                else if (i == index)
+                foreach (var song in songs)
                 {
-                    dispatcher.Dispatch(() =>
+                    if (i != index && song.IsPlaying)
                     {
-                        song.IsPlaying = true;
-                    });
+                        dispatcher.Dispatch(() =>
+                        {
+                            song.IsPlaying = false;
+                        });
+                    }
+                    else if (i == index)
+                    {
+                        dispatcher.Dispatch(() =>
+                        {
+                            song.IsPlaying = true;
+                        });
+                    }
+                    i++;
                 }
-                i++;
             }
-            //});
-
         }
 
         public async Task Add(MusicItem item)
         {
+            if (songs.Count == 0)
+            {
+                await NewPlaylist(item);
+                await PlaybackService.Instance.PlayNewList(0, false);
+                return;
+            }
             IEnumerable<SongItem> list = new ObservableCollection<SongItem>();
             switch (MusicItem.ParseType(item.GetParameter()))
             {
@@ -243,7 +267,13 @@ namespace NextPlayerUWP.Common
 
         public async Task Add(IEnumerable<MusicItem> items)
         {
-            if (items.FirstOrDefault().GetType() == typeof(SongItem))
+            if (songs.Count == 0)
+            {
+                await NewPlaylist(items);
+                await PlaybackService.Instance.PlayNewList(0, false);
+                return;
+            }
+            if (items.OfType<SongItem>().Count() == items.Count())
             {
                 foreach (SongItem song in items)
                 {
@@ -267,6 +297,12 @@ namespace NextPlayerUWP.Common
 
         public async Task AddNext(MusicItem item)
         {
+            if (songs.Count == 0)
+            {
+                await NewPlaylist(item);
+                await PlaybackService.Instance.PlayNewList(0, false);
+                return;
+            }
             IEnumerable<SongItem> list = new List<SongItem>();
             switch (MusicItem.ParseType(item.GetParameter()))
             {
@@ -320,7 +356,7 @@ namespace NextPlayerUWP.Common
                     break;
             }
             int index = ApplicationSettingsHelper.ReadSongIndex();
-            foreach(var n in list)
+            foreach (var n in list)
             {
                 index++;
                 songs.Insert(index, n);
@@ -330,8 +366,14 @@ namespace NextPlayerUWP.Common
 
         public async Task AddNext(IEnumerable<MusicItem> items)
         {
+            if (songs.Count == 0)
+            {
+                await NewPlaylist(items);
+                await PlaybackService.Instance.PlayNewList(0, false);
+                return;
+            }
             int index = ApplicationSettingsHelper.ReadSongIndex();
-            if (items.FirstOrDefault().GetType() == typeof(SongItem))
+            if (items.OfType<SongItem>().Count() == items.Count())
             {
                 foreach (SongItem n in items)
                 {
@@ -446,7 +488,7 @@ namespace NextPlayerUWP.Common
         {
             songs.Clear();
 
-            if (items.FirstOrDefault().GetType() == typeof(SongItem))
+            if (items.OfType<SongItem>().Count() == items.Count())
             {
                 foreach (SongItem song in items)
                 {
@@ -561,7 +603,7 @@ namespace NextPlayerUWP.Common
 
         private async Task SaveNowPlayingInDB()
         {
-            await DatabaseManager.Current.InsertNewNowPlayingPlaylistAsync(songs);
+            await DatabaseManager.Current.InsertNewNowPlayingPlaylistAsync(new List<SongItem>(songs));
         }
 
         public SongItem GetSongItem(int index)

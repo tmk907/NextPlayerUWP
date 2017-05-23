@@ -12,6 +12,7 @@ using Template10.Services.NavigationService;
 using System.IO;
 using Windows.UI.Xaml;
 using NextPlayerUWPDataLayer.Playlists;
+using System.Collections.Specialized;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -31,7 +32,7 @@ namespace NextPlayerUWP.ViewModels
                 playlist.Add(new SongItem());
                 playlist.Add(new SongItem());
                 playlist.Add(new SongItem());
-            }
+            }           
         }
 
         BaseSortingHelper<SongItem> sortingHelper;
@@ -57,6 +58,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return isPlainPlaylist; }
             set { Set(ref isPlainPlaylist, value); }
+        }
+
+        private bool updating = false;
+        public bool Updating
+        {
+            get { return updating; }
+            set { Set(ref updating, value); }
         }
 
         protected override async Task LoadData()
@@ -91,7 +99,7 @@ namespace NextPlayerUWP.ViewModels
                         PageSubTitle = p.Name;
                         IsPlainPlaylist = true;
                         Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
-                        foreach(var song in playlist)
+                        foreach (var song in playlist)
                         {
                             song.Index = i;
                             i++;
@@ -210,12 +218,73 @@ namespace NextPlayerUWP.ViewModels
             await ph.UpdatePlaylistFile(p).ConfigureAwait(false);
         }
 
+        public async Task DeleteManyAsync(IEnumerable<MusicItem> songs)
+        {
+            var p = await DatabaseManager.Current.GetPlainPlaylistAsync(Int32.Parse(firstParam));
+
+            foreach (SongItem song in songs)
+            {
+                int i = 0;
+                foreach (var s in playlist)
+                {
+                    if (s.SongId == song.SongId) break;
+                    i++;
+                }
+                Playlist.RemoveAt(i);
+                await DatabaseManager.Current.DeletePlainPlaylistEntryAsync(song.SongId, p.Id);
+            }
+            PlaylistHelper ph = new PlaylistHelper();
+            await ph.UpdatePlaylistFile(p).ConfigureAwait(false);
+        }
+
+        public void ReorderCompleted()
+        {
+
+        }
+
+        public async Task RefreshPlaylist()
+        {
+            Updating = true;
+            if (IsPlainPlaylist)
+            {
+                MediaImport mi = new MediaImport(App.FileFormatsHelper);
+                await mi.UpdatePlaylist(Int32.Parse(firstParam));
+                Playlist = await DatabaseManager.Current.GetSongItemsFromPlainPlaylistAsync(Int32.Parse(firstParam));
+                Playlist.CollectionChanged += Playlist_CollectionChanged;
+                int i = 0;
+                foreach (var song in playlist)
+                {
+                    song.Index = i;
+                    i++;
+                }
+            }
+            Updating = false;
+        }
+
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
             var orderSelector = sortingHelper.GetOrderBySelector();
             var query = playlist.OrderBy(orderSelector);
             Playlist = new ObservableCollection<SongItem>(query);
+            if (type == MusicItemTypes.plainplaylist)
+            {
+                Playlist.CollectionChanged += Playlist_CollectionChanged;
+            }
+        }
+
+        private NotifyCollectionChangedAction previousAction = NotifyCollectionChangedAction.Reset;
+        private async void Playlist_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (previousAction == NotifyCollectionChangedAction.Remove && e.Action == NotifyCollectionChangedAction.Add)
+            {
+                int id = Int32.Parse(firstParam);
+                await DatabaseManager.Current.UpdatePlainPlaylistAsync(id, playlist);
+                var p = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
+                PlaylistHelper ph = new PlaylistHelper();
+                await ph.UpdatePlaylistFile(p).ConfigureAwait(false);
+            }
+            previousAction = e.Action;
         }
 
         public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -255,7 +324,14 @@ namespace NextPlayerUWP.ViewModels
                 }
                 if (!find) return;
             }
-            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            try
+            {
+                listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            }
+            catch (NullReferenceException ex)
+            {
+
+            }
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

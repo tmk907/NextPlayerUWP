@@ -13,7 +13,7 @@ namespace NextPlayerUWP
 {
     sealed partial class App : BootStrapper
     {
-        private const int dbVersion = 11;
+        private const int dbVersion = 13;
 
         private void FirstRunSetup()
         {
@@ -27,7 +27,7 @@ namespace NextPlayerUWP
             //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, true);
             var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
             ColorsHelper ch = new ColorsHelper();
-            ch.SaveUserAccentColor(color);
+            ch.SaveAppAccentColor(color);
             //ch.SetAccentColorShades(color);
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterDropItem, SettingsKeys.ActionAddToNowPlaying);
@@ -69,6 +69,9 @@ namespace NextPlayerUWP
                 new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Online },
             };
             ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, true);
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -170,6 +173,18 @@ namespace NextPlayerUWP
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 11);
                 version = "11";
             }
+            if (version.ToString() == "11")
+            {
+                DatabaseManager.Current.UpdateToVersion12();
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 12);
+                version = "12";
+            }
+            if (version.ToString() == "12")
+            {
+                DatabaseManager.Current.UpdateToVersion13();
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.DBVersion, 13);
+                version = "13";
+            }
             // change  private const int dbVersion
         }
 
@@ -240,6 +255,15 @@ namespace NextPlayerUWP
                     new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Online },
                 };
                 ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AccentFromAlbumArt) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, false);
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, false);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.MediaScanUseIndexer) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, true);
             }
         }
 

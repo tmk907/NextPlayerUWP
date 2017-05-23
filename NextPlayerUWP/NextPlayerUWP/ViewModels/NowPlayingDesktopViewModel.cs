@@ -1,4 +1,6 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,7 +23,7 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
             //App.ChangeRightPanelVisibility(true);
-
+            MessageHub.Instance.Publish<PageNavigated>(new PageNavigated() { NavigatedTo = false, PageType = PageNavigatedType.NowPlayingDesktop });
             await Task.CompletedTask;
         }
 
@@ -29,7 +31,7 @@ namespace NextPlayerUWP.ViewModels
         {
             //App.ChangeRightPanelVisibility(false);
             App.OnNavigatedToNewView(true, true);
-            
+            MessageHub.Instance.Publish<PageNavigated>(new PageNavigated() { NavigatedTo = true, PageType = PageNavigatedType.NowPlayingDesktop });
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());

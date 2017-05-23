@@ -29,6 +29,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += View_Unloaded;
             ViewModel = (FoldersViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
+            selectionButtons.ShowShareButton = true;
         }
         //~FoldersView()
         //{

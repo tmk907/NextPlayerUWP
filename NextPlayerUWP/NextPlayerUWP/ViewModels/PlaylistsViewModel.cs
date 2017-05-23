@@ -11,6 +11,7 @@ using Windows.Storage.Provider;
 using NextPlayerUWPDataLayer.Playlists;
 using System.Linq;
 using NextPlayerUWP.Common;
+using Windows.System;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -36,6 +37,13 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return editPlaylist; }
             set { Set(ref editPlaylist, value); }
+        }
+
+        private string newPlaylistName = "";
+        public string NewPlaylistName
+        {
+            get { return newPlaylistName; }
+            set { Set(ref newPlaylistName, value); }
         }
 
         private bool relativePaths = false;
@@ -132,11 +140,25 @@ namespace NextPlayerUWP.ViewModels
                 if (p.Id == editPlaylist.Id && !p.IsSmart)
                 {
                     PlaylistHelper ph = new PlaylistHelper();
-                    await ph.EditName(p,editPlaylist.Name);
+                    await ph.EditName(p, newPlaylistName);
                     break;
                 }
             }
             //await LoadData();
+        }
+
+        public async void OpenFolder()
+        {
+            try
+            {
+                var path = System.IO.Path.GetDirectoryName(editPlaylist.Path);
+                var folder = await StorageFolder.GetFolderFromPathAsync(path);
+                await Launcher.LaunchFolderAsync(folder);
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
 
         public void FilterPlaylists()

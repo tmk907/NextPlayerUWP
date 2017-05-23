@@ -29,6 +29,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += View_Unloaded;
             ViewModel = (PlaylistViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
+            selectionButtons.ShowShareButton = true;
         }
         //~PlaylistView()
         //{
@@ -95,6 +96,6 @@ namespace NextPlayerUWP.Views
         public void OnSearchMessage(EnableSearching msg)
         {
             SearchBox.Focus(FocusState.Programmatic);
-        }
+        }       
     }
 }

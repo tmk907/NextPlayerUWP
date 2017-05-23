@@ -16,11 +16,11 @@ namespace NextPlayerUWP.ViewModels
 {
     public class RadiosViewModel : Template10.Mvvm.ViewModelBase
     {
-        private ObservableCollection<RadioItem> radios = new ObservableCollection<RadioItem>();
-        public ObservableCollection<RadioItem> Radios
+        private ObservableCollection<RadioItem> favouriteRadios = new ObservableCollection<RadioItem>();
+        public ObservableCollection<RadioItem> FavouriteRadios
         {
-            get { return radios; }
-            set { Set(ref radios, value); }
+            get { return favouriteRadios; }
+            set { Set(ref favouriteRadios, value); }
         }
 
         private ObservableCollection<SongItem> streams = new ObservableCollection<SongItem>();
@@ -35,6 +35,23 @@ namespace NextPlayerUWP.ViewModels
         {
             get { return updating; }
             set { Set(ref updating, value); }
+        }
+
+        private int selectedPivotIndex = 0;
+        public int SelectedPivotIndex
+        {
+            get { return selectedPivotIndex; }
+            set
+            {
+                if (value == 2)
+                {
+                    NavigationService.Navigate(App.Pages.CuteRadio);
+                }
+                else
+                {
+                    Set(ref selectedPivotIndex, value);
+                }
+            }
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -52,6 +69,16 @@ namespace NextPlayerUWP.ViewModels
             //    Radios = new ObservableCollection<RadioItem>(jr);
             //}
             //await UpdatePlayingNow();
+            FavouriteRadios.Clear();
+            var list = await DatabaseManager.Current.GetRadioFavouritesAsync();
+            foreach(var item in list)
+            {
+                FavouriteRadios.Add(new RadioItem(item.BroadcastId, item.Type)
+                {
+                    Name = item.Name,
+                    StreamUrl = item.Stream,
+                });
+            }
             Updating = false;
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
@@ -66,6 +93,20 @@ namespace NextPlayerUWP.ViewModels
             await PlaybackService.Instance.PlayNewList(0);
         }
 
+        public int EditedId = -1;
+        private string newName = "";
+        public string NewName
+        {
+            get { return newName; }
+            set { Set(ref newName, value); }
+        }
+
+        public async void SaveEditedName()
+        {
+            if (EditedId == -1) return;
+            FavouriteRadios.FirstOrDefault(r => r.BroadcastId == EditedId).Name = NewName;
+            await DatabaseManager.Current.UpdateFavouriteRadioName(EditedId, NewName);
+        }
 
         private async Task<List<RadioItem>> GetJamendoRadios()
         {
@@ -80,7 +121,7 @@ namespace NextPlayerUWP.ViewModels
         private async Task UpdatePlayingNow()
         {
             JamendoRadioService jamendoService = new JamendoRadioService();
-            foreach (var radio in Radios)
+            foreach (var radio in FavouriteRadios)
             {
                 if (radio.Type == NextPlayerUWPDataLayer.Enums.RadioType.Jamendo && radio.RemainingTime < (DateTime.Now - radio.StreamUpdatedAt).TotalMilliseconds)
                 {
@@ -114,6 +155,13 @@ namespace NextPlayerUWP.ViewModels
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+        }
+
+        public async void DeleteFromFavourites(object sender, RoutedEventArgs e)
+        {
+            var item = (RadioItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
+            await DatabaseManager.Current.DeleteRadioFromFavourites(item.BroadcastId, item.Type);
+            FavouriteRadios.Remove(item);
         }
     }
 }

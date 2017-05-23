@@ -237,7 +237,7 @@
   <data name="MFIDelete.Text" xml:space="preserve">
     <value>Usuń</value>
   </data>
-  <data name="MFIEditPlainName.Text" xml:space="preserve">
+  <data name="MFIEditName.Text" xml:space="preserve">
     <value>Edytuj nazwę</value>
   </data>
   <data name="MFIEditSmart.Text" xml:space="preserve">
@@ -679,7 +679,7 @@
     <value>Data dodania</value>
   </data>
   <data name="AppBarButtonShuffleAll.Label" xml:space="preserve">
-    <value>Shuffle all</value>
+    <value>Losowo</value>
   </data>
   <data name="AppBarButtonQueue.Label" xml:space="preserve">
     <value>Queue</value>
@@ -861,8 +861,8 @@
   <data name="TBOnline.Text" xml:space="preserve">
     <value>Online</value>
   </data>
-  <data name="TBStreams.Text" xml:space="preserve">
-    <value>Streams</value>
+  <data name="TBStreamsLower.Text" xml:space="preserve">
+    <value>streams</value>
   </data>
   <data name="Online" xml:space="preserve">
     <value>Online</value>
@@ -932,5 +932,86 @@
   </data>
   <data name="TBDateCreated.Text" xml:space="preserve">
     <value>Data utworzenia</value>
+  </data>
+  <data name="AppBarButtonRefresh.Label" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="TBFavouritesLower.Text" xml:space="preserve">
+    <value>ulubione</value>
+  </data>
+  <data name="TBMoreLower.Text" xml:space="preserve">
+    <value>więcej</value>
+  </data>
+  <data name="MFIAddToFavourites.Text" xml:space="preserve">
+    <value>Dodaj do ulubionych</value>
+  </data>
+  <data name="TBCountriesLower.Text" xml:space="preserve">
+    <value>państwa</value>
+  </data>
+  <data name="TBLanguagesLower.Text" xml:space="preserve">
+    <value>języki</value>
+  </data>
+  <data name="TBSearchLower.Text" xml:space="preserve">
+    <value>szukaj</value>
+  </data>
+  <data name="MFIRemoveFromFavourites.Text" xml:space="preserve">
+    <value>Usuń z ulubionych</value>
+  </data>
+  <data name="TBGenresLower.Text" xml:space="preserve">
+    <value>gatunki</value>
+  </data>
+  <data name="PageHeaderStreaming.Content" xml:space="preserve">
+    <value>Streaming</value>
+  </data>
+  <data name="TBRadioLower.Text" xml:space="preserve">
+    <value>radio</value>
+  </data>
+  <data name="TBUseSystemIndexing.Text" xml:space="preserve">
+    <value>Użyj systemu indeksowania (wyszukiwanie jest dużo szybsze). Wyłącz, jeśli niektóre pliki nie zostały znalezione.</value>
+  </data>
+  <data name="TBIgnoreFollowingArticles.Text" xml:space="preserve">
+    <value>Ignoruj następujące przedimki podczas sortowania wg. nazwy albumu, artysty lub tytułu:</value>
+  </data>
+  <data name="TBLastLibraryUpdate.Text" xml:space="preserve">
+    <value>Ostatnia aktualizacja:</value>
+  </data>
+  <data name="TBMatchAlbumArtAccent.Text" xml:space="preserve">
+    <value>Dopasuj kolor wiodący do okładki albumu</value>
+  </data>
+  <data name="TBNowPlayingBackgroundAlbumArt.Text" xml:space="preserve">
+    <value>Pokaż okładkę albumu w tle w widoku teraz odtwarzane</value>
+  </data>
+  <data name="TBInstalledExtensions.Text" xml:space="preserve">
+    <value>Zainstalowane:</value>
+  </data>
+  <data name="TBAvailableExtensions.Text" xml:space="preserve">
+    <value>Dostępne:</value>
+  </data>
+  <data name="ButtonInstall.Content" xml:space="preserve">
+    <value>Instaluj</value>
+  </data>
+  <data name="ButtonSearchLyrics.Label" xml:space="preserve">
+    <value>Szukaj tekstu</value>
+  </data>
+  <data name="AppBarButtonShare.Label" xml:space="preserve">
+    <value>Udostępnij</value>
+  </data>
+  <data name="TBTranslations.Text" xml:space="preserve">
+    <value>Tłumaczenia</value>
+  </data>
+  <data name="ContentDialogTranslations.Title" xml:space="preserve">
+    <value>Tłumaczenia</value>
+  </data>
+  <data name="TBRateApp.Text" xml:space="preserve">
+    <value>Oceń aplikację</value>
+  </data>
+  <data name="TBMailToSupport.Text" xml:space="preserve">
+    <value>Mail to support</value>
+  </data>
+  <data name="TBLicenses.Text" xml:space="preserve">
+    <value>Licencje</value>
+  </data>
+  <data name="TBLikeOnFacebook.Text" xml:space="preserve">
+    <value>Polub na Facebooku</value>
   </data>
 </root>

@@ -358,5 +358,36 @@ namespace NextPlayerUWPDataLayer.Playlists
             }
             return contentCreator;
         }
+
+        public static string MakeAbsolutePath(string folderPath, string filePath)
+        {
+            if (filePath.Contains(@"://")) return filePath; //stream
+            if (filePath.Length > 3 && filePath[1] == ':' && filePath[2] == '/') return filePath; //absolute local path
+
+            if (String.IsNullOrWhiteSpace(filePath)) return filePath;
+
+            if (filePath[0] == '/' || filePath[0] == '\\') //relative path
+            {
+                filePath = filePath.Substring(1);
+            }
+            try
+            {
+                string path = Path.Combine(folderPath, filePath);
+                path = Path.GetFullPath(path);
+                return path;
+            }
+            catch (ArgumentException ex)
+            {
+                return filePath;
+            }
+            catch (PathTooLongException)
+            {
+                return filePath;
+            }
+            catch (NotSupportedException)
+            {
+                return filePath;
+            }
+        }
     }
 }

@@ -374,7 +374,7 @@ namespace NextPlayerUWPDataLayer.Model
             duration = table.Duration;
             path = table.Path;
             rating = (int)table.Rating;
-            title = table.Title;
+            title = table.Title ?? "";
             disc = (table.Disc == 0) ? 1 : table.Disc;
             trackNumber = table.Track;
             year = table.Year;

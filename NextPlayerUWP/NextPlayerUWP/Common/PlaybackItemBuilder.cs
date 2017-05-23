@@ -4,6 +4,8 @@ using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
+using NextPlayerUWPDataLayer.Playlists;
+using PlaylistsNET.Content;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,7 +77,7 @@ namespace NextPlayerUWP.Common
             switch (song.SourceType)
             {
                 case MusicSource.LocalFile:
-                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.Substring(song.Path.LastIndexOf('.'))))
+                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.GetExtension()))
                     {
                         mpi = PrepareFromLocalFile(song);
                     }
@@ -85,7 +87,7 @@ namespace NextPlayerUWP.Common
                     }
                     break;
                 case MusicSource.LocalNotMusicLibrary:
-                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.Substring(song.Path.LastIndexOf('.'))))
+                    if (App.FileFormatsHelper.IsDefaultSupportedType(song.Path.GetExtension()))
                     {
                         mpi = PrepareFromFutureAccessList(song);
                     }
@@ -95,17 +97,15 @@ namespace NextPlayerUWP.Common
                     }
                     break;
                 case MusicSource.RadioJamendo:
-                    mpi = await PrepareFromJamendo(song);
+                    //mpi = await PrepareFromJamendo(song);
+                    mpi = PrepareDefaultItem();
                     break;
                 case MusicSource.Dropbox:
-                    mpi = PrepareFromCloudStorage(song);
-                    break;
                 case MusicSource.OneDrive:
-                    mpi = PrepareFromCloudStorage(song);
-                    break;
                 case MusicSource.PCloud:
                     mpi = PrepareFromCloudStorage(song);
                     break;
+                case MusicSource.Radio:
                 case MusicSource.OnlineFile:
                     mpi = PrepareFromOnlineFile(song);
                     break;
@@ -214,23 +214,23 @@ namespace NextPlayerUWP.Common
         //    return null;
         //}
 
-        private static async Task<MediaPlaybackItem> PrepareFromJamendo(SongItem song)
-        {
-            if ("" == song.Path)
-            {
-                var stream = await PlaybackService.Instance.jRadioData.GetRadioStream(song.SongId);
-                if (stream != null)
-                {
-                    song.Path = stream.Url;
-                }
-            }
-            var jamendoSource = MediaSource.CreateFromUri(new Uri(song.Path));
-            var jamendoPlaybackItem = new MediaPlaybackItem(jamendoSource);
-            jamendoPlaybackItem.Source.OpenOperationCompleted += PlaybackService.RadioSource_OpenOperationCompleted;
-            UpdateDisplayProperties(jamendoPlaybackItem, song);
-            jamendoSource.CustomProperties[propertySongId] = song.SongId;
-            return jamendoPlaybackItem;
-        }
+        //private static async Task<MediaPlaybackItem> PrepareFromJamendo(SongItem song)
+        //{
+        //    if ("" == song.Path)
+        //    {
+        //        var stream = await PlaybackService.Instance.jRadioData.GetRadioStream(song.SongId);
+        //        if (stream != null)
+        //        {
+        //            song.Path = stream.Url;
+        //        }
+        //    }
+        //    var jamendoSource = MediaSource.CreateFromUri(new Uri(song.Path));
+        //    var jamendoPlaybackItem = new MediaPlaybackItem(jamendoSource);
+        //    jamendoPlaybackItem.Source.OpenOperationCompleted += PlaybackService.RadioSource_OpenOperationCompleted;
+        //    UpdateDisplayProperties(jamendoPlaybackItem, song);
+        //    jamendoSource.CustomProperties[propertySongId] = song.SongId;
+        //    return jamendoPlaybackItem;
+        //}
 
         private static MediaPlaybackItem PrepareFromCloudStorage(SongItem song)
         {
@@ -247,15 +247,84 @@ namespace NextPlayerUWP.Common
             return playbackItem;
         }
 
+        private static MediaPlaybackItem PrepareFromOnlinePlaylist(SongItem song)
+        {
+            MediaBinder mb = new MediaBinder();
+            mb.Token = song.SongId.ToString();
+            mb.Binding += BindSourcePlaylist;
+
+            var source = MediaSource.CreateFromMediaBinder(mb);
+            source.CustomProperties[propertySongId] = song.SongId;
+            var playbackItem = new MediaPlaybackItem(source);
+            playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
+            UpdateDisplayProperties(playbackItem, song);
+
+            return playbackItem;
+        }
+
+        private static async void BindSourcePlaylist(MediaBinder sender, MediaBindingEventArgs args)
+        {
+            var deferral = args.GetDeferral();
+            int id = Int32.Parse(args.MediaBinder.Token);
+            var song = NowPlayingPlaylistManager.Current.songs.FirstOrDefault(s => s.SongId == id);
+            try
+            {
+                using (var request = new Microsoft.Toolkit.Uwp.HttpHelperRequest(new Uri(song.Path), Windows.Web.Http.HttpMethod.Get))
+                {
+                    using (var response = await Microsoft.Toolkit.Uwp.HttpHelper.Instance.SendRequestAsync(request))
+                    {
+                        string p = await response.GetTextResultAsync();
+                        PlaylistFileReader pfr = new PlaylistFileReader();
+                        if (song.Path.EndsWith(".m3u"))
+                        {
+                            var m3u = pfr.OpenM3uPlaylist(p);
+                            if (m3u.PlaylistEntries.Count > 0)
+                            {
+                                args.SetUri(new Uri(m3u.PlaylistEntries[0].Path));
+                            }
+                            else
+                            {
+                                args.SetUri(new Uri(AppConstants.EmptyMP3File));
+                            }
+                        }
+                        else if (song.Path.EndsWith(".pls"))
+                        {
+                            var pls = pfr.OpenPlsPlaylist(p);
+                            if (pls.PlaylistEntries.Count > 0)
+                            {
+                                args.SetUri(new Uri(pls.PlaylistEntries[0].Path));
+                            }
+                            else
+                            {
+                                args.SetUri(new Uri(AppConstants.EmptyMP3File));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                args.SetUri(new Uri(AppConstants.EmptyMP3File));
+            }
+            deferral.Complete();
+        }
+
         private static MediaPlaybackItem PrepareFromOnlineFile(SongItem song)
         {
-            if (String.IsNullOrEmpty(song.Path))
+            Uri uri;
+            try
             {
-                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("PrepareFromOnlineFile path error", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
-                TelemetryAdapter.TrackEvent("PrepareFromOnlineFile path error");
+                if (song.Path.EndsWith(".pls") || song.Path.EndsWith(".m3u"))
+                {
+                    return PrepareFromOnlinePlaylist(song);
+                }
+                uri = new Uri(song.Path);
+            }
+            catch (UriFormatException ex)
+            {
                 return PrepareDefaultItem();
             }
-            var source = MediaSource.CreateFromUri(new Uri(song.Path));//error opened from file?
+            var source = MediaSource.CreateFromUri(uri);
             var playbackItem = new MediaPlaybackItem(source);
             playbackItem.Source.OpenOperationCompleted += PlaybackService.Source_OpenOperationCompleted;
             UpdateDisplayProperties(playbackItem, song);
@@ -269,7 +338,16 @@ namespace NextPlayerUWP.Common
             int id = Int32.Parse(args.MediaBinder.Token);
             var song = NowPlayingPlaylistManager.Current.songs.FirstOrDefault(s => s.SongId == id);
             await UpdateSongContentPath(song, song.SourceType);
-            args.SetUri(new Uri(song.ContentPath));
+            if (String.IsNullOrEmpty(song.ContentPath))
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("BindSource path error", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("BindSource path error");
+                args.SetUri(new Uri(AppConstants.EmptyMP3File));
+            }
+            else
+            {
+                args.SetUri(new Uri(song.ContentPath));
+            }
 
             deferral.Complete();
         }

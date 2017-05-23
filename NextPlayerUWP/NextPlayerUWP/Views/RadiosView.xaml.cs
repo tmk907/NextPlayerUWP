@@ -1,9 +1,11 @@
 ﻿using NextPlayerUWP.ViewModels;
+using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Template10.Common;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -48,6 +50,28 @@ namespace NextPlayerUWP.Views
             var menu = this.Resources["ContextMenuStream"] as MenuFlyout;
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
+        }
+
+        private void RadioItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            var menu = this.Resources["ContextMenuFavouriteRadio"] as MenuFlyout;
+            var position = e.GetPosition(senderElement);
+            menu.ShowAt(senderElement, position);
+        }
+
+        private async void EditName_Click(object sender, RoutedEventArgs e)
+        {
+            RadioItem selected = (RadioItem)((MenuFlyoutItem)sender).CommandParameter;
+            ViewModel.EditedId = selected.BroadcastId;
+            ViewModel.NewName = selected.Name;
+            await ContentDialogEditName.ShowAsync();
+        }
+
+        private void GoToCuteRadioView(object sender, RoutedEventArgs e)
+        {
+            var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+            nav.Navigate(typeof(CuteRadioView));
         }
     }
 }

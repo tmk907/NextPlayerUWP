@@ -96,12 +96,15 @@ namespace NextPlayerUWP.ViewModels.Settings
             if (accentColors.Count == 0)
             {
                 ColorsHelper ch = new ColorsHelper();
-                var sc = ch.GetSavedUserAccentColor();
-                foreach (var c in ch.GetWin10Colors())
+                var sc = ch.GetSavedAppAccentColor();
+                foreach (var c in ch.GetWin10AccentColors())
                 {
                     AccentColors.Add(new SolidColorBrush(c));
                 }
             }
+
+            AccentFromAlbumArt = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AccentFromAlbumArt);
+            AlbumArtInBackground = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AlbumArtInBackground);
 
             if (menuButtons.Count == 0)
             {
@@ -383,8 +386,42 @@ namespace NextPlayerUWP.ViewModels.Settings
             var brush = grid.SelectedItem as SolidColorBrush;
             if (brush == null) return;
             ColorsHelper ch = new ColorsHelper();
-            ch.ChangeCurrentAccentColor(brush.Color);
-            ch.SaveUserAccentColor(brush.Color);
+            ch.ChangeAppAccentColor(brush.Color);
+            ch.SaveAppAccentColor(brush.Color);
+        }
+
+        private bool accentFromAlbumArt = false;
+        public bool AccentFromAlbumArt
+        {
+            get { return accentFromAlbumArt; }
+            set
+            {
+                if (isLoaded && value != accentFromAlbumArt)
+                {
+                    MessageHub.Instance.Publish(new AppColorAccent() { UseAlbumArtAccent = value });
+                    if (!value)
+                    {
+                        ColorsHelper ch = new ColorsHelper();
+                        ch.RestoreAppAccentColors();
+                    }
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, value);
+                }
+                Set(ref accentFromAlbumArt, value);
+            }
+        }
+
+        private bool albumArtInBackground = false;
+        public bool AlbumArtInBackground
+        {
+            get { return albumArtInBackground; }
+            set
+            {
+                Set(ref albumArtInBackground, value);
+                if (isLoaded)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, value);
+                }
+            }
         }
 
         private Dictionary<string, string> languageDescriptions = new Dictionary<string, string>()

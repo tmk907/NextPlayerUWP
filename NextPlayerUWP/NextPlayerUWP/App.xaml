@@ -29,8 +29,10 @@
                     <!--ChromeLow-->
                     <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlit" Color="#FFF2F2F2"/>
 
+                    <Color x:Key="UserAccentColorTr">#80FFA500</Color>
                     <Color x:Key="UserAccentColor">#FFFFA500</Color>
                     <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="UserAccentBrushTr" Color="{StaticResource UserAccentColorTr}"/>
                     
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{StaticResource UserAccentColor}"/>
@@ -71,27 +73,6 @@
                         <Setter Property="PaneBorderThickness" Value="0"/>
                         <Setter Property="SecondarySeparator" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
                     </Style>
-                    
-                    <!--<Style TargetType="controls:HamburgerMenu" x:Key="HamburgerMenuStyle">
-                       
-
-
-                        <Setter Property="SecondarySeparator" Value="Gray" />
-
-                        <Setter Property="HamburgerBackground" Value="Silver" />
-                        <Setter Property="HamburgerForeground" Value="Black" />
-                        <Setter Property="NavAreaBackground" Value="#FFF2F2F2" />
-                        <Setter Property="NavButtonForeground" Value="Black" />
-                        <Setter Property="NavButtonBackground" Value="#FFF2F2F2" />
-                        <Setter Property="NavButtonHoverForeground" Value="Black" />
-                        <Setter Property="NavButtonHoverBackground" Value="#FFDADADA" />
-                        <Setter Property="NavButtonPressedForeground" Value="White" />
-                        <Setter Property="NavButtonPressedBackground" Value="LightSkyBlue" />
-                        <Setter Property="NavButtonCheckedForeground" Value="Black" />
-                        <Setter Property="NavButtonCheckedBackground" Value="{StaticResource NavButtonCheckedLightBackground}" />
-                        <Setter Property="NavButtonCheckedIndicatorBrush" Value="{StaticResource MenuIndicatorLightBrush}" />
-
-                    </Style>-->
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <x:String x:Key="SlideableListItemLeftLabel">Play</x:String>
@@ -112,9 +93,11 @@
                     <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFill" Color="#FF1F1F1F"/>
                     <!--ChromeLow-->
                     <SolidColorBrush x:Key="SliderHorizontalDecreaseRectFillHighlit" Color="#FF171717"/>
-                    
+
+                    <Color x:Key="UserAccentColorTr">#8000B7C3</Color>
                     <Color x:Key="UserAccentColor">#FF00B7C3</Color>
                     <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="UserAccentBrushTr" Color="{StaticResource UserAccentColorTr}"/>
                     
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{StaticResource UserAccentColor}"/>
@@ -211,11 +194,12 @@
             <converters:IntToDouble x:Key="IntToDoubleConverter"/>
 
             <DataTemplate x:Key="ZoomedOutItemsTemplate">
-                <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"
-                     Height="84"
-                     BorderThickness="1" 
-                     BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
-                     Background="Transparent">
+                <Border  
+                    Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=desktop}"
+                    Height="84"
+                    BorderThickness="0,0,0,1" 
+                    BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
+                    Background="Transparent">
                     <TextBlock Text="{Binding Group.Key}"
                            FontSize="32"
                            FontWeight="Normal"
@@ -225,40 +209,35 @@
                 </Border>
             </DataTemplate>
             <DataTemplate x:Key="ZoomedOutItemsTemplateMobile">
-                <Border  Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=mobile}"
-                     Height="48"
-                     BorderThickness="1" 
-                     BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" 
-                     Background="Transparent">
+                <Border  
+                    Width="{Binding Group.Header, Converter={StaticResource ZoomedOutItemWidthConverter}, ConverterParameter=mobile}"
+                    Height="48"
+                    Margin="0,0,0,4"
+                    BorderThickness="0,0,0,1" 
+                    BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}"
+                    Background="Transparent">
                     <TextBlock Text="{Binding Group.Key}"
-                           FontSize="18"
-                           FontWeight="Normal"
-                           Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                        FontSize="26"
+                        FontWeight="Normal"
+                        Foreground="{StaticResource SystemControlBackgroundAccentBrush}"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,0"
+                        VerticalAlignment="Center"/>
                 </Border>
             </DataTemplate>
 
-            <!--<Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
-                <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"/>
-                <Setter Property="NavButtonBackground" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"/>
-
-                <Setter Property="AccentColor" Value="Red"/>
-                <Setter Property="HamburgerBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
-                <Setter Property="NavButtonHoverBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
-                <Setter Property="NavButtonPressedBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
-                
-                <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
-                
-                <Setter Property="NavButtonHoverForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
-                <Setter Property="HamburgerForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
-                <Setter Property="NavButtonForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
-                <Setter Property="NavButtonCheckedForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
-                <Setter Property="NavButtonPressedForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
-                
-                <Setter Property="PaneBorderThickness" Value="0"/>
-                <Setter Property="SecondarySeparator" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
-            </Style>-->
+            <Style x:Key="ZoomedOutItemContainerStyleMobile" TargetType="ListViewItem">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+                <Setter Property="Height" Value="60" />
+                <Setter Property="MinHeight" Value="40"/>
+                <Setter Property="MinWidth" Value="40"/>
+                <Setter Property="Margin" Value="8,4,8,4"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
             
             <Style x:Key="ZoomedOutItemContainerStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -270,6 +249,21 @@
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="Padding" Value="0"/>
             </Style>
+
+            <ItemsPanelTemplate x:Key="ZoomedOutItemsPanelTemplateMobile">
+                <ItemsWrapGrid 
+                    Orientation="Horizontal"
+                    ItemHeight="60"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+            </ItemsPanelTemplate>
+
+            <ItemsPanelTemplate x:Key="ZoomedOutItemsPanelTemplateDesktop">
+                <ItemsWrapGrid 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+            </ItemsPanelTemplate>
 
             <Style x:Key="ListViewItemContainerStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>

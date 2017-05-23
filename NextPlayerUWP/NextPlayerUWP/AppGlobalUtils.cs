@@ -58,19 +58,28 @@ namespace NextPlayerUWP
             }
         }
 
-        public static void ChangeRightPanelVisibility(bool visible)
+        private static PlayerInitializer playerInitializer;
+        public static PlayerInitializer PlayerInitializer
         {
-            if (Window.Current == null || Window.Current.Content == null) return;
-            ((Shell)((ModalDialog)Window.Current.Content).Content).ChangeRightPanelVisibility(visible);
+            get
+            {
+                if (playerInitializer == null)
+                {
+                    playerInitializer = new PlayerInitializer();
+                }
+                return playerInitializer;
+            }
         }
 
-        public static void OnNavigatedToNewView(bool visible, bool isNowPlayingDesktopActive = false)
+        public static bool IsBottomPlayerVMCreated = false;
+        public static void OnNavigatedToNewView(bool bottomPlayerVisible, bool isNowPlayingDesktopActive = false)
         {
-            if (Window.Current == null || Window.Current.Content == null) return;
-            //((Shell)((ModalDialog)Window.Current.Content).Content).ChangeBottomPlayerVisibility(visible);
-            ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
-            vml.BottomPlayerVM.BottomPlayerVisibility = visible;
-            ((Shell)((ModalDialog)Window.Current.Content).Content).OnDesktopViewActiveChange(isNowPlayingDesktopActive);
+            if (IsBottomPlayerVMCreated)
+            {
+                ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
+                vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
+                vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
+            }
         }
 
         public static async Task ChangeStatusBarVisibility()

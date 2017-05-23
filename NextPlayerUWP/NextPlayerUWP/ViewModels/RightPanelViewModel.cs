@@ -8,11 +8,10 @@ using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Template10.Common;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Data.Json;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -21,20 +20,22 @@ namespace NextPlayerUWP.ViewModels
     public class RightPanelViewModel : Template10.Mvvm.ViewModelBase
     {
         ListViewScrollerHelper scrollerHelper;
-        LyricsExtensionsClient lyricsExtensions;
+        CancellationTokenSource cts;
 
         public RightPanelViewModel()
         {
             Logger2.DebugWrite("RightPanelViewModel()", "");
-
+            System.Diagnostics.Stopwatch s1 = new System.Diagnostics.Stopwatch();
+            s1.Start();
             ViewModelLocator vml = new ViewModelLocator();
             QueueVM = vml.QueueVM;
+            lyricsPanelVM = vml.LyricsPanelVM;
             scrollerHelper = new ListViewScrollerHelper();
             sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            lyricsExtensions = new LyricsExtensionsClient(vml.LyricsExtensionsService);
+            isInitialized = false;
             Init();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
@@ -42,22 +43,18 @@ namespace NextPlayerUWP.ViewModels
             MessageHub.Instance.Subscribe<ShowLyrics>(OnShowLyricsMessage);
             MessageHub.Instance.Subscribe<ShowNowPlayingList>(OnShowNowPlayingListMessage);
 
-            lyricsWebview = new WebView(WebViewExecutionMode.SeparateThread);
-            lyricsWebview.ContentLoading += webView1_ContentLoading;
-            lyricsWebview.NavigationStarting += webView1_NavigationStarting;
-            lyricsWebview.DOMContentLoaded += webView1_DOMContentLoaded;
-            lyricsWebview.NavigationCompleted += LyricsWebview_NavigationCompleted;
+            cts = new CancellationTokenSource();
 
-        }
-        
-        public WebView GetWebView()
-        {
-            return lyricsWebview;
+            s1.Stop();
+            System.Diagnostics.Debug.WriteLine("RightPanelViewModel() End {0}ms", s1.ElapsedMilliseconds);
         }
 
+        private bool isInitialized;
         private void Init()
         {
+            if (isInitialized) return;
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
+            isInitialized = true;
         }
         
         public void OnShowLyricsMessage(ShowLyrics msg)
@@ -78,9 +75,11 @@ namespace NextPlayerUWP.ViewModels
         private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
         {
             PlaybackService.MediaPlayerTrackChanged -= TrackChanged;
+            isInitialized = false;
         }
 
         public QueueViewModelBase QueueVM { get; set; }
+        private LyricsPanelViewModel lyricsPanelVM;
 
         private int selectedPivotIndex = 0;
         public int SelectedPivotIndex
@@ -96,7 +95,16 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (QueueVM.SongsCount == 0 || index > QueueVM.SongsCount - 1 || index < 0) return;
                 scrollerHelper.ScrollAfterTrackChanged(index);
-                await ChangeLyrics(index);
+                if (SelectedPivotIndex == 0)
+                {
+                    lyricsLoaded = false;
+                    cachedIndex = index;
+                }
+                else
+                {
+                    var song = QueueVM.Songs[index];
+                    await lyricsPanelVM.ChangeLyrics(song);
+                }
             });
         }
 
@@ -251,10 +259,11 @@ namespace NextPlayerUWP.ViewModels
             await NowPlayingPlaylistManager.Current.Delete(item.SongId);
         }
 
-        public void Share(object sender, RoutedEventArgs e)
+        public async void Share(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            // App.Current.NavigationService.Navigate(App.Pages.BluetoothSharePage, item.GetParameter()); TODO
+            ShareHelper sh = new ShareHelper();
+            await sh.Share(item);
         }
 
         public async void Pin(object sender, RoutedEventArgs e)
@@ -308,6 +317,9 @@ namespace NextPlayerUWP.ViewModels
         }
 
         SortingHelperForSongItemsInPlaylist sortingHelper;
+        private Windows.ApplicationModel.Resources.ResourceLoader loader;
+        private bool lyricsLoaded = false;
+        private int cachedIndex = 0;
 
         protected ObservableCollection<ComboBoxItemValue> comboBoxItemValues = new ObservableCollection<ComboBoxItemValue>();
         public ObservableCollection<ComboBoxItemValue> ComboBoxItemValues
@@ -334,6 +346,19 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        public async void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((Pivot)sender).SelectedIndex == 1)
+            {
+                if (!lyricsLoaded && QueueVM.Songs.Count > 0)
+                {
+                    var song = QueueVM.Songs[cachedIndex];
+                    await lyricsPanelVM.ChangeLyrics(song);
+                    lyricsLoaded = true;
+                }
+            }
+        }
+
         public async void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
@@ -343,289 +368,23 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
-        #region Lyrics
-
-        private string artist = "Artist";
-        public string Artist
+        private string artistSearch = "";
+        public string ArtistSearch
         {
-            get { return artist; }
-            set { Set(ref artist, value); }
+            get { return artistSearch; }
+            set { Set(ref artistSearch, value); }
         }
 
-        private string title = "Title";
-        public string Title
+        private string titleSearch = "";
+        public string TitleSearch
         {
-            get { return title; }
-            set { Set(ref title, value); }
+            get { return titleSearch; }
+            set { Set(ref titleSearch, value); }
         }
 
-        private string lyrics = "Lyrics";
-        public string Lyrics
+        public async void SearchLyrics()
         {
-            get { return lyrics; }
-            set { Set(ref lyrics, value); }
+            await lyricsPanelVM.SearchLyrics(artistSearch, titleSearch);
         }
-
-        private string statusText = "";
-        public string StatusText
-        {
-            get { return statusText; }
-            set { Set(ref statusText, value); }
-        }
-
-        private bool statusVisibility = false;
-        public bool StatusVisibility
-        {
-            get { return statusVisibility; }
-            set { Set(ref statusVisibility, value); }
-        }
-
-        private bool webVisibility = false;
-        public bool WebVisibility
-        {
-            get { return webVisibility; }
-            set { Set(ref webVisibility, value); }
-        }
-
-        private bool showProgressBar = false;
-        public bool ShowProgressBar
-        {
-            get { return showProgressBar; }
-            set { Set(ref showProgressBar, value); }
-        }
-
-        public async void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (((Pivot)sender).SelectedIndex == 1)
-            {
-                if (lyricsNotLoaded)
-                {
-                    await ChangeLyrics(cachedIndex);
-                    lyricsNotLoaded = false;
-                }
-            }
-        }
-
-        private WebView lyricsWebview;
-        private string address;
-        private bool original = true;
-        private Windows.ApplicationModel.Resources.ResourceLoader loader;
-        private bool lyricsNotLoaded = false;
-        private int cachedIndex = 0;
-
-        //TODO sprawdzac z ustawien
-        private bool autoLoadFromWeb = true;
-
-        private async Task ChangeLyrics(int index)
-        {
-            if (SelectedPivotIndex == 0)
-            {
-                lyricsNotLoaded = true;
-                cachedIndex = index;
-                return;
-            }
-            original = true;
-
-            //appBarSave.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-
-            var song = QueueVM.Songs[index];
-            Title = song.Title;
-            Artist = song.Artist;
-            Lyrics = "";
-            string dbLyrics = await DatabaseManager.Current.GetLyricsAsync(song.SongId);
-            WebVisibility = false;
-            if (string.IsNullOrEmpty(dbLyrics))
-            {
-                ShowProgressBar = true;
-                var extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title);
-                ShowProgressBar = false;
-
-                if (extLyrics.Lyrics == "")
-                {
-                    if (extLyrics.Url != "")
-                    {
-                        try
-                        {
-                            ShowProgressBar = true;
-                            lyricsWebview.Navigate(new Uri(extLyrics.Url));
-                        }
-                        catch (Exception ex)
-                        {
-                            ShowProgressBar = false;
-                        }
-                    }
-                    else
-                    {
-                        if (autoLoadFromWeb)
-                        {
-                            try
-                            {
-                                lyricsWebview.Stop();
-                            }
-                            catch (InvalidOperationException ex)
-                            {
-
-                            }
-                            await LoadLyricsFromWebsite();
-                        }
-                    }
-                }
-                else
-                {
-                    original = false;
-                    Lyrics = extLyrics.Lyrics;
-                }
-            }
-            else
-            {
-                original = false;
-                Lyrics = dbLyrics;
-            }
-            TelemetryAdapter.TrackEvent("ChangeLyrics()");
-        }
-
-        private async Task LoadLyricsFromWebsite()
-        {
-            StatusText = "";
-
-            ShowProgressBar = true;
-            StatusVisibility = true;
-            WebVisibility = false;
-
-            //StatusText = loader.GetString("Connecting") + "...";
-
-            string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?action=lyrics&artist=" + artist + "&song=" + title + "&fmt=realjson");
-            if (result == null || result == "")
-            {
-                StatusText = loader.GetString("ConnectionError");
-                ShowProgressBar = false;
-                return;
-            }
-            JsonValue jsonList;
-            bool isJson = JsonValue.TryParse(result, out jsonList);
-            if (isJson)
-            {
-                string l = jsonList.GetObject().GetNamedString("lyrics");
-                if (l == "Not found")
-                {
-                    StatusText = loader.GetString("CantFindLyrics");
-                    ShowProgressBar = false;
-                }
-                else
-                {
-                    address = jsonList.GetObject().GetNamedString("url");
-                    address += "?useskin=wikiamobile";
-                    try
-                    {
-                        Uri a = new Uri(address);
-                        lyricsWebview.Navigate(a);
-
-                    }
-                    catch (FormatException e)
-                    {
-                        StatusText = loader.GetString("ConnectionError");
-                        ShowProgressBar = false;
-                    }
-                }
-            }
-            else
-            {
-                StatusText = loader.GetString("ConnectionError");
-                ShowProgressBar = false;
-            }
-        }
-
-        private async Task<string> ReadDataFromWeb(string a)
-        {
-            var client = new HttpClient();
-            string result = "";
-            try
-            {
-                var response = await client.GetAsync(new Uri(a));
-                result = await response.Content.ReadAsStringAsync();
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return result;
-        }
-
-        private bool IsAllowedUri(Uri uri)
-        {
-            return uri.ToString().Contains("lyrics.wikia.com");
-        }
-
-        private void webView1_NavigationStarting(object sender, WebViewNavigationStartingEventArgs args)
-        {
-            if (!IsAllowedUri(args.Uri))
-                args.Cancel = true;
-        }
-
-        private void webView1_ContentLoading(WebView sender, WebViewContentLoadingEventArgs args)
-        {
-            if (args.Uri != null)
-            {
-                //StatusText = "Loading content for " + args.Uri.ToString();
-            }
-        }
-
-        private void webView1_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
-        {
-            StatusVisibility = false;
-            WebVisibility = true;
-
-            if (original)
-            {
-                //await ParseLyrics();
-                original = false;
-            }
-        }
-
-
-        private void LyricsWebview_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-        {
-            ShowProgressBar = false;
-        }
-
-
-        private async Task ParseLyrics()
-        {
-            try
-            {
-                string html = await lyricsWebview.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
-                int i0 = html.IndexOf("Tap what's hiding behind");
-                if (i0 < 0)
-                {
-                    int i1 = html.IndexOf("div class=\"lyricbox");
-                    if (i1 > 0)
-                    {
-                        int i2 = html.IndexOf("</script>", i1) + "</script>".Length;
-                        int i3 = html.IndexOf("<script>", i2);
-
-                        string text = html.Substring(i2, i3 - i2);
-                        lyrics = text.Replace("<br>", "\n").Replace("<b>", "").Replace("</b>", "").Replace("&amp;", "&").Replace("<i>", "(").Replace("</i>", ")");
-                        Artist = artist;
-                        Title = title;
-                        Lyrics = lyrics;
-
-                        await SaveLyrics();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger2.Current.WriteMessage("Lyrics ParseLyrics() " + "\n" + address + " " + artist + " " + title + "\n" + ex.Message);
-            }
-        }
-
-        private async Task SaveLyrics()
-        {
-            int songId = NowPlayingPlaylistManager.Current.GetCurrentPlaying().SongId;
-            await DatabaseManager.Current.UpdateLyricsAsync(songId, lyrics);
-            //!SaveLater.Current.SaveLyricsLater(songId, lyrics);
-        }
-
-        #endregion
     }
 }

@@ -1,14 +1,15 @@
 ﻿using Microsoft.Toolkit.Uwp;
 using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -16,12 +17,17 @@ namespace NextPlayerUWP.ViewModels
     {
         public QueueViewModelBase()
         {
+            System.Diagnostics.Debug.WriteLine("QueueViewModelBase");
+            isInitialized = false;
             Init();
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
             lastFmCache = new LastFmCache();
+            accentToken = MessageHub.Instance.Subscribe<AppColorAccent>(OnAppAccentChange);
         }
         private LastFmCache lastFmCache;
+        private bool isInitialized;
+        private Guid accentToken;
 
         private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
         {
@@ -33,12 +39,14 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.MediaPlayerTrackChanged -= ChangeSong;
             SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
-            NowPlayingPlaylistManager.NPListChanged -= NPListChanged;
-
+            NowPlayingPlaylistManager.NPListChanged -= UpdatePlaylist;
+            isInitialized = false;
         }
 
         private void Init()
         {
+            if (isInitialized) return;
+            System.Diagnostics.Debug.WriteLine("QueueViewModelBase.Init()");
             CurrentSong = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             if (!currentSong.IsAlbumArtSet)
             {
@@ -48,22 +56,25 @@ namespace NextPlayerUWP.ViewModels
             {
                 CoverUri = currentSong.AlbumArtUri;
             }
+            AlbumArtColor = Colors.Gray;
+            //ChangeAlbumArtColor();
             if (songs.Count == 0)
             {
                 UpdatePlaylist();
             }
-
+            CurrentSongNumber = PlaybackService.Instance.CurrentSongIndex + 1;
             PlaybackService.MediaPlayerTrackChanged += ChangeSong;
             SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
-            NowPlayingPlaylistManager.NPListChanged += NPListChanged;
-
+            NowPlayingPlaylistManager.NPListChanged += UpdatePlaylist;
+            isInitialized = true;
         }
 
         private SongItem currentSong = new SongItem();
         public SongItem CurrentSong
         {
-            get {
+            get
+            {
                 if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
                 {
                     currentSong = new SongItem();
@@ -97,6 +108,17 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        private bool useAlbumArtAccent = false;
+        private ColorsHelper colorsHelper = new ColorsHelper();
+        private ConcurrentDictionary<Uri, Color> cachedColors = new ConcurrentDictionary<Uri, Color>();
+
+        private Color albumArtColor;
+        public Color AlbumArtColor
+        {
+            get { return albumArtColor; }
+            set { Set(ref albumArtColor, value); }
+        }
+
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
         public ObservableCollection<SongItem> Songs
         {
@@ -116,37 +138,37 @@ namespace NextPlayerUWP.ViewModels
 
         private async void ChangeSong(int index)
         {
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            await d.DispatchAsync(() =>
             {
                 CurrentSong = NowPlayingPlaylistManager.Current.GetSongItem(index);
                 CoverUri = currentSong.AlbumArtUri;
                 CurrentSongNumber = index + 1;
             });
+            await ChangeAlbumArtColor();
         }
 
         public async void ChangeCoverUri(Uri cacheUri)
         {
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            await d.DispatchAsync(() =>
             {
                 CoverUri = cacheUri;
             });
-        }
-
-        private void NPListChanged()
-        {
-            UpdatePlaylist();
-            SongsCount = NowPlayingPlaylistManager.Current.songs.Count;
+            await ChangeAlbumArtColor();
         }
 
         private void UpdatePlaylist()
         {
             Songs = NowPlayingPlaylistManager.Current.songs;
+            SongsCount = NowPlayingPlaylistManager.Current.songs.Count;
         }
 
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
             await Task.Delay(400);
-            await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            await d.DispatchAsync(async () =>
             {
                 var duration = PlaybackService.Instance.Duration;
                 if (duration == TimeSpan.MaxValue)
@@ -163,6 +185,42 @@ namespace NextPlayerUWP.ViewModels
                     await DatabaseManager.Current.UpdateSongDurationAsync(currentSong.SongId, currentSong.Duration);//.ConfigureAwait(false);
                 }
             });
+        }
+
+        private void OnAppAccentChange(AppColorAccent message)
+        {
+            useAlbumArtAccent = message.UseAlbumArtAccent;
+            if (useAlbumArtAccent)
+            {
+                ChangeAlbumArtColor();
+            }
+        }
+
+        private async Task ChangeAlbumArtColor()
+        {
+            if (useAlbumArtAccent)
+            {
+                if (cachedColors.ContainsKey(coverUri))
+                {
+                    var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+                    await d.DispatchAsync(() =>
+                    {
+                        AlbumArtColor = cachedColors[coverUri];
+                        colorsHelper.ChangeAppAccentColor(albumArtColor);
+                    });
+                }
+                else
+                {
+                    var color = await colorsHelper.GetDominantColorFromSavedAlbumArt(coverUri);
+                    cachedColors.TryAdd(coverUri, color);
+                    var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+                    await d.DispatchAsync(() =>
+                    {
+                        AlbumArtColor = color;
+                        colorsHelper.ChangeAppAccentColor(albumArtColor);
+                    });
+                }
+            }
         }
     }
 }

@@ -97,7 +97,7 @@
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Left">
                             <Button.Content>
-                                <SymbolIcon Symbol="Copy"/>
+                                <SymbolIcon Symbol="OpenLocal"/>
                             </Button.Content>
                         </Button>
                         

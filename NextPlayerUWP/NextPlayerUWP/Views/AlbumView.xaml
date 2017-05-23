@@ -38,8 +38,8 @@
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
             <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit" 
                             Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <!--<MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>-->
+            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <SolidColorBrush x:Key="ForegroundColor" x:Name="ForegroundColor" Color="{ThemeResource SystemBaseHighColor}"/>
         <Style x:Key="AlbumDescriptionAlbumNameStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
@@ -362,8 +362,6 @@
                         <Setter Target="AlbumSongsListView.EvenRowBackground" Value="{ThemeResource ListViewItemBackgroundSecond}"/>
                         <Setter Target="AlbumSongsListView.OddRowBackground" Value="{ThemeResource ListViewItemBackgroundNormal}"/>
                         <Setter Target="AlbumCoverImage.Visibility" Value="Visible"/>
-                        <Setter Target="DarkenLayer.Visibility" Value="Collapsed"/>
-                        <Setter Target="DarkenLayer.Opacity" Value="0"/>
                         <Setter Target="ForegroundColor.Color" Value="{ThemeResource SystemBaseHighColor}"/>
                         <Setter Target="AlbumSongsListView.CanDragItems" Value="True"/>
                     </VisualState.Setters>
@@ -423,12 +421,13 @@
                 Stretch="UniformToFill"
                 x:DeferLoadStrategy="Lazy"
                 Visibility="Collapsed"
+                Opacity="0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 ImageOpened="AlbumCoverImageBG_ImageOpened">
             <Image.Source>
                 <BitmapImage 
-                    UriSource="{Binding Album.ImageUri, Mode=OneWay}"/>
+                    UriSource="{x:Bind ViewModel.Album.ImageUri, Mode=OneWay}"/>
             </Image.Source>
         </Image>
         <Rectangle x:Name="DarkenLayer" 
@@ -454,19 +453,19 @@
                                     VerticalAlignment="Center"
                                     Text="Album:"/>
                     <TextBox Margin="0,4,4,0"
-                                  Text="{Binding EditedAlbum.AlbumParam, Mode=TwoWay}"/>
+                                  Text="{x:Bind ViewModel.EditedAlbum.AlbumParam, Mode=TwoWay}"/>
                     <TextBlock Margin="0,4,4,0"
                                     x:Uid="TBAlbumArtist"
                                     VerticalAlignment="Center"
                                     Text="Album artist:"/>
                     <TextBox Margin="0,4,4,0"
-                                  Text="{Binding EditedAlbum.AlbumArtist, Mode=TwoWay}"/>
+                                  Text="{x:Bind ViewModel.EditedAlbum.AlbumArtist, Mode=TwoWay}"/>
                     <TextBlock Margin="0,4,4,0"
                                     VerticalAlignment="Center"
                                     x:Uid="TBYear"
                                     Text="Year:"/>
                     <TextBox Margin="0,4,4,0"
-                                  Text="{Binding EditedAlbum.Year, Mode=TwoWay}"/>
+                                  Text="{x:Bind ViewModel.EditedAlbum.Year, Mode=TwoWay}"/>
                 </StackPanel>
             </ContentDialog.Content>
         </ContentDialog>
@@ -485,10 +484,11 @@
                     x:Name="AlbumCoverImage"
                     x:DeferLoadStrategy="Lazy" 
                     Visibility="Collapsed"
+                    Opacity="0"
                     ImageOpened="AlbumCoverImage_ImageOpened">
                 <Image.Source>
                     <BitmapImage
-                        UriSource="{Binding Album.ImageUri, Mode=OneWay}"
+                        UriSource="{x:Bind ViewModel.Album.ImageUri, Mode=OneWay}"
                         DecodePixelType="Logical"
                         DecodePixelHeight="220" DecodePixelWidth="220"/>
                 </Image.Source>
@@ -507,8 +507,8 @@
                         Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
                         Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
                 <TextBlock Grid.Row="2"
-                            Text="{Binding Album.Year}"
-                            Visibility="{Binding Album.Year, Converter={StaticResource YearToVisibilityConverter}}"
+                            Text="{x:Bind ViewModel.Album.Year, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.Album.Year, Converter={StaticResource YearToVisibilityConverter},Mode=OneWay}"
                             Style="{StaticResource AlbumDescription2TBStyle}"/>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
@@ -516,7 +516,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
-                        Text="{Binding Album.Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                        Text="{x:Bind ViewModel.Album.Duration, Converter={StaticResource TimeSpanToStringConverter}, Mode=OneWay}"
                         Style="{StaticResource AlbumDescription2TBStyle}"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                         <Button Click="{x:Bind ViewModel.PlayAlbum}"
@@ -561,7 +561,7 @@
                     x:Name="AlbumSongsListView"
                     EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
                     OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-                    ItemsSource="{Binding Songs}"
+                    ItemsSource="{x:Bind ViewModel.Songs, Mode=OneWay}"
                     ItemTemplate="{StaticResource AlbumSongItemTemplateDesktop}"
                     ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
                     SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
@@ -606,8 +606,8 @@
                             Text="{x:Bind ViewModel.Album.AlbumArtist, Mode=OneWay}"
                             Style="{StaticResource AlbumDescriptionAlbumArtistStyle}"/>
                         <TextBlock Grid.Row="2"
-                            Text="{Binding Album.Year}"
-                            Visibility="{Binding Album.Year, Converter={StaticResource YearToVisibilityConverter}}"
+                            Text="{x:Bind ViewModel.Album.Year, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.Album.Year, Converter={StaticResource YearToVisibilityConverter}, Mode=OneWay}"
                             Style="{StaticResource AlbumDescription2TBStyle}"/>
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
@@ -615,7 +615,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0"
-                                Text="{Binding Album.Duration, Converter={StaticResource TimeSpanToStringConverter}}"
+                                Text="{x:Bind ViewModel.Album.Duration, Converter={StaticResource TimeSpanToStringConverter}, Mode=OneWay}"
                                 Style="{StaticResource AlbumDescription2TBStyle}"/>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                                 <Button Click="{x:Bind ViewModel.PlayAlbum}"
@@ -659,7 +659,7 @@
                     <mycontrols:AlternatingRowListView Grid.Row="1" Grid.ColumnSpan="2"
                         EvenRowBackground="{ThemeResource ListViewItemBackgroundSecondSemiTr}"
                         OddRowBackground="{ThemeResource ListViewItemBackgroundNormalSemiTr}"
-                        ItemsSource="{Binding Songs}"
+                        ItemsSource="{x:Bind ViewModel.Songs, Mode=OneWay}"
                         ItemTemplate="{StaticResource AlbumSongItemTemplateMobileWide}"
                         ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
                         SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"

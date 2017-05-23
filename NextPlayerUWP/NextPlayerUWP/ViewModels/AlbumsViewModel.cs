@@ -136,7 +136,18 @@ namespace NextPlayerUWP.ViewModels
 
         private async void MediaImport_MediaImported(string s)
         {
-            await Dispatcher.DispatchAsync(() => ReloadData());
+            Template10.Common.IDispatcherWrapper d = Dispatcher;
+            if (d == null)
+            {
+                d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            }
+            if (d == null)
+            {
+                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("AlbumsViewModel Dispatcher null", NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
+                TelemetryAdapter.TrackEvent("Dispatcher null");
+                return;
+            }
+            await d.DispatchAsync(() => ReloadData());
         }
 
         private async void App_SongUpdated(int id)
@@ -237,7 +248,7 @@ namespace NextPlayerUWP.ViewModels
                 }
                 if (find) break;
             }
-            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+            listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);//NullReferenceException
         }
 
         public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

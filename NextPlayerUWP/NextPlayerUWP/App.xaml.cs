@@ -1,7 +1,5 @@
-﻿using GalaSoft.MvvmLight.Threading;
-using Microsoft.HockeyApp;
+﻿using Microsoft.HockeyApp;
 using NextPlayerUWP.Common;
-using NextPlayerUWP.Messages;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;
@@ -9,7 +7,6 @@ using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,10 +14,8 @@ using Template10.Common;
 using Template10.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 
 namespace NextPlayerUWP
 {    
@@ -36,10 +31,15 @@ namespace NextPlayerUWP
 
         bool _isInBackgroundMode = false;
         private AppKeyboardShortcuts appShortcuts;
+        bool isBackgroundLeavedFirstTime = true;
+        private bool resumeAlbumArtFinder = false;
 
+        Stopwatch s1;
         public App()
         {
             InitializeComponent();
+            s1 = new Stopwatch();
+            s1.Start();
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
             MemoryManager.AppMemoryUsageLimitChanging += MemoryManager_AppMemoryUsageLimitChanging;
@@ -102,14 +102,19 @@ namespace NextPlayerUWP
             SplashFactory = (e) => new Views.Splash(e);
 
             appShortcuts = new AppKeyboardShortcuts();
-            
-            this.UnhandledException += App_UnhandledException;
+            OnStartAsyncFinished += InitAfterOnStart;
 
+            this.UnhandledException += App_UnhandledException;
+            s1.Stop();
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             //var gcTimer = new DispatcherTimer();
             //gcTimer.Tick += (sender, e) => { GC.Collect(); };
             //gcTimer.Interval = TimeSpan.FromSeconds(1);
             //gcTimer.Start();
         }
+
+        #region Events
 
         private void MemoryManager_AppMemoryUsageIncreased(object sender, object e)
         {
@@ -174,7 +179,7 @@ namespace NextPlayerUWP
                 //If we are in debug mode free memory here because the memory limits are turned off
                 //In release builds defer the actual reduction of memory to the limit changing event so we don't 
                 //unnecessarily throw away the UI
-
+                resumeAlbumArtFinder = AlbumArtFinder.Cancel();
                 ReduceMemoryUsage(0);
 #endif
             }
@@ -184,7 +189,6 @@ namespace NextPlayerUWP
             }
         }
 
-        bool isBackgroundLeavedFirstTime = true;
         private async void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             Debug.WriteLine("App App_LeavingBackground");
@@ -203,6 +207,13 @@ namespace NextPlayerUWP
                     Content = new Views.Shell(service),
                     ModalContent = new Views.Busy(),
                 };
+                
+
+                if (resumeAlbumArtFinder)
+                {
+                    AlbumArtFinder.StartLooking().ConfigureAwait(false);
+                }
+
                 deferral.Complete();
             }
             isBackgroundLeavedFirstTime = false;
@@ -216,6 +227,8 @@ namespace NextPlayerUWP
             Logger2.Current.LogAppUnhadledException(e);
         }
 
+        #endregion
+
         public enum Pages
         {
             AddToPlaylist,
@@ -227,6 +240,7 @@ namespace NextPlayerUWP
             Artist,
             AudioSettings,
             CloudStorageFolders,
+            CuteRadio,
             Genres,
             FileInfo,
             Folders,
@@ -250,19 +264,24 @@ namespace NextPlayerUWP
 
         public override UIElement CreateRootElement(IActivatedEventArgs e)
         {
+            s1.Stop();
+            Debug.WriteLine("Time CreateRootElement Start: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
             return new ModalDialog
             {
                 DisableBackButtonWhenModal = true,
                 Content = new Views.Shell(service),
                 ModalContent = new Views.Busy(),
-            };
+            };            
         }
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             Debug.WriteLine("OnInitializeAsync " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-
+            s1.Stop();
+            Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
             if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
             {
                 await SongCoverManager.Instance.Initialize(true);
@@ -271,16 +290,16 @@ namespace NextPlayerUWP
             {
                 await SongCoverManager.Instance.Initialize();
             }
-            DispatcherHelper.Initialize();
+           
             ColorsHelper ch = new ColorsHelper();
-            ch.RestoreUserAccentColors();
+            ch.RestoreAppAccentColors();
             TranslationHelper tr = new TranslationHelper();
             tr.ChangeSlideableItemDescription();
 
             await ChangeStatusBarVisibility();
             ThemeHelper.ApplyAppTheme(ThemeHelper.IsLightTheme);
 
-#region AddPageKeys
+            #region AddPageKeys
             var keys = PageKeys<Pages>();
             if (!keys.ContainsKey(Pages.AddToPlaylist))
                 keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
@@ -300,6 +319,8 @@ namespace NextPlayerUWP
                 keys.Add(Pages.AudioSettings, typeof(AudioSettingsView));
             if (!keys.ContainsKey(Pages.CloudStorageFolders))
                 keys.Add(Pages.CloudStorageFolders, typeof(CloudStorageFoldersView));
+            if (!keys.ContainsKey(Pages.CuteRadio))
+                keys.Add(Pages.CuteRadio, typeof(CuteRadioView));
             if (!keys.ContainsKey(Pages.FileInfo))
                 keys.Add(Pages.FileInfo, typeof(FileInfoView));
             if (!keys.ContainsKey(Pages.Folders))
@@ -348,156 +369,158 @@ namespace NextPlayerUWP
             }
             catch (Exception ex)
             {
-                //Logger.SaveInSettings("OnInitializeAsync DisplayRequestHelper " + ex);
-            }
-            //await MediaImport.CheckChanges();
-
-            try
-            {
-                AdDuplex.AdDuplexClient.Initialize("bfe9d689-7cf7-4add-84fe-444dc72e6f36");
-            }
-            catch (Exception ex)
-            {
-                Logger2.Current.WriteMessage("Adduplex initialize fail", Logger2.Level.WarningError);
             }
 
-            if (!isFirstRun)
-            {
-                AlbumArtFinder.StartLooking().ConfigureAwait(false);
-            }
-        }   
+            
+            s1.Stop();
+            Debug.WriteLine("Time OnInitializeAsync End: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
+        }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             Debug.WriteLine("OnStartAsync " + startKind + " " + args.PreviousExecutionState + " " + DetermineStartCause(args));
-            if (startKind == StartKind.Launch)
-            {
-                //TelemetryAdapter.TrackAppLaunch();
-            }
+            s1.Stop();
+            Debug.WriteLine("Time OnStartAsync Start: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
+
+            var fileArgs = args as FileActivatedEventArgs;
 
             if (isFirstRun)
             {
                 isFirstRun = false;
                 await NavigationService.NavigateAsync(Pages.Settings);
-                return;
-            }
-
-            var fileArgs = args as FileActivatedEventArgs;
-            if (fileArgs != null && fileArgs.Files.Any())
-            {
-                var file = fileArgs.Files.First() as StorageFile;
-                await OpenFileAndPlay(file);
-
-                if (DeviceFamilyHelper.IsDesktop())
-                {
-                    await NavigationService.NavigateAsync(Pages.NowPlayingDesktop);
-                }
-                else
-                {
-                    await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
-                }
-                if (fileArgs.Files.Count > 1)
-                {
-                    await OpenFilesAndAddToNowPlaying(fileArgs.Files.Skip(1));
-                }
             }
             else
             {
-                switch (DetermineStartCause(args))
+                if (fileArgs != null && fileArgs.Files.Any())
                 {
-                    case AdditionalKinds.SecondaryTile:
-                        LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
-                        if (!eventArgs.TileId.Contains(SettingsKeys.TileId))
-                        {
-                            //Logger.Save("event arg doesn't contain tileid " + Environment.NewLine + eventArgs.TileId + Environment.NewLine + eventArgs.Arguments);
-                            //Logger.SaveToFile();
-                            Debug.WriteLine("OnStartAsync event arg doesn't contain tileid");
-                            TelemetryAdapter.TrackEventException("event arg doesn't contain tileid");
-                        }
-                        Pages page = Pages.Playlists;
-                        string parameter = eventArgs.Arguments;
-                        MusicItemTypes type = MusicItem.ParseType(parameter);
-                        // dodac wybor w ustawieniach, czy przejsc do widoku, czy zaczac odtwarzanie i przejsc do teraz odtwarzane
-                        switch (type)
-                        {
-                            case MusicItemTypes.album:
-                                page = Pages.Album;
-                                parameter = MusicItem.SplitParameter(parameter)[1];
-                                break;
-                            case MusicItemTypes.albumartist:
-                                page = Pages.AlbumArtist;
-                                parameter = MusicItem.SplitParameter(parameter)[1];
-                                break;
-                            case MusicItemTypes.artist:
-                                page = Pages.Artist;
-                                parameter = MusicItem.SplitParameter(parameter)[1];
-                                break;
-                            case MusicItemTypes.folder:
-                                page = Pages.Playlist;
-                                break;
-                            case MusicItemTypes.genre:
-                                page = Pages.Playlist;
-                                break;
-                            case MusicItemTypes.plainplaylist:
-                                page = Pages.Playlist;
-                                break;
-                            case MusicItemTypes.smartplaylist:
-                                page = Pages.Playlist;
-                                break;
-                            case MusicItemTypes.song:
-                                //page = Pages.NowPlaying; ?
-                                break;
-                            case MusicItemTypes.unknown:
-                                TelemetryAdapter.TrackEventException("MusicItemTypes.unknown");
-                                break;
-                            default:
-                                break;
-                        }
-                        TelemetryAdapter.TrackEvent("LaunchFromSecondaryTile " + type.ToString());
-                        await NavigationService.NavigateAsync(page, parameter);
-                        break;
-                    case AdditionalKinds.Primary:
-                        if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                            args.PreviousExecutionState == ApplicationExecutionState.NotRunning || 
-                            args.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                        {
-                            Debug.WriteLine("OnStartAsync Primary closed");
+                    if (DeviceFamilyHelper.IsDesktop())
+                    {
+                        await NavigationService.NavigateAsync(Pages.NowPlayingDesktop);
+                    }
+                    else
+                    {
+                        await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
+                    }
+                }
+                else
+                {
+                    switch (DetermineStartCause(args))
+                    {
+                        case AdditionalKinds.SecondaryTile:
+                            LaunchActivatedEventArgs eventArgs = args as LaunchActivatedEventArgs;
+                            if (!eventArgs.TileId.Contains(SettingsKeys.TileId))
+                            {
+                                Debug.WriteLine("OnStartAsync event arg doesn't contain tileid");
+                                TelemetryAdapter.TrackEventException("event arg doesn't contain tileid");
+                            }
+                            Pages page = Pages.Playlists;
+                            string parameter = eventArgs.Arguments;
+                            MusicItemTypes type = MusicItem.ParseType(parameter);
+                            // dodac wybor w ustawieniach, czy przejsc do widoku, czy zaczac odtwarzanie i przejsc do teraz odtwarzane
+                            switch (type)
+                            {
+                                case MusicItemTypes.album:
+                                    page = Pages.Album;
+                                    parameter = MusicItem.SplitParameter(parameter)[1];
+                                    break;
+                                case MusicItemTypes.albumartist:
+                                    page = Pages.AlbumArtist;
+                                    parameter = MusicItem.SplitParameter(parameter)[1];
+                                    break;
+                                case MusicItemTypes.artist:
+                                    page = Pages.Artist;
+                                    parameter = MusicItem.SplitParameter(parameter)[1];
+                                    break;
+                                case MusicItemTypes.folder:
+                                    page = Pages.Playlist;
+                                    break;
+                                case MusicItemTypes.genre:
+                                    page = Pages.Playlist;
+                                    break;
+                                case MusicItemTypes.plainplaylist:
+                                    page = Pages.Playlist;
+                                    break;
+                                case MusicItemTypes.smartplaylist:
+                                    page = Pages.Playlist;
+                                    break;
+                                case MusicItemTypes.song:
+                                    //page = Pages.NowPlaying; ?
+                                    break;
+                                case MusicItemTypes.unknown:
+                                    TelemetryAdapter.TrackEventException("MusicItemTypes.unknown");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            TelemetryAdapter.TrackEvent("LaunchFromSecondaryTile " + type.ToString());
+                            await NavigationService.NavigateAsync(page, parameter);
+                            break;
+                        case AdditionalKinds.Primary:
+                            if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                                args.PreviousExecutionState == ApplicationExecutionState.NotRunning ||
+                                args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                            {
+                                Debug.WriteLine("OnStartAsync Primary closed");
+                                await NavigationService.NavigateAsync(Pages.Playlists);
+                            }
+                            else
+                            {
+                                Debug.WriteLine("OnStartAsync Primary not closed");
+                            }
+                            break;
+                        case AdditionalKinds.Toast:
+                            Debug.WriteLine("OnStartAsync Toast");
+                            var toastargs = args as ToastNotificationActivatedEventArgs;
+                            await NavigationService.NavigateAsync(Pages.Settings);
+                            break;
+                        default:
+                            Debug.WriteLine("OnStartAsync default");
                             await NavigationService.NavigateAsync(Pages.Playlists);
-                        }
-                        else
-                        {
-                            Debug.WriteLine("OnStartAsync Primary not closed");
-                            //Logger.SaveInSettings("Onstart from Primary " + args.PreviousExecutionState);
-                            //await NavigationService.NavigateAsync(Pages.Playlists);
-                        }
-                        break;
-                    case AdditionalKinds.Toast:
-                        Debug.WriteLine("OnStartAsync Toast");
-                        var toastargs = args as ToastNotificationActivatedEventArgs;
-                        await NavigationService.NavigateAsync(Pages.Settings);
-                        break;
-                    default:
-                        Debug.WriteLine("OnStartAsync default");
-                        //Logger.Save("OnStart default");
-                        //Logger.SaveToFile();
-                        //if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                        //    args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
-                        //{
-                            await NavigationService.NavigateAsync(Pages.Playlists);
-                        //}
-                        break;
+                            break;
+                    }
                 }
             }
-
-            
-            if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser ||
-                args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
-            {
-                await RegisterBGScrobbler();
-                await TileManager.ManageSecondaryTileImages();               
-            }
+            OnStartAsyncFinished?.Invoke(args.PreviousExecutionState, fileArgs);
+            s1.Stop();
+            Debug.WriteLine("Time OnStartAsync End: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
         }
-        
+
+        private delegate void OnStartAsyncFinishedHandler(ApplicationExecutionState state, FileActivatedEventArgs fileArgs);
+        private event OnStartAsyncFinishedHandler OnStartAsyncFinished;
+
+        public static FileActivatedEventArgs FileArgs;
+
+        private async void InitAfterOnStart(ApplicationExecutionState state, FileActivatedEventArgs fileArgs)
+        {
+            s1.Stop();
+            Debug.WriteLine("InitAfterOnStart: {0}ms", s1.ElapsedMilliseconds);
+            s1.Start();
+            if (fileArgs != null)
+            {
+                PlayerInitializer.SetFiles(fileArgs.Files);
+            }
+            await PlayerInitializer.InitMain();
+
+            if (state == ApplicationExecutionState.ClosedByUser ||
+                state == ApplicationExecutionState.NotRunning)
+            {
+                try
+                {
+                    await RegisterBGScrobbler();
+                    await TileManager.ManageSecondaryTileImages();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            s1.Stop();
+            Debug.WriteLine("InitAfterOnStart: End {0}ms", s1.ElapsedMilliseconds);
+        }
+
         public override async Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunch)
         {            
             Logger2.Current.WriteMessage("OnSuspendingAsync");
@@ -505,7 +528,27 @@ namespace NextPlayerUWP
             await base.OnSuspendingAsync(s, e, prelaunch);
         }
 
-#endregion
+        public override Task OnPrelaunchAsync(IActivatedEventArgs args, out bool runOnStartAsync)
+        {
+            runOnStartAsync = true;
+
+            var a = NowPlayingPlaylistManager.Current;
+            var b = PlaybackService.Instance;
+            
+            ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
+
+            var c = vml.PlayerVM;
+            var d = vml.QueueVM;
+            var e = vml.RightPanelVM;
+            var f = vml.PlaylistsVM;
+            var g = vml.BottomPlayerVM;
+
+            return Task.CompletedTask;
+        }
+
+        #endregion
+
+        public static bool CanLoadShellControls = false;
 
         private void Resetdb()
         {
@@ -516,54 +559,6 @@ namespace NextPlayerUWP
         {
             await BackgroundTaskHelper.CheckAppVersion();
             await BackgroundTaskHelper.RegisterBackgroundTasks();
-        }
-
-        private async Task OpenFileAndPlay(StorageFile file)
-        {
-            MediaImport mi = new MediaImport(FileFormatsHelper);
-            string type = file.FileType.ToLower();
-            if (FileFormatsHelper.IsFormatSupported(type))
-            {
-                SongItem si = await mi.OpenSingleFileAsync(file);
-                await NowPlayingPlaylistManager.Current.NewPlaylist(si);
-                await PlaybackService.Instance.PlayNewList(0);
-            }
-            else if (FileFormatsHelper.IsPlaylistSupportedType(type))
-            {
-                var playlist = await mi.OpenPlaylistFileAsync(file);
-                if (playlist != null)
-                {
-                    await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
-                    await PlaybackService.Instance.PlayNewList(0);
-                }
-            }
-        }
-
-        private async Task OpenFilesAndAddToNowPlaying(IEnumerable<IStorageItem> files)
-        {
-            MediaImport mi = new MediaImport(FileFormatsHelper);
-            List<SongItem> list = new List<SongItem>();
-            int i = 0;
-            const int size = 4;
-            foreach(var file in files)
-            {
-                var si = await mi.OpenSingleFileAsync(file as StorageFile);
-                list.Add(si);
-                if (i == size)
-                {
-                    await NowPlayingPlaylistManager.Current.Add(list);
-                    list.Clear();
-                    i = 0;
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            if (list.Count > 0)
-            {
-                await NowPlayingPlaylistManager.Current.Add(list);
-            }
         }
     }
 }

@@ -28,6 +28,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += View_Unloaded;
             ViewModel = (ArtistViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
+            selectionButtons.ShowShareButton = true;
         }
         //~ArtistView()
         //{

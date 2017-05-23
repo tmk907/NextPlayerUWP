@@ -62,6 +62,38 @@ namespace NextPlayerUWPDataLayer.Playlists
             return playlist;
         }
 
+        public M3uPlaylist OpenM3uPlaylist(string file)
+        {
+            M3uPlaylist playlist;
+            using (Stream stream = GenerateStreamFromString(file))
+            {
+                var content = new M3uContent();
+                playlist = content.GetFromStream(stream);
+            }
+            return playlist;
+        }
+
+        public PlsPlaylist OpenPlsPlaylist(string file)
+        {
+            PlsPlaylist playlist;
+            using (Stream stream = GenerateStreamFromString(file))
+            {
+                var content = new PlsContent();
+                playlist = content.GetFromStream(stream);
+            }
+            return playlist;
+        }
+
+        private static Stream GenerateStreamFromString(string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
         public async Task<M3uPlaylist> OpenM3u8Playlist(StorageFile file)
         {
             M3uPlaylist playlist;

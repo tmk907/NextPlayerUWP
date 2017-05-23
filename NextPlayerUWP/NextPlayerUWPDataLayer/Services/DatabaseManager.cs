@@ -33,8 +33,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         private DatabaseManager()
         {
-            connectionAsync = new SQLiteAsyncConnection(DBFilePath, true);
-            connection = new SQLiteConnection(DBFilePath, true);
+            connectionAsync = new SQLiteAsyncConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex, true);
+            connection = new SQLiteConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex, true);
             connection.BusyTimeout = TimeSpan.FromSeconds(10);
         }
 
@@ -73,6 +73,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<CachedScrobble>();
             connection.CreateTable<FutureAccessTokensTable>();
             connection.CreateTable<CloudAccountsTable>();
+            connection.CreateTable<RadiosTable>();
         }
 
         public void DeleteDatabase()
@@ -91,6 +92,7 @@ namespace NextPlayerUWPDataLayer.Services
             connection.DropTable<CachedScrobble>();
             connection.DropTable<FutureAccessTokensTable>();
             connection.DropTable<CloudAccountsTable>();
+            connection.DropTable<RadiosTable>();
         }
 
         public async Task ChangeToNotAvaialble(List<string> availableDirectories)
@@ -557,16 +559,6 @@ namespace NextPlayerUWPDataLayer.Services
 
         #region Get
 
-        public string GetAlbumArt(string album)
-        {
-            var q = connection.Table<AlbumsTable>().Where(a => a.Album.Equals(album)).ToList();
-            string imagepath = AppConstants.AlbumCover;
-            if (q.Count > 0)
-            {
-                imagepath = q.FirstOrDefault().ImagePath;
-            }
-            return imagepath;
-        }
 
         public string GetLyrics(int id)
         {
@@ -612,33 +604,12 @@ namespace NextPlayerUWPDataLayer.Services
             return s;
         }
 
-        public List<NowPlayingSong> GetNowPlayingSongs()
-        {
-            List<NowPlayingSong> songs = new List<NowPlayingSong>();
-            var query = connection.Table<NowPlayingTable>().OrderBy(s => s.Position).ToList();
-            foreach (var e in query)
-            {
-                songs.Add(CreateNowPlayingSong(e));
-            }
-            return songs;
-        }
-
-
-        public NowPlayingSong GetNowPlayingSong(int songId)
-        {
-            var list = connection.Table<NowPlayingTable>().Where(s => s.SongId.Equals(songId)).ToList();
-            if (list.Count > 0)
-            {
-                return CreateNowPlayingSong(list.FirstOrDefault());
-            }
-            return null;
-        }
-
         public async Task<SongItem> GetSongItemAsync(int id)
         {
-            var l = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
-            var i = l.FirstOrDefault();
-            return new SongItem(i);
+            var list = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(id)).ToListAsync();
+            var item = list.FirstOrDefault();
+            if (item == null) return new SongItem();
+            else return new SongItem(item);
         }
 
         public async Task<SongItem> GetSongItemIfExistAsync(string path)
@@ -942,35 +913,40 @@ namespace NextPlayerUWPDataLayer.Services
             return songs;
         }
 
-        public ObservableCollection<SongItem> GetSongItemsFromNowPlaying()
+        public async Task<ObservableCollection<SongItem>> GetSongItemsFromNowPlayingAsync()
         {
-            var query = connection.Table<NowPlayingTable>().OrderBy(e => e.Position).ToList();
             ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
-            foreach (var e in query)
+            Dictionary<int, SongItem> online = new Dictionary<int, SongItem>();
+
+            var songsFromDatabase = await connectionAsync.QueryAsync<SongsTable>("SELECT SongsTable.* FROM NowPlayingTable LEFT JOIN SongsTable ON NowPlayingTable.SongId = SongsTable.SongId ORDER BY NowPlayingTable.Position");
+            var radios = await connectionAsync.QueryAsync<NowPlayingTable>("SELECT NowPlayingTable.* FROM NowPlayingTable Left JOIN SongsTable ON NowPlayingTable.SongId = SongsTable.SongId WHERE SongsTable.SongId IS NULL ORDER BY NowPlayingTable.Position");
+
+            foreach (var item in radios)
             {
-                var type = (MusicSource)e.SourceType;
-                if (type == MusicSource.LocalFile || type == MusicSource.LocalNotMusicLibrary || type == MusicSource.Dropbox || type == MusicSource.OneDrive || type == MusicSource.PCloud)
+                SongItem s = new SongItem();
+                s.Album = item.Album;
+                s.Artist = item.Artist;
+                s.CoverPath = item.ImagePath;
+                s.Path = item.Path;
+                s.SongId = item.SongId;
+                s.SourceType = (MusicSource)item.SourceType;
+                s.Title = item.Title;
+                online.Add(item.Position, s);
+            }
+
+            int position = 0;
+            SongItem radio;
+            foreach (var item in songsFromDatabase)
+            {
+                if (online.TryGetValue(position, out radio))
                 {
-                    var query2 = connection.Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
-                    if (query2 != null)
-                    {
-                        var newSong = new SongItem(query2);
-                        newSong.SourceType = type;
-                        list.Add(newSong);
-                    }
+                    list.Add(radio);
                 }
-                else if (type == MusicSource.RadioJamendo)
+                else if (item?.SongId != null)
                 {
-                    SongItem s = new SongItem();
-                    s.SourceType = MusicSource.RadioJamendo;
-                    s.Title = e.Title;
-                    s.Artist = e.Artist;
-                    s.Album = e.Album;
-                    s.Path = e.Path;
-                    s.CoverPath = e.ImagePath;
-                    s.SongId = e.SongId;
-                    list.Add(s);
+                    list.Add(new SongItem(item));
                 }
+                position++;
             }
             return list;
         }
@@ -1217,6 +1193,37 @@ namespace NextPlayerUWPDataLayer.Services
         //    return list;
         //}
 
+        public async Task<List<SimpleRadioData>> GetRadioFavouritesAsync()
+        {
+            List<SimpleRadioData> list = new List<SimpleRadioData>();
+
+            var res = await connectionAsync.Table<RadiosTable>().ToListAsync();
+
+            foreach(var item in res)
+            {
+                list.Add(new SimpleRadioData(item.RadioId, (RadioType)item.RadioType, item.Name, item.Source));
+            }
+
+            return list;
+        }
+
+        public async Task<RadioItem> GetRadioItem(int id, RadioType type)
+        {
+            var r = await connectionAsync.Table<RadiosTable>().Where(e => e.RadioId == id && e.RadioType == (int)type).ToListAsync();
+            if (r.Count > 0)
+            {
+                return new RadioItem(id, type)
+                {
+                    Name = r.FirstOrDefault().Name,
+                    StreamUrl = r.FirstOrDefault().Source,
+                };
+            }
+            else
+            {
+                return new RadioItem();
+            }
+        }
+
         #endregion
 
         #region Insert
@@ -1341,26 +1348,7 @@ namespace NextPlayerUWPDataLayer.Services
             return newplaylist.PlainPlaylistId;
         }
 
-        public int InsertPlainPlaylist(PlaylistItem item)
-        {
-            var newplaylist = new PlainPlaylistsTable
-            {
-                Name = item.Name,
-                DateModified = item.DateModified,
-                IsHidden = item.IsHidden,
-                Path = item.Path,
-            };
 
-            connection.Insert(newplaylist);
-            return newplaylist.PlainPlaylistId;
-        }
-
-        /// <summary>
-        /// InsertPlainPlaylistEntryAsync
-        /// </summary>
-        /// <param name="_playlistId"></param>
-        /// <param name="list">SongId,Place</param>
-        /// <returns></returns>
         public async Task InsertPlainPlaylistEntryAsync(int _playlistId, List<Tuple<int,int>> list)
         {
             List<PlainPlaylistEntryTable> l = new List<PlainPlaylistEntryTable>();
@@ -1376,10 +1364,11 @@ namespace NextPlayerUWPDataLayer.Services
             await connectionAsync.InsertAllAsync(l);
         }
 
-        public async Task InsertNewNowPlayingPlaylistAsync(IEnumerable<SongItem> songs)//error constraint https://rink.hockeyapp.net/manage/apps/308671/app_versions/56/crash_reasons/151334480
+        //error constraint https://rink.hockeyapp.net/manage/apps/308671/app_versions/56/crash_reasons/151334480
+        //two position same ?
+        public async Task InsertNewNowPlayingPlaylistAsync(IEnumerable<SongItem> songs)
         {
             List<NowPlayingTable> list = new List<NowPlayingTable>();
-            connection.DeleteAll<NowPlayingTable>();
             int i = 0;
             foreach (var item in songs)
             {
@@ -1396,7 +1385,13 @@ namespace NextPlayerUWPDataLayer.Services
                 });
                 i++;
             }
-            await connectionAsync.InsertAllAsync(list);
+            connection.RunInTransaction(() =>
+            {
+                connection.Execute("DELETE FROM NowPlayingTable");
+                connection.InsertAll(list);
+            });
+            //await connectionAsync.ExecuteAsync("DELETE FROM NowPlayingTable");
+            //await connectionAsync.InsertAllAsync(list);
         }
 
         public int InsertSmartPlaylist(string name, int songsNumber, string sorting)
@@ -1411,6 +1406,20 @@ namespace NextPlayerUWPDataLayer.Services
 
             connection.Insert(newplaylist);
             return newplaylist.SmartPlaylistId;
+        }
+
+        public void InsertSmartPlaylistEntry(int _playlistId, string _item, string _comparison, string _value, string _operator)
+        {
+            var newEntry = new SmartPlaylistEntryTable
+            {
+                PlaylistId = _playlistId,
+                Item = _item,
+                Comparison = _comparison,
+                Operator = _operator,
+                Value = _value,
+            };
+
+            connection.Insert(newEntry);
         }
 
         public async Task<int> InsertSmartPlaylistAsync(string name, int songsNumber, string sorting)
@@ -1440,30 +1449,6 @@ namespace NextPlayerUWPDataLayer.Services
 
             await connectionAsync.InsertAsync(newEntry);
         }
-
-        public void InsertSmartPlaylistEntry(int _playlistId, string _item, string _comparison, string _value, string _operator)
-        {
-            var newEntry = new SmartPlaylistEntryTable
-            {
-                PlaylistId = _playlistId,
-                Item = _item,
-                Comparison = _comparison,
-                Operator = _operator,
-                Value = _value,
-            };
-
-           connection.Insert(newEntry);
-        }
-
-        //public int InsertImportedPlaylist(string name, string path, int plainId)
-        //{
-        //    var p = new ImportedPlaylistsTable() {
-        //        Name = name,
-        //        Path = path,
-        //        PlainPlaylistId = plainId
-        //    };
-        //    return connection.Insert(p);
-        //}
 
         public async Task<List<SongItem>> InsertCloudItems(IEnumerable<SongData> songsdata, MusicSource type)
         {
@@ -1545,43 +1530,53 @@ namespace NextPlayerUWPDataLayer.Services
             return id;
         }
 
+        public async Task AddRadioToFavourites(SimpleRadioData radio)
+        {
+            await connectionAsync.InsertAsync(new RadiosTable()
+            {
+                RadioId = radio.BroadcastId,
+                RadioType = (int)radio.Type,
+                Name = radio.Name,
+                Source = radio.Stream,
+                IsFavourite = true,
+            });
+        }
+
+        public async Task UpdateFavouriteRadioName(int id, string newName)
+        {
+            var list = await connectionAsync.Table<RadiosTable>().Where(r => r.RadioId == id).ToListAsync();
+            if (list.Count > 0)
+            {
+                var radio = list.FirstOrDefault();
+                radio.Name = newName;
+                await connectionAsync.UpdateAsync(radio);
+            }
+        }
+
         #endregion
 
         #region Delete
 
         public async Task DeleteSmartPlaylistEntries(int playlistId)
         {
-            var items = await connectionAsync.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(playlistId)).ToListAsync();
-            foreach (var item in items)
-            {
-                connection.Delete<SmartPlaylistEntryTable>(item.Id);
-            }
+            await connectionAsync.ExecuteAsync("DELETE FROM SmartPlaylistEntryTable WHERE PlaylistId = ?", playlistId);
         }
 
         public async Task DeleteSmartPlaylistAsync(int id)
         {
             await DeleteSmartPlaylistEntries(id);
-            var list =  await connectionAsync.Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).ToListAsync();
-            var playlist = list.FirstOrDefault();
-            await connectionAsync.DeleteAsync(playlist);
+            await connectionAsync.ExecuteAsync("DELETE FROM SmartPlaylistsTable WHERE SmartPlaylistId = ?", id);
         }
 
         public async Task DeletePlainPlaylistEntryAsync(int songId, int playlistId)
         {
-            var item = await connectionAsync.Table<PlainPlaylistEntryTable>().Where(s => s.SongId == songId && s.PlaylistId == playlistId).ToListAsync();
-            await connectionAsync.DeleteAsync(item.FirstOrDefault());
+            await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ? AND SongId = ?", playlistId, songId);
         }
 
         public async Task DeletePlainPlaylistAsync(int playlistId)
         {
             await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlistId);
-            //connection.Execute("DELETE FROM PlainPlaylistsTable WHERE PlainPlaylistId = ?");
-            var q = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId == playlistId).FirstOrDefaultAsync();
-            await connectionAsync.DeleteAsync(q);
-            
-            //var list = await connectionAsync.Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId.Equals(playlistId)).ToListAsync();
-            //var playlist = list.FirstOrDefault();
-            //await connectionAsync.DeleteAsync(playlist);
+            await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistsTable WHERE PlainPlaylistId = ?", playlistId);
         }
 
 
@@ -1607,10 +1602,17 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task DeleteSong(int songId)
         {
-            var q = await connectionAsync.Table<SongsTable>().Where(s => s.SongId.Equals(songId)).ToListAsync();
-            if (q.Count == 1)
+            await connectionAsync.ExecuteAsync("DELETE FROM SongsTable WHERE SongId = ?", songId);
+        }
+
+        public async Task DeleteRadioFromFavourites(int id, RadioType type)
+        {
+            var r = await connectionAsync.Table<RadiosTable>().Where(a => a.RadioId == id && a.RadioType == (int)type).ToListAsync();
+            if (r.Count == 1)
             {
-                connection.Delete(q.FirstOrDefault());
+                var radio = r.FirstOrDefault();
+                radio.IsFavourite = false;
+                await connectionAsync.UpdateAsync(radio);
             }
         }
 
@@ -1631,11 +1633,6 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task UpdateAlbumsTable(IEnumerable<AlbumsTable> albums)//error
         {
             await connectionAsync.UpdateAllAsync(albums);
-        }
-
-        public void UpdateSongImagePath(SongItem song)
-        {
-           connection.Execute("UPDATE SongsTable SET AlbumArt = ? WHERE SongId = ?", song.CoverPath, song.SongId);
         }
 
         public async Task UpdateSongsImagePath(IEnumerable<SongsTable> songs)
@@ -1793,7 +1790,7 @@ namespace NextPlayerUWPDataLayer.Services
                     Path = playlist.Path,
                     IsHidden = playlist.SongIds.Count == 0
                 };
-                connection.Insert(t);
+                await connectionAsync.InsertAsync(t);
                 int i = 0;
                 List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
                 foreach (var item in playlist.SongIds)
@@ -1823,6 +1820,25 @@ namespace NextPlayerUWPDataLayer.Services
                 IsHidden = playlist.IsHidden
             };
             await connectionAsync.UpdateAsync(item);
+        }
+
+        public async Task UpdatePlainPlaylistAsync(int playlistId, IEnumerable<SongItem> songs)
+        {
+            await connectionAsync.ExecuteAsync("DELETE FROM PlainPlaylistEntryTable WHERE PlaylistId = ?", playlistId);
+            int i = 0;
+            List<PlainPlaylistEntryTable> entries = new List<PlainPlaylistEntryTable>();
+            foreach (var item in songs)
+            {
+                var entry = new PlainPlaylistEntryTable()
+                {
+                    Place = i,
+                    PlaylistId = playlistId,
+                    SongId = item.SongId,
+                };
+                entries.Add(entry);
+                i++;
+            }
+            await connectionAsync.InsertAllAsync(entries);
         }
 
         /// <summary>
@@ -1910,9 +1926,9 @@ namespace NextPlayerUWPDataLayer.Services
             return list;
         }
 
-        public void DeleteCachedScrobble(int id)
+        public async Task DeleteCachedScrobbleAsync(int id)
         {
-            connection.Execute("DELETE FROM CachedScrobble WHERE id = ?", id);
+            await connectionAsync.ExecuteAsync("DELETE FROM CachedScrobble WHERE id = ?", id);
         }
 
         public async Task DeleteAllCachedScrobbles()
@@ -2003,7 +2019,7 @@ namespace NextPlayerUWPDataLayer.Services
             return list;
         }
 
-        public List<CloudAccount> GetAllCloudAccounts()
+        public List<CloudAccount> GetAllCloudAccounts()//notasync
         {
             var query = connection.Table<CloudAccountsTable>().ToList();
             List<CloudAccount> list = new List<CloudAccount>();
@@ -2177,16 +2193,6 @@ namespace NextPlayerUWPDataLayer.Services
             return s;
         }
 
-        public void ClearCoverPaths()
-        {
-            connection.Execute("UPDATE AlbumsTable SET ImagePath = ''");
-        }
-
-        public void ResetNowPlaying()
-        {
-            connection.DropTable<NowPlayingTable>();
-            connection.CreateTable<NowPlayingTable>();
-        }
         public void update1()
         {
             connection.DropTable<SmartPlaylistEntryTable>();
@@ -2194,7 +2200,6 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<SmartPlaylistsTable>();
             connection.CreateTable<SmartPlaylistEntryTable>();
         }
-
 
         public void resetdb()
         {
@@ -2317,6 +2322,16 @@ namespace NextPlayerUWPDataLayer.Services
             connection.CreateTable<SongsTable>();
             DateTime date = new DateTime(2016, 4, 26);
             connection.Execute("UPDATE SongsTable SET DateCreated = ?", date);
+        }
+
+        public void UpdateToVersion12()
+        {
+            connection.Execute("DELETE FROM SongsTable WHERE MusicSourceType = ?", 9);
+        }
+
+        public void UpdateToVersion13()
+        {
+            connection.CreateTable<RadiosTable>();
         }
 
         public async Task<List<SongsTable>> GetSongsTableAsync()

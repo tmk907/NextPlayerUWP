@@ -29,6 +29,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += View_Unloaded;
             ViewModel = (PlaylistViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
+            selectionButtons.ShowShareButton = true;
             //AppMessenger2.RegisterEnableSearch(this);
         }
         //~PlaylistEditableView()
@@ -92,6 +93,18 @@ namespace NextPlayerUWP.Views
         public void OnSearchMessage(EnableSearching msg)
         {
             SearchBox.Focus(FocusState.Programmatic);
+        }
+
+        private async void RefreshPlaylist(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.RefreshPlaylist();
+        }
+
+        private async void DeleteSelected(object sender, RoutedEventArgs e)
+        {
+            var items = PlaylistListView.GetSelectedItems<MusicItem>();
+            if (items.Count > 0) await ViewModel.DeleteManyAsync(items);
+            selectionButtons.HideMultipleSelectionButtons();
         }
     }
 }
