@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Template10.Common;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
@@ -25,6 +27,16 @@ namespace NextPlayerUWP.ViewModels
             QueueVM = vml.QueueVM;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             App.IsBottomPlayerVMCreated = true;
+
+            var window = CoreApplication.GetCurrentView()?.CoreWindow;
+            if (window != null)
+            {
+                window.SizeChanged += OnCoreWindowOnSizeChanged;
+            }
+            if (window.Bounds.Width >= normal)
+            {
+                
+            }
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -160,6 +172,30 @@ namespace NextPlayerUWP.ViewModels
         public void ShowHideSlider()
         {
             IsSliderVisible = !IsSliderVisible;
+        }
+
+        int compact = 0;
+        int narrow = 500;
+        int normal = 720;
+        int wide = 1008;
+
+
+        private void OnCoreWindowOnSizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
+        {
+            if (args.Size.Width >= wide)
+            {
+                IsSliderVisible = false;
+            }
+            else if (args.Size.Width >= normal)
+            {
+                IsSliderVisible = false;
+            }
+            else if (args.Size.Width >= narrow)
+            {
+            }
+            else if (args.Size.Width >= compact)
+            {
+            }
         }
 
         #region Slider Timer

@@ -996,4 +996,22 @@
   <data name="AppBarButtonShare.Label" xml:space="preserve">
     <value>Udostępnij</value>
   </data>
+  <data name="TBTranslations.Text" xml:space="preserve">
+    <value>Tłumaczenia</value>
+  </data>
+  <data name="ContentDialogTranslations.Title" xml:space="preserve">
+    <value>Tłumaczenia</value>
+  </data>
+  <data name="TBRateApp.Text" xml:space="preserve">
+    <value>Oceń aplikację</value>
+  </data>
+  <data name="TBMailToSupport.Text" xml:space="preserve">
+    <value>Mail to support</value>
+  </data>
+  <data name="TBLicenses.Text" xml:space="preserve">
+    <value>Licencje</value>
+  </data>
+  <data name="TBLikeOnFacebook.Text" xml:space="preserve">
+    <value>Polub na Facebooku</value>
+  </data>
 </root>

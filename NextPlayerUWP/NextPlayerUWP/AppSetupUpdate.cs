@@ -70,7 +70,7 @@ namespace NextPlayerUWP
             };
             ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, false);
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, false);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, true);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, true);
 
             Debug.WriteLine("FirstRunSetup finished");

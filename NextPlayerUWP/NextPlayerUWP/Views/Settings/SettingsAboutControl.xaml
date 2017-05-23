@@ -5,11 +5,155 @@
     xmlns:local="using:NextPlayerUWP.Views.Settings"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:NextPlayerUWP.ViewModels.Settings"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-
+    <UserControl.Resources>
+    <Style x:Key="AboutButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource UserAccentBrush}"/>
+        <Setter Property="BorderThickness" Value="4,0,0,0"/>
+        <Setter Property="Padding" Value="8,0,0,0"/>
+        <Setter Property="Margin" Value="0,4,0,8"/>
+        <Setter Property="MinWidth" Value="128"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+        <Setter Property="UseSystemFocusVisuals" Value="True"/>
+        <Setter Property="FocusVisualMargin" Value="-3"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    </UserControl.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <ContentDialog x:Name="ContentDialogTranslations"
+                Grid.Row="1"
+                x:Uid="ContentDialogTranslations"
+                VerticalAlignment="Center"
+                Title="Translations"
+                PrimaryButtonText="Translate"
+                PrimaryButtonClick="{x:Bind ViewModel.TranslateApp}"
+                SecondaryButtonText="Close"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+            <ContentDialog.Content>
+                <ListView Grid.Row="0"
+                        Margin="0,4,0,4"
+                        ItemsSource="{x:Bind ViewModel.Translations, Mode=OneWay}"
+                        IsItemClickEnabled="False"
+                        SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:TranslationEntry">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock 
+                                        Grid.Row="0"
+                                        Text="{x:Bind Language}"
+                                        FontSize="15"
+                                        Style="{StaticResource SubtitleTextBlockStyle}"
+                                        />  
+                                    <ListView
+                                        Grid.Row="1"
+                                        Margin="0,4,0,4"
+                                        ScrollViewer.HorizontalScrollMode="Disabled"
+                                        ItemsSource="{x:Bind Translators}"
+                                        IsItemClickEnabled="False"
+                                        SelectionMode="None">
+                                        <ListView.ItemContainerStyle>
+                                            <Style TargetType="ListViewItem">
+                                                <Setter Property="MinHeight" Value="20"/>
+                                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                                <Setter Property="Padding" Value="8,0,0,0"/>
+                                                <Setter Property="Margin" Value="0,0,0,0"/>
+                                            </Style>
+                                        </ListView.ItemContainerStyle>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <TextBlock 
+                                                    Text="{x:Bind}"
+                                                    FontSize="14"
+                                                    Style="{StaticResource BodyTextBlockStyle}"/>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+            </ContentDialog.Content>
+        </ContentDialog>
         <ScrollViewer Padding="12,0,12,0">
             <StackPanel Orientation="Vertical" Margin="4">
                 <TextBlock x:Uid="TBAbout"
@@ -29,30 +173,66 @@
                             Text="{x:Bind ViewModel.AppVersion}"/>
                     </StackPanel>
                     <Button  
-                        x:Uid="ButtonRateApp"
-                        Content="Rate app"
-                        Margin="0,4,0,8"
-                        MinWidth="128"
-                        Click="{x:Bind ViewModel.RateApp}"/>
+                        Click="{x:Bind ViewModel.RateApp}"
+                        Style="{StaticResource AboutButtonStyle}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Grid.Column="0" Glyph="&#xE734;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0"/>
+                                <TextBlock Grid.Column="1" x:Uid="TBRateApp" Text="Rate app"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
                     <Button  
-                        x:Uid="ButtonFeedback"
-                        Margin="0,4,0,8"
-                        MinWidth="128"
-                        Content="Feedback"
                         Visibility="{x:Bind ViewModel.FeedbackVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.LeaveFeedback}"/>
+                        Click="{x:Bind ViewModel.LeaveFeedback}"
+                        Style="{StaticResource AboutButtonStyle}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xED15;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0"/>
+                                <TextBlock x:Uid="TBLeaveFeedback" Text="Leave feedback"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
                     <Button  
-                        x:Uid="ButtonEmail"
-                        Content="Support"
-                        MinWidth="128"
-                        Margin="0,4,0,8"
-                        Click="{x:Bind ViewModel.ContactWithSupport}"/>
+                        Click="{x:Bind ViewModel.ContactWithSupport}"
+                        Style="{StaticResource AboutButtonStyle}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE715;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0"/>
+                                <TextBlock x:Uid="TBMailToSupport" Text="Mail to support"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
                     <Button  
-                        x:Uid="ButtonLicenses"
-                        Content="Licenses"
-                        Margin="0,4,0,8"
-                        MinWidth="128"
-                        Click="{x:Bind ViewModel.Licenses}"/>
+                        Click="{x:Bind ViewModel.GoToFacebook}"
+                        Style="{StaticResource AboutButtonStyle}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE8E1;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0"/>
+                                <TextBlock x:Uid="TBLikeOnFacebook" Text="Like on Facebook"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button  
+                        Click="Button_Click"
+                        Style="{StaticResource AboutButtonStyle}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE909;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0"/>
+                                <TextBlock x:Uid="TBTranslations" Text="Translations"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button  
+                        Click="{x:Bind ViewModel.Licenses}"
+                        Style="{StaticResource AboutButtonStyle}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE7BC;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0"/>
+                                <TextBlock x:Uid="TBLicenses" Text="Licenses"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

@@ -2,6 +2,8 @@
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Template10.Common;
 using Windows.ApplicationModel;
@@ -9,6 +11,12 @@ using Windows.System;
 
 namespace NextPlayerUWP.ViewModels.Settings
 {
+    public class TranslationEntry
+    {
+        public string Language { get; set; }
+        public List<string> Translators { get; set; }
+    }
+
     public class SettingsAboutViewModel : Template10.Mvvm.ViewModelBase, ISettingsViewModel
     {
         public SettingsAboutViewModel()
@@ -36,6 +44,7 @@ namespace NextPlayerUWP.ViewModels.Settings
             {
                 FeedbackVisibility = true;
             }
+            ShowTranslators();
             isLoaded = true;
         }
 
@@ -51,6 +60,13 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             get { return feedbackVisibility; }
             set { Set(ref feedbackVisibility, value); }
+        }
+
+        private ObservableCollection<TranslationEntry> translations = new ObservableCollection<TranslationEntry>();
+        public ObservableCollection<TranslationEntry> Translations
+        {
+            get { return translations; }
+            set { Set(ref translations, value); }
         }
 
         public async void RateApp()
@@ -83,6 +99,64 @@ namespace NextPlayerUWP.ViewModels.Settings
             TelemetryAdapter.TrackEvent("View Licenses");
             var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
             nav.Navigate(App.Pages.Licenses);
+        }
+
+        public async void GoToFacebook()
+        {
+            await Launcher.LaunchUriAsync(new Uri(@"https://www.facebook.com/Next-Player-Music-Player-1719236521668808"));
+        }
+
+        public async void TranslateApp()
+        {
+            await Launcher.LaunchUriAsync(new Uri(@"https://github.com/tmk907/Next-Player_Translations"));
+        }
+
+        public void ShowTranslators()
+        {
+            if (translations.Count != 0) return;
+            Translations = new ObservableCollection<TranslationEntry>()
+            {
+                new TranslationEntry()
+                {
+                    Language = "Arabic",
+                    Translators = new List<string>(){ "JamalM" }
+                },
+                new TranslationEntry()
+                {
+                    Language = "French",
+                    Translators = new List<string>(){ "Shinshia" }
+                },
+                new TranslationEntry()
+                {
+                    Language = "German",
+                    Translators = new List<string>(){ "buagseitei", "Sebster" }
+                },
+                new TranslationEntry()
+                {
+                    Language = "Indonesian",
+                    Translators = new List<string>(){ "aires", "Tzaa" }
+                },
+                new TranslationEntry()
+                {
+                    Language = "Italian",
+                    Translators = new List<string>(){ "Salvo85" }
+                },
+                new TranslationEntry()
+                {
+                    Language = "Russian",
+                    Translators = new List<string>(){ "interpreter", "LaFee", "Mascia", "NastyaR" }
+                },
+                new TranslationEntry()
+                {
+                    Language = "Portuguese",
+                    Translators = new List<string>(){ "elcioebel", "Gis" }
+                },
+                new TranslationEntry()
+                {
+                    Language = "Spanish",
+                    Translators = new List<string>(){ "jeac76", "jsnt", "VictorCas" }
+                },
+            };
         }
     }
 }
