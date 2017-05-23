@@ -232,6 +232,7 @@
     <Compile Include="Messages\MenuButtonSelected.cs" />
     <Compile Include="Messages\MessageNames.cs" />
     <Compile Include="Messages\InAppNotification.cs" />
+    <Compile Include="Messages\PageNavigated.cs" />
     <Compile Include="Messages\ShowLyrics.cs" />
     <Compile Include="Messages\ShowNowPlayingList.cs" />
     <Compile Include="Messages\ThemeChange.cs" />

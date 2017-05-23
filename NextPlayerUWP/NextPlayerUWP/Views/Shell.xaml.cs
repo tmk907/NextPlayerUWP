@@ -31,6 +31,10 @@ namespace NextPlayerUWP.Views
         private Guid tokenMenu;
         private Guid tokenTheme;
         private Guid tokenNotification;
+        private Guid tokenPageNavigated;
+
+        private PlaybackTimer AdTimer;
+        private TimeSpan AdVisibleDuration = TimeSpan.FromSeconds(70);
 
         public Shell()
         {
@@ -41,6 +45,8 @@ namespace NextPlayerUWP.Views
             this.Loaded += Shell_Loaded;
             this.Unloaded += Shell_Unloaded;
             ShellVM.RefreshMenuButtons();
+
+            AdTimer = new PlaybackTimer();
 
             MigrateCredentialsAsync();
             ReviewReminder();
@@ -57,6 +63,7 @@ namespace NextPlayerUWP.Views
             tokenMenu = MessageHub.Instance.Subscribe<MenuButtonSelected>(OnMenuButtonMessage);
             tokenNotification = MessageHub.Instance.Subscribe<InAppNotification>(OnInAppNotificationMessage);
             tokenTheme = MessageHub.Instance.Subscribe<ThemeChange>(OnThemeChangeMessage);
+            tokenPageNavigated = MessageHub.Instance.Subscribe<PageNavigated>(OnPageNavigatedMessage);
             ApplyTheme(ThemeHelper.IsLightTheme);
 
             if (App.CanLoadShellControls)
@@ -70,12 +77,12 @@ namespace NextPlayerUWP.Views
         public void LoadControls()
         {
             System.Diagnostics.Debug.WriteLine("Shell.LoadControls()");
-            //await Task.Delay(500);
             FindName(nameof(BottomPlayerWrapper));
             if (DeviceFamilyHelper.IsDesktop())
             {
                 FindName(nameof(RightPanelWrapper));
             }
+            LoadAd(TimeSpan.FromSeconds(5));
             System.Diagnostics.Debug.WriteLine("Shell.LoadControls() End");
         }
 
@@ -85,8 +92,11 @@ namespace NextPlayerUWP.Views
             MessageHub.Instance.UnSubscribe(tokenMenu);
             MessageHub.Instance.UnSubscribe(tokenNotification);
             MessageHub.Instance.UnSubscribe(tokenTheme);
+            MessageHub.Instance.UnSubscribe(tokenPageNavigated);
+            UnloadAd(false);
+            AdTimer.TimerCancel();
         }
-
+       
         public Shell(INavigationService navigationService) : this()
         {
             SetNavigationService(navigationService);
@@ -155,6 +165,99 @@ namespace NextPlayerUWP.Views
                 HamburgerMenu.RefreshStyles(ApplicationTheme.Dark);
             }
         }
+
+        #region Ads
+
+        private async void LoadAd(TimeSpan delay)
+        {
+            if (delay != TimeSpan.Zero)
+            {
+                await Task.Delay(delay);
+            }
+            if (Microsoft.Toolkit.Uwp.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable && !hideAd)
+            {
+                if (DeviceFamilyHelper.IsDesktop())
+                {
+                    FindName(nameof(AdWrapperDesktop));
+#if DEBUG
+                    DesktopAd.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
+                    DesktopAd.AdUnitId = "test";
+#else
+                    DesktopAd.ApplicationId = "9nblggh67n4f";
+                    DesktopAd.AdUnitId = "11684323";
+#endif
+                    AdWrapperDesktop.Visibility = Visibility.Visible;
+                    DesktopAd.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    FindName(nameof(AdWrapperMobile));
+#if DEBUG
+                    MobileAd.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
+                    MobileAd.AdUnitId = "test";
+#else
+                    MobileAd.ApplicationId = "9nblggh67n4f";
+                    MobileAd.AdUnitId = "11684325";
+#endif
+                    AdWrapperMobile.Visibility = Visibility.Visible;
+                    MobileAd.Visibility = Visibility.Visible;
+                }
+                AdTimer.SetTimerWithAction(AdVisibleDuration, () =>
+                {
+                    UnloadAd(true);
+                });
+            }
+
+        }
+
+        private bool AdWasDisplayed = false;
+        private bool hideAd = false;
+        private void UnloadAd(bool fromTimer)
+        {
+            Template10.Common.WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            {
+                if (AdWrapperMobile != null)
+                {
+                    MobileAd.Visibility = Visibility.Collapsed;
+                    AdWrapperMobile.Visibility = Visibility.Collapsed;
+                }
+                if (AdWrapperDesktop != null)
+                {
+                    DesktopAd.Visibility = Visibility.Collapsed;
+                    AdWrapperDesktop.Visibility = Visibility.Collapsed;
+                }
+                if (fromTimer) AdWasDisplayed = true;
+            });
+        }
+
+        private void OnPageNavigatedMessage(PageNavigated message)
+        {
+            if (message.NavigatedTo)
+            {
+                if (message.PageType == PageNavigatedType.NowPlayingDesktop ||
+                    message.PageType == PageNavigatedType.NowPlaying ||
+                    message.PageType == PageNavigatedType.TagsEditor)
+                {
+                    hideAd = true;
+                    UnloadAd(false);
+                }
+            }
+            else
+            {
+                if (message.PageType == PageNavigatedType.NowPlayingDesktop ||
+                    message.PageType == PageNavigatedType.NowPlaying ||
+                    message.PageType == PageNavigatedType.TagsEditor)
+                {
+                    if (!AdWasDisplayed)
+                    {
+                        hideAd = false;
+                        LoadAd(TimeSpan.Zero);
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         private async Task MigrateCredentialsAsync()
         {

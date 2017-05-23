@@ -8,6 +8,7 @@
     xmlns:views="using:NextPlayerUWP.Views"
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:ads="using:Microsoft.Advertising.WinRT.UI"
     mc:Ignorable="d">
     <Grid x:Uid="ShellGrid">
         <Grid.RowDefinitions>
@@ -48,7 +49,7 @@
         <UserControl 
             x:Name="BottomPlayerWrapper"
             x:DeferLoadStrategy="Lazy"
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.ColumnSpan="2">
             <local:BottomPlayerControl/>
         </UserControl>
@@ -61,6 +62,33 @@
                 x:Name="RightPanel" 
                 Width="{x:Bind ShellVM.RightPanelWidth, Mode=OneWay}"
                 Visibility="{x:Bind ShellVM.IsRightPanelVisible, Mode=OneWay}" />
+        </Grid>
+        <Grid 
+            Grid.Row="0" Grid.Column="0"
+            x:Name="AdWrapperMobile"
+            x:DeferLoadStrategy="Lazy"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Background="Transparent">
+            <ads:AdControl
+                x:Name="MobileAd"
+                Width="300"
+                Height="50"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"/>
+        </Grid>
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" 
+              x:Name="AdWrapperDesktop" 
+              x:DeferLoadStrategy="Lazy"
+              Background="Transparent"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Bottom">
+            <ads:AdControl
+                x:Name="DesktopAd"
+                Width="728"
+                Height="90"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"/>
         </Grid>
     </Grid>
 </Page>

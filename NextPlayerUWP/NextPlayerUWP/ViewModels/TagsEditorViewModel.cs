@@ -1,4 +1,6 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -236,6 +238,7 @@ namespace NextPlayerUWP.ViewModels
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             App.OnNavigatedToNewView(true);
+            MessageHub.Instance.Publish<PageNavigated>(new PageNavigated() { NavigatedTo = true, PageType = PageNavigatedType.TagsEditor });
             IsAlbumArtVisible = false;
             songId = -1;
             songData = new SongData();
@@ -266,6 +269,12 @@ namespace NextPlayerUWP.ViewModels
             IsAlbumArtVisible = IsAlbumArtSet();
             await LoadSongs();
             TelemetryAdapter.TrackPageView(this.GetType().ToString());
+        }
+
+        public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
+        {
+            MessageHub.Instance.Publish<PageNavigated>(new PageNavigated() { NavigatedTo = false, PageType = PageNavigatedType.TagsEditor });
+            return base.OnNavigatedFromAsync(pageState, suspending);
         }
 
         public void ClearAlbumArt()

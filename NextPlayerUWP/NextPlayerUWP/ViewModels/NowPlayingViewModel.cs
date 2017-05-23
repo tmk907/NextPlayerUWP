@@ -1,4 +1,6 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Messages;
+using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -25,7 +27,7 @@ namespace NextPlayerUWP.ViewModels
             PlayerVM = vml.PlayerVM;
             QueueVM = vml.QueueVM;
             lyricsPanelVM = vml.LyricsPanelVM;
-            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            song = QueueVM.CurrentSong;
         }
 
         //private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
@@ -236,7 +238,7 @@ namespace NextPlayerUWP.ViewModels
         private async void TrackChanged(int index)
         {
             int prevId = song.SongId;
-            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            song = QueueVM.CurrentSong;
             await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
             {
                 if (song.SongId != prevId)
@@ -314,6 +316,7 @@ namespace NextPlayerUWP.ViewModels
             System.Diagnostics.Debug.WriteLine("NowPlayingVM OnNavigatedToAsync");
 
             App.OnNavigatedToNewView(false);
+            MessageHub.Instance.Publish<PageNavigated>(new PageNavigated() { NavigatedTo = true, PageType = PageNavigatedType.NowPlaying });
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.FlipViewSelectedIndex);
@@ -327,7 +330,7 @@ namespace NextPlayerUWP.ViewModels
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
             //ShowAlbumArtInBackground = ApplicationSettingsHelper.ReadData<bool>(SettingsKeys.AlbumArtInBackground);
-            await lyricsPanelVM.ChangeLyrics(song);
+            await lyricsPanelVM.ChangeLyrics(QueueVM.CurrentSong);
             //await Task.CompletedTask;
         }
 
@@ -335,6 +338,7 @@ namespace NextPlayerUWP.ViewModels
         {
             System.Diagnostics.Debug.WriteLine("NowPlayingVM OnNavigatedFromAsync");
 
+            MessageHub.Instance.Publish<PageNavigated>(new PageNavigated() { NavigatedTo = false, PageType = PageNavigatedType.NowPlaying });
             //App.ChangeBottomPlayerVisibility(true);
             PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
             PlaybackService.MediaPlayerTrackChanged -= TrackChanged;

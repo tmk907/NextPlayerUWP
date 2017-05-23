@@ -665,7 +665,7 @@
                 x:Name="BackDropControl"
                 x:DeferLoadStrategy="Lazy"
                 Grid.RowSpan="2"
-                BlurAmount="90"
+                BlurAmount="80"
                 TintAlpha="100"
                 SaturationIntensity="1"
                 TintColor="{x:Bind ViewModel.QueueVM.AlbumArtColor, Mode=OneWay}"/>
@@ -799,14 +799,14 @@
                             PointerReleased="{x:Bind ViewModel.Image_Released}"
                             PointerExited="{x:Bind ViewModel.Image_Exited}">
                             <imagecontrol:CrossfadingImage
-                        x:Name="PrimaryImage"
-                        Grid.Column="0" 
-                        Grid.Row="0"
-                        VerticalAlignment="Bottom" 
-                        HorizontalAlignment="Center"
-                        FadeInDuration="0:0:0.3"
-                        FadeOutDuration="0:0:0.3"
-                        Stretch="Uniform"/>
+                                x:Name="PrimaryImage"
+                                Grid.Column="0" 
+                                Grid.Row="0"
+                                VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Center"
+                                FadeInDuration="0:0:0.3"
+                                FadeOutDuration="0:0:0.3"
+                                Stretch="Uniform"/>
                         </Grid>
                         <Grid Grid.Row="1">
                             <FlipView 
