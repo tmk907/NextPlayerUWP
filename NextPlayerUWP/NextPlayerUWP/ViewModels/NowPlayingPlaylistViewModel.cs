@@ -22,7 +22,7 @@ namespace NextPlayerUWP.ViewModels
             scrollerHelper = new ListViewScrollerHelper();
             sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
-            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
+            selectedComboBoxItem = sortingHelper.SelectedSortOption;
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
         }
 
@@ -50,7 +50,7 @@ namespace NextPlayerUWP.ViewModels
             }
             d.Dispatch(() =>
             {
-                scrollerHelper.ScrollAfterTrackChanged(index);
+                scrollerHelper.ScrollToIndex(index);
             });
         }
 
@@ -270,6 +270,19 @@ namespace NextPlayerUWP.ViewModels
                     SortMusicItems();
                 }
             }
+        }
+
+        public void ScrollToCurrentPlaying()
+        {
+            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            int index = 0;
+            foreach (var s in QueueVM.Songs)
+            {
+                if (s.SongId == song.SongId) break;
+                index++;
+            }
+            if (index == QueueVM.Songs.Count) return;
+            scrollerHelper.ScrollToIndex(index);
         }
 
         public async void SortMusicItems()

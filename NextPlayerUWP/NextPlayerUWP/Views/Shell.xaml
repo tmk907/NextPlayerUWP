@@ -72,10 +72,12 @@
             Background="Transparent">
             <ads:AdControl
                 x:Name="MobileAd"
-                Width="300"
                 Height="50"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"/>
+                Width="320"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AdRefreshed="MobileAd_AdRefreshed"
+                ErrorOccurred="MobileAd_ErrorOccurred"/>
         </Grid>
         <Grid Grid.Row="0" Grid.ColumnSpan="2" 
               x:Name="AdWrapperDesktop" 
@@ -85,10 +87,12 @@
               VerticalAlignment="Bottom">
             <ads:AdControl
                 x:Name="DesktopAd"
-                Width="728"
                 Height="90"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"/>
+                Width="728"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AdRefreshed="DesktopAd_AdRefreshed"
+                ErrorOccurred="DesktopAd_ErrorOccurred"/>
         </Grid>
     </Grid>
 </Page>

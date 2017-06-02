@@ -33,8 +33,8 @@ namespace NextPlayerUWPDataLayer.Services
 
         private DatabaseManager()
         {
-            connectionAsync = new SQLiteAsyncConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex, true);
-            connection = new SQLiteConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex, true);
+            connectionAsync = new SQLiteAsyncConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.SharedCache, true);
+            connection = new SQLiteConnection(DBFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.SharedCache, true);
             connection.BusyTimeout = TimeSpan.FromSeconds(10);
         }
 
@@ -1637,7 +1637,24 @@ namespace NextPlayerUWPDataLayer.Services
 
         public async Task UpdateSongsImagePath(IEnumerable<SongsTable> songs)
         {
-            await connectionAsync.UpdateAllAsync(songs);
+            bool done = false;
+            int i = 0;
+            {
+                while (!done)
+                {
+                    try
+                    {
+                        i++;
+                        await connectionAsync.UpdateAllAsync(songs);
+                        done = true;
+                    }
+                    catch (Exception)
+                    {
+                        await Task.Delay(1000);
+                        if (i == 5) done = true;
+                    }
+                }
+            }
         }
 
         public async Task UpdateSongImagePath(List<Tuple<int,string>> data)

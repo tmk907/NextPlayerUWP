@@ -1,7 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -27,7 +26,7 @@ namespace NextPlayerUWP.ViewModels
             PlayerVM = vml.PlayerVM;
             QueueVM = vml.QueueVM;
             lyricsPanelVM = vml.LyricsPanelVM;
-            song = QueueVM.CurrentSong;
+            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
         }
 
         //private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
@@ -238,7 +237,7 @@ namespace NextPlayerUWP.ViewModels
         private async void TrackChanged(int index)
         {
             int prevId = song.SongId;
-            song = QueueVM.CurrentSong;
+            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
             {
                 if (song.SongId != prevId)
@@ -321,16 +320,16 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.FlipViewSelectedIndex);
             StartTimer();
-            
-            TimeEnd = QueueVM.CurrentSong.Duration;
+            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            TimeEnd = song.Duration;
             SliderValue = 0.0;
-            SliderMaxValue = (int)Math.Round(QueueVM.CurrentSong.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+            SliderMaxValue = (int)Math.Round(song.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
             //ShowAlbumArtInBackground = ApplicationSettingsHelper.ReadData<bool>(SettingsKeys.AlbumArtInBackground);
-            await lyricsPanelVM.ChangeLyrics(QueueVM.CurrentSong);
+            await lyricsPanelVM.ChangeLyrics(song);
             //await Task.CompletedTask;
         }
 

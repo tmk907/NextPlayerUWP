@@ -467,6 +467,11 @@
             VisualStateNormalMinWidth="720">
             <controls:PageHeader.SecondaryCommands>
                 <AppBarButton 
+                    Icon="SetTile"
+                    x:Uid="AppBarButtonScrollToPlayingSong"
+                    Label="Scroll to playing song"
+                    Click="{x:Bind ViewModel.ScrollToCurrentPlaying}"/>
+                <AppBarButton 
                     x:Uid="AppBarButtonSort"
                     x:Name="AppBarButtonSort"
                     Icon="Sort" 
@@ -500,7 +505,8 @@
                         </Flyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton Icon="Save"
+                <AppBarButton 
+                    Icon="Save"
                     x:Uid="AppBarButtonSave"
                     x:Name="AppBarButtonSave"
                     Label="Save"

@@ -401,7 +401,7 @@
                 Title="New playlist"
                 PrimaryButtonText="Save"
                 IsPrimaryButtonEnabled="{Binding Text, ElementName=playlistNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
-                PrimaryButtonClick="{x:Bind ViewModel.Save}"
+                PrimaryButtonClick="ContentDialogNewPlaylist_PrimaryButtonClick"
                 SecondaryButtonText="Cancel"
                 VerticalContentAlignment="Stretch"
                 MaxWidth="300">
@@ -423,7 +423,7 @@
                 Title="Edit name"
                 PrimaryButtonText="Save"
                 IsPrimaryButtonEnabled="{Binding Text, ElementName=editplaylistNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
-                PrimaryButtonClick="{x:Bind ViewModel.SaveEditedName}"
+                PrimaryButtonClick="ContentDialogEditName_PrimaryButtonClick"
                 SecondaryButtonText="Cancel"
                 VerticalContentAlignment="Stretch"
                 MaxWidth="300">

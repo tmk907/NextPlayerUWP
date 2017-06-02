@@ -138,5 +138,17 @@ namespace NextPlayerUWP.Views
         {
             SearchBox.Focus(FocusState.Programmatic);
         }
+
+        private void ContentDialogNewPlaylist_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            ViewModel.Name = playlistNameTB.Text;
+            ViewModel.Save();
+        }
+
+        private void ContentDialogEditName_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            ViewModel.NewPlaylistName = editplaylistNameTB.Text;
+            ViewModel.SaveEditedName();
+        }
     }
 }

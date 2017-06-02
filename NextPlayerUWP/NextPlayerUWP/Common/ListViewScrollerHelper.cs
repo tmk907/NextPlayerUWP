@@ -47,28 +47,30 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        public void ScrollAfterTrackChanged(int index)
+        public void ScrollToIndex(int index)
         {
-            if (listView!=null && listView.Items.Count > 3)
-            try
+            if (listView != null && listView.Items.Count > 3)
             {
-                var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
-                if (isp == null) return;
-                int firstVisibleIndex = isp.FirstVisibleIndex;
-                int lastVisibleIndex = isp.LastVisibleIndex;
-                if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;
-                if (index < firstVisibleIndex)
+                try
                 {
-                    listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+                    var isp = (ItemsStackPanel)listView.ItemsPanelRoot;
+                    if (isp == null) return;
+                    int firstVisibleIndex = isp.FirstVisibleIndex;
+                    int lastVisibleIndex = isp.LastVisibleIndex;
+                    if (index <= lastVisibleIndex && index >= firstVisibleIndex) return;
+                    if (index < firstVisibleIndex)
+                    {
+                        listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
+                    }
+                    else if (index > lastVisibleIndex)
+                    {
+                        listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
+                    }
                 }
-                else if (index > lastVisibleIndex)
+                catch (Exception ex)
                 {
-                    listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Default);
+                    NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NowPlayingPlaylsitViewModel ScrollAfterTrackChanged " + ex.ToString(), NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
                 }
-            }
-            catch (Exception ex)
-            {
-                NextPlayerUWPDataLayer.Diagnostics.Logger2.Current.WriteMessage("NowPlayingPlaylsitViewModel ScrollAfterTrackChanged " + ex.ToString(), NextPlayerUWPDataLayer.Diagnostics.Logger2.Level.WarningError);
             }
         }
 
