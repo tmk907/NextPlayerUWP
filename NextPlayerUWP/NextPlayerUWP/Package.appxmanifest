@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap uap3 mp">
-  <Identity Name="60490polApki.Next-Player" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="3.2.0.0" />
+  <Identity Name="60490polApki.Next-Player" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="3.3.0.0" />
   <mp:PhoneIdentity PhoneProductId="ebc8c71b-f83f-47ff-9c61-32413fe4cc03" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Next-Player</DisplayName>
@@ -26,23 +26,12 @@
         <uap:SplashScreen Image="Assets\Visual Assets\SplashScreen\Splash3.png" BackgroundColor="#0078D7" />
       </uap:VisualElements>
       <Extensions>
-        <uap3:Extension Category="windows.appExtensionHost">
-          <uap3:AppExtensionHost>
-            <uap3:Name>uwp.music-player.lyrics</uap3:Name>
-          </uap3:AppExtensionHost>
-        </uap3:Extension>
-        <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="playlist">
-            <uap:Logo>Assets\Visual Assets\Icons\ScaledLogoExtensions.png</uap:Logo>
-            <uap:SupportedFileTypes>
-              <uap:FileType>.m3u</uap:FileType>
-              <uap:FileType>.m3u8</uap:FileType>
-              <uap:FileType>.wpl</uap:FileType>
-              <uap:FileType>.pls</uap:FileType>
-              <uap:FileType>.zpl</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileTypeAssociation>
-        </uap:Extension>
+        <Extension Category="windows.backgroundTasks" EntryPoint="ScrobblerBG.BackgroundScrobbler">
+          <BackgroundTasks>
+            <Task Type="systemEvent" />
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="music">
             <uap:Logo>Assets\Visual Assets\Icons\ScaledLogoExtensions.png</uap:Logo>
@@ -61,12 +50,23 @@
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
-        <Extension Category="windows.backgroundTasks" EntryPoint="ScrobblerBG.BackgroundScrobbler">
-          <BackgroundTasks>
-            <Task Type="systemEvent" />
-            <Task Type="timer" />
-          </BackgroundTasks>
-        </Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="playlist">
+            <uap:Logo>Assets\Visual Assets\Icons\ScaledLogoExtensions.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.m3u</uap:FileType>
+              <uap:FileType>.m3u8</uap:FileType>
+              <uap:FileType>.wpl</uap:FileType>
+              <uap:FileType>.pls</uap:FileType>
+              <uap:FileType>.zpl</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap3:Extension Category="windows.appExtensionHost">
+          <uap3:AppExtensionHost>
+            <uap3:Name>uwp.music-player.lyrics</uap3:Name>
+          </uap3:AppExtensionHost>
+        </uap3:Extension>
       </Extensions>
     </Application>
   </Applications>
