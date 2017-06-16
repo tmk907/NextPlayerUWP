@@ -72,6 +72,7 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, false);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, true);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.SongDurationType, SettingsKeys.SongDurationTotal);
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -264,6 +265,10 @@ namespace NextPlayerUWP
             if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.MediaScanUseIndexer) == null)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, true);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.SongDurationType) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.SongDurationType, SettingsKeys.SongDurationTotal);
             }
         }
 

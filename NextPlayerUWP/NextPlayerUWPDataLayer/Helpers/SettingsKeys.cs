@@ -70,6 +70,10 @@
         public const string PlaylistsFolder = "PlaylistsFolder";
         public const string AutoSavePlaylists = "AutoSavePlaylists";
         public const string FlipViewSelectedIndex = "FlipViewSelectedIndex";
+        public const string SongDurationType = "SongDurationType";
+        public const string SongDurationTotal = "SongDurationTotal";
+        public const string SongDurationRemaining = "SongDurationRemaining";
+        public const string SongDurationPlaylistRemaining = "SongDurationPlaylistRemaining";
 
         public const string LibraryUpdatedAt = "LibraryUpdatedAt";
         public const string LibraryUpdateFrequency = "LibraryUpdateFrequency";

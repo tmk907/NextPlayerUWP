@@ -27,6 +27,7 @@ namespace NextPlayerUWP.ViewModels
             QueueVM = vml.QueueVM;
             lyricsPanelVM = vml.LyricsPanelVM;
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            songDurationType = ApplicationSettingsHelper.ReadSettingsValue<string>(SettingsKeys.SongDurationType);
         }
 
         //private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
@@ -73,6 +74,10 @@ namespace NextPlayerUWP.ViewModels
             get { return currentTime; }
             set { Set(ref currentTime, value); }
         }
+
+        private string songDurationType;
+        private TimeSpan songDuration = TimeSpan.Zero;
+        private TimeSpan playlistDuration = TimeSpan.Zero;
 
         private TimeSpan timeEnd = TimeSpan.Zero;
         public TimeSpan TimeEnd
@@ -123,6 +128,22 @@ namespace NextPlayerUWP.ViewModels
         public void ShowVolumeControl()
         {
             IsVolumeControlVisible = !IsVolumeControlVisible;
+        }
+
+        public void ChangeTimeEndType()
+        {
+            if (songDurationType == SettingsKeys.SongDurationTotal)
+            {
+                songDurationType = SettingsKeys.SongDurationRemaining;
+            }
+            else if (songDurationType == SettingsKeys.SongDurationRemaining)
+            {
+                songDurationType = SettingsKeys.SongDurationPlaylistRemaining;
+            }
+            else if (songDurationType == SettingsKeys.SongDurationPlaylistRemaining)
+            {
+                songDurationType = SettingsKeys.SongDurationTotal;
+            }
         }
 
         #endregion
@@ -271,6 +292,19 @@ namespace NextPlayerUWP.ViewModels
             else
             {
                 CurrentTime = TimeSpan.FromSeconds(SliderValue);
+            }
+            switch (songDurationType)
+            {
+                case SettingsKeys.SongDurationTotal:
+                    break;
+                case SettingsKeys.SongDurationRemaining:
+                    TimeEnd = songDuration - currentTime;
+                    break;
+                case SettingsKeys.SongDurationPlaylistRemaining:
+                    TimeEnd = playlistDuration - currentTime;
+                    break;
+                default:
+                    break;
             }
         }
 
