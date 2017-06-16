@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common.Tiles;
+using NextPlayerUWP.Extensions;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
@@ -21,6 +22,7 @@ namespace NextPlayerUWP.Common
             System.Diagnostics.Debug.WriteLine("OnMediaPlayerTrackChanged {0}", index);
             MediaPlayerTrackChanged?.Invoke(index);
             UpdateLiveTile(false);
+            SendNotification();
         }
 
         private bool shuffle;
@@ -389,6 +391,13 @@ namespace NextPlayerUWP.Common
                 List<string> artists = new List<string>() { prevSong.Artist, song.Artist, nextSong.Artist };
                 tileHelper.UpdateAppTile(titles, artists, song.AlbumArtUri.ToString());
             }
+        }
+
+        private NowPlayingBroadcasterExtension br = new NowPlayingBroadcasterExtension();
+        private void SendNotification()
+        {
+            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            br.SendNotification(song.Album, song.Artist, song.Title, PlaybackService.Instance.PlayerState);
         }
 
         private void UpdateStats(int songId, TimeSpan songDuration, TimeSpan songPlaybackDuration)
