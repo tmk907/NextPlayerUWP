@@ -2579,7 +2579,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.5": {
+      "UWPMusicPlayerExtensions/0.9.7": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -5325,7 +5325,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.5": {
+      "UWPMusicPlayerExtensions/0.9.7": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -8088,7 +8088,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.5": {
+      "UWPMusicPlayerExtensions/0.9.7": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -10821,7 +10821,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.5": {
+      "UWPMusicPlayerExtensions/0.9.7": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -13593,7 +13593,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.5": {
+      "UWPMusicPlayerExtensions/0.9.7": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -16326,7 +16326,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.5": {
+      "UWPMusicPlayerExtensions/0.9.7": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -19098,7 +19098,7 @@
           "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {}
         }
       },
-      "UWPMusicPlayerExtensions/0.9.5": {
+      "UWPMusicPlayerExtensions/0.9.7": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -28236,10 +28236,10 @@
         "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll"
       ]
     },
-    "UWPMusicPlayerExtensions/0.9.5": {
-      "sha512": "sISDpds1jagnxNejdy9L4AzvBvGTm7BStqBW7i3lqBGBdhdvLSJWfprdn265YtG926CtoKk2/mqzC1TWvIYHBw==",
+    "UWPMusicPlayerExtensions/0.9.7": {
+      "sha512": "8uaUg7Fp69ZKAEsJrp3Sco20QpZDoZA3ngYaEFyWJzgYB0FGlqNYgEVcknngm+k4cf8/jUWQphycuXN8wOKSOA==",
       "type": "package",
-      "path": "uwpmusicplayerextensions/0.9.5",
+      "path": "uwpmusicplayerextensions/0.9.7",
       "files": [
         "ref/uap10.0/UWPMusicPlayerExtensions.dll",
         "ref/uap10.0/UWPMusicPlayerExtensions.pri",
@@ -28249,7 +28249,7 @@
         "runtimes/win10-x64/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
         "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.dll",
         "runtimes/win10-x86/lib/uap10.0/UWPMusicPlayerExtensions.pdb",
-        "uwpmusicplayerextensions.0.9.5.nupkg.sha512",
+        "uwpmusicplayerextensions.0.9.7.nupkg.sha512",
         "uwpmusicplayerextensions.nuspec"
       ]
     },
@@ -28372,7 +28372,7 @@
       "Microsoft.Toolkit.Uwp.UI.Controls >= 1.4.1",
       "MvvmLight >= 5.3.0",
       "SimpleCrossfadingImageUWP >= 0.9.3",
-      "UWPMusicPlayerExtensions >= 0.9.5",
+      "UWPMusicPlayerExtensions >= 0.9.7",
       "WindowsStateTriggers >= 1.1.0",
       "ksemenenko.ColorThief >= 1.1.0.3"
     ],
@@ -28419,7 +28419,7 @@
       "Microsoft.Toolkit.Uwp.UI.Controls": "1.4.1",
       "MvvmLight": "5.3.0",
       "SimpleCrossfadingImageUWP": "0.9.3",
-      "UWPMusicPlayerExtensions": "0.9.5",
+      "UWPMusicPlayerExtensions": "[0.9.7, )",
       "WindowsStateTriggers": "1.1.0"
     },
     "frameworks": {
