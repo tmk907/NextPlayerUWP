@@ -100,13 +100,29 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <controls:PageHeader Grid.Row="0"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                x:Uid="PageHeaderNowPlaying"
-                Content="Now playing" 
-                VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720"/>
+        <controls:PageHeader 
+            Grid.Row="0"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            x:Uid="PageHeaderNowPlaying"
+            Content="Now playing" 
+            VisualStateNarrowMinWidth="0" 
+            VisualStateNormalMinWidth="720">
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton
+                    x:Uid="AppBarButtonQueue"
+                    Icon="List"
+                    Label="Queue"
+                    Visibility="{x:Bind ViewModel.ShowButtons, Mode=OneWay}"
+                    Click="{x:Bind ViewModel.GoToNowPlayingPlaylist}"/>
+                <AppBarButton
+                    x:Uid="AppBarButtonLyrics"
+                    Icon="Font"
+                    Label="Lyrics"
+                    Visibility="{x:Bind ViewModel.ShowButtons, Mode=OneWay}"
+                    Click="{x:Bind ViewModel.GoToLyrics}"/>
+            </controls:PageHeader.PrimaryCommands>
+        </controls:PageHeader>
         <Grid Grid.Row="1" x:Name="ContentGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="13*"/>
@@ -189,55 +205,63 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Button 
-                    Style="{StaticResource TransparentButtonStyle}"
+                        Style="{StaticResource TransparentButtonStyle}"
                         Click="{x:Bind ViewModel.RateSong}"
-                    Grid.Column="0"
+                        Grid.Column="0"
                     Tag="0"/>
                     <Button 
-                    Grid.Column="1"
-                    Style="{StaticResource TransparentButtonStyle}"
+                        Grid.Column="1"
+                        Style="{StaticResource TransparentButtonStyle}"
                         Click="{x:Bind ViewModel.RateSong}"
-                            Tag="1">
+                        Tag="1">
                         <Button.Content>
-                        <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}" 
-                                    Style="{StaticResource StarTextBlockStyle}"/>
+                        <TextBlock  
+                            Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=1}" 
+                            Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
                     <Button 
-                    Grid.Column="2"
-                    Style="{StaticResource TransparentButtonStyle}"
+                        Grid.Column="2"
+                        Style="{StaticResource TransparentButtonStyle}"
                         Click="{x:Bind ViewModel.RateSong}"
-                            Tag="2">
+                        Tag="2">
                         <Button.Content>
-                            <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}" 
-                                    Style="{StaticResource StarTextBlockStyle}"/>
+                            <TextBlock  
+                                Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=2}" 
+                                Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
-                    <Button Style="{StaticResource TransparentButtonStyle}"
-                            Click="{x:Bind ViewModel.RateSong}"
-                            Grid.Column="3"
-                            Tag="3">
+                    <Button 
+                        Style="{StaticResource TransparentButtonStyle}"
+                        Click="{x:Bind ViewModel.RateSong}"
+                        Grid.Column="3"
+                        Tag="3">
                         <Button.Content>
-                            <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}" 
-                                    Style="{StaticResource StarTextBlockStyle}"/>
+                            <TextBlock  
+                                Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=3}" 
+                                Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
-                    <Button Style="{StaticResource TransparentButtonStyle}"
-                            Click="{x:Bind ViewModel.RateSong}"
-                            Grid.Column="4"
-                            Tag="4">
+                    <Button 
+                        Style="{StaticResource TransparentButtonStyle}"
+                        Click="{x:Bind ViewModel.RateSong}"
+                        Grid.Column="4"
+                        Tag="4">
                         <Button.Content>
-                            <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}" 
-                                    Style="{StaticResource StarTextBlockStyle}"/>
+                            <TextBlock  
+                                Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=4}" 
+                                Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
-                    <Button Style="{StaticResource TransparentButtonStyle}"
-                            Click="{x:Bind ViewModel.RateSong}"
-                            Grid.Column="5"    
-                                Tag="5">
+                    <Button 
+                        Style="{StaticResource TransparentButtonStyle}"
+                        Click="{x:Bind ViewModel.RateSong}"
+                        Grid.Column="5"    
+                        Tag="5">
                         <Button.Content>
-                            <TextBlock  Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}" 
-                                        Style="{StaticResource StarTextBlockStyle}"/>
+                            <TextBlock  
+                                Text="{Binding QueueVM.CurrentSong.Rating, Converter={StaticResource IntToRatingStarConverter}, ConverterParameter=5}" 
+                                Style="{StaticResource StarTextBlockStyle}"/>
                         </Button.Content>
                     </Button>
                 </Grid>

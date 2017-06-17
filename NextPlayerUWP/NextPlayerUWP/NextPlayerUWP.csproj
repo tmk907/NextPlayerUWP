@@ -192,6 +192,7 @@
     <Compile Include="Converters\ComboBoxItemValueConverter.cs" />
     <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
     <Compile Include="Converters\DateTimeToString.cs" />
+    <Compile Include="Converters\DoubleToGridLength.cs" />
     <Compile Include="Converters\GetListView.cs" />
     <Compile Include="Converters\IntToBitrate.cs" />
     <Compile Include="Converters\IntToDouble.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="Extensions\ExtensionsService.cs" />
     <Compile Include="Extensions\LyricsExtensions.cs" />
     <Compile Include="Extensions\MyLyricsExtensionsClient.cs" />
+    <Compile Include="Extensions\NowPlayingBroadcasterExtension.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\ListViewItemTemplateSelector.cs" />
     <Compile Include="Helpers\PlaylistRule.cs" />
@@ -233,10 +235,12 @@
     <Compile Include="Messages\MessageNames.cs" />
     <Compile Include="Messages\InAppNotification.cs" />
     <Compile Include="Messages\PageNavigated.cs" />
+    <Compile Include="Messages\RightPanelVisibilityChange.cs" />
     <Compile Include="Messages\ShowLyrics.cs" />
     <Compile Include="Messages\ShowNowPlayingList.cs" />
     <Compile Include="Messages\ThemeChange.cs" />
     <Compile Include="Messages\AppColorAccent.cs" />
+    <Compile Include="Messages\WindowSizeBreakpoint.cs" />
     <Compile Include="Models\ArtistItemHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddToPlaylistViewModel.cs" />

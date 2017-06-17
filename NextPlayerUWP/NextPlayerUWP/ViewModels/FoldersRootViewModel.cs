@@ -19,6 +19,7 @@ namespace NextPlayerUWP.ViewModels
             sortingHelper = new SortingHelperForFolderItems("FoldersRoot");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
+            SortDescending = sortingHelper.SortDescending;
             MediaImport.MediaImported += MediaImport_MediaImported;
             ViewModelLocator vml = new ViewModelLocator();
             helper = vml.FolderVMHelper;
@@ -127,7 +128,7 @@ namespace NextPlayerUWP.ViewModels
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
             var orderSelector = sortingHelper.GetOrderBySelector();
-            var query = folders.OrderBy(orderSelector);
+            var query = (sortDescending) ? folders.OrderByDescending(orderSelector) : folders.OrderBy(orderSelector);
             Folders = new ObservableCollection<FolderItem>(query);
         }
 

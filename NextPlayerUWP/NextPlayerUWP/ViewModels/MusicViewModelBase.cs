@@ -73,6 +73,19 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        protected bool sortDescending = false;
+        public bool SortDescending
+        {
+            get { return sortDescending; }
+            set { Set(ref sortDescending, value); }
+        }
+
+        public void ChangeSortingPriority()
+        {
+            //sortDescending = !sortDescending;
+            SortMusicItems();
+        }
+
         protected virtual void SortMusicItems() { }
 
         #region Commands

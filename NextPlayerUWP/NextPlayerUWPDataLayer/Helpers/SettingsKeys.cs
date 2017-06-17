@@ -22,6 +22,11 @@
         public const string AccentFromAlbumArt = "AccentFromAlbumArt";
         public const string AlbumArtInBackground = "AlbumArtInBackground";
 
+        public const string RightPanelWidthCompact = "RightPanelWidthCompact";
+        public const string RightPanelWidthNarrow = "RightPanelWidthNarrow";
+        public const string RightPanelWidthNormal = "RightPanelWidthNormal";
+        public const string RightPanelWidthWide = "RightPanelWidthWide";
+
         //Review
         public const string IsReviewed = "isreviewed5";
         public const string LastReviewRemind = "lastreviewremind5";

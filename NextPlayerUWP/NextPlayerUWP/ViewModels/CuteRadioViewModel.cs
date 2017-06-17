@@ -13,6 +13,7 @@ using NextPlayerUWP.Common;
 using Windows.UI.Xaml;
 using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Radio.CuteRadio.Model;
+using Windows.UI.Xaml.Navigation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -42,6 +43,12 @@ namespace NextPlayerUWP.ViewModels
         public IncrementalLoadingCollection<RadioSourceLanguage, Station> RadiosByLanguage;
         public IncrementalLoadingCollection<RadioSourceCountry, Station> RadiosByCountry;
         public IncrementalLoadingCollection<RadioSourceSearch, Station> RadiosSearch;
+
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            App.OnNavigatedToNewView(true);
+            await Task.CompletedTask;
+        }
 
         //0 country 1 genre 2 lang
         private int selectedPivotIndex = 0;

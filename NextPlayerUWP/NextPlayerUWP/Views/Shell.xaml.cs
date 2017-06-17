@@ -180,10 +180,10 @@ namespace NextPlayerUWP.Views
                 {
                     FindName(nameof(AdWrapperDesktop));
 #if DEBUG
-                    DesktopAd.ApplicationId = "9nblggh67n4f";
-                    DesktopAd.AdUnitId = "11684323";
-                    //DesktopAd.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
-                    //DesktopAd.AdUnitId = "test";
+                    //DesktopAd.ApplicationId = "9nblggh67n4f";
+                    //DesktopAd.AdUnitId = "11684323";
+                    DesktopAd.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
+                    DesktopAd.AdUnitId = "test";
 #else
                     DesktopAd.ApplicationId = "9nblggh67n4f";
                     DesktopAd.AdUnitId = "11684323";
@@ -195,10 +195,10 @@ namespace NextPlayerUWP.Views
                 {
                     FindName(nameof(AdWrapperMobile));
 #if DEBUG
-                    MobileAd.ApplicationId = "9nblggh67n4f";
-                    MobileAd.AdUnitId = "11684325";
-                    //MobileAd.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
-                    //MobileAd.AdUnitId = "test";
+                    //MobileAd.ApplicationId = "9nblggh67n4f";
+                    //MobileAd.AdUnitId = "11684325";
+                    MobileAd.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
+                    MobileAd.AdUnitId = "test";
 #else
                     MobileAd.ApplicationId = "9nblggh67n4f";
                     MobileAd.AdUnitId = "11684325";
@@ -365,8 +365,6 @@ namespace NextPlayerUWP.Views
                 }
             }
         }
-
-        
 
         //        private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
         //        {

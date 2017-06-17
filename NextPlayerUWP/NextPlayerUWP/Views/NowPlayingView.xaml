@@ -1054,6 +1054,7 @@
                     VerticalAlignment="Center" 
                     Style="{StaticResource TimeSliderStyle}"/>
                     <TextBlock Grid.Column="2"
+                              Tapped="{x:Bind ViewModel.ChangeTimeEndType}"
                         Style="{StaticResource SubtitleTextBlockStyle}"
                         FontSize="17"
                         VerticalAlignment="Center"

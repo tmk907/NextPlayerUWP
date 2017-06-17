@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,6 +20,7 @@ namespace NextPlayerUWP.ViewModels
             sortingHelper = new SortingHelperForSongItems("Songs");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
+            SortDescending = sortingHelper.SortDescending;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
         }
@@ -207,12 +207,34 @@ namespace NextPlayerUWP.ViewModels
             var query = songs.OrderBy(orderSelector).ThenBy(a => a.Title).
                 GroupBy(groupSelector).
                 Select(group => new {
+                    GroupName = group.Key.ToString().ToUpper(),
+                    Items = group
+                });
+
+            if (sortDescending)
+            {
+                query = songs.OrderByDescending(orderSelector).ThenBy(a => a.Title).
+                GroupBy(groupSelector).
+                Select(group => new {
                     GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
                     : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")
                     : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss")
                     : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"),
                     Items = group
                 });
+            }
+            else
+            {
+                query = songs.OrderBy(orderSelector).ThenBy(a => a.Title).
+                GroupBy(groupSelector).
+                Select(group => new {
+                    GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
+                    : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")
+                    : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss")
+                    : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"),
+                    Items = group
+                });
+            }
 
             int i = 0;
             string s;
