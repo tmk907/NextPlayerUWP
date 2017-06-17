@@ -14,7 +14,7 @@
     "Microsoft.Toolkit.Uwp.UI.Controls": "1.4.1",
     "MvvmLight": "5.3.0",
     "SimpleCrossfadingImageUWP": "0.9.3",
-    "UWPMusicPlayerExtensions": "0.9.5",
+    "UWPMusicPlayerExtensions": "0.9.7",
     "WindowsStateTriggers": "1.1.0"
   },
   "frameworks": {

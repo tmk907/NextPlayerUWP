@@ -94,7 +94,7 @@ namespace NextPlayerUWP.ViewModels
             await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
             {
                 if (QueueVM.SongsCount == 0 || index > QueueVM.SongsCount - 1 || index < 0) return;
-                scrollerHelper.ScrollAfterTrackChanged(index);
+                scrollerHelper.ScrollToIndex(index);
                 if (SelectedPivotIndex == 0)
                 {
                     lyricsLoaded = false;
@@ -226,7 +226,7 @@ namespace NextPlayerUWP.ViewModels
             Logger2.DebugWrite("RightPanelViewModel", "OnLoaded");
 
             scrollerHelper.listView = (ListView)p;
-            scrollerHelper.ScrollAfterTrackChanged(PlaybackService.Instance.CurrentSongIndex);
+            scrollerHelper.ScrollToIndex(PlaybackService.Instance.CurrentSongIndex);
         }
 
         public void OnUnLoaded()
@@ -385,6 +385,19 @@ namespace NextPlayerUWP.ViewModels
         public async void SearchLyrics()
         {
             await lyricsPanelVM.SearchLyrics(artistSearch, titleSearch);
+        }
+
+        public void ScrollToCurrentPlaying()
+        {
+            var song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            int index = 0;
+            foreach (var s in QueueVM.Songs)
+            {
+                if (s.SongId == song.SongId) break;
+                index++;
+            }
+            if (index == QueueVM.Songs.Count) return;
+            scrollerHelper.ScrollToIndex(index);
         }
     }
 }

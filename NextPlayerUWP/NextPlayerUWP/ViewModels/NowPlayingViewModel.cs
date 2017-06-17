@@ -1,7 +1,6 @@
 ﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
-using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using System;
@@ -27,7 +26,8 @@ namespace NextPlayerUWP.ViewModels
             PlayerVM = vml.PlayerVM;
             QueueVM = vml.QueueVM;
             lyricsPanelVM = vml.LyricsPanelVM;
-            song = QueueVM.CurrentSong;
+            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            songDurationType = ApplicationSettingsHelper.ReadSettingsValue<string>(SettingsKeys.SongDurationType);
         }
 
         //private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
@@ -74,6 +74,10 @@ namespace NextPlayerUWP.ViewModels
             get { return currentTime; }
             set { Set(ref currentTime, value); }
         }
+
+        private string songDurationType;
+        private TimeSpan songDuration = TimeSpan.Zero;
+        private TimeSpan playlistDuration = TimeSpan.Zero;
 
         private TimeSpan timeEnd = TimeSpan.Zero;
         public TimeSpan TimeEnd
@@ -124,6 +128,24 @@ namespace NextPlayerUWP.ViewModels
         public void ShowVolumeControl()
         {
             IsVolumeControlVisible = !IsVolumeControlVisible;
+        }
+
+        public void ChangeTimeEndType()
+        {
+            if (songDurationType == SettingsKeys.SongDurationTotal)
+            {
+                songDurationType = SettingsKeys.SongDurationRemaining;
+                TimeEnd = songDuration - currentTime;
+            }
+            else if (songDurationType == SettingsKeys.SongDurationRemaining)
+            {
+                songDurationType = SettingsKeys.SongDurationTotal;
+                TimeEnd = songDuration;
+            }
+            else if (songDurationType == SettingsKeys.SongDurationPlaylistRemaining)
+            {
+                songDurationType = SettingsKeys.SongDurationTotal;
+            }
         }
 
         #endregion
@@ -224,9 +246,18 @@ namespace NextPlayerUWP.ViewModels
                     StartTimer();
                 }
                 CurrentTime = TimeSpan.Zero;
-                TimeEnd = duration;
+                songDuration = TimeSpan.FromSeconds(Math.Truncate(duration.TotalSeconds));
+                TimeEnd = songDuration;
+
                 SliderValue = 0.0;
-                SliderMaxValue = (int)Math.Round(duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+                if (duration.TotalSeconds > 1)
+                {
+                    SliderMaxValue = Math.Truncate(duration.TotalSeconds - 1);
+                }
+                else
+                {
+                    SliderMaxValue = 0.0;
+                }
             });
         }
 
@@ -238,7 +269,7 @@ namespace NextPlayerUWP.ViewModels
         private async void TrackChanged(int index)
         {
             int prevId = song.SongId;
-            song = QueueVM.CurrentSong;
+            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
             {
                 if (song.SongId != prevId)
@@ -266,8 +297,21 @@ namespace NextPlayerUWP.ViewModels
             if (!sliderpressed)
             {
                 position = PlaybackService.Instance.Position;
-                SliderValue = position.TotalSeconds;
-                CurrentTime = position;
+                SliderValue = Math.Truncate(position.TotalSeconds);
+                CurrentTime = TimeSpan.FromSeconds(sliderValue);
+                switch (songDurationType)
+                {
+                    case SettingsKeys.SongDurationTotal:
+                        break;
+                    case SettingsKeys.SongDurationRemaining:
+                        TimeEnd = songDuration - currentTime;
+                        break;
+                    case SettingsKeys.SongDurationPlaylistRemaining:
+                        TimeEnd = playlistDuration - currentTime;
+                        break;
+                    default:
+                        break;
+                }
             }
             else
             {
@@ -287,28 +331,6 @@ namespace NextPlayerUWP.ViewModels
             _timer.Tick -= _timer_Tick;
         }
 
-        private void videoMediaElement_MediaFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-            // get HRESULT from event args 
-            string hr = GetHresultFromErrorMessage(e);
-            // Handle media failed event appropriately 
-        }
-
-        private string GetHresultFromErrorMessage(ExceptionRoutedEventArgs e)
-        {
-            String hr = String.Empty;
-            String token = "HRESULT - ";
-            const int hrLength = 10;     // eg "0xFFFFFFFF"
-
-            int tokenPos = e.ErrorMessage.IndexOf(token, StringComparison.Ordinal);
-            if (tokenPos != -1)
-            {
-                hr = e.ErrorMessage.Substring(tokenPos + token.Length, hrLength);
-            }
-
-            return hr;
-        }
-
         #endregion
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -321,16 +343,16 @@ namespace NextPlayerUWP.ViewModels
             PlaybackService.MediaPlayerTrackChanged += TrackChanged;
             FlipViewSelectedIndex = (int)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.FlipViewSelectedIndex);
             StartTimer();
-            
-            TimeEnd = QueueVM.CurrentSong.Duration;
+            song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
+            TimeEnd = song.Duration;
             SliderValue = 0.0;
-            SliderMaxValue = (int)Math.Round(QueueVM.CurrentSong.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+            SliderMaxValue = (int)Math.Round(song.Duration.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
             if (mode == NavigationMode.New || mode == NavigationMode.Forward)
             {
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
             //ShowAlbumArtInBackground = ApplicationSettingsHelper.ReadData<bool>(SettingsKeys.AlbumArtInBackground);
-            await lyricsPanelVM.ChangeLyrics(QueueVM.CurrentSong);
+            await lyricsPanelVM.ChangeLyrics(song);
             //await Task.CompletedTask;
         }
 

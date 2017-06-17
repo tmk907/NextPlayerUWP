@@ -180,6 +180,8 @@ namespace NextPlayerUWP.Views
                 {
                     FindName(nameof(AdWrapperDesktop));
 #if DEBUG
+                    //DesktopAd.ApplicationId = "9nblggh67n4f";
+                    //DesktopAd.AdUnitId = "11684323";
                     DesktopAd.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
                     DesktopAd.AdUnitId = "test";
 #else
@@ -193,6 +195,8 @@ namespace NextPlayerUWP.Views
                 {
                     FindName(nameof(AdWrapperMobile));
 #if DEBUG
+                    //MobileAd.ApplicationId = "9nblggh67n4f";
+                    //MobileAd.AdUnitId = "11684325";
                     MobileAd.ApplicationId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
                     MobileAd.AdUnitId = "test";
 #else
@@ -207,7 +211,6 @@ namespace NextPlayerUWP.Views
                     UnloadAd(true);
                 });
             }
-
         }
 
         private bool AdWasDisplayed = false;
@@ -228,6 +231,40 @@ namespace NextPlayerUWP.Views
                 }
                 if (fromTimer) AdWasDisplayed = true;
             });
+        }
+
+        private void DesktopAd_AdRefreshed(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Ad refreshed");
+            TelemetryAdapter.TrackEvent("AdRefreshedDesktop");
+        }
+
+        private void DesktopAd_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Ad error {0} {1}", e.ErrorCode.ToString(), e.ErrorMessage);
+            TelemetryAdapter.TrackEvent("AdErrorDesktop" + e.ErrorMessage);
+            if (e.ErrorMessage == "NoAdAvailable")
+            {
+                UnloadAd(true);
+                AdTimer.TimerCancel();
+            }
+        }
+
+        private void MobileAd_AdRefreshed(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Ad refreshed");
+            TelemetryAdapter.TrackEvent("AdRefreshedMobile");
+        }
+
+        private void MobileAd_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Ad error {0} {1}", e.ErrorCode.ToString(), e.ErrorMessage);
+            TelemetryAdapter.TrackEvent("AdErrorMobile" + e.ErrorMessage);
+            if (e.ErrorMessage == "NoAdAvailable")
+            {
+                UnloadAd(true);
+                AdTimer.TimerCancel();
+            }
         }
 
         private void OnPageNavigatedMessage(PageNavigated message)
@@ -329,19 +366,19 @@ namespace NextPlayerUWP.Views
             }
         }
 
-//        private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
-//        {
-//            if (DeviceFamilyHelper.IsDesktop())
-//            {
-//#if DEBUG
-//                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
-//#endif
-//            }
-//            else
-//            {
-//                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
-//            }
-//        }
+        //        private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
+        //        {
+        //            if (DeviceFamilyHelper.IsDesktop())
+        //            {
+        //#if DEBUG
+        //                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+        //#endif
+        //            }
+        //            else
+        //            {
+        //                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+        //            }
+        //        }
 
     }
 }

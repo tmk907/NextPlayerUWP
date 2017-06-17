@@ -175,6 +175,13 @@ namespace NextPlayerUWPDataLayer.Diagnostics
             }
         }
 
+        public static void DebugWrite(string data)
+        {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("{0} {1}", DateTime.Now.TimeOfDay, data);
+#endif
+        }
+
         public static void DebugWrite(string caller, string data)
         {
 #if DEBUG

@@ -70,7 +70,7 @@ namespace NextPlayerUWP.Common
 
         private void PlaybackService_StreamUpdated(NowPlayingSong updatedSong)
         {
-            dispatcher.Dispatch(() =>
+            dispatcher?.Dispatch(() =>
             {
                 SongItem si = songs.Where(s => (s.SongId.Equals(updatedSong.SongId) && s.SourceType.Equals(updatedSong.SourceType))).FirstOrDefault();
                 if (si != null)
@@ -89,7 +89,7 @@ namespace NextPlayerUWP.Common
 
         private async void App_SongUpdated(int id)
         {
-            await dispatcher.DispatchAsync(async () =>
+            await dispatcher?.DispatchAsync(async () =>
             {
                 SongItem si = songs.Where(s => s.SongId.Equals(id)).FirstOrDefault();
                 if (si != null)
@@ -162,6 +162,10 @@ namespace NextPlayerUWP.Common
                     {
                         System.Diagnostics.Debug.WriteLine("Dispatcher null");
                         return;
+                    }
+                    else
+                    {
+                        dispatcher = WindowWrapper.Current().Dispatcher;
                     }
                 }
                 foreach (var song in songs)

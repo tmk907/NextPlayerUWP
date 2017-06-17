@@ -360,6 +360,11 @@
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+            <AppBarButton 
+                Icon="SetTile"
+                x:Uid="AppBarButtonScrollToPlayingSong"
+                Label="Scroll to playing song"
+                Click="{x:Bind ViewModel.ScrollToCurrentPlaying}"/>
             <AppBarButton
                 x:Uid="AppBarButtonSave"
                 Icon="Save"

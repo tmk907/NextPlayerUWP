@@ -54,6 +54,7 @@ namespace NextPlayerUWP.Common
     public abstract class BaseSortingHelper<T> : ISortingHelper<T>
     {
         private string collectionName;
+        private string collectionNameOrder;
 
         private string sortOption;
         protected string SortOption
@@ -73,6 +74,20 @@ namespace NextPlayerUWP.Common
                     sortOption = value;
                     ApplicationSettingsHelper.SaveSettingsValue(collectionName, value);
                 }
+            }
+        }
+
+        protected bool sortDescending = false;
+        public bool SortDescending
+        {
+            get
+            {                    
+                return sortDescending;
+            }
+            set
+            {
+                sortDescending = value;
+                ApplicationSettingsHelper.SaveSettingsValue(collectionNameOrder, value);
             }
         }
 
@@ -96,11 +111,13 @@ namespace NextPlayerUWP.Common
         public BaseSortingHelper(string collectionName)
         {
             this.collectionName = collectionName;
+            collectionNameOrder = collectionName + "Order";
             ComboBoxItemValues = GetComboBoxValues();
             if (SortOption == null) SortOption = ComboBoxItemValues.FirstOrDefault().Option;
             IgnoreArticles = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.IgnoreArticles);
             //ApplicationSettingsHelper.SaveData(SettingsKeys.IgnoredArticlesList, new List<string>() { "a", "an", "the" });
             Articles = ApplicationSettingsHelper.ReadData<List<string>>(SettingsKeys.IgnoredArticlesList);
+            sortDescending = ApplicationSettingsHelper.ReadSettingsValue<bool>(collectionNameOrder);
         }
 
         protected abstract ObservableCollection<ComboBoxItemValue> GetComboBoxValues();

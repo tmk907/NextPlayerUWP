@@ -19,6 +19,7 @@ namespace NextPlayerUWP.ViewModels
             sortingHelper = new SortingHelperForAlbumArtistItems("AlbumArtists");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
+            SortDescending = sortingHelper.SortDescending;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
         }
@@ -110,6 +111,32 @@ namespace NextPlayerUWP.ViewModels
                 : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"),
                     Items = group
                 });
+
+            if (sortDescending)
+            {
+                query = albumArtists.OrderByDescending(orderSelector).
+                GroupBy(groupSelector).
+                Select(group => new {
+                    GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
+                : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")
+                : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss")
+                : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"),
+                    Items = group
+                });
+            }
+            else
+            {
+                query = albumArtists.OrderBy(orderSelector).
+                GroupBy(groupSelector).
+                Select(group => new {
+                    GroupName = (format != "duration") ? group.Key.ToString().ToUpper()
+                : (((TimeSpan)group.Key).Hours == 0) ? ((TimeSpan)group.Key).ToString(@"m\:ss")
+                : (((TimeSpan)group.Key).Days == 0) ? ((TimeSpan)group.Key).ToString(@"h\:mm\:ss")
+                : ((TimeSpan)group.Key).ToString(@"d\.hh\:mm\:ss"),
+                    Items = group
+                });
+            }
+
             int i = 0;
             string s;
             GroupedAlbumArtists.Clear();

@@ -1000,7 +1000,7 @@
     <value>قيّم التطبيق</value>
   </data>
   <data name="TBLeaveFeedback.Text" xml:space="preserve">
-    <value></value>
+    <value>Leave feedback</value>
   </data>
   <data name="TBMailToSupport.Text" xml:space="preserve">
     <value>Mail to support</value>
@@ -1016,5 +1016,14 @@
   </data>
   <data name="ContentDialogTranslations.Title" xml:space="preserve">
     <value>Translations</value>
+  </data>
+  <data name="ContentDialogTranslations.PrimaryButtonText" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="ContentDialogTranslations.SecondaryButtonText" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="AppBarButtonScrollToPlayingSong.Label" xml:space="preserve">
+    <value>Scroll to playing song</value>
   </data>
 </root>

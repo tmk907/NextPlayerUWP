@@ -22,6 +22,11 @@
         public const string AccentFromAlbumArt = "AccentFromAlbumArt";
         public const string AlbumArtInBackground = "AlbumArtInBackground";
 
+        public const string RightPanelWidthCompact = "RightPanelWidthCompact";
+        public const string RightPanelWidthNarrow = "RightPanelWidthNarrow";
+        public const string RightPanelWidthNormal = "RightPanelWidthNormal";
+        public const string RightPanelWidthWide = "RightPanelWidthWide";
+
         //Review
         public const string IsReviewed = "isreviewed5";
         public const string LastReviewRemind = "lastreviewremind5";
@@ -70,6 +75,10 @@
         public const string PlaylistsFolder = "PlaylistsFolder";
         public const string AutoSavePlaylists = "AutoSavePlaylists";
         public const string FlipViewSelectedIndex = "FlipViewSelectedIndex";
+        public const string SongDurationType = "SongDurationType";
+        public const string SongDurationTotal = "SongDurationTotal";
+        public const string SongDurationRemaining = "SongDurationRemaining";
+        public const string SongDurationPlaylistRemaining = "SongDurationPlaylistRemaining";
 
         public const string LibraryUpdatedAt = "LibraryUpdatedAt";
         public const string LibraryUpdateFrequency = "LibraryUpdateFrequency";

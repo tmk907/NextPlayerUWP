@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWPDataLayer.Helpers;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -86,6 +87,8 @@ namespace NextPlayerUWP.Common
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
             {
                 var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                coreTitleBar.ExtendViewIntoTitleBar = false;
                 if (titleBar != null)
                 {
                     switch (theme)

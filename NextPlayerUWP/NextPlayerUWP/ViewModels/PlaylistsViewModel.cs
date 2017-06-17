@@ -113,6 +113,7 @@ namespace NextPlayerUWP.ViewModels
 
         public async void Save()
         {
+            System.Diagnostics.Debug.WriteLine("new playlist name " + name);
             int id = DatabaseManager.Current.InsertPlainPlaylist(name);
             var playlist = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
             Playlists.Add(playlist);

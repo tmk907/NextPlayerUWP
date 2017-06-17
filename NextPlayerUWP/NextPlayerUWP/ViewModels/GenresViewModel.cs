@@ -17,6 +17,7 @@ namespace NextPlayerUWP.ViewModels
             sortingHelper = new SortingHelperForGenreItems("Genres");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
+            SortDescending = sortingHelper.SortDescending;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) Genres.Add(new GenreItem());
@@ -87,7 +88,7 @@ namespace NextPlayerUWP.ViewModels
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
             var orderSelector = sortingHelper.GetOrderBySelector();
-            var query = genres.OrderBy(orderSelector);
+            var query = (sortDescending) ? genres.OrderByDescending(orderSelector) : genres.OrderBy(orderSelector);
             Genres = new ObservableCollection<GenreItem>(query);
         }
 

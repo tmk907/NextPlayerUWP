@@ -1,4 +1,5 @@
 ﻿using Microsoft.HockeyApp;
+using Microsoft.Services.Store.Engagement;
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
@@ -104,6 +105,7 @@ namespace NextPlayerUWP
             appShortcuts = new AppKeyboardShortcuts();
             OnStartAsyncFinished += InitAfterOnStart;
 
+            RegisterNotificationChannelAsync();
             this.UnhandledException += App_UnhandledException;
             s1.Stop();
             Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
@@ -473,7 +475,16 @@ namespace NextPlayerUWP
                         case AdditionalKinds.Toast:
                             Debug.WriteLine("OnStartAsync Toast");
                             var toastargs = args as ToastNotificationActivatedEventArgs;
-                            await NavigationService.NavigateAsync(Pages.Settings);
+                            StoreServicesEngagementManager manager = StoreServicesEngagementManager.GetDefault();
+                            string originalArgs = manager.ParseArgumentsAndTrackAppLaunch(toastargs.Argument);
+                            if (originalArgs == "extensions")
+                            {
+                                NavigationService.Navigate(typeof(SettingsDetailsView), nameof(ViewModels.Settings.SettingsExtensionsViewModel));
+                            }
+                            else
+                            {
+                                await NavigationService.NavigateAsync(Pages.Settings);
+                            }
                             break;
                         default:
                             Debug.WriteLine("OnStartAsync default");
@@ -559,6 +570,12 @@ namespace NextPlayerUWP
         {
             await BackgroundTaskHelper.CheckAppVersion();
             await BackgroundTaskHelper.RegisterBackgroundTasks();
+        }
+
+        private async void RegisterNotificationChannelAsync()
+        {
+            StoreServicesEngagementManager manager = StoreServicesEngagementManager.GetDefault();
+            await manager.RegisterNotificationChannelAsync();
         }
     }
 }

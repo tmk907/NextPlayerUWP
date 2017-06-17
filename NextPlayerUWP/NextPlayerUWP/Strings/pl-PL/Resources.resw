@@ -1014,4 +1014,16 @@
   <data name="TBLikeOnFacebook.Text" xml:space="preserve">
     <value>Polub na Facebooku</value>
   </data>
+  <data name="TBLeaveFeedback.Text" xml:space="preserve">
+    <value>Zostaw opinię</value>
+  </data>
+  <data name="ContentDialogTranslations.PrimaryButtonText" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="ContentDialogTranslations.SecondaryButtonText" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="AppBarButtonScrollToPlayingSong.Label" xml:space="preserve">
+    <value>Przewiń to odtwarzanego utworu</value>
+  </data>
 </root>

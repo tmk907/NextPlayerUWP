@@ -21,6 +21,7 @@ namespace NextPlayerUWP.ViewModels
             sortingHelper = new SortingHelperForSongItems("Folders");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
             SelectedComboBoxItem = sortingHelper.SelectedSortOption;
+            SortDescending = sortingHelper.SortDescending;
             MediaImport.MediaImported += MediaImport_MediaImported;
             ViewModelLocator vml = new ViewModelLocator();
             helper = vml.FolderVMHelper;
@@ -284,7 +285,9 @@ namespace NextPlayerUWP.ViewModels
             var orderSelector = sortingHelper.GetOrderBySelector();
 
             var folderItems = items.Where(i => i.GetType() != typeof(SongItem));
-            var sortedSongs = items.OfType<SongItem>().OrderBy(orderSelector);
+            var sortedSongs = (sortDescending) ? 
+                items.OfType<SongItem>().OrderByDescending(orderSelector) : 
+                items.OfType<SongItem>().OrderBy(orderSelector);
 
             Items = new ObservableCollection<MusicItem>(folderItems);
 

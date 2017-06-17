@@ -22,6 +22,7 @@ namespace NextPlayerUWP.ViewModels
         {
             sortingHelper = new SortingHelperForSongItemsInPlaylist("init");
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
+            SortDescending = sortingHelper.SortDescending;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 playlist = new ObservableCollection<SongItem>();
@@ -265,7 +266,7 @@ namespace NextPlayerUWP.ViewModels
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
             var orderSelector = sortingHelper.GetOrderBySelector();
-            var query = playlist.OrderBy(orderSelector);
+            var query = (sortDescending)? playlist.OrderByDescending(orderSelector) : playlist.OrderBy(orderSelector);
             Playlist = new ObservableCollection<SongItem>(query);
             if (type == MusicItemTypes.plainplaylist)
             {

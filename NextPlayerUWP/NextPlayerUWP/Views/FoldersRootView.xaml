@@ -230,7 +230,6 @@
                         TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock x:Uid="TBSortBy" Text="Sort by" Margin="8,0,0,2" VerticalAlignment="Center" FontSize="15"/>
                     <ComboBox Margin="4,0,8,0" 
                             BorderThickness="0" 
                             Width="Auto" 
@@ -238,6 +237,15 @@
                             ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
                             DisplayMemberPath="Label"
                             SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
+                    <ToggleButton
+                        x:Uid="ButtonPriority"
+                        Style="{StaticResource SortingOrderButtonStyle}"
+                        IsChecked="{x:Bind ViewModel.SortDescending, Mode=TwoWay}"
+                        Click="{x:Bind ViewModel.ChangeSortingPriority}">
+                        <ToggleButton.Content>
+                            <SymbolIcon Symbol="Priority"/>
+                        </ToggleButton.Content>
+                    </ToggleButton>
                 </StackPanel>
                 <AutoSuggestBox  
                     x:Name="SearchBox"

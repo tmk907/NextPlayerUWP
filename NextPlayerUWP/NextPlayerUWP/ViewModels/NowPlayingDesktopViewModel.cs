@@ -16,9 +16,12 @@ namespace NextPlayerUWP.ViewModels
         {
             ViewModelLocator vml = new ViewModelLocator();
             QueueVM = vml.QueueVM;
+            token = MessageHub.Instance.Subscribe<RightPanelVisibilityChange>(OnRightPanelVisibilityChange);
+            ShowButtons = Window.Current.Bounds.Width < 500;
         }
 
         public QueueViewModelBase QueueVM { get; set; }
+        private Guid token;
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
@@ -39,11 +42,33 @@ namespace NextPlayerUWP.ViewModels
             await Task.CompletedTask;
         }
         
+        private void OnRightPanelVisibilityChange(RightPanelVisibilityChange msg)
+        {
+            ShowButtons = !msg.Visible;
+        }
+
         public async void RateSong(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             int rating = Int32.Parse(button.Tag.ToString());
             await QueueVM.RateSong(rating);
+        }
+
+        private bool showButtons = false;
+        public bool ShowButtons
+        {
+            get { return showButtons; }
+            set { Set(ref showButtons, value); }
+        }
+
+        public void GoToNowPlayingPlaylist()
+        {
+            NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
+        }
+
+        public void GoToLyrics()
+        {
+            NavigationService.Navigate(App.Pages.Lyrics);
         }
     }
 }
