@@ -193,7 +193,7 @@
     <value>Anuluj</value>
   </data>
   <data name="ContentDialogNewPlaylist.Title" xml:space="preserve">
-    <value>Nowa pusta playlista</value>
+    <value>Utwórz nową playlistę</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Usuń</value>
@@ -628,25 +628,25 @@
     <value>Rating (lowest first)</value>
   </data>
   <data name="LowestRating" xml:space="preserve">
-    <value>Rating (highest first)</value>
+    <value>Ocena (od najwyższej)</value>
   </data>
   <data name="LeastOftenPlayed" xml:space="preserve">
-    <value>Play count (highest first)</value>
+    <value>Liczba odtworzeń (od największej)</value>
   </data>
   <data name="LeastRecentlyAdded" xml:space="preserve">
-    <value>Date added (oldest first)</value>
+    <value>Data dodania (od najstarszej)</value>
   </data>
   <data name="LeastRecentlyPlayed" xml:space="preserve">
-    <value>Date played (oldest first)</value>
+    <value>Data odtwarzania(od najstarszej)</value>
   </data>
   <data name="MostOftenPlayed" xml:space="preserve">
-    <value>Play count (lowest first)</value>
+    <value>Liczba odtworzeń (od największej))</value>
   </data>
   <data name="MostRecentlyAdded" xml:space="preserve">
-    <value>Date added (newest first)</value>
+    <value>Data dodania (od najnowszej)</value>
   </data>
   <data name="MostRecentlyPlayed" xml:space="preserve">
-    <value>Date played (newest first)</value>
+    <value>Data odtwarzania (od najnowszej)</value>
   </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Usuń</value>
@@ -1025,5 +1025,17 @@
   </data>
   <data name="AppBarButtonScrollToPlayingSong.Label" xml:space="preserve">
     <value>Przewiń to odtwarzanego utworu</value>
+  </data>
+  <data name="MostRecentlyCreated" xml:space="preserve">
+    <value>Data utworzenia (od najnowszej)</value>
+  </data>
+  <data name="ContentDialogNewPlaylistWithSongs.Title" xml:space="preserve">
+    <value>Utwórz playlistę i dodaj utwory</value>
+  </data>
+  <data name="ContentDialogNewPlaylistWithSongs.SecondaryButtonText" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="ContentDialogNewPlaylistWithSongs.PrimaryButtonText" xml:space="preserve">
+    <value>Zapisz</value>
   </data>
 </root>

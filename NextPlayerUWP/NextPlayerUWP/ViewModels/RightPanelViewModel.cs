@@ -95,6 +95,9 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (QueueVM.SongsCount == 0 || index > QueueVM.SongsCount - 1 || index < 0) return;
                 scrollerHelper.ScrollToIndex(index);
+                var song = QueueVM.Songs[index];
+                ArtistSearch = song.Artist;
+                TitleSearch = song.Title;
                 if (SelectedPivotIndex == 0)
                 {
                     lyricsLoaded = false;
@@ -102,7 +105,6 @@ namespace NextPlayerUWP.ViewModels
                 }
                 else
                 {
-                    var song = QueueVM.Songs[index];
                     await lyricsPanelVM.ChangeLyrics(song);
                 }
             });

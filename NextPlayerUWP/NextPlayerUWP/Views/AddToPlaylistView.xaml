@@ -64,23 +64,25 @@
                     HorizontalContentAlignment="Stretch"/>
             <Grid Grid.Row="1">
                 <ContentDialog x:Name="ContentDialogNewPlaylist"
-                    x:Uid="ContentDialogNewPlaylist"
+                    x:Uid="ContentDialogNewPlaylistWithSongs"
                     VerticalAlignment="Center"
-                    Title="New playlist"
+                    Title="Create new playlist and add songs"
                     PrimaryButtonText="Save"
                     IsPrimaryButtonEnabled="{Binding Text, ElementName=playlistNameTB, Converter={StaticResource PlaylistNameToBoolConverter}, Mode=OneWay}"
-                    PrimaryButtonClick="{x:Bind ViewModel.Save}"
+                    PrimaryButtonClick="ContentDialogNewPlaylist_PrimaryButtonClick"
                     SecondaryButtonText="Cancel"
                     VerticalContentAlignment="Stretch"
                     MaxWidth="300">
                     <ContentDialog.Content>
                         <StackPanel Orientation="Vertical">
-                            <TextBlock x:Uid="TBPlaylistName"
-                            Margin="0,4,4,4"
-                            Text="Playlist name:"/>
-                            <TextBox x:Name="playlistNameTB"
-                            Margin="0,4,4,0"
-                            Text="{x:Bind ViewModel.Name, Mode=TwoWay}"/>
+                            <TextBlock 
+                                x:Uid="TBPlaylistName"
+                                Margin="0,4,4,4"
+                                Text="Playlist name:"/>
+                            <TextBox 
+                                x:Name="playlistNameTB"
+                                Margin="0,4,4,0"
+                                Text="{x:Bind ViewModel.Name, Mode=TwoWay}"/>
                         </StackPanel>
                     </ContentDialog.Content>
                 </ContentDialog>

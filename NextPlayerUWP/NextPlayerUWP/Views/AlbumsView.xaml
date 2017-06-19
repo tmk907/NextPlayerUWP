@@ -9,8 +9,6 @@
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -339,7 +337,7 @@
                             ShowsScrollingPlaceholders="False"
                             Margin="12,0,0,0"
                             CanDragItems="True"
-                            DragItemsStarting="{x:Bind ViewModel.DragStarting}" >
+                            DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                             <mycontrols:MyListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsWrapGrid Orientation="Horizontal"/>

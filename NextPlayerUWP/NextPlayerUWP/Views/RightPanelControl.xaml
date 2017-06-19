@@ -389,24 +389,28 @@
             HorizontalAlignment="Center"
             Title="Search lyrics"
             PrimaryButtonText="Search"
-            PrimaryButtonClick="{x:Bind ViewModel.SearchLyrics}"
+            PrimaryButtonClick="ContentDialogSearchLyrics_PrimaryButtonClick"
             SecondaryButtonText="Cancel"
             VerticalContentAlignment="Stretch"
             MaxWidth="300">
             <ContentDialog.Content>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock x:Uid="TBArtist"
-                            Margin="0,4,4,4"
-                            Text="Artist"/>
+                    <TextBlock 
+                        x:Uid="TBArtist"
+                        Margin="0,4,4,4"
+                        Text="Artist"/>
                     <TextBox
-                            Margin="0,4,4,0"
-                            Text="{x:Bind ViewModel.ArtistSearch, Mode=TwoWay}"/>
-                    <TextBlock x:Uid="TBTitle"
-                            Margin="0,4,4,4"
-                            Text="Title"/>
+                        x:Name="ArtistSearch"
+                        Margin="0,4,4,0"
+                        Text="{x:Bind ViewModel.ArtistSearch, Mode=TwoWay}"/>
+                    <TextBlock 
+                        x:Uid="TBTitle"
+                        Margin="0,4,4,4"
+                        Text="Title"/>
                     <TextBox
-                            Margin="0,4,4,0"
-                            Text="{x:Bind ViewModel.TitleSearch, Mode=TwoWay}"/>
+                        x:Name="TitleSearch"
+                        Margin="0,4,4,0"
+                        Text="{x:Bind ViewModel.TitleSearch, Mode=TwoWay}"/>
                 </StackPanel>
             </ContentDialog.Content>
         </ContentDialog>

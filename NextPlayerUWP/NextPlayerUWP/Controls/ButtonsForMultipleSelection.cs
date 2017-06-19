@@ -63,15 +63,12 @@ namespace NextPlayerUWP.Controls
             if (!isLoaded) return;
             if (DeviceFamilyHelper.IsMobile())
             {
-                //for (int i = 1; i <= 5; i++)
-                //{
-                    var buttons = PageHeader.SecondaryCommands.OfType<Control>().Where(a => (a?.Tag as string) != ButtonForMultipleSelection).ToList();
-                    PageHeader.SecondaryCommands.Clear();
-                    foreach(ICommandBarElement item in buttons)
-                    {
-                        PageHeader.SecondaryCommands.Add(item);
-                    }
-                //}
+                var buttons = PageHeader.SecondaryCommands.OfType<Control>().Where(a => (a?.Tag as string) != ButtonForMultipleSelection).ToList();
+                PageHeader.SecondaryCommands.Clear();
+                foreach(ICommandBarElement item in buttons)
+                {
+                    PageHeader.SecondaryCommands.Add(item);
+                }
             }
             else
             {

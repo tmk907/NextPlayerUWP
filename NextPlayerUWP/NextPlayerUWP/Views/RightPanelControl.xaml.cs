@@ -112,5 +112,12 @@ namespace NextPlayerUWP.Views
         {
             System.Diagnostics.Debug.WriteLine("AdControl refreshed (" + ((AdControl)sender).Name + ") has ad:" + ((AdControl)sender).HasAd.ToString());
         }
+
+        private void ContentDialogSearchLyrics_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            ViewModel.ArtistSearch = ArtistSearch.Text;
+            ViewModel.TitleSearch = TitleSearch.Text;
+            ViewModel.SearchLyrics();
+        }
     }
 }

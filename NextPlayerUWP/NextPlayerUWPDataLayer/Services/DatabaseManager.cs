@@ -843,11 +843,11 @@ namespace NextPlayerUWPDataLayer.Services
                     {
                         value = "'%" + value + "%'";
                     }
-                    else if (rule.Comparison.Equals(SPUtility.Comparison.StartsWith))
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.EndsWith))
                     {
                         value = "'%" + value + "'";
                     }
-                    else if (rule.Comparison.Equals(SPUtility.Comparison.EndsWith))
+                    else if (rule.Comparison.Equals(SPUtility.Comparison.StartsWith))
                     {
                         value = "'" + value + "%'";
                     }

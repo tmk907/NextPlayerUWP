@@ -275,6 +275,8 @@ namespace NextPlayerUWP.ViewModels
                 if (song.SongId != prevId)
                 {
                     await lyricsPanelVM.ChangeLyrics(song);
+                    ArtistSearch = song.Artist;
+                    TitleSearch = song.Title;
                 };
             });
         }
@@ -352,6 +354,8 @@ namespace NextPlayerUWP.ViewModels
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
             //ShowAlbumArtInBackground = ApplicationSettingsHelper.ReadData<bool>(SettingsKeys.AlbumArtInBackground);
+            ArtistSearch = song.Artist;
+            TitleSearch = song.Title;
             await lyricsPanelVM.ChangeLyrics(song);
             //await Task.CompletedTask;
         }

@@ -159,5 +159,12 @@ namespace NextPlayerUWP.Views
         {
             e.Handled = true;   
         }
+
+        private void ContentDialogSearchLyrics_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            ViewModel.ArtistSearch = ArtistSearch.Text;
+            ViewModel.TitleSearch = TitleSearch.Text;
+            ViewModel.SearchLyrics();
+        }
     }    
 }
