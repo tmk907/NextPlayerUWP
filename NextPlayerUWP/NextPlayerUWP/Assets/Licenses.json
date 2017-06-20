@@ -52,16 +52,7 @@
 				"copyright": "",
 				"content": ""
 			}
-		},
-		{
-			"name": "NotificationsExtensions.Win10",
-			"site": "https://github.com/WindowsNotifications/NotificationsExtensions",
-			"license": {
-				"type": "The MIT License (MIT)",
-				"copyright": "Copyright (c) 2015 Microsoft",
-				"content": ""
-			}
-		},
+		},		
 		{
 			"name": "OneDrive SDK for CSharp",
 			"site": "https://github.com/OneDrive/onedrive-sdk-csharp",
@@ -151,6 +142,15 @@
 				"copyright": "Copyright (c) Morten Nielsen",
 				"content": ""
 			}
-		},		
+		},	
+		{
+			"name": "WriteableBitmapEx",
+			"site": "https://github.com/teichgraf/WriteableBitmapEx",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2009-2015 Rene Schulte",
+				"content": ""
+			}
+		},			
 	]
 }

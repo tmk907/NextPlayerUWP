@@ -179,6 +179,7 @@ namespace NextPlayerUWP.Views
                 if (DeviceFamilyHelper.IsDesktop())
                 {
                     FindName(nameof(AdWrapperDesktop));
+                    if (FindName(nameof(DesktopAd)) == null) return;
 #if DEBUG
                     //DesktopAd.ApplicationId = "9nblggh67n4f";
                     //DesktopAd.AdUnitId = "11684323";
@@ -194,6 +195,7 @@ namespace NextPlayerUWP.Views
                 else
                 {
                     FindName(nameof(AdWrapperMobile));
+                    if (FindName(nameof(MobileAd)) == null) return;
 #if DEBUG
                     //MobileAd.ApplicationId = "9nblggh67n4f";
                     //MobileAd.AdUnitId = "11684325";
@@ -221,12 +223,24 @@ namespace NextPlayerUWP.Views
             {
                 if (AdWrapperMobile != null)
                 {
-                    MobileAd.Visibility = Visibility.Collapsed;
+                    if (FindName(nameof(MobileAd)) != null)
+                    {
+                        MobileAd.Visibility = Visibility.Collapsed;
+                        MobileAd.Dispose();
+                        AdWrapperMobile.Children.Remove(MobileAd);
+                        MobileAd = null;
+                    }
                     AdWrapperMobile.Visibility = Visibility.Collapsed;
                 }
                 if (AdWrapperDesktop != null)
                 {
-                    DesktopAd.Visibility = Visibility.Collapsed;
+                    if (FindName(nameof(DesktopAd)) != null)
+                    {
+                        DesktopAd.Visibility = Visibility.Collapsed;
+                        DesktopAd.Dispose();
+                        AdWrapperDesktop.Children.Remove(DesktopAd);
+                        DesktopAd = null;
+                    }
                     AdWrapperDesktop.Visibility = Visibility.Collapsed;
                 }
                 if (fromTimer) AdWasDisplayed = true;
@@ -248,6 +262,20 @@ namespace NextPlayerUWP.Views
                 UnloadAd(true);
                 AdTimer.TimerCancel();
             }
+        }
+
+        private void DesktopAd_IsEngagedChanged(object sender, RoutedEventArgs e)
+        {
+            UnloadAd(true);
+            AdTimer.TimerCancel();
+            TelemetryAdapter.TrackEvent("AdClickedDesktop");
+        }
+
+        private void MobileAd_IsEngagedChanged(object sender, RoutedEventArgs e)
+        {
+            UnloadAd(true);
+            AdTimer.TimerCancel();
+            TelemetryAdapter.TrackEvent("AdClickedMobile");
         }
 
         private void MobileAd_AdRefreshed(object sender, RoutedEventArgs e)
@@ -365,6 +393,8 @@ namespace NextPlayerUWP.Views
                 }
             }
         }
+
+       
 
         //        private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
         //        {

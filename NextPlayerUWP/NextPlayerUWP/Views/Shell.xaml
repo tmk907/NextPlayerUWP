@@ -92,7 +92,8 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 AdRefreshed="MobileAd_AdRefreshed"
-                ErrorOccurred="MobileAd_ErrorOccurred"/>
+                ErrorOccurred="MobileAd_ErrorOccurred"
+                IsEngagedChanged="MobileAd_IsEngagedChanged"/>
         </Grid>
         <Grid Grid.Row="0" Grid.ColumnSpan="2" 
               x:Name="AdWrapperDesktop" 
@@ -107,7 +108,8 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 AdRefreshed="DesktopAd_AdRefreshed"
-                ErrorOccurred="DesktopAd_ErrorOccurred"/>
+                ErrorOccurred="DesktopAd_ErrorOccurred"
+                IsEngagedChanged="DesktopAd_IsEngagedChanged"/>
         </Grid>
     </Grid>
 </Page>
