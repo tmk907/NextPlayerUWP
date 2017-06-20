@@ -34,6 +34,7 @@ namespace NextPlayerUWP
         private AppKeyboardShortcuts appShortcuts;
         bool isBackgroundLeavedFirstTime = true;
         private bool resumeAlbumArtFinder = false;
+        public static bool ShowAd = true;
 
         Stopwatch s1;
         public App()

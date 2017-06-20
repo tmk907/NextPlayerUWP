@@ -82,7 +82,17 @@ namespace NextPlayerUWP.Views
             {
                 FindName(nameof(RightPanelWrapper));
             }
-            LoadAd(TimeSpan.FromSeconds(5));
+
+            DateTime july1 = new DateTime(2017, 7, 1, 0, 0, 0);
+            DateTime july31 = new DateTime(2017, 7, 31, 23, 59, 59);
+            if (DateTime.Now.Ticks > july1.Ticks && DateTime.Now.Ticks < july31.Ticks)
+            {
+
+            }
+            else
+            {
+                LoadAd(TimeSpan.FromSeconds(5));
+            }
             System.Diagnostics.Debug.WriteLine("Shell.LoadControls() End");
         }
 
@@ -170,6 +180,11 @@ namespace NextPlayerUWP.Views
 
         private async void LoadAd(TimeSpan delay)
         {
+            if (!App.ShowAd)
+            {
+                UnloadAd(true);
+                return;
+            }
             if (delay != TimeSpan.Zero)
             {
                 await Task.Delay(delay);
@@ -225,7 +240,6 @@ namespace NextPlayerUWP.Views
                 {
                     if (FindName(nameof(MobileAd)) != null)
                     {
-                        MobileAd.Visibility = Visibility.Collapsed;
                         MobileAd.Dispose();
                         AdWrapperMobile.Children.Remove(MobileAd);
                         MobileAd = null;
@@ -236,14 +250,17 @@ namespace NextPlayerUWP.Views
                 {
                     if (FindName(nameof(DesktopAd)) != null)
                     {
-                        DesktopAd.Visibility = Visibility.Collapsed;
                         DesktopAd.Dispose();
                         AdWrapperDesktop.Children.Remove(DesktopAd);
                         DesktopAd = null;
                     }
                     AdWrapperDesktop.Visibility = Visibility.Collapsed;
                 }
-                if (fromTimer) AdWasDisplayed = true;
+                if (fromTimer)
+                {
+                    AdWasDisplayed = true;
+                    App.ShowAd = false;
+                }
             });
         }
 
