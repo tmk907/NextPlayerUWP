@@ -29,6 +29,7 @@
         <uap3:Extension Category="windows.appExtensionHost">
           <uap3:AppExtensionHost>
             <uap3:Name>uwp.music-player.lyrics</uap3:Name>
+            <uap3:Name>uwp.music-player.npnotification</uap3:Name>
           </uap3:AppExtensionHost>
         </uap3:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
