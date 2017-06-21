@@ -107,6 +107,31 @@ namespace NextPlayerUWP.ViewModels
             }
         }
 
+        private int pivotSelectedIndex = 0;
+        public int PivotSelectedIndex
+        {
+            get { return pivotSelectedIndex; }
+            set
+            {
+                Set(ref pivotSelectedIndex, value);
+                if (value == 2)
+                {
+                    ShowNowPlayingListButtons = true;
+                }
+                else
+                {
+                    ShowNowPlayingListButtons = false;
+                }
+            }
+        }
+
+        private bool showNowPlayingListButtons = false;
+        public bool ShowNowPlayingListButtons
+        {
+            get { return showNowPlayingListButtons; }
+            set { Set(ref showNowPlayingListButtons, value); }
+        }
+
         private bool showAlbumArtInBackground = false;
         public bool ShowAlbumArtInBackground
         {
@@ -354,6 +379,14 @@ namespace NextPlayerUWP.ViewModels
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
             //ShowAlbumArtInBackground = ApplicationSettingsHelper.ReadData<bool>(SettingsKeys.AlbumArtInBackground);
+            if (mode != NavigationMode.Back)
+            {
+                PivotSelectedIndex = 0;
+            }
+            else
+            {
+                ShowNowPlayingListButtons = (pivotSelectedIndex == 2);
+            }
             ArtistSearch = song.Artist;
             TitleSearch = song.Title;
             await lyricsPanelVM.ChangeLyrics(song);

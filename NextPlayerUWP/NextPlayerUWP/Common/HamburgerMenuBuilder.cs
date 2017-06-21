@@ -330,7 +330,7 @@ namespace NextPlayerUWP.Common
             { MenuItemType.Genres, typeof(GenresView)},
             //{ MenuItemType.NowPlaying, typeof(NowPlayingView)},
             { MenuItemType.NowPlayingSong, typeof(NowPlayingDesktopView)},
-            { MenuItemType.NowPlayingPlaylist, typeof(NowPlayingPlaylistView)},
+            { MenuItemType.NowPlayingPlaylist, typeof(NowPlayingView)},
             { MenuItemType.Playlists, typeof(PlaylistsView)},
             { MenuItemType.Online, typeof(RadiosView)},
             //{ MenuItemType.Settings, typeof(SettingsView)},

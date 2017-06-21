@@ -1038,4 +1038,7 @@
   <data name="ContentDialogNewPlaylistWithSongs.PrimaryButtonText" xml:space="preserve">
     <value>Zapisz</value>
   </data>
+  <data name="AppBarButtonSavePlaylist.Label" xml:space="preserve">
+    <value>Zapisz playlistę</value>
+  </data>
 </root>

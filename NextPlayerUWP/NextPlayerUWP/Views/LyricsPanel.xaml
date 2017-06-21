@@ -9,7 +9,6 @@
     mc:Ignorable="d"
     d:DesignHeight="500"
     d:DesignWidth="300">
-
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="8"/>

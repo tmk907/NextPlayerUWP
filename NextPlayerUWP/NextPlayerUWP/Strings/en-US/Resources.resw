@@ -1038,4 +1038,7 @@
   <data name="ContentDialogNewPlaylistWithSongs.Title" xml:space="preserve">
     <value>Create playlist and add songs</value>
   </data>
+  <data name="AppBarButtonSavePlaylist.Label" xml:space="preserve">
+    <value>Save playlist</value>
+  </data>
 </root>

@@ -89,9 +89,16 @@ namespace NextPlayerUWP.ViewModels
                 Title = artist;
                 Artist = title;
                 Lyrics = "";
+                StatusText = "";
+                StatusVisibility = false;
                 LyricsSourceVisibility = false;
                 Lyrics = await LoadLyrics(artist, title, cts.Token);
                 ShowProgressBar = false;
+                if (String.IsNullOrEmpty(Lyrics))
+                {
+                    StatusText = "No lyrics found";
+                    StatusVisibility = true;
+                }
                 System.Diagnostics.Debug.WriteLine("LyricsViewModel ChangeLyrics() finished");
                 TelemetryAdapter.TrackEvent("SearchLyrics()");
             }
@@ -113,9 +120,16 @@ namespace NextPlayerUWP.ViewModels
                 Title = song.Title;
                 Artist = song.Artist;
                 Lyrics = "";
+                StatusText = "";
+                StatusVisibility = false;
                 LyricsSourceVisibility = false;
                 Lyrics = await LoadLyrics(song, cts.Token);
                 ShowProgressBar = false;
+                if (String.IsNullOrEmpty(Lyrics))
+                {
+                    StatusText = "No lyrics found";
+                    StatusVisibility = true;
+                }
                 System.Diagnostics.Debug.WriteLine("LyricsViewModel ChangeLyrics() finished");
                 TelemetryAdapter.TrackEvent("ChangeLyrics()");
             }

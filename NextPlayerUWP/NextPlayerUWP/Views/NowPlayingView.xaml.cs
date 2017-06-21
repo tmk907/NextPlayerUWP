@@ -1,12 +1,9 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Animations;
-using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Common;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
-using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Threading.Tasks;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -22,15 +19,17 @@ namespace NextPlayerUWP.Views
     {
         Uri imageUri;
         NowPlayingViewModel ViewModel;
+        NowPlayingPlaylistPanelViewModel PanelVM;
         PointerEventHandler pointerpressedhandler;
         PointerEventHandler pointerreleasedhandler;
         private ColorsHelper colorsHelper;
-        
 
         public NowPlayingView()
         {
             this.InitializeComponent();
             ViewModel = (NowPlayingViewModel)DataContext;
+            ViewModelLocator vml = new ViewModelLocator();
+            PanelVM = vml.NowPlayingPlaylistPanelVM;
             this.Loaded += NowPlayingView_Loaded;
             this.Unloaded += NowPlayingView_Unloaded;
             pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
@@ -165,6 +164,16 @@ namespace NextPlayerUWP.Views
             ViewModel.ArtistSearch = ArtistSearch.Text;
             ViewModel.TitleSearch = TitleSearch.Text;
             ViewModel.SearchLyrics();
+            ViewModel.PivotSelectedIndex = 1;
+        }
+
+        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var pivot = sender as Pivot;
+            if (pivot.SelectedIndex == 2)
+            {
+                FindName(nameof(NowPlayingPlaylistPanel));
+            }
         }
     }    
 }

@@ -31,6 +31,7 @@ namespace NextPlayerUWP.ViewModels
             SimpleIoc.Default.Register<NowPlayingViewModel>();
             SimpleIoc.Default.Register<NowPlayingDesktopViewModel>();
             SimpleIoc.Default.Register<NowPlayingPlaylistViewModel>();
+            SimpleIoc.Default.Register<NowPlayingPlaylistPanelViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
             SimpleIoc.Default.Register<PlaylistViewModel>();
             SimpleIoc.Default.Register<RadiosViewModel>();
@@ -68,6 +69,7 @@ namespace NextPlayerUWP.ViewModels
         public NewSmartPlaylistViewModel NewSmartPlaylistVM => ServiceLocator.Current.GetInstance<NewSmartPlaylistViewModel>();
         public NowPlayingViewModel NowPlayingVM => ServiceLocator.Current.GetInstance<NowPlayingViewModel>();
         public NowPlayingPlaylistViewModel NowPlayingPlaylistVM => ServiceLocator.Current.GetInstance<NowPlayingPlaylistViewModel>();
+        public NowPlayingPlaylistPanelViewModel NowPlayingPlaylistPanelVM => ServiceLocator.Current.GetInstance<NowPlayingPlaylistPanelViewModel>();
         public NowPlayingDesktopViewModel NowPlayingDesktopVM => ServiceLocator.Current.GetInstance<NowPlayingDesktopViewModel>();
         public PlaylistViewModel PlaylistVM => ServiceLocator.Current.GetInstance<PlaylistViewModel>();
         public PlaylistsViewModel PlaylistsVM => ServiceLocator.Current.GetInstance<PlaylistsViewModel>();

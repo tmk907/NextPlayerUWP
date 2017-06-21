@@ -265,6 +265,7 @@
     <Compile Include="ViewModels\MusicViewModelBase.cs" />
     <Compile Include="ViewModels\NewSmartPlaylistViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingDesktopViewModel.cs" />
+    <Compile Include="ViewModels\NowPlayingPlaylistPanelViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingPlaylistViewModel.cs" />
     <Compile Include="ViewModels\BottomPlayerViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
@@ -351,6 +352,9 @@
     </Compile>
     <Compile Include="Views\NowPlayingDesktopView.xaml.cs">
       <DependentUpon>NowPlayingDesktopView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NowPlayingPlaylistPanel.xaml.cs">
+      <DependentUpon>NowPlayingPlaylistPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NowPlayingPlaylistView.xaml.cs">
       <DependentUpon>NowPlayingPlaylistView.xaml</DependentUpon>
@@ -639,6 +643,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NowPlayingDesktopView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NowPlayingPlaylistPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1038,4 +1038,7 @@
   <data name="ContentDialogNewPlaylistWithSongs.SecondaryButtonText" xml:space="preserve">
     <value>إلغاء</value>
   </data>
+  <data name="AppBarButtonSavePlaylist.Label" xml:space="preserve">
+    <value>Save playlist</value>
+  </data>
 </root>
