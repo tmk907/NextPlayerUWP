@@ -1,7 +1,9 @@
 ﻿using NextPlayerUWP.ViewModels;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -21,7 +23,9 @@ namespace NextPlayerUWP.Views
         public NowPlayingPlaylistPanel()
         {
             this.InitializeComponent();
-            ViewModel = (NowPlayingPlaylistPanelViewModel)DataContext;
+            ViewModelLocator vml = new ViewModelLocator();
+            ViewModel = vml.NowPlayingPlaylistPanelVM;
+            this.DataContext = this;
             this.Loaded += NowPlayingPlaylistPanel_Loaded;
             this.Unloaded += NowPlayingPlaylistPanel_Unloaded;
             PanelRootGrid.SizeChanged += PanelRootGrid_SizeChanged;
@@ -80,5 +84,32 @@ namespace NextPlayerUWP.Views
             var position = e.GetPosition(senderElement);
             menu.ShowAt(senderElement, position);
         }
+
+        public Brush EvenRowBackgroundBrush
+        {
+            get { return (SolidColorBrush)GetValue(EvenRowBackgroundBrushProperty); }
+            set
+            {
+                SetValue(EvenRowBackgroundBrushProperty, value);
+                NowPlayingPlaylistListView.EvenRowBackground = value;
+            }
+        }
+
+        public static readonly DependencyProperty EvenRowBackgroundBrushProperty =
+            DependencyProperty.Register("EvenRowBackgroundBrush", typeof(Brush), typeof(NowPlayingPlaylistPanel), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+
+        public Brush OddRowBackgroundBrush
+        {
+            get { return (SolidColorBrush)GetValue(OddRowBackgroundBrushProperty); }
+            set
+            {
+                SetValue(OddRowBackgroundBrushProperty, value);
+                NowPlayingPlaylistListView.OddRowBackground = value;
+            }
+        }
+
+        public static readonly DependencyProperty OddRowBackgroundBrushProperty =
+            DependencyProperty.Register("OddRowBackgroundBrush", typeof(Brush), typeof(NowPlayingPlaylistPanel), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+
     }
 }

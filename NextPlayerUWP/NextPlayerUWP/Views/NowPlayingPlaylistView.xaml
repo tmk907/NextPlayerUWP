@@ -412,6 +412,8 @@
         </controls:PageHeader>
         <local:NowPlayingPlaylistPanel 
             Grid.Row="1"
-            Margin="12,12,0,4"/>
+            Margin="12,12,0,4"
+            OddRowBackgroundBrush="{ThemeResource ListViewItemBackgroundSecond}"
+            EvenRowBackgroundBrush="{ThemeResource ListViewItemBackgroundNormal}"/>
     </Grid>
 </Page>

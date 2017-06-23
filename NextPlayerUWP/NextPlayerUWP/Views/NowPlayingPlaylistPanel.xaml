@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
-    DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingPlaylistPanelVM}"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -181,8 +180,8 @@
         </VisualStateManager.VisualStateGroups>
         <mycontrols:AlternatingRowListView 
             x:Name="NowPlayingPlaylistListView"
-            EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-            OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+            EvenRowBackground="{Binding Path=EvenRowBackgroundBrush}"
+            OddRowBackground="{Binding Path=OddRowBackgroundBrush}"
             Margin="0"
             ItemsSource="{x:Bind ViewModel.QueueVM.Songs, Mode=OneWay}"
             ItemTemplate="{StaticResource SongTemplate}"
