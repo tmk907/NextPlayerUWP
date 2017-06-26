@@ -129,8 +129,10 @@
     <Compile Include="AppSetupUpdate.cs" />
     <Compile Include="Common\AlbumArtFinder.cs" />
     <Compile Include="Common\AppKeyboardShortcuts.cs" />
+    <Compile Include="Common\AppPages.cs" />
     <Compile Include="Common\BackgroundTaskHelper.cs" />
     <Compile Include="Common\ColorsHelper.cs" />
+    <Compile Include="Common\DeepLinkService.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
     <Compile Include="Common\FoldersVMHelper.cs" />
     <Compile Include="Common\HamburgerMenuBuilder.cs" />
@@ -154,7 +156,6 @@
     <Compile Include="Common\SortingHelper.cs" />
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="Common\TagsManager.cs" />
-    <Compile Include="Common\Test2.cs" />
     <Compile Include="Common\ThemeHelper.cs" />
     <Compile Include="Common\TileManager.cs" />
     <Compile Include="Common\Tiles\ITileContentFactory.cs" />

@@ -158,7 +158,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.Album, ((AlbumItem)e.ClickedItem).AlbumId);
+            NavigationService.Navigate(AppPages.Pages.Album, ((AlbumItem)e.ClickedItem).AlbumId);
         }
 
         private async Task ReloadData()

@@ -70,7 +70,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.Playlist, ((GenreItem)e.ClickedItem).GetParameter());
+            NavigationService.Navigate(AppPages.Pages.Playlist, ((GenreItem)e.ClickedItem).GetParameter());
         }
 
         private async void App_SongUpdated(int id)

@@ -155,7 +155,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 var folder = ((CloudFolder)e.ClickedItem);
                 //FolderName += @"\" + folder.Folder;
-                NavigationService.Navigate(App.Pages.CloudStorageFolders, folder.Id);
+                NavigationService.Navigate(AppPages.Pages.CloudStorageFolders, folder.Id);
             }
         }
 

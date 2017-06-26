@@ -98,7 +98,7 @@ namespace NextPlayerUWP.ViewModels.Settings
         {
             TelemetryAdapter.TrackEvent("View Licenses");
             var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
-            nav.Navigate(App.Pages.Licenses);
+            nav.Navigate(AppPages.Pages.Licenses);
         }
 
         public async void GoToFacebook()

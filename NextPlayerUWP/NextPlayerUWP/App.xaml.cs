@@ -232,37 +232,6 @@ namespace NextPlayerUWP
 
         #endregion
 
-        public enum Pages
-        {
-            AddToPlaylist,
-            Albums,
-            Album,
-            AlbumArtists,
-            AlbumArtist,
-            Artists,
-            Artist,
-            AudioSettings,
-            CloudStorageFolders,
-            CuteRadio,
-            Genres,
-            FileInfo,
-            Folders,
-            FoldersRoot,
-            Lyrics,
-            Licenses,
-            NewSmartPlaylist,
-            NowPlaying,
-            NowPlayingDesktop,
-            NowPlayingPlaylist,
-            Playlists,
-            Playlist,
-            PlaylistEditable,
-            Radios,
-            Settings,
-            Songs,
-            TagsEditor
-        }
-
 #region Template10 overrides
 
         public override UIElement CreateRootElement(IActivatedEventArgs e)
@@ -302,63 +271,14 @@ namespace NextPlayerUWP
             await ChangeStatusBarVisibility();
             ThemeHelper.ApplyAppTheme(ThemeHelper.IsLightTheme);
 
-            #region AddPageKeys
-            var keys = PageKeys<Pages>();
-            if (!keys.ContainsKey(Pages.AddToPlaylist))
-                keys.Add(Pages.AddToPlaylist, typeof(AddToPlaylistView));
-            if (!keys.ContainsKey(Pages.Albums))
-                keys.Add(Pages.Albums, typeof(AlbumsView));
-            if (!keys.ContainsKey(Pages.Album))
-                keys.Add(Pages.Album, typeof(AlbumView));
-            if (!keys.ContainsKey(Pages.AlbumArtists))
-                keys.Add(Pages.AlbumArtists, typeof(AlbumArtistsView));
-            if (!keys.ContainsKey(Pages.AlbumArtist))
-                keys.Add(Pages.AlbumArtist, typeof(AlbumArtistView));
-            if (!keys.ContainsKey(Pages.Artists))
-                keys.Add(Pages.Artists, typeof(ArtistsView));
-            if (!keys.ContainsKey(Pages.Artist))
-                keys.Add(Pages.Artist, typeof(ArtistView));
-            if (!keys.ContainsKey(Pages.AudioSettings))
-                keys.Add(Pages.AudioSettings, typeof(AudioSettingsView));
-            if (!keys.ContainsKey(Pages.CloudStorageFolders))
-                keys.Add(Pages.CloudStorageFolders, typeof(CloudStorageFoldersView));
-            if (!keys.ContainsKey(Pages.CuteRadio))
-                keys.Add(Pages.CuteRadio, typeof(CuteRadioView));
-            if (!keys.ContainsKey(Pages.FileInfo))
-                keys.Add(Pages.FileInfo, typeof(FileInfoView));
-            if (!keys.ContainsKey(Pages.Folders))
-                keys.Add(Pages.Folders, typeof(FoldersView));
-            if (!keys.ContainsKey(Pages.FoldersRoot))
-                keys.Add(Pages.FoldersRoot, typeof(FoldersRootView));
-            if (!keys.ContainsKey(Pages.Genres))
-                keys.Add(Pages.Genres, typeof(GenresView));
-            if (!keys.ContainsKey(Pages.Licenses))
-                keys.Add(Pages.Licenses, typeof(Licences));
-            if (!keys.ContainsKey(Pages.Lyrics))
-                keys.Add(Pages.Lyrics, typeof(LyricsView));
-            if (!keys.ContainsKey(Pages.NewSmartPlaylist))
-                keys.Add(Pages.NewSmartPlaylist, typeof(NewSmartPlaylistView));
-            if (!keys.ContainsKey(Pages.NowPlaying))
-                keys.Add(Pages.NowPlaying, typeof(NowPlayingView));
-            if (!keys.ContainsKey(Pages.NowPlayingDesktop))
-                keys.Add(Pages.NowPlayingDesktop, typeof(NowPlayingDesktopView));
-            if (!keys.ContainsKey(Pages.NowPlayingPlaylist))
-                keys.Add(Pages.NowPlayingPlaylist, typeof(NowPlayingPlaylistView));
-            if (!keys.ContainsKey(Pages.Playlists))
-                keys.Add(Pages.Playlists, typeof(PlaylistsView));
-            if (!keys.ContainsKey(Pages.Playlist))
-                keys.Add(Pages.Playlist, typeof(PlaylistView));
-            if (!keys.ContainsKey(Pages.PlaylistEditable))
-                keys.Add(Pages.PlaylistEditable, typeof(PlaylistEditableView));
-            if (!keys.ContainsKey(Pages.Radios))
-                keys.Add(Pages.Radios, typeof(RadiosView));
-            if (!keys.ContainsKey(Pages.Settings))
-                keys.Add(Pages.Settings, typeof(SettingsView2));
-            if (!keys.ContainsKey(Pages.Songs))
-                keys.Add(Pages.Songs, typeof(SongsView));
-            if (!keys.ContainsKey(Pages.TagsEditor))
-                keys.Add(Pages.TagsEditor, typeof(TagsEditor));
-#endregion
+            var keys = PageKeys<AppPages.Pages>();
+            foreach(var kv in AppPages.PagesToTypes)
+            {
+                if (!keys.ContainsKey(kv.Key))
+                {
+                    keys.Add(kv.Key, kv.Value);
+                }
+            }
 
             try
             {
@@ -392,7 +312,7 @@ namespace NextPlayerUWP
             if (isFirstRun)
             {
                 isFirstRun = false;
-                await NavigationService.NavigateAsync(Pages.Settings);
+                await NavigationService.NavigateAsync(AppPages.Pages.Settings);
             }
             else
             {
@@ -400,11 +320,11 @@ namespace NextPlayerUWP
                 {
                     if (DeviceFamilyHelper.IsDesktop())
                     {
-                        await NavigationService.NavigateAsync(Pages.NowPlayingDesktop);
+                        await NavigationService.NavigateAsync(AppPages.Pages.NowPlayingDesktop);
                     }
                     else
                     {
-                        await NavigationService.NavigateAsync(Pages.NowPlayingPlaylist);
+                        await NavigationService.NavigateAsync(AppPages.Pages.NowPlayingPlaylist);
                     }
                 }
                 else
@@ -416,40 +336,39 @@ namespace NextPlayerUWP
                             if (!eventArgs.TileId.Contains(SettingsKeys.TileId))
                             {
                                 Debug.WriteLine("OnStartAsync event arg doesn't contain tileid");
-                                TelemetryAdapter.TrackEventException("event arg doesn't contain tileid");
                             }
-                            Pages page = Pages.Playlists;
+                            AppPages.Pages page = AppPages.Pages.Playlists;
                             string parameter = eventArgs.Arguments;
                             MusicItemTypes type = MusicItem.ParseType(parameter);
                             // dodac wybor w ustawieniach, czy przejsc do widoku, czy zaczac odtwarzanie i przejsc do teraz odtwarzane
                             switch (type)
                             {
                                 case MusicItemTypes.album:
-                                    page = Pages.Album;
+                                    page = AppPages.Pages.Album;
                                     parameter = MusicItem.SplitParameter(parameter)[1];
                                     break;
                                 case MusicItemTypes.albumartist:
-                                    page = Pages.AlbumArtist;
+                                    page = AppPages.Pages.AlbumArtist;
                                     parameter = MusicItem.SplitParameter(parameter)[1];
                                     break;
                                 case MusicItemTypes.artist:
-                                    page = Pages.Artist;
+                                    page = AppPages.Pages.Artist;
                                     parameter = MusicItem.SplitParameter(parameter)[1];
                                     break;
                                 case MusicItemTypes.folder:
-                                    page = Pages.Playlist;
+                                    page = AppPages.Pages.Playlist;
                                     break;
                                 case MusicItemTypes.genre:
-                                    page = Pages.Playlist;
+                                    page = AppPages.Pages.Playlist;
                                     break;
                                 case MusicItemTypes.plainplaylist:
-                                    page = Pages.Playlist;
+                                    page = AppPages.Pages.Playlist;
                                     break;
                                 case MusicItemTypes.smartplaylist:
-                                    page = Pages.Playlist;
+                                    page = AppPages.Pages.Playlist;
                                     break;
                                 case MusicItemTypes.song:
-                                    //page = Pages.NowPlaying; ?
+                                    //page = AppPages.Pages.NowPlaying; ?
                                     break;
                                 case MusicItemTypes.unknown:
                                     TelemetryAdapter.TrackEventException("MusicItemTypes.unknown");
@@ -466,7 +385,16 @@ namespace NextPlayerUWP
                                 args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                             {
                                 Debug.WriteLine("OnStartAsync Primary closed");
-                                await NavigationService.NavigateAsync(Pages.Playlists);
+                                var link = ApplicationSettingsHelper.ReadSettingsValue<string>(SettingsKeys.StartPage);
+                                var deepLink = new DeepLinkService();
+                                var parser = deepLink.ParseDeepLink(new Uri(link));
+                                string startPage = parser[DeepLinkService.AvailableParameters.Page];
+                                var t = AppPages.PagesToKeys.FirstOrDefault(kv => kv.Value.Equals(startPage)).Key;
+                                if (t == AppPages.Pages.NowPlaying && DeviceFamilyHelper.IsDesktop())
+                                {
+                                    t = AppPages.Pages.NowPlayingDesktop;
+                                }
+                                await NavigationService.NavigateAsync(t);
                             }
                             else
                             {
@@ -484,12 +412,12 @@ namespace NextPlayerUWP
                             }
                             else
                             {
-                                await NavigationService.NavigateAsync(Pages.Settings);
+                                await NavigationService.NavigateAsync(AppPages.Pages.Settings);
                             }
                             break;
                         default:
                             Debug.WriteLine("OnStartAsync default");
-                            await NavigationService.NavigateAsync(Pages.Playlists);
+                            await NavigationService.NavigateAsync(AppPages.Pages.Playlists);
                             break;
                     }
                 }

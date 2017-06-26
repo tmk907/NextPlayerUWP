@@ -163,7 +163,7 @@ namespace NextPlayerUWP.ViewModels
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(groupedSongs);
             await PlaybackService.Instance.PlayNewList(index);
-            //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+            //NavigationService.Navigate(AppPages.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
         public async void ShuffleAllSongs()

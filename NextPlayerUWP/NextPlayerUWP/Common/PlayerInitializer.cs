@@ -41,7 +41,11 @@ namespace NextPlayerUWP.Common
             {
                 return;
             }
-            if (!isInitialized && initializationStarted) throw new System.Exception("PlayerInitializer failed");
+            if (!isInitialized && initializationStarted)
+            {
+                //throw new System.Exception("PlayerInitializer failed");
+                TelemetryAdapter.TrackEvent("PlayerInitializationStarted2");
+            }
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() Start");
             System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
             s.Start();
@@ -116,7 +120,7 @@ namespace NextPlayerUWP.Common
 
         private async Task DelayAlbumArtFinder()
         {
-            await Task.Delay(2000);
+            await Task.Delay(4000);
             await App.AlbumArtFinder.StartLooking().ConfigureAwait(false);
         }
 

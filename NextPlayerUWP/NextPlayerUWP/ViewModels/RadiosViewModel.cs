@@ -45,7 +45,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 if (value == 2)
                 {
-                    NavigationService.Navigate(App.Pages.CuteRadio);
+                    NavigationService.Navigate(AppPages.Pages.CuteRadio);
                 }
                 else
                 {
@@ -154,7 +154,7 @@ namespace NextPlayerUWP.ViewModels
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+            NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
         }
 
         public async void DeleteFromFavourites(object sender, RoutedEventArgs e)

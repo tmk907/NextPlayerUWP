@@ -80,7 +80,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.Artist, ((ArtistItem)e.ClickedItem).ArtistId);
+            NavigationService.Navigate(AppPages.Pages.Artist, ((ArtistItem)e.ClickedItem).ArtistId);
         }
 
         private async void App_SongUpdated(int id)

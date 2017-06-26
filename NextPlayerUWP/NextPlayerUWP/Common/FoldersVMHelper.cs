@@ -23,18 +23,12 @@ namespace NextPlayerUWP.Common
 
         public class TreeFolderNode : TreeNode
         {
-            //public List<TreeFileNode> Files { get; set; } = new List<TreeFileNode>();
             public ObservableCollection<SongItem> Songs { get; set; } = new ObservableCollection<SongItem>();
             public Dictionary<string, TreeFolderNode> Folders { get; set; } = new Dictionary<string, TreeFolderNode>();
             public string FolderName { get; set; } = "";
             public DateTime LastAdded { get; set; } = DateTime.MinValue;
             public int SongsCount { get; set; } = 0;
         }
-
-        //public class TreeFileNode : TreeNode
-        //{
-        //    public string FileName { get; set; } = "";
-        //}
 
         private TreeFolderNode root = new TreeFolderNode();
         private List<string> rootPaths = new List<string>();

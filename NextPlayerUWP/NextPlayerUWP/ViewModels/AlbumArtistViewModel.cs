@@ -121,7 +121,7 @@ namespace NextPlayerUWP.ViewModels
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(albums);
             await PlaybackService.Instance.PlayNewList(index);
-            //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+            //NavigationService.Navigate(AppPages.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
         public async void ShuffleAllSongs()
@@ -195,7 +195,7 @@ namespace NextPlayerUWP.ViewModels
             }
             App.AddToCache(list);
             var item = new ListOfMusicItems();
-            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+            NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
         }
 
         public int GetIndexFromGroup(object item)

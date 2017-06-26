@@ -7,6 +7,7 @@ using NextPlayerUWPDataLayer.Model;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using NextPlayerUWP.Controls;
+using NextPlayerUWP.Common;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -82,7 +83,7 @@ namespace NextPlayerUWP.Views
         {
             var image = sender as Image;
             int id = (int)image.Tag;
-            App.Current.NavigationService.Navigate(App.Pages.Album, id);
+            App.Current.NavigationService.Navigate(AppPages.Pages.Album, id);
         }
 
         private void ShuffleAppBarButton_Click(object sender, RoutedEventArgs e)

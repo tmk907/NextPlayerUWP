@@ -113,7 +113,7 @@ namespace NextPlayerUWP.ViewModels
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(songs);
             await PlaybackService.Instance.PlayNewList(index);
-            //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+            //NavigationService.Navigate(AppPages.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
         public async void ShuffleAllSongs()
@@ -228,7 +228,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void AddAlbumToPlaylist()
         {
-            NavigationService.Navigate(App.Pages.AddToPlaylist, album.GetParameter());
+            NavigationService.Navigate(AppPages.Pages.AddToPlaylist, album.GetParameter());
         }
 
         public async void FindYear()

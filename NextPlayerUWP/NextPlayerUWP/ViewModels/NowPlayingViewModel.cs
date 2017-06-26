@@ -408,7 +408,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void GoToNowPlayingPlaylist()
         {
-            NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
+            NavigationService.Navigate(AppPages.Pages.NowPlayingPlaylist);
         }
 
         private string artistSearch = "";

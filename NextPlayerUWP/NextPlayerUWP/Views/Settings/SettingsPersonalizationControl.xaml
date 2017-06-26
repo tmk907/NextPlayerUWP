@@ -291,6 +291,21 @@
                         Margin="4,0,4,4"
                         Text="Please restart app to apply changes."/>
                 </StackPanel>
+                <StackPanel x:Name="StartPageSP"
+                            Margin="4"
+                            Orientation="Vertical">
+                    <TextBlock
+                        x:Uid="TBChooseStartupScreen"
+                        Text="Startup screen"
+                        FontSize="17"
+                        Margin="4"
+                        Style="{StaticResource BodyTextBlockStyle}"/>
+                    <ComboBox
+                        MinWidth="128"
+                        ItemsSource="{x:Bind ViewModel.StartPages, Mode=OneWay}"
+                        DisplayMemberPath="Label"
+                        SelectedItem="{x:Bind ViewModel.SelectedStartPage, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"/>
+                </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <TextBlock
                         x:Uid="TBMenu"

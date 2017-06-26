@@ -98,17 +98,17 @@ namespace NextPlayerUWP.ViewModels
             var item = (PlaylistItem)e.ClickedItem;
             if (item.IsSmart)
             {
-                NavigationService.Navigate(App.Pages.Playlist, item.GetParameter());
+                NavigationService.Navigate(AppPages.Pages.Playlist, item.GetParameter());
             }
             else
             {
-                NavigationService.Navigate(App.Pages.PlaylistEditable, item.GetParameter());
+                NavigationService.Navigate(AppPages.Pages.PlaylistEditable, item.GetParameter());
             }
         }
 
         public void NewSmartPlaylist()
         {
-            NavigationService.Navigate(App.Pages.NewSmartPlaylist);
+            NavigationService.Navigate(AppPages.Pages.NewSmartPlaylist);
         }
 
         public async void Save()
@@ -131,7 +131,7 @@ namespace NextPlayerUWP.ViewModels
         public void EditSmartPlaylist(object sender, RoutedEventArgs e)
         {
             var playlist = (PlaylistItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.NewSmartPlaylist,playlist.Id);
+            NavigationService.Navigate(AppPages.Pages.NewSmartPlaylist,playlist.Id);
         }
 
         public async void SaveEditedName()

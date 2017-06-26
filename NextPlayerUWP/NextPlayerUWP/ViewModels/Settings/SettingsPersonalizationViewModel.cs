@@ -4,6 +4,7 @@ using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Helpers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -34,7 +35,6 @@ namespace NextPlayerUWP.ViewModels.Settings
         private void OnLoaded()
         {
             if (isLoaded) return;
-
             Languages = new ObservableCollection<LanguageItem>();
             foreach (var code in Windows.Globalization.ApplicationLanguages.ManifestLanguages)
             {
@@ -65,7 +65,6 @@ namespace NextPlayerUWP.ViewModels.Settings
             {
                 ActionNr = 3;
             }
-
             string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand) as string;
             switch (swipeAction)
             {
@@ -92,7 +91,6 @@ namespace NextPlayerUWP.ViewModels.Settings
 
             //Personalization
             ThemeNr = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme) ? 1 : 2;
-
             if (accentColors.Count == 0)
             {
                 ColorsHelper ch = new ColorsHelper();
@@ -102,9 +100,10 @@ namespace NextPlayerUWP.ViewModels.Settings
                     AccentColors.Add(new SolidColorBrush(c));
                 }
             }
-
             AccentFromAlbumArt = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AccentFromAlbumArt);
             AlbumArtInBackground = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AlbumArtInBackground);
+
+            PrepareStartPages();
 
             if (menuButtons.Count == 0)
             {
@@ -503,6 +502,69 @@ namespace NextPlayerUWP.ViewModels.Settings
             }
             ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, newOrder);
             App.OnMenuItemVisibilityChange();
+        }
+
+        protected ObservableCollection<ComboBoxItemValue> startPages = new ObservableCollection<ComboBoxItemValue>();
+        public ObservableCollection<ComboBoxItemValue> StartPages
+        {
+            get { return startPages; }
+            set
+            {
+                startPages = value;
+            }
+        }
+
+        protected ComboBoxItemValue selectedStartPage;
+        public ComboBoxItemValue SelectedStartPage
+        {
+            get { return selectedStartPage; }
+            set
+            {
+                bool diff = selectedStartPage != value;
+                Set(ref selectedStartPage, value);
+                if (value != null && diff)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.StartPage, value.Option);
+                }
+            }
+        }
+
+        private void PrepareStartPages()
+        {
+            var list = new ObservableCollection<ComboBoxItemValue>();
+            TranslationHelper tr = new TranslationHelper();
+            var deeplink = new DeepLinkService();
+
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.Albums,new Dictionary<string, string>()),
+                    tr.GetTranslation("TBAlbums/Text")));
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.Artists, new Dictionary<string, string>()),
+                    tr.GetTranslation("TBArtists/Text")));
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.AlbumArtists, new Dictionary<string, string>()),
+                    tr.GetTranslation("TBAlbumArtists/Text")));
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.FoldersRoot, new Dictionary<string, string>()),
+                    tr.GetTranslation("TBFolders/Text")));
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.Genres, new Dictionary<string, string>()),
+                    tr.GetTranslation("TBGenres/Text")));
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.Playlists, new Dictionary<string, string>()),
+                    tr.GetTranslation("TBPlaylists/Text")));
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.Songs, new Dictionary<string, string>()),
+                    tr.GetTranslation("TBSongs/Text")));
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.NowPlaying, new Dictionary<string, string>()),
+                    tr.GetTranslation("TBNowPlaying/Text")));
+            list.Add(new ComboBoxItemValue(
+                    deeplink.CreateDeepLink(AppPages.Pages.Radios, new Dictionary<string, string>()),
+                    tr.GetTranslation("TBRadio/Text")));
+            StartPages = list;
+            var savedOption = ApplicationSettingsHelper.ReadSettingsValue<string>(SettingsKeys.StartPage);
+            SelectedStartPage = StartPages.FirstOrDefault(p => p.Option.Equals(savedOption));
         }
     }
 }

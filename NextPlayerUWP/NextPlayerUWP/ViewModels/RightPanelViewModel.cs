@@ -276,33 +276,33 @@ namespace NextPlayerUWP.ViewModels
         public void EditTags(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(App.Pages.TagsEditor, item.GetParameter());
+            App.Current.NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
         }
 
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(App.Pages.FileInfo, item.GetParameter());
+            App.Current.NavigationService.Navigate(AppPages.Pages.FileInfo, item.GetParameter());
         }
 
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+            App.Current.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
         }
 
         public async void GoToArtist(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             ArtistItem temp = await DatabaseManager.Current.GetArtistItemAsync(item.FirstArtist);
-            App.Current.NavigationService.Navigate(App.Pages.Artist, temp.ArtistId);
+            App.Current.NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
         }
 
         public async void GoToAlbum(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
-            App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
+            App.Current.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
         }
 
         #endregion
@@ -310,12 +310,12 @@ namespace NextPlayerUWP.ViewModels
         public void SavePlaylist()
         {
             NowPlayingListItem item = new NowPlayingListItem();
-            App.Current.NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+            App.Current.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
         }
 
         public void ShowAudioSettings()
         {
-            App.Current.NavigationService.Navigate(App.Pages.AudioSettings);
+            App.Current.NavigationService.Navigate(AppPages.Pages.AudioSettings);
         }
 
         SortingHelperForSongItemsInPlaylist sortingHelper;

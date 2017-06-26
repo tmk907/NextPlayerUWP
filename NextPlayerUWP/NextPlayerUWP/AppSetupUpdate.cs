@@ -77,6 +77,8 @@ namespace NextPlayerUWP
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNarrow, 0.0);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNormal, 250.0);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthWide, 300.0);
+            DeepLinkService deeplink = new DeepLinkService();
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.StartPage, deeplink.CreateDeepLink(AppPages.Pages.Playlists, new Dictionary<string, string>()));
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -277,6 +279,11 @@ namespace NextPlayerUWP
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNarrow, 0.0);
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNormal, 250.0);
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthWide, 300.0);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.StartPage) == null)
+            {
+                DeepLinkService deeplink = new DeepLinkService();
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.StartPage, deeplink.CreateDeepLink(AppPages.Pages.Playlists, new Dictionary<string, string>()));
             }
         }
 

@@ -1041,4 +1041,7 @@
   <data name="AppBarButtonSavePlaylist.Label" xml:space="preserve">
     <value>Save playlist</value>
   </data>
+  <data name="TBChooseStartupScreen.Text" xml:space="preserve">
+    <value>Startup screen</value>
+  </data>
 </root>

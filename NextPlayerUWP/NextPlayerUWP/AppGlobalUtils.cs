@@ -71,6 +71,19 @@ namespace NextPlayerUWP
             }
         }
 
+        private static AppPages appPages;
+        public static AppPages AppPages
+        {
+            get
+            {
+                if (appPages == null)
+                {
+                    appPages = new AppPages();
+                }
+                return appPages;
+            }
+        }
+
         public static bool IsBottomPlayerVMCreated = false;
         public static void OnNavigatedToNewView(bool bottomPlayerVisible, bool isNowPlayingDesktopActive = false)
         {

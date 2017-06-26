@@ -418,12 +418,12 @@ namespace NextPlayerUWP.Views
         //            if (DeviceFamilyHelper.IsDesktop())
         //            {
         //#if DEBUG
-        //                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+        //                Menu.NavigationService.Navigate(AppPages.Pages.NowPlaying);
         //#endif
         //            }
         //            else
         //            {
-        //                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+        //                Menu.NavigationService.Navigate(AppPages.Pages.NowPlaying);
         //            }
         //        }
 

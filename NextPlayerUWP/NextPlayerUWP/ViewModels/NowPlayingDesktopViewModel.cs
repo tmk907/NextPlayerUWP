@@ -64,12 +64,12 @@ namespace NextPlayerUWP.ViewModels
 
         public void GoToNowPlayingPlaylist()
         {
-            NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
+            NavigationService.Navigate(AppPages.Pages.NowPlayingPlaylist);
         }
 
         public void GoToLyrics()
         {
-            NavigationService.Navigate(App.Pages.Lyrics);
+            NavigationService.Navigate(AppPages.Pages.Lyrics);
         }
     }
 }
