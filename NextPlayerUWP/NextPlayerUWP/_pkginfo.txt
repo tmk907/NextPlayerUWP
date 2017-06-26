@@ -1,1 +1,1 @@
-E:\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\ARM\Release\Upload\NextPlayerUWP_3.5.0.0\NextPlayerUWP_3.5.0.0_x86_x64_arm.appxbundle
+E:\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\ARM\Release\Upload\NextPlayerUWP_3.6.0.0\NextPlayerUWP_3.6.0.0_x86_x64_arm.appxbundle
