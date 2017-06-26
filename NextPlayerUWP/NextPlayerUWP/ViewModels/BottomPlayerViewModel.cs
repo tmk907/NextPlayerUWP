@@ -27,7 +27,6 @@ namespace NextPlayerUWP.ViewModels
             PlayerVM = vml.PlayerVM;
             QueueVM = vml.QueueVM;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
-            App.IsBottomPlayerVMCreated = true;
             songDurationType = ApplicationSettingsHelper.ReadSettingsValue<string>(SettingsKeys.SongDurationType);
 
             var window = CoreApplication.GetCurrentView()?.CoreWindow;

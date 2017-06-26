@@ -85,15 +85,6 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             Background="Transparent">
-            <ads:AdControl
-                x:Name="MobileAd"
-                Height="50"
-                Width="320"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                AdRefreshed="MobileAd_AdRefreshed"
-                ErrorOccurred="MobileAd_ErrorOccurred"
-                IsEngagedChanged="MobileAd_IsEngagedChanged"/>
         </Grid>
         <Grid Grid.Row="0" Grid.ColumnSpan="2" 
               x:Name="AdWrapperDesktop" 
@@ -101,15 +92,6 @@
               Background="Transparent"
               HorizontalAlignment="Center"
               VerticalAlignment="Bottom">
-            <ads:AdControl
-                x:Name="DesktopAd"
-                Height="90"
-                Width="728"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                AdRefreshed="DesktopAd_AdRefreshed"
-                ErrorOccurred="DesktopAd_ErrorOccurred"
-                IsEngagedChanged="DesktopAd_IsEngagedChanged"/>
         </Grid>
     </Grid>
 </Page>

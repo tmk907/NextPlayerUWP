@@ -84,15 +84,13 @@ namespace NextPlayerUWP
             }
         }
 
-        public static bool IsBottomPlayerVMCreated = false;
+        public static bool mobileNowPlaying = false;
         public static void OnNavigatedToNewView(bool bottomPlayerVisible, bool isNowPlayingDesktopActive = false)
         {
-            if (IsBottomPlayerVMCreated)
-            {
-                ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
-                vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
-                vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
-            }
+            ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
+            vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
+            vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
+            mobileNowPlaying = !isNowPlayingDesktopActive && !bottomPlayerVisible;
         }
 
         public static async Task ChangeStatusBarVisibility()
