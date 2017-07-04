@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.AppColors;
+using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
@@ -26,8 +27,7 @@ namespace NextPlayerUWP
 
             //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, true);
             var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
-            ColorsHelper ch = new ColorsHelper();
-            ch.SaveAppAccentColor(color);
+            AppAccentColors.SaveAppAccentColor(color);
             //ch.SetAccentColorShades(color);
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterDropItem, SettingsKeys.ActionAddToNowPlaying);

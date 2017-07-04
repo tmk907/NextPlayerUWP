@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.AppColors;
+using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWPDataLayer.Helpers;
@@ -93,8 +94,8 @@ namespace NextPlayerUWP.ViewModels.Settings
             ThemeNr = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme) ? 1 : 2;
             if (accentColors.Count == 0)
             {
-                ColorsHelper ch = new ColorsHelper();
-                var sc = ch.GetSavedAppAccentColor();
+                AppAccentColors ch = new AppAccentColors();
+                var sc = AppAccentColors.GetSavedAppAccentColor();
                 foreach (var c in ch.GetWin10AccentColors())
                 {
                     AccentColors.Add(new SolidColorBrush(c));
@@ -384,9 +385,9 @@ namespace NextPlayerUWP.ViewModels.Settings
             var grid = (GridView)sender;
             var brush = grid.SelectedItem as SolidColorBrush;
             if (brush == null) return;
-            ColorsHelper ch = new ColorsHelper();
-            ch.ChangeAppAccentColor(brush.Color);
-            ch.SaveAppAccentColor(brush.Color);
+            AppAccentColors.ChangeAppAccentColor(brush.Color, brush.Color);
+            AppAccentColors.SaveAppAccentColor(brush.Color);
+            AccentFromAlbumArt = false;
         }
 
         private bool accentFromAlbumArt = false;
@@ -400,8 +401,7 @@ namespace NextPlayerUWP.ViewModels.Settings
                     MessageHub.Instance.Publish(new AppColorAccent() { UseAlbumArtAccent = value });
                     if (!value)
                     {
-                        ColorsHelper ch = new ColorsHelper();
-                        ch.RestoreAppAccentColors();
+                        AppAccentColors.RestoreAppAccentColors();
                     }
                     ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, value);
                 }

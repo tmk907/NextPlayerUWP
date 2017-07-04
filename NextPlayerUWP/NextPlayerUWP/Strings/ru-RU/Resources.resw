@@ -970,7 +970,7 @@
     <value>Use system indexing (searching is much faster). Disable if some files were not found.</value>
   </data>
   <data name="TBIgnoreFollowingArticles.Text" xml:space="preserve">
-    <value>gnore following articles, when sorting by album name, artist or title:</value>
+    <value>Ignore following articles, when sorting by album name, artist or title:</value>
   </data>
   <data name="TBLastLibraryUpdate.Text" xml:space="preserve">
     <value>Last update:</value>

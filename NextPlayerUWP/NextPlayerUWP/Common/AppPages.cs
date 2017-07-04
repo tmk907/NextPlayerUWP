@@ -72,7 +72,7 @@ namespace NextPlayerUWP.Common
         {
             { Pages.AddToPlaylist, typeof(AddToPlaylistView) },
             { Pages.Album, typeof(AlbumView) },
-            { Pages.AlbumArtist, typeof(AlbumArtistsView) },
+            { Pages.AlbumArtist, typeof(AlbumArtistView) },
             { Pages.AlbumArtists, typeof(AlbumArtistsView) },
             { Pages.Albums, typeof(AlbumsView) },
             { Pages.Artist, typeof(ArtistView) },

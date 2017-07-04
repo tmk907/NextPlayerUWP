@@ -1,8 +1,11 @@
 ﻿using Microsoft.Toolkit.Uwp;
+using NextPlayerUWP.AppColors;
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
+using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
@@ -23,6 +26,7 @@ namespace NextPlayerUWP.ViewModels
             App.Current.EnteredBackground += Current_EnteredBackground;
             App.Current.LeavingBackground += Current_LeavingBackground;
             lastFmCache = new LastFmCache();
+            useAlbumArtAccent = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AccentFromAlbumArt);
             accentToken = MessageHub.Instance.Subscribe<AppColorAccent>(OnAppAccentChange);
         }
         private LastFmCache lastFmCache;
@@ -109,8 +113,7 @@ namespace NextPlayerUWP.ViewModels
         }
 
         private bool useAlbumArtAccent = false;
-        private ColorsHelper colorsHelper = new ColorsHelper();
-        private ConcurrentDictionary<Uri, Color> cachedColors = new ConcurrentDictionary<Uri, Color>();
+        private AlbumArtColors colorsHelper = new AlbumArtColors();
 
         private Color albumArtColor;
         public Color AlbumArtColor
@@ -198,29 +201,18 @@ namespace NextPlayerUWP.ViewModels
 
         private async Task ChangeAlbumArtColor()
         {
-            if (useAlbumArtAccent)
+            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            await d.DispatchAsync(() =>
             {
-                if (cachedColors.ContainsKey(coverUri))
+                var color = colorsHelper.GetDominantColorFromSavedAlbumArt(coverUri);
+
+                AlbumArtColor = color;
+                if (useAlbumArtAccent)
                 {
-                    var d = Template10.Common.WindowWrapper.Current().Dispatcher;
-                    await d.DispatchAsync(() =>
-                    {
-                        AlbumArtColor = cachedColors[coverUri];
-                        colorsHelper.ChangeAppAccentColor(albumArtColor);
-                    });
+                    var c = colorsHelper.CreateAppAccentFromAlbumArtColor(albumArtColor);
+                    AppAccentColors.ChangeAppAccentColor(c, albumArtColor);
                 }
-                else
-                {
-                    var color = await colorsHelper.GetDominantColorFromSavedAlbumArt(coverUri);
-                    cachedColors.TryAdd(coverUri, color);
-                    var d = Template10.Common.WindowWrapper.Current().Dispatcher;
-                    await d.DispatchAsync(() =>
-                    {
-                        AlbumArtColor = color;
-                        colorsHelper.ChangeAppAccentColor(albumArtColor);
-                    });
-                }
-            }
+            });
         }
     }
 }

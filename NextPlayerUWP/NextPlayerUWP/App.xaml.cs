@@ -1,5 +1,6 @@
 ﻿using Microsoft.HockeyApp;
 using Microsoft.Services.Store.Engagement;
+using NextPlayerUWP.AppColors;
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
@@ -33,7 +34,6 @@ namespace NextPlayerUWP
         bool _isInBackgroundMode = false;
         private AppKeyboardShortcuts appShortcuts;
         bool isBackgroundLeavedFirstTime = true;
-        private bool resumeAlbumArtFinder = false;
         public static bool ShowAd = true;
 
         Stopwatch s1;
@@ -182,7 +182,6 @@ namespace NextPlayerUWP
                 //If we are in debug mode free memory here because the memory limits are turned off
                 //In release builds defer the actual reduction of memory to the limit changing event so we don't 
                 //unnecessarily throw away the UI
-                resumeAlbumArtFinder = AlbumArtFinder.Cancel();
                 ReduceMemoryUsage(0);
 #endif
             }
@@ -211,12 +210,6 @@ namespace NextPlayerUWP
                     ModalContent = new Views.Busy(),
                 };
                 
-
-                if (resumeAlbumArtFinder)
-                {
-                    AlbumArtFinder.StartLooking().ConfigureAwait(false);
-                }
-
                 deferral.Complete();
             }
             isBackgroundLeavedFirstTime = false;
@@ -263,8 +256,7 @@ namespace NextPlayerUWP
                 await SongCoverManager.Instance.Initialize();
             }
            
-            ColorsHelper ch = new ColorsHelper();
-            ch.RestoreAppAccentColors();
+            AppAccentColors.RestoreAppAccentColors();
             TranslationHelper tr = new TranslationHelper();
             tr.ChangeSlideableItemDescription();
 

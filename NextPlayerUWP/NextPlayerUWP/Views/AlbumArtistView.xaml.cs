@@ -8,6 +8,9 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using NextPlayerUWP.Controls;
 using NextPlayerUWP.Common;
+using System.Linq;
+using NextPlayerUWP.AppColors;
+using System.Collections;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,6 +23,7 @@ namespace NextPlayerUWP.Views
     {
         public AlbumArtistViewModel ViewModel;
         private ButtonsForMultipleSelection selectionButtons;
+        private AlbumArtColors albumArtColors;
 
         public AlbumArtistView()
         {
@@ -29,6 +33,7 @@ namespace NextPlayerUWP.Views
             ViewModel = (AlbumArtistViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
             selectionButtons.ShowShareButton = true;
+            albumArtColors = new AlbumArtColors();
         }
         //~AlbumArtistView()
         //{
@@ -106,6 +111,34 @@ namespace NextPlayerUWP.Views
         private void SelectAll(object sender, RoutedEventArgs e)
         {
             AlbumArtistSongsListView.SelectAll();
+        }
+
+        private async void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = ((Grid)sender);
+            Image image;
+            if (e.OriginalSource.GetType() == typeof(Image))
+            {
+                image = e.OriginalSource as Image;
+            }
+            else
+            {
+                return;
+            }
+
+            var dt = image.DataContext as IList;
+            var item = dt[0] as SongItem;
+            var color = albumArtColors.GetDominantColorFromSavedAlbumArt(item.AlbumArtUri);
+            var shadow = grid.Children.OfType<DropShadowPanel>().First();
+            shadow.Color = color;
+            shadow.ShadowOpacity = 0.7;
+        }
+
+        private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = ((Grid)sender);
+            var shadow = grid.Children.OfType<DropShadowPanel>().First();
+            shadow.ShadowOpacity = 0.0;
         }
     }
 }

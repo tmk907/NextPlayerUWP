@@ -67,7 +67,7 @@ namespace NextPlayerUWP.ViewModels
                     }
                     else
                     {
-                        await AlbumArtFinder.UpdateSingleAlbumArt(album);
+                        //await AlbumArtFinder.UpdateSingleAlbumArt(album);
                     }
                 }
             }

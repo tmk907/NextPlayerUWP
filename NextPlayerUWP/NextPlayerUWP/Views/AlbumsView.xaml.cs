@@ -11,6 +11,10 @@ using System.Collections.Generic;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Controls;
 using NextPlayerUWP.Messages.Hub;
+using NextPlayerUWP.AppColors;
+using System.Linq;
+using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -24,6 +28,7 @@ namespace NextPlayerUWP.Views
         public AlbumsViewModel ViewModel;
         private ButtonsForMultipleSelection selectionButtons;
         private Guid token;
+        private AlbumArtColors albumArtColors;
 
         public AlbumsView()
         {
@@ -33,6 +38,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += View_Unloaded;
             ViewModel = (AlbumsViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
+            albumArtColors = new AlbumArtColors();
         }
         //~AlbumsView()
         //{
@@ -108,6 +114,24 @@ namespace NextPlayerUWP.Views
         public void OnSearchMessage(EnableSearching msg)
         {
             SearchBox.Focus(FocusState.Programmatic);
+        }
+
+
+        private async void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = ((Grid)sender);
+            var item = grid.DataContext as AlbumItem;
+            var color = albumArtColors.GetDominantColorFromSavedAlbumArt(item.ImageUri);
+            var shadow = grid.Children.OfType<DropShadowPanel>().First();
+            shadow.Color = color;
+            shadow.ShadowOpacity = 0.8;
+        }
+
+        private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = ((Grid)sender);
+            var shadow = grid.Children.OfType<DropShadowPanel>().First();
+            shadow.ShadowOpacity = 0.0;
         }
     }
 }

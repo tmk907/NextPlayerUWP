@@ -1656,15 +1656,7 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
         }
-
-        public async Task UpdateSongImagePath(List<Tuple<int,string>> data)
-        {
-            foreach(var t in data)
-            {
-                await connectionAsync.ExecuteAsync("UPDATE SongsTable SET AlbumArt = ? WHERE SongId = ?", t.Item2, t.Item1);
-            }
-        }
-
+       
         public async Task UpdateAlbumItem(AlbumItem album)
         {
             AlbumsTable t = new AlbumsTable()
@@ -2354,6 +2346,11 @@ namespace NextPlayerUWPDataLayer.Services
         public async Task<List<SongsTable>> GetSongsTableAsync()
         {
             return await connectionAsync.Table<SongsTable>().ToListAsync();
+        }
+
+        public async Task<List<SongsTable>> GetSongsTableAsync2()
+        {
+            return await songsConnectionAsync.ToListAsync();
         }
 
         public async Task<List<SongsTable>> GetSongsTableFromDirectory(string dir)

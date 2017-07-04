@@ -64,6 +64,8 @@
         <DataTemplate x:Key="GroupHeaderTemplate">
             <Grid Margin="0,0,0,4" 
                   RightTapped="AlbumGroupHeader_RightTapped" 
+                  PointerEntered="Grid_PointerEntered"
+                  PointerExited="Grid_PointerExited"
                   Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
@@ -73,16 +75,23 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Image Grid.Column="0" Grid.RowSpan="2"
+                <toolkitcontrols:DropShadowPanel
+                    Grid.Column="0" Grid.RowSpan="2"
+                    BlurRadius="26.0"
+                    ShadowOpacity="0.0"
+                    OffsetY="0"
+                    OffsetX="0">
+                    <Image
                        Tapped="AlbumCoverImage_Tapped"
                        Tag="{Binding Header.AlbumId}"
                        ImageOpened="AlbumCoverImage_ImageOpened">
-                    <Image.Source>
-                        <BitmapImage UriSource="{Binding Header.ImageUri, Mode=OneWay}"
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding Header.ImageUri, Mode=OneWay}"
                                      DecodePixelType="Logical"
                                      DecodePixelHeight="100" DecodePixelWidth="100"/>
-                    </Image.Source>
-                </Image>
+                        </Image.Source>
+                    </Image>
+                </toolkitcontrols:DropShadowPanel>
                 <TextBlock Grid.Column="1" Grid.Row="0"
                     Text="{Binding Header.Album}"
                     Style="{StaticResource SubheaderTextBlockStyle}"

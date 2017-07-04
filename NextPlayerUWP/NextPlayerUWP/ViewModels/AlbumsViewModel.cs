@@ -24,7 +24,6 @@ namespace NextPlayerUWP.ViewModels
             SortDescending = sortingHelper.SortDescending;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
-            AlbumArtFinder.AlbumArtUpdatedEvent += AlbumArtFinder_AlbumArtUpdatedEvent;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 albums = new ObservableCollection<AlbumItem>();

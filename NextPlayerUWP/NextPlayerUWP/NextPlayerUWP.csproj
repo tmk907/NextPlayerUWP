@@ -125,13 +125,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppColors\ColorDifference.cs" />
     <Compile Include="AppGlobalUtils.cs" />
     <Compile Include="AppSetupUpdate.cs" />
-    <Compile Include="Common\AlbumArtFinder.cs" />
+    <Compile Include="AppColors\AlbumArtColors.cs" />
+    <Compile Include="AppColors\ColorConverter.cs" />
     <Compile Include="Common\AppKeyboardShortcuts.cs" />
     <Compile Include="Common\AppPages.cs" />
     <Compile Include="Common\BackgroundTaskHelper.cs" />
-    <Compile Include="Common\ColorsHelper.cs" />
+    <Compile Include="AppColors\AppAccentColors.cs" />
     <Compile Include="Common\DeepLinkService.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
     <Compile Include="Common\FoldersVMHelper.cs" />

@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.AppColors;
+using NextPlayerUWP.Common;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;
@@ -22,7 +23,6 @@ namespace NextPlayerUWP.Views
         NowPlayingPlaylistPanelViewModel PanelVM;
         PointerEventHandler pointerpressedhandler;
         PointerEventHandler pointerreleasedhandler;
-        private ColorsHelper colorsHelper;
 
         public NowPlayingView()
         {
@@ -34,7 +34,6 @@ namespace NextPlayerUWP.Views
             this.Unloaded += NowPlayingView_Unloaded;
             pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
             pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
-            colorsHelper = new ColorsHelper();
         }
 
         //~NowPlayingView()
@@ -57,9 +56,9 @@ namespace NextPlayerUWP.Views
 
         private Uri GetAlbumUri()
         {
-            if (ViewModel.QueueVM.CoverUri == new Uri(AppConstants.SongCoverBig))
+            if (ViewModel.QueueVM.CoverUri == AlbumArtColors.DefaultAlbumArtUri)
             {
-                return new Uri(colorsHelper.GetAlbumCoverAssetWithCurrentAccentColor());
+                return AlbumArtColors.GetAlbumCoverAssetWithCurrentAccentColor();
             }
             else
             {

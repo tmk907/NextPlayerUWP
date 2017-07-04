@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
+    "Colourful": "1.1.2",
     "HockeySDK.UWP": "4.1.6",
-    "ksemenenko.ColorThief": "1.1.0.3",
     "Microsoft.ApplicationInsights": "1.2.3",
     "Microsoft.ApplicationInsights.PersistenceChannel": "1.2.3",
     "Microsoft.ApplicationInsights.WindowsApps": "1.1.1",

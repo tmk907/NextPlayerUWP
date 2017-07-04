@@ -35,16 +35,6 @@ namespace NextPlayerUWP
 
         public static bool IsLightThemeOn = false;
 
-        private static AlbumArtFinder albumArtFinder;
-        public static AlbumArtFinder AlbumArtFinder
-        {
-            get
-            {
-                if (albumArtFinder == null) albumArtFinder = new AlbumArtFinder();
-                return albumArtFinder;
-            }
-        }
-
         private static FileFormatsHelper fileFormatsHelper;
         public static FileFormatsHelper FileFormatsHelper
         {

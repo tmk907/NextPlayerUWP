@@ -478,7 +478,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid Background="{StaticResource UserAccentBrush}" Visibility="{x:Bind ViewModel.BottomPlayerVisibility, Mode=OneWay}">
+    <Grid Background="{StaticResource AlbumArtAccentBrush}" Visibility="{x:Bind ViewModel.BottomPlayerVisibility, Mode=OneWay}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Phone">
