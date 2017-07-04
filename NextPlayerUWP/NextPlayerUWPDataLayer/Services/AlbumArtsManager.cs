@@ -13,6 +13,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace NextPlayerUWPDataLayer.Services
 {
@@ -184,6 +185,23 @@ namespace NextPlayerUWPDataLayer.Services
                 var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                 string outputFileName = GetFileName(songData, color);
                 string savedPath = await ImagesManager.SaveCover(outputFileName, albumArtsFolderName, softwareBitmap);
+                songData.AlbumArtPath = savedPath;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public async Task SaveAlbumArtAndColor(WriteableBitmap bitmap, SongData songData)
+        {
+            PaletteHelper paletteHelper = new PaletteHelper();
+            var dominant = paletteHelper.GetColorFromImage(bitmap);
+            int color = ColorHelpers.ColorToInt(dominant);
+            try
+            {
+                string outputFileName = GetFileName(songData, color);
+                string savedPath = await ImagesManager.SaveCover(outputFileName, albumArtsFolderName, bitmap);
                 songData.AlbumArtPath = savedPath;
             }
             catch (Exception ex)

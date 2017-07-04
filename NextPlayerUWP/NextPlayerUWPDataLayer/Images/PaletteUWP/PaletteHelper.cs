@@ -4,6 +4,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace NextPlayerUWPDataLayer.Images.PaletteUWP
 {
@@ -21,6 +22,12 @@ namespace NextPlayerUWPDataLayer.Images.PaletteUWP
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
                 p = await Palette.From(decoder).Generate();
             }
+            return GetColorFromPalette(p);
+        }
+
+        public Color GetColorFromImage(WriteableBitmap wb)
+        {
+            Palette p = Palette.From(wb).Generate();
             return GetColorFromPalette(p);
         }
 

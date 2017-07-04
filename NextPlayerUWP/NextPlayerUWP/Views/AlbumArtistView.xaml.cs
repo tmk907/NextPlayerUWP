@@ -140,5 +140,31 @@ namespace NextPlayerUWP.Views
             var shadow = grid.Children.OfType<DropShadowPanel>().First();
             shadow.ShadowOpacity = 0.0;
         }
+
+        private void DropShadowPanel_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            var shadow = ((DropShadowPanel)sender);
+            Image image;
+            if (e.OriginalSource.GetType() == typeof(Image))
+            {
+                image = e.OriginalSource as Image;
+            }
+            else
+            {
+                return;
+            }
+
+            var dt = image.DataContext as IList;
+            var item = dt[0] as SongItem;
+            var color = albumArtColors.GetDominantColorFromSavedAlbumArt(item.AlbumArtUri);
+            shadow.Color = color;
+            shadow.ShadowOpacity = 0.7;
+        }
+
+        private void DropShadowPanel_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var shadow = ((DropShadowPanel)sender);
+            shadow.ShadowOpacity = 0.0;
+        }
     }
 }

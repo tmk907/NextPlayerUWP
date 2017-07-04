@@ -320,6 +320,47 @@ namespace NextPlayerUWPDataLayer.Services
             }
             var toUpdate = oldSongs.Where(s => availableChange.Contains(s.SongId)).ToList();
 
+            #region FindAlbumArtsForOldSongsWithoutAlbumArt
+            foreach(var song in toUpdate.Where(s=>String.IsNullOrEmpty(s.AlbumArt)))
+            {
+                var file = files.FirstOrDefault(f => f.Path.Equals(song.Path));
+                SongData sd = new SongData();
+                sd.Tag.Album = song.Album;
+                sd.Tag.Artists = song.Artists;
+                sd.Tag.Title = song.Title;
+                sd.Path = song.Path;
+                await aam.SaveAlbumArtAndColor(file, sd, true);
+                if (String.IsNullOrEmpty(sd.AlbumArtPath))
+                {
+                    song.AlbumArt = AppConstants.AlbumCover;
+                }
+                else
+                {
+                    song.AlbumArt = sd.AlbumArtPath;
+                }
+            }
+
+            foreach(var song in oldSongs.Where(s => String.IsNullOrEmpty(s.AlbumArt) && availableNotChange.Contains(s.SongId)))
+            {
+                var file = files.FirstOrDefault(f => f.Path.Equals(song.Path));
+                SongData sd = new SongData();
+                sd.Tag.Album = song.Album;
+                sd.Tag.Artists = song.Artists;
+                sd.Tag.Title = song.Title;
+                sd.Path = song.Path;
+                await aam.SaveAlbumArtAndColor(file, sd, true);
+                if (String.IsNullOrEmpty(sd.AlbumArtPath))
+                {
+                    song.AlbumArt = AppConstants.AlbumCover;
+                }
+                else
+                {
+                    song.AlbumArt = sd.AlbumArtPath;
+                }
+                toUpdate.Add(song);
+            }
+            #endregion
+
             await DatabaseManager.Current.UpdateFolderAsync(folder.Path, oldSongs, newSongs, toNotAvailable, toUpdate);
 
             songsAdded += newSongs.Count;// + oldSongs.Where(s => s.IsAvailable == 1).Count();
@@ -952,7 +993,7 @@ namespace NextPlayerUWPDataLayer.Services
                 {
                     await FutureAccessHelper.AddToFutureAccessListAndSaveTokenAsync(file);
                     var songData = await CreateSongFromFileAsync(file);
-                    await ImagesManager.SaveAlbumArtFromSong(songData);
+                    await aam.SaveAlbumArtAndColor(songData, true);
                     songData.IsAvailable = 0;
                     int id = await DatabaseManager.Current.InsertSongAsync(songData);
                     song = await DatabaseManager.Current.GetSongItemAsync(id);

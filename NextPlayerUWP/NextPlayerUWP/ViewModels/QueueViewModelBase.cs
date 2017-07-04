@@ -41,7 +41,7 @@ namespace NextPlayerUWP.ViewModels
         private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
         {
             PlaybackService.MediaPlayerTrackChanged -= ChangeSong;
-            SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
+            //SongCoverManager.CoverUriPrepared -= ChangeCoverUri;
             PlaybackService.MediaPlayerMediaOpened -= PlaybackService_MediaPlayerMediaOpened;
             NowPlayingPlaylistManager.NPListChanged -= UpdatePlaylist;
             isInitialized = false;
@@ -68,7 +68,7 @@ namespace NextPlayerUWP.ViewModels
             }
             CurrentSongNumber = PlaybackService.Instance.CurrentSongIndex + 1;
             PlaybackService.MediaPlayerTrackChanged += ChangeSong;
-            SongCoverManager.CoverUriPrepared += ChangeCoverUri;
+            //SongCoverManager.CoverUriPrepared += ChangeCoverUri;
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             NowPlayingPlaylistManager.NPListChanged += UpdatePlaylist;
             isInitialized = true;
