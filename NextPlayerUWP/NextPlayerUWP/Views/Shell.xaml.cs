@@ -83,17 +83,7 @@ namespace NextPlayerUWP.Views
             {
                 FindName(nameof(RightPanelWrapper));
             }
-
-            DateTime july1 = new DateTime(2017, 7, 1, 0, 0, 0);
-            DateTime july31 = new DateTime(2017, 7, 31, 23, 59, 59);
-            if (DateTime.Now.Ticks > july1.Ticks && DateTime.Now.Ticks < july31.Ticks)
-            {
-
-            }
-            else
-            {
-                LoadAd(TimeSpan.FromSeconds(5));
-            }
+            LoadAd(TimeSpan.FromSeconds(5));
             System.Diagnostics.Debug.WriteLine("Shell.LoadControls() End");
         }
 
@@ -180,6 +170,12 @@ namespace NextPlayerUWP.Views
 
         private async void LoadAd(TimeSpan delay)
         {
+            DateTime july1 = new DateTime(2017, 7, 1, 0, 0, 0);
+            DateTime july31 = new DateTime(2017, 7, 31, 23, 59, 59);
+            if (DateTime.Now.Ticks > july1.Ticks && DateTime.Now.Ticks < july31.Ticks)
+            {
+                return;
+            }
             if (!App.ShowAd)
             {
                 UnloadAd(true);
