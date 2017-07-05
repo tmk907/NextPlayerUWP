@@ -112,7 +112,7 @@ namespace NextPlayerUWP.ViewModels
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter()); 
+            NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter()); 
         }
 
         public async void Share(object sender, RoutedEventArgs e)
@@ -131,27 +131,27 @@ namespace NextPlayerUWP.ViewModels
         public void EditTags(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.TagsEditor, item.GetParameter());
+            NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
         }
 
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(App.Pages.FileInfo, ((SongItem)item).GetParameter());
+            NavigationService.Navigate(AppPages.Pages.FileInfo, ((SongItem)item).GetParameter());
         }
 
         public async void GoToArtist(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             ArtistItem temp = await DatabaseManager.Current.GetArtistItemAsync(item.FirstArtist);
-            App.Current.NavigationService.Navigate(App.Pages.Artist, temp.ArtistId);
+            App.Current.NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
         }
 
         public async void GoToAlbum(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
-            App.Current.NavigationService.Navigate(App.Pages.Album, temp.AlbumId);
+            App.Current.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
         }
 
         public async Task SlidableListItemLeftCommandRequested(MusicItem item)
@@ -175,7 +175,7 @@ namespace NextPlayerUWP.ViewModels
                     MessageHub.Instance.Publish<InAppNotification>(new InAppNotification() { FirstTextLine = text2 });
                     break;
                 case SettingsKeys.SwipeActionAddToPlaylist:
-                    NavigationService.Navigate(App.Pages.AddToPlaylist, item.GetParameter());
+                    NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
                     break;
                 default:
                     break;
@@ -475,7 +475,7 @@ namespace NextPlayerUWP.ViewModels
         {
             App.AddToCache(items);
             DisableMultipleSelection();
-            NavigationService.Navigate(App.Pages.AddToPlaylist, new ListOfMusicItems().GetParameter());
+            NavigationService.Navigate(AppPages.Pages.AddToPlaylist, new ListOfMusicItems().GetParameter());
         }
 
         public async void ShareMany(IEnumerable<MusicItem> items)

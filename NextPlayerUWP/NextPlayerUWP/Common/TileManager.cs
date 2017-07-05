@@ -4,8 +4,6 @@ using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Data.Xml.Dom;
@@ -75,6 +73,11 @@ namespace NextPlayerUWP.Common
                     type = loader.GetString("Artist");
                     parameter = MusicItemTypes.artist + MusicItem.separator + ((ArtistItem)item).ArtistId.ToString();
                     break;
+                case MusicItemTypes.albumartist:
+                    name = ((AlbumArtistItem)item).AlbumArtist;
+                    type = loader.GetString("AlbumArtist");
+                    parameter = MusicItemTypes.albumartist + MusicItem.separator + ((AlbumArtistItem)item).AlbumArtistId.ToString();
+                    break;
                 case MusicItemTypes.folder:
                     name = ((FolderItem)item).Folder;
                     type = loader.GetString("Folder");
@@ -106,14 +109,8 @@ namespace NextPlayerUWP.Common
             Uri square150x150Logo = new Uri("ms-appx:///Assets/Visual Assets/Square150/Medium3.png");
 
             SecondaryTile secondaryTile = new SecondaryTile(tileId, displayName, tileActivationArguments, square150x150Logo, TileSize.Square150x150);
-            //SecondaryTile secondaryTile = new SecondaryTile(tileId,
-            //                                    displayName,
-            //                                    tileActivationArguments,
-            //                                    square150x150Logo,
-            //                                    TileSize.Square150x150);
-            secondaryTile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Visual Assets/Wide310/Wide3.png");
-            //secondaryTile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/Visual Assets/Square71/Small3.png");
 
+            secondaryTile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Visual Assets/Wide310/Wide3.png");
             secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
             secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
 

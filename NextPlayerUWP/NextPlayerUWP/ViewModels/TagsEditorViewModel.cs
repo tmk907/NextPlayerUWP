@@ -191,8 +191,8 @@ namespace NextPlayerUWP.ViewModels
                 }
                 if (IsAlbumArtSet())
                 {
-                    string savedPath = await ImagesManager.SaveCover(songData.SongId.ToString(), "Songs", albumArt);
-                    songData.AlbumArtPath = savedPath;
+                    AlbumArtsManager aam = new AlbumArtsManager();
+                    await aam.SaveAlbumArtAndColor(albumArt, songData);
                     if (file != null) await tm.SaveAlbumArt(albumArtFile, file);
                 }
                 else

@@ -17,7 +17,7 @@ namespace NextPlayerUWP.ViewModels
             ViewModelLocator vml = new ViewModelLocator();
             QueueVM = vml.QueueVM;
             token = MessageHub.Instance.Subscribe<RightPanelVisibilityChange>(OnRightPanelVisibilityChange);
-            ShowButtons = Window.Current.Bounds.Width < 500;
+            ShowButtons = Window.Current.Bounds.Width <= 720;
         }
 
         public QueueViewModelBase QueueVM { get; set; }
@@ -39,6 +39,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
+            ShowButtons = Window.Current.Bounds.Width < 720;
             await Task.CompletedTask;
         }
         
@@ -63,12 +64,12 @@ namespace NextPlayerUWP.ViewModels
 
         public void GoToNowPlayingPlaylist()
         {
-            NavigationService.Navigate(App.Pages.NowPlayingPlaylist);
+            NavigationService.Navigate(AppPages.Pages.NowPlayingPlaylist);
         }
 
         public void GoToLyrics()
         {
-            NavigationService.Navigate(App.Pages.Lyrics);
+            NavigationService.Navigate(AppPages.Pages.Lyrics);
         }
     }
 }

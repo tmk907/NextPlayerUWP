@@ -93,8 +93,8 @@ namespace NextPlayerUWP.Views
             {
 #if DEBUG
                 var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
-                nav.Navigate(App.Pages.NowPlayingPlaylist);
-                //nav.Navigate(App.Pages.NowPlaying);
+                nav.Navigate(AppPages.Pages.NowPlayingPlaylist);
+                //nav.Navigate(AppPages.Pages.NowPlaying);
 #endif
             }
             else
@@ -106,9 +106,9 @@ namespace NextPlayerUWP.Views
                 }
                 else
                 {
-                    nav.Navigate(App.Pages.NowPlaying);
+                    nav.Navigate(AppPages.Pages.NowPlaying);
                 }
-                //Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+                //Menu.NavigationService.Navigate(AppPages.Pages.NowPlaying);
             }
         }
     }

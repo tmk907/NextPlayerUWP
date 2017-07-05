@@ -48,6 +48,7 @@ namespace NextPlayerUWP.Common
         public const string TrackNumber = "TrackNumber";
         public const string FileName = "FileName";
         public const string DateCreated = "DateCreated";
+        public const string AlbumArtColor = "AlbumArtColor";
         public const string Default = "Default";
     }
 
@@ -598,6 +599,8 @@ namespace NextPlayerUWP.Common
                     return t => t.SongsNumber;
                 case SortNames.LastAdded:
                     return t => String.Format("{0:d}", t.LastAdded);
+                //case SortNames.AlbumArtColor:
+                //    return t => (t.AlbumArtColorSort == Int32.MaxValue) ? "def" : "col";
                 default:
                     return t => (t.Album == "") ? "" : t.Album[0].ToString().ToLower();
             }
@@ -633,6 +636,8 @@ namespace NextPlayerUWP.Common
                     return s => s.SongsNumber;
                 case SortNames.LastAdded:
                     return s => s.LastAdded.Ticks;
+                //case SortNames.AlbumArtColor:
+                //    return s => s.AlbumArtColorSort;
                 default:
                     return s => s.Album;
             }
@@ -654,6 +659,8 @@ namespace NextPlayerUWP.Common
                     return "SongsNumber";
                 case SortNames.LastAdded:
                     return "LastAdded";
+                case SortNames.AlbumArtColor:
+                    return "AlbumArtColor";
                 default:
                     return "Album";
             }
@@ -669,6 +676,7 @@ namespace NextPlayerUWP.Common
             comboboxItems.Add(new ComboBoxItemValue(SortNames.Duration, loader.GetString(SortNames.Duration)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.SongCount, loader.GetString(SortNames.SongCount)));
             comboboxItems.Add(new ComboBoxItemValue(SortNames.LastAdded, loader.GetString(SortNames.LastAdded)));
+            //comboboxItems.Add(new ComboBoxItemValue(SortNames.AlbumArtColor, loader.GetString(SortNames.AlbumArtColor)));
             return comboboxItems;
         }
     }

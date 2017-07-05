@@ -171,7 +171,7 @@ namespace NextPlayerUWP.ViewModels
             }
             await NowPlayingPlaylistManager.Current.NewPlaylist(playlist);
             await PlaybackService.Instance.PlayNewList(index);
-            //NavigationService.Navigate(App.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
+            //NavigationService.Navigate(AppPages.Pages.NowPlaying, ((SongItem)e.ClickedItem).GetParameter());
         }
 
         public async void ShuffleAllSongs()
@@ -265,6 +265,7 @@ namespace NextPlayerUWP.ViewModels
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            sortingHelper.SortDescending = sortDescending;
             var orderSelector = sortingHelper.GetOrderBySelector();
             var query = (sortDescending)? playlist.OrderByDescending(orderSelector) : playlist.OrderBy(orderSelector);
             Playlist = new ObservableCollection<SongItem>(query);

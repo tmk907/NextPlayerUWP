@@ -14,19 +14,24 @@ namespace NextPlayerUWP.Extensions
         NowPlayingNotificationBroadcaster client;
         CancellationTokenSource cts;
 
+        string prevData = "";
+
         public NowPlayingBroadcasterExtension()
         {
             cts = new CancellationTokenSource();
+            helper = new ExtensionClientHelper(MusicPlayerExtensionTypes.NowPlayingNotification);
+            client = new NowPlayingNotificationBroadcaster(helper);
         }
 
         public async Task SendNotification(string album, string artist, string title, MediaPlaybackState state)
         {
+            string data = album + artist + title + state.ToString();
+            if (data == prevData) return;
             cts.Cancel();
             cts = new CancellationTokenSource();
-            helper = new ExtensionClientHelper(MusicPlayerExtensionTypes.NowPlayingNotification);
-            client = new NowPlayingNotificationBroadcaster(helper);
             try
             {
+                prevData = data;
                 await client.SendRequestAsync(new NowPlayingNotification()
                 {
                     Album = album,

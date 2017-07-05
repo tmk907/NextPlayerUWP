@@ -24,7 +24,6 @@ namespace NextPlayerUWP.ViewModels
             SortDescending = sortingHelper.SortDescending;
             App.SongUpdated += App_SongUpdated;
             MediaImport.MediaImported += MediaImport_MediaImported;
-            AlbumArtFinder.AlbumArtUpdatedEvent += AlbumArtFinder_AlbumArtUpdatedEvent;
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 albums = new ObservableCollection<AlbumItem>();
@@ -158,7 +157,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.Album, ((AlbumItem)e.ClickedItem).AlbumId);
+            NavigationService.Navigate(AppPages.Pages.Album, ((AlbumItem)e.ClickedItem).AlbumId);
         }
 
         private async Task ReloadData()
@@ -170,6 +169,7 @@ namespace NextPlayerUWP.ViewModels
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            sortingHelper.SortDescending = sortDescending;
 
             var orderSelector = sortingHelper.GetOrderBySelector();
             var groupSelector = sortingHelper.GetGroupBySelector();

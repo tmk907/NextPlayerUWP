@@ -193,7 +193,7 @@
     <value>Abbruch</value>
   </data>
   <data name="ContentDialogNewPlaylist.Title" xml:space="preserve">
-    <value>Neue Wiedergabeliste</value>
+    <value>Create new playlist</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Löschen</value>
@@ -970,7 +970,7 @@
     <value>Use system indexing (searching is much faster). Disable if some files were not found.</value>
   </data>
   <data name="TBIgnoreFollowingArticles.Text" xml:space="preserve">
-    <value>gnore following articles, when sorting by album name, artist or title:</value>
+    <value>Ignore following articles, when sorting by album name, artist or title:</value>
   </data>
   <data name="TBLastLibraryUpdate.Text" xml:space="preserve">
     <value>Last update:</value>
@@ -1025,5 +1025,26 @@
   </data>
   <data name="AppBarButtonScrollToPlayingSong.Label" xml:space="preserve">
     <value>Scroll to playing song</value>
+  </data>
+  <data name="MostRecentlyCreated" xml:space="preserve">
+    <value>Date created (newest first)</value>
+  </data>
+  <data name="ContentDialogNewPlaylistWithSongs.Title" xml:space="preserve">
+    <value>Create playlist and add songs</value>
+  </data>
+  <data name="ContentDialogNewPlaylistWithSongs.SecondaryButtonText" xml:space="preserve">
+    <value>Abbruch</value>
+  </data>
+  <data name="ContentDialogNewPlaylistWithSongs.PrimaryButtonText" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="AppBarButtonSavePlaylist.Label" xml:space="preserve">
+    <value>Save playlist</value>
+  </data>
+  <data name="TBChooseStartupScreen.Text" xml:space="preserve">
+    <value>Startup screen</value>
+  </data>
+  <data name="AlbumArtColor" xml:space="preserve">
+    <value>Farbe</value>
   </data>
 </root>

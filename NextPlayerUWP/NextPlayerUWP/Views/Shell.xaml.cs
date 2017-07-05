@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Common;
+﻿using Microsoft.Advertising.WinRT.UI;
+using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
 using NextPlayerUWP.ViewModels;
@@ -94,7 +95,6 @@ namespace NextPlayerUWP.Views
             MessageHub.Instance.UnSubscribe(tokenTheme);
             MessageHub.Instance.UnSubscribe(tokenPageNavigated);
             UnloadAd(false);
-            AdTimer.TimerCancel();
         }
        
         public Shell(INavigationService navigationService) : this()
@@ -170,15 +170,35 @@ namespace NextPlayerUWP.Views
 
         private async void LoadAd(TimeSpan delay)
         {
+            DateTime july1 = new DateTime(2017, 7, 1, 0, 0, 0);
+            DateTime july31 = new DateTime(2017, 7, 31, 23, 59, 59);
+            if (DateTime.Now.Ticks > july1.Ticks && DateTime.Now.Ticks < july31.Ticks)
+            {
+                return;
+            }
+            if (!App.ShowAd)
+            {
+                UnloadAd(true);
+                return;
+            }
             if (delay != TimeSpan.Zero)
             {
                 await Task.Delay(delay);
             }
+            hideAd = hideAd || App.mobileNowPlaying;
             if (Microsoft.Toolkit.Uwp.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable && !hideAd)
             {
                 if (DeviceFamilyHelper.IsDesktop())
                 {
                     FindName(nameof(AdWrapperDesktop));
+                    AdControl DesktopAd = new AdControl();
+                    DesktopAd.Height = 90;
+                    DesktopAd.Width = 728;
+                    DesktopAd.HorizontalAlignment = HorizontalAlignment.Left;
+                    DesktopAd.VerticalAlignment = VerticalAlignment.Top;
+                    DesktopAd.AdRefreshed += DesktopAd_AdRefreshed;
+                    DesktopAd.ErrorOccurred += DesktopAd_ErrorOccurred;
+                    DesktopAd.IsEngagedChanged += DesktopAd_IsEngagedChanged;
 #if DEBUG
                     //DesktopAd.ApplicationId = "9nblggh67n4f";
                     //DesktopAd.AdUnitId = "11684323";
@@ -194,6 +214,14 @@ namespace NextPlayerUWP.Views
                 else
                 {
                     FindName(nameof(AdWrapperMobile));
+                    AdControl MobileAd = new AdControl();
+                    MobileAd.Height = 50;
+                    MobileAd.Width = 320;
+                    MobileAd.HorizontalAlignment = HorizontalAlignment.Left;
+                    MobileAd.VerticalAlignment = VerticalAlignment.Top;
+                    MobileAd.AdRefreshed += MobileAd_AdRefreshed;
+                    MobileAd.ErrorOccurred += MobileAd_ErrorOccurred;
+                    MobileAd.IsEngagedChanged += MobileAd_IsEngagedChanged;
 #if DEBUG
                     //MobileAd.ApplicationId = "9nblggh67n4f";
                     //MobileAd.AdUnitId = "11684325";
@@ -203,6 +231,8 @@ namespace NextPlayerUWP.Views
                     MobileAd.ApplicationId = "9nblggh67n4f";
                     MobileAd.AdUnitId = "11684325";
 #endif
+
+                    AdWrapperMobile.Children.Add(MobileAd);
                     AdWrapperMobile.Visibility = Visibility.Visible;
                     MobileAd.Visibility = Visibility.Visible;
                 }
@@ -219,17 +249,34 @@ namespace NextPlayerUWP.Views
         {
             Template10.Common.WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
-                if (AdWrapperMobile != null)
+                AdTimer.TimerCancel();
+                if (AdWrapperMobile != null && AdWrapperMobile.Children.Count > 0)
                 {
-                    MobileAd.Visibility = Visibility.Collapsed;
+                    var ad = AdWrapperMobile.Children[0] as AdControl;
+                    ad.AdRefreshed -= MobileAd_AdRefreshed;
+                    ad.ErrorOccurred -= MobileAd_ErrorOccurred;
+                    ad.IsEngagedChanged -= MobileAd_IsEngagedChanged;
+                    ad.Dispose();
+                    AdWrapperMobile.Children.Remove(ad);
+                    ad = null;
                     AdWrapperMobile.Visibility = Visibility.Collapsed;
                 }
-                if (AdWrapperDesktop != null)
+                if (AdWrapperDesktop != null && AdWrapperDesktop.Children.Count > 0)
                 {
-                    DesktopAd.Visibility = Visibility.Collapsed;
+                    var ad = AdWrapperDesktop.Children[0] as AdControl;
+                    ad.AdRefreshed -= DesktopAd_AdRefreshed;
+                    ad.ErrorOccurred -= DesktopAd_ErrorOccurred;
+                    ad.IsEngagedChanged -= DesktopAd_IsEngagedChanged;
+                    ad.Dispose();
+                    AdWrapperDesktop.Children.Remove(ad);
+                    ad = null;
                     AdWrapperDesktop.Visibility = Visibility.Collapsed;
                 }
-                if (fromTimer) AdWasDisplayed = true;
+                if (fromTimer)
+                {
+                    AdWasDisplayed = true;
+                    App.ShowAd = false;
+                }
             });
         }
 
@@ -246,8 +293,19 @@ namespace NextPlayerUWP.Views
             if (e.ErrorMessage == "NoAdAvailable")
             {
                 UnloadAd(true);
-                AdTimer.TimerCancel();
             }
+        }
+
+        private void DesktopAd_IsEngagedChanged(object sender, RoutedEventArgs e)
+        {
+            UnloadAd(true);
+            TelemetryAdapter.TrackEvent("AdClickedDesktop");
+        }
+
+        private void MobileAd_IsEngagedChanged(object sender, RoutedEventArgs e)
+        {
+            UnloadAd(true);
+            TelemetryAdapter.TrackEvent("AdClickedMobile");
         }
 
         private void MobileAd_AdRefreshed(object sender, RoutedEventArgs e)
@@ -263,9 +321,10 @@ namespace NextPlayerUWP.Views
             if (e.ErrorMessage == "NoAdAvailable")
             {
                 UnloadAd(true);
-                AdTimer.TimerCancel();
             }
         }
+
+        #endregion
 
         private void OnPageNavigatedMessage(PageNavigated message)
         {
@@ -288,13 +347,12 @@ namespace NextPlayerUWP.Views
                     if (!AdWasDisplayed)
                     {
                         hideAd = false;
+                        App.mobileNowPlaying = false;
                         LoadAd(TimeSpan.Zero);
                     }
                 }
             }
         }
-
-        #endregion
 
         private async Task MigrateCredentialsAsync()
         {
@@ -366,17 +424,19 @@ namespace NextPlayerUWP.Views
             }
         }
 
+       
+
         //        private void GoToNowPlaying(object sender, TappedRoutedEventArgs e)
         //        {
         //            if (DeviceFamilyHelper.IsDesktop())
         //            {
         //#if DEBUG
-        //                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+        //                Menu.NavigationService.Navigate(AppPages.Pages.NowPlaying);
         //#endif
         //            }
         //            else
         //            {
-        //                Menu.NavigationService.Navigate(App.Pages.NowPlaying);
+        //                Menu.NavigationService.Navigate(AppPages.Pages.NowPlaying);
         //            }
         //        }
 

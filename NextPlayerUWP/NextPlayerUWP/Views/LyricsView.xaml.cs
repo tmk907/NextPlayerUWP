@@ -23,6 +23,13 @@ namespace NextPlayerUWP.Views
         {
             await ContentDialogSearchLyrics.ShowAsync();
         }
+
+        private void ContentDialogSearchLyrics_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            ViewModel.ArtistSearch = ArtistSearch.Text;
+            ViewModel.TitleSearch = TitleSearch.Text;
+            ViewModel.SearchLyrics();
+        }
         //~LyricsView()
         //{
         //    System.Diagnostics.Debug.WriteLine("~" + GetType().Name);

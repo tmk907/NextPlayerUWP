@@ -61,6 +61,53 @@
         </Style>
 
 
+        <DataTemplate x:Key="GroupHeaderTemplateDesktop">
+            <Grid Margin="0,0,0,4" 
+                  RightTapped="AlbumGroupHeader_RightTapped" 
+                  Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <toolkitcontrols:DropShadowPanel
+                    Grid.Column="0" Grid.RowSpan="2"
+                    PointerEntered="DropShadowPanel_PointerEntered"
+                    PointerExited="DropShadowPanel_PointerExited"
+                    BlurRadius="20.0"
+                    ShadowOpacity="0.0"
+                    OffsetY="0"
+                    OffsetX="0">
+                    <Image
+                       Tapped="AlbumCoverImage_Tapped"
+                       Tag="{Binding Header.AlbumId}"
+                       ImageOpened="AlbumCoverImage_ImageOpened">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding Header.ImageUri, Mode=OneWay}"
+                                     DecodePixelType="Logical"
+                                     DecodePixelHeight="100" DecodePixelWidth="100"/>
+                        </Image.Source>
+                    </Image>
+                </toolkitcontrols:DropShadowPanel>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                    Text="{Binding Header.Album}"
+                    Style="{StaticResource SubheaderTextBlockStyle}"
+                    TextTrimming="CharacterEllipsis"
+                    FontSize="23"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                    Text="{Binding Header.Year}"
+                    Visibility="{Binding Header.Year, Converter={StaticResource YearToVisibilityConverter}}"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Margin="8,0,0,0"
+                    FontSize="18"
+                    VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="GroupHeaderTemplate">
             <Grid Margin="0,0,0,4" 
                   RightTapped="AlbumGroupHeader_RightTapped" 
@@ -73,15 +120,16 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Image Grid.Column="0" Grid.RowSpan="2"
-                       Tapped="AlbumCoverImage_Tapped"
-                       Tag="{Binding Header.AlbumId}"
-                       ImageOpened="AlbumCoverImage_ImageOpened">
-                    <Image.Source>
-                        <BitmapImage UriSource="{Binding Header.ImageUri, Mode=OneWay}"
-                                     DecodePixelType="Logical"
-                                     DecodePixelHeight="100" DecodePixelWidth="100"/>
-                    </Image.Source>
+                <Image
+                    Grid.Column="0" Grid.RowSpan="2"
+                        Tapped="AlbumCoverImage_Tapped"
+                        Tag="{Binding Header.AlbumId}"
+                        ImageOpened="AlbumCoverImage_ImageOpened">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding Header.ImageUri, Mode=OneWay}"
+                                        DecodePixelType="Logical"
+                                        DecodePixelHeight="100" DecodePixelWidth="100"/>
+                        </Image.Source>
                 </Image>
                 <TextBlock Grid.Column="1" Grid.Row="0"
                     Text="{Binding Header.Album}"
@@ -241,6 +289,7 @@
                     <VisualState.Setters>
                         <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateDesktop}"/>
                         <Setter Target="PortraitView.Visibility" Value="Visible"/>
+                        <Setter Target="ArtistSongsListViewGroupHeader.HeaderTemplate" Value="{StaticResource GroupHeaderTemplateDesktop}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Xbox">
@@ -324,7 +373,8 @@
                         SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                         IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                         ItemClick="{x:Bind ViewModel.ItemClicked }"
-                        Margin="12,0,0,0"
+                        Margin="0,0,0,0"
+                        Padding="12,0,0,0"
                         CanDragItems="True"
                         DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                 <mycontrols:AlternatingRowListView.ItemsPanel>
@@ -333,7 +383,7 @@
                     </ItemsPanelTemplate>
                 </mycontrols:AlternatingRowListView.ItemsPanel>
                 <mycontrols:AlternatingRowListView.GroupStyle>
-                    <GroupStyle 
+                    <GroupStyle x:Name="ArtistSongsListViewGroupHeader"
                         HeaderTemplate="{StaticResource GroupHeaderTemplate}"
                         HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"/>
                 </mycontrols:AlternatingRowListView.GroupStyle>

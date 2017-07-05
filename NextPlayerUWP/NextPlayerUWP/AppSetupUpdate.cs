@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.AppColors;
+using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
@@ -26,8 +27,7 @@ namespace NextPlayerUWP
 
             //ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AppTheme, true);
             var color = Windows.UI.Color.FromArgb(255, 0, 120, 215);
-            ColorsHelper ch = new ColorsHelper();
-            ch.SaveAppAccentColor(color);
+            AppAccentColors.SaveAppAccentColor(color);
             //ch.SetAccentColorShades(color);
 
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.ActionAfterDropItem, SettingsKeys.ActionAddToNowPlaying);
@@ -69,14 +69,16 @@ namespace NextPlayerUWP
                 new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Online },
             };
             ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, false);
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, false);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, true);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.SongDurationType, SettingsKeys.SongDurationTotal);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthCompact, 0.0);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNarrow, 0.0);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNormal, 250.0);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthWide, 300.0);
+            DeepLinkService deeplink = new DeepLinkService();
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.StartPage, deeplink.CreateDeepLink(AppPages.Pages.Playlists, new Dictionary<string, string>()));
 
             Debug.WriteLine("FirstRunSetup finished");
         }
@@ -277,6 +279,11 @@ namespace NextPlayerUWP
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNarrow, 0.0);
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNormal, 250.0);
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthWide, 300.0);
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.StartPage) == null)
+            {
+                DeepLinkService deeplink = new DeepLinkService();
+                ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.StartPage, deeplink.CreateDeepLink(AppPages.Pages.Playlists, new Dictionary<string, string>()));
             }
         }
 

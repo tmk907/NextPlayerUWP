@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using NextPlayerUWP.Models;
+using System;
+using System.Collections.Generic;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
@@ -11,6 +14,11 @@ namespace NextPlayerUWP.Views
     /// </summary>
     public sealed partial class Licences : Page
     {
+        public List<LicenseModel> Licenses { get; set; }
+        private string MITLicense;
+        private string ApacheLicense;
+        private string TagLibLicenseAddon;
+
         public Licences()
         {
             this.InitializeComponent();
@@ -21,9 +29,37 @@ namespace NextPlayerUWP.Views
         {
             StorageFolder appInstalledFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
             StorageFolder assets = await appInstalledFolder.GetFolderAsync("Assets");
-            StorageFile file = await assets.GetFileAsync("Licenses.txt");
-            string text = await Windows.Storage.FileIO.ReadTextAsync(file);
-            LicensesTextBlock.Text = text;
+            var fileLicenses = await assets.GetFileAsync("Licenses.json");
+            var fileMIT = await assets.GetFileAsync("MITLicense.txt");
+            var fileApache = await assets.GetFileAsync("ApacheLicense.txt");
+            var fileTagLib = await assets.GetFileAsync("TagLibLicenseAddon.txt");
+
+            string text = await FileIO.ReadTextAsync(fileLicenses);
+            MITLicense = await FileIO.ReadTextAsync(fileMIT);
+            ApacheLicense = await FileIO.ReadTextAsync(fileApache);
+            TagLibLicenseAddon = await FileIO.ReadTextAsync(fileTagLib);
+
+            var allLicenses = JsonConvert.DeserializeObject<LicensesModel>(text);
+            Licenses = allLicenses.Licenses;
+            foreach(var license in Licenses)
+            {
+                if (license.License.Type.Contains("MIT"))
+                {
+                    license.License.Content = MITLicense;
+                    if (license.Name.Contains("TagLib"))
+                    {
+                        license.License.Content += Environment.NewLine;
+                        license.License.Content += Environment.NewLine;
+                        license.License.Content += TagLibLicenseAddon;
+                    }
+                }
+                else if (license.License.Type.Contains("Apache"))
+                {
+                    license.License.Content = ApacheLicense;
+                }
+            }
+
+            LicensesListView.ItemsSource = Licenses;
         }
     }
 }

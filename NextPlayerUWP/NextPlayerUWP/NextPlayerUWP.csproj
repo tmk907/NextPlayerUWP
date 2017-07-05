@@ -17,7 +17,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>NextPlayerUWP_StoreKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>3A9C8FAD49CBA7BCDD1A341FB01158B054C98237</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>99B5231F378BB363E5126B4DF169E68236CB7AB9</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
@@ -106,6 +106,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="Assets\Licenses.json" />
     <None Include="NextPlayerUWP_StoreKey.pfx" />
     <None Include="project.json" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
@@ -124,12 +125,16 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppColors\ColorDifference.cs" />
     <Compile Include="AppGlobalUtils.cs" />
     <Compile Include="AppSetupUpdate.cs" />
-    <Compile Include="Common\AlbumArtFinder.cs" />
+    <Compile Include="AppColors\AlbumArtColors.cs" />
+    <Compile Include="AppColors\ColorConverter.cs" />
     <Compile Include="Common\AppKeyboardShortcuts.cs" />
+    <Compile Include="Common\AppPages.cs" />
     <Compile Include="Common\BackgroundTaskHelper.cs" />
-    <Compile Include="Common\ColorsHelper.cs" />
+    <Compile Include="AppColors\AppAccentColors.cs" />
+    <Compile Include="Common\DeepLinkService.cs" />
     <Compile Include="Common\DisplayRequestHelper.cs" />
     <Compile Include="Common\FoldersVMHelper.cs" />
     <Compile Include="Common\HamburgerMenuBuilder.cs" />
@@ -153,7 +158,6 @@
     <Compile Include="Common\SortingHelper.cs" />
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="Common\TagsManager.cs" />
-    <Compile Include="Common\Test2.cs" />
     <Compile Include="Common\ThemeHelper.cs" />
     <Compile Include="Common\TileManager.cs" />
     <Compile Include="Common\Tiles\ITileContentFactory.cs" />
@@ -242,6 +246,7 @@
     <Compile Include="Messages\AppColorAccent.cs" />
     <Compile Include="Messages\WindowSizeBreakpoint.cs" />
     <Compile Include="Models\ArtistItemHeader.cs" />
+    <Compile Include="Models\LicensesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddToPlaylistViewModel.cs" />
     <Compile Include="ViewModels\AlbumArtistsViewModel.cs" />
@@ -263,6 +268,7 @@
     <Compile Include="ViewModels\MusicViewModelBase.cs" />
     <Compile Include="ViewModels\NewSmartPlaylistViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingDesktopViewModel.cs" />
+    <Compile Include="ViewModels\NowPlayingPlaylistPanelViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingPlaylistViewModel.cs" />
     <Compile Include="ViewModels\BottomPlayerViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
@@ -349,6 +355,9 @@
     </Compile>
     <Compile Include="Views\NowPlayingDesktopView.xaml.cs">
       <DependentUpon>NowPlayingDesktopView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NowPlayingPlaylistPanel.xaml.cs">
+      <DependentUpon>NowPlayingPlaylistPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NowPlayingPlaylistView.xaml.cs">
       <DependentUpon>NowPlayingPlaylistView.xaml</DependentUpon>
@@ -466,7 +475,10 @@
     <Content Include="Assets\Albums\Colors\FFFF4343-min.png" />
     <Content Include="Assets\Albums\Colors\FFFF8C00-min.png" />
     <Content Include="Assets\Albums\Colors\FFFFB900-min.png" />
+    <Content Include="Assets\ApacheLicense.txt" />
+    <Content Include="Assets\MITLicense.txt" />
     <Content Include="Assets\Sounds\Empty.mp3" />
+    <Content Include="Assets\TagLibLicenseAddon.txt" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.png" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-16.png" />
     <Content Include="Assets\Visual Assets\Icons\ScaledLogoExtensions.targetsize-24.png" />
@@ -494,7 +506,6 @@
     <Content Include="Assets\Albums\AlbumCoverTR.png" />
     <Content Include="Assets\Albums\AlbumCoverTRnG.png" />
     <Content Include="Assets\Albums\AlbumCoverTRSmall.png" />
-    <Content Include="Assets\Licenses.txt" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.scale-100.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.scale-125.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledAppList.scale-150.png" />
@@ -635,6 +646,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NowPlayingDesktopView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NowPlayingPlaylistPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

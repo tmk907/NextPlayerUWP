@@ -8,6 +8,10 @@ using NextPlayerUWPDataLayer.Model;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using NextPlayerUWP.Controls;
+using NextPlayerUWP.Common;
+using NextPlayerUWP.AppColors;
+using System.Linq;
+using System.Collections;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,6 +24,7 @@ namespace NextPlayerUWP.Views
     {
         public ArtistViewModel ViewModel;
         private ButtonsForMultipleSelection selectionButtons;
+        private AlbumArtColors albumArtColors;
 
         public ArtistView()
         {
@@ -29,6 +34,7 @@ namespace NextPlayerUWP.Views
             ViewModel = (ArtistViewModel)DataContext;
             selectionButtons = new ButtonsForMultipleSelection();
             selectionButtons.ShowShareButton = true;
+            albumArtColors = new AlbumArtColors();
         }
         //~ArtistView()
         //{
@@ -104,7 +110,61 @@ namespace NextPlayerUWP.Views
         {
             var image = sender as Image;
             int id = (int)image.Tag;
-            App.Current.NavigationService.Navigate(App.Pages.Album, id);
+            App.Current.NavigationService.Navigate(AppPages.Pages.Album, id);
+        }
+
+        private async void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = ((Grid)sender);
+            Image image;
+            if (e.OriginalSource.GetType() == typeof(Image))
+            {
+                image = e.OriginalSource as Image;
+            }
+            else
+            {
+                return;
+            }
+
+            var dt = image.DataContext as IList;
+            var item = dt[0] as SongItem;
+            var color = albumArtColors.GetDominantColorFromSavedAlbumArt(item.AlbumArtUri);
+            var shadow = grid.Children.OfType<DropShadowPanel>().First();
+            shadow.Color = color;
+            shadow.ShadowOpacity = 0.7;
+        }
+
+        private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = ((Grid)sender);
+            var shadow = grid.Children.OfType<DropShadowPanel>().First();
+            shadow.ShadowOpacity = 0.0;
+        }
+
+        private void DropShadowPanel_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            var shadow = ((DropShadowPanel)sender);
+            Image image;
+            if (e.OriginalSource.GetType() == typeof(Image))
+            {
+                image = e.OriginalSource as Image;
+            }
+            else
+            {
+                return;
+            }
+
+            var dt = image.DataContext as IList;
+            var item = dt[0] as SongItem;
+            var color = albumArtColors.GetDominantColorFromSavedAlbumArt(item.AlbumArtUri);
+            shadow.Color = color;
+            shadow.ShadowOpacity = 0.7;
+        }
+
+        private void DropShadowPanel_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var shadow = ((DropShadowPanel)sender);
+            shadow.ShadowOpacity = 0.0;
         }
     }
 }

@@ -34,5 +34,11 @@ namespace NextPlayerUWP.Views
         {
             await ContentDialogNewPlaylist.ShowAsync();
         }
+
+        private void ContentDialogNewPlaylist_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            ViewModel.Name = playlistNameTB.Text;
+            ViewModel.CreateNewPlaylist();
+        }
     }
 }

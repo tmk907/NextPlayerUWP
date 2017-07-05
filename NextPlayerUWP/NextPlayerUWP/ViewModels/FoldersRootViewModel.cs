@@ -115,18 +115,19 @@ namespace NextPlayerUWP.ViewModels
             if (typeof(FolderItem) == e.ClickedItem.GetType())
             {
                 var folder = (FolderItem)e.ClickedItem;
-                NavigationService.Navigate(App.Pages.Folders, folder.Directory);
+                NavigationService.Navigate(AppPages.Pages.Folders, folder.Directory);
             }
             else if (typeof(CloudRootFolder) == e.ClickedItem.GetType())
             {
                 var folder = (CloudRootFolder)e.ClickedItem;
-                NavigationService.Navigate(App.Pages.CloudStorageFolders, CloudRootFolder.ToParameter(folder.UserId, folder.CloudType));
+                NavigationService.Navigate(AppPages.Pages.CloudStorageFolders, CloudRootFolder.ToParameter(folder.UserId, folder.CloudType));
             }
         }
 
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            sortingHelper.SortDescending = sortDescending;
             var orderSelector = sortingHelper.GetOrderBySelector();
             var query = (sortDescending) ? folders.OrderByDescending(orderSelector) : folders.OrderBy(orderSelector);
             Folders = new ObservableCollection<FolderItem>(query);

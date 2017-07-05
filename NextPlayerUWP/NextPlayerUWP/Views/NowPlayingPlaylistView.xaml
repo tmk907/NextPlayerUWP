@@ -5,11 +5,7 @@
     xmlns:local="using:NextPlayerUWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:controls="using:Template10.Controls"
-    xmlns:mycontrols="using:NextPlayerUWP.Controls"
-    xmlns:triggers="using:WindowsStateTriggers"
-    DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingPlaylistVM}"
     mc:Ignorable="d">
     <Page.Transitions>
         <TransitionCollection>
@@ -303,104 +299,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <MenuFlyout x:Key="ContextMenu">
-            <MenuFlyoutItem x:Uid="MFIAddToPlaylist" Text="Add to playlist" 
-                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=addtoplaylist}"
-                            Click="{x:Bind ViewModel.AddToPlaylist}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIDelete" Text="Delete" 
-                            Click="{x:Bind ViewModel.Delete}" CommandParameter="{Binding}"/>
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIGoToArtist" Text="Go To Artist" 
-                            Click="{x:Bind ViewModel.GoToArtist}" CommandParameter="{Binding}"
-                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=gotoartist}"/>
-            <MenuFlyoutItem x:Uid="MFIGoToAlbum" Text="Go To Album" 
-                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=gotoalbum}"
-                            Click="{x:Bind ViewModel.GoToAlbum}" CommandParameter="{Binding}" />
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details" 
-                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=showdetails}"
-                            Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit"
-                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=edittags}"
-                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
-                            Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
-        </MenuFlyout>
-        <DataTemplate x:Key="SongItemTemplateDesktop" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" 
-                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="6*"/>
-                    <ColumnDefinition Width="6*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" 
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleLeft}"/>
-                <TextBlock Grid.Column="1" 
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
-                <TextBlock Grid.Column="2" 
-                    Text="{x:Bind Album}"
-                    Style="{StaticResource SongItemStyleCenter}"/>
-                <TextBlock Grid.Column="3" 
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="SongItemTemplateMobile" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped"
-                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="0" Grid.Row="1"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="1" Grid.RowSpan="2"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="SongItemTemplateMobileWide" x:DataType="data:SongItem">
-            <Grid RightTapped="ListViewItem_RightTapped" 
-                  Background="{x:Bind Path=IsPlaying, Converter={StaticResource BoolToBackgroundHighlightConverter}, Mode=OneWay}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0"
-                    Text="{x:Bind Title}"
-                    Style="{StaticResource SongItemStyleTop}"/>
-                <TextBlock Grid.Column="0" Grid.Row="1"
-                    Text="{x:Bind Artist}"
-                    Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
-                    Text="{x:Bind Album}"
-                    Style="{StaticResource SongItemStyleBottom}"/>
-                <TextBlock Grid.Column="2" Grid.RowSpan="2"
-                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}"
-                    Style="{StaticResource SongItemStyleRight}"/>
-            </Grid>
-        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <VisualStateManager.VisualStateGroups>
+        <!--<VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="MobileWide">
                     <VisualState.StateTriggers>
@@ -410,7 +311,6 @@
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="NowPlayingPlaylistListView.Visibility" Value="Visible"/>-->
                         <Setter Target="NowPlayingPlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobileWide}"/>
                         <Setter Target="AppBarButtonSave.Visibility" Value="Visible"/>
                         <Setter Target="AppBarButtonSort.Visibility" Value="Visible"/>
@@ -424,7 +324,6 @@
                         </triggers:CompositeStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="NowPlayingPlaylistListView.Visibility" Value="Visible"/>-->
                         <Setter Target="NowPlayingPlaylistListView.ItemTemplate" Value="{StaticResource SongItemTemplateMobile}"/>
                         <Setter Target="AppBarButtonSave.Visibility" Value="Visible"/>
                         <Setter Target="AppBarButtonSort.Visibility" Value="Visible"/>
@@ -435,7 +334,6 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="SongInfoGrid.Visibility" Value="Visible"/>-->
                         <Setter Target="AppBarButtonSave.Visibility" Value="Collapsed"/>
                         <Setter Target="AppBarButtonSort.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
@@ -445,13 +343,12 @@
                         <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="SongInfoGrid.Visibility" Value="Visible"/>-->
                         <Setter Target="AppBarButtonSave.Visibility" Value="Collapsed"/>
                         <Setter Target="AppBarButtonSort.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+        </VisualStateManager.VisualStateGroups>-->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -470,7 +367,7 @@
                     Icon="SetTile"
                     x:Uid="AppBarButtonScrollToPlayingSong"
                     Label="Scroll to playing song"
-                    Click="{x:Bind ViewModel.ScrollToCurrentPlaying}"/>
+                    Click="{x:Bind PanelVM.ScrollToCurrentPlaying}"/>
                 <AppBarButton 
                     x:Uid="AppBarButtonSort"
                     x:Name="AppBarButtonSort"
@@ -484,8 +381,8 @@
                                 </Style>
                             </Flyout.FlyoutPresenterStyle>
                             <ListView
-                            ItemsSource="{x:Bind ViewModel.ComboBoxItemValues}"
-                            SelectedItem="{x:Bind ViewModel.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
+                            ItemsSource="{x:Bind PanelVM.ComboBoxItemValues}"
+                            SelectedItem="{x:Bind PanelVM.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
                             DisplayMemberPath="Label"
                             Padding="4"
                             HorizontalContentAlignment="Stretch">
@@ -510,38 +407,13 @@
                     x:Uid="AppBarButtonSave"
                     x:Name="AppBarButtonSave"
                     Label="Save"
-                    Click="{x:Bind ViewModel.SavePlaylist}"/>
+                    Click="{x:Bind PanelVM.SavePlaylist}"/>
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
-        <mycontrols:AlternatingRowListView 
+        <local:NowPlayingPlaylistPanel 
             Grid.Row="1"
-            x:Name="NowPlayingPlaylistListView"
-            EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
-            OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
-            ItemsSource="{x:Bind ViewModel.QueueVM.Songs}"
-            ItemTemplate="{StaticResource SongItemTemplateDesktop}"
-            IsItemClickEnabled="True"
-            ItemClick="{x:Bind ViewModel.ItemClicked}"  
             Margin="12,12,0,4"
-            SelectionMode="None"
-            AllowDrop="True"
-            CanDragItems="True"
-            CanReorderItems="True">
-            <mycontrols:AlternatingRowListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsStackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </mycontrols:AlternatingRowListView.ItemsPanel>
-            <mycontrols:AlternatingRowListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="Margin" Value="0,0,12,0"/>
-                    <Setter Property="Padding" Value="0,0,0,0"/>
-                </Style>
-            </mycontrols:AlternatingRowListView.ItemContainerStyle>
-        </mycontrols:AlternatingRowListView>
+            OddRowBackgroundBrush="{ThemeResource ListViewItemBackgroundSecond}"
+            EvenRowBackgroundBrush="{ThemeResource ListViewItemBackgroundNormal}"/>
     </Grid>
 </Page>

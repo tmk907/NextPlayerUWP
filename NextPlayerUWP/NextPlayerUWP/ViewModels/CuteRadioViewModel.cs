@@ -288,7 +288,7 @@ namespace NextPlayerUWP.ViewModels
                 Name = item.Title,
                 StreamUrl = item.Source,
             };
-            NavigationService.Navigate(App.Pages.AddToPlaylist, radio.GetParameter());
+            NavigationService.Navigate(AppPages.Pages.AddToPlaylist, radio.GetParameter());
         }
 
         public async void AddToFavourites(object sender, RoutedEventArgs e)

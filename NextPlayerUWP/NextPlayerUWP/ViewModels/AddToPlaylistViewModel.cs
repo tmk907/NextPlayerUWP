@@ -67,6 +67,11 @@ namespace NextPlayerUWP.ViewModels
         {
             Loading = true;
             PlaylistItem p = (PlaylistItem)e.ClickedItem;
+            await AddToPlaylist(p);
+        }
+
+        private async Task AddToPlaylist(PlaylistItem p)
+        {
             string value = values[1];
             string userId;
             string folderId;
@@ -143,7 +148,7 @@ namespace NextPlayerUWP.ViewModels
                     var temp = App.GetFromCache();
                     SongItemsFactory factory = new SongItemsFactory();
                     songs = await factory.GetSongItems(temp);
-                    await DatabaseManager.Current.AddToPlaylist(p.Id, songs); 
+                    await DatabaseManager.Current.AddToPlaylist(p.Id, songs);
                     App.ClearCache();
                     break;
                 default:
@@ -155,12 +160,20 @@ namespace NextPlayerUWP.ViewModels
             NavigationService.GoBack();
         }
 
-        public async void Save()
+        public async void CreateNewPlaylist()
         {
             int id = DatabaseManager.Current.InsertPlainPlaylist(name);
             var playlist = await DatabaseManager.Current.GetPlainPlaylistAsync(id);
-            Playlists.Add(playlist);
+            if (playlists.Count == 0)
+            {
+                Playlists.Add(playlist);
+            }
+            else
+            {
+                Playlists.Insert(0, playlist);
+            }
             Name = "";
+            await AddToPlaylist(playlist);
         }
     }
 }

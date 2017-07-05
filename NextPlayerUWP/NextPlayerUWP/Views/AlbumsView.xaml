@@ -8,9 +8,8 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:data="using:NextPlayerUWPDataLayer.Model"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:toolkitcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=AlbumsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -55,8 +54,10 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="4,0,4,4"/>
         </Style>
-        <DataTemplate x:Key="AlbumItemTemplate" x:DataType="data:AlbumItem">
-            <Grid RightTapped="ListViewItem_RightTapped" 
+        <DataTemplate x:Key="AlbumItemTemplateDesktop" x:DataType="data:AlbumItem">
+            <Grid RightTapped="ListViewItem_RightTapped"
+                  PointerExited="Grid_PointerExited"
+                  PointerEntered="Grid_PointerEntered"
                   Background="Transparent"
                   Width="140" Height="216">
                 <Grid.RowDefinitions>
@@ -78,27 +79,69 @@
                     mycontrols:ImageExtensions.DecodePixelHeight="132"
                     mycontrols:ImageExtensions.DecodableUriSource="{x:Bind ImageUri}" 
                 />-->
-                <Image Grid.Row="0" 
-                       Width="132" 
-                       Height="132" 
-                       Margin="4" 
-                       Opacity="0" 
-                       ImageOpened="Image_ImageOpened">
-                    <Image.Source>
-                        <BitmapImage UriSource="{x:Bind ImageUri}"
-                                     DecodePixelType="Logical"
-                                     DecodePixelHeight="132" 
-                                     DecodePixelWidth="132"/>
-                    </Image.Source>
-                </Image>
+                <toolkit:DropShadowPanel 
+                    BlurRadius="36.0"
+                    ShadowOpacity="0.0"
+                    OffsetY="8"
+                    OffsetX="4"
+                    Grid.Row="0">
+                    <Image 
+                        Width="132" 
+                        Height="132" 
+                        Margin="4" 
+                        Opacity="0" 
+                        ImageOpened="Image_ImageOpened">
+                        <Image.Source>
+                            <BitmapImage UriSource="{x:Bind ImageUri}"
+                                         DecodePixelType="Logical"
+                                         DecodePixelHeight="132" 
+                                         DecodePixelWidth="132"/>
+                        </Image.Source>
+                    </Image>
+                </toolkit:DropShadowPanel>
                 <TextBlock Grid.Row="1"
                     Text="{x:Bind Album}"
-                           x:Phase="0"
+                    x:Phase="0"
                     Style="{StaticResource AlbumNameStyle}"
                     />
                 <TextBlock Grid.Row="2"
                     Text="{x:Bind AlbumArtist}"
-                           x:Phase="0"
+                    x:Phase="0"
+                    Style="{StaticResource AlbumArtistStyle}"
+                    />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="AlbumItemTemplate" x:DataType="data:AlbumItem">
+            <Grid RightTapped="ListViewItem_RightTapped"
+                  Background="Transparent"
+                  Width="140" Height="216">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="136"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Image 
+                    Grid.Row="0"
+                    Width="132" 
+                    Height="132" 
+                    Margin="4" 
+                    Opacity="0" 
+                    ImageOpened="Image_ImageOpened">
+                    <Image.Source>
+                        <BitmapImage UriSource="{x:Bind ImageUri}"
+                                        DecodePixelType="Logical"
+                                        DecodePixelHeight="132" 
+                                        DecodePixelWidth="132"/>
+                    </Image.Source>
+                </Image>
+                <TextBlock Grid.Row="1"
+                    Text="{x:Bind Album}"
+                    x:Phase="0"
+                    Style="{StaticResource AlbumNameStyle}"
+                    />
+                <TextBlock Grid.Row="2"
+                    Text="{x:Bind AlbumArtist}"
+                    x:Phase="0"
                     Style="{StaticResource AlbumArtistStyle}"
                     />
             </Grid>
@@ -228,6 +271,7 @@
                         <Setter Target="ZoomedOutListView.ItemTemplate" Value="{StaticResource ZoomedOutItemsTemplate}"/>
                         <Setter Target="ZoomedOutListView.ItemContainerStyle" Value="{StaticResource ZoomedOutItemContainerStyle}"/>
                         <Setter Target="ZoomedOutListView.ItemsPanel" Value="{StaticResource ZoomedOutItemsPanelTemplateDesktop}"/>
+                        <Setter Target="AlbumsListView.ItemTemplate" Value="{StaticResource AlbumItemTemplateDesktop}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Xbox">
@@ -337,9 +381,10 @@
                             IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
                             ItemClick="{x:Bind ViewModel.ItemClicked }"
                             ShowsScrollingPlaceholders="False"
-                            Margin="12,0,0,0"
+                            Margin="0,0,0,0"
+                            Padding="12,0,0,0"
                             CanDragItems="True"
-                            DragItemsStarting="{x:Bind ViewModel.DragStarting}" >
+                            DragItemsStarting="{x:Bind ViewModel.DragStarting}">
                             <mycontrols:MyListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsWrapGrid Orientation="Horizontal"/>

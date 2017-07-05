@@ -1,0 +1,156 @@
+{
+	"licenses": [{
+			"name": "Color Thief",
+			"site": "https://github.com/KSemenenko/ColorThief",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2015 Kos",
+				"content": ""
+			}
+		},
+		{
+			"name": "Dropbox.NET",
+			"site": "https://github.com/dropbox",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2015 Dropbox Inc., http://www.dropbox.com/",
+				"content": ""
+			}
+		},
+		{
+			"name": "Easy.MessageHub",
+			"site": "https://github.com/NimaAra/Easy.MessageHub",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "2016 Nima Ara",
+				"content": ""
+			}
+		},
+		{
+			"name": "HockeySDK.UWP",
+			"site": "https://github.com/bitstadium/HockeySDK-Windows",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) Microsoft Corporation",
+				"content": ""
+			}
+		},
+		{
+			"name": "Json.NET",
+			"site": "http://www.newtonsoft.com/json",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2007 James Newton-Kin",
+				"content": ""
+			}
+		},		
+		{
+			"name": "MVVM Light Toolkit",
+			"site": "http://www.galasoft.ch/mvvm",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "",
+				"content": ""
+			}
+		},		
+		{
+			"name": "OneDrive SDK for CSharp",
+			"site": "https://github.com/OneDrive/onedrive-sdk-csharp",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2015 Microsoft",
+				"content": ""
+			}
+		},
+		{
+			"name": "Playlists.NET",
+			"site": "https://github.com/tmk907/Playlists.NET",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2017 tmk907",
+				"content": ""
+			}
+		},
+		{
+			"name": "Radio stations data come from cuteRadio Data API ",
+			"site": "http://marxoft.co.uk/projects/cuteradio-api/",
+			"license": {
+				"type": "",
+				"copyright": "",
+				"content": ""
+			}
+		},
+		{
+			"name": "SimpleCrossfadingImageUWP",
+			"site": "https://github.com/tmk907/SimpleCrossfadingImageUWP",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2017 tmk907",
+				"content": ""
+			}
+		},
+		{
+			"name": "sqlite-net",
+			"site": "https://github.com/praeclarum/sqlite-net",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2009-2012 Krueger Systems, Inc.",
+				"content": ""
+			}
+		},
+		{
+			"name": "TagLib.Portable",
+			"site": "https://github.com/timheuer/taglib-sharp-portable",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2014 Tim Heuer",
+				"content": ""
+			}
+		},
+		{
+			"name": "Template10",
+			"site": "https://github.com/Windows-XAML/Template10",
+			"license": {
+				"type": "Apache License",
+				"copyright": "",
+				"content": ""
+			}
+		},
+		{
+			"name": "UWPMusicPlayerExtensions",
+			"site": "https://github.com/tmk907/UWPMusicPlayerExtensions",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2017 tmk907",
+				"content": ""
+			}
+		},			
+		{
+			"name": "UWP Community Toolkit",
+			"site": "https://github.com/Microsoft/UWPCommunityToolkit/",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) Microsoft Corporation All rights reserved.",
+				"content": ""
+			}
+		},
+		{
+			"name": "WindowsStateTriggers",
+			"site": "https://github.com/dotMorten/WindowsStateTriggers",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) Morten Nielsen",
+				"content": ""
+			}
+		},	
+		{
+			"name": "WriteableBitmapEx",
+			"site": "https://github.com/teichgraf/WriteableBitmapEx",
+			"license": {
+				"type": "The MIT License (MIT)",
+				"copyright": "Copyright (c) 2009-2015 Rene Schulte",
+				"content": ""
+			}
+		},			
+	]
+}

@@ -33,7 +33,9 @@
                     <Color x:Key="UserAccentColor">#FFFFA500</Color>
                     <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="UserAccentBrushTr" Color="{StaticResource UserAccentColorTr}"/>
-                    
+                    <SolidColorBrush x:Key="AlbumArtAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="AlbumArtAccentBrushTr" Color="{StaticResource UserAccentColor}"/>
+
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlForegroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
@@ -98,7 +100,9 @@
                     <Color x:Key="UserAccentColor">#FF00B7C3</Color>
                     <SolidColorBrush x:Key="UserAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="UserAccentBrushTr" Color="{StaticResource UserAccentColorTr}"/>
-                    
+                    <SolidColorBrush x:Key="AlbumArtAccentBrush" Color="{StaticResource UserAccentColor}"/>
+                    <SolidColorBrush x:Key="AlbumArtAccentBrushTr" Color="{StaticResource UserAccentColor}"/>
+
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{StaticResource UserAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlForegroundAccentBrush" Color="{StaticResource UserAccentColor}"/>

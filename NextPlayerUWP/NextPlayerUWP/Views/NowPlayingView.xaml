@@ -8,7 +8,6 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:imagecontrol="using:SimpleCrossfadingImageUWP"
-    xmlns:triggers="using:WindowsStateTriggers"
     xmlns:tconverters="using:Template10.Converters"
     DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingVM}"
     mc:Ignorable="d"
@@ -625,14 +624,54 @@
                 Content="Now playing" 
                 VisualStateNarrowMinWidth="0" 
                 VisualStateNormalMinWidth="720">
-
             <controls:PageHeader.SecondaryCommands>
-                <AppBarButton
-                x:Uid="AppBarButtonQueue"
-                Icon="List"
-                Label="Queue"
-                Click="{x:Bind ViewModel.GoToNowPlayingPlaylist}"
-                />
+                <AppBarButton 
+                    Icon="SetTile"
+                    x:Uid="AppBarButtonScrollToPlayingSong"
+                    Visibility="{x:Bind ViewModel.ShowNowPlayingListButtons, Mode=OneWay}"
+                    Label="Scroll to playing song"
+                    Click="{x:Bind PanelVM.ScrollToCurrentPlaying}"/>
+                <AppBarButton 
+                    x:Uid="AppBarButtonSort"
+                    x:Name="AppBarButtonSort"
+                    Visibility="{x:Bind ViewModel.ShowNowPlayingListButtons, Mode=OneWay}"
+                    Icon="Sort" 
+                    Label="Sort">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="Padding" Value="0"/>
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <ListView
+                            ItemsSource="{x:Bind PanelVM.ComboBoxItemValues}"
+                            SelectedItem="{x:Bind PanelVM.SelectedComboBoxItem, Converter={StaticResource ComboBoxItemValueConverter}, Mode=TwoWay}"
+                            DisplayMemberPath="Label"
+                            Padding="4"
+                            HorizontalContentAlignment="Stretch">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="0"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="MinHeight" Value="10"/>
+                                        <Setter Property="Height" Value="30"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton 
+                    Icon="Save"
+                    x:Uid="AppBarButtonSavePlaylist"
+                    x:Name="AppBarButtonSave"
+                    Label="Save playlist"
+                    Click="{x:Bind PanelVM.SavePlaylist}"/>
                 <AppBarButton
                     x:Uid="ButtonSearchLyrics"
                     Label="Search lyrics"
@@ -758,28 +797,35 @@
                 HorizontalAlignment="Center"
                 Title="Search lyrics"
                 PrimaryButtonText="Search"
-                PrimaryButtonClick="{x:Bind ViewModel.SearchLyrics}"
+                PrimaryButtonClick="ContentDialogSearchLyrics_PrimaryButtonClick"
                 SecondaryButtonText="Cancel"
                 VerticalContentAlignment="Stretch"
                 MaxWidth="300">
                 <ContentDialog.Content>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock x:Uid="TBArtist"
+                        <TextBlock 
+                            x:Uid="TBArtist"
                             Margin="0,4,4,4"
                             Text="Artist"/>
                         <TextBox
+                            x:Name="ArtistSearch"
                             Margin="0,4,4,0"
                             Text="{x:Bind ViewModel.ArtistSearch, Mode=TwoWay}"/>
-                        <TextBlock x:Uid="TBTitle"
+                        <TextBlock 
+                            x:Uid="TBTitle"
                             Margin="0,4,4,4"
                             Text="Title"/>
                         <TextBox
+                            x:Name="TitleSearch"
                             Margin="0,4,4,0"
                             Text="{x:Bind ViewModel.TitleSearch, Mode=TwoWay}"/>
                     </StackPanel>
                 </ContentDialog.Content>
             </ContentDialog>
-            <Pivot Grid.Row="0" Style="{StaticResource NowPlayingPivotStyle}">
+            <Pivot Grid.Row="0" 
+                   Style="{StaticResource NowPlayingPivotStyle}"
+                   SelectionChanged="Pivot_SelectionChanged"
+                   SelectedIndex="{x:Bind ViewModel.PivotSelectedIndex, Mode=TwoWay}">
                 <PivotItem>
                     <Grid Grid.Column="0">
                         <Grid.RowDefinitions>
@@ -927,6 +973,12 @@
                 </PivotItem>
                 <PivotItem>
                     <local:LyricsPanel/>
+                </PivotItem>
+                <PivotItem>
+                    <local:NowPlayingPlaylistPanel
+                        x:Name="NowPlayingPlaylistPanel"
+                        x:DeferLoadStrategy="Lazy"
+                        Margin="0,8,0,0"/>
                 </PivotItem>
             </Pivot>
             <Grid Grid.Row="1">

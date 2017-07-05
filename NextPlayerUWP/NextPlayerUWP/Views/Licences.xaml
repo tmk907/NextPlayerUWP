@@ -6,6 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Template10.Controls"
+    xmlns:models="using:NextPlayerUWP.Models"
+    xmlns:uwptoolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
     mc:Ignorable="d">
     <Page.Transitions>
         <TransitionCollection>
@@ -32,10 +35,55 @@
 			VisualStateNormalMinWidth="720">
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1" Margin="12,12,12,4">
-            <ScrollViewer>
-                <TextBlock x:Name="LicensesTextBlock"
-                           TextWrapping="WrapWholeWords"/>
-            </ScrollViewer>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                TextWrapping="WrapWholeWords"
+                Text="This application uses following open source libraries:"
+            />
+            <ListView
+                x:Name="LicensesListView"
+                Grid.Row="1"
+                ItemContainerStyle="{StaticResource ListViewItemContainerStyle4}"
+                SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:LicenseModel">
+                        <uwptoolkit:Expander
+                            Header="{x:Bind Name}"
+                            MinWidth="192"
+                            IsExpanded="False">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <HyperlinkButton
+                                    Grid.Row="0"
+                                    Margin="0,4,0,4"
+                                    Content="{x:Bind Site}"
+                                    NavigateUri="{x:Bind Site}"/>
+                                <TextBlock 
+                                    Grid.Row="1"
+                                    Margin="0,8,0,8"
+                                    Text="{x:Bind License.Type}"/>
+                                <TextBlock 
+                                    Grid.Row="2"
+                                    Margin="0,0,0,8"
+                                    Text="{x:Bind License.Copyright}"/>
+                                <TextBlock 
+                                    Grid.Row="3"
+                                    TextWrapping="WrapWholeWords"
+                                    Text="{x:Bind License.Content}"/>
+                            </Grid>
+                        </uwptoolkit:Expander>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </Grid>
 </Page>

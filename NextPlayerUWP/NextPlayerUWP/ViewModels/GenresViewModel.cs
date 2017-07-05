@@ -70,7 +70,7 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.Playlist, ((GenreItem)e.ClickedItem).GetParameter());
+            NavigationService.Navigate(AppPages.Pages.Playlist, ((GenreItem)e.ClickedItem).GetParameter());
         }
 
         private async void App_SongUpdated(int id)
@@ -87,6 +87,7 @@ namespace NextPlayerUWP.ViewModels
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            sortingHelper.SortDescending = sortDescending;
             var orderSelector = sortingHelper.GetOrderBySelector();
             var query = (sortDescending) ? genres.OrderByDescending(orderSelector) : genres.OrderBy(orderSelector);
             Genres = new ObservableCollection<GenreItem>(query);

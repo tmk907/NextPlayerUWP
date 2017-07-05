@@ -7,6 +7,7 @@ using Windows.UI.ViewManagement;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWP.Common;
 using System.Threading.Tasks;
+using NextPlayerUWP.AppColors;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -19,7 +20,6 @@ namespace NextPlayerUWP.Views
     {
         private Uri imageUri;
         NowPlayingDesktopViewModel ViewModel;
-        private ColorsHelper colorsHelper;
 
         public NowPlayingDesktopView()
         {
@@ -28,7 +28,6 @@ namespace NextPlayerUWP.Views
             ViewModel = (NowPlayingDesktopViewModel)DataContext;
             this.Loaded += NowPlayingDesktopView_Loaded;
             this.Unloaded += NowPlayingDesktopView_Unloaded;
-            colorsHelper = new ColorsHelper();
         }
         //~NowPlayingDesktopView()
         //{
@@ -72,9 +71,9 @@ namespace NextPlayerUWP.Views
 
         private Uri GetAlbumUri()
         {
-            if (ViewModel.QueueVM.CoverUri == new Uri(AppConstants.SongCoverBig))
+            if (ViewModel.QueueVM.CoverUri == AlbumArtColors.DefaultAlbumArtUri)
             {
-                return new Uri(colorsHelper.GetAlbumCoverAssetWithCurrentAccentColor());
+                return AlbumArtColors.GetAlbumCoverAssetWithCurrentAccentColor();
             }
             else
             {

@@ -45,7 +45,12 @@ namespace NextPlayerUWP.ViewModels
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
             await Dispatcher.DispatchAsync(async () =>
             {
-                if (song.SongId != prevId) await lyricsPanelVM.ChangeLyrics(song);
+                if (song.SongId != prevId)
+                {
+                    ArtistSearch = song.Artist;
+                    TitleSearch = song.Title;
+                    await lyricsPanelVM.ChangeLyrics(song);
+                }
             });
         }
 

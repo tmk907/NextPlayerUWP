@@ -155,7 +155,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 var folder = ((CloudFolder)e.ClickedItem);
                 //FolderName += @"\" + folder.Folder;
-                NavigationService.Navigate(App.Pages.CloudStorageFolders, folder.Id);
+                NavigationService.Navigate(AppPages.Pages.CloudStorageFolders, folder.Id);
             }
         }
 
@@ -180,6 +180,7 @@ namespace NextPlayerUWP.ViewModels
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            sortingHelper.SortDescending = sortDescending;
             var orderSelector = sortingHelper.GetOrderBySelector();
 
             var folderItems = items.Where(i => i.GetType() == typeof(CloudFolder));

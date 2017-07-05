@@ -91,12 +91,13 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Navigate(App.Pages.AlbumArtist, ((AlbumArtistItem)e.ClickedItem).AlbumArtistId);
+            NavigationService.Navigate(AppPages.Pages.AlbumArtist, ((AlbumArtistItem)e.ClickedItem).AlbumArtistId);
         }
 
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            sortingHelper.SortDescending = sortDescending;
             var orderSelector = sortingHelper.GetOrderBySelector();
             var groupSelector = sortingHelper.GetGroupBySelector();
             string propertyName = sortingHelper.GetPropertyName();

@@ -18,6 +18,7 @@ namespace NextPlayerUWPDataLayer.Enums
             public static readonly string LeastRecentlyAdded = "LeastRecentlyAdded";
             public static readonly string MostRecentlyPlayed = "MostRecentlyPlayed";
             public static readonly string LeastRecentlyPlayed = "LeastRecentlyPlayed";
+            public static readonly string MostRecentlyCreated = "MostRecentlyCreated";
         }
 
         public enum ItemType
@@ -44,10 +45,11 @@ namespace NextPlayerUWPDataLayer.Enums
             public static readonly string FilePath = "FilePath";
             public static readonly string DateAdded = "DateAdded";
             public static readonly string LastPlayed = "LastPlayed";
+            public static readonly string DateCreated = "DateCreated";
 
             public static bool IsDateType(string value)
             {
-                return (value == SPUtility.Item.DateAdded || value == SPUtility.Item.LastPlayed);
+                return (value == SPUtility.Item.DateAdded || value == SPUtility.Item.LastPlayed || value == SPUtility.Item.DateCreated);
             }
 
             public static bool IsTimeType(string value)
@@ -114,7 +116,8 @@ namespace NextPlayerUWPDataLayer.Enums
             {SortBy.MostRecentlyAdded,"DateAdded DESC"},
             {SortBy.LeastRecentlyAdded,"DateAdded"},
             {SortBy.MostRecentlyPlayed,"LastPlayed DESC"},
-            {SortBy.LeastRecentlyPlayed,"LastPlayed"}
+            {SortBy.LeastRecentlyPlayed,"LastPlayed"},
+            {SortBy.MostRecentlyCreated, "DateCreated DESC" }
         };
 
         internal static Dictionary<string, string> SPConditionItem = new Dictionary<string, string>()
@@ -131,6 +134,7 @@ namespace NextPlayerUWPDataLayer.Enums
             {Item.PlayCount, "PlayCount"},
             {Item.DateAdded, "DateAdded"},
             {Item.LastPlayed, "LastPlayed"},
+            {Item.DateCreated, "DateCreated" },
             {Item.FilePath, "Path" }
         };
 

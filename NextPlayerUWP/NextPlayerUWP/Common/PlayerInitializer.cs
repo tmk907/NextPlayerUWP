@@ -41,7 +41,11 @@ namespace NextPlayerUWP.Common
             {
                 return;
             }
-            if (!isInitialized && initializationStarted) throw new System.Exception("PlayerInitializer failed");
+            if (!isInitialized && initializationStarted)
+            {
+                //throw new System.Exception("PlayerInitializer failed");
+                TelemetryAdapter.TrackEvent("PlayerInitializationStarted2");
+            }
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() Start");
             System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
             s.Start();
@@ -51,7 +55,6 @@ namespace NextPlayerUWP.Common
             await PlaybackService.Instance.Initialize();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() Middle");
             LoadShellControls();
-            DelayAlbumArtFinder();
             s.Stop();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() End {0}ms", s.ElapsedMilliseconds);
             isInitialized = true;
@@ -101,7 +104,6 @@ namespace NextPlayerUWP.Common
             if (!isInitialized)
             {
                 LoadShellControls();
-                DelayAlbumArtFinder();
             }
             s.Stop();
             System.Diagnostics.Debug.WriteLine("PlayerInitializer.Init() End {0}ms", s.ElapsedMilliseconds);
@@ -112,12 +114,6 @@ namespace NextPlayerUWP.Common
         {
             if (Window.Current == null || Window.Current.Content == null) return;
             ((Shell)((ModalDialog)Window.Current.Content).Content).LoadControls();
-        }
-
-        private async Task DelayAlbumArtFinder()
-        {
-            await Task.Delay(2000);
-            await App.AlbumArtFinder.StartLooking().ConfigureAwait(false);
         }
 
         private async Task<MusicItem> GetFirstItem(IReadOnlyList<IStorageItem> files)

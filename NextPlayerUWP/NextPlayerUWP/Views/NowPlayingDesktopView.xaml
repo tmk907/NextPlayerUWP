@@ -8,7 +8,6 @@
     xmlns:controls="using:Template10.Controls"
     xmlns:mycontrols="using:NextPlayerUWP.Controls"
     xmlns:imagecontrol="using:SimpleCrossfadingImageUWP"
-    xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingDesktopVM}"
     mc:Ignorable="d">
     <Page.Transitions>

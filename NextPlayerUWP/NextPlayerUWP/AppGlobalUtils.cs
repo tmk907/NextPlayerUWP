@@ -35,16 +35,6 @@ namespace NextPlayerUWP
 
         public static bool IsLightThemeOn = false;
 
-        private static AlbumArtFinder albumArtFinder;
-        public static AlbumArtFinder AlbumArtFinder
-        {
-            get
-            {
-                if (albumArtFinder == null) albumArtFinder = new AlbumArtFinder();
-                return albumArtFinder;
-            }
-        }
-
         private static FileFormatsHelper fileFormatsHelper;
         public static FileFormatsHelper FileFormatsHelper
         {
@@ -71,15 +61,26 @@ namespace NextPlayerUWP
             }
         }
 
-        public static bool IsBottomPlayerVMCreated = false;
+        private static AppPages appPages;
+        public static AppPages AppPages
+        {
+            get
+            {
+                if (appPages == null)
+                {
+                    appPages = new AppPages();
+                }
+                return appPages;
+            }
+        }
+
+        public static bool mobileNowPlaying = false;
         public static void OnNavigatedToNewView(bool bottomPlayerVisible, bool isNowPlayingDesktopActive = false)
         {
-            if (IsBottomPlayerVMCreated)
-            {
-                ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
-                vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
-                vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
-            }
+            ViewModels.ViewModelLocator vml = new ViewModels.ViewModelLocator();
+            vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
+            vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
+            mobileNowPlaying = !isNowPlayingDesktopActive && !bottomPlayerVisible;
         }
 
         public static async Task ChangeStatusBarVisibility()
