@@ -46,8 +46,7 @@ namespace NextPlayerUWPDataLayer.Services
             var notAvailable = songs.Where(so => so.IsAvailable == 0).ToList();
             await DatabaseManager.Current.UpdateSongsTableAsync(notAvailable);
             songs = songs.Where(so => so.IsAvailable > 0 && so.AlbumArt.StartsWith("ms-appdata:///local/Songs/")).ToList();
-
-            StorageFolder songsFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync("Songs");
+            StorageFolder songsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Songs", CreationCollisionOption.OpenIfExists);
             StorageFolder albumArts = await ApplicationData.Current.LocalFolder.CreateFolderAsync("AlbumArts", CreationCollisionOption.OpenIfExists);
             var files = await songsFolder.GetFilesAsync();
 
