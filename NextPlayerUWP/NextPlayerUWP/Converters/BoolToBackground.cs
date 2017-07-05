@@ -10,7 +10,21 @@ namespace NextPlayerUWP.Converters
         {
             if ((bool)value)
             {
-                return App.Current.Resources["UserAccentBrushTr"] as SolidColorBrush;
+                foreach (var dict in App.Current.Resources.ThemeDictionaries)
+                {
+                    var theme = dict.Value as Windows.UI.Xaml.ResourceDictionary;
+                    if (dict.Key as string == "Light" && App.IsLightThemeOn)
+                    {
+                        var a = theme["AlbumArtAccentBrushTr"] as SolidColorBrush;
+                        return a;
+                    }
+                    else if (dict.Key as string == "Dark" && !App.IsLightThemeOn)
+                    {
+                        var a = theme["AlbumArtAccentBrushTr"] as SolidColorBrush;
+                        return a;
+                    }
+                }
+                return App.Current.Resources["AlbumArtAccentBrushTr"] as SolidColorBrush;
             }
             else
             {

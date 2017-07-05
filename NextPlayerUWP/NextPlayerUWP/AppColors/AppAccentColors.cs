@@ -84,13 +84,15 @@ namespace NextPlayerUWP.AppColors
                 ((SolidColorBrush)theme["UserAccentBrush"]).Color = color;
                 ((SolidColorBrush)theme["AlbumArtAccentBrush"]).Color = albumArtAccent;
 
-                byte transparency = 128;
+                byte transparency = 60;
                 if (dict.Key as string == "Dark")
                 {
-                    transparency = 200;
+                    transparency = 240;
                 }
                 var colorTr = Color.FromArgb(transparency, color.R, color.G, color.B);
                 ((SolidColorBrush)theme["UserAccentBrushTr"]).Color = colorTr;
+                colorTr = Color.FromArgb(transparency, albumArtAccent.R, albumArtAccent.G, albumArtAccent.B);
+                ((SolidColorBrush)theme["AlbumArtAccentBrushTr"]).Color = colorTr;
 
                 ((SolidColorBrush)theme["SystemControlBackgroundAccentBrush"]).Color = color;
                 ((SolidColorBrush)theme["SystemControlDisabledAccentBrush"]).Color = color;
