@@ -169,6 +169,7 @@ namespace NextPlayerUWP.ViewModels
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            sortingHelper.SortDescending = sortDescending;
 
             var orderSelector = sortingHelper.GetOrderBySelector();
             var groupSelector = sortingHelper.GetGroupBySelector();

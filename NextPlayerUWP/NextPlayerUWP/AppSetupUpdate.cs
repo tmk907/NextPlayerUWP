@@ -69,8 +69,8 @@ namespace NextPlayerUWP
                 new MenuButtonItem() { ShowButton = true, PageType = MenuItemType.Online },
             };
             ApplicationSettingsHelper.SaveData(SettingsKeys.MenuEntries, menuEntries);
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, false);
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AccentFromAlbumArt, true);
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.AlbumArtInBackground, false);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.MediaScanUseIndexer, true);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.SongDurationType, SettingsKeys.SongDurationTotal);
             ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthCompact, 0.0);

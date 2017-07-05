@@ -265,6 +265,7 @@ namespace NextPlayerUWP.ViewModels
         protected override void SortMusicItems()
         {
             sortingHelper.SelectedSortOption = selectedComboBoxItem;
+            sortingHelper.SortDescending = sortDescending;
             var orderSelector = sortingHelper.GetOrderBySelector();
             var query = (sortDescending)? playlist.OrderByDescending(orderSelector) : playlist.OrderBy(orderSelector);
             Playlist = new ObservableCollection<SongItem>(query);
