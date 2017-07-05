@@ -1044,4 +1044,7 @@
   <data name="TBChooseStartupScreen.Text" xml:space="preserve">
     <value>Startup screen</value>
   </data>
+  <data name="AlbumArtColor" xml:space="preserve">
+    <value>اللون</value>
+  </data>
 </root>

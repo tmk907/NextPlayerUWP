@@ -129,7 +129,7 @@ namespace NextPlayerUWPDataLayer.Model
                 }
             }
         }
-
+      
         public AlbumItem()
         {
             albumId = -1;
@@ -144,6 +144,7 @@ namespace NextPlayerUWPDataLayer.Model
             IsImageSet = true;
             imageUri = new Uri(imagePath);
             lastAdded = DateTime.MinValue;
+            //SetAlbumArtColor();
         }
 
         public AlbumItem(AlbumsTable table)
@@ -176,6 +177,7 @@ namespace NextPlayerUWPDataLayer.Model
             }
             imageUri = new Uri(imagePath);
             lastAdded = table.LastAdded;
+            //SetAlbumArtColor();
         }
 
         public override string ToString()
@@ -203,5 +205,65 @@ namespace NextPlayerUWPDataLayer.Model
         {
             return MusicItemTypes.album + separator + albumParam + separator + albumArtist;
         }
+
+        //private double? albumArtColorSort = null;
+        //public double AlbumArtColorSort
+        //{
+        //    get
+        //    {
+        //        if (albumArtColorSort == null)
+        //        {
+        //            if (albumArtColor == Int32.MaxValue)
+        //            {
+        //                albumArtColorSort = albumArtColor;
+        //            }
+        //            else
+        //            {
+
+        //                albumArtColorSort = Math.Sqrt(.241 * Images.PaletteUWP.ColorHelpers.Red(albumArtColor)
+        //                    + .691 * Images.PaletteUWP.ColorHelpers.Green(albumArtColor)
+        //                    + .068 * Images.PaletteUWP.ColorHelpers.Blue(albumArtColor));
+
+        //                //float[] hsl = new float[3];
+        //                //Images.PaletteUWP.ColorHelpers.ColorToHSL(albumArtColor, hsl);
+        //                //albumArtColorSort = (int)(hsl[0] * 10000000);
+        //            }
+        //        }
+        //        return albumArtColorSort ?? Int32.MaxValue;
+        //    }
+        //}
+
+
+        //private int albumArtColor;
+        //public string AlbumArtColor { get { return albumArtColor.ToString(); } }
+
+        //private void SetAlbumArtColor()
+        //{
+        //    if (imagePath == AppConstants.AlbumCover || imagePath == "")
+        //    {
+        //        albumArtColor = Int32.MaxValue;
+        //    }
+        //    else
+        //    {
+        //        var parts = imagePath.ToString().Split('+');
+        //        if (parts.Length == 2 && !String.IsNullOrWhiteSpace(parts[1]))
+        //        {
+        //            string i = parts[1].Replace(".jpg", "");
+        //            int c = 0;
+        //            if (Int32.TryParse(i, out c))
+        //            {
+        //                albumArtColor = c;
+        //            }
+        //            else
+        //            {
+        //                albumArtColor = Int32.MaxValue;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            albumArtColor = Int32.MaxValue;
+        //        }
+        //    }
+        //}
     }
 }
