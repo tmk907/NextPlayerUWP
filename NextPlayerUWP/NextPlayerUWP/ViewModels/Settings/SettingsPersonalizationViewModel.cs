@@ -40,7 +40,19 @@ namespace NextPlayerUWP.ViewModels.Settings
             foreach (var code in Windows.Globalization.ApplicationLanguages.ManifestLanguages)
             {
                 string name = "unknown";
-                languageDescriptions.TryGetValue(code.Substring(0, 2), out name);
+                string langMain = code.Substring(0, 2);
+                if (langMain == "pt")
+                {
+                    if (code == "pt-BR")
+                    {
+                        langMain = "pt-BR";
+                    }
+                    else
+                    {
+                        langMain = "pt-PT";
+                    }
+                }
+                languageDescriptions.TryGetValue(langMain, out name);
                 Languages.Add(new LanguageItem() { Code = code, Name = name });
             }
             string primaryCode = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
@@ -434,7 +446,8 @@ namespace NextPlayerUWP.ViewModels.Settings
             {"id","Bahasa Indonesia" },
             {"it","Italiano" },
             {"pl","Polski" },
-            {"pt","Português" },
+            {"pt-PT","Português" },
+            {"pt-BR","Português brasileiro" },
             {"ru","русский" },
         };
 
