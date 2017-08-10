@@ -129,7 +129,7 @@ namespace NextPlayerUWP.ViewModels.Settings
                 new TranslationEntry()
                 {
                     Language = "German",
-                    Translators = new List<string>(){ "buagseitei", "Sebster" }
+                    Translators = new List<string>(){ "brullsker", "buagseitei", "Sebster" }
                 },
                 new TranslationEntry()
                 {
@@ -149,6 +149,11 @@ namespace NextPlayerUWP.ViewModels.Settings
                 new TranslationEntry()
                 {
                     Language = "Portuguese",
+                    Translators = new List<string>(){ "David Baptista da Silva" }
+                },
+                new TranslationEntry()
+                {
+                    Language = "Brazilian Portuguese",
                     Translators = new List<string>(){ "elcioebel", "Gis" }
                 },
                 new TranslationEntry()
