@@ -605,7 +605,21 @@ namespace NextPlayerUWPDataLayer.Services
             song.DateAdded = DateTime.Now;
             song.Filename = file.Name;
             song.Path = file.Path;
-            song.DirectoryPath = (!String.IsNullOrWhiteSpace(song.Path)) ? Path.GetDirectoryName(song.Path) : "UnknownDirectory";
+            if (file.Path.Length >= 260)
+            {
+                try
+                {
+                    song.DirectoryPath = (!String.IsNullOrWhiteSpace(file.Path)) ? Path.GetDirectoryName(song.Path) : "UnknownDirectory";
+                }
+                catch (PathTooLongException ex)
+                {
+                    song.DirectoryPath = "UnknownDirectory2";
+                }
+            }
+            else
+            {
+                song.DirectoryPath = (!String.IsNullOrWhiteSpace(file.Path)) ? Path.GetDirectoryName(song.Path) : "UnknownDirectory";
+            }
             song.FolderName = Path.GetFileName(song.DirectoryPath);
             song.PlayCount = 0;
             song.LastPlayed = DateTime.MinValue;
