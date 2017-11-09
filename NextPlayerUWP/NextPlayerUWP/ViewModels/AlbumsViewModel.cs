@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -157,7 +158,23 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
+            //listView.PrepareConnectedAnimation("albumImageAnimation", e.ClickedItem, "AlbumImage");
+            //persitedItemForConnectedAnimation = e.ClickedItem;
             NavigationService.Navigate(AppPages.Pages.Album, ((AlbumItem)e.ClickedItem).AlbumId);
+        }
+
+        protected override async Task StartConnectedAnimation()
+        {
+            //if (persitedItemForConnectedAnimation != null)
+            //{
+            //    ConnectedAnimation animation = ConnectedAnimationService.GetForCurrentView().GetAnimation("albumImageAnimation");
+            //    if (animation != null)
+            //    {
+            //        await Task.Delay(200);
+            //        await listView.TryStartConnectedAnimationAsync(animation, persitedItemForConnectedAnimation, "AlbumImage");
+            //    }
+            //    persitedItemForConnectedAnimation = null;
+            //}
         }
 
         private async Task ReloadData()

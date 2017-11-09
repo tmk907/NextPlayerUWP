@@ -11,6 +11,7 @@ using NextPlayerUWP.Common;
 using System.Linq;
 using NextPlayerUWP.AppColors;
 using System.Collections;
+using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -88,6 +89,7 @@ namespace NextPlayerUWP.Views
         {
             var image = sender as Image;
             int id = (int)image.Tag;
+            //ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("AlbumCoverFromAlbumArtist", image);
             App.Current.NavigationService.Navigate(AppPages.Pages.Album, id);
         }
 

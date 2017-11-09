@@ -86,6 +86,7 @@
                     OffsetX="4"
                     Grid.Row="0">
                     <Image 
+                        x:Name="AlbumImage"
                         Width="132" 
                         Height="132" 
                         Margin="4" 

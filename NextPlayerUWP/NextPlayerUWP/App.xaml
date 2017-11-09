@@ -53,7 +53,13 @@
                     <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource UserAccentColor}" Opacity="0.8" />
 
                     <SolidColorBrush x:Key="HoverBrush" Color="#FF2B2B2B"/>
-                    
+
+                    <!--<AcrylicBrush x:Key="HamburgerNavAreaBackground" BackgroundSource="Backdrop" FallbackColor="{StaticResource SystemChromeMediumColor}" Opacity="0.6" TintColor="{StaticResource SystemChromeAltHighColor}"/>-->
+                    <!--<SolidColorBrush x:Key="HamForegroundBrush" Color="White"/>
+                    <SolidColorBrush x:Key="HamButtonBackgroundBrush" Color="#14FFFFFF"/>
+                    <SolidColorBrush x:Key="HamButtonBackgroundHoverBrush" Color="#14FFFFFF"/>-->
+                    <!--<Color x:Key="HamAccentColor">#FF1F1F1F"</Color>-->
+
                     <Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
                         <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
                         <Setter Property="NavButtonBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
@@ -122,6 +128,12 @@
 
                     <SolidColorBrush x:Key="HoverBrush" Color="#FFD9D9D9"/>
 
+                    <!--<AcrylicBrush x:Key="HamburgerNavAreaBackground" BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.6" FallbackColor="{StaticResource SystemChromeMediumLowColor}" />-->
+                    <!--<SolidColorBrush x:Key="HamForegroundBrush" Color="Black"/>
+                    <SolidColorBrush x:Key="HamButtonBackgroundBrush" Color="#10000000"/>
+                    <SolidColorBrush x:Key="HamButtonBackgroundHoverBrush" Color="#10000000"/>-->
+                    <!--<Color x:Key="HamAccentColor">"#FFE6E6E6"</Color>-->
+
                     <Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
                         <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
                         <Setter Property="NavButtonBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
@@ -134,7 +146,7 @@
 
                         <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
                         <Setter Property="NavButtonCheckedIndicatorBrush" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
-                        
+
                         <Setter Property="NavButtonHoverForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
                         <Setter Property="HamburgerForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
                         <Setter Property="NavButtonForeground" Value="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
@@ -166,7 +178,29 @@
 
             <SolidColorBrush x:Key="TopAppBarBrush" Color="LightGray"/>
 
-            
+            <!--<Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
+                <Setter Property="NavAreaBackground" Value="{StaticResource SystemChromeMediumColor}"/>
+                --><!--<Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}"/>--><!--
+                <Setter Property="NavButtonBackground" Value="Transparent"/>
+
+                --><!--<Setter Property="AccentColor" Value="#FFE6E6E6"/>--><!--
+                <Setter Property="HamburgerBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+
+                <Setter Property="NavButtonHoverBackground" Value="{ThemeResource HamButtonBackgroundHoverBrush}"/>
+                <Setter Property="NavButtonPressedBackground" Value="{ThemeResource HamButtonBackgroundHoverBrush}"/>
+
+                <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource HamButtonBackgroundBrush}"/>
+                <Setter Property="NavButtonCheckedIndicatorBrush" Value="{ThemeResource HamButtonBackgroundBrush}"/>
+
+                <Setter Property="NavButtonHoverForeground" Value="{ThemeResource HamForegroundBrush}"/>
+                <Setter Property="HamburgerForeground" Value="{ThemeResource HamForegroundBrush}"/>
+                <Setter Property="NavButtonForeground" Value="{ThemeResource HamForegroundBrush}"/>
+                <Setter Property="NavButtonCheckedForeground" Value="{ThemeResource HamForegroundBrush}"/>
+                <Setter Property="NavButtonPressedForeground" Value="{ThemeResource HamForegroundBrush}"/>
+
+                <Setter Property="PaneBorderThickness" Value="0"/>
+                <Setter Property="SecondarySeparator" Value="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+            </Style>-->
 
             <!--<converters:GetListView x:Key="GetListView"/>-->
             <converters:BackgroundConverter x:Key="BackgroundConverter"/>
