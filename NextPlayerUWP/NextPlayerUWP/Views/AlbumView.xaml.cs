@@ -47,31 +47,31 @@ namespace NextPlayerUWP.Views
             selectionButtons.OnLoaded(ViewModel, PageHeader, AlbumSongsListView);
         }
 
-        //protected override void OnNavigatedTo(NavigationEventArgs e)
-        //{
-        //    base.OnNavigatedTo(e);
-        //    ConnectedAnimation imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("albumImageAnimation");
-        //    if (imageAnimation != null)
-        //    {
-        //        imageAnimation.TryStart(AlbumCoverImage);
-        //    }
-        //    else
-        //    {
-        //        imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("AlbumCoverFromArtist");
-        //        if (imageAnimation != null)
-        //        {
-        //            imageAnimation.TryStart(AlbumCoverImage);
-        //        }
-        //        else
-        //        {
-        //            imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("AlbumCoverFromAlbumArtist");
-        //            if (imageAnimation != null)
-        //            {
-        //                imageAnimation.TryStart(AlbumCoverImage);
-        //            }
-        //        }
-        //    }
-        //}
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            ConnectedAnimation imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("albumImageAnimation");
+            if (imageAnimation != null)
+            {
+                imageAnimation.TryStart(AlbumCoverImage);
+            }
+            else
+            {
+                imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("AlbumCoverFromArtist");
+                if (imageAnimation != null)
+                {
+                    imageAnimation.TryStart(AlbumCoverImage);
+                }
+                else
+                {
+                    imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("AlbumCoverFromAlbumArtist");
+                    if (imageAnimation != null)
+                    {
+                        imageAnimation.TryStart(AlbumCoverImage);
+                    }
+                }
+            }
+        }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {

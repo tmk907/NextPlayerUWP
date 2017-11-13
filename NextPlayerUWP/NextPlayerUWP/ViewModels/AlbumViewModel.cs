@@ -100,7 +100,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine("navvigation mode refresh");
             }
-            //ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("albumImageAnimation", SourceImage);
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("albumImageAnimation", SourceImage);
             args.Cancel = false;
             await Task.CompletedTask;
         }

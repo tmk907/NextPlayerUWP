@@ -112,7 +112,7 @@ namespace NextPlayerUWP.Views
             var image = sender as Image;
             int id = (int)image.Tag;
             //var a = ArtistSongsListView.ContainerFromItem(sender);
-            //ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("AlbumCoverFromArtist", image);
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("AlbumCoverFromArtist", image);
             App.Current.NavigationService.Navigate(AppPages.Pages.Album, id);
         }
 
