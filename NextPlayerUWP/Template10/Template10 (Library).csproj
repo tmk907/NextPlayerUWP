@@ -114,7 +114,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
+ <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <!-- <None Include="Nuget\Build.cmd" />
     <None Include="Nuget\Template10.targets" />

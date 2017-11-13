@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.SpotifyAPI.Web;
 using NextPlayerUWPDataLayer.Constants;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace NextPlayerUWP.ViewModels
 {
@@ -99,6 +100,7 @@ namespace NextPlayerUWP.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine("navvigation mode refresh");
             }
+            //ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("albumImageAnimation", SourceImage);
             args.Cancel = false;
             await Task.CompletedTask;
         }

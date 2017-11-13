@@ -80,6 +80,8 @@ namespace NextPlayerUWP.ViewModels
             set { Set(ref sortDescending, value); }
         }
 
+        protected object persitedItemForConnectedAnimation;
+
         public void ChangeSortingPriority()
         {
             //sortDescending = !sortDescending;
@@ -209,6 +211,10 @@ namespace NextPlayerUWP.ViewModels
                 state.Clear();
             }
             if (NavigationMode.Back == mode) isBack = true;
+            if (NavigationMode.New == mode)
+            {
+                persitedItemForConnectedAnimation = null;
+            }
             if (CanRestoreListPosition(mode))
             {
                 var navState = StateManager.Current.Read(this.GetType().ToString());
@@ -319,12 +325,14 @@ namespace NextPlayerUWP.ViewModels
         {
             await LoadData();
             await SetScrollPosition();
+            await StartConnectedAnimation();
 
             onNavigatedCompleted = false;
             onLoadedCompleted = false;
         }
 
         protected virtual async Task LoadData() { await Task.CompletedTask; }
+        protected virtual async Task StartConnectedAnimation() { await Task.CompletedTask; }
 
         protected async Task SetScrollPosition()
         {

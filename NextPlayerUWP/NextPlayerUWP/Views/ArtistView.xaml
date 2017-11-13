@@ -82,6 +82,7 @@
                     OffsetY="0"
                     OffsetX="0">
                     <Image
+                       x:Name="AlbumCoverImage"
                        Tapped="AlbumCoverImage_Tapped"
                        Tag="{Binding Header.AlbumId}"
                        ImageOpened="AlbumCoverImage_ImageOpened">
