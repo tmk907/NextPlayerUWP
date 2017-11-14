@@ -104,11 +104,11 @@ namespace NextPlayerUWP.Views
             image.Fade(1, 700, 0).Start();
         }
 
-        private void AlbumCoverImage_ImageOpened(object sender, RoutedEventArgs e)
-        {
-            var image = (Image)sender;
-            image.Fade(1, 800, 0).Start();
-        }
+        //private void AlbumCoverImage_ImageOpened(object sender, RoutedEventArgs e)
+        //{
+        //    var image = (Image)sender;
+        //    image.Fade(1, 800, 0).Start();
+        //}
 
         private void ShuffleAppBarButton_Click(object sender, RoutedEventArgs e)
         {
