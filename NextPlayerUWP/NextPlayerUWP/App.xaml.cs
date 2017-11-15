@@ -248,16 +248,8 @@ namespace NextPlayerUWP
             Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
             s1.Start();
             AppAccentColors.RestoreAppAccentColors();
-            try
-            {
-                TranslationHelper tr = new TranslationHelper();
-                tr.ChangeSlideableItemDescription();
-
-            }
-            catch (Exception ex)
-            {
-
-            }
+            TranslationHelper tr = new TranslationHelper();
+            tr.ChangeSlideableItemDescription();
 
             if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
             {

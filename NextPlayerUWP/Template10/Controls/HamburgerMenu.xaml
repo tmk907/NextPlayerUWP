@@ -110,7 +110,6 @@
                               RightTapped="NavButton_RightTapped"
                               TabIndex="2"
                               Tapped="NavButton_Tapped"
-                              ToolTipService.ToolTip="{Binding Path=(ToolTipService.ToolTip)}"
                               Unchecked="NavButtonUnchecked"
                               Visibility="{Binding Visibility, Mode=TwoWay}">
                     <ToggleButton.Template>

@@ -58,7 +58,7 @@
                     <SolidColorBrush x:Key="HamForegroundBrush" Color="White"/>
                     <SolidColorBrush x:Key="HamButtonBackgroundBrush" Color="#14FFFFFF"/>
                     <SolidColorBrush x:Key="HamButtonBackgroundHoverBrush" Color="#14FFFFFF"/>
-                    <Color x:Key="HamAccentColor">#FF1F1F1F"</Color>
+                    <!--<Color x:Key="HamAccentColor">#FF1F1F1F"</Color>-->
 
                     <!--<Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
                         <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
@@ -132,7 +132,7 @@
                     <SolidColorBrush x:Key="HamForegroundBrush" Color="Black"/>
                     <SolidColorBrush x:Key="HamButtonBackgroundBrush" Color="#10000000"/>
                     <SolidColorBrush x:Key="HamButtonBackgroundHoverBrush" Color="#10000000"/>
-                    <Color x:Key="HamAccentColor">"#FFE6E6E6"</Color>
+                    <!--<Color x:Key="HamAccentColor">"#FFE6E6E6"</Color>-->
 
                     <!--<Style x:Key="HamburgerMenuStyle" TargetType="controls:HamburgerMenu">
                         <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
@@ -183,7 +183,7 @@
                 <Setter Property="NavAreaBackground" Value="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}"/>
                 <Setter Property="NavButtonBackground" Value="Transparent"/>
 
-                <Setter Property="AccentColor" Value="{ThemeResource HamAccentColor}"/>
+                <Setter Property="AccentColor" Value="Blue"/>
                 <Setter Property="HamburgerBackground" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
 
                 <Setter Property="NavButtonHoverBackground" Value="{ThemeResource HamButtonBackgroundHoverBrush}"/>
