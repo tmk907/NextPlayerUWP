@@ -58,6 +58,7 @@
                     Text="{x:Bind Description}"/>
                 <Button 
                     x:Uid="ButtonInstall"
+                    Style="{StaticResource ButtonRevealStyle}"
                     Grid.Column="1"
                     Grid.RowSpan="2"
                     VerticalAlignment="Center"
@@ -93,6 +94,7 @@
                     </ListView>
                     <Button 
                         x:Uid="ButtonSave"
+                        Style="{StaticResource ButtonRevealStyle}"
                         Content="Save"
                         Click="{x:Bind ViewModel.ApplyLyricsExtensionChanges}"
                         MinWidth="128"/>

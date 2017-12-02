@@ -344,6 +344,7 @@
                     </ListView>
                     <Button 
                         x:Uid="ButtonSave"
+                        Style="{StaticResource ButtonRevealStyle}"
                         Content="Save"
                         Click="{x:Bind ViewModel.SaveMenuItems}"
                         MinWidth="128"/>
