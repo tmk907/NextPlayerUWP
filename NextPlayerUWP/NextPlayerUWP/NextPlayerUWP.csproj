@@ -779,7 +779,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Colourful">
-      <Version>1.1.2</Version>
+      <Version>1.2.1</Version>
     </PackageReference>
     <PackageReference Include="HockeySDK.UWP">
       <Version>4.1.6</Version>
@@ -797,7 +797,7 @@
       <Version>2.2.29</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.1</Version>
+      <Version>6.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
       <Version>10.1610.0</Version>
