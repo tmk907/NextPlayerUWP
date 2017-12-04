@@ -443,7 +443,8 @@ namespace NextPlayerUWP
                 try
                 {
                     await RegisterBGScrobbler();
-                    await TileManager.ManageSecondaryTileImages();
+                    var tilesManager = new TilesManager();
+                    await tilesManager.ManageSecondaryTileImages();
                 }
                 catch (Exception ex)
                 {

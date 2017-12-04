@@ -13,13 +13,19 @@ using Windows.UI.StartScreen;
 
 namespace NextPlayerUWP.Common
 {
-    public class TileManager
+    public class TilesManager
     {
+        private TilesSettings tileSettings;
+
+        public TilesManager()
+        {
+            tileSettings = new TilesSettings(new ApplicationSettingsService());
+        }
         /// <summary>
         /// Deletes unused tile images from App folder
         /// </summary>
         /// <returns></returns>
-        public static async Task ManageSecondaryTileImages()
+        public async Task ManageSecondaryTileImages()
         {
             var tiles = await SecondaryTile.FindAllAsync();
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -44,10 +50,10 @@ namespace NextPlayerUWP.Common
             }
         }
 
-        public static async Task CreateTile(MusicItem item)
+        public async Task CreateTile(MusicItem item)
         {
-            int id = ApplicationSettingsHelper.ReadTileIdValue() + 1;
-            ApplicationSettingsHelper.SaveTileIdValue(id);
+            int id = tileSettings.ReadTileIdValue() + 1;
+            tileSettings.SaveTileIdValue(id);
             string tileId = SettingsKeys.TileId + id.ToString();
             string parameter = item.GetParameter();
             MusicItemTypes itemType = MusicItem.ParseType(parameter);
@@ -114,7 +120,7 @@ namespace NextPlayerUWP.Common
             secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
             secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
 
-            ApplicationSettingsHelper.SaveTileData(new TileData() {
+            tileSettings.SaveTileData(new TileData() {
                 Id = tileId,
                 Name = name,
                 Type = type,
@@ -126,9 +132,9 @@ namespace NextPlayerUWP.Common
             await secondaryTile.RequestCreateAsync();
         }
 
-        public static void UpdateNewSecondaryTile()
+        public void UpdateNewSecondaryTile()
         {
-            List<TileData> list = ApplicationSettingsHelper.ReadTileData();
+            List<TileData> list = tileSettings.ReadTileData();
             foreach(var tileData in list)
             {
                 string name = tileData.Name;

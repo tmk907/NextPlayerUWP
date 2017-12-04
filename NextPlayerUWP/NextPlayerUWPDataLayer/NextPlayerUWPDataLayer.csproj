@@ -112,13 +112,16 @@
     <Compile Include="CloudStorage\CloudAccounts.cs" />
     <Compile Include="CloudStorage\OneDrive\OneDriveCredentialVault.cs" />
     <Compile Include="Diagnostic\Logger2.cs" />
+    <Compile Include="Helpers\ApplicationSettingsService.cs" />
     <Compile Include="Helpers\ClientHttp.cs" />
     <Compile Include="Helpers\DeviceFamilyHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Helpers\IApplicationSettings.cs" />
     <Compile Include="Helpers\LocalFileNames.cs" />
     <Compile Include="Helpers\SettingsKeys.cs" />
     <Compile Include="Helpers\Stoper.cs" />
     <Compile Include="Helpers\TaskCache.cs" />
+    <Compile Include="Helpers\TilesSettings.cs" />
     <Compile Include="Images\PaletteUWP\ColorCutQuantizer.cs" />
     <Compile Include="Images\PaletteUWP\ColorHelpers.cs" />
     <Compile Include="Images\PaletteUWP\Heap.cs" />

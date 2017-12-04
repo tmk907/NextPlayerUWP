@@ -1,4 +1,6 @@
-﻿using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Commands;
+using NextPlayerUWP.Commands.Navigation;
+using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System.Collections.Generic;
@@ -108,47 +110,44 @@ namespace NextPlayerUWP.ViewModels
 
         public async void Delete(object sender, RoutedEventArgs e)
         {
-            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            await NowPlayingPlaylistManager.Current.Delete(item.SongId);
+            var command = new DeleteFromNowPlayingCommand((SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
         public async void Share(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            ShareHelper sh = new ShareHelper();
-            await sh.Share(item);
-        }       
-
-        public void EditTags(object sender, RoutedEventArgs e)
-        {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
+            var command = new ShareCommand((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
-        public void ShowDetails(object sender, RoutedEventArgs e)
+        public async void EditTags(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.FileInfo, item.GetParameter());
+            var command = new EditTagsCommand((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
-        public void AddToPlaylist(object sender, RoutedEventArgs e)
+        public async void ShowDetails(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
+            var command = new ShowDetailsCommand((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
+        }
+
+        public async void AddToPlaylist(object sender, RoutedEventArgs e)
+        {
+            var command = new AddToPlaylistCommand((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
         public async void GoToArtist(object sender, RoutedEventArgs e)
         {
-            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            ArtistItem temp = await DatabaseManager.Current.GetArtistItemAsync(item.FirstArtist);
-            App.Current.NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
+            var command = new GoToArtistCommand((SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
         public async void GoToAlbum(object sender, RoutedEventArgs e)
         {
-            var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
-            App.Current.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
+            var command = new GoToAlbumCommand((SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
         #endregion
@@ -204,8 +203,8 @@ namespace NextPlayerUWP.ViewModels
 
         public async void ShareMany(IEnumerable<SongItem> items)
         {
-            ShareHelper sh = new ShareHelper();
-            await sh.Share(items);
+            var command = new ShareCommand(items);
+            await command.Excecute();
             DisableMultipleSelection();
         }
         #endregion

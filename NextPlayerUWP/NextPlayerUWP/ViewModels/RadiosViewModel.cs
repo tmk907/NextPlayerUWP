@@ -1,4 +1,6 @@
-﻿using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Commands;
+using NextPlayerUWP.Commands.Navigation;
+using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -134,27 +136,26 @@ namespace NextPlayerUWP.ViewModels
 
         public async void PlayNow(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            await NowPlayingPlaylistManager.Current.NewPlaylist(item);
-            await PlaybackService.Instance.PlayNewList(0);
+            var command = new PlayNowCommand((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
         public async void PlayNext(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            await NowPlayingPlaylistManager.Current.AddNext(item);
+            var command = new PlayNextCommand((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
         public async void AddToNowPlaying(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            await NowPlayingPlaylistManager.Current.Add(item);
+            var command = new AddToNowPlayingCommand((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
-        public void AddToPlaylist(object sender, RoutedEventArgs e)
+        public async void AddToPlaylist(object sender, RoutedEventArgs e)
         {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
+            var command = new AddToPlaylistCommand((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await command.Excecute();
         }
 
         public async void DeleteFromFavourites(object sender, RoutedEventArgs e)
