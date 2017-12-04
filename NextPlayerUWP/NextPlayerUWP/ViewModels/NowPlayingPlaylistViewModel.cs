@@ -220,24 +220,26 @@ namespace NextPlayerUWP.ViewModels
 
         public async Task PlayNowMany(IEnumerable<MusicItem> items)
         {
-            await NowPlayingPlaylistManager.Current.NewPlaylist(items);
-            await PlaybackService.Instance.PlayNewList(0);
+            var command = new PlayNowCommand(items);
+            await command.Excecute();
         }
 
         public async Task PlayNextMany(IEnumerable<MusicItem> items)
         {
-            await NowPlayingPlaylistManager.Current.AddNext(items);
+            var command = new PlayNextCommand(items);
+            await command.Excecute();
         }
 
         public async Task AddToNowPlayingMany(IEnumerable<MusicItem> items)
         {
-            await NowPlayingPlaylistManager.Current.Add(items);
+            var command = new AddToNowPlayingCommand(items);
+            await command.Excecute();
         }
 
-        public void AddToPlaylistMany(IEnumerable<MusicItem> items)
+        public async void AddToPlaylistMany(IEnumerable<MusicItem> items)
         {
-            App.AddToCache(items);
-            NavigationService.Navigate(AppPages.Pages.AddToPlaylist, new ListOfMusicItems().GetParameter());
+            var command = new AddToPlaylistCommand(items);
+            await command.Excecute();
         }
         #endregion
 

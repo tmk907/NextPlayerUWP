@@ -133,6 +133,7 @@
     <Compile Include="AppColors\ColorConverter.cs" />
     <Compile Include="Commands\AddToNowPlayingCommand.cs" />
     <Compile Include="Commands\DeleteFromNowPlayingCommand.cs" />
+    <Compile Include="Commands\DoNothingCommand.cs" />
     <Compile Include="Commands\IGenericCommand.cs" />
     <Compile Include="Commands\Navigation\AddToPlaylistCommand.cs" />
     <Compile Include="Commands\Navigation\EditTagsCommand.cs" />

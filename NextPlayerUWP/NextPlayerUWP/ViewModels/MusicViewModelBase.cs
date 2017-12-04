@@ -158,28 +158,34 @@ namespace NextPlayerUWP.ViewModels
         {
             string swipeAction = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.ActionAfterSwipeLeftCommand) as string;
             TranslationHelper helper = new TranslationHelper();
+            IGenericCommand command;
             switch (swipeAction)
             {
                 case SettingsKeys.SwipeActionPlayNow:
-                    await NowPlayingPlaylistManager.Current.NewPlaylist(item);
-                    await PlaybackService.Instance.PlayNewList(0);
+                    command = new PlayNowCommand(item);
+                    await command.Excecute();
                     break;
                 case SettingsKeys.SwipeActionPlayNext:
-                    await NowPlayingPlaylistManager.Current.AddNext(item);
+                    command = new PlayNextCommand(item);
+                    await command.Excecute();
                     string text = helper.GetTranslation(TranslationHelper.AddedNext);
                     MessageHub.Instance.Publish<InAppNotification>(new InAppNotification() { FirstTextLine = text });
                     break;
                 case SettingsKeys.SwipeActionAddToNowPlaying:
-                    await NowPlayingPlaylistManager.Current.Add(item);
+                    command = new AddToNowPlayingCommand(item);
+                    await command.Excecute();
                     string text2 = helper.GetTranslation(TranslationHelper.AddedToNowPlaying);
                     MessageHub.Instance.Publish<InAppNotification>(new InAppNotification() { FirstTextLine = text2 });
                     break;
                 case SettingsKeys.SwipeActionAddToPlaylist:
-                    NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
+                    command = new AddToPlaylistCommand(item);
+                    await command.Excecute();
                     break;
                 default:
+                    command = new DoNothingCommand();
+                    await command.Excecute();
                     break;
-            }
+            }            
         }
 
         #endregion
@@ -461,20 +467,22 @@ namespace NextPlayerUWP.ViewModels
         public async Task PlayNowMany(IEnumerable<MusicItem> items)
         {
             DisableMultipleSelection();
-            await NowPlayingPlaylistManager.Current.NewPlaylist(items);
-            await PlaybackService.Instance.PlayNewList(0);
+            var command = new PlayNowCommand(items);
+            await command.Excecute();
         }
 
         public async Task PlayNextMany(IEnumerable<MusicItem> items)
         {
             DisableMultipleSelection();
-            await NowPlayingPlaylistManager.Current.AddNext(items);
+            var command = new PlayNextCommand(items);
+            await command.Excecute();
         }
 
         public async Task AddToNowPlayingMany(IEnumerable<MusicItem> items)
         {
             DisableMultipleSelection();
-            await NowPlayingPlaylistManager.Current.Add(items);
+            var command = new AddToNowPlayingCommand(items);
+            await command.Excecute();
         }
 
         public void AddToPlaylistMany(IEnumerable<MusicItem> items)
