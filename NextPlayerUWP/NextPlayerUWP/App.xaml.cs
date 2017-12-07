@@ -2,6 +2,7 @@
 using Microsoft.Services.Store.Engagement;
 using NextPlayerUWP.AppColors;
 using NextPlayerUWP.Common;
+using NextPlayerUWP.Playback;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Diagnostics;

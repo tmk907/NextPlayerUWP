@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Playback;
 using NextPlayerUWPDataLayer.CloudStorage;
 using NextPlayerUWPDataLayer.Model;
 using System;

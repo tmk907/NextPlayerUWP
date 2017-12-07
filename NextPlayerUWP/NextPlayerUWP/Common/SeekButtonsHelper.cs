@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerUWP.Playback;
+using System;
 using Windows.UI.Xaml;
 
 namespace NextPlayerUWP.Common

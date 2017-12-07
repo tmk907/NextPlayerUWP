@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Playback;
 using NextPlayerUWP.ViewModels;
 using System;
 using System.Linq;

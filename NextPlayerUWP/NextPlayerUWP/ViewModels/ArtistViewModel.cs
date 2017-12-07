@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
 using NextPlayerUWP.Models;
+using NextPlayerUWP.Playback;
 
 namespace NextPlayerUWP.ViewModels
 {

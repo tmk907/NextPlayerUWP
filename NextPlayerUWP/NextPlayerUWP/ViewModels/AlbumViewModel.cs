@@ -12,6 +12,7 @@ using Template10.Services.NavigationService;
 using NextPlayerUWPDataLayer.SpotifyAPI.Web;
 using NextPlayerUWPDataLayer.Constants;
 using Windows.UI.Xaml.Media.Animation;
+using NextPlayerUWP.Playback;
 
 namespace NextPlayerUWP.ViewModels
 {

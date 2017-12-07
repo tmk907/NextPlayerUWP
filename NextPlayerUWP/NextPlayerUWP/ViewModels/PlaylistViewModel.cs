@@ -13,6 +13,7 @@ using System.IO;
 using Windows.UI.Xaml;
 using NextPlayerUWPDataLayer.Playlists;
 using System.Collections.Specialized;
+using NextPlayerUWP.Playback;
 
 namespace NextPlayerUWP.ViewModels
 {

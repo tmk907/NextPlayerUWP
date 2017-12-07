@@ -1,6 +1,7 @@
 ﻿using NextPlayerUWP.Commands;
 using NextPlayerUWP.Commands.Navigation;
 using NextPlayerUWP.Common;
+using NextPlayerUWP.Playback;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;

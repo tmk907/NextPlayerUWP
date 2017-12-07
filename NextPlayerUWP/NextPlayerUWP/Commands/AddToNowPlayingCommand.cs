@@ -1,4 +1,4 @@
-﻿using NextPlayerUWP.Common;
+﻿using NextPlayerUWP.Playback;
 using NextPlayerUWPDataLayer.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;

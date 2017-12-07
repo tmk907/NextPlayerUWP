@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWP.AppColors;
 using NextPlayerUWP.Common;
+using NextPlayerUWP.Playback;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Helpers;

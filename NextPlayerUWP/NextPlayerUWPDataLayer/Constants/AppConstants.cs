@@ -6,6 +6,7 @@
         public const string AppName = "Next-Player";
         public const string ProductId = "9nblggh67n4f";
         public const string DBFileName = "database1.db";
+        public const string FileNameHistoryDB = "history.db";
         public const string DeveloperEmail = "next-player@outlook.com";
         public const string HockeyAppId = "35b4dc0a397c4b9cb04b958de8947e03 ";
 

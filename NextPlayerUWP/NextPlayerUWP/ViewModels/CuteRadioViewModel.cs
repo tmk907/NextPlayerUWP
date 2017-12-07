@@ -14,6 +14,7 @@ using Windows.UI.Xaml;
 using NextPlayerUWPDataLayer.Services;
 using NextPlayerUWPDataLayer.Radio.CuteRadio.Model;
 using Windows.UI.Xaml.Navigation;
+using NextPlayerUWP.Playback;
 
 namespace NextPlayerUWP.ViewModels
 {

@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Constants;
+﻿using NextPlayerUWP.Playback;
+using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Model;
 using System;
 using System.Collections.Generic;

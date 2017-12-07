@@ -11,6 +11,7 @@ using TagLib;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Runtime.InteropServices.WindowsRuntime;
+using NextPlayerUWP.Playback;
 
 namespace NextPlayerUWP.Common
 {

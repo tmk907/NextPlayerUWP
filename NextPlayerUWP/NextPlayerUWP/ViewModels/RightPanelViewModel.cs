@@ -4,6 +4,7 @@ using NextPlayerUWP.Common;
 using NextPlayerUWP.Extensions;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
+using NextPlayerUWP.Playback;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;

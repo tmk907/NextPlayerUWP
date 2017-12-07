@@ -233,6 +233,9 @@
     <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\MigrationHelper.cs" />
+    <Compile Include="Services\Repository\HistTrack.cs" />
+    <Compile Include="Services\Repository\IRepository.cs" />
+    <Compile Include="Services\Repository\ListeningHistoryRepository.cs" />
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="SoundCloud\Enums\License.cs" />
     <Compile Include="SoundCloud\Enums\SCPlaylistType.cs" />
@@ -291,6 +294,7 @@
     <Compile Include="Tables\FoldersTable.cs" />
     <Compile Include="Tables\FutureAccessTokensTable.cs" />
     <Compile Include="Tables\GenresTable.cs" />
+    <Compile Include="Tables\HistoryTable.cs" />
     <Compile Include="Tables\ImportedPlaylistsTable.cs" />
     <Compile Include="Tables\NowPlayingTable.cs" />
     <Compile Include="Tables\PlainPlaylistEntryTable.cs" />

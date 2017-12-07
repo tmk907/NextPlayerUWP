@@ -1,28 +1,22 @@
 ﻿using NextPlayerUWP.Playback;
+using NextPlayerUWPDataLayer.Services.Repository;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace NextPlayerUWP.Common.History
 {
-    public class HistTrack
-    {
-        public int SongId { get; set; }
-        public DateTime DatePlayed { get; set; }
-        public TimeSpan PlaybackDuration { get; set; }
-    }
-
-    public enum TrackPlaybackStatus
-    {
-        Start,
-        Resume,
-        Pause,
-        Complete
-    }
-
     public class ListeningHistory
     {
-        private ListeningHistoryRepository repo;
+        private IRepository<HistTrack> repo;
+
+        private enum TrackPlaybackStatus
+        {
+            Start,
+            Resume,
+            Pause,
+            Complete
+        }
+
+        private TimeSpan minPlaybackDuration;
 
         private int songId;
         private DateTime startedtAt;
@@ -33,6 +27,7 @@ namespace NextPlayerUWP.Common.History
         public ListeningHistory()
         {
             repo = new ListeningHistoryRepository();
+            minPlaybackDuration = TimeSpan.FromSeconds(5);
         }
 
         public void StartListening()
@@ -67,7 +62,7 @@ namespace NextPlayerUWP.Common.History
             }
             prevEventTime = DateTime.Now;
 
-            if (playbackTime > TimeSpan.FromSeconds(5))
+            if (playbackTime > minPlaybackDuration)
             {
                 repo.Add(new HistTrack()
                 {
@@ -99,18 +94,6 @@ namespace NextPlayerUWP.Common.History
             playbackTime = TimeSpan.Zero;
             startedtAt = DateTime.Now;
             this.songId = songId;
-        }
-    }
-
-    public class ListeningHistoryRepository
-    {
-        private List<HistTrack> history = new List<HistTrack>();
-
-        public async Task Add(HistTrack ht)
-        {
-            System.Diagnostics.Debug.WriteLine("History {0} {1} {2}", ht.SongId, ht.PlaybackDuration.ToString(), ht.DatePlayed.ToString());
-            history.Add(ht);
-            await Task.CompletedTask;
         }
     }
 }

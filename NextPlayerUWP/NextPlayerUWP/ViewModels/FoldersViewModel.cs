@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
+using NextPlayerUWP.Playback;
 
 namespace NextPlayerUWP.ViewModels
 {
