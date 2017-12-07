@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 
-namespace NextPlayerUWP.Common
+namespace NextPlayerUWP.Playback
 {
     public partial class PlaybackService
     {

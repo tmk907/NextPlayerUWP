@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Playback;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;

@@ -1,5 +1,6 @@
 ﻿using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
+using NextPlayerUWP.Playback;
 using NextPlayerUWP.Views;
 using System.Linq;
 using Template10.Common;
@@ -41,7 +42,7 @@ namespace NextPlayerUWP.Common
         {
             if (args.EventType == Windows.UI.Core.CoreAcceleratorKeyEventType.KeyDown)
             {
-                System.Diagnostics.Debug.WriteLine("AccKey down: {0}", args.VirtualKey);
+                //System.Diagnostics.Debug.WriteLine("AccKey down: {0}", args.VirtualKey);
 
                 if (args.VirtualKey == VirtualKey.Menu)
                 {
@@ -146,7 +147,7 @@ namespace NextPlayerUWP.Common
             }
             else if (args.EventType == Windows.UI.Core.CoreAcceleratorKeyEventType.KeyUp)
             {
-                System.Diagnostics.Debug.WriteLine("AccKey up {0}", args.VirtualKey);
+                //System.Diagnostics.Debug.WriteLine("AccKey up {0}", args.VirtualKey);
                 if (args.VirtualKey == VirtualKey.Control)
                 {
                     isCtrlPressed = false;

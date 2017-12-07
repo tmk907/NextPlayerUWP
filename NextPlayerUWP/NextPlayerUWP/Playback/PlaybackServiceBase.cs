@@ -1,4 +1,4 @@
-﻿namespace NextPlayerUWP.Common
+﻿namespace NextPlayerUWP.Playback
 {
     public interface IPlaybackService
     {

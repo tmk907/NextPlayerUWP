@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Windows.System.Threading;
 
-namespace NextPlayerUWP.Common
+namespace NextPlayerUWP.Playback
 {
     public class PlaybackTimer
     {

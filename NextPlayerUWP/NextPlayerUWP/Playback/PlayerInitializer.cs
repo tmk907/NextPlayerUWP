@@ -1,4 +1,5 @@
-﻿using NextPlayerUWP.Views;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using Template10.Controls;
 using Windows.Storage;
 using Windows.UI.Xaml;
 
-namespace NextPlayerUWP.Common
+namespace NextPlayerUWP.Playback
 {
     public class PlayerInitializer
     {

@@ -2,6 +2,7 @@
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Messages;
 using NextPlayerUWP.Messages.Hub;
+using NextPlayerUWP.Playback;
 using NextPlayerUWP.ViewModels;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;

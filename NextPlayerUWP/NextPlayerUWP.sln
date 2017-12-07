@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextPlayerUWP", "NextPlayerUWP\NextPlayerUWP.csproj", "{D74D0E71-67FB-4BC2-A32C-CF10A3D493F8}"
 EndProject
@@ -130,5 +130,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FDA65A6B-6317-4918-A451-0395F45A9DF3}
 	EndGlobalSection
 EndGlobal

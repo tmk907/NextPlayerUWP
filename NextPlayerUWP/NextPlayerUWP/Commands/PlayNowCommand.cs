@@ -28,7 +28,7 @@ namespace NextPlayerUWP.Commands
             }
             else
             {
-                await NowPlayingPlaylistManager.Current.NewPlaylist(items)
+                await NowPlayingPlaylistManager.Current.NewPlaylist(items);
             }
             await PlaybackService.Instance.PlayNewList(0);
         }

@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.CloudStorage;
 using Template10.Common;
+using NextPlayerUWP.Common;
 
-namespace NextPlayerUWP.Common
+namespace NextPlayerUWP.Playback
 {
     public delegate void NPListChangedHandler();
     public sealed class NowPlayingPlaylistManager

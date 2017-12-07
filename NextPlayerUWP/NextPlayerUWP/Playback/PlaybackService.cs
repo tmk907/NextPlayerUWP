@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 
-namespace NextPlayerUWP.Common
+namespace NextPlayerUWP.Playback
 {
     public delegate void MediaPlayerStateChangeHandler(MediaPlaybackState state);
     public delegate void MediaPlayerTrackChangeHandler(int index);
@@ -52,6 +52,8 @@ namespace NextPlayerUWP.Common
 
         private const string propertyIndex = "index";
         private const string propertySongId = "songid";
+        private PlayingTrackEvents playingTrackEvents;
+        private Common.History.ListeningHistory hist;
 
         public PlaybackService()
         {
@@ -79,6 +81,10 @@ namespace NextPlayerUWP.Common
 
             RadioTimer = new PlaybackTimer();
             MusicPlaybackTimer = new PlaybackTimer();
+
+            playingTrackEvents = new PlayingTrackEvents();
+            hist = new Common.History.ListeningHistory();
+            hist.StartListening();
 
             cts = new CancellationTokenSource();
         }
@@ -206,24 +212,24 @@ namespace NextPlayerUWP.Common
         public static event MediaPlayerStateChangeHandler MediaPlayerStateChanged;
         public void OnMediaPlayerStateChanged(MediaPlaybackState state)
         {
-            System.Diagnostics.Debug.WriteLine("OnMediaPlayerStateChanged {0}", state);
+            //System.Diagnostics.Debug.WriteLine("OnMediaPlayerStateChanged {0}", state);
             MediaPlayerStateChanged?.Invoke(state);
         }
 
         public static event MediaPlayerMediaOpenHandler MediaPlayerMediaOpened;
         public void OnMediaPlayerMediaOpened()
         {
-            System.Diagnostics.Debug.WriteLine("OnMediaPlayerMediaOpened {0} {1}", Player.PlaybackSession.PlaybackState, Player.PlaybackSession.NaturalDuration);
+            //System.Diagnostics.Debug.WriteLine("OnMediaPlayerMediaOpened {0} {1}", Player.PlaybackSession.PlaybackState, Player.PlaybackSession.NaturalDuration);
             MediaPlayerMediaOpened?.Invoke();
         }
         public static event StreamUpdatedHandler StreamUpdated;
         public void OnStreamUpdated(NowPlayingSong song)
         {
-            System.Diagnostics.Debug.WriteLine("OnStreamUpdated");
+            //System.Diagnostics.Debug.WriteLine("OnStreamUpdated");
             StreamUpdated?.Invoke(song);
         }
         #endregion
-       
+
         #region mediaList
 
         bool isLoaded = false; //TODO remove?

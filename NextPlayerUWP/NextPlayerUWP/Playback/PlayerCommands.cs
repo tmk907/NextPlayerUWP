@@ -1,6 +1,6 @@
 ﻿using NextPlayerUWP.ViewModels;
 
-namespace NextPlayerUWP.Common
+namespace NextPlayerUWP.Playback
 {
     public class PlayerCommands
     {

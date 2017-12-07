@@ -1,4 +1,5 @@
 ﻿//using FFmpegInterop;
+using NextPlayerUWP.Common;
 using NextPlayerUWPDataLayer.CloudStorage;
 using NextPlayerUWPDataLayer.Constants;
 using NextPlayerUWPDataLayer.Enums;
@@ -16,7 +17,7 @@ using Windows.Media.Streaming.Adaptive;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
-namespace NextPlayerUWP.Common
+namespace NextPlayerUWP.Playback
 {
     public class MyStreamReference : IRandomAccessStreamReference
     {
