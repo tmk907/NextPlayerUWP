@@ -154,7 +154,7 @@
     <Compile Include="Common\FoldersVMHelper.cs" />
     <Compile Include="Common\HamburgerMenuBuilder.cs" />
     <Compile Include="Common\History\ListeningHistory.cs" />
-    <Compile Include="Playback\PlayingTrackEvents.cs" />
+    <Compile Include="Playback\PlayingTrackStateEvents.cs" />
     <Compile Include="Common\ListViewScrollerHelper.cs" />
     <Compile Include="Common\MenuButtonItem.cs" />
     <Compile Include="Common\MessageDialogHelper.cs" />

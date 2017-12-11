@@ -2,9 +2,9 @@
 
 namespace NextPlayerUWPDataLayer.Services.Repository
 {
-    public class HistTrack
+    public class ListenedSong
     {
-        public int histId { get; set; }
+        public int EventId { get; set; }
         public int SongId { get; set; }
         public DateTime DatePlayed { get; set; }
         public TimeSpan PlaybackDuration { get; set; }

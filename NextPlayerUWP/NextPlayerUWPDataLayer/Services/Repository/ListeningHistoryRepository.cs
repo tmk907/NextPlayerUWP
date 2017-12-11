@@ -4,13 +4,13 @@ using SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace NextPlayerUWPDataLayer.Services.Repository
 {
-    public class ListeningHistoryRepository : IRepository<HistTrack>
+    public class ListeningHistoryRepository
     {
         private SQLiteAsyncConnection connectionAsync;
         public string DBFilePath { get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.FileNameHistoryDB); } }
@@ -29,68 +29,70 @@ namespace NextPlayerUWPDataLayer.Services.Repository
             connection.BusyTimeout = TimeSpan.FromSeconds(10);
             try
             {
-                connection.GetTableInfo(nameof(HistoryTable));
+                var a = connection.Table<ListeningHistoryTable>().ToList();
             }
-            catch (Exception ex)
+            catch (SQLiteException ex)
             {
-                connection.CreateTable<HistoryTable>();
+                connection.CreateTable<ListeningHistoryTable>();
             }
         }
 
-        public async Task Add(HistTrack entity)
+        public async Task Add(ListenedSong song)
         {
-            System.Diagnostics.Debug.WriteLine("History {0} {1} {2}", entity.SongId, entity.PlaybackDuration.ToString(), entity.DatePlayed.ToString());
-            await connectionAsync.InsertAsync(entity);
-        }
-
-        public async Task Delete(HistTrack entity)
-        {
-            await connectionAsync.DeleteAsync(entity);
-        }
-
-        public async Task Update(HistTrack entity)
-        {
-            await connectionAsync.InsertAsync(entity);
-        }
-
-        public async Task<HistTrack> GetById(int id)
-        {
-            var h = await connectionAsync.Table<HistoryTable>().Where(e => e.HistId == id).FirstOrDefaultAsync();
-            return new HistTrack()
+            System.Diagnostics.Debug.WriteLine("History {0} {1} {2}", song.SongId, song.PlaybackDuration.ToString(), song.DatePlayed.ToString());
+            await connectionAsync.InsertAsync(new ListeningHistoryTable()
             {
-                DatePlayed = h.DatePlayed,
-                histId = h.HistId,
-                PlaybackDuration = h.PlaybackDuration,
-                SongId = h.SongId
-            };
+                DatePlayed = song.DatePlayed,
+                PlaybackDuration = song.PlaybackDuration,
+                SongId = song.SongId,
+            });
         }
 
-        public async Task<IEnumerable<HistTrack>> GetAll()
+        //?
+        public async Task<ListenedSong> GetById(int id)
         {
-            var list = await connectionAsync.Table<HistoryTable>().ToListAsync();
-            var result = new List<HistTrack>();
+            var h = await connectionAsync.Table<ListeningHistoryTable>().Where(e => e.EventId == id).FirstOrDefaultAsync();
+            return Create(h);
+        }
+
+        //?
+        public async Task<ListenedSong> GetBySongId(int id)
+        {
+            var h = await connectionAsync.Table<ListeningHistoryTable>().Where(e => e.SongId == id).FirstOrDefaultAsync();
+            return Create(h);
+        }
+
+        public async Task<IEnumerable<ListenedSong>> GetAll()
+        {
+            var list = await connectionAsync.Table<ListeningHistoryTable>().ToListAsync();
+            var result = new List<ListenedSong>();
             foreach(var item in list)
             {
-                result.Add(new HistTrack()
-                {
-                    DatePlayed = item.DatePlayed,
-                    histId = item.HistId,
-                    PlaybackDuration=item.PlaybackDuration,
-                    SongId = item.SongId
-                });
+                result.Add(Create(item));
             }
             return result;
         }
 
-        public async Task<IEnumerable<HistTrack>> Get(Expression<Func<HistTrack, bool>> predicate)
+        public async Task<IEnumerable<ListenedSong>> GetFromTo(DateTime from, DateTime to)
         {
-            var list = await connectionAsync.Table<HistoryTable>().ToListAsync();
-            var result = new List<HistTrack>();
-            //foreach(var item in list.Where<HistoryTable>(predicate))
-            //{
-            //    result.Add(item);
-            //}
+            var list = await connectionAsync.Table<ListeningHistoryTable>().Where(e => e.DatePlayed >= from && e.DatePlayed <= to).OrderBy(e => e.DatePlayed).ToListAsync();
+            var result = new List<ListenedSong>();
+            foreach (var item in list)
+            {
+                result.Add(Create(item));
+            }
             return result;
+        }
+
+        private static ListenedSong Create(ListeningHistoryTable table)
+        {
+            return new ListenedSong()
+            {
+                DatePlayed=table.DatePlayed,
+                EventId = table.EventId,
+                PlaybackDuration = table.PlaybackDuration,
+                SongId = table.SongId,
+            };
         }
     }
 }

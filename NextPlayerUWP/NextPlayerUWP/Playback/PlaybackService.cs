@@ -52,7 +52,7 @@ namespace NextPlayerUWP.Playback
 
         private const string propertyIndex = "index";
         private const string propertySongId = "songid";
-        private PlayingTrackEvents playingTrackEvents;
+        private PlayingTrackStateEvents playingTrackEvents;
         private Common.History.ListeningHistory hist;
 
         public PlaybackService()
@@ -82,7 +82,7 @@ namespace NextPlayerUWP.Playback
             RadioTimer = new PlaybackTimer();
             MusicPlaybackTimer = new PlaybackTimer();
 
-            playingTrackEvents = new PlayingTrackEvents();
+            playingTrackEvents = new PlayingTrackStateEvents();
             hist = new Common.History.ListeningHistory();
             hist.StartListening();
 

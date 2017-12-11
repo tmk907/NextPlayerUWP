@@ -6,7 +6,7 @@ namespace NextPlayerUWP.Common.History
 {
     public class ListeningHistory
     {
-        private IRepository<HistTrack> repo;
+        private ListeningHistoryRepository repo;
 
         private enum TrackPlaybackStatus
         {
@@ -32,21 +32,21 @@ namespace NextPlayerUWP.Common.History
 
         public void StartListening()
         {
-            PlayingTrackEvents.MediaPlayerTrackStarted += MediaPlayerTrackStarted;
-            PlayingTrackEvents.MediaPlayerTrackPaused += MediaPlayerTrackPaused;
-            PlayingTrackEvents.MediaPlayerTrackResumed += MediaPlayerTrackResumed;
-            PlayingTrackEvents.MediaPlayerTrackCompleted += MediaPlayerTrackCompleted;
+            PlayingTrackStateEvents.MediaPlayerTrackStarted += MediaPlayerTrackStarted;
+            PlayingTrackStateEvents.MediaPlayerTrackPaused += MediaPlayerTrackPaused;
+            PlayingTrackStateEvents.MediaPlayerTrackResumed += MediaPlayerTrackResumed;
+            PlayingTrackStateEvents.MediaPlayerTrackCompleted += MediaPlayerTrackCompleted;
         }
 
         public void StopListening()
         {
-            PlayingTrackEvents.MediaPlayerTrackStarted -= MediaPlayerTrackStarted;
-            PlayingTrackEvents.MediaPlayerTrackPaused -= MediaPlayerTrackPaused;
-            PlayingTrackEvents.MediaPlayerTrackResumed -= MediaPlayerTrackResumed;
-            PlayingTrackEvents.MediaPlayerTrackCompleted -= MediaPlayerTrackCompleted;
+            PlayingTrackStateEvents.MediaPlayerTrackStarted -= MediaPlayerTrackStarted;
+            PlayingTrackStateEvents.MediaPlayerTrackPaused -= MediaPlayerTrackPaused;
+            PlayingTrackStateEvents.MediaPlayerTrackResumed -= MediaPlayerTrackResumed;
+            PlayingTrackStateEvents.MediaPlayerTrackCompleted -= MediaPlayerTrackCompleted;
         }
 
-        private void MediaPlayerTrackCompleted(int songId)
+        private async void MediaPlayerTrackCompleted(int songId)
         {
             if (prevStatus == TrackPlaybackStatus.Resume)
             {
@@ -64,7 +64,7 @@ namespace NextPlayerUWP.Common.History
 
             if (playbackTime > minPlaybackDuration)
             {
-                repo.Add(new HistTrack()
+                await repo.Add(new ListenedSong()
                 {
                     DatePlayed = startedtAt,
                     PlaybackDuration = playbackTime,

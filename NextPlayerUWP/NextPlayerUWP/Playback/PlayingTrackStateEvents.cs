@@ -3,7 +3,7 @@ using Windows.Media.Playback;
 
 namespace NextPlayerUWP.Playback
 {
-    public class PlayingTrackEvents
+    public class PlayingTrackStateEvents
     {
         public delegate void MediaPlayerTrackStartedHandler(int songId, MediaPlaybackState2 state);
         public delegate void MediaPlayerTrackPausedHandler();
@@ -18,7 +18,7 @@ namespace NextPlayerUWP.Playback
         private int prevSongId;
         private MediaPlaybackState prevState;
 
-        public PlayingTrackEvents()
+        public PlayingTrackStateEvents()
         {
             PlaybackService.MediaPlayerStateChanged += PlaybackService_MediaPlayerStateChanged;
             PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
