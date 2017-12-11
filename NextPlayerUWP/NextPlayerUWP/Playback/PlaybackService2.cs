@@ -1,9 +1,11 @@
-﻿using NextPlayerUWP.Common.Tiles;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Common.Tiles;
 using NextPlayerUWP.Extensions;
 using NextPlayerUWPDataLayer.Enums;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
+using NextPlayerUWPDataLayer.Services.Repository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,7 +23,6 @@ namespace NextPlayerUWP.Playback
         {
             System.Diagnostics.Debug.WriteLine("OnMediaPlayerTrackChanged {0}", index);
             MediaPlayerTrackChanged?.Invoke(index);
-            UpdateLiveTile(false);
             SendNotification();
         }
 
@@ -31,10 +32,7 @@ namespace NextPlayerUWP.Playback
         private Stoper songPlayingStoper;
 
         private TimeSpan timePreviousOrBeggining = TimeSpan.FromSeconds(5);
-        private LastFmCache lastFmCache;
-        private PlaybackTimer RadioTimer;
-        private PlaybackTimer MusicPlaybackTimer;
-
+        private ActionTimer RadioTimer;
 
         #region Properties
 
@@ -315,35 +313,7 @@ namespace NextPlayerUWP.Playback
 
         #region Timer
 
-        public void SetPlaybackStopTimer()
-        {
-            var t = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.TimerTime);
-            long timerTicks = 0;
-            if (t != null)
-            {
-                timerTicks = (long)t;
-            }
-            TimeSpan currentTime = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute) + TimeSpan.FromSeconds(DateTime.Now.Second);
-
-            TimeSpan delay = TimeSpan.FromTicks(timerTicks - currentTime.Ticks);
-            if (delay < TimeSpan.Zero)
-            {
-                delay = delay + TimeSpan.FromHours(24);
-            }
-
-            MusicPlaybackTimer.SetTimerWithAction(delay, PlaybackStopTimerCallback);
-        }
-
-        private void PlaybackStopTimerCallback()
-        {
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, false);
-            Pause();
-        }
-
-        public void CancelPlaybackStopTimer()
-        {
-            MusicPlaybackTimer.TimerCancel();
-        }
+        
 
         #endregion
 
@@ -370,29 +340,6 @@ namespace NextPlayerUWP.Playback
             }
         }
 
-        private int lastUpdatedTileSongId = -1;
-        public void UpdateLiveTile(bool refresh)
-        {
-            if (NowPlayingPlaylistManager.Current.songs.Count == 0) return;
-            int songIndex = CurrentSongIndex;
-            var song = NowPlayingPlaylistManager.Current.songs[songIndex];
-            if (!refresh && song.SongId == lastUpdatedTileSongId) return;
-            lastUpdatedTileSongId = song.SongId;
-            TileUpdateHelper tileHelper = new TileUpdateHelper();
-            if (NowPlayingPlaylistManager.Current.songs.Count < 3)
-            {
-                tileHelper.UpdateAppTile(song.Title, song.Artist, song.AlbumArtUri.ToString());
-            }
-            else
-            {
-                var prevSong = NowPlayingPlaylistManager.Current.songs[(songIndex == 0) ? NowPlayingPlaylistManager.Current.songs.Count - 1 : songIndex - 1];
-                var nextSong = NowPlayingPlaylistManager.Current.songs[(songIndex == NowPlayingPlaylistManager.Current.songs.Count - 1) ? 0 : songIndex + 1];
-                List<string> titles = new List<string>() { prevSong.Title, song.Title, nextSong.Title };
-                List<string> artists = new List<string>() { prevSong.Artist, song.Artist, nextSong.Artist };
-                tileHelper.UpdateAppTile(titles, artists, song.AlbumArtUri.ToString());
-            }
-        }
-
         private NowPlayingBroadcasterExtension br = new NowPlayingBroadcasterExtension();
         private void SendNotification()
         {
@@ -400,71 +347,11 @@ namespace NextPlayerUWP.Playback
             br.SendNotification(song.Album, song.Artist, song.Title, PlaybackService.Instance.PlayerState);
         }
 
-        private void UpdateStats(int songId, TimeSpan songDuration, TimeSpan songPlaybackDuration)
-        {
-            System.Diagnostics.Debug.WriteLine("UpdateStats {0}", songPlaybackDuration);
-            if (songId == 1 || TimeSpan.Zero == songDuration)
-            {
-                System.Diagnostics.Debug.WriteLine("UpdateStats wrong song duration");
-                return;
-            }
-            if (songPlaybackDuration.TotalSeconds >= songDuration.TotalSeconds * 0.5 || songPlaybackDuration.TotalSeconds >= 4 * 60)
-            {
-                UpdateStats2(songId, songDuration);
-            }
-        }
 
-        private async Task UpdateStats2(int songId, TimeSpan songDuration)
+        ListeningHistoryRepository repo = new ListeningHistoryRepository();
+        private async void UpdateStats(int songId, TimeSpan duration, TimeSpan playbackTime)
         {
-            var song = await DatabaseManager.Current.GetSongItemAsync(songId);
-            if (song.SongId != -1 && song.SourceType != MusicSource.RadioJamendo && song.SourceType != MusicSource.Radio)
-            {
-                System.Diagnostics.Debug.WriteLine("UpdateStats2 {0} {1}", songId, songDuration);
-                await UpdateSongStatistics(song.SongId);
-                if (songDuration > TimeSpan.FromSeconds(30))
-                {
-                    await CacheTrackScrobble(song);
-                }
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("UpdateStats2 stats not updated");
-            }
-        }
-
-        private async Task UpdateSongStatistics(int songId)
-        {
-            if (songId > 0)
-            {
-                await DatabaseManager.Current.UpdateSongStatistics(songId);
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("UpdateSongStatistics SongId < 0");
-            }
-        }
-
-        private async Task CacheTrackScrobble(SongItem song)
-        {
-            int seconds = 0;
-            try
-            {
-                DateTime start = DateTime.UtcNow - song.Duration;
-                seconds = (int)start.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("CacheTrackScrobble fails to calculate song playback start time {0}", ex);
-                return;
-            }
-            TrackScrobble scrobble = new TrackScrobble()
-            {
-                Artist = song.Artist,
-                Track = song.Title,
-                Timestamp = seconds.ToString()
-            };
-            await lastFmCache.CacheTrackScrobble(scrobble).ConfigureAwait(false);
-            System.Diagnostics.Debug.WriteLine("Scrobbled " + song.Artist + " " + song.Title);
+            await repo.Add(new ListenedSong() { DatePlayed = DateTime.Now, PlaybackDuration = playbackTime, SongId = songId+10000 });
         }
     }
 }

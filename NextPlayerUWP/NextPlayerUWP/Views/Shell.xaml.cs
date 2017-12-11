@@ -35,7 +35,7 @@ namespace NextPlayerUWP.Views
         private Guid tokenNotification;
         private Guid tokenPageNavigated;
 
-        private PlaybackTimer AdTimer;
+        private ActionTimer AdTimer;
         private TimeSpan AdVisibleDuration = TimeSpan.FromSeconds(70);
 
         public Shell()
@@ -48,7 +48,7 @@ namespace NextPlayerUWP.Views
             this.Unloaded += Shell_Unloaded;
             ShellVM.RefreshMenuButtons();
 
-            AdTimer = new PlaybackTimer();
+            AdTimer = new ActionTimer();
 
             MigrateCredentialsAsync();
             ReviewReminder();

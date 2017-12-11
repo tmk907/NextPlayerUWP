@@ -154,6 +154,8 @@
     <Compile Include="Common\FoldersVMHelper.cs" />
     <Compile Include="Common\HamburgerMenuBuilder.cs" />
     <Compile Include="Common\History\ListeningHistory.cs" />
+    <Compile Include="Common\Tiles\LiveTileUpdater.cs" />
+    <Compile Include="Playback\PlaybackTimer.cs" />
     <Compile Include="Playback\PlayingTrackStateEvents.cs" />
     <Compile Include="Common\ListViewScrollerHelper.cs" />
     <Compile Include="Common\MenuButtonItem.cs" />
@@ -169,7 +171,7 @@
     <Compile Include="Playback\PlaybackService.cs" />
     <Compile Include="Playback\PlaybackService2.cs" />
     <Compile Include="Playback\PlaybackServiceBase.cs" />
-    <Compile Include="Playback\PlaybackTimer.cs" />
+    <Compile Include="Common\ActionTimer.cs" />
     <Compile Include="Common\SeekButtonsHelper.cs" />
     <Compile Include="Common\SongCoverManager.cs" />
     <Compile Include="Common\SortingHelper.cs" />

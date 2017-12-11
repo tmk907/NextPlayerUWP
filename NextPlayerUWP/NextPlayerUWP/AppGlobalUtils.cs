@@ -1,4 +1,5 @@
 ﻿using NextPlayerUWP.Common;
+using NextPlayerUWP.Common.Tiles;
 using NextPlayerUWP.Playback;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Helpers;
@@ -72,6 +73,15 @@ namespace NextPlayerUWP
                     appPages = new AppPages();
                 }
                 return appPages;
+            }
+        }
+
+        private static LiveTileUpdater liveTileUpdater;
+        public static LiveTileUpdater LiveTileUpdater
+        {
+            get
+            {
+                return liveTileUpdater;
             }
         }
 

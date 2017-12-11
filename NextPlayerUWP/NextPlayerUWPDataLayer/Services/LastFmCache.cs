@@ -1,4 +1,6 @@
 ﻿using NextPlayerUWPDataLayer.Helpers;
+using NextPlayerUWPDataLayer.Model;
+using System;
 using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.Services
@@ -35,21 +37,18 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-        //public async Task CacheTrackLove(string artist, string track)
-        //{
-        //    if (AreCredentialsSet())
-        //    {
-        //        await DatabaseManager.Current.CacheTrackLoveAsync("track.love", artist, track);
-        //    }
-        //}
-
-        //public async Task CacheTrackUnlove(string artist, string track)
-        //{
-        //    if (AreCredentialsSet())
-        //    {
-        //        await DatabaseManager.Current.CacheTrackLoveAsync("track.unlove", artist, track);
-        //    }
-        //}
+        public async Task CacheTrackScrobble(SongItem song, TimeSpan playbackDuration, DateTime playedAt)
+        {
+            if (playbackDuration.TotalSeconds >= song.Duration.TotalSeconds * 0.5 || playbackDuration.TotalSeconds >= 4 * 60)
+            {
+                RefreshCredentialsFromSettings();
+                if (IsUserLoggedIn)
+                {
+                    string timestamp = ((int)playedAt.Subtract(new DateTime(1970, 1, 1)).TotalSeconds).ToString();
+                    await DatabaseManager.Current.CacheTrackScrobbleAsync("track.scrobble", song.Artist, song.Title, timestamp);
+                }
+            }
+        }
 
         public async Task RateSong(string artist, string track, int rating)
         {

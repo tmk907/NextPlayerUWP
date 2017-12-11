@@ -1,4 +1,5 @@
-﻿using NextPlayerUWPDataLayer.Diagnostics;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Diagnostics;
 using NextPlayerUWPDataLayer.Helpers;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWPDataLayer.Services;
@@ -54,6 +55,7 @@ namespace NextPlayerUWP.Playback
         private const string propertySongId = "songid";
         private PlayingTrackStateEvents playingTrackEvents;
         private Common.History.ListeningHistory hist;
+        public PlaybackTimer PlaybackTimer { get; }
 
         public PlaybackService()
         {
@@ -75,12 +77,10 @@ namespace NextPlayerUWP.Playback
             shuffle = Shuffle.CurrentState();
             ApplyRepeatState();
 
-            lastFmCache = new LastFmCache();
-
             songPlayingStoper = new Stoper();
 
-            RadioTimer = new PlaybackTimer();
-            MusicPlaybackTimer = new PlaybackTimer();
+            RadioTimer = new ActionTimer();
+            PlaybackTimer = new PlaybackTimer();
 
             playingTrackEvents = new PlayingTrackStateEvents();
             hist = new Common.History.ListeningHistory();

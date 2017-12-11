@@ -1,39 +1,41 @@
 ﻿using NextPlayerUWP.Common.Extensions;
+using NextPlayerUWPDataLayer.Model;
 using Windows.Media.Playback;
 
 namespace NextPlayerUWP.Playback
 {
     public class PlayingTrackStateEvents
     {
-        public delegate void MediaPlayerTrackStartedHandler(int songId, MediaPlaybackState2 state);
+        public delegate void MediaPlayerTrackStartedHandler(SongItem song, MediaPlaybackState2 state);
         public delegate void MediaPlayerTrackPausedHandler();
         public delegate void MediaPlayerTrackResumedHandler();
-        public delegate void MediaPlayerTrackCompletedHandler(int songId);
+        public delegate void MediaPlayerTrackCompletedHandler(SongItem song);
 
         public static event MediaPlayerTrackStartedHandler MediaPlayerTrackStarted;
         public static event MediaPlayerTrackPausedHandler MediaPlayerTrackPaused;
         public static event MediaPlayerTrackResumedHandler MediaPlayerTrackResumed;
         public static event MediaPlayerTrackCompletedHandler MediaPlayerTrackCompleted;
 
-        private int prevSongId;
+        private SongItem prevSong;
         private MediaPlaybackState prevState;
 
         public PlayingTrackStateEvents()
         {
             PlaybackService.MediaPlayerStateChanged += PlaybackService_MediaPlayerStateChanged;
             PlaybackService.MediaPlayerTrackChanged += PlaybackService_MediaPlayerTrackChanged;
-            prevSongId = -1;
+            prevSong = new SongItem();
             prevState = MediaPlaybackState.None;
         }
 
-        private void PlaybackService_MediaPlayerTrackChanged(int songId)
+        private void PlaybackService_MediaPlayerTrackChanged(int index)
         {
-            if (prevSongId != -1)
+            if (prevSong.SongId != -1)
             {
-                OnTrackCompleted(prevSongId);
+                OnTrackCompleted(prevSong);
             }
-            OnTrackStarted(songId, PlaybackService.Instance.PlayerState);
-            prevSongId = songId;
+            var song = NowPlayingPlaylistManager.Current.GetSongItem(index);
+            OnTrackStarted(song, PlaybackService.Instance.PlayerState);
+            prevSong = song;
         }
 
         private void PlaybackService_MediaPlayerStateChanged(MediaPlaybackState state)
@@ -55,14 +57,14 @@ namespace NextPlayerUWP.Playback
             prevState = state;
         }
 
-        private void OnTrackStarted(int songId, MediaPlaybackState state)
+        private void OnTrackStarted(SongItem song, MediaPlaybackState state)
         {
-            MediaPlayerTrackStarted?.Invoke(songId, state.ToMyMediaPlaybackState());
+            MediaPlayerTrackStarted?.Invoke(song, state.ToMyMediaPlaybackState());
         }
 
-        private void OnTrackCompleted(int songId)
+        private void OnTrackCompleted(SongItem song)
         {
-            MediaPlayerTrackCompleted?.Invoke(songId);
+            MediaPlayerTrackCompleted?.Invoke(song);
         }
 
         private void OnTrackPaused()

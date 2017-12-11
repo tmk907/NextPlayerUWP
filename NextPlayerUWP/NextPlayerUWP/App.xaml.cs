@@ -2,6 +2,7 @@
 using Microsoft.Services.Store.Engagement;
 using NextPlayerUWP.AppColors;
 using NextPlayerUWP.Common;
+using NextPlayerUWP.Common.Tiles;
 using NextPlayerUWP.Playback;
 using NextPlayerUWP.Views;
 using NextPlayerUWPDataLayer.Constants;
@@ -108,6 +109,8 @@ namespace NextPlayerUWP
             OnStartAsyncFinished += InitAfterOnStart;
 
             RegisterNotificationChannelAsync();
+
+            liveTileUpdater = new LiveTileUpdater();
             this.UnhandledException += App_UnhandledException;
             s1.Stop();
             Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);

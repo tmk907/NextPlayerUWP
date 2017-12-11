@@ -311,7 +311,7 @@ namespace NextPlayerUWP.ViewModels.Settings
                     {
                         ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.EnableLiveTileWithImage, value);
                         TelemetryAdapter.TrackEvent("LiveImage " + ((value) ? "on" : "off"));
-                        PlaybackService.Instance.UpdateLiveTile(true);
+                        App.LiveTileUpdater.UpdateLiveTile(true);
                     }
                 }
                 Set(ref liveTileWithAlbumArt, value);

@@ -84,14 +84,6 @@ namespace NextPlayerUWPDataLayer.Services
             SessionKey = "";
         }
 
-        private async Task SetSession()
-        {
-            if (!IsUserLoggedIn())
-            {
-                await SetMobileSession();
-            }
-        }
-
         public async Task<StatusCode> SetMobileSession()
         {
             Dictionary<string, string> data = new Dictionary<string, string>();
@@ -151,7 +143,6 @@ namespace NextPlayerUWPDataLayer.Services
             return response;
         }
 
-
         public bool IsUserLoggedIn()
         {
             return SessionKey != "";
@@ -171,7 +162,6 @@ namespace NextPlayerUWPDataLayer.Services
         {
             return response.Contains("<lfm status=\"ok\">");
         }
-
 
         private string GetSignature(Dictionary<string,string> parameters)
         {
@@ -198,7 +188,6 @@ namespace NextPlayerUWPDataLayer.Services
             string signature = GetSignature(msg);
             msg.Add("api_sig", signature);
         }
-
 
         private StatusCode ParseError(string response)
         {
@@ -299,7 +288,6 @@ namespace NextPlayerUWPDataLayer.Services
             }
         }
 
-
         private async Task<StatusCode> TrackScroblle(List<TrackScrobble> data)
         {
             if (!AreCredentialsSet()) return StatusCode.ReAuth;
@@ -375,7 +363,6 @@ namespace NextPlayerUWPDataLayer.Services
             var errorCode = ParseError(response);
             return errorCode;
         }
-
 
         public async Task SendCachedScrobbles()
         {
@@ -453,33 +440,7 @@ namespace NextPlayerUWPDataLayer.Services
                 }
             }
         }
-
-        
-
-        public async Task CacheTrackScrobble(TrackScrobble scrobble)
-        {
-            if (AreCredentialsSet())
-            {
-                await DatabaseManager.Current.CacheTrackScrobbleAsync("track.scrobble", scrobble.Artist, scrobble.Track, scrobble.Timestamp);
-            }
-        }
-
-        public async Task CacheTrackLove(string artist, string track)
-        {
-            if (AreCredentialsSet())
-            {
-                await DatabaseManager.Current.CacheTrackLoveAsync("track.love", artist, track);
-            }
-        }
-
-        public async Task CacheTrackUnlove(string artist, string track)
-        {
-            if (AreCredentialsSet())
-            {
-                await DatabaseManager.Current.CacheTrackLoveAsync("track.unlove", artist, track);
-            }
-        }
-
+        //!
         public async Task TrackGetInfo(string title, string artist, bool autocorrect = true)
         {
             Dictionary<string, string> msg = new Dictionary<string, string>();

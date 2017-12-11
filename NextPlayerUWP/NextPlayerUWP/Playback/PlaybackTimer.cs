@@ -1,62 +1,46 @@
-﻿using System;
-using System.Threading.Tasks;
-using Windows.System.Threading;
+﻿using NextPlayerUWP.Common;
+using NextPlayerUWPDataLayer.Helpers;
+using System;
 
 namespace NextPlayerUWP.Playback
 {
     public class PlaybackTimer
     {
-        ThreadPoolTimer timer = null;
-        bool isTimerSet = false;
-        private Func<Task> taskToDo;
-        private Action actionToDo;
+        private ActionTimer MusicPlaybackTimer;
 
-        public void SetTimerWithAction(TimeSpan delay, Action actionToDo)
+        public PlaybackTimer()
         {
-            this.actionToDo = actionToDo;
-            if (delay > TimeSpan.Zero)
-            {
-                if (isTimerSet)
-                {
-                    TimerCancel();
-                }
-                timer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(TimerCallback), delay);
-                isTimerSet = true;
-            }
+            MusicPlaybackTimer = new ActionTimer();
         }
 
-        public void SetTimerWithTask(TimeSpan delay, Func<Task> taskToDo)
+        public void SetPlaybackStopTimer()
         {
-            this.taskToDo = taskToDo;
-
-            if (isTimerSet)
+            var t = ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.TimerTime);
+            long timerTicks = 0;
+            if (t != null)
             {
-                TimerCancel();
+                timerTicks = (long)t;
             }
-            timer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(TimerCallback), delay);
-            isTimerSet = true;
+            TimeSpan currentTime = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute) + TimeSpan.FromSeconds(DateTime.Now.Second);
+
+            TimeSpan delay = TimeSpan.FromTicks(timerTicks - currentTime.Ticks);
+            if (delay < TimeSpan.Zero)
+            {
+                delay = delay + TimeSpan.FromHours(24);
+            }
+
+            MusicPlaybackTimer.SetTimerWithAction(delay, PlaybackStopTimerCallback);
         }
 
-        private async void TimerCallback(ThreadPoolTimer timer)
+        private void PlaybackStopTimerCallback()
         {
-            TimerCancel();
-            if (taskToDo != null)
-            {
-                await Task.Run(taskToDo);
-            }
-            else
-            {
-                actionToDo?.Invoke();
-            }
+            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, false);
+            PlaybackService.Instance.Pause();
         }
 
-        public void TimerCancel()
+        public void CancelPlaybackStopTimer()
         {
-            isTimerSet = false;
-            if (timer != null)
-            {
-                timer.Cancel();
-            }
+            MusicPlaybackTimer.TimerCancel();
         }
     }
 }

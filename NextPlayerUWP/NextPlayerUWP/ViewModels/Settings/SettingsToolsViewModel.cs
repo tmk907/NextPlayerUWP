@@ -76,13 +76,13 @@ namespace NextPlayerUWP.ViewModels.Settings
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, true);
                     ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerTime, time.Ticks);
-                    PlaybackService.Instance.SetPlaybackStopTimer();
+                    PlaybackService.Instance.PlaybackTimer.SetPlaybackStopTimer();
                     TelemetryAdapter.TrackEvent("Timer on");
                 }
                 else
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.TimerOn, false);
-                    PlaybackService.Instance.CancelPlaybackStopTimer();
+                    PlaybackService.Instance.PlaybackTimer.CancelPlaybackStopTimer();
                 }
             }
         }

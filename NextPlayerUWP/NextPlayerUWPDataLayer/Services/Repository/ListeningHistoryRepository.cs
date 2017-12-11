@@ -15,7 +15,6 @@ namespace NextPlayerUWPDataLayer.Services.Repository
         private SQLiteAsyncConnection connectionAsync;
         public string DBFilePath { get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.FileNameHistoryDB); } }
 
-
         public ListeningHistoryRepository()
         {
             CreateDatabaseIfNotExist();
