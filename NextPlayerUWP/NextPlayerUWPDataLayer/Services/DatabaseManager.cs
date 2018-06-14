@@ -633,6 +633,14 @@ namespace NextPlayerUWPDataLayer.Services
             return songs;
         }
 
+        public async Task<Dictionary<string,SongItem>> GetAllSongItemsDictAsync()
+        {
+            Dictionary<string, SongItem> songs = new Dictionary<string, SongItem>();
+            var result = await songsConnectionAsync.ToListAsync();
+            songs = result.ToDictionary(kv => kv.Path, kv => new SongItem(kv));
+            return songs;
+        }
+
         public async Task<ObservableCollection<SongItem>> GetLocalSongItemsAsync()
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();

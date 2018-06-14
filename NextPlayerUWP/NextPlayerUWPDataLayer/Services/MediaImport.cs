@@ -466,7 +466,7 @@ namespace NextPlayerUWPDataLayer.Services
             withoutChangePlaylists = new List<ImportedPlaylist>();
             playlistsAdded = 0;
 
-            var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+            var allSongs = await DatabaseManager.Current.GetAllSongItemsDictAsync();
 
             foreach (var file in playlistFiles)
             {
@@ -848,9 +848,17 @@ namespace NextPlayerUWPDataLayer.Services
             if (!String.IsNullOrEmpty(p.Path))
             {
                 var file = await FutureAccessHelper.GetFileFromPathAsync(p.Path);
+                if (file == null)
+                {
+                    try
+                    {
+                        file = await StorageFile.GetFileFromPathAsync(p.Path);
+                    }
+                    catch (Exception ex) { }
+                }
                 if (file != null)
                 {
-                    var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+                    var allSongs = await DatabaseManager.Current.GetAllSongItemsDictAsync();
                     ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
                     if (playlist != null)
                     {
@@ -858,28 +866,10 @@ namespace NextPlayerUWPDataLayer.Services
                         int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
                     }
                 }
-                else
-                {
-                    try
-                    {
-                        file = await StorageFile.GetFileFromPathAsync(p.Path);
-                        var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
-                        ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
-                        if (playlist != null)
-                        {
-                            playlist.PlainPlaylistId = playlistId;
-                            int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
             }
         }
 
-        private async Task<ImportedPlaylist> ImportPlaylistAsync(StorageFile file, IEnumerable<SongItem> songs)
+        private async Task<ImportedPlaylist> ImportPlaylistAsync(StorageFile file, Dictionary<string, SongItem> songs)
         {
             PlaylistImporter pi = new PlaylistImporter();
             ImportedPlaylist newPlaylist = await pi.Import(file);
@@ -899,9 +889,10 @@ namespace NextPlayerUWPDataLayer.Services
         /// <param name="entry"></param>
         /// <param name="allSongs"></param>
         /// <returns>songId</returns>
-        private async Task<int> ResolvePlaylistEntryAsync(GeneralPlaylistEntry entry, IEnumerable<SongItem> allSongs)
+        private async Task<int> ResolvePlaylistEntryAsync(GeneralPlaylistEntry entry, Dictionary<string,SongItem> allSongs)
         {
-            var song = allSongs.FirstOrDefault(s => s.Path.Equals(entry.Path));
+            SongItem song = null;
+            allSongs.TryGetValue(entry.Path, out song);
             int id = 0;
             if (song != null)
             {
@@ -1026,7 +1017,7 @@ namespace NextPlayerUWPDataLayer.Services
                 var playlistItem = playlists.FirstOrDefault(p => p.Path.Equals(file.Path));
                 if (playlistItem == null || playlistItem.DateModified < prop.DateModified)
                 {
-                    var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+                    var allSongs = await DatabaseManager.Current.GetAllSongItemsDictAsync();
                     ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
                     if (playlist != null)
                     {
@@ -1069,7 +1060,7 @@ namespace NextPlayerUWPDataLayer.Services
         private async Task ImportPlaylistsAfterAppUpdate9()
         {
             PlaylistHelper ph = new PlaylistHelper();
-            var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+            var allSongs = await DatabaseManager.Current.GetAllSongItemsDictAsync();
             var folder = await ph.GetFolderWithAppPlaylistsAsync();
             queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string> { ".m3u" });
             queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
