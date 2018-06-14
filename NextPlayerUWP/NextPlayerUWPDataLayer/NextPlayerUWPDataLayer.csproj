@@ -302,8 +302,8 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.UWP.2015, Version=3.20.1">
-      <Name>SQLite for Universal Windows Platform %28SQLite.UWP.2015, Version=3.20.1%29</Name>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.24.0">
+      <Name>SQLite for Universal Windows Platform %28SQLite.UWP.2015, Version=3.24.0%29</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
@@ -311,13 +311,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dropbox.Api">
-      <Version>4.6.0</Version>
+      <Version>4.8.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Net.Http">
       <Version>2.2.29</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.2</Version>
+      <Version>6.1.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETNative.Analyzer">
       <Version>1.0.0</Version>

@@ -1,2 +1,2 @@
-MainPackage=E:\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\x64\Release\NextPlayerUWP_3.8.2.0_x64.appx
-SymbolPackage=E:\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\NextPlayerUWP_3.8.2.0_Test\NextPlayerUWP_3.8.2.0_x64.appxsym
+MainPackage=E:\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\bin\x64\Release\NextPlayerUWP_3.8.3.0_x64.appx
+SymbolPackage=E:\Source\Repos\NextPlayerUWP\NextPlayerUWP\NextPlayerUWP\AppPackages\NextPlayerUWP_3.8.3.0_Test\NextPlayerUWP_3.8.3.0_x64.appxsym
