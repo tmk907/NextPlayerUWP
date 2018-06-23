@@ -251,4 +251,11 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
 /NextPlayerUWP/NextPlayerUWP/AppPackagesBeta
+/NextPlayerUWP/NextPlayerUWP/_pkginfo.txt
+/NextPlayerUWP/NextPlayerUWP/BundleArtifacts
+/NextPlayerUWP/NextPlayerUWP/NextPlayerUWP_StoreKey.pfx
+/NextPlayerUWP/NextPlayerUWP/NextPlayerUWP_TemporaryKey.pfx
+/NextPlayerUWP/NextPlayerUWP/Package.xml
+/NextPlayerUWP/NextPlayerUWP/Package.StoreAssociation.xml
