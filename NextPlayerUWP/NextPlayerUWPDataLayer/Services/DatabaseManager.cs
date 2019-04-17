@@ -633,6 +633,14 @@ namespace NextPlayerUWPDataLayer.Services
             return songs;
         }
 
+        public async Task<Dictionary<string,SongItem>> GetAllSongItemsDictAsync()
+        {
+            Dictionary<string, SongItem> songs = new Dictionary<string, SongItem>();
+            var result = await songsConnectionAsync.ToListAsync();
+            songs = result.ToDictionary(kv => kv.Path, kv => new SongItem(kv));
+            return songs;
+        }
+
         public async Task<ObservableCollection<SongItem>> GetLocalSongItemsAsync()
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
@@ -1321,11 +1329,12 @@ namespace NextPlayerUWPDataLayer.Services
             }
             else
             {
+                Debug.WriteLine("InsertSongAsync {0} {1}", songData.Path, 1);
                 return q.FirstOrDefault().SongId;
             }
         }
 
-        public async Task InsertSongsAsync(IEnumerable<SongData> list)
+        public async Task<List<int>> InsertSongsAsync(IEnumerable<SongData> list)
         {
             List<SongsTable> newSongs = new List<SongsTable>();
             foreach (var item in list)
@@ -1333,6 +1342,24 @@ namespace NextPlayerUWPDataLayer.Services
                 newSongs.Add(CreateSongsTable(item));
             }
             await connectionAsync.InsertAllAsync(newSongs);
+
+            var list2 = await GetSongItemsForPlaylistAsync(list.Select(e => e.Path));
+            //!!
+            //if (list2.Count != list.Count())
+            //{
+
+            //}
+            var lookup = list2.ToLookup(e => e.Path);
+            var ids = new List<int>();
+            foreach(var data in list)
+            {
+                ids.Add(lookup[data.Path].First().SongId);
+                //if (lookup[data.Path].Count() > 1)
+                //{
+
+                //}
+            }
+            return ids;
         }
 
         public int InsertPlainPlaylist(string _name)

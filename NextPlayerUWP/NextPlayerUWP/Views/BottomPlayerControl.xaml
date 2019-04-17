@@ -30,7 +30,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="30">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
@@ -40,6 +40,9 @@
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#16FFFFFF"/>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
@@ -51,9 +54,9 @@
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#20FFFFFF"/>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
@@ -78,7 +81,17 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <ContentPresenter x:Name="ContentPresenter" 
+                                              AutomationProperties.AccessibilityView="Raw" 
+                                              BorderBrush="{TemplateBinding BorderBrush}" 
+                                              BorderThickness="{TemplateBinding BorderThickness}" 
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              ContentTransitions="{TemplateBinding ContentTransitions}" 
+                                              Content="{TemplateBinding Content}" 
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              Padding="{TemplateBinding Padding}" 
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              CornerRadius="30" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -101,7 +114,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RepeatButton">
-                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="30" >
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
@@ -111,6 +124,9 @@
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#16FFFFFF"/>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
@@ -122,9 +138,9 @@
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#20FFFFFF"/>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
@@ -149,7 +165,17 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <ContentPresenter x:Name="ContentPresenter" 
+                                              AutomationProperties.AccessibilityView="Raw" 
+                                              BorderBrush="{TemplateBinding BorderBrush}" 
+                                              BorderThickness="{TemplateBinding BorderThickness}" 
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              ContentTransitions="{TemplateBinding ContentTransitions}" 
+                                              Content="{TemplateBinding Content}" 
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              Padding="{TemplateBinding Padding}" 
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              CornerRadius="30" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -710,7 +736,7 @@
                 <RepeatButton Grid.Column="1"
                             Click="{x:Bind ViewModel.PlayerVM.PreviousOrSeek}"
                             Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval}"
-                            Width="48" Height="60"
+                            Width="54" Height="54"
                             Style="{StaticResource BottomPlayerRepeatButtonStyle}">
                     <RepeatButton.ContentTemplate>
                         <DataTemplate>
@@ -726,9 +752,9 @@
                     </RepeatButton.ContentTemplate>
                 </RepeatButton>
                 <Button Grid.Column="2"
-                            Click="{x:Bind ViewModel.PlayerVM.Play}"
-                            Width="48" Height="60"
-                            Style="{StaticResource BottomPlayerButtonStyle}">
+                    Click="{x:Bind ViewModel.PlayerVM.Play}"
+                    Width="60" Height="60"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Grid>
@@ -746,7 +772,7 @@
                 <RepeatButton Grid.Column="3"
                             Click="{x:Bind ViewModel.PlayerVM.NextOrSeek}"
                             Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval}"
-                            Width="48" Height="60"
+                            Width="54" Height="54"
                             Style="{StaticResource BottomPlayerRepeatButtonStyle}">
                     <RepeatButton.ContentTemplate>
                         <DataTemplate>
@@ -765,7 +791,7 @@
                                 x:Name="ToggleRepeatButton"
                             Click="{x:Bind ViewModel.PlayerVM.ToggleRepeat}"
                             Width="48" 
-                            Height="60"
+                            Height="48"
                             Style="{StaticResource BottomPlayerButtonStyle}">
                     <Button.ContentTemplate>
                         <DataTemplate>
@@ -786,7 +812,7 @@
                 <Button Style="{StaticResource BottomPlayerButtonStyle}"
                                 RightTapped="{x:Bind ViewModel.PlayerVM.MuteVolume}"
                                 Width="48" 
-                                Height="60">
+                                Height="48">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Grid>

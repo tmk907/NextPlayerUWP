@@ -89,7 +89,6 @@
                                   Content="{Binding Content}"
                                   Foreground="{Binding NavButtonForeground, ElementName=ThisPage, FallbackValue=White, Mode=OneWay}"
                                   Loaded="NavButton_Loaded"
-                                  ToolTipService.ToolTip="{Binding Path=(ToolTipService.ToolTip)}"
                                   Visibility="{Binding Visibility, Mode=TwoWay}" />
             </DataTemplate>
 
@@ -110,7 +109,6 @@
                               RightTapped="NavButton_RightTapped"
                               TabIndex="2"
                               Tapped="NavButton_Tapped"
-                              ToolTipService.ToolTip="{Binding Path=(ToolTipService.ToolTip)}"
                               Unchecked="NavButtonUnchecked"
                               Visibility="{Binding Visibility, Mode=TwoWay}">
                     <ToggleButton.Template>
@@ -210,7 +208,6 @@
                         RightTapped="NavButton_RightTapped"
                         TabIndex="2"
                         Tapped="NavButton_Tapped"
-                        ToolTipService.ToolTip="{x:Bind Path=(ToolTipService.ToolTip), Mode=OneWay}"
                         Visibility="{x:Bind Visibility, Mode=OneWay}">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">

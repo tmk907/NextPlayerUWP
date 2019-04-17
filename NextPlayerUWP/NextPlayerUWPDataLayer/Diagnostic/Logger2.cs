@@ -57,7 +57,7 @@ namespace NextPlayerUWPDataLayer.Diagnostics
             minLevel = level;
         }
 
-        public void LogAppUnhadledException(UnhandledExceptionEventArgs e)
+        public void LogAppUnhadledException(Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             WriteMessage(string.Format("UnhandledException - Exit - {0}", e.Exception.ToString()));
             Task t = WriteToFile();

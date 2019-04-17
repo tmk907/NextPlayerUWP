@@ -483,9 +483,7 @@
                     Margin="12,12,12,12"
                     x:Name="AlbumCoverImage"
                     x:DeferLoadStrategy="Lazy" 
-                    Visibility="Collapsed"
-                    Opacity="0"
-                    ImageOpened="AlbumCoverImage_ImageOpened">
+                    Visibility="Collapsed">
                 <Image.Source>
                     <BitmapImage
                         UriSource="{x:Bind ViewModel.Album.ImageUri, Mode=OneWay}"

@@ -158,8 +158,8 @@ namespace NextPlayerUWP.ViewModels
 
         public void ItemClicked(object sender, ItemClickEventArgs e)
         {
-            //listView.PrepareConnectedAnimation("albumImageAnimation", e.ClickedItem, "AlbumImage");
-            //persitedItemForConnectedAnimation = e.ClickedItem;
+            listView.PrepareConnectedAnimation("albumImageAnimation", e.ClickedItem, "AlbumImage");
+            persitedItemForConnectedAnimation = e.ClickedItem;
             NavigationService.Navigate(AppPages.Pages.Album, ((AlbumItem)e.ClickedItem).AlbumId);
         }
 

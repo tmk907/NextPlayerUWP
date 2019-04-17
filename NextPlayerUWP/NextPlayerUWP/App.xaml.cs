@@ -217,7 +217,7 @@ namespace NextPlayerUWP
             appShortcuts.RegisterShortcuts();
         }
 
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             //Logger.SaveInSettings("App_UnhandledException " + e.Exception);
             Logger2.Current.LogAppUnhadledException(e);
@@ -247,6 +247,10 @@ namespace NextPlayerUWP
             s1.Stop();
             Debug.WriteLine("Time: {0}ms", s1.ElapsedMilliseconds);
             s1.Start();
+            AppAccentColors.RestoreAppAccentColors();
+            TranslationHelper tr = new TranslationHelper();
+            tr.ChangeSlideableItemDescription();
+
             if (ApplicationExecutionState.Terminated == args.PreviousExecutionState)
             {
                 await SongCoverManager.Instance.Initialize(true);
@@ -255,11 +259,8 @@ namespace NextPlayerUWP
             {
                 await SongCoverManager.Instance.Initialize();
             }
-           
-            AppAccentColors.RestoreAppAccentColors();
-            TranslationHelper tr = new TranslationHelper();
-            tr.ChangeSlideableItemDescription();
-
+            
+            
             await ChangeStatusBarVisibility();
             ThemeHelper.ApplyAppTheme(ThemeHelper.IsLightTheme);
 

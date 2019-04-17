@@ -138,6 +138,7 @@
                     <StackPanel Orientation="Horizontal" Margin="4,4,4,4">
                         <Button 
                             x:Uid="ButtonUpdate"
+                            Style="{StaticResource ButtonRevealStyle}"
                             Content="Update" 
                             Margin="0,0,12,0"
                             MinWidth="128"
@@ -208,6 +209,7 @@
                     </ListView>
                     <Button 
                         x:Uid="ButtonAddFolder"
+                        Style="{StaticResource ButtonRevealStyle}"
                         Content="Add folder" 
                         Click="{x:Bind ViewModel.AddFolder}"
                         Margin="0,4,4,4"
@@ -230,6 +232,7 @@
                     </ListView>
                     <Button 
                         x:Uid="ButtonAddFolder"
+                        Style="{StaticResource ButtonRevealStyle}"
                         Content="Add folder" 
                         Click="{x:Bind ViewModel.AddSdCardFolder}"
                         Margin="0,4,4,4"

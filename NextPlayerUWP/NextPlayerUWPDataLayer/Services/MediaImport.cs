@@ -466,7 +466,7 @@ namespace NextPlayerUWPDataLayer.Services
             withoutChangePlaylists = new List<ImportedPlaylist>();
             playlistsAdded = 0;
 
-            var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+            var allSongs = await DatabaseManager.Current.GetAllSongItemsDictAsync();
 
             foreach (var file in playlistFiles)
             {
@@ -848,9 +848,17 @@ namespace NextPlayerUWPDataLayer.Services
             if (!String.IsNullOrEmpty(p.Path))
             {
                 var file = await FutureAccessHelper.GetFileFromPathAsync(p.Path);
+                if (file == null)
+                {
+                    try
+                    {
+                        file = await StorageFile.GetFileFromPathAsync(p.Path);
+                    }
+                    catch (Exception ex) { }
+                }
                 if (file != null)
                 {
-                    var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+                    var allSongs = await DatabaseManager.Current.GetAllSongItemsDictAsync();
                     ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
                     if (playlist != null)
                     {
@@ -858,142 +866,145 @@ namespace NextPlayerUWPDataLayer.Services
                         int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
                     }
                 }
-                else
-                {
-                    try
-                    {
-                        file = await StorageFile.GetFileFromPathAsync(p.Path);
-                        var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
-                        ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
-                        if (playlist != null)
-                        {
-                            playlist.PlainPlaylistId = playlistId;
-                            int id = await DatabaseManager.Current.InsertOrUpdateImportedPlaylist(playlist);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
             }
         }
 
-        private async Task<ImportedPlaylist> ImportPlaylistAsync(StorageFile file, IEnumerable<SongItem> songs)
+        private async Task<ImportedPlaylist> ImportPlaylistAsync(StorageFile file, Dictionary<string, SongItem> songs)
         {
             PlaylistImporter pi = new PlaylistImporter();
             ImportedPlaylist newPlaylist = await pi.Import(file);
             string folderPath = Path.GetDirectoryName(newPlaylist.Path);
-            foreach (var m in newPlaylist.Entries)
+            var dataToInsert = new List<SongData>();
+            try
             {
-                m.Path = PlaylistHelper.MakeAbsolutePath(folderPath, m.Path);
-                int id = await ResolvePlaylistEntryAsync(m, songs);
-                newPlaylist.SongIds.Add(id);
+                foreach (var entry in newPlaylist.Entries)
+                {
+                    entry.Path = PlaylistHelper.MakeAbsolutePath(folderPath, entry.Path);
+                    int id = GetIdIfExist(entry, songs);
+                    if (id == 0)
+                    {
+                        var songData = await PlaylistEntryToSongDataAsync(entry);
+                        dataToInsert.Add(songData);
+                    }
+                    newPlaylist.SongIds.Add(id);
+                }
+                var ids = await DatabaseManager.Current.InsertSongsAsync(dataToInsert);
+                int i = 0;
+                for (int j = 0; j < newPlaylist.SongIds.Count; j++)
+                {
+                    if (newPlaylist.SongIds[j] == 0)
+                    {
+                        newPlaylist.SongIds[j] = ids[i];
+                        i++;
+                    }
+                }
             }
+            catch (Exception ex) { }
+            //if (i!=ids.Count)
+            //{
+
+            //}
             return newPlaylist;
         }
 
-        /// <summary>
-        /// If database doesn't contain item with entry.Path new item is created
-        /// </summary>
-        /// <param name="entry"></param>
-        /// <param name="allSongs"></param>
-        /// <returns>songId</returns>
-        private async Task<int> ResolvePlaylistEntryAsync(GeneralPlaylistEntry entry, IEnumerable<SongItem> allSongs)
+        private int GetIdIfExist(GeneralPlaylistEntry entry, Dictionary<string, SongItem> allSongs)
         {
-            var song = allSongs.FirstOrDefault(s => s.Path.Equals(entry.Path));
+            SongItem song = null;
+            allSongs.TryGetValue(entry.Path, out song);
             int id = 0;
             if (song != null)
             {
                 id = song.SongId;
             }
-            else
-            {
-                SongData data = DatabaseManager.GetEmptySongData();
-                if (entry.Path.Length >= 2 && entry.Path[1] == ':')
-                {
-                    var file = await FutureAccessHelper.GetFileFromPathAsync(entry.Path);
-                    if (file != null)
-                    {
-                        data = await CreateSongFromFileAsync(file);
-                        id = await DatabaseManager.Current.InsertSongAsync(data);
-                    }
-                }
-                if (id == 0)
-                {
-                    data.Tag.Album = entry.AlbumTitle ?? "";
-                    data.Tag.AlbumArtist = entry.AlbumArtist ?? "";
-                    data.Tag.Title = entry.TrackTitle ?? "";
-                    data.Tag.Artists = entry.TrackArtist ?? "";
-                    data.Tag.FirstArtist = entry.TrackArtist ?? "";
-                    data.Duration = entry.Duration;
-                    data.Path = entry.Path ?? "";
-                    data.IsAvailable = 0;
+            return id;
+        }
 
-                    if (data.Path.Length >= 2)
+        private async Task<SongData> PlaylistEntryToSongDataAsync(GeneralPlaylistEntry entry)
+        {
+            int id = 0;
+            SongData data = DatabaseManager.GetEmptySongData();
+            if (entry.Path.Length >= 2 && entry.Path[1] == ':')
+            {
+                var file = await FutureAccessHelper.GetFileFromPathAsync(entry.Path);
+                if (file != null)
+                {
+                    data = await CreateSongFromFileAsync(file);
+                    return data;
+                }
+            }
+            if (id == 0)
+            {
+                data.Tag.Album = entry.AlbumTitle ?? "";
+                data.Tag.AlbumArtist = entry.AlbumArtist ?? "";
+                data.Tag.Title = entry.TrackTitle ?? "";
+                data.Tag.Artists = entry.TrackArtist ?? "";
+                data.Tag.FirstArtist = entry.TrackArtist ?? "";
+                data.Duration = entry.Duration;
+                data.Path = entry.Path ?? "";
+                data.IsAvailable = 0;
+
+                if (data.Path.Length >= 2)
+                {
+                    if (data.Path[1] == ':')//local file
                     {
-                        if (data.Path[1] == ':')//local file
+                        data.MusicSourceType = (int)Enums.MusicSource.LocalNotMusicLibrary;
+                        try
                         {
-                            data.MusicSourceType = (int)Enums.MusicSource.LocalNotMusicLibrary;
-                            try
-                            {
-                                data.DirectoryPath = Path.GetDirectoryName(entry.Path);
-                                data.Filename = Path.GetFileName(data.Path);
-                                data.FolderName = Path.GetFileName(data.DirectoryPath);
-                            }
-                            catch (ArgumentException)
-                            {
-                                data.DirectoryPath = "";
-                                data.Filename = "";
-                                data.FolderName = "";
-                            }
+                            data.DirectoryPath = Path.GetDirectoryName(entry.Path);
+                            data.Filename = Path.GetFileName(data.Path);
+                            data.FolderName = Path.GetFileName(data.DirectoryPath);
                         }
-                        else
+                        catch (ArgumentException)
                         {
-                            if (data.Path.Contains("://"))//stream?
-                            {
-                                data.Tag.Title = (data.Tag.Title != "") ? data.Tag.Title : data.Path;
-                                try
-                                {
-                                    data.DirectoryPath = data.Path.Substring(0, data.Path.IndexOf(':') + 3);
-                                }
-                                catch
-                                {
-                                    data.DirectoryPath = data.Path;
-                                }
-                                data.Filename = data.Path;
-                                data.FolderName = data.Path;
-                                if (data.Path.StartsWith("http://") || data.Path.StartsWith("https://"))
-                                {
-                                    data.MusicSourceType = (int)Enums.MusicSource.OnlineFile;
-                                    data.IsAvailable = 1;
-                                }
-                                else
-                                {
-                                    data.MusicSourceType = (int)Enums.MusicSource.Unknown;
-                                }
-                            }
-                            else
-                            {
-                                data.DirectoryPath = data.Path;
-                                data.Filename = data.Path;
-                                data.FolderName = data.Path;
-                                data.MusicSourceType = (int)Enums.MusicSource.Unknown;
-                            }
+                            data.DirectoryPath = "";
+                            data.Filename = "";
+                            data.FolderName = "";
                         }
                     }
                     else
                     {
-                        data.DirectoryPath = entry.Path;
-                        data.Filename = entry.Path;
-                        data.FolderName = entry.Path;
-                        data.MusicSourceType = (int)Enums.MusicSource.Unknown;
+                        if (data.Path.Contains("://"))//stream?
+                        {
+                            data.Tag.Title = (data.Tag.Title != "") ? data.Tag.Title : data.Path;
+                            try
+                            {
+                                data.DirectoryPath = data.Path.Substring(0, data.Path.IndexOf(':') + 3);
+                            }
+                            catch
+                            {
+                                data.DirectoryPath = data.Path;
+                            }
+                            data.Filename = data.Path;
+                            data.FolderName = data.Path;
+                            if (data.Path.StartsWith("http://") || data.Path.StartsWith("https://"))
+                            {
+                                data.MusicSourceType = (int)Enums.MusicSource.OnlineFile;
+                                data.IsAvailable = 1;
+                            }
+                            else
+                            {
+                                data.MusicSourceType = (int)Enums.MusicSource.Unknown;
+                            }
+                        }
+                        else
+                        {
+                            data.DirectoryPath = data.Path;
+                            data.Filename = data.Path;
+                            data.FolderName = data.Path;
+                            data.MusicSourceType = (int)Enums.MusicSource.Unknown;
+                        }
                     }
-                    if (data.Tag.Title == "") data.Tag.Title = "Unknown title";
-                    id = await DatabaseManager.Current.InsertSongAsync(data);
                 }
+                else
+                {
+                    data.DirectoryPath = entry.Path;
+                    data.Filename = entry.Path;
+                    data.FolderName = entry.Path;
+                    data.MusicSourceType = (int)Enums.MusicSource.Unknown;
+                }
+                if (data.Tag.Title == "") data.Tag.Title = "Unknown title";
             }
-            return id;
+            return data;
         }
 
         public async Task<SongItem> OpenSingleFileAsync(StorageFile file)
@@ -1026,7 +1037,7 @@ namespace NextPlayerUWPDataLayer.Services
                 var playlistItem = playlists.FirstOrDefault(p => p.Path.Equals(file.Path));
                 if (playlistItem == null || playlistItem.DateModified < prop.DateModified)
                 {
-                    var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+                    var allSongs = await DatabaseManager.Current.GetAllSongItemsDictAsync();
                     ImportedPlaylist playlist = await ImportPlaylistAsync(file, allSongs);
                     if (playlist != null)
                     {
@@ -1069,7 +1080,7 @@ namespace NextPlayerUWPDataLayer.Services
         private async Task ImportPlaylistsAfterAppUpdate9()
         {
             PlaylistHelper ph = new PlaylistHelper();
-            var allSongs = await DatabaseManager.Current.GetAllSongItemsAsync();
+            var allSongs = await DatabaseManager.Current.GetAllSongItemsDictAsync();
             var folder = await ph.GetFolderWithAppPlaylistsAsync();
             queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string> { ".m3u" });
             queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;

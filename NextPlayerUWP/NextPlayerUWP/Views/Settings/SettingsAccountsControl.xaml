@@ -29,6 +29,7 @@
                 <Button 
                     Grid.Column="2"
                     x:Uid="ButtonLogout"
+                    Style="{StaticResource ButtonRevealStyle}"
                     MinWidth="64"
                     Click="ViewModel.CloudStorageLogout"
                     Tag="{Binding}"
@@ -64,6 +65,7 @@
                             Width="256"/>
                         <Button 
                             x:Uid="ButtonLogin"
+                            Style="{StaticResource ButtonRevealStyle}"
                             Content="Login"
                             Margin="0,8,0,0"
                             MinWidth="128"
@@ -72,6 +74,7 @@
                             Visibility="{x:Bind ViewModel.IsLastFmLoggedIn, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"/>
                         <Button 
                             x:Uid="ButtonLogout"
+                            Style="{StaticResource ButtonRevealStyle}"
                             Content="Logout"
                             MinWidth="128"
                             Margin="0,8,0,0"
@@ -112,6 +115,7 @@
                         </ListView>
                         <Button 
                             x:Uid="ButtonAddAccount"
+                            Style="{StaticResource ButtonRevealStyle}"
                             Content="Add account"
                             Margin="0,0,0,0"
                             MinWidth="128"
@@ -133,6 +137,7 @@
                         </ListView>
                         <Button 
                             x:Uid="ButtonAddAccount"
+                            Style="{StaticResource ButtonRevealStyle}"
                             Content="Add account"
                             Margin="0,0,0,0"
                             MinWidth="128"
@@ -154,6 +159,7 @@
                         </ListView>
                         <Button 
                             x:Uid="ButtonAddAccount"
+                            Style="{StaticResource ButtonRevealStyle}"
                             Content="Add account"
                             Margin="0,0,0,0"
                             MinWidth="128"

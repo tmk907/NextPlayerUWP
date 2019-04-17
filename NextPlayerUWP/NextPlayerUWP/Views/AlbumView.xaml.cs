@@ -7,6 +7,8 @@ using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using NextPlayerUWPDataLayer.Model;
 using NextPlayerUWP.Controls;
+using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -47,31 +49,31 @@ namespace NextPlayerUWP.Views
             selectionButtons.OnLoaded(ViewModel, PageHeader, AlbumSongsListView);
         }
 
-        //protected override void OnNavigatedTo(NavigationEventArgs e)
-        //{
-        //    base.OnNavigatedTo(e);
-        //    ConnectedAnimation imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("albumImageAnimation");
-        //    if (imageAnimation != null)
-        //    {
-        //        imageAnimation.TryStart(AlbumCoverImage);
-        //    }
-        //    else
-        //    {
-        //        imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("AlbumCoverFromArtist");
-        //        if (imageAnimation != null)
-        //        {
-        //            imageAnimation.TryStart(AlbumCoverImage);
-        //        }
-        //        else
-        //        {
-        //            imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("AlbumCoverFromAlbumArtist");
-        //            if (imageAnimation != null)
-        //            {
-        //                imageAnimation.TryStart(AlbumCoverImage);
-        //            }
-        //        }
-        //    }
-        //}
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            ConnectedAnimation imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("albumImageAnimation");
+            if (imageAnimation != null)
+            {
+                imageAnimation.TryStart(AlbumCoverImage);
+            }
+            else
+            {
+                imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("AlbumCoverFromArtist");
+                if (imageAnimation != null)
+                {
+                    imageAnimation.TryStart(AlbumCoverImage);
+                }
+                else
+                {
+                    imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("AlbumCoverFromAlbumArtist");
+                    if (imageAnimation != null)
+                    {
+                        imageAnimation.TryStart(AlbumCoverImage);
+                    }
+                }
+            }
+        }
 
         private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -102,11 +104,11 @@ namespace NextPlayerUWP.Views
             image.Fade(1, 700, 0).Start();
         }
 
-        private void AlbumCoverImage_ImageOpened(object sender, RoutedEventArgs e)
-        {
-            var image = (Image)sender;
-            image.Fade(1, 800, 0).Start();
-        }
+        //private void AlbumCoverImage_ImageOpened(object sender, RoutedEventArgs e)
+        //{
+        //    var image = (Image)sender;
+        //    image.Fade(1, 800, 0).Start();
+        //}
 
         private void ShuffleAppBarButton_Click(object sender, RoutedEventArgs e)
         {

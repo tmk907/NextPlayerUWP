@@ -616,19 +616,19 @@ namespace Template10.Common
             catch { /* this is okay */ }
 
             // this wonky style of loop is important due to a platform bug
-            int count = Application.Current.Resources.Count;
-            foreach (var resource in Application.Current.Resources)
-            {
-                var k = resource.Key;
-                if (k == typeof(Controls.CustomTitleBar))
-                {
-                    var s = resource.Value as Style;
-                    var t = new Controls.CustomTitleBar();
-                    t.Style = s;
-                }
-                count--;
-                if (count == 0) break;
-            }
+            //int count = Application.Current.Resources.Count;
+            //foreach (var resource in Application.Current.Resources)
+            //{
+            //    var k = resource.Key;
+            //    if (k == typeof(Controls.CustomTitleBar))
+            //    {
+            //        var s = resource.Value as Style;
+            //        var t = new Controls.CustomTitleBar();
+            //        t.Style = s;
+            //    }
+            //    count--;
+            //    if (count == 0) break;
+            //}
         }
 
         private async Task CallOnInitializeAsync(bool canRepeat, IActivatedEventArgs e)
