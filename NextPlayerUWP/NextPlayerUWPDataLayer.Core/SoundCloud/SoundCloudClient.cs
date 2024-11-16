@@ -3,6 +3,7 @@ using NextPlayerUWPDataLayer.SoundCloud.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,8 +23,8 @@ namespace NextPlayerUWPDataLayer.SoundCloud
         private async Task<string> DownloadAsync(string url)
         {
             String response;
-            Windows.Web.Http.HttpClient httpClient = new Windows.Web.Http.HttpClient();
-            Windows.Web.Http.HttpResponseMessage httpResponse = new Windows.Web.Http.HttpResponseMessage();
+            var httpClient = new HttpClient();
+            var httpResponse = new HttpResponseMessage();
             try
             {
                 Uri uri = new Uri(url);
