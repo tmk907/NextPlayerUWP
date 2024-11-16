@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 
 namespace NextPlayerUWPDataLayer.SpotifyAPI.Web
 {
@@ -17,8 +18,8 @@ namespace NextPlayerUWPDataLayer.SpotifyAPI.Web
         public async Task<string> DownloadAsync(string url)
         {
             String response;
-            Windows.Web.Http.HttpClient httpClient = new Windows.Web.Http.HttpClient();
-            Windows.Web.Http.HttpResponseMessage httpResponse = new Windows.Web.Http.HttpResponseMessage();
+            var httpClient = new HttpClient();
+            var httpResponse = new HttpResponseMessage();
             try
             {
                 Uri uri = new Uri(url);

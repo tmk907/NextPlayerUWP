@@ -110,7 +110,14 @@
   <ItemGroup>
     <Compile Include="CloudStorage\CloudAccount.cs" />
     <Compile Include="CloudStorage\CloudAccounts.cs" />
+    <Compile Include="CloudStorage\CloudStorageServiceFactory.cs" />
+    <Compile Include="CloudStorage\CloudStorageType.cs" />
+    <Compile Include="CloudStorage\Dropbox\DropboxService.cs" />
+    <Compile Include="CloudStorage\GoogleDrive\GoogleDriveService.cs" />
+    <Compile Include="CloudStorage\ICloudStorageService.cs" />
     <Compile Include="CloudStorage\OneDrive\OneDriveCredentialVault.cs" />
+    <Compile Include="CloudStorage\OneDrive\OneDriveService.cs" />
+    <Compile Include="CloudStorage\pCloud\PCloudService.cs" />
     <Compile Include="Diagnostic\Logger2.cs" />
     <Compile Include="Helpers\ClientHttp.cs" />
     <Compile Include="Helpers\DeviceFamilyHelper.cs" />
@@ -138,12 +145,6 @@
     <Compile Include="Jamendo\Util.cs" />
     <Compile Include="Model\AlbumArtistItem.cs" />
     <Compile Include="Model\CloudRootFolder.cs" />
-    <Compile Include="CloudStorage\CloudStorageServiceFactory.cs" />
-    <Compile Include="CloudStorage\CloudStorageType.cs" />
-    <Compile Include="CloudStorage\Dropbox\DropboxService.cs" />
-    <Compile Include="CloudStorage\GoogleDrive\GoogleDriveService.cs" />
-    <Compile Include="CloudStorage\ICloudStorageService.cs" />
-    <Compile Include="CloudStorage\pCloud\PCloudService.cs" />
     <Compile Include="Diagnostic\Logger.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
@@ -172,7 +173,6 @@
     <Compile Include="Model\SongData.cs" />
     <Compile Include="Model\SongItem.cs" />
     <Compile Include="Model\TrackStream.cs" />
-    <Compile Include="CloudStorage\OneDrive\OneDriveService.cs" />
     <Compile Include="pCloud\Downloader.cs" />
     <Compile Include="pCloud\Model\AudioMetadata.cs" />
     <Compile Include="pCloud\Model\BaseMetadata.cs" />
@@ -229,39 +229,6 @@
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\MigrationHelper.cs" />
     <Compile Include="Services\SpotifyService.cs" />
-    <Compile Include="Spotify\Enums\AlbumType.cs" />
-    <Compile Include="Spotify\Enums\FollowType.cs" />
-    <Compile Include="Spotify\Enums\Scope.cs" />
-    <Compile Include="Spotify\Enums\SearchType.cs" />
-    <Compile Include="Spotify\IClient.cs" />
-    <Compile Include="Spotify\Models\ArrayResponse.cs" />
-    <Compile Include="Spotify\Models\BasicModel.cs" />
-    <Compile Include="Spotify\Models\Category.cs" />
-    <Compile Include="Spotify\Models\CategoryList.cs" />
-    <Compile Include="Spotify\Models\CategoryPlaylist.cs" />
-    <Compile Include="Spotify\Models\CursorPaging.cs" />
-    <Compile Include="Spotify\Models\FeaturedPlaylists.cs" />
-    <Compile Include="Spotify\Models\FollowedArtists.cs" />
-    <Compile Include="Spotify\Models\FullAlbum.cs" />
-    <Compile Include="Spotify\Models\FullArtist.cs" />
-    <Compile Include="Spotify\Models\FullPlaylist.cs" />
-    <Compile Include="Spotify\Models\FullTrack.cs" />
-    <Compile Include="Spotify\Models\GeneralModels.cs" />
-    <Compile Include="Spotify\Models\NewAlbumReleases.cs" />
-    <Compile Include="Spotify\Models\Paging.cs" />
-    <Compile Include="Spotify\Models\PrivateProfile.cs" />
-    <Compile Include="Spotify\Models\PublicProfile.cs" />
-    <Compile Include="Spotify\Models\SearchItem.cs" />
-    <Compile Include="Spotify\Models\SimpleAlbum.cs" />
-    <Compile Include="Spotify\Models\SimpleArtist.cs" />
-    <Compile Include="Spotify\Models\SimplePlaylist.cs" />
-    <Compile Include="Spotify\Models\SimpleTrack.cs" />
-    <Compile Include="Spotify\Models\Snapshot.cs" />
-    <Compile Include="Spotify\Models\Token.cs" />
-    <Compile Include="Spotify\SpotifyWebAPI.cs" />
-    <Compile Include="Spotify\SpotifyWebBuilder.cs" />
-    <Compile Include="Spotify\SpotifyWebClient.cs" />
-    <Compile Include="Spotify\Util.cs" />
     <Compile Include="Model\Tags.cs" />
     <Content Include="Properties\NextPlayerUWPDataLayer.rd.xml" />
   </ItemGroup>
@@ -270,9 +237,7 @@
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Spotify\Auth\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="Dropbox.Api">
       <Version>4.8.1</Version>
