@@ -782,15 +782,6 @@
     <PackageReference Include="Colourful">
       <Version>1.2.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.ApplicationInsights">
-      <Version>1.2.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.ApplicationInsights.PersistenceChannel">
-      <Version>1.2.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.ApplicationInsights.WindowsApps">
-      <Version>1.1.1</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Net.Http">
       <Version>2.2.29</Version>
     </PackageReference>

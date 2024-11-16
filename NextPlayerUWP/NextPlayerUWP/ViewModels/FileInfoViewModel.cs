@@ -47,7 +47,6 @@ namespace NextPlayerUWP.ViewModels
             }
             catch (Exception ex)
             {
-                //App.TelemetryClient.TrackTrace("AddFileSize" + Environment.NewLine + ex.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
             }
         }
     }

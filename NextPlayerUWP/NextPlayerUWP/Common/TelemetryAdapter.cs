@@ -1,5 +1,4 @@
-﻿using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.Services.Store.Engagement;
+﻿using Microsoft.Services.Store.Engagement;
 using NextPlayerUWPDataLayer.Helpers;
 using System;
 using System.Collections;
