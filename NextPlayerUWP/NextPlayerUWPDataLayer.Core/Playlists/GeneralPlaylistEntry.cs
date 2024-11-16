@@ -1,4 +1,4 @@
-﻿using PlaylistsNET.Model;
+﻿using PlaylistsNET.Models;
 using System;
 
 namespace NextPlayerUWPDataLayer.Playlists

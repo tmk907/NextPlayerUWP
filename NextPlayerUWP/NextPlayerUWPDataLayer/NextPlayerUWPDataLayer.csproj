@@ -111,7 +111,6 @@
     <Compile Include="CloudStorage\CloudAccount.cs" />
     <Compile Include="CloudStorage\CloudAccounts.cs" />
     <Compile Include="CloudStorage\CloudStorageServiceFactory.cs" />
-    <Compile Include="CloudStorage\CloudStorageType.cs" />
     <Compile Include="CloudStorage\Dropbox\DropboxService.cs" />
     <Compile Include="CloudStorage\GoogleDrive\GoogleDriveService.cs" />
     <Compile Include="CloudStorage\ICloudStorageService.cs" />
@@ -133,7 +132,6 @@
     <Compile Include="Images\PaletteUWP\PaletteHelper.cs" />
     <Compile Include="Images\PaletteUWP\Target.cs" />
     <Compile Include="Model\AlbumArtistItem.cs" />
-    <Compile Include="Model\CloudRootFolder.cs" />
     <Compile Include="Diagnostic\Logger.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
@@ -145,26 +143,15 @@
     <Compile Include="Helpers\TileData.cs" />
     <Compile Include="Model\AlbumItem.cs" />
     <Compile Include="Model\ArtistItem.cs" />
-    <Compile Include="Model\FolderItem.cs" />
     <Compile Include="Model\GenreItem.cs" />
-    <Compile Include="Model\GroupList.cs" />
-    <Compile Include="Model\ImportedPlaylist.cs" />
-    <Compile Include="Model\NowPlayingListItem.cs" />
-    <Compile Include="Model\NowPlayingSong.cs" />
-    <Compile Include="Model\ObservableRangeCollection.cs" />
-    <Compile Include="Model\CloudFolder.cs" />
-    <Compile Include="Model\PlaylistFilterElement.cs" />
     <Compile Include="Model\PlaylistItem.cs" />
-    <Compile Include="Model\SdCardFolder.cs" />
     <Compile Include="Model\SmartPlaylistItem.cs" />
-    <Compile Include="Model\SongData.cs" />
     <Compile Include="Playlists\ContentCreator\EmptyContentCreator.cs" />
     <Compile Include="Playlists\ContentCreator\IContentCreator.cs" />
     <Compile Include="Playlists\ContentCreator\M3uContentCreator.cs" />
     <Compile Include="Playlists\ContentCreator\PlsContentCreator.cs" />
     <Compile Include="Playlists\ContentCreator\WplContentCreator.cs" />
     <Compile Include="Playlists\ContentCreator\ZplContentCreator.cs" />
-    <Compile Include="Playlists\GeneralPlaylistEntry.cs" />
     <Compile Include="Playlists\PlaylistHelper.cs" />
     <Compile Include="Playlists\PlaylistFileReader.cs" />
     <Compile Include="Playlists\PlaylistFileSaver.cs" />
@@ -191,7 +178,6 @@
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\MigrationHelper.cs" />
     <Compile Include="Services\SpotifyService.cs" />
-    <Compile Include="Model\Tags.cs" />
     <Content Include="Properties\NextPlayerUWPDataLayer.rd.xml" />
   </ItemGroup>
   <ItemGroup>
