@@ -27,15 +27,6 @@
 			}
 		},
 		{
-			"name": "HockeySDK.UWP",
-			"site": "https://github.com/bitstadium/HockeySDK-Windows",
-			"license": {
-				"type": "The MIT License (MIT)",
-				"copyright": "Copyright (c) Microsoft Corporation",
-				"content": ""
-			}
-		},
-		{
 			"name": "Json.NET",
 			"site": "http://www.newtonsoft.com/json",
 			"license": {

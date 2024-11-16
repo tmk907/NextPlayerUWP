@@ -1,5 +1,4 @@
-﻿using Microsoft.HockeyApp;
-using Microsoft.Services.Store.Engagement;
+﻿using Microsoft.Services.Store.Engagement;
 using NextPlayerUWP.AppColors;
 using NextPlayerUWP.Common;
 using NextPlayerUWP.Views;
@@ -46,7 +45,6 @@ namespace NextPlayerUWP
             this.LeavingBackground += App_LeavingBackground;
             MemoryManager.AppMemoryUsageLimitChanging += MemoryManager_AppMemoryUsageLimitChanging;
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_AppMemoryUsageIncreased;
-            HockeyClient.Current.Configure(AppConstants.HockeyAppId);
             Logger2.Current.CreateErrorFile();
 #if DEBUG
             Logger2.Current.SetLevel(Logger2.Level.Debug);

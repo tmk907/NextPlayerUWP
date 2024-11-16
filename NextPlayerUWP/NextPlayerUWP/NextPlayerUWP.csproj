@@ -782,9 +782,6 @@
     <PackageReference Include="Colourful">
       <Version>1.2.1</Version>
     </PackageReference>
-    <PackageReference Include="HockeySDK.UWP">
-      <Version>4.1.6</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.ApplicationInsights">
       <Version>1.2.3</Version>
     </PackageReference>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.HockeyApp;
 using Microsoft.Services.Store.Engagement;
 using NextPlayerUWPDataLayer.Helpers;
 using System;
@@ -19,14 +18,14 @@ namespace NextPlayerUWP.Common
             StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
             logger.Log(eventName);
 #endif
-            HockeyClient.Current.TrackEvent(eventName);
+            //HockeyClient.Current.TrackEvent(eventName);
 
             System.Diagnostics.Debug.WriteLine("TrackEvent: " + eventName);
         }
 
         public static void TrackEvent(string eventName, IDictionary<string,string> properties, IDictionary<string,double> metrics)
         {
-            HockeyClient.Current.TrackEvent(eventName, properties, metrics);
+            //HockeyClient.Current.TrackEvent(eventName, properties, metrics);
         }
 
         public static void TrackLibraryUpdate(int songsCount, int playlistsCount, double durationSeconds)
@@ -39,24 +38,24 @@ namespace NextPlayerUWP.Common
             var properties = new Dictionary<string, string> {
                 { "libraryUpdateP", "libraryUpdated" }
             };
-            HockeyClient.Current.TrackEvent("libraryUpdate", properties, metrics);
+            //HockeyClient.Current.TrackEvent("libraryUpdate", properties, metrics);
         }
 
         public static void TrackMetrics(string name, double value, IDictionary<string,string> properties = null)
         {
-            HockeyClient.Current.TrackMetric(name, value, properties);
+            //HockeyClient.Current.TrackMetric(name, value, properties);
         }
 
         public static void TrackEventException(string exception)
         {
-            //Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Exception: " + exception);
+            //HockeyClient.Current.TrackEvent("Exception: " + exception);
             System.Diagnostics.Debug.WriteLine("TrackEventException: " + exception);
         }
 
         public static void TrackPageView(string name)
         {
             System.Diagnostics.Debug.WriteLine("TrackPageView " + name);
-            HockeyClient.Current.TrackPageView(name);
+            //HockeyClient.Current.TrackPageView(name);
         }
 
         public static void TrackAppLaunch()

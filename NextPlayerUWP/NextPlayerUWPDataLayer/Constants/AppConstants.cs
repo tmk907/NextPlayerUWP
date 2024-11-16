@@ -7,7 +7,6 @@
         public const string ProductId = "9nblggh67n4f";
         public const string DBFileName = "database1.db";
         public const string DeveloperEmail = "next-player@outlook.com";
-        public const string HockeyAppId = "";
 
         //Assets
         public const string AlbumCoverSmall = "ms-appx:///Assets/Albums/AlbumCoverTRSmall.png";
