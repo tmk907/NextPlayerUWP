@@ -158,16 +158,12 @@
     <Compile Include="Radio\CuteRadio\UriBuilder.cs" />
     <Compile Include="Services\AlbumArtsManager.cs" />
     <Compile Include="Services\CredentialLockerService.cs" />
-    <Compile Include="Services\FileFormatsHelper.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\ImagesManager.cs" />
-    <Compile Include="Services\IRadioService.cs" />
-    <Compile Include="Services\JamendoRadioService.cs" />
     <Compile Include="Services\LastFmCache.cs" />
     <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\MigrationHelper.cs" />
-    <Compile Include="Services\SpotifyService.cs" />
     <Content Include="Properties\NextPlayerUWPDataLayer.rd.xml" />
   </ItemGroup>
   <ItemGroup>
