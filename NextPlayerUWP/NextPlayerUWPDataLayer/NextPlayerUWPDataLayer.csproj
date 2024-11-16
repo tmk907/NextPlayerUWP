@@ -279,22 +279,6 @@
     <Compile Include="Spotify\SpotifyWebBuilder.cs" />
     <Compile Include="Spotify\SpotifyWebClient.cs" />
     <Compile Include="Spotify\Util.cs" />
-    <Compile Include="Tables\AlbumArtistsTable.cs" />
-    <Compile Include="Tables\AlbumsTable.cs" />
-    <Compile Include="Tables\ArtistsTable.cs" />
-    <Compile Include="Tables\CachedScrobble.cs" />
-    <Compile Include="Tables\CloudAccountsTable.cs" />
-    <Compile Include="Tables\FavouriteRadiosTable.cs" />
-    <Compile Include="Tables\FoldersTable.cs" />
-    <Compile Include="Tables\FutureAccessTokensTable.cs" />
-    <Compile Include="Tables\GenresTable.cs" />
-    <Compile Include="Tables\ImportedPlaylistsTable.cs" />
-    <Compile Include="Tables\NowPlayingTable.cs" />
-    <Compile Include="Tables\PlainPlaylistEntryTable.cs" />
-    <Compile Include="Tables\PlainPlaylistsTable.cs" />
-    <Compile Include="Tables\SmartPlaylistEntryTable.cs" />
-    <Compile Include="Tables\SmartPlaylistsTable.cs" />
-    <Compile Include="Tables\SongsTable.cs" />
     <Compile Include="Model\Tags.cs" />
     <Content Include="Properties\NextPlayerUWPDataLayer.rd.xml" />
   </ItemGroup>
@@ -346,6 +330,12 @@
     <PackageReference Include="WriteableBitmapEx">
       <Version>1.5.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NextPlayerUWPDataLayer.Core\NextPlayerUWPDataLayer.Core.csproj">
+      <Project>{5b945875-49b1-4603-9207-fb9ce78852db}</Project>
+      <Name>NextPlayerUWPDataLayer.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
