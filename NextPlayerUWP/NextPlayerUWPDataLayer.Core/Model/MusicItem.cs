@@ -35,7 +35,7 @@ namespace NextPlayerUWPDataLayer.Model
             }
             catch (Exception ex)
             {
-                Diagnostics.Logger2.Current.WriteMessage("MusicItem ParseType " + Environment.NewLine + ex.Message);
+                //Diagnostics.Logger2.Current.WriteMessage("MusicItem ParseType " + Environment.NewLine + ex.Message);
                 return MusicItemTypes.unknown;
             }
         }
