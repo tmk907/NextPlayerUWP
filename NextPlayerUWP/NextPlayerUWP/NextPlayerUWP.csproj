@@ -16,8 +16,8 @@
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>NextPlayerUWP_StoreKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>89EFBA153A73BC30DF9D92909F21A1DC49D5A770</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>NextPlayerUWP_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>8E372CB3418512D3C9CE63A2C5052F9D0724D96B</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
@@ -26,6 +26,7 @@
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -111,8 +112,6 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="Assets\Licenses.json" />
-    <None Include="Package.xml" />
-    <None Include="NextPlayerUWP_StoreKey.pfx" />
     <PRIResource Include="Strings\pt-BR\Resources.resw" />
     <PRIResource Include="Strings\pt-PT\Resources.resw" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
@@ -429,7 +428,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="NextPlayerUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Albums\Colors\FF0063B1-min.png" />
@@ -507,7 +505,6 @@
     <Content Include="Assets\Visual Assets\Square44\ScaledLogoExtensions.targetsize-24.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledLogoExtensions.targetsize-256.png" />
     <Content Include="Assets\Visual Assets\Square44\ScaledLogoExtensions.targetsize-48.png" />
-    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Assets\Albums\AlbumCoverTR.png" />
     <Content Include="Assets\Albums\AlbumCoverTRnG.png" />
     <Content Include="Assets\Albums\AlbumCoverTRSmall.png" />
