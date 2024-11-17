@@ -28,7 +28,7 @@ namespace NextPlayerUWP.ViewModels
 
         public CuteRadioViewModel()
         {
-            radioService = new CuteRadioService();
+            radioService = new CuteRadioService(new CuteRadioCache());
             sourceCountry = new RadioSourceCountry(radioService);
             sourceGenre = new RadioSourceGenre(radioService);
             sourceLanguage = new RadioSourceLanguage(radioService);

@@ -5,13 +5,7 @@ using System.Threading.Tasks;
 
 namespace NextPlayerUWPDataLayer.Radio.CuteRadio
 {
-    public class CachedRadioData
-    {
-        public DateTime UpdatedAt { get; set; }
-        public List<string> Data { get; set; }
-    }
-
-    public class CuteRadioCache
+    public class CuteRadioCache : ICuteRadioCache
     {
         private readonly TimeSpan maxCacheDuration;
 

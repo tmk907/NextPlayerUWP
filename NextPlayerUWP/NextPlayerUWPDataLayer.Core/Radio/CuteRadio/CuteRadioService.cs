@@ -1,10 +1,9 @@
-﻿using Microsoft.Toolkit.Uwp;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NextPlayerUWPDataLayer.Radio.CuteRadio.Model;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.Web.Http;
 
 namespace NextPlayerUWPDataLayer.Radio.CuteRadio
 {
@@ -12,23 +11,20 @@ namespace NextPlayerUWPDataLayer.Radio.CuteRadio
     {
         private UriBuilder uriBuilder;
         private const int limit = 20;
-        private CuteRadioCache cache;
+        private ICuteRadioCache cache;
+        private HttpClient _httpClient;
 
-        public CuteRadioService()
+        public CuteRadioService(ICuteRadioCache cuteRadioCache)
         {
             uriBuilder = new UriBuilder();
-            cache = new CuteRadioCache();
+            cache = cuteRadioCache;
+            _httpClient = new HttpClient();
         }
 
         private async Task<string> DownloadAsync(string uri)
         {
-            using (var request = new HttpHelperRequest(new Uri(uri), HttpMethod.Get))
-            {
-                using (var response = await HttpHelper.Instance.SendRequestAsync(request))
-                {
-                    return await response.GetTextResultAsync();
-                }
-            }
+            var result = await _httpClient.GetStringAsync(uri);
+            return result;
         }
 
         private async Task<List<Station>> GetStationsList(string uri)
