@@ -1,6 +1,6 @@
 ﻿using NextPlayerUWPDataLayer.Model;
 using PlaylistsNET.Content;
-using PlaylistsNET.Model;
+using PlaylistsNET.Models;
 using System.Collections.Generic;
 using System;
 using Windows.Storage;
@@ -35,9 +35,8 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
                     Title = song.Title
                 });
             }
-            var creator = new M3uContent();
-            string content = creator.Create(playlist);
-            return content;
+            var content = new M3uContent();
+            return content.ToText(playlist);
         }
 
         public async Task UpdateContent(PlaylistItem item, IEnumerable<SongItem> songs, StorageFile file)

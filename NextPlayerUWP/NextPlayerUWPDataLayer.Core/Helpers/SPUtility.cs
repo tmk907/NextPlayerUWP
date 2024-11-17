@@ -103,7 +103,7 @@ namespace NextPlayerUWPDataLayer.Enums
             public static readonly string And = "AND";
         }
 
-        internal static Dictionary<string, string> SPsorting = new Dictionary<string, string>()
+        public static Dictionary<string, string> SPsorting = new Dictionary<string, string>()
         {
             {SortBy.Title,"Title"},
             {SortBy.Album, "Album"},
@@ -120,7 +120,7 @@ namespace NextPlayerUWPDataLayer.Enums
             {SortBy.MostRecentlyCreated, "DateCreated DESC" }
         };
 
-        internal static Dictionary<string, string> SPConditionItem = new Dictionary<string, string>()
+        public static Dictionary<string, string> SPConditionItem = new Dictionary<string, string>()
         {
             {Item.Title, "Title"},
             {Item.Album, "Album"},
@@ -138,7 +138,7 @@ namespace NextPlayerUWPDataLayer.Enums
             {Item.FilePath, "Path" }
         };
 
-        internal static Dictionary<string, string> SPConditionComparison = new Dictionary<string, string>()
+        public static Dictionary<string, string> SPConditionComparison = new Dictionary<string, string>()
         {
             {Comparison.Is, "="},
             {Comparison.IsNot, "<>"},

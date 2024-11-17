@@ -1,5 +1,5 @@
 ﻿using PlaylistsNET.Content;
-using PlaylistsNET.Model;
+using PlaylistsNET.Models;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -8,9 +8,9 @@ namespace NextPlayerUWPDataLayer.Playlists
 {
     public class PlaylistFileReader
     {
-        public async Task<IBasePlaylist<BasePlaylistEntry>> OpenPlaylist(StorageFile file)
+        public async Task<IBasePlaylist> OpenPlaylist(StorageFile file)
         {
-            IBasePlaylist<BasePlaylistEntry> playlist;
+            IBasePlaylist playlist;
 
             string type = file.FileType;
             switch (type)
@@ -38,15 +38,14 @@ namespace NextPlayerUWPDataLayer.Playlists
             return playlist;
         }
 
-        public async Task<IBasePlaylist<BasePlaylistEntry>> OpenPlaylist2(StorageFile file)
+        public async Task<IBasePlaylist> OpenPlaylist2(StorageFile file)
         {
-            IBasePlaylist<BasePlaylistEntry> playlist;
+            IBasePlaylist playlist;
             string type = file.FileType;
-            PlaylistContentFactory factory = new PlaylistContentFactory();
-            IPlaylistContentReader<IBasePlaylist<BasePlaylistEntry>> content = factory.GetPlaylistContentReader(file.FileType);
+            var parser = PlaylistParserFactory.GetPlaylistParser(file.FileType);
             using(var stream = await file.OpenStreamForReadAsync())
             {
-                playlist = content.GetFromStream(stream);
+                playlist = parser.GetFromStream(stream);
             }
             return playlist;
         }
@@ -99,7 +98,7 @@ namespace NextPlayerUWPDataLayer.Playlists
             M3uPlaylist playlist;
             using (var stream = await file.OpenStreamForReadAsync())
             {
-                var content = new M3u8Content();
+                var content = new M3uContent();
                 playlist = content.GetFromStream(stream);
             }
             return playlist;

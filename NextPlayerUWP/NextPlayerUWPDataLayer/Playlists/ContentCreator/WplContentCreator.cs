@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using NextPlayerUWPDataLayer.Model;
 using Windows.Storage;
-using PlaylistsNET.Model;
+using PlaylistsNET.Models;
 using PlaylistsNET.Content;
 using System.IO;
 using System.Xml.Linq;
+using static Dropbox.Api.Files.SearchMatchType;
 
 namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
 {
@@ -30,9 +31,8 @@ namespace NextPlayerUWPDataLayer.Playlists.ContentCreator
                     TrackTitle = song.Title
                 });
             }
-            var creator = new WplContent();
-            string content = creator.Create(playlist);
-            return content;
+            var content = new WplContent();
+            return content.ToText(playlist);
         }
 
         public async Task UpdateContent(PlaylistItem item, IEnumerable<SongItem> songs, StorageFile file)
