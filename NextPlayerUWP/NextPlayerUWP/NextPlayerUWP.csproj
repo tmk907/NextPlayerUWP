@@ -737,6 +737,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NextPlayerUWPDataLayer.Core\NextPlayerUWPDataLayer.Core.csproj">
+      <Project>{5b945875-49b1-4603-9207-fb9ce78852db}</Project>
+      <Name>NextPlayerUWPDataLayer.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NextPlayerUWPDataLayer\NextPlayerUWPDataLayer.csproj">
       <Project>{25899887-6252-4635-84b5-0c54c736f0fb}</Project>
       <Name>NextPlayerUWPDataLayer</Name>
