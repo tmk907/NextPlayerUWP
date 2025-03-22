@@ -4,11 +4,9 @@ using NextPlayerWinUIDataLayer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Template10.Common;
 using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -19,9 +17,9 @@ namespace NextPlayerWinUI.ViewModels
             Logger2.DebugWrite("BottomPlayerViewModel()", "");
             _timer = new DispatcherTimer();
             SetupTimer();
-            App.Current.Resuming += Current_Resuming;
-            App.Current.Suspending += Current_Suspending;
-            NowPlayingPlaylistManager.Current.SetDispatcher(WindowWrapper.Current().Dispatcher);
+            //App.Current.Resuming += Current_Resuming;
+            //App.Current.Suspending += Current_Suspending;
+            NowPlayingPlaylistManager.Current.SetDispatcher(App.Dispatcher);
             //PlaybackService.Instance.Initialize().ConfigureAwait(false);
             ViewModelLocator vml = new ViewModelLocator();
             PlayerVM = vml.PlayerVM;
@@ -29,15 +27,16 @@ namespace NextPlayerWinUI.ViewModels
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             songDurationType = ApplicationSettingsHelper.ReadSettingsValue<string>(SettingsKeys.SongDurationType);
 
-            var window = CoreApplication.GetCurrentView()?.CoreWindow;
-            if (window != null)
-            {
-                window.SizeChanged += OnCoreWindowOnSizeChanged;
-            }
-            if (window.Bounds.Width >= normal)
-            {
+            //todo
+            //var window = CoreApplication.GetCurrentView()?.CoreWindow;
+            //if (window != null)
+            //{
+            //    window.SizeChanged += OnCoreWindowOnSizeChanged;
+            //}
+            //if (window.Bounds.Width >= normal)
+            //{
                 
-            }
+            //}
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -68,14 +67,14 @@ namespace NextPlayerWinUI.ViewModels
         public bool BottomPlayerVisibility
         {
             get { return bottomPlayerVisibility; }
-            set { Set(ref bottomPlayerVisibility, value); }
+            set { SetProperty(ref bottomPlayerVisibility, value); }
         }
 
         private bool isNowPlayingDesktopViewActive = false;
         public bool IsNowPlayingDesktopViewActive
         {
             get { return isNowPlayingDesktopViewActive; }
-            set { Set(ref isNowPlayingDesktopViewActive, value); }
+            set { SetProperty(ref isNowPlayingDesktopViewActive, value); }
         }
 
         #region Properties
@@ -84,21 +83,21 @@ namespace NextPlayerWinUI.ViewModels
         public double SliderMaxValue
         {
             get { return sliderMaxValue; }
-            set { Set(ref sliderMaxValue, value); }
+            set { SetProperty(ref sliderMaxValue, value); }
         }
 
         private double sliderValue = 0.0;
         public double SliderValue
         {
             get { return sliderValue; }
-            set { Set(ref sliderValue, value); }
+            set { SetProperty(ref sliderValue, value); }
         }
 
         private TimeSpan currentTime = TimeSpan.Zero;
         public TimeSpan CurrentTime
         {
             get { return currentTime; }
-            set { Set(ref currentTime, value); }
+            set { SetProperty(ref currentTime, value); }
         }
 
         private string songDurationType;
@@ -109,14 +108,14 @@ namespace NextPlayerWinUI.ViewModels
         public TimeSpan TimeEnd
         {
             get { return timeEnd; }
-            set { Set(ref timeEnd, value); }
+            set { SetProperty(ref timeEnd, value); }
         }
 
         private string showHideSliderButtonContent = "\uE972";
         public string ShowHideSliderButtonContent
         {
             get { return showHideSliderButtonContent; }
-            set { Set(ref showHideSliderButtonContent, value); }
+            set { SetProperty(ref showHideSliderButtonContent, value); }
         }
 
         private bool isSliderVisible = false;
@@ -125,7 +124,7 @@ namespace NextPlayerWinUI.ViewModels
             get { return isSliderVisible; }
             set
             {
-                Set(ref isSliderVisible, value);
+                SetProperty(ref isSliderVisible, value);
                 ShowHideSliderButtonContent = value ? "\uE972" : "\uE971";
             }
         }
@@ -152,7 +151,7 @@ namespace NextPlayerWinUI.ViewModels
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
             await Task.Delay(400);
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            App.Dispatcher.Dispatch(() =>
             {
                 var duration = PlaybackService.Instance.Duration;
                 if (duration == TimeSpan.MaxValue)
@@ -212,23 +211,23 @@ namespace NextPlayerWinUI.ViewModels
         int wide = 1008;
 
 
-        private void OnCoreWindowOnSizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
-        {
-            if (args.Size.Width >= wide)
-            {
-                IsSliderVisible = false;
-            }
-            else if (args.Size.Width >= normal)
-            {
-                IsSliderVisible = false;
-            }
-            else if (args.Size.Width >= narrow)
-            {
-            }
-            else if (args.Size.Width >= compact)
-            {
-            }
-        }
+        //private void OnCoreWindowOnSizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
+        //{
+        //    if (args.Size.Width >= wide)
+        //    {
+        //        IsSliderVisible = false;
+        //    }
+        //    else if (args.Size.Width >= normal)
+        //    {
+        //        IsSliderVisible = false;
+        //    }
+        //    else if (args.Size.Width >= narrow)
+        //    {
+        //    }
+        //    else if (args.Size.Width >= compact)
+        //    {
+        //    }
+        //}
 
         #region Slider Timer
 

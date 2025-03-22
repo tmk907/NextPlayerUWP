@@ -268,11 +268,11 @@ namespace NextPlayerWinUI.Helpers
             }
             else if (SPUtility.Item.IsDateType(selectedItem))
             {
-                
+
             }
             else if (SPUtility.Item.IsTimeType(selectedItem))
             {
-                
+
             }
             else
             {

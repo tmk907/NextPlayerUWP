@@ -1,5 +1,4 @@
 ﻿using NextPlayerWinUI.Common;
-using NextPlayerWinUI.Extensions;
 using NextPlayerWinUI.Messages;
 using NextPlayerWinUI.Messages.Hub;
 using NextPlayerWinUIDataLayer.Diagnostics;
@@ -10,10 +9,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Template10.Common;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -37,8 +35,8 @@ namespace NextPlayerWinUI.ViewModels
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             isInitialized = false;
             Init();
-            App.Current.EnteredBackground += Current_EnteredBackground;
-            App.Current.LeavingBackground += Current_LeavingBackground;
+            //App.Current.EnteredBackground += Current_EnteredBackground;
+            //App.Current.LeavingBackground += Current_LeavingBackground;
             
             MessageHub.Instance.Subscribe<ShowLyrics>(OnShowLyricsMessage);
             MessageHub.Instance.Subscribe<ShowNowPlayingList>(OnShowNowPlayingListMessage);
@@ -85,13 +83,13 @@ namespace NextPlayerWinUI.ViewModels
         public int SelectedPivotIndex
         {
             get { return selectedPivotIndex; }
-            set { Set(ref selectedPivotIndex, value); }
+            set { SetProperty(ref selectedPivotIndex, value); }
         }
 
         private async void TrackChanged(int index)
         {
             Logger2.DebugWrite("RightPanelViewModel", $"TrackChanged {index}");
-            await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
+            await App.Dispatcher.DispatchAsync(async () =>
             {
                 if (QueueVM.SongsCount == 0 || index > QueueVM.SongsCount - 1 || index < 0) return;
                 scrollerHelper.ScrollToIndex(index);
@@ -276,33 +274,33 @@ namespace NextPlayerWinUI.ViewModels
         public void EditTags(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
+            App.NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
         }
 
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.FileInfo, item.GetParameter());
+            App.NavigationService.Navigate(AppPages.Pages.FileInfo, item.GetParameter());
         }
 
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
+            App.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
         }
 
         public async void GoToArtist(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             ArtistItem temp = await DatabaseManager.Current.GetArtistItemAsync(item.FirstArtist);
-            App.Current.NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
+            App.NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
         }
 
         public async void GoToAlbum(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
-            App.Current.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
+            App.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
         }
 
         #endregion
@@ -310,12 +308,12 @@ namespace NextPlayerWinUI.ViewModels
         public void SavePlaylist()
         {
             NowPlayingListItem item = new NowPlayingListItem();
-            App.Current.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
+            App.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
         }
 
         public void ShowAudioSettings()
         {
-            App.Current.NavigationService.Navigate(AppPages.Pages.AudioSettings);
+            App.NavigationService.Navigate(AppPages.Pages.AudioSettings);
         }
 
         SortingHelperForSongItemsInPlaylist sortingHelper;
@@ -374,14 +372,14 @@ namespace NextPlayerWinUI.ViewModels
         public string ArtistSearch
         {
             get { return artistSearch; }
-            set { Set(ref artistSearch, value); }
+            set { SetProperty(ref artistSearch, value); }
         }
 
         private string titleSearch = "";
         public string TitleSearch
         {
             get { return titleSearch; }
-            set { Set(ref titleSearch, value); }
+            set { SetProperty(ref titleSearch, value); }
         }
 
         public async void SearchLyrics()

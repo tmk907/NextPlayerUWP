@@ -1,5 +1,4 @@
 ﻿using NextPlayerWinUI.Common;
-using NextPlayerWinUI.Extensions;
 using NextPlayerWinUIDataLayer.Model;
 using NextPlayerWinUIDataLayer.Services;
 using System;
@@ -14,67 +13,67 @@ namespace NextPlayerWinUI.ViewModels
         public LyricsPanelViewModel()
         {
             ViewModelLocator vml = new ViewModelLocator();
-            lyricsExtensions = new MyLyricsExtensionsClient();
+            //lyricsExtensions = new MyLyricsExtensionsClient();//todo
             cts = new CancellationTokenSource();
         }
 
-        MyLyricsExtensionsClient lyricsExtensions;
+        //MyLyricsExtensionsClient lyricsExtensions;
         CancellationTokenSource cts;
 
         private string artist = "Artist";
         public string Artist
         {
             get { return artist; }
-            set { Set(ref artist, value); }
+            set { SetProperty(ref artist, value); }
         }
 
         private string title = "Title";
         public string Title
         {
             get { return title; }
-            set { Set(ref title, value); }
+            set { SetProperty(ref title, value); }
         }
 
         private string lyrics = "Lyrics";
         public string Lyrics
         {
             get { return lyrics; }
-            set { Set(ref lyrics, value); }
+            set { SetProperty(ref lyrics, value); }
         }
 
         private Uri lyricsSource;
         public Uri LyricsSource
         {
             get { return lyricsSource; }
-            set { Set(ref lyricsSource, value); }
+            set { SetProperty(ref lyricsSource, value); }
         }
 
         private bool lyricsSourceVisibility = false;
         public bool LyricsSourceVisibility
         {
             get { return lyricsSourceVisibility; }
-            set { Set(ref lyricsSourceVisibility, value); }
+            set { SetProperty(ref lyricsSourceVisibility, value); }
         }
 
         private string statusText = "";
         public string StatusText
         {
             get { return statusText; }
-            set { Set(ref statusText, value); }
+            set { SetProperty(ref statusText, value); }
         }
 
         private bool statusVisibility = false;
         public bool StatusVisibility
         {
             get { return statusVisibility; }
-            set { Set(ref statusVisibility, value); }
+            set { SetProperty(ref statusVisibility, value); }
         }
 
         private bool showProgressBar = false;
         public bool ShowProgressBar
         {
             get { return showProgressBar; }
-            set { Set(ref showProgressBar, value); }
+            set { SetProperty(ref showProgressBar, value); }
         }
 
         
@@ -145,18 +144,19 @@ namespace NextPlayerWinUI.ViewModels
             token.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(dbLyrics))
             {
-                var extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title, token);
-                token.ThrowIfCancellationRequested();
-                if (!String.IsNullOrEmpty(extLyrics.Url))
-                {
-                    try
-                    {
-                        LyricsSource = new Uri(extLyrics.Url);
-                        LyricsSourceVisibility = true;
-                    }
-                    catch (Exception) { }
-                }
-                return extLyrics.Lyrics;
+                //var extLyrics = await lyricsExtensions.GetLyrics(song.Album, song.Artist, song.Title, token);
+                //token.ThrowIfCancellationRequested();
+                //if (!String.IsNullOrEmpty(extLyrics.Url))
+                //{
+                //    try
+                //    {
+                //        LyricsSource = new Uri(extLyrics.Url);
+                //        LyricsSourceVisibility = true;
+                //    }
+                //    catch (Exception) { }
+                //}
+                //return extLyrics.Lyrics;
+                return "";
             }
             else
             {
@@ -166,18 +166,19 @@ namespace NextPlayerWinUI.ViewModels
 
         private async Task<string> LoadLyrics(string artist, string title, CancellationToken token)
         {
-            var extLyrics = await lyricsExtensions.GetLyrics("", artist, title, token);
-            token.ThrowIfCancellationRequested();
-            if (!String.IsNullOrEmpty(extLyrics.Url))
-            {
-                try
-                {
-                    LyricsSource = new Uri(extLyrics.Url);
-                    LyricsSourceVisibility = true;
-                }
-                catch (Exception) { }
-            }
-            return extLyrics.Lyrics;
+            //var extLyrics = await lyricsExtensions.GetLyrics("", artist, title, token);
+            //token.ThrowIfCancellationRequested();
+            //if (!String.IsNullOrEmpty(extLyrics.Url))
+            //{
+            //    try
+            //    {
+            //        LyricsSource = new Uri(extLyrics.Url);
+            //        LyricsSourceVisibility = true;
+            //    }
+            //    catch (Exception) { }
+            //}
+            //return extLyrics.Lyrics;
+            return "";
         }
 
     }

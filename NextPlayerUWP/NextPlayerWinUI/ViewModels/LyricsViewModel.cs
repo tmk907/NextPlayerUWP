@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Template10.Mvvm;
 using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -24,14 +24,14 @@ namespace NextPlayerWinUI.ViewModels
         public string ArtistSearch
         {
             get { return artistSearch; }
-            set { Set(ref artistSearch, value); }
+            set { SetProperty(ref artistSearch, value); }
         }
 
         private string titleSearch = "";
         public string TitleSearch
         {
             get { return titleSearch; }
-            set { Set(ref titleSearch, value); }
+            set { SetProperty(ref titleSearch, value); }
         }
 
         public async void SearchLyrics()

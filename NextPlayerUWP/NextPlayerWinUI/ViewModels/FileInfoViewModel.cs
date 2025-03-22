@@ -4,7 +4,7 @@ using NextPlayerWinUIDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -14,7 +14,7 @@ namespace NextPlayerWinUI.ViewModels
         public SongData FileInfo
         {
             get { return fileInfo; }
-            set { Set(ref fileInfo, value); }
+            set { SetProperty(ref fileInfo, value); }
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)

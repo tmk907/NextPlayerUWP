@@ -22,18 +22,18 @@ namespace NextPlayerWinUI.Common
             System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyAppTheme");
             if (isLightTheme)
             {
-                if (App.Current.NavigationService != null)
+                if (App.NavigationService != null)
                 {
-                    App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
+                    App.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
                 }
                 ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Light);
                 ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Light);
             }
             else
             {
-                if (App.Current.NavigationService != null)
+                if (App.NavigationService != null)
                 {
-                    App.Current.NavigationService.Frame.RequestedTheme = ElementTheme.Dark;
+                    App.NavigationService.Frame.RequestedTheme = ElementTheme.Dark;
                 }
                 ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Dark);
                 ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Dark);

@@ -1,10 +1,8 @@
-﻿using NextPlayerWinUI.Views;
-using NextPlayerWinUIDataLayer.Model;
+﻿using NextPlayerWinUIDataLayer.Model;
 using NextPlayerWinUIDataLayer.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Template10.Controls;
 using Windows.Storage;
 using Microsoft.UI.Xaml;
 

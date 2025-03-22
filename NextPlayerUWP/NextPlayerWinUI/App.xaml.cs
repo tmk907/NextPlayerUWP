@@ -5,7 +5,6 @@ using NextPlayerWinUIDataLayer.Diagnostics;
 using NextPlayerWinUIDataLayer.Helpers;
 using System;
 using System.Threading.Tasks;
-using NextPlayerWinUI.Template10;
 using Windows.ApplicationModel.Activation;
 using CommunityToolkit.Common;
 using Template10.Services.NavigationService;
@@ -134,7 +133,7 @@ namespace NextPlayerWinUI
         private event OnStartAsyncFinishedHandler OnStartAsyncFinished;
 
         public static FileActivatedEventArgs FileArgs;
-        public INavigationService NavigationService;
+        public static INavigationService NavigationService;
 
 
         private async void InitAfterOnStart(ApplicationExecutionState state, FileActivatedEventArgs fileArgs)

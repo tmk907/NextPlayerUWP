@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -33,14 +33,14 @@ namespace NextPlayerWinUI.ViewModels
         public ObservableCollection<ArtistItem> Artists
         {
             get { return artists; }
-            set { Set(ref artists, value); }
+            set { SetProperty(ref artists, value); }
         }
 
         private ObservableCollection<GroupList> groupedArtists = new ObservableCollection<GroupList>();
         public ObservableCollection<GroupList> GroupedArtists
         {
             get { return groupedArtists; }
-            set { Set(ref groupedArtists, value); }
+            set { SetProperty(ref groupedArtists, value); }
         }
 
         protected override async Task LoadData()

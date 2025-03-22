@@ -24,7 +24,7 @@ namespace NextPlayerWinUI.ViewModels
         public ObservableCollection<string> Keys
         {
             get { return keys; }
-            set { Set(ref keys, value); }
+            set { SetProperty(ref keys, value); }
         }
     }
 }

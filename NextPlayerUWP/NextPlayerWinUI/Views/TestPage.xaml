@@ -1,0 +1,34 @@
+﻿<Page
+    x:Class="NextPlayerWinUI.Views.TestPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerWinUI.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:NextPlayerWinUIDataLayer.Model"
+    DataContext="{Binding Source={StaticResource Locator}, Path=TestVM}"
+    mc:Ignorable="d">
+    <Page.Resources />
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <SemanticZoom>
+            <SemanticZoom.ZoomedInView>
+                <ListView />
+            </SemanticZoom.ZoomedInView>
+            <SemanticZoom.ZoomedOutView>
+                <ListView
+                    x:Name="ZoomedOutListView"
+                    ItemContainerStyle="{StaticResource ZoomedOutItemContainerStyle}"
+                    ItemTemplate="{StaticResource ZoomedOutItemsTemplate}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+            </SemanticZoom.ZoomedOutView>
+        </SemanticZoom>
+    </Grid>
+</Page>

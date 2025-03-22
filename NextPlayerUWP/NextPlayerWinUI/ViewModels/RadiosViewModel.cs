@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 
 namespace NextPlayerWinUI.ViewModels
@@ -20,21 +20,21 @@ namespace NextPlayerWinUI.ViewModels
         public ObservableCollection<RadioItem> FavouriteRadios
         {
             get { return favouriteRadios; }
-            set { Set(ref favouriteRadios, value); }
+            set { SetProperty(ref favouriteRadios, value); }
         }
 
         private ObservableCollection<SongItem> streams = new ObservableCollection<SongItem>();
         public ObservableCollection<SongItem> Streams
         {
             get { return streams; }
-            set { Set(ref streams, value); }
+            set { SetProperty(ref streams, value); }
         }
 
         private bool updating = false;
         public bool Updating
         {
             get { return updating; }
-            set { Set(ref updating, value); }
+            set { SetProperty(ref updating, value); }
         }
 
         private int selectedPivotIndex = 0;
@@ -49,7 +49,7 @@ namespace NextPlayerWinUI.ViewModels
                 }
                 else
                 {
-                    Set(ref selectedPivotIndex, value);
+                    SetProperty(ref selectedPivotIndex, value);
                 }
             }
         }
@@ -98,7 +98,7 @@ namespace NextPlayerWinUI.ViewModels
         public string NewName
         {
             get { return newName; }
-            set { Set(ref newName, value); }
+            set { SetProperty(ref newName, value); }
         }
 
         public async void SaveEditedName()

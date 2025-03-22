@@ -38,14 +38,14 @@ namespace NextPlayerWinUI.ViewModels
         public ObservableCollection<AlbumArtistItem> AlbumArtists
         {
             get { return albumArtists; }
-            set { Set(ref albumArtists, value); }
+            set { SetProperty(ref albumArtists, value); }
         }
 
         private ObservableCollection<GroupList> groupedAlbumArtists = new ObservableCollection<GroupList>();
         public ObservableCollection<GroupList> GroupedAlbumArtists
         {
             get { return groupedAlbumArtists; }
-            set { Set(ref groupedAlbumArtists, value); }
+            set { SetProperty(ref groupedAlbumArtists, value); }
         }
 
         private async Task ReloadData()

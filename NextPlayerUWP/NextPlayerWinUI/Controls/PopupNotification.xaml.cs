@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Threading;
-using CommunityToolkit.WinUI.Animations;
+//using CommunityToolkit.WinUI.Animations;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -118,16 +118,20 @@ namespace NextPlayerWinUI.Controls
 
         private async Task Show()
         {
-            var anim = NotificationPanel.Fade(1).Offset(-100);
-            anim.SetDurationForAll(ShowAnimationDuration);
-            await anim.StartAsync();
+            NotificationPanel.Opacity = 1;
+            NotificationPanel.Visibility = Visibility.Visible;
+            //var anim = NotificationPanel.Fade(1).OffSetProperty(-100);
+            //anim.SetDurationForAll(ShowAnimationDuration);
+            //await anim.StartAsync();
         }
 
         private async Task Hide()
         {
-            var animOut = NotificationPanel.Fade(0).Offset(100);
-            animOut.SetDurationForAll(HideAnimationDuration);
-            await animOut.StartAsync();
+            NotificationPanel.Opacity = 0;
+            NotificationPanel.Visibility = Visibility.Collapsed;
+            //var animOut = NotificationPanel.Fade(0).OffSetProperty(100);
+            //animOut.SetDurationForAll(HideAnimationDuration);
+            //await animOut.StartAsync();
         }
     }
 }

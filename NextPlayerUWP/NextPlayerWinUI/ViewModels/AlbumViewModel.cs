@@ -6,12 +6,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using NextPlayerWinUIDataLayer.SpotifyAPI.Web;
 using NextPlayerWinUIDataLayer.Constants;
-using Windows.UI.Xaml.Media.Animation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -35,21 +34,21 @@ namespace NextPlayerWinUI.ViewModels
         public AlbumItem Album
         {
             get { return album; }
-            set { Set(ref album, value); }
+            set { SetProperty(ref album, value); }
         }
 
         private AlbumItem editedAlbum = new AlbumItem();
         public AlbumItem EditedAlbum
         {
             get { return editedAlbum; }
-            set { Set(ref editedAlbum, value); }
+            set { SetProperty(ref editedAlbum, value); }
         }
 
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
         public ObservableCollection<SongItem> Songs
         {
             get { return songs; }
-            set { Set(ref songs, value); }
+            set { SetProperty(ref songs, value); }
         }
 
         protected override async Task LoadData()

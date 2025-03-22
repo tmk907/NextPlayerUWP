@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using System.Linq;
 using NextPlayerWinUI.Models;
 
@@ -22,14 +22,14 @@ namespace NextPlayerWinUI.ViewModels
         public AlbumArtistItem AlbumArtist
         {
             get { return albumArtist; }
-            set { Set(ref albumArtist, value); }
+            set { SetProperty(ref albumArtist, value); }
         }
 
         private ObservableCollection<GroupList> albums = new ObservableCollection<GroupList>();
         public ObservableCollection<GroupList> Albums
         {
             get { return albums; }
-            set { Set(ref albums, value); }
+            set { SetProperty(ref albums, value); }
         }
 
         public override void ChildOnNavigatedTo(object parameter, NavigationMode mode, IDictionary<string, object> state)

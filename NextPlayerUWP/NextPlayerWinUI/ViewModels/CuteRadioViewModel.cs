@@ -1,19 +1,16 @@
-﻿using Microsoft.Toolkit.Uwp;
-using NextPlayerWinUIDataLayer.Model;
+﻿using NextPlayerWinUIDataLayer.Model;
 using NextPlayerWinUIDataLayer.Radio.CuteRadio;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using NextPlayerWinUI.Common;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using NextPlayerWinUIDataLayer.Services;
 using NextPlayerWinUIDataLayer.Radio.CuteRadio.Model;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -21,28 +18,33 @@ namespace NextPlayerWinUI.ViewModels
     {
         private CuteRadioService radioService;
 
-        private RadioSourceCountry sourceCountry;
-        private RadioSourceGenre sourceGenre;
-        private RadioSourceLanguage sourceLanguage;
-        private RadioSourceSearch sourceSearch;
+        //private RadioSourceCountry sourceCountry;
+        //private RadioSourceGenre sourceGenre;
+        //private RadioSourceLanguage sourceLanguage;
+        //private RadioSourceSearch sourceSearch;
 
         public CuteRadioViewModel()
         {
             radioService = new CuteRadioService(new CuteRadioCache());
-            sourceCountry = new RadioSourceCountry(radioService);
-            sourceGenre = new RadioSourceGenre(radioService);
-            sourceLanguage = new RadioSourceLanguage(radioService);
-            sourceSearch = new RadioSourceSearch(radioService);
-            RadiosByCountry = new IncrementalLoadingCollection<RadioSourceCountry, Station>(sourceCountry, 20, OnStartLoading, OnEndLoading);
-            RadiosByGenre = new IncrementalLoadingCollection<RadioSourceGenre, Station>(sourceGenre, 20, OnStartLoading, OnEndLoading);
-            RadiosByLanguage = new IncrementalLoadingCollection<RadioSourceLanguage, Station>(sourceLanguage, 20, OnStartLoading, OnEndLoading);
-            RadiosSearch = new IncrementalLoadingCollection<RadioSourceSearch, Station>(sourceSearch, 20, OnStartLoading, OnEndLoading);
+            //sourceCountry = new RadioSourceCountry(radioService);
+            //sourceGenre = new RadioSourceGenre(radioService);
+            //sourceLanguage = new RadioSourceLanguage(radioService);
+            //sourceSearch = new RadioSourceSearch(radioService);
+            //RadiosByCountry = new IncrementalLoadingCollection<RadioSourceCountry, Station>(sourceCountry, 20, OnStartLoading, OnEndLoading);
+            //RadiosByGenre = new IncrementalLoadingCollection<RadioSourceGenre, Station>(sourceGenre, 20, OnStartLoading, OnEndLoading);
+            //RadiosByLanguage = new IncrementalLoadingCollection<RadioSourceLanguage, Station>(sourceLanguage, 20, OnStartLoading, OnEndLoading);
+            //RadiosSearch = new IncrementalLoadingCollection<RadioSourceSearch, Station>(sourceSearch, 20, OnStartLoading, OnEndLoading);
         }
 
-        public IncrementalLoadingCollection<RadioSourceGenre, Station> RadiosByGenre;
-        public IncrementalLoadingCollection<RadioSourceLanguage, Station> RadiosByLanguage;
-        public IncrementalLoadingCollection<RadioSourceCountry, Station> RadiosByCountry;
-        public IncrementalLoadingCollection<RadioSourceSearch, Station> RadiosSearch;
+        //public IncrementalLoadingCollection<RadioSourceGenre, Station> RadiosByGenre;
+        //public IncrementalLoadingCollection<RadioSourceLanguage, Station> RadiosByLanguage;
+        //public IncrementalLoadingCollection<RadioSourceCountry, Station> RadiosByCountry;
+        //public IncrementalLoadingCollection<RadioSourceSearch, Station> RadiosSearch;
+
+        public ObservableCollection<Station> RadiosByGenre;
+        public ObservableCollection<Station> RadiosByLanguage;
+        public ObservableCollection<Station> RadiosByCountry;
+        public ObservableCollection<Station> RadiosSearch;
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
@@ -55,7 +57,7 @@ namespace NextPlayerWinUI.ViewModels
         public int SelectedPivotIndex
         {
             get { return selectedPivotIndex; }
-            set { Set(ref selectedPivotIndex, value); }
+            set { SetProperty(ref selectedPivotIndex, value); }
         }
 
         public void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -83,7 +85,7 @@ namespace NextPlayerWinUI.ViewModels
         public bool Loading
         {
             get { return loading; }
-            set { Set(ref loading, value); }
+            set { SetProperty(ref loading, value); }
         }
 
         public void OnStartLoading()
@@ -100,42 +102,42 @@ namespace NextPlayerWinUI.ViewModels
         public ObservableCollection<string> Genres
         {
             get { return genres; }
-            set { Set(ref genres, value); }
+            set { SetProperty(ref genres, value); }
         }
 
         private ObservableCollection<string> countries = new ObservableCollection<string>();
         public ObservableCollection<string> Countries
         {
             get { return countries; }
-            set { Set(ref countries, value); }
+            set { SetProperty(ref countries, value); }
         }
 
         private ObservableCollection<string> languages = new ObservableCollection<string>();
         public ObservableCollection<string> Languages
         {
             get { return languages; }
-            set { Set(ref languages, value); }
+            set { SetProperty(ref languages, value); }
         }
 
         private ObservableCollection<RadioItem> streams = new ObservableCollection<RadioItem>();
         public ObservableCollection<RadioItem> Streams
         {
             get { return streams; }
-            set { Set(ref streams, value); }
+            set { SetProperty(ref streams, value); }
         }
 
         private bool areStationsVisible = false;
         public bool AreStationsVisible
         {
             get { return areStationsVisible; }
-            set { Set(ref areStationsVisible, value); }
+            set { SetProperty(ref areStationsVisible, value); }
         }
 
         private bool searching = false;
         public bool Searching
         {
             get { return searching; }
-            set { Set(ref searching, value); }
+            set { SetProperty(ref searching, value); }
         }
 
         public async void ShowGenres()
@@ -181,30 +183,30 @@ namespace NextPlayerWinUI.ViewModels
        
         public async void GenreClick(object sender, ItemClickEventArgs e)
         {
-            sourceGenre.Name = e.ClickedItem as string;
-            await RadiosByGenre.RefreshAsync();
-            AreStationsVisible = true;
+            //sourceGenre.Name = e.ClickedItem as string;
+            //await RadiosByGenre.RefreshAsync();
+            //AreStationsVisible = true;
         }
 
         public async void LanguageClick(object sender, ItemClickEventArgs e)
         {
-            sourceLanguage.Name = e.ClickedItem as string;
-            await RadiosByLanguage.RefreshAsync();
-            AreStationsVisible = true;
+            //sourceLanguage.Name = e.ClickedItem as string;
+            //await RadiosByLanguage.RefreshAsync();
+            //AreStationsVisible = true;
         }
 
         public async void CountryClick(object sender, ItemClickEventArgs e)
         {
-            sourceCountry.Name = e.ClickedItem as string;
-            await RadiosByCountry.RefreshAsync();
-            AreStationsVisible = true;
+            //sourceCountry.Name = e.ClickedItem as string;
+            //await RadiosByCountry.RefreshAsync();
+            //AreStationsVisible = true;
         }
 
         public async void Search(string name)
         {
-            Searching = true;
-            sourceSearch.Name = name;
-            await RadiosSearch.RefreshAsync();
+            //Searching = true;
+            //sourceSearch.Name = name;
+            //await RadiosSearch.RefreshAsync();
 
             Searching = false;
         }
@@ -308,72 +310,72 @@ namespace NextPlayerWinUI.ViewModels
         }
     }
 
-    public class RadioSourceGenre : IIncrementalSource<Station>
-    {
-        private CuteRadioService radioService;
-        private readonly List<Station> radios;
-        public string Name = "";
-        public RadioSourceGenre(CuteRadioService radioService)
-        {
-            this.radioService = radioService;
-            radios = new List<Station>();
-        }
+    //public class RadioSourceGenre : IIncrementalSource<Station>
+    //{
+    //    private CuteRadioService radioService;
+    //    private readonly List<Station> radios;
+    //    public string Name = "";
+    //    public RadioSourceGenre(CuteRadioService radioService)
+    //    {
+    //        this.radioService = radioService;
+    //        radios = new List<Station>();
+    //    }
 
-        public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await radioService.GetStationsByGenre(Name ,pageIndex);
-        }
-    }
+    //    public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+    //    {
+    //        return await radioService.GetStationsByGenre(Name ,pageIndex);
+    //    }
+    //}
 
-    public class RadioSourceCountry : IIncrementalSource<Station>
-    {
-        private CuteRadioService radioService;
-        private readonly List<Station> radios;
-        public string Name = "";
-        public RadioSourceCountry(CuteRadioService radioService)
-        {
-            this.radioService = radioService;
-            radios = new List<Station>();
-        }
+    //public class RadioSourceCountry : IIncrementalSource<Station>
+    //{
+    //    private CuteRadioService radioService;
+    //    private readonly List<Station> radios;
+    //    public string Name = "";
+    //    public RadioSourceCountry(CuteRadioService radioService)
+    //    {
+    //        this.radioService = radioService;
+    //        radios = new List<Station>();
+    //    }
 
-        public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await radioService.GetStationsByCountry(Name, pageIndex);
-        }
-    }
+    //    public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+    //    {
+    //        return await radioService.GetStationsByCountry(Name, pageIndex);
+    //    }
+    //}
 
-    public class RadioSourceLanguage : IIncrementalSource<Station>
-    {
-        private CuteRadioService radioService;
-        private readonly List<Station> radios;
-        public string Name = "";
-        public RadioSourceLanguage(CuteRadioService radioService)
-        {
-            this.radioService = radioService;
-            radios = new List<Station>();
-        }
+    //public class RadioSourceLanguage : IIncrementalSource<Station>
+    //{
+    //    private CuteRadioService radioService;
+    //    private readonly List<Station> radios;
+    //    public string Name = "";
+    //    public RadioSourceLanguage(CuteRadioService radioService)
+    //    {
+    //        this.radioService = radioService;
+    //        radios = new List<Station>();
+    //    }
 
-        public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await radioService.GetStationsByLanguage(Name, pageIndex);
-        }
-    }
+    //    public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+    //    {
+    //        return await radioService.GetStationsByLanguage(Name, pageIndex);
+    //    }
+    //}
 
-    public class RadioSourceSearch : IIncrementalSource<Station>
-    {
-        private CuteRadioService radioService;
-        private readonly List<Station> radios;
-        public string Name = "";
-        public RadioSourceSearch(CuteRadioService radioService)
-        {
-            this.radioService = radioService;
-            radios = new List<Station>();
-        }
+    //public class RadioSourceSearch : IIncrementalSource<Station>
+    //{
+    //    private CuteRadioService radioService;
+    //    private readonly List<Station> radios;
+    //    public string Name = "";
+    //    public RadioSourceSearch(CuteRadioService radioService)
+    //    {
+    //        this.radioService = radioService;
+    //        radios = new List<Station>();
+    //    }
 
-        public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (Name == "") return new List<Station>();
-            return await radioService.SearchStations(Name, pageIndex);
-        }
-    }
+    //    public async Task<IEnumerable<Station>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+    //    {
+    //        if (Name == "") return new List<Station>();
+    //        return await radioService.SearchStations(Name, pageIndex);
+    //    }
+    //}
 }

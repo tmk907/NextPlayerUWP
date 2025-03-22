@@ -4,9 +4,9 @@ using NextPlayerWinUI.Messages.Hub;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -59,7 +59,7 @@ namespace NextPlayerWinUI.ViewModels
         public bool ShowButtons
         {
             get { return showButtons; }
-            set { Set(ref showButtons, value); }
+            set { SetProperty(ref showButtons, value); }
         }
 
         public void GoToNowPlayingPlaylist()

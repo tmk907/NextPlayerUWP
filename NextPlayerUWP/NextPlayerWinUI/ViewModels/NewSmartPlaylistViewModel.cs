@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Navigation;
 using NextPlayerWinUIDataLayer.Model;
 
 namespace NextPlayerWinUI.ViewModels
@@ -30,14 +30,14 @@ namespace NextPlayerWinUI.ViewModels
         public string PlaylistName
         {
             get { return playlistName; }
-            set { Set(ref playlistName, value); }
+            set { SetProperty(ref playlistName, value); }
         }
 
         public string maxSongsNumber = "100";
         public string MaxSongsNumber
         {
             get { return maxSongsNumber; }
-            set { Set(ref maxSongsNumber, value); }
+            set { SetProperty(ref maxSongsNumber, value); }
         }
 
         private ObservableCollection<ComboBoxItemValue> sortRules = new ObservableCollection<ComboBoxItemValue>();
@@ -59,28 +59,28 @@ namespace NextPlayerWinUI.ViewModels
                 
                 return sortRules;
             }
-            set { Set(ref sortRules, value); }
+            set { SetProperty(ref sortRules, value); }
         }
 
         private ComboBoxItemValue selectedSortRule;
         public ComboBoxItemValue SelectedSortRule
         {
             get { return selectedSortRule; }
-            set { Set(ref selectedSortRule, value); }
+            set { SetProperty(ref selectedSortRule, value); }
         }
 
         private ObservableCollection<PlaylistRule> playlistRules = new ObservableCollection<PlaylistRule>();
         public ObservableCollection<PlaylistRule> PlaylistRules
         {
             get { return playlistRules; }
-            set { Set(ref playlistRules, value); }
+            set { SetProperty(ref playlistRules, value); }
         }
 
         private bool errorVisibility = false;
         public bool ErrorVisibility
         {
             get { return errorVisibility; }
-            set { Set(ref errorVisibility, value); }
+            set { SetProperty(ref errorVisibility, value); }
         }
 
         public void AddRule()

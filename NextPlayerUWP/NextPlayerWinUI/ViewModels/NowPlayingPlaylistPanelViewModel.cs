@@ -4,10 +4,9 @@ using NextPlayerWinUIDataLayer.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Template10.Common;
 using Template10.Mvvm;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -30,11 +29,7 @@ namespace NextPlayerWinUI.ViewModels
 
         private void TrackChanged(int index)
         {
-            Template10.Common.IDispatcherWrapper d = Dispatcher;
-            if (d == null)
-            {
-                d = Template10.Common.WindowWrapper.Current().Dispatcher;
-            }
+            var d = App.Dispatcher;
             if (d == null)
             {
                 return;
@@ -122,33 +117,33 @@ namespace NextPlayerWinUI.ViewModels
         public void EditTags(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
+            App.NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
         }
 
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.FileInfo, item.GetParameter());
+            App.NavigationService.Navigate(AppPages.Pages.FileInfo, item.GetParameter());
         }
 
         public void AddToPlaylist(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.Current.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
+            App.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
         }
 
         public async void GoToArtist(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             ArtistItem temp = await DatabaseManager.Current.GetArtistItemAsync(item.FirstArtist);
-            App.Current.NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
+            App.NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
         }
 
         public async void GoToAlbum(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
-            App.Current.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
+            App.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
         }
 
         #endregion
@@ -161,7 +156,7 @@ namespace NextPlayerWinUI.ViewModels
             get { return isClickEnabled; }
             set
             {
-                Set(ref isClickEnabled, value);
+                SetProperty(ref isClickEnabled, value);
                 IsMultiSelection = !isClickEnabled && selectionMode == ListViewSelectionMode.Multiple;
             }
         }
@@ -172,7 +167,7 @@ namespace NextPlayerWinUI.ViewModels
             get { return selectionMode; }
             set
             {
-                Set(ref selectionMode, value);
+                SetProperty(ref selectionMode, value);
                 IsMultiSelection = !isClickEnabled && selectionMode == ListViewSelectionMode.Multiple;
             }
         }
@@ -181,7 +176,7 @@ namespace NextPlayerWinUI.ViewModels
         public bool IsMultiSelection
         {
             get { return isMultiSelection; }
-            set { Set(ref isMultiSelection, value); }
+            set { SetProperty(ref isMultiSelection, value); }
         }
 
         public void EnableMultipleSelection()
@@ -213,8 +208,7 @@ namespace NextPlayerWinUI.ViewModels
         public void SavePlaylist()
         {
             NowPlayingListItem item = new NowPlayingListItem();
-            var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
-            nav.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
+            App.NavigationService.Navigate(AppPages.Pages.AddToPlaylist, item.GetParameter());
         }
 
         protected ObservableCollection<ComboBoxItemValue> comboBoxItemValues = new ObservableCollection<ComboBoxItemValue>();

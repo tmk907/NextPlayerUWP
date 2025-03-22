@@ -1,14 +1,14 @@
 ﻿using NextPlayerWinUI.Common;
 using NextPlayerWinUIDataLayer.Helpers;
 using System.Collections.ObjectModel;
-using Template10.Controls;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class ShellViewModel : Template10.Mvvm.BindableBase
+    public class ShellViewModel : ObservableObject
     {
         public ShellViewModel()
         {
@@ -20,7 +20,7 @@ namespace NextPlayerWinUI.ViewModels
             rightPanelWide = ApplicationSettingsHelper.ReadSettingsValue<double>(SettingsKeys.RightPanelWidthWide);
             if (window != null)
             {
-                window.SizeChanged += OnCoreWindowOnSizeChanged;
+                window.SizeChanged += OnWindowSizeChanged; ;
             }
             if (window.Bounds.Width >= normal)
             {
@@ -44,14 +44,14 @@ namespace NextPlayerWinUI.ViewModels
         public bool IsNowPlayingDesktopViewActive
         {
             get { return isNowPlayingDesktopViewActive; }
-            set { Set(ref isNowPlayingDesktopViewActive, value); }
+            set { SetProperty(ref isNowPlayingDesktopViewActive, value); }
         }
        
         private ObservableCollection<HamburgerButtonInfo> primaryButtons = new ObservableCollection<HamburgerButtonInfo>();
         public ObservableCollection<HamburgerButtonInfo> PrimaryButtons
         {
             get { return primaryButtons; }
-            set { Set(ref primaryButtons, value); }
+            set { SetProperty(ref primaryButtons, value); }
         }
 
         public void RefreshMenuButtons()
@@ -69,7 +69,7 @@ namespace NextPlayerWinUI.ViewModels
             set
             {
                 bool changed = (value != isRightPanelVisible);
-                Set(ref isRightPanelVisible, value);
+                SetProperty(ref isRightPanelVisible, value);
                 if (changed) Messages.Hub.MessageHub.Instance.Publish(new Messages.RightPanelVisibilityChange() { Visible = value });
             }
         }
@@ -78,14 +78,14 @@ namespace NextPlayerWinUI.ViewModels
         public double RightPanelWidth
         {
             get { return rightPanelWidth; }
-            set { Set(ref rightPanelWidth, value); }
+            set { SetProperty(ref rightPanelWidth, value); }
         }
 
         private double rightPanelMinWidth = 0;
         public double RightPanelMinWidth
         {
             get { return rightPanelMinWidth; }
-            set { Set(ref rightPanelMinWidth, value); }
+            set { SetProperty(ref rightPanelMinWidth, value); }
         }
 
         const double compact = 0;
@@ -100,7 +100,7 @@ namespace NextPlayerWinUI.ViewModels
 
         private double prevWindowState = compact;
 
-        private void OnCoreWindowOnSizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
+        private void OnWindowSizeChanged(CoreWindow sender, Windows.UI.Core.WindowSizeChangedEventArgs args)
         {
             if (args.Size.Width >= wide)
             {
@@ -156,13 +156,13 @@ namespace NextPlayerWinUI.ViewModels
         private readonly CoreCursor hoverCursor = new CoreCursor(CoreCursorType.SizeWestEast, 1);
         private bool resizing = false;
 
-        public void GridSplitterManipulationStarted(object sender, Windows.UI.Xaml.Input.ManipulationStartedRoutedEventArgs e)
+        public void GridSplitterManipulationStarted(object sender, Microsoft.UI.Xaml.Input.ManipulationStartedRoutedEventArgs e)
         {
             resizing = true;
             Window.Current.CoreWindow.PointerCursor = hoverCursor;
         }
 
-        public void GridSplitterManipulationDelta(object sender, Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
+        public void GridSplitterManipulationDelta(object sender, Microsoft.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
         {
             if (rightPanelWidth - e.Delta.Translation.X < rightPanelMinWidth)
             {
@@ -174,7 +174,7 @@ namespace NextPlayerWinUI.ViewModels
             }
         }
 
-        public void GridSplitterManipulationCompleted(object sender, Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
+        public void GridSplitterManipulationCompleted(object sender, Microsoft.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("ManipulationCompleted {0}", rightPanelWidth);
             if (prevWindowState == wide)
@@ -201,7 +201,7 @@ namespace NextPlayerWinUI.ViewModels
             Window.Current.CoreWindow.PointerCursor = normalCursor;
         }
 
-        public void GridSplitterPointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        public void GridSplitterPointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (!resizing)
             {
@@ -209,7 +209,7 @@ namespace NextPlayerWinUI.ViewModels
             }
         }
 
-        public void GridSplitterPointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        public void GridSplitterPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (!resizing)
             {

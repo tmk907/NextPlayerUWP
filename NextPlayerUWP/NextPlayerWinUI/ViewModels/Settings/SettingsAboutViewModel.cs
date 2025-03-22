@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Template10.Common;
 using Windows.ApplicationModel;
 using Windows.System;
 
@@ -41,10 +40,10 @@ namespace NextPlayerWinUI.ViewModels.Settings
 #if DEBUG
             AppVersion = AppVersion + " Debug";
 #endif
-            if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
-            {
-                FeedbackVisibility = true;
-            }
+            //if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
+            //{
+            //    FeedbackVisibility = true;
+            //}
             ShowTranslators();
             isLoaded = true;
         }
@@ -81,8 +80,9 @@ namespace NextPlayerWinUI.ViewModels.Settings
         public async void LeaveFeedback()
         {
             TelemetryAdapter.TrackEvent("Leave feedback button");
-            var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-            await launcher.LaunchAsync();
+            //todo
+            //var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+            //await launcher.LaunchAsync();
         }
 
         public async void ContactWithSupport()
@@ -98,8 +98,7 @@ namespace NextPlayerWinUI.ViewModels.Settings
         public void Licenses()
         {
             TelemetryAdapter.TrackEvent("View Licenses");
-            var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
-            nav.Navigate(AppPages.Pages.Licenses);
+            App.NavigationService.Navigate(AppPages.Pages.Licenses);
         }
 
         public async void GoToFacebook()

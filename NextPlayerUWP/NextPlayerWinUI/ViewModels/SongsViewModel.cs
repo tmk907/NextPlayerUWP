@@ -8,8 +8,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -29,11 +29,7 @@ namespace NextPlayerWinUI.ViewModels
 
         private async void MediaImport_MediaImported(string s)
         {
-            Template10.Common.IDispatcherWrapper d = Dispatcher;
-            if (d == null)
-            {
-                d = Template10.Common.WindowWrapper.Current().Dispatcher;
-            }
+            var d = App.Dispatcher;
             if (d == null)
             {
                 NextPlayerWinUIDataLayer.Diagnostics.Logger2.Current.WriteMessage("SongsViewModel Dispatcher null", NextPlayerWinUIDataLayer.Diagnostics.Logger2.Level.WarningError);
@@ -45,11 +41,7 @@ namespace NextPlayerWinUI.ViewModels
 
         private async void App_SongUpdated(int id)
         {
-            Template10.Common.IDispatcherWrapper d = Dispatcher;
-            if (d == null)
-            {
-                d = Template10.Common.WindowWrapper.Current().Dispatcher;
-            }
+            var d = App.Dispatcher;
             if (d == null)
             {
                 NextPlayerWinUIDataLayer.Diagnostics.Logger2.Current.WriteMessage("SongsViewModel Dispatcher null", NextPlayerWinUIDataLayer.Diagnostics.Logger2.Level.WarningError);
@@ -72,7 +64,7 @@ namespace NextPlayerWinUI.ViewModels
                 //    }
                 //}
                 return songs; }
-            set { Set(ref songs, value); }
+            set { SetProperty(ref songs, value); }
         }
 
         private ObservableCollection<GroupList> groupedSongs = new ObservableCollection<GroupList>();
@@ -92,7 +84,7 @@ namespace NextPlayerWinUI.ViewModels
                 //}
                 return groupedSongs;
             }
-            set { Set(ref groupedSongs, value); }
+            set { SetProperty(ref groupedSongs, value); }
         }
 
         protected override async Task LoadData()

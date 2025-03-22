@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
 using Windows.Storage;
 using Windows.Storage.Provider;
 using NextPlayerWinUIDataLayer.Playlists;
@@ -22,42 +22,42 @@ namespace NextPlayerWinUI.ViewModels
         public ObservableCollection<PlaylistItem> Playlists
         {
             get { return playlists; }
-            set { Set(ref playlists, value); }
+            set { SetProperty(ref playlists, value); }
         }
 
         private string name = "";
         public string Name
         {
             get { return name; }
-            set { Set(ref name, value); }
+            set { SetProperty(ref name, value); }
         }
 
         private PlaylistItem editPlaylist = new PlaylistItem(-1, false, "");
         public PlaylistItem EditPlaylist
         {
             get { return editPlaylist; }
-            set { Set(ref editPlaylist, value); }
+            set { SetProperty(ref editPlaylist, value); }
         }
 
         private string newPlaylistName = "";
         public string NewPlaylistName
         {
             get { return newPlaylistName; }
-            set { Set(ref newPlaylistName, value); }
+            set { SetProperty(ref newPlaylistName, value); }
         }
 
         private bool relativePaths = false;
         public bool RelativePaths
         {
             get { return relativePaths; }
-            set { Set(ref relativePaths, value); }
+            set { SetProperty(ref relativePaths, value); }
         }
 
         private ObservableCollection<PlaylistFilterElement> filters = new ObservableCollection<PlaylistFilterElement>();
         public ObservableCollection<PlaylistFilterElement> Filters
         {
             get { return filters; }
-            set { Set(ref filters, value); }
+            set { SetProperty(ref filters, value); }
         }
 
         protected override async Task LoadData()

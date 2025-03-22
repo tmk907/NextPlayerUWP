@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -28,21 +28,21 @@ namespace NextPlayerWinUI.ViewModels
         public string PageHeader
         {
             get { return pageHeader; }
-            set { Set(ref pageHeader, value); }
+            set { SetProperty(ref pageHeader, value); }
         }
 
         private string folderName = "";
         public string FolderName
         {
             get { return folderName; }
-            set { Set(ref folderName, value); }
+            set { SetProperty(ref folderName, value); }
         }
 
         private ObservableCollection<MusicItem> items = new ObservableCollection<MusicItem>();
         public ObservableCollection<MusicItem> Items
         {
             get { return items; }
-            set { Set(ref items, value); }
+            set { SetProperty(ref items, value); }
         }
 
         private CloudFolder currentFolder;
@@ -51,7 +51,7 @@ namespace NextPlayerWinUI.ViewModels
         public bool Loading
         {
             get { return loading; }
-            set { Set(ref loading, value); }
+            set { SetProperty(ref loading, value); }
         }
 
         string folderId = "";

@@ -6,11 +6,10 @@ using NextPlayerWinUIDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Template10.Common;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -58,21 +57,21 @@ namespace NextPlayerWinUI.ViewModels
         public double SliderMaxValue
         {
             get { return sliderMaxValue; }
-            set { Set(ref sliderMaxValue, value); }
+            set { SetProperty(ref sliderMaxValue, value); }
         }
 
         private double sliderValue = 0.0;
         public double SliderValue
         {
             get { return sliderValue; }
-            set { Set(ref sliderValue, value); }
+            set { SetProperty(ref sliderValue, value); }
         }
 
         private TimeSpan currentTime = TimeSpan.Zero;
         public TimeSpan CurrentTime
         {
             get { return currentTime; }
-            set { Set(ref currentTime, value); }
+            set { SetProperty(ref currentTime, value); }
         }
 
         private string songDurationType;
@@ -83,14 +82,14 @@ namespace NextPlayerWinUI.ViewModels
         public TimeSpan TimeEnd
         {
             get { return timeEnd; }
-            set { Set(ref timeEnd, value); }
+            set { SetProperty(ref timeEnd, value); }
         }
 
         private bool isVolumeControlVisible = false;
         public bool IsVolumeControlVisible
         {
             get { return isVolumeControlVisible; }
-            set { Set(ref isVolumeControlVisible, value); }
+            set { SetProperty(ref isVolumeControlVisible, value); }
         }
 
         private int flipViewSelectedIndex = 0;
@@ -103,7 +102,7 @@ namespace NextPlayerWinUI.ViewModels
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.FlipViewSelectedIndex, value);
                 }
-                Set(ref flipViewSelectedIndex, value);
+                SetProperty(ref flipViewSelectedIndex, value);
             }
         }
 
@@ -113,7 +112,7 @@ namespace NextPlayerWinUI.ViewModels
             get { return pivotSelectedIndex; }
             set
             {
-                Set(ref pivotSelectedIndex, value);
+                SetProperty(ref pivotSelectedIndex, value);
                 if (value == 2)
                 {
                     ShowNowPlayingListButtons = true;
@@ -129,14 +128,14 @@ namespace NextPlayerWinUI.ViewModels
         public bool ShowNowPlayingListButtons
         {
             get { return showNowPlayingListButtons; }
-            set { Set(ref showNowPlayingListButtons, value); }
+            set { SetProperty(ref showNowPlayingListButtons, value); }
         }
 
         private bool showAlbumArtInBackground = false;
         public bool ShowAlbumArtInBackground
         {
             get { return showAlbumArtInBackground; }
-            set { Set(ref showAlbumArtInBackground, value); }
+            set { SetProperty(ref showAlbumArtInBackground, value); }
         }
 
         #endregion
@@ -217,13 +216,13 @@ namespace NextPlayerWinUI.ViewModels
         public double IMGX
         {
             get { return iMGX; }
-            set { Set(ref iMGX, value); }
+            set { SetProperty(ref iMGX, value); }
         }
         private double iMGY;
         public double IMGY
         {
             get { return iMGY; }
-            set { Set(ref iMGY, value); }
+            set { SetProperty(ref iMGY, value); }
         }
         public void CoverImage_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
@@ -259,7 +258,7 @@ namespace NextPlayerWinUI.ViewModels
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
             await Task.Delay(400);
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            App.Dispatcher.Dispatch(() =>
             {
                 var duration = PlaybackService.Instance.Duration;
                 if (duration == TimeSpan.MaxValue)
@@ -295,7 +294,7 @@ namespace NextPlayerWinUI.ViewModels
         {
             int prevId = song.SongId;
             song = NowPlayingPlaylistManager.Current.GetCurrentPlaying();
-            await WindowWrapper.Current().Dispatcher.DispatchAsync(async () =>
+            await App.Dispatcher.DispatchAsync(async () =>
             {
                 if (song.SongId != prevId)
                 {
@@ -415,14 +414,14 @@ namespace NextPlayerWinUI.ViewModels
         public string ArtistSearch
         {
             get { return artistSearch; }
-            set { Set(ref artistSearch, value); }
+            set { SetProperty(ref artistSearch, value); }
         }
 
         private string titleSearch = "";
         public string TitleSearch
         {
             get { return titleSearch; }
-            set { Set(ref titleSearch, value); }
+            set { SetProperty(ref titleSearch, value); }
         }
 
         public async void SearchLyrics()

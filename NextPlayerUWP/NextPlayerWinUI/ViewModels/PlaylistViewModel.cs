@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Template10.Services.NavigationService;
 using System.IO;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using NextPlayerWinUIDataLayer.Playlists;
 using System.Collections.Specialized;
 
@@ -44,28 +44,28 @@ namespace NextPlayerWinUI.ViewModels
         public ObservableCollection<SongItem> Playlist
         {
             get { return playlist; }
-            set { Set(ref playlist, value); }
+            set { SetProperty(ref playlist, value); }
         }
 
         private string pageSubTitle = "";
         public string PageSubTitle
         {
             get { return pageSubTitle; }
-            set { Set(ref pageSubTitle, value); }
+            set { SetProperty(ref pageSubTitle, value); }
         }
 
         private bool isPlainPlaylist = false;
         public bool IsPlainPlaylist
         {
             get { return isPlainPlaylist; }
-            set { Set(ref isPlainPlaylist, value); }
+            set { SetProperty(ref isPlainPlaylist, value); }
         }
 
         private bool updating = false;
         public bool Updating
         {
             get { return updating; }
-            set { Set(ref updating, value); }
+            set { SetProperty(ref updating, value); }
         }
 
         protected override async Task LoadData()

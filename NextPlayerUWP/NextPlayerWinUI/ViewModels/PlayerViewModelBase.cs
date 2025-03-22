@@ -1,10 +1,11 @@
-﻿using NextPlayerWinUI.Common;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using NextPlayerWinUI.Common;
 using NextPlayerWinUIDataLayer.Helpers;
 using Windows.Media.Playback;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class PlayerViewModelBase : Template10.Mvvm.BindableBase
+    public class PlayerViewModelBase : ObservableObject
     {
         public PlayerViewModelBase()
         {
@@ -12,8 +13,8 @@ namespace NextPlayerWinUI.ViewModels
             isInitialized = false;
             Init();
             seekButtonsHelper = new SeekButtonsHelper();
-            App.Current.EnteredBackground += Current_EnteredBackground;
-            App.Current.LeavingBackground += Current_LeavingBackground;
+            //App.Current.EnteredBackground += Current_EnteredBackground;
+            //App.Current.LeavingBackground += Current_LeavingBackground;
         }
         private bool isInitialized;
         private void Current_LeavingBackground(object sender, Windows.ApplicationModel.LeavingBackgroundEventArgs e)
@@ -58,7 +59,7 @@ namespace NextPlayerWinUI.ViewModels
                     else isMuted = false;
                     PlaybackService.Instance.Volume = value;
                 }
-                Set(ref volume, value);
+                SetProperty(ref volume, value);
             }
         }
 
@@ -85,7 +86,7 @@ namespace NextPlayerWinUI.ViewModels
                 {
                     PlaybackService.Instance.PlaybackRatePercent = value;
                 }
-                Set(ref playbackRate, value);
+                SetProperty(ref playbackRate, value);
             }
         }
 
@@ -104,7 +105,7 @@ namespace NextPlayerWinUI.ViewModels
                 {
                     PlaybackService.Instance.AudioBalance = value;
                 }
-                Set(ref audioBalance, value);
+                SetProperty(ref audioBalance, value);
             }
         }
 
@@ -117,7 +118,7 @@ namespace NextPlayerWinUI.ViewModels
         public bool ShuffleMode
         {
             get { return shuffleMode; }
-            set { Set(ref shuffleMode, value); }
+            set { SetProperty(ref shuffleMode, value); }
         }
 
         public async void ToggleShuffle()
@@ -130,7 +131,7 @@ namespace NextPlayerWinUI.ViewModels
         public RepeatEnum RepeatMode
         {
             get { return repeatMode; }
-            set { Set(ref repeatMode, value); }
+            set { SetProperty(ref repeatMode, value); }
         }
 
         public void ToggleRepeat()
@@ -144,16 +145,12 @@ namespace NextPlayerWinUI.ViewModels
         public string PlayButtonContent
         {
             get { return playButtonContent; }
-            set { Set(ref playButtonContent, value); }
+            set { SetProperty(ref playButtonContent, value); }
         }
 
         private void ChangePlayButtonContent(MediaPlaybackState state)
         {
-            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
-            if (d == null)
-            {
-                return;
-            }
+            var d = App.Dispatcher;
             d.Dispatch(() =>
             {
                 if (state == MediaPlaybackState.Playing || state == MediaPlaybackState.Buffering)

@@ -16,6 +16,7 @@
     <ProjectReference Include="..\NextPlayerWinUIDataLayer\NextPlayerWinUIDataLayer.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Common\" />
     <Folder Include="Template10\" />
   </ItemGroup>
   

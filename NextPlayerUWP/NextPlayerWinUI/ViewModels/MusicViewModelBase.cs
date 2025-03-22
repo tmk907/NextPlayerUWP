@@ -146,14 +146,14 @@ namespace NextPlayerWinUI.ViewModels
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             ArtistItem temp = await DatabaseManager.Current.GetArtistItemAsync(item.FirstArtist);
-            App.Current..NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
+            App.NavigationService.Navigate(AppPages.Pages.Artist, temp.ArtistId);
         }
 
         public async void GoToAlbum(object sender, RoutedEventArgs e)
         {
             var item = (SongItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
             AlbumItem temp = await DatabaseManager.Current.GetAlbumItemAsync(item.Album, item.AlbumArtist);
-            App.Current.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
+            App.NavigationService.Navigate(AppPages.Pages.Album, temp.AlbumId);
         }
 
         public async Task SlidableListItemLeftCommandRequested(MusicItem item)

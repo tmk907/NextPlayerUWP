@@ -1,30 +1,29 @@
-﻿using Microsoft.Toolkit.Uwp;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI;
 using NextPlayerWinUI.AppColors;
 using NextPlayerWinUI.Common;
 using NextPlayerWinUI.Messages;
 using NextPlayerWinUI.Messages.Hub;
-using NextPlayerWinUIDataLayer.Constants;
 using NextPlayerWinUIDataLayer.Enums;
 using NextPlayerWinUIDataLayer.Helpers;
 using NextPlayerWinUIDataLayer.Model;
 using NextPlayerWinUIDataLayer.Services;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.UI;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class QueueViewModelBase : Template10.Mvvm.BindableBase
+    public class QueueViewModelBase : ObservableObject
     {
         public QueueViewModelBase()
         {
             System.Diagnostics.Debug.WriteLine("QueueViewModelBase");
             isInitialized = false;
             Init();
-            App.Current.EnteredBackground += Current_EnteredBackground;
-            App.Current.LeavingBackground += Current_LeavingBackground;
+            //App.Current.EnteredBackground += Current_EnteredBackground;
+            //App.Current.LeavingBackground += Current_LeavingBackground;
             lastFmCache = new LastFmCache();
             useAlbumArtAccent = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AccentFromAlbumArt);
             accentToken = MessageHub.Instance.Subscribe<AppColorAccent>(OnAppAccentChange);
@@ -85,21 +84,21 @@ namespace NextPlayerWinUI.ViewModels
                 }
                 return currentSong;
             }
-            set { Set(ref currentSong, value); }
+            set { SetProperty(ref currentSong, value); }
         }
 
         private int currentSongNumber = 0;
         public int CurrentSongNumber
         {
             get { return currentSongNumber; }
-            set { Set(ref currentSongNumber, value); }
+            set { SetProperty(ref currentSongNumber, value); }
         }
 
         private int songsCount = 0;
         public int SongsCount
         {
             get { return songsCount; }
-            set { Set(ref songsCount, value); }
+            set { SetProperty(ref songsCount, value); }
         }
 
         private Uri coverUri;
@@ -108,7 +107,7 @@ namespace NextPlayerWinUI.ViewModels
             get { return coverUri; }
             set
             {
-                Set(ref coverUri, value);
+                SetProperty(ref coverUri, value);
             }
         }
 
@@ -119,14 +118,14 @@ namespace NextPlayerWinUI.ViewModels
         public Color AlbumArtColor
         {
             get { return albumArtColor; }
-            set { Set(ref albumArtColor, value); }
+            set { SetProperty(ref albumArtColor, value); }
         }
 
         private ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
         public ObservableCollection<SongItem> Songs
         {
             get { return songs; }
-            set { Set(ref songs, value); }
+            set { SetProperty(ref songs, value); }
         }
 
         public async Task RateSong(int rating)
@@ -141,7 +140,7 @@ namespace NextPlayerWinUI.ViewModels
 
         private async void ChangeSong(int index)
         {
-            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            var d = App.Dispatcher;
             await d.DispatchAsync(() =>
             {
                 CurrentSong = NowPlayingPlaylistManager.Current.GetSongItem(index);
@@ -153,7 +152,7 @@ namespace NextPlayerWinUI.ViewModels
 
         public async void ChangeCoverUri(Uri cacheUri)
         {
-            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            var d = App.Dispatcher;
             await d.DispatchAsync(() =>
             {
                 CoverUri = cacheUri;
@@ -170,7 +169,7 @@ namespace NextPlayerWinUI.ViewModels
         private async void PlaybackService_MediaPlayerMediaOpened()
         {
             await Task.Delay(400);
-            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            var d = App.Dispatcher;
             await d.DispatchAsync(async () =>
             {
                 var duration = PlaybackService.Instance.Duration;
@@ -201,7 +200,7 @@ namespace NextPlayerWinUI.ViewModels
 
         private async Task ChangeAlbumArtColor()
         {
-            var d = Template10.Common.WindowWrapper.Current().Dispatcher;
+            var d = App.Dispatcher;
             await d.DispatchAsync(() =>
             {
                 var color = colorsHelper.GetDominantColorFromSavedAlbumArt(coverUri);

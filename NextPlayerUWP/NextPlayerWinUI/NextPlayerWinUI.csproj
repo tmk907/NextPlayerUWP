@@ -54,6 +54,9 @@
     <Page Update="Controls\SongListViewItemTemplate.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\TestPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
   <!--

@@ -45,7 +45,7 @@ namespace NextPlayerWinUI.ViewModels
             services.AddSingleton<CuteRadioViewModel>();
 
             services.AddSingleton<SettingsVMService>();
-            services.AddSingleton<MyLyricsExtensionsClient>();
+            //services.AddSingleton<MyLyricsExtensionsClient>();
             services.AddSingleton<FoldersVMHelper>();
 
 
@@ -85,7 +85,7 @@ namespace NextPlayerWinUI.ViewModels
         public CuteRadioViewModel CuteRadioVM => Ioc.Default.GetRequiredService<CuteRadioViewModel>();
 
         public SettingsVMService SettingsVMService => Ioc.Default.GetRequiredService<SettingsVMService>();
-        public MyLyricsExtensionsClient LyricsExtensionsClient => Ioc.Default.GetRequiredService<MyLyricsExtensionsClient>();
+        //public MyLyricsExtensionsClient LyricsExtensionsClient => Ioc.Default.GetRequiredService<MyLyricsExtensionsClient>();
         public FoldersVMHelper FolderVMHelper => Ioc.Default.GetRequiredService<FoldersVMHelper>();
     }
 }

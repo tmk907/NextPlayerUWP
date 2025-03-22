@@ -17,10 +17,10 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -40,42 +40,42 @@ namespace NextPlayerWinUI.ViewModels
         {
             get { if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) tagsData = new Tags();
                 return tagsData; }
-            set { Set(ref tagsData, value); }
+            set { SetProperty(ref tagsData, value); }
         }
 
         private bool showProgressBar = false;
         public bool ShowProgressBar
         {
             get { return showProgressBar; }
-            set { Set(ref showProgressBar, value); }
+            set { SetProperty(ref showProgressBar, value); }
         }
 
         private bool buttonsEnabled = true;
         public bool ButtonsEnabled
         {
             get { return buttonsEnabled; }
-            set { Set(ref buttonsEnabled, value); }
+            set { SetProperty(ref buttonsEnabled, value); }
         }
 
         private WriteableBitmap albumArt;
         public WriteableBitmap AlbumArt
         {
             get { return albumArt; }
-            set { Set(ref albumArt, value); }
+            set { SetProperty(ref albumArt, value); }
         }
 
         private bool isAlbumArtVisible = false;
         public bool IsAlbumArtVisible
         {
             get { return isAlbumArtVisible; }
-            set { Set(ref isAlbumArtVisible, value); }
+            set { SetProperty(ref isAlbumArtVisible, value); }
         }
 
         private ObservableCollection<SongItem> songs;
         public ObservableCollection<SongItem> Songs
         {
             get { return songs; }
-            set { Set(ref songs, value); }
+            set { SetProperty(ref songs, value); }
         }
 
         public async void SaveTags(object sender, RoutedEventArgs e)
@@ -189,7 +189,7 @@ namespace NextPlayerWinUI.ViewModels
                 {
                     file = null;
                 }
-                if (IsAlbumArtSet())
+                if (IsAlbumArtSetProperty())
                 {
                     AlbumArtsManager aam = new AlbumArtsManager();
                     await aam.SaveAlbumArtAndColor(albumArt, songData);
@@ -266,7 +266,7 @@ namespace NextPlayerWinUI.ViewModels
                     AlbumArt = await tm.GetAlbumArt(file);
                 }
             }
-            IsAlbumArtVisible = IsAlbumArtSet();
+            IsAlbumArtVisible = IsAlbumArtSetProperty();
             await LoadSongs();
             TelemetryAdapter.TrackPageView(this.GetType().ToString());
         }
@@ -321,7 +321,7 @@ namespace NextPlayerWinUI.ViewModels
             {
                 //show error
             }
-            IsAlbumArtVisible = IsAlbumArtSet();
+            IsAlbumArtVisible = IsAlbumArtSetProperty();
             isAlbumArtChanged = true;
             ShowProgressBar = false;
         }
@@ -346,7 +346,7 @@ namespace NextPlayerWinUI.ViewModels
                 {
                     //show error
                 }
-                IsAlbumArtVisible = IsAlbumArtSet();
+                IsAlbumArtVisible = IsAlbumArtSetProperty();
                 isAlbumArtChanged = true;
             }
             catch (Exception ex)
@@ -355,7 +355,7 @@ namespace NextPlayerWinUI.ViewModels
             }
         }
 
-        private bool IsAlbumArtSet()
+        private bool IsAlbumArtSetProperty()
         {
             if (albumArt == null) return false;
             else return albumArt.PixelHeight != 1 || albumArt.PixelWidth != 1;
@@ -363,7 +363,7 @@ namespace NextPlayerWinUI.ViewModels
 
         public async void SaveToFile()
         {
-            if (!IsAlbumArtSet())
+            if (!IsAlbumArtSetProperty())
             {
                 MessageDialogHelper m = new MessageDialogHelper();
                 await m.ShowAlbumArtSaveError();
