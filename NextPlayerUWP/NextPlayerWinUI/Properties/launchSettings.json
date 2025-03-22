@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NextPlayerWinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "NextPlayerWinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
