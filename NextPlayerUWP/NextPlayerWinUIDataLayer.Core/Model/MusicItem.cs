@@ -1,0 +1,56 @@
+﻿using System;
+
+namespace NextPlayerWinUIDataLayer.Model
+{
+    public enum MusicItemTypes
+    {
+        album,
+        albumartist,
+        artist,
+        folder,
+        genre,
+        nowplayinglist,
+        onedrivefolder,
+        googledrivefolder,
+        pcloudfolder,
+        dropboxfolder,
+        plainplaylist,
+        radio,
+        smartplaylist,
+        song,
+        listofitems,
+        unknown
+    }
+    public abstract class MusicItem
+    {
+        public int Index;
+        public abstract string GetParameter();
+        public const string separator = "!@#$%";
+        public static MusicItemTypes ParseType(string param)
+        {
+            string[] s = param.Split(new string[] { separator },StringSplitOptions.None);
+            try
+            {
+                return (MusicItemTypes)Enum.Parse(typeof(MusicItemTypes), s[0]);
+            }
+            catch (Exception ex)
+            {
+                //Diagnostics.Logger2.Current.WriteMessage("MusicItem ParseType " + Environment.NewLine + ex.Message);
+                return MusicItemTypes.unknown;
+            }
+        }
+        public static string[] SplitParameter(string param)
+        {
+            return param.Split(new string[] { separator }, StringSplitOptions.None);
+        }
+    }
+
+    public class ListOfMusicItems : MusicItem
+    {
+        public override string GetParameter()
+        {
+            return MusicItemTypes.listofitems + separator + "a";
+        }
+    }
+
+}

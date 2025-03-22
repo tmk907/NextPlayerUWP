@@ -1,0 +1,15 @@
+﻿using SQLite;
+
+namespace NextPlayerWinUIDataLayer.Tables
+{
+    [Table("SmartPlaylistsTable")]
+    public class SmartPlaylistsTable
+    {
+        [PrimaryKey, AutoIncrement]
+        public int SmartPlaylistId { get; set; }
+        public string Name { get; set; }
+        public int SongsNumber { get; set; }
+        public string SortBy { get; set; }
+        public bool IsHidden { get; set; }
+    }
+}
