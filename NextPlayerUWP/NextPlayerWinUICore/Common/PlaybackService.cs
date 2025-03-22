@@ -125,7 +125,7 @@ namespace NextPlayerWinUI.Common
                     if (playbackItemQueue.Count == maxCachedItems)
                     {
                         var removed = playbackItemQueue.Dequeue();
-                        removed.Source.ReSetProperty();
+                        removed.Source.Reset();
                     }
                     playbackItemQueue.Enqueue(item);
                 }
@@ -136,7 +136,7 @@ namespace NextPlayerWinUI.Common
         {
             foreach(var song in playbackItemQueue)
             {
-                song.Source.ReSetProperty();
+                song.Source.Reset();
             }
             playbackItemQueue.Clear();
         }
@@ -464,7 +464,7 @@ namespace NextPlayerWinUI.Common
             {
                 if (i != j)
                 {
-                    mediaList.Items[i].Source.ReSetProperty();
+                    mediaList.Items[i].Source.Reset();
                 }
             }
 

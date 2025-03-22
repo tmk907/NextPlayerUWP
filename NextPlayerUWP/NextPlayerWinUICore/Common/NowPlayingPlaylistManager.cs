@@ -9,7 +9,6 @@ using System.Collections.Specialized;
 using System.Threading.Tasks;
 using NextPlayerWinUIDataLayer.Diagnostics;
 using NextPlayerWinUIDataLayer.CloudStorage;
-using Template10.Common;
 
 namespace NextPlayerWinUI.Common
 {
@@ -158,14 +157,14 @@ namespace NextPlayerWinUI.Common
                 int i = 0;
                 if (dispatcher == null)
                 {
-                    if (WindowWrapper.Current().Dispatcher == null)
+                    if (App.Dispatcher == null)
                     {
                         System.Diagnostics.Debug.WriteLine("Dispatcher null");
                         return;
                     }
                     else
                     {
-                        dispatcher = WindowWrapper.Current().Dispatcher;
+                        dispatcher = App.Dispatcher;
                     }
                 }
                 foreach (var song in songs)
