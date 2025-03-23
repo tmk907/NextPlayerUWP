@@ -5,6 +5,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Template10.Controls;
 
 namespace NextPlayerWinUI.ViewModels
 {

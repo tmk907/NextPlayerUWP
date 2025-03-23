@@ -1,0 +1,74 @@
+﻿<Page
+    x:Class="NextPlayerWinUI.Views.LyricsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerWinUI.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Template10.Controls"
+    DataContext="{Binding Source={StaticResource Locator}, Path=LyricsVM}"
+    mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo/>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <controls:PageHeader Grid.Row="0"
+            BackButtonVisibility="Collapsed" 
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            x:Uid="PageHeaderLyrics"
+            Content="Lyrics" 
+            VisualStateNarrowMinWidth="0" 
+            VisualStateNormalMinWidth="720">
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton
+                    x:Uid="ButtonSearch"
+                    Label="Search"
+                    Icon="Find"
+                    Click="SearchButton_Click"/>
+            </controls:PageHeader.PrimaryCommands>
+        </controls:PageHeader>
+        <Grid Grid.Row="1">
+            <ContentDialog 
+                x:Name="ContentDialogSearchLyrics"
+                x:Uid="ContentDialogSearchLyrics"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Title="Search lyrics"
+                PrimaryButtonText="Search"
+                PrimaryButtonClick="ContentDialogSearchLyrics_PrimaryButtonClick"
+                SecondaryButtonText="Cancel"
+                VerticalContentAlignment="Stretch"
+                MaxWidth="300">
+                <ContentDialog.Content>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock 
+                            x:Uid="TBArtist"
+                            Margin="0,4,4,4"
+                            Text="Artist"/>
+                        <TextBox
+                            x:Name="ArtistSearch"
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.ArtistSearch, Mode=TwoWay}"/>
+                        <TextBlock 
+                            x:Uid="TBTitle"
+                            Margin="0,4,4,4"
+                            Text="Title"/>
+                        <TextBox
+                            x:Name="TitleSearch"
+                            Margin="0,4,4,0"
+                            Text="{x:Bind ViewModel.TitleSearch, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ContentDialog.Content>
+            </ContentDialog>
+            <local:LyricsPanel/>
+        </Grid>
+    </Grid>
+</Page>

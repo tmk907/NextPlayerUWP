@@ -36,16 +36,20 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Colourful" Version="1.2.1" />
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.1.240916" />
     <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.1.240916" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
     <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.2307.3001" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NextPlayerWinUICore\NextPlayerWinUICore.csproj" />
     <ProjectReference Include="..\NextPlayerWinUIDataLayer\NextPlayerWinUIDataLayer.csproj" />
+    <ProjectReference Include="..\Template10WinUI\Template10WinUI.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\PopupNotification.xaml">
@@ -54,9 +58,138 @@
     <Page Update="Controls\SongListViewItemTemplate.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\AddToPlaylistView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\AlbumArtistsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\AlbumArtistView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\AlbumsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\AlbumView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ArtistsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ArtistView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\AudioSettingsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\BlankPage1.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\BottomPlayerControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Busy.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\CloudStorageFoldersView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\CuteRadioView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\FileInfoView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\FoldersRootView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\FoldersView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\GenresView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Licences.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LyricsPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LyricsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NewSmartPlaylistView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NowPlayingDesktopView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NowPlayingPlaylistPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NowPlayingPlaylistView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NowPlayingView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\PlaylistEditableView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\PlaylistsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\PlaylistView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RadiosView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RightPanelControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SettingsDetailsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SettingsView2.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsAboutControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsAccountsControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsExtensionsControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsLibraryControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsPersonalizationControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsToolsControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Shell.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SongsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Splash.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\TagsEditor.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\TestPage.xaml">
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Template10\" />
   </ItemGroup>
 
   <!--

@@ -8,6 +8,7 @@ namespace NextPlayerWinUI
 {
     public interface IDispatcherWrapper
     {
+        bool HasThreadAccess();
         void Dispatch(Action action, int delayms = 0, DispatcherQueuePriority priority = DispatcherQueuePriority.Normal);
         Task DispatchAsync(Func<Task> func, int delayms = 0, DispatcherQueuePriority priority = DispatcherQueuePriority.Normal);
         Task DispatchAsync(Action action, int delayms = 0, DispatcherQueuePriority priority = DispatcherQueuePriority.Normal);
@@ -23,6 +24,7 @@ namespace NextPlayerWinUI
             dispatcher = dispatcherQueue;
         }
 
+        public bool HasThreadAccess() => dispatcher.HasThreadAccess;
         public void Dispatch(Action function, int delayms = 0, DispatcherQueuePriority priority = DispatcherQueuePriority.Normal)
         {
             if (dispatcher.HasThreadAccess)

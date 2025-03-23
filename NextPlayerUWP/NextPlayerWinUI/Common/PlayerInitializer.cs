@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.UI.Xaml;
+using NextPlayerWinUI.Views;
+using Template10.Controls;
 
 namespace NextPlayerWinUI.Common
 {

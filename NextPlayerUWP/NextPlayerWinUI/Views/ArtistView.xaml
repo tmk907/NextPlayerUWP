@@ -1,0 +1,492 @@
+﻿<Page
+    x:Class="NextPlayerWinUI.Views.ArtistView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:data="using:NextPlayerWinUIDataLayer.Model"
+    xmlns:mycontrols="using:NextPlayerWinUI.Controls"
+    xmlns:triggers="using:WindowsStateTriggers"
+    DataContext="{Binding Source={StaticResource Locator}, Path=ArtistVM}"
+    mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SuppressNavigationTransitionInfo />
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
+    <Page.Resources>
+        <CollectionViewSource
+            x:Name="AlbumsCVS"
+            IsSourceGrouped="True"
+            Source="{Binding Albums}" />
+        <MenuFlyout x:Key="ContextMenu">
+            <MenuFlyoutItem
+                x:Uid="MFIPlayNow"
+                Click="{x:Bind ViewModel.PlayNow}"
+                CommandParameter="{Binding}"
+                Text="Play now" />
+            <MenuFlyoutItem
+                x:Uid="MFIPlayNext"
+                Click="{x:Bind ViewModel.PlayNext}"
+                CommandParameter="{Binding}"
+                Text="Play next" />
+            <MenuFlyoutItem
+                x:Uid="MFIAddToNowPlaying"
+                Click="{x:Bind ViewModel.AddToNowPlaying}"
+                CommandParameter="{Binding}"
+                Text="Add to now playing" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+                x:Uid="MFIAddToPlaylist"
+                Click="{x:Bind ViewModel.AddToPlaylist}"
+                CommandParameter="{Binding}"
+                Text="Add to playlist" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+                x:Uid="MFIGoToAlbum"
+                Click="{x:Bind ViewModel.GoToAlbum}"
+                CommandParameter="{Binding}"
+                Text="Go To Album" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+                x:Uid="MFIShowDetails"
+                Click="{x:Bind ViewModel.ShowDetails}"
+                CommandParameter="{Binding}"
+                Text="Show details" />
+            <MenuFlyoutItem
+                x:Uid="MFIEditTags"
+                Click="{x:Bind ViewModel.EditTags}"
+                CommandParameter="{Binding}"
+                Text="Edit" />
+            <MenuFlyoutItem
+                x:Uid="MFIShare"
+                Click="{x:Bind ViewModel.Share}"
+                CommandParameter="{Binding}"
+                Text="Share" />
+        </MenuFlyout>
+        <MenuFlyout x:Key="AlbumContextMenu">
+            <MenuFlyoutItem
+                x:Uid="MFIPlayNow"
+                Click="{x:Bind ViewModel.PlayNowAlbum}"
+                CommandParameter="{Binding}"
+                Text="Play now" />
+            <MenuFlyoutItem
+                x:Uid="MFIPlayNext"
+                Click="{x:Bind ViewModel.PlayNextAlbum}"
+                CommandParameter="{Binding}"
+                Text="Play next" />
+            <MenuFlyoutItem
+                x:Uid="MFIAddToNowPlaying"
+                Click="{x:Bind ViewModel.AddToNowPlayingAlbum}"
+                CommandParameter="{Binding}"
+                Text="Add to now playing" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+                x:Uid="MFIAddToPlaylist"
+                Click="{x:Bind ViewModel.AddToPlaylistAlbum}"
+                CommandParameter="{Binding}"
+                Text="Add to playlist" />
+        </MenuFlyout>
+        <Style
+            x:Key="ArtistDescriptionTextBlockStyle"
+            BasedOn="{StaticResource BaseTextBlockStyle}"
+            TargetType="TextBlock">
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontWeight" Value="Light" />
+            <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+
+        <DataTemplate x:Key="GroupHeaderTemplateDesktop">
+            <Grid
+                Margin="0,0,0,4"
+                Background="Transparent"
+                RightTapped="AlbumGroupHeader_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <!--<toolkitcontrols:DropShadowPanel
+                    Grid.Column="0" Grid.RowSpan="2"
+                    PointerEntered="DropShadowPanel_PointerEntered"
+                    PointerExited="DropShadowPanel_PointerExited"
+                    BlurRadius="20.0"
+                    ShadowOpacity="0.0"
+                    OffsetY="0"
+                    OffsetX="0">-->
+                <Image
+                    x:Name="AlbumCoverImage"
+                    Grid.RowSpan="2"
+                    Grid.Column="0"
+                    ImageOpened="AlbumCoverImage_ImageOpened"
+                    Tag="{Binding Header.AlbumId}"
+                    Tapped="AlbumCoverImage_Tapped">
+                    <Image.Source>
+                        <BitmapImage
+                            DecodePixelHeight="100"
+                            DecodePixelType="Logical"
+                            DecodePixelWidth="100"
+                            UriSource="{Binding Header.ImageUri, Mode=OneWay}" />
+                    </Image.Source>
+                </Image>
+                <!--</toolkitcontrols:DropShadowPanel>-->
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="23"
+                    Style="{StaticResource SubheaderTextBlockStyle}"
+                    Text="{Binding Header.Album}"
+                    TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="18"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{Binding Header.Year}"
+                    Visibility="{Binding Header.Year, Converter={StaticResource YearToVisibilityConverter}}" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="GroupHeaderTemplate">
+            <Grid
+                Margin="0,0,0,4"
+                Background="Transparent"
+                RightTapped="AlbumGroupHeader_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Image
+                    Grid.RowSpan="2"
+                    Grid.Column="0"
+                    ImageOpened="AlbumCoverImage_ImageOpened"
+                    Tag="{Binding Header.AlbumId}"
+                    Tapped="AlbumCoverImage_Tapped">
+                    <Image.Source>
+                        <BitmapImage
+                            DecodePixelHeight="100"
+                            DecodePixelType="Logical"
+                            DecodePixelWidth="100"
+                            UriSource="{Binding Header.ImageUri, Mode=OneWay}" />
+                    </Image.Source>
+                </Image>
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="23"
+                    Style="{StaticResource SubheaderTextBlockStyle}"
+                    Text="{Binding Header.Album}"
+                    TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="18"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{Binding Header.Year}"
+                    Visibility="{Binding Header.Year, Converter={StaticResource YearToVisibilityConverter}}" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ArtistSongItemTemplateDesktop" x:DataType="data:SongItem">
+            <Grid Background="Transparent" RightTapped="ListViewItem_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    Style="{StaticResource SongItemStyleIndex}"
+                    Text="{x:Bind TrackNumber}" />
+                <TextBlock
+                    Grid.Column="1"
+                    Style="{StaticResource SongItemStyleLeft}"
+                    Text="{x:Bind Title}" />
+                <TextBlock
+                    Grid.Column="2"
+                    Style="{StaticResource SongItemStyleCenter}"
+                    Text="{x:Bind Artist}" />
+                <TextBlock
+                    Grid.Column="3"
+                    Style="{StaticResource SongItemStyleRight}"
+                    Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ArtistSongItemTemplateMobile" x:DataType="data:SongItem">
+                <Grid Background="Transparent" RightTapped="ListViewItem_RightTapped">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.RowSpan="2"
+                        Grid.Column="0"
+                        Style="{StaticResource SongItemStyleIndex}"
+                        Text="{x:Bind TrackNumber}" />
+                    <TextBlock
+                        Grid.RowSpan="2"
+                        Grid.Column="2"
+                        Style="{StaticResource SongItemStyleRight}"
+                        Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Style="{StaticResource SongItemStyleTop}"
+                        Text="{x:Bind Title}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Style="{StaticResource SongItemStyleBottom}"
+                        Text="{x:Bind Artist}" />
+                </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ArtistSongItemTemplateMobileWide" x:DataType="data:SongItem">
+                <Grid Background="Transparent" RightTapped="ListViewItem_RightTapped">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Style="{StaticResource SongItemStyleIndex}"
+                        Text="{x:Bind TrackNumber}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Style="{StaticResource SongItemStyleLeft}"
+                        Text="{x:Bind Title}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Style="{StaticResource SongItemStyleCenter}"
+                        Text="{x:Bind Artist}" />
+                    <TextBlock
+                        Grid.Column="3"
+                        Style="{StaticResource SongItemStyleRight}"
+                        Text="{x:Bind Duration, Converter={StaticResource TimeSpanToStringConverter}}" />
+                </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <controls:PageHeader
+            x:Name="PageHeader"
+            x:Uid="PageHeaderArtist"
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            BackButtonVisibility="Collapsed"
+            Content="Artist"
+            Frame="{x:Bind Frame, Mode=OneWay}"
+            VisualStateNarrowMinWidth="0"
+            VisualStateNormalMinWidth="720">
+            <AppBarButton
+                x:Name="ShuffleAppBarButton"
+                x:Uid="AppBarButtonShuffleAll"
+                Icon="Shuffle"
+                Label="Shuffle all" />
+            <AppBarSeparator />
+            <AppBarButton
+                x:Uid="AppBarButtonSelect"
+                Click="EnableMultipleSelection"
+                Label="Select"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}">
+                <AppBarButton.Content>
+                    <Viewbox Height="22">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE762;" />
+                    </Viewbox>
+                </AppBarButton.Content>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="AppBarButtonSelectAll"
+                Click="SelectAll"
+                Icon="SelectAll"
+                Label="Select all"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            <AppBarButton
+                x:Uid="AppBarButtonClearSelection"
+                Click="DisableMultipleSelection"
+                Icon="ClearSelection"
+                Label="Clear selection"
+                Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+        </controls:PageHeader>
+        <Grid
+            x:Name="PortraitView"
+            Grid.Row="1"
+            Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="12,12,12,12"
+                Style="{StaticResource ArtistDescriptionTextBlockStyle}"
+                Text="{x:Bind ViewModel.Artist.Artist, Mode=OneWay}" />
+            <mycontrols:AlternatingRowListView
+                x:Name="ArtistSongsListView"
+                Grid.Row="1"
+                Margin="0,0,0,0"
+                Padding="12,0,0,0"
+                CanDragItems="True"
+                DragItemsStarting="{x:Bind ViewModel.DragStarting}"
+                EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
+                ItemClick="{x:Bind ViewModel.ItemClicked}"
+                ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
+                ItemTemplate="{StaticResource ArtistSongItemTemplateDesktop}"
+                ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
+                OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}">
+                <mycontrols:AlternatingRowListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </mycontrols:AlternatingRowListView.ItemsPanel>
+                <mycontrols:AlternatingRowListView.GroupStyle>
+                    <GroupStyle
+                        x:Name="ArtistSongsListViewGroupHeader"
+                        HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}"
+                        HeaderTemplate="{StaticResource GroupHeaderTemplate}" />
+                </mycontrols:AlternatingRowListView.GroupStyle>
+            </mycontrols:AlternatingRowListView>
+        </Grid>
+        <ScrollViewer
+            x:Name="MobileLandscapeView"
+            Grid.Row="1"
+            Grid.Column="0"
+            x:DeferLoadStrategy="Lazy"
+            ScrollViewer.VerticalScrollMode="Enabled"
+            Visibility="Collapsed">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="12,12,12,12"
+                    Style="{StaticResource ArtistDescriptionTextBlockStyle}"
+                    Text="{x:Bind ViewModel.Artist.Artist, Mode=OneWay}" />
+                <mycontrols:AlternatingRowListView
+                    Grid.Row="1"
+                    Margin="12,0,0,0"
+                    CanDragItems="False"
+                    EvenRowBackground="{ThemeResource ListViewItemBackgroundSecond}"
+                    IsItemClickEnabled="{x:Bind ViewModel.IsClickEnabled, Mode=OneWay}"
+                    ItemClick="{x:Bind ViewModel.ItemClicked}"
+                    ItemContainerStyle="{StaticResource ListViewItemContainerStyle2}"
+                    ItemTemplate="{StaticResource ArtistSongItemTemplateMobileWide}"
+                    ItemsSource="{Binding Source={StaticResource AlbumsCVS}}"
+                    OddRowBackground="{ThemeResource ListViewItemBackgroundNormal}"
+                    ScrollViewer.VerticalScrollMode="Disabled"
+                    SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}">
+                    <mycontrols:AlternatingRowListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </mycontrols:AlternatingRowListView.ItemsPanel>
+                    <mycontrols:AlternatingRowListView.GroupStyle>
+                        <GroupStyle HeaderContainerStyle="{StaticResource GroupHeaderContainerStyle}" HeaderTemplate="{StaticResource GroupHeaderTemplate}" />
+                    </mycontrols:AlternatingRowListView.GroupStyle>
+                </mycontrols:AlternatingRowListView>
+            </Grid>
+        </ScrollViewer>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="MobileWide">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile" />
+                            <triggers:AdaptiveTrigger MinWindowWidth="480" />
+                            <triggers:OrientationStateTrigger Orientation="Portrait" />
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateMobileWide}" />
+                        <Setter Target="ArtistSongsListView.CanDragItems" Value="False" />
+                        <Setter Target="PortraitView.Visibility" Value="Visible" />
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MobileNarrow">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile" />
+                            <triggers:AdaptiveTrigger MinWindowWidth="0" />
+                            <triggers:OrientationStateTrigger Orientation="Portrait" />
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateMobile}" />
+                        <Setter Target="ArtistSongsListView.CanDragItems" Value="False" />
+                        <Setter Target="PortraitView.Visibility" Value="Visible" />
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MobileLandscape">
+                    <VisualState.StateTriggers>
+                        <triggers:CompositeStateTrigger Operator="And">
+                            <triggers:OrientationStateTrigger Orientation="Landscape" />
+                            <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile" />
+                        </triggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MobileLandscapeView.Visibility" Value="Visible" />
+                        <Setter Target="PortraitView.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateDesktop}" />
+                        <Setter Target="PortraitView.Visibility" Value="Visible" />
+                        <Setter Target="ArtistSongsListViewGroupHeader.HeaderTemplate" Value="{StaticResource GroupHeaderTemplateDesktop}" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Xbox">
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArtistSongsListView.ItemTemplate" Value="{StaticResource ArtistSongItemTemplateDesktop}" />
+                        <Setter Target="PortraitView.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</Page>

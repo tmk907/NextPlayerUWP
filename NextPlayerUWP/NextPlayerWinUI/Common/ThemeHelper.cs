@@ -52,25 +52,25 @@ namespace NextPlayerWinUI.Common
             System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToStatusBar");
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
-                var statusBar = StatusBar.GetForCurrentView();
-                switch (theme)
-                {
-                    case ElementTheme.Dark:
-                        statusBar.BackgroundColor = Colors.Black;
-                        statusBar.BackgroundOpacity = 1;
-                        statusBar.ForegroundColor = Colors.White;
-                        break;
-                    case ElementTheme.Light:
-                        statusBar.BackgroundColor = Colors.White;
-                        statusBar.BackgroundOpacity = 1;
-                        statusBar.ForegroundColor = Colors.Black;
-                        break;
-                    default:
-                        statusBar.BackgroundColor = Colors.Black;
-                        statusBar.BackgroundOpacity = 1;
-                        statusBar.ForegroundColor = Colors.White;
-                        break;
-                }
+                //var statusBar = StatusBar.GetForCurrentView();
+                //switch (theme)
+                //{
+                //    case ElementTheme.Dark:
+                //        statusBar.BackgroundColor = Colors.Black;
+                //        statusBar.BackgroundOpacity = 1;
+                //        statusBar.ForegroundColor = Colors.White;
+                //        break;
+                //    case ElementTheme.Light:
+                //        statusBar.BackgroundColor = Colors.White;
+                //        statusBar.BackgroundOpacity = 1;
+                //        statusBar.ForegroundColor = Colors.Black;
+                //        break;
+                //    default:
+                //        statusBar.BackgroundColor = Colors.Black;
+                //        statusBar.BackgroundOpacity = 1;
+                //        statusBar.ForegroundColor = Colors.White;
+                //        break;
+                //}
             }
         }
 

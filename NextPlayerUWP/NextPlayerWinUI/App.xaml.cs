@@ -117,7 +117,8 @@ namespace NextPlayerWinUI
             await Logger2.Current.WriteToFile();
         }
 
-        private Window? m_window;
+        private static Window? m_window;
+        public static Window? Window { get; }
 
         public static DispatcherWrapper Dispatcher { get; private set; }
 

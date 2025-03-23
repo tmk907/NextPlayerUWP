@@ -1,0 +1,1066 @@
+﻿<UserControl
+    x:Class="NextPlayerWinUI.Views.BottomPlayerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayerWinUI.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winstatetriggers="using:WindowsStateTriggers"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    DataContext="{Binding Source={StaticResource Locator}, Path=BottomPlayerVM}"
+    mc:Ignorable="d">
+    <!--  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModel}"  -->
+    <UserControl.Resources>
+        <Style x:Key="BottomPlayerButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="MinWidth" Value="40" />
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid
+                            x:Name="RootGrid"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="30">
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                AutomationProperties.AccessibilityView="Raw"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                CornerRadius="30" />
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#16FFFFFF" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#20FFFFFF" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="BottomPlayerRepeatButtonStyle" TargetType="RepeatButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="MinWidth" Value="40" />
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Grid
+                            x:Name="RootGrid"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="30">
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                AutomationProperties.AccessibilityView="Raw"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                CornerRadius="30" />
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#16FFFFFF" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#20FFFFFF" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="TimeSliderStyle" TargetType="Slider">
+            <Setter Property="Background" Value="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" />
+            <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}" />
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="ManipulationMode" Value="None" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Margin="{TemplateBinding Padding}">
+                            <Grid.Resources>
+                                <Style x:Key="SliderThumbStyle" TargetType="Thumb">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Background" Value="{ThemeResource SystemControlForegroundAccentBrush}" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse
+                                                    x:Name="EllipseThumb"
+                                                    Width="{TemplateBinding Width}"
+                                                    Height="{TemplateBinding Height}"
+                                                    Fill="{TemplateBinding Background}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <ContentPresenter
+                                x:Name="HeaderContentPresenter"
+                                Margin="{ThemeResource SliderHeaderThemeMargin}"
+                                x:DeferLoadStrategy="Lazy"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                FontWeight="{ThemeResource SliderHeaderThemeFontWeight}"
+                                Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                TextWrapping="Wrap"
+                                Visibility="Collapsed" />
+                            <Grid
+                                x:Name="SliderContainer"
+                                Grid.Row="1"
+                                Background="Transparent"
+                                Control.IsTemplateFocusTarget="True">
+                                <Grid x:Name="HorizontalTemplate" MinHeight="44">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="18" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="18" />
+                                    </Grid.RowDefinitions>
+                                    <Rectangle
+                                        x:Name="HorizontalTrackRect"
+                                        Grid.Row="1"
+                                        Grid.ColumnSpan="3"
+                                        Height="{ThemeResource SliderTrackThemeHeight}"
+                                        Fill="{StaticResource SliderThumbBackgroundLight}" />
+                                    <Rectangle
+                                        x:Name="HorizontalDecreaseRect"
+                                        Grid.Row="1"
+                                        Fill="{StaticResource SliderHorizontalDecreaseRectFillLight}" />
+                                    <TickBar
+                                        x:Name="TopTickBar"
+                                        Grid.ColumnSpan="3"
+                                        Height="{ThemeResource SliderOutsideTickBarThemeHeight}"
+                                        Margin="0,0,0,4"
+                                        VerticalAlignment="Bottom"
+                                        Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                        Visibility="Collapsed" />
+                                    <TickBar
+                                        x:Name="HorizontalInlineTickBar"
+                                        Grid.Row="1"
+                                        Grid.ColumnSpan="3"
+                                        Height="{ThemeResource SliderTrackThemeHeight}"
+                                        Fill="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                        Visibility="Collapsed" />
+                                    <TickBar
+                                        x:Name="BottomTickBar"
+                                        Grid.Row="2"
+                                        Grid.ColumnSpan="3"
+                                        Height="{ThemeResource SliderOutsideTickBarThemeHeight}"
+                                        Margin="0,4,0,0"
+                                        VerticalAlignment="Top"
+                                        Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                        Visibility="Collapsed" />
+                                    <Thumb
+                                        x:Name="HorizontalThumb"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="3"
+                                        Grid.Column="1"
+                                        Width="16"
+                                        Height="16"
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        Background="{StaticResource SliderThumbBackgroundLight}"
+                                        DataContext="{TemplateBinding Value}"
+                                        Style="{StaticResource SliderThumbStyle}" />
+                                </Grid>
+                            </Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="HorizontalThumb">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb" Storyboard.TargetProperty="Width">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="24" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb" Storyboard.TargetProperty="Height">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="24" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HeaderContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalDecreaseRect" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalTrackRect" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalDecreaseRect" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalTrackRect" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalThumb" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TopTickBar" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BottomTickBar" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LeftTickBar" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RightTickBar" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="HorizontalTrackRect">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="HorizontalThumb">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeAltLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb" Storyboard.TargetProperty="Width">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="20" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb" Storyboard.TargetProperty="Height">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="20" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="VolumeSliderStyle" TargetType="Slider">
+            <Setter Property="Background" Value="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" />
+            <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}" />
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="ManipulationMode" Value="None" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Margin="{TemplateBinding Padding}">
+                            <Grid.Resources>
+                                <Style x:Key="SliderThumbStyle" TargetType="Thumb">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Background" Value="{ThemeResource SystemControlForegroundAccentBrush}" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse
+                                                    x:Name="EllipseThumb"
+                                                    Width="{TemplateBinding Width}"
+                                                    Height="{TemplateBinding Height}"
+                                                    Fill="{TemplateBinding Background}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <ContentPresenter
+                                x:Name="HeaderContentPresenter"
+                                Margin="{ThemeResource SliderHeaderThemeMargin}"
+                                x:DeferLoadStrategy="Lazy"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                FontWeight="{ThemeResource SliderHeaderThemeFontWeight}"
+                                Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                TextWrapping="Wrap"
+                                Visibility="Collapsed" />
+                            <Grid
+                                x:Name="SliderContainer"
+                                Grid.Row="1"
+                                Background="Transparent"
+                                Control.IsTemplateFocusTarget="True">
+                                <Grid
+                                    x:Name="VerticalTemplate"
+                                    MinWidth="44"
+                                    Visibility="Collapsed">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="18" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="18" />
+                                    </Grid.ColumnDefinitions>
+                                    <Rectangle
+                                        x:Name="VerticalTrackRect"
+                                        Grid.RowSpan="3"
+                                        Grid.Column="1"
+                                        Width="{ThemeResource SliderTrackThemeHeight}"
+                                        Fill="{TemplateBinding Background}" />
+                                    <Rectangle
+                                        x:Name="VerticalDecreaseRect"
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Fill="{TemplateBinding Foreground}" />
+                                    <TickBar
+                                        x:Name="LeftTickBar"
+                                        Grid.RowSpan="3"
+                                        Width="{ThemeResource SliderOutsideTickBarThemeHeight}"
+                                        Margin="0,0,4,0"
+                                        HorizontalAlignment="Right"
+                                        Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                        Visibility="Collapsed" />
+                                    <TickBar
+                                        x:Name="VerticalInlineTickBar"
+                                        Grid.RowSpan="3"
+                                        Grid.Column="1"
+                                        Width="{ThemeResource SliderTrackThemeHeight}"
+                                        Fill="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                        Visibility="Collapsed" />
+                                    <TickBar
+                                        x:Name="RightTickBar"
+                                        Grid.RowSpan="3"
+                                        Grid.Column="2"
+                                        Width="{ThemeResource SliderOutsideTickBarThemeHeight}"
+                                        Margin="4,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                        Visibility="Collapsed" />
+                                    <Thumb
+                                        x:Name="VerticalThumb"
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Width="16"
+                                        Height="16"
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        Background="{ThemeResource SystemControlForegroundAccentBrush}"
+                                        DataContext="{TemplateBinding Value}"
+                                        Style="{StaticResource SliderThumbStyle}" />
+                                </Grid>
+                            </Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalThumb" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HeaderContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalDecreaseRect" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalTrackRect" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalThumb" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LeftTickBar" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RightTickBar" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalTrackRect"
+                                           Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalThumb"
+                                           Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeAltLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="VolumeFlyoutStyle" TargetType="FlyoutPresenter">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundChromeHighBrush}" />
+            <Setter Property="BorderThickness" Value="{ThemeResource FlyoutBorderThemeThickness}" />
+            <Setter Property="Padding" Value="12,8,12,8" />
+            <Setter Property="MinWidth" Value="{ThemeResource FlyoutThemeMinHeight}" />
+            <Setter Property="MaxWidth" Value="{ThemeResource FlyoutThemeMaxWidth}" />
+            <Setter Property="MinHeight" Value="{ThemeResource FlyoutThemeMinWidth}" />
+            <Setter Property="MaxHeight" Value="{ThemeResource FlyoutThemeMaxHeight}" />
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="FlyoutPresenter">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer
+                                x:Name="ScrollViewer"
+                                AutomationProperties.AccessibilityView="Raw"
+                                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                                VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                                ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                                <ContentPresenter
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    ContentTransitions="{TemplateBinding ContentTransitions}" />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource AlbumArtAccentBrush}" Visibility="{x:Bind ViewModel.BottomPlayerVisibility, Mode=OneWay}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Name="BottomPlayerGrid"
+            Grid.Row="0"
+            Height="68"
+            Visibility="{Binding BottomPlayerVisibility, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="SongInfoColumn" Width="*" />
+                <ColumnDefinition x:Name="ShowHideColumn" Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition x:Name="VolumeColumn" Width="Auto" />
+                <ColumnDefinition x:Name="SliderColumn" Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="68" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <!--<imagecontrol:CrossfadingImage
+                            Grid.RowSpan="2"
+                            Grid.Column="0"
+                            Margin="4"
+                            Tapped="GoToNowPlaying"
+                            DecodePixelHeight="60"
+                            DecodePixelWidth="60"
+                            FadeInDuration="0:0:0.3"
+                            FadeOutDuration="0:0:0.3"
+                            ImageUri="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}"
+                            Stretch="Uniform"/>-->
+                <Image Grid.RowSpan="2"
+                       Grid.Column="0"
+                       Width="60"
+                       Height="60"
+                       Margin="4"
+                       Stretch="Uniform"
+                       Tapped="GoToNowPlaying">
+                    <Image.Source>
+                        <BitmapImage UriSource="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}" />
+                    </Image.Source>
+                </Image>
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Background="Transparent"
+                    Tapped="GoToNowPlaying">
+                    <TextBlock
+                        Margin="4,4,0,4"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        FontSize="16"
+                        Foreground="{ThemeResource BottomPlayerTextForeground}"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Tapped="GoToNowPlaying"
+                        Text="{Binding QueueVM.CurrentSong.Title}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="NoWrap" />
+                </Grid>
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Background="Transparent"
+                    Tapped="GoToNowPlaying">
+                    <TextBlock
+                        Margin="4,4,0,4"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        FontSize="14"
+                        Foreground="{ThemeResource BottomPlayerTextForeground}"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Text="{Binding QueueVM.CurrentSong.Artist}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="NoWrap" />
+                </Grid>
+            </Grid>
+            <Grid
+                x:Name="ShowHideGrid"
+                Grid.Column="1"
+                x:DeferLoadStrategy="Lazy"
+                Visibility="Collapsed">
+                <Button
+                    Width="48"
+                    Height="60"
+                    Click="{x:Bind ViewModel.ShowHideSlider}"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    x:Name="ShowHideButtonText"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="20"
+                                    Foreground="White"
+                                    Text="{Binding ShowHideSliderButtonContent}" />
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+            </Grid>
+            <Grid
+                Grid.Column="2"
+                Width="Auto"
+                FlowDirection="LeftToRight">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button
+                    x:Name="ShuffleButton"
+                    Grid.Column="0"
+                    Width="48"
+                    Height="48"
+                    Click="{x:Bind ViewModel.PlayerVM.ToggleShuffle}"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="20"
+                                    Foreground="{Binding PlayerVM.ShuffleMode, Converter={StaticResource ShuffleForegroundConverter}}"
+                                    Text="&#xE14B;" />
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <RepeatButton
+                    Grid.Column="1"
+                    Width="54"
+                    Height="54"
+                    Click="{x:Bind ViewModel.PlayerVM.PreviousOrSeek}"
+                    Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval}"
+                    Style="{StaticResource BottomPlayerRepeatButtonStyle}">
+                    <RepeatButton.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="30"
+                                    Foreground="{ThemeResource BottomPlayerTextForeground}"
+                                    Text="&#xE892;" />
+                            </Grid>
+                        </DataTemplate>
+                    </RepeatButton.ContentTemplate>
+                </RepeatButton>
+                <Button
+                    Grid.Column="2"
+                    Width="60"
+                    Height="60"
+                    Click="{x:Bind ViewModel.PlayerVM.Play}"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    Margin="0,0,0,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="30"
+                                    Foreground="{ThemeResource BottomPlayerTextForeground}"
+                                    Text="{Binding PlayerVM.PlayButtonContent}" />
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <RepeatButton
+                    Grid.Column="3"
+                    Width="54"
+                    Height="54"
+                    Click="{x:Bind ViewModel.PlayerVM.NextOrSeek}"
+                    Interval="{x:Bind ViewModel.PlayerVM.RepeatButtonInterval}"
+                    Style="{StaticResource BottomPlayerRepeatButtonStyle}">
+                    <RepeatButton.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="30"
+                                    Foreground="{ThemeResource BottomPlayerTextForeground}"
+                                    Text="&#xE893;" />
+                            </Grid>
+                        </DataTemplate>
+                    </RepeatButton.ContentTemplate>
+                </RepeatButton>
+                <Button
+                    x:Name="ToggleRepeatButton"
+                    Grid.Column="4"
+                    Width="48"
+                    Height="48"
+                    Click="{x:Bind ViewModel.PlayerVM.ToggleRepeat}"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="18"
+                                    Foreground="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatForegroundConverter}}"
+                                    Text="{Binding PlayerVM.RepeatMode, Converter={StaticResource RepeatContentConverter}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+            </Grid>
+            <Grid
+                x:Name="VolumeGrid"
+                Grid.Column="3"
+                x:DeferLoadStrategy="Lazy"
+                Visibility="Collapsed">
+                <Button
+                    Width="48"
+                    Height="48"
+                    RightTapped="{x:Bind ViewModel.PlayerVM.MuteVolume}"
+                    Style="{StaticResource BottomPlayerButtonStyle}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <SymbolIcon
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Foreground="White"
+                                    Symbol="{Binding PlayerVM.Volume, Converter={StaticResource VolumeSymbolConverter}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                    <Button.Flyout>
+                        <Flyout FlyoutPresenterStyle="{StaticResource VolumeFlyoutStyle}" Placement="Bottom">
+                            <Flyout.Content>
+                                <Slider
+                                    Width="36"
+                                    Height="200"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Stretch"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Orientation="Vertical"
+                                    StepFrequency="1.0"
+                                    Style="{StaticResource VolumeSliderStyle}"
+                                    Value="{Binding PlayerVM.Volume, Mode=TwoWay}" />
+                            </Flyout.Content>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </Grid>
+            <Grid
+                x:Name="SliderGrid"
+                Grid.Column="4"
+                x:DeferLoadStrategy="Lazy"
+                FlowDirection="LeftToRight"
+                Loaded="SliderGrid_Loaded"
+                Unloaded="SliderGrid_Unloaded"
+                Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="60" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="0,0,8,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    FontSize="17"
+                    Foreground="{ThemeResource BottomPlayerTextForeground}"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}" />
+                <Slider
+                    x:Name="timeslider"
+                    Grid.Column="1"
+                    Margin="4,8,4,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
+                    StepFrequency="1.0"
+                    Style="{StaticResource TimeSliderStyle}"
+                    ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
+                    Value="{Binding SliderValue, Mode=TwoWay}" />
+                <TextBlock
+                    Grid.Column="2"
+                    Margin="0,0,8,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    FontSize="17"
+                    Foreground="{ThemeResource BottomPlayerTextForeground}"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Tapped="{x:Bind ViewModel.ChangeTimeEndType}"
+                    Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}" />
+            </Grid>
+        </Grid>
+        <Grid
+            x:Name="BottomSlider"
+            Grid.Row="1"
+            Height="50"
+            x:DeferLoadStrategy="Lazy"
+            Loaded="BottomSlider_Loaded"
+            Unloaded="BottomSlider_Unloaded"
+            Visibility="{Binding IsSliderVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="60" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                Margin="0,0,8,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                FontSize="17"
+                Foreground="{ThemeResource BottomPlayerTextForeground}"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}" />
+            <Slider
+                x:Name="durationSliderBottom"
+                Grid.Column="1"
+                Margin="4,8,4,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Maximum="{Binding SliderMaxValue, Mode=TwoWay}"
+                StepFrequency="1.0"
+                Style="{StaticResource TimeSliderStyle}"
+                ThumbToolTipValueConverter="{StaticResource ThumbToolTipValueConverter}"
+                Value="{Binding SliderValue, Mode=TwoWay}" />
+            <TextBlock
+                Grid.Column="2"
+                Margin="0,0,8,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                FontSize="17"
+                Foreground="{ThemeResource BottomPlayerTextForeground}"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="{Binding TimeEnd, Converter={StaticResource TimeSpanToStringConverter}}" />
+        </Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Phone">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderColumn.Width" Value="0" />
+                        <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
+                        <Setter Target="ToggleRepeatButton.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <!--<VisualState x:Name="VisualStateWide">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="1008" />
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderGrid.Visibility" Value="Visible"/>
+                        <Setter Target="SliderColumn.Width" Value="*"/>
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible"/>
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="SongInfoColumn.Width" Value="*"/>
+                    </VisualState.Setters>
+                </VisualState>-->
+                <VisualState x:Name="VisualStateNormal">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop" />
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="720" />
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderGrid.Visibility" Value="Visible" />
+                        <Setter Target="SliderColumn.Width" Value="*" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible" />
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="SongInfoColumn.Width" Value="*" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateNarrow">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop" />
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="500" />
+                            <winstatetriggers:CompareStateTrigger
+                                CompareTo="false"
+                                Comparison="Equal"
+                                Value="{x:Bind ViewModel.IsNowPlayingDesktopViewActive, Mode=OneWay}" />
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="SliderColumn.Width" Value="0" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="SongInfoColumn.Width" Value="*" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateNarrowNowPlaying">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop" />
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="500" />
+                            <winstatetriggers:CompareStateTrigger
+                                CompareTo="true"
+                                Comparison="Equal"
+                                Value="{x:Bind ViewModel.IsNowPlayingDesktopViewActive, Mode=OneWay}" />
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderGrid.Visibility" Value="Visible" />
+                        <Setter Target="SliderColumn.Width" Value="*" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible" />
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="SongInfoColumn.Width" Value="0" />
+                        <Setter Target="ShuffleButton.Visibility" Value="Visible" />
+                        <Setter Target="ToggleRepeatButton.Visibility" Value="Visible" />
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateCompact">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop" />
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                            <winstatetriggers:CompareStateTrigger
+                                CompareTo="false"
+                                Comparison="Equal"
+                                Value="{x:Bind ViewModel.IsNowPlayingDesktopViewActive, Mode=OneWay}" />
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="SliderColumn.Width" Value="0" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="ShowHideGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="SongInfoColumn.Width" Value="*" />
+                        <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
+                        <Setter Target="ToggleRepeatButton.Visibility" Value="Collapsed" />
+                        <Setter Target="BottomSlider.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateCompactNowPlaying">
+                    <VisualState.StateTriggers>
+                        <winstatetriggers:CompositeStateTrigger Operator="And">
+                            <winstatetriggers:DeviceFamilyStateTrigger DeviceFamily="Desktop" />
+                            <winstatetriggers:AdaptiveTrigger MinWindowWidth="0" />
+                            <winstatetriggers:CompareStateTrigger
+                                CompareTo="true"
+                                Comparison="Equal"
+                                Value="{x:Bind ViewModel.IsNowPlayingDesktopViewActive, Mode=OneWay}" />
+                        </winstatetriggers:CompositeStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SliderGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="SliderColumn.Width" Value="0" />
+                        <Setter Target="VolumeGrid.Visibility" Value="Visible" />
+                        <Setter Target="ShowHideGrid.Visibility" Value="Visible" />
+                        <Setter Target="SongInfoColumn.Width" Value="0" />
+                        <Setter Target="ShuffleButton.Visibility" Value="Visible" />
+                        <Setter Target="ToggleRepeatButton.Visibility" Value="Visible" />
+                        <Setter Target="BottomSlider.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</UserControl>
