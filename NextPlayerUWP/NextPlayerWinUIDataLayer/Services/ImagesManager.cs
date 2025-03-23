@@ -151,7 +151,7 @@ namespace NextPlayerWinUIDataLayer.Services
                             encoder.IsThumbnailGenerated = false;
                             break;
                         default:
-                            throw err;
+                            throw;
                     }
                 }
                 if (encoder.IsThumbnailGenerated == false)

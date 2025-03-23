@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.OneDriveSDK.Authentication" Version="1.0.10" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="TagLib.Portable" Version="1.3.1" />
   </ItemGroup>
   <ItemGroup>
