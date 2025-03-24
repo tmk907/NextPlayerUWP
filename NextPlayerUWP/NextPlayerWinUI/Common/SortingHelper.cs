@@ -1,10 +1,10 @@
-﻿using NextPlayerWinUIDataLayer.Helpers;
+﻿using Microsoft.Windows.ApplicationModel.Resources;
+using NextPlayerWinUIDataLayer.Helpers;
 using NextPlayerWinUIDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.ApplicationModel.Resources;
 
 namespace NextPlayerWinUI.Common
 {

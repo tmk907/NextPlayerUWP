@@ -57,11 +57,11 @@ namespace Template10.Controls
                 Loaded += HamburgerMenu_Loaded;
 
                 // xbox controller menu button support
-                KeyboardService.Instance.AfterMenuGesture += () =>
-                {
-                    HamburgerCommand.Execute();
-                    HamburgerButton.Focus(FocusState.Programmatic);
-                };
+                //KeyboardService.Instance.AfterMenuGesture += () =>
+                //{
+                //    HamburgerCommand.Execute();
+                //    HamburgerButton.Focus(FocusState.Programmatic);
+                //};
 
                 GotFocus += (s, e) =>
                 {

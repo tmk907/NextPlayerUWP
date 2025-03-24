@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using CommunityToolkit.Common;
 using Template10.Services.NavigationService;
+using NextPlayerWinUI.Views;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -103,7 +104,10 @@ namespace NextPlayerWinUI
         {
             m_window = new MainWindow();
             m_window.Activate();
+            NavigationService = new NavigationService(new Microsoft.UI.Xaml.Controls.Frame());
+            m_window.Content = new Shell(NavigationService);
             App.Dispatcher = new DispatcherWrapper(DispatcherQueue.GetForCurrentThread());
+            
 
             OnStartAsync(StartKind.Launch,args).GetResultOrDefault();
             OnInitializeAsync(args).GetResultOrDefault();
@@ -117,8 +121,8 @@ namespace NextPlayerWinUI
             await Logger2.Current.WriteToFile();
         }
 
-        private static Window? m_window;
-        public static Window? Window { get; }
+        private static MainWindow? m_window;
+        public static Window? Window => m_window;
 
         public static DispatcherWrapper Dispatcher { get; private set; }
 

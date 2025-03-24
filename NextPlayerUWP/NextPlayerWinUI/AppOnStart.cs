@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
+using Template10.Common;
 
 namespace NextPlayerWinUI
 {

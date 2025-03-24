@@ -1,22 +1,22 @@
-﻿//using NextPlayerWinUI.Common;
-//using System;
-//using Microsoft.UI.Xaml.Data;
+﻿using NextPlayerWinUI.Common;
+using System;
+using Microsoft.UI.Xaml.Data;
 
-//namespace NextPlayerWinUI.Converters
-//{
-//    public class BoolToSubfoldersDescription : IValueConverter
-//    {
-//        public object Convert(object value, Type targetType, object parameter, string language)
-//        {
-//            bool a = (bool)value;
-//            TranslationHelper tr = new TranslationHelper();
-//            if (a) return tr.GetTranslation(TranslationHelper.IncludeSubfolders);
-//            else return tr.GetTranslation(TranslationHelper.DontIncludeSubFolders);
-//        }
+namespace NextPlayerWinUI.Converters
+{
+    public class BoolToSubfoldersDescription : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            bool a = (bool)value;
+            TranslationHelper tr = new TranslationHelper();
+            if (a) return tr.GetTranslation(TranslationHelper.IncludeSubfolders);
+            else return tr.GetTranslation(TranslationHelper.DontIncludeSubFolders);
+        }
 
-//        public object ConvertBack(object value, Type targetType, object parameter, string language)
-//        {
-//            throw new NotImplementedException();
-//        }
-//    }
-//}
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

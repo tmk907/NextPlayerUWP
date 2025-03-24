@@ -48,10 +48,10 @@ namespace Template10.Services.NavigationService
         public static INavigationService GetForFrame(Frame frame) =>
             WindowWrapper.ActiveWrappers.SelectMany(x => x.NavigationServices).FirstOrDefault(x => x.FrameFacade.Frame.Equals(frame));
 
-        protected internal NavigationService(Frame frame)
+        public NavigationService(Frame frame)
         {
             SerializationService = Services.SerializationService.SerializationService.Json;
-            IsInMainView = CoreApplication.MainView == CoreApplication.GetCurrentView();
+            IsInMainView = true;// CoreApplication.MainView == CoreApplication.GetCurrentView();
             FrameFacadeInternal = new FrameFacade(this, frame);
             FrameFacadeInternal.Navigating += async (s, e) =>
             {
@@ -245,7 +245,7 @@ namespace Template10.Services.NavigationService
         {
             DebugWrite($"Key: {key}, Parameter: {parameter}, NavigationTransitionInfo: {infoOverride}");
 
-            var keys = BootStrapper.Current.PageKeys<T>();
+            var keys = PageKeys<T>();
 
             if (!keys.ContainsKey(key))
                 throw new KeyNotFoundException(key.ToString());
@@ -374,6 +374,23 @@ namespace Template10.Services.NavigationService
 
         public Type CurrentPageType => FrameFacadeInternal.CurrentPageType;
         public object CurrentPageParam => FrameFacadeInternal.CurrentPageParam;
+
+        private object _PageKeys;
+
+        public Dictionary<T, Type> PageKeys<T>()
+            where T : struct, IConvertible
+        {
+            if (!typeof(T).GetTypeInfo().IsEnum)
+            {
+                throw new ArgumentException("T must be an enumerated type");
+            }
+            if (_PageKeys != null && _PageKeys is Dictionary<T, Type>)
+            {
+                return _PageKeys as Dictionary<T, Type>;
+            }
+            return (_PageKeys = new Dictionary<T, Type>()) as Dictionary<T, Type>;
+        }
+
     }
 }
 
