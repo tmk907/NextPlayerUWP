@@ -21,20 +21,13 @@ namespace NextPlayerWinUI.Views.Settings
             ViewModel.Load();
         }
 
-        private void RemoveFolder_Click(object sender, RoutedEventArgs e)
-        {
-            SdCardFolder folder = (SdCardFolder)((Button)sender).Tag;
-            ViewModel.RemoveFolder(folder);
-        }
-
-        private async void RemoveSdCardFolder_Click(object sender, RoutedEventArgs e)
+        private async void RemoveFolder_Click(object sender, RoutedEventArgs e)
         {
             SdCardFolder folder = (SdCardFolder)((Button)sender).Tag;
             MessageDialogHelper msg = new MessageDialogHelper();
-            bool remove = await msg.ShowExcludeFolderConfirmation();
-            if (remove)
+            if (await msg.ShowExcludeFolderConfirmation())
             {
-                ViewModel.RemoveSdCardFolder(folder);
+                await ViewModel.RemoveFolder(folder);
             }
         }
     }

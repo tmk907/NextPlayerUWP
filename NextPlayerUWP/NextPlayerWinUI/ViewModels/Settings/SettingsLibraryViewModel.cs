@@ -39,11 +39,6 @@ namespace NextPlayerWinUI.ViewModels.Settings
                 var list = await GetMusicFolders();
                 MusicLibraryFolders = new ObservableCollection<SdCardFolder>(list);
             }
-            if (sdCardFolders.Count == 0)
-            {
-                var list = await GetSdCardFolders();
-                SdCardFolders = new ObservableCollection<SdCardFolder>(list);
-            }
             LastLibraryUpdate = ApplicationSettingsHelper.ReadSettingsValue<DateTimeOffset>(SettingsKeys.LibraryUpdatedAt).Date;
             if (ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.MediaScan) != null)
             {
@@ -105,13 +100,6 @@ namespace NextPlayerWinUI.ViewModels.Settings
             set { SetProperty(ref musicLibraryFolders, value); }
         }
 
-        private ObservableCollection<SdCardFolder> sdCardFolders = new ObservableCollection<SdCardFolder>();
-        public ObservableCollection<SdCardFolder> SdCardFolders
-        {
-            get { return sdCardFolders; }
-            set { SetProperty(ref sdCardFolders, value); }
-        }
-
         private bool useIndexer = false;
         public bool UseIndexer
         {
@@ -143,93 +131,46 @@ namespace NextPlayerWinUI.ViewModels.Settings
             TelemetryAdapter.TrackEvent("Library updated");
         }
 
+        /// <summary>
+        /// Windows does not let desktop apps change the Music library, so added folders are kept in the app's own list.
+        /// </summary>
         public async void AddFolder()
-        {
-            var musicLibrary = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Music);
-            Windows.Storage.StorageFolder newFolder = await musicLibrary.RequestAddFolderAsync();
-            if (newFolder != null)
-            {
-                MusicLibraryFolders.Add(new SdCardFolder() { Name = newFolder.DisplayName, Path = newFolder.Path, IncludeSubFolders = true });
-            }
-        }
-
-        public async void RemoveFolder(SdCardFolder musicFolder)
-        {
-            try
-            {
-                var musicLibrary = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Music);
-                var folder = musicLibrary.Folders.Where(f => f.Path.Equals(musicFolder.Path)).FirstOrDefault();
-                bool confirmDeletion = await musicLibrary.RequestRemoveFolderAsync(folder);
-                if (confirmDeletion)
-                {
-                    MusicLibraryFolders.Remove(musicFolder);
-                    await AfterFolderDelete(musicFolder.Path);
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        public async void AddSdCardFolder()//error element not found
         {
             var folderPicker = WindowHelper.InitializeWithWindow(new Windows.Storage.Pickers.FolderPicker());
             folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
             folderPicker.FileTypeFilter.Add("*");
-            try
-            {
-                Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
-                if (folder != null)
-                {
-                    MessageDialogHelper helper = new MessageDialogHelper();
-                    bool includeSubFolders = await helper.ShowIncludeAllSubFoldersQuestion();
-                    SdCardFolders.Add(new SdCardFolder()
-                    {
-                        Name = folder.Name,
-                        Path = folder.Path,
-                        IncludeSubFolders = includeSubFolders,
-                    });
-                    var ff = sdCardFolders.Where(f => !f.Path.ToLower().StartsWith("c:"));
-                    var list = new List<SdCardFolder>(ff);
-                    await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
 
+            Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            if (folder == null || MusicLibraryFolders.Any(f => f.Path.Equals(folder.Path, StringComparison.OrdinalIgnoreCase)))
+            {
+                return;
             }
+
+            bool includeSubFolders = await new MessageDialogHelper().ShowIncludeAllSubFoldersQuestion();
+            MusicLibraryFolders.Add(new SdCardFolder()
+            {
+                Name = folder.Name,
+                Path = folder.Path,
+                IncludeSubFolders = includeSubFolders,
+                IsRemovable = true,
+            });
+            await SaveAddedFolders();
         }
 
-        public async void RemoveSdCardFolder(SdCardFolder musicFolder)
+        public async Task RemoveFolder(SdCardFolder musicFolder)
         {
-            if (musicFolder.Path.ToLower().StartsWith("c:")) return;
-
-            SdCardFolders.Remove(musicFolder);
+            MusicLibraryFolders.Remove(musicFolder);
+            await SaveAddedFolders();
             await AfterFolderDelete(musicFolder.Path);
         }
+
+        private Task SaveAddedFolders()
+            => ApplicationSettingsHelper.SaveSdCardFoldersToScan(MusicLibraryFolders.Where(f => f.IsRemovable).ToList());
 
         private async Task AfterFolderDelete(string folderPath)
         {
             await DatabaseManager.Current.DeleteFolderAndSubFoldersAsync(folderPath);
             MediaImport.OnMediaImported("FolderRemoved");
-        }
-
-        private async Task<List<SdCardFolder>> GetSdCardFolders()
-        {
-            var list = await ApplicationSettingsHelper.GetSdCardFoldersToScan();
-            if (list == null)
-            {
-                list = new List<SdCardFolder>();
-                await ApplicationSettingsHelper.SaveSdCardFoldersToScan(list);
-            }
-            var folder = new SdCardFolder()
-            {
-                Name = "Music",
-                Path = @"C:\",
-                IncludeSubFolders = true,
-            };
-            list.Insert(0, folder);
-            return list;
         }
 
         private async Task<List<SdCardFolder>> GetMusicFolders()
@@ -239,6 +180,12 @@ namespace NextPlayerWinUI.ViewModels.Settings
             foreach (var f in lib.Folders)
             {
                 list.Add(new SdCardFolder { Name = f.DisplayName, Path = f.Path, IncludeSubFolders = true });
+            }
+            var added = await ApplicationSettingsHelper.GetSdCardFoldersToScan() ?? new List<SdCardFolder>();
+            foreach (var f in added)
+            {
+                f.IsRemovable = true;
+                list.Add(f);
             }
             return list;
         }

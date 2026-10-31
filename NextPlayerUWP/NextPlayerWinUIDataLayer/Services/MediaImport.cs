@@ -375,36 +375,6 @@ await DatabaseManager.Current.UpdateFolderAsync(folder.Path, oldSongs, newSongs,
             }
         }
 
-        public async Task MobileUpdateAsync()
-        {
-            var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-            StorageFolder externalDevices = KnownFolders.RemovableDevices;
-            StorageFolder sdCard = (await externalDevices.GetFoldersAsync()).FirstOrDefault();
-            string sdCardPath = sdCard?.Path ?? "!";
-            foreach (var folder in library.Folders)
-            {
-                if (!folder.Path.StartsWith(sdCardPath))
-                {
-                    await AddFilesFromFolderAsync(folder);
-                }
-            }
-            if (sdCardFoldersToScan.Count > 0 && sdCard != null)
-            {
-                foreach (var folderToScan in sdCardFoldersToScan)
-                {
-                    try
-                    {
-                        var folder = await StorageFolder.GetFolderFromPathAsync(folderToScan.Path);
-                        await AddFilesFromFolderAsync(folder, folderToScan.IncludeSubFolders);
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            }
-        }
-
         public async Task ScanWholeMusicLibraryAsync()
         {
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
@@ -412,6 +382,19 @@ await DatabaseManager.Current.UpdateFolderAsync(folder.Path, oldSongs, newSongs,
             foreach (var folder in library.Folders)
             {
                 await AddFilesFromFolderAsync(folder);
+            }
+
+            foreach (var folderToScan in sdCardFoldersToScan)
+            {
+                try
+                {
+                    var folder = await StorageFolder.GetFolderFromPathAsync(folderToScan.Path);
+                    await AddFilesFromFolderAsync(folder, folderToScan.IncludeSubFolders);
+                }
+                catch (Exception ex)
+                {
+                    Logger2.Current.WriteMessage("Scan folder " + folderToScan.Path + " " + ex.Message, Logger2.Level.WarningError);
+                }
             }
         }
 
@@ -548,14 +531,7 @@ await DatabaseManager.Current.UpdateFolderAsync(folder.Path, oldSongs, newSongs,
 
             Stopwatch s = new Stopwatch();
             s.Start();
-            if (DeviceFamilyHelper.IsMobile())
-            {
-                await MobileUpdateAsync();
-            }
-            else
-            {
-                await ScanWholeMusicLibraryAsync();
-            }
+            await ScanWholeMusicLibraryAsync();
             s.Stop();
             Debug.WriteLine("Scan {0}ms", s.ElapsedMilliseconds);
 

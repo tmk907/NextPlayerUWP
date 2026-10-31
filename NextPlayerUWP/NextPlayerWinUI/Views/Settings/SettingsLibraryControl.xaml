@@ -5,48 +5,11 @@
     xmlns:local="using:NextPlayerWinUI.Views.Settings"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:triggers="using:WindowsStateTriggers"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.Resources>
         <DataTemplate x:Key="MusicFolderTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition MinWidth="192" Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <FontIcon Grid.Column="0" Grid.RowSpan="2"
-                          FontFamily="Segoe MDL2 Assets"
-                          Glyph="&#xE8B7;" 
-                          VerticalAlignment="Center"
-                          Margin="0,0,12,0"/>
-                <TextBlock Grid.Column="1" Grid.Row="0"
-                           VerticalAlignment="Bottom"
-                           Text="{Binding Name}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1"
-                           FontSize="13"
-                           VerticalAlignment="Bottom"
-                           Text="{Binding Path}"/>
-                <Button Grid.Column="3" Grid.RowSpan="2"
-                        Click="RemoveFolder_Click"
-                        Width="40"
-                        Height="40"
-                        Background="Transparent"
-                        Tag="{Binding}"
-                        VerticalAlignment="Center">
-                    <Button.Content>
-                        <SymbolIcon Symbol="Cancel"/>
-                    </Button.Content>
-                </Button>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="SdCardFolderTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -76,7 +39,8 @@
                            Visibility="{Binding IncludeSubFolders, Converter={StaticResource BoolToVisibilityConverter}}"
                            Text="{Binding IncludeSubFolders, Converter={StaticResource BoolToSubfoldersDescriptionConverter}}"/>
                 <Button Grid.Column="3" Grid.RowSpan="3"
-                        Click="RemoveSdCardFolder_Click"
+                        Click="RemoveFolder_Click"
+                        IsEnabled="{Binding IsRemovable}"
                         Width="40"
                         Height="40"
                         Background="Transparent"
@@ -90,37 +54,6 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="Phone">
-                    <VisualState.StateTriggers>
-                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Collapsed"/>
-                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Visible"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Desktop">
-                    <VisualState.StateTriggers>
-                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Desktop"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
-                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Xbox">
-                    <VisualState.StateTriggers>
-                        <triggers:DeviceFamilyStateTrigger DeviceFamily="Xbox"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="AddMusicFoldersStackPanel.Visibility" Value="Visible"/>
-                        <Setter Target="AddSdCardFoldersStackPanel.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
         <ScrollViewer Padding="12,0,12,0">
             <StackPanel Orientation="Vertical" Margin="4">
                 <TextBlock 
@@ -212,29 +145,6 @@
                         Style="{StaticResource ButtonRevealStyle}"
                         Content="Add folder" 
                         Click="{x:Bind ViewModel.AddFolder}"
-                        Margin="0,4,4,4"
-                        MinWidth="128"/>
-                </StackPanel>
-                <StackPanel x:Name="AddSdCardFoldersStackPanel"
-                              Orientation="Vertical" 
-                              Margin="4,4,4,4">
-                    <TextBlock 
-                        x:Uid="TBAddMusicLibraryFolders"
-                                  Style="{StaticResource BodyTextBlockStyle}"
-                                  FontSize="17"
-                                  Text="Folders, where app looks for music"/>
-                    <ListView 
-                        Margin="0,4,4,4"
-                        ItemsSource="{x:Bind ViewModel.SdCardFolders, Mode=OneWay}"
-                        ItemTemplate="{StaticResource SdCardFolderTemplate}"
-                        SelectionMode="None"
-                        IsItemClickEnabled="False">
-                    </ListView>
-                    <Button 
-                        x:Uid="ButtonAddFolder"
-                        Style="{StaticResource ButtonRevealStyle}"
-                        Content="Add folder" 
-                        Click="{x:Bind ViewModel.AddSdCardFolder}"
                         Margin="0,4,4,4"
                         MinWidth="128"/>
                 </StackPanel>

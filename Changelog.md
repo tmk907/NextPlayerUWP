@@ -48,6 +48,10 @@ safe to delete by hand. The UWP `Template10` project stays, because `NextPlayerU
 - The current song changed on every restart and the queue was re-sorted. Creating the right panel triggered a sort, and
   during the first second after startup each re-added song counted as a drag and moved the saved index.
 - Lyrics panel showed the first song of a restored queue instead of the current one.
+- "Add folder" crashed the app and removing a library folder silently did nothing, because desktop apps cannot use
+  `RequestAddFolderAsync` or `RequestRemoveFolderAsync`. Added folders are now kept in the app's own list and scanned
+  with the Windows Music library. Folders that come from that library cannot be removed in the app, so their remove
+  button is disabled. The mobile SD card version of this code is removed.
 - The app crashed at startup when the process that opened a file had already exited. It now starts normally.
 - Crashes from `async void` methods left no log. They are now logged, then the app exits as before.
 - `DispatcherWrapper.Dispatch` ran actions twice when called on the UI thread.
@@ -93,10 +97,13 @@ Tested by driving the running x64 Debug build:
 - Album page, playback, pause, next and mute persistence
 - Back navigation, Alt+number and Ctrl+L, Now Playing background, dark theme
 - Single-instance hand-off and opening a file, both on a running app and on a cold start
+- Adding a library folder, scanning it, keeping it after a restart and removing it
+- Opening the share sheet and the tile pin prompt (both cancelled)
+- Compiling Release for x64, x86 and ARM64
 
 Not tested yet:
 
-- Share, tile pinning, file pickers
+- Completing a share or a tile pin, and exporting a playlist
 - Scrobbling, and radio stations loading from the network
 - A full scan including OneDrive folders
-- Release, x86 runtime and ARM64 builds (x86 Debug was only compiled)
+- Running a Release build, or running on x86 or ARM64
