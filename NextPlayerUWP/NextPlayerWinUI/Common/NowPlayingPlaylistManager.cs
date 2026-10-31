@@ -104,7 +104,7 @@ namespace NextPlayerWinUI.Common
 
         private int removeIndex = 0;
         private int addIndex = 0;
-        private DateTime removedTime = DateTime.Now;
+        private DateTime removedTime = DateTime.MinValue;
 
         private void Songs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -660,6 +660,8 @@ namespace NextPlayerWinUI.Common
             var songid = GetCurrentPlaying().SongId;
             var orderSelector = SortingHelper.GetOrderBySelector();
             var list = songs.OrderBy(orderSelector).ToList();
+            // Rebuilding the list must not look like the user dragging songs around.
+            songs.CollectionChanged -= Songs_CollectionChanged;
             songs.Clear();
             int newIndex = 0;
             foreach(var song in list)
@@ -672,6 +674,7 @@ namespace NextPlayerWinUI.Common
                 songs.Add(song);
                 newIndex++;
             }
+            songs.CollectionChanged += Songs_CollectionChanged;
             await NotifyChange();
         }
 

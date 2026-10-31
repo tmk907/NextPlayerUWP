@@ -45,6 +45,9 @@ safe to delete by hand. The UWP `Template10` project stays, because `NextPlayerU
   follows `NaturalDurationChanged`.
 - Volume was never saved, because it was only saved in a UWP background event.
 - After a restart the player bar showed "Unknown Title", because the view model was created before the queue loaded.
+- The current song changed on every restart and the queue was re-sorted. Creating the right panel triggered a sort, and
+  during the first second after startup each re-added song counted as a drag and moved the saved index.
+- Lyrics panel showed the first song of a restored queue instead of the current one.
 - Crashes from `async void` methods left no log. They are now logged, then the app exits as before.
 - `DispatcherWrapper.Dispatch` ran actions twice when called on the UI thread.
 - Navigation pane was white in dark theme, which hid its icons.
@@ -64,8 +67,6 @@ safe to delete by hand. The UWP `Template10` project stays, because `NextPlayerU
 
 ## Known issues
 
-- **Restored song is inconsistent:** across restarts the player bar showed different songs, and the lyrics panel could
-  show a different song from the bar. The list does not advance by itself. The cause is still being traced.
 - **Cloud sign-in does not work (Dropbox, pCloud, OneDrive):** `WebAuthenticationBroker` is UWP-only. A replacement
   needs redirect URI changes in the provider developer settings.
 - **Lyrics and now-playing extensions are disabled:** `UWPMusicPlayerExtensions` ships only `uap10.0` binaries. Its

@@ -31,7 +31,7 @@ namespace NextPlayerWinUI.ViewModels
             scrollerHelper = new ListViewScrollerHelper();
             sortingHelper = NowPlayingPlaylistManager.Current.SortingHelper;
             ComboBoxItemValues = sortingHelper.ComboBoxItemValues;
-            SelectedComboBoxItem = sortingHelper.SelectedSortOption;
+            selectedComboBoxItem = sortingHelper.SelectedSortOption;
             loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             isInitialized = false;
             Init();
@@ -99,7 +99,6 @@ namespace NextPlayerWinUI.ViewModels
                 if (SelectedPivotIndex == 0)
                 {
                     lyricsLoaded = false;
-                    cachedIndex = index;
                 }
                 else
                 {
@@ -319,7 +318,6 @@ namespace NextPlayerWinUI.ViewModels
         SortingHelperForSongItemsInPlaylist sortingHelper;
         private Windows.ApplicationModel.Resources.ResourceLoader loader;
         private bool lyricsLoaded = false;
-        private int cachedIndex = 0;
 
         protected ObservableCollection<ComboBoxItemValue> comboBoxItemValues = new ObservableCollection<ComboBoxItemValue>();
         public ObservableCollection<ComboBoxItemValue> ComboBoxItemValues
