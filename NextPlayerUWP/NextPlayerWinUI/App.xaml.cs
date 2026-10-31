@@ -89,7 +89,7 @@ namespace NextPlayerWinUI
             m_window.Activate();
 
             await OnInitializeAsync();
-            await OnActivatedAsync(AppInstance.GetCurrent().GetActivatedEventArgs(), isAppStarting: true);
+            await OnActivatedAsync(Program.ActivationArgs, isAppStarting: true);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace NextPlayerWinUI
 
         private async Task OnActivatedAsync(AppActivationArguments activation, bool isAppStarting)
         {
-            var fileArgs = activation.Data as IFileActivatedEventArgs;
+            var fileArgs = activation?.Data as IFileActivatedEventArgs;
 
             await NavigateForActivationAsync(activation, fileArgs, isAppStarting);
 

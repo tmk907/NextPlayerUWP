@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
@@ -16,6 +17,9 @@ namespace NextPlayerWinUI
     public static class Program
     {
         private const string InstanceKey = "main";
+
+        /// <summary>How this process was activated, or null if that could not be read.</summary>
+        public static AppActivationArguments ActivationArgs { get; private set; }
 
         [STAThread]
         private static int Main(string[] args)
@@ -39,7 +43,7 @@ namespace NextPlayerWinUI
 
         private static bool RedirectToRunningInstance()
         {
-            var activationArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+            ActivationArgs = TryGetActivationArgs();
             var mainInstance = AppInstance.FindOrRegisterForKey(InstanceKey);
 
             if (mainInstance.IsCurrent)
@@ -48,9 +52,28 @@ namespace NextPlayerWinUI
                 return false;
             }
 
-            // RedirectActivationToAsync must not block the STA thread directly.
-            Task.Run(() => mainInstance.RedirectActivationToAsync(activationArgs).AsTask()).GetAwaiter().GetResult();
+            if (ActivationArgs != null)
+            {
+                // RedirectActivationToAsync must not block the STA thread directly.
+                Task.Run(() => mainInstance.RedirectActivationToAsync(ActivationArgs).AsTask()).GetAwaiter().GetResult();
+            }
             return true;
+        }
+
+        /// <summary>
+        /// Reading the arguments fails with RPC_S_SERVER_UNAVAILABLE when the process that opened a file has
+        /// already exited. The app should then start normally instead of crashing.
+        /// </summary>
+        private static AppActivationArguments TryGetActivationArgs()
+        {
+            try
+            {
+                return AppInstance.GetCurrent().GetActivatedEventArgs();
+            }
+            catch (COMException)
+            {
+                return null;
+            }
         }
 
         /// <summary>

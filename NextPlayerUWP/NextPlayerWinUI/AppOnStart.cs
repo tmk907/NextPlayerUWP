@@ -30,10 +30,10 @@ namespace NextPlayerWinUI
                 return;
             }
 
-            switch (activation.Kind)
+            switch (activation?.Kind ?? ExtendedActivationKind.Launch)
             {
                 case ExtendedActivationKind.Launch:
-                    await NavigateForLaunchAsync(activation.Data as ILaunchActivatedEventArgs, isAppStarting);
+                    await NavigateForLaunchAsync(activation?.Data as ILaunchActivatedEventArgs, isAppStarting);
                     break;
                 case ExtendedActivationKind.ToastNotification:
                     await NavigationService.NavigateAsync(AppPages.Pages.Settings);

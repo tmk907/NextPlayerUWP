@@ -48,6 +48,7 @@ safe to delete by hand. The UWP `Template10` project stays, because `NextPlayerU
 - The current song changed on every restart and the queue was re-sorted. Creating the right panel triggered a sort, and
   during the first second after startup each re-added song counted as a drag and moved the saved index.
 - Lyrics panel showed the first song of a restored queue instead of the current one.
+- The app crashed at startup when the process that opened a file had already exited. It now starts normally.
 - Crashes from `async void` methods left no log. They are now logged, then the app exits as before.
 - `DispatcherWrapper.Dispatch` ran actions twice when called on the UI thread.
 - Navigation pane was white in dark theme, which hid its icons.
@@ -91,10 +92,10 @@ Tested by driving the running x64 Debug build:
 - Library scan of the local Music folder only
 - Album page, playback, pause, next and mute persistence
 - Back navigation, Alt+number and Ctrl+L, Now Playing background, dark theme
+- Single-instance hand-off and opening a file, both on a running app and on a cold start
 
 Not tested yet:
 
-- File activation and single-instance hand-off
 - Share, tile pinning, file pickers
 - Scrobbling, and radio stations loading from the network
 - A full scan including OneDrive folders
