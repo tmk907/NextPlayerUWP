@@ -1,17 +1,11 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using NextPlayerWinUIDataLayer.Helpers;
-using System;
-using System.Runtime.InteropServices;
 
 namespace NextPlayerWinUI.Common
 {
     public class ThemeHelper
     {
-        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
-
-        [DllImport("dwmapi.dll")]
-        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
-
         public static bool IsLightTheme => (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
 
         public static void ApplyAppTheme(bool isLightTheme)
@@ -27,16 +21,13 @@ namespace NextPlayerWinUI.Common
         public static void ApplyThemeToTitleBar(bool isLightTheme)
             => ApplyThemeToTitleBar(isLightTheme ? ElementTheme.Light : ElementTheme.Dark);
 
-        /// <summary>The system title bar follows this attribute on both Windows 10 and Windows 11.</summary>
         public static void ApplyThemeToTitleBar(ElementTheme theme)
         {
-            if (App.Window == null)
+            var titleBar = App.Window?.AppWindow.TitleBar;
+            if (titleBar != null)
             {
-                return;
+                titleBar.PreferredTheme = theme == ElementTheme.Dark ? TitleBarTheme.Dark : TitleBarTheme.Light;
             }
-
-            int useDarkMode = theme == ElementTheme.Dark ? 1 : 0;
-            DwmSetWindowAttribute(WindowHelper.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref useDarkMode, sizeof(int));
         }
     }
 }
