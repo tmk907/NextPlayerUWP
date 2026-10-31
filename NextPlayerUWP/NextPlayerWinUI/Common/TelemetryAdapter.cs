@@ -11,11 +11,6 @@ namespace NextPlayerWinUI.Common
     {
         public static void TrackEvent(string eventName)
         {
-#if DEBUG
-#else
-            StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
-            logger.Log(eventName);
-#endif
             //HockeyClient.Current.TrackEvent(eventName);
 
             System.Diagnostics.Debug.WriteLine("TrackEvent: " + eventName);
