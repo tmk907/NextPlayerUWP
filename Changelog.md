@@ -100,10 +100,12 @@ Tested by driving the running x64 Debug build:
 - Adding a library folder, scanning it, keeping it after a restart and removing it
 - Opening the share sheet and the tile pin prompt (both cancelled)
 - Compiling Release for x64, x86 and ARM64
+- Release x64 build: all menu pages
+- Radio country list loading from the network, and the playlist export dialog
 
 Not tested yet:
 
-- Completing a share or a tile pin, and exporting a playlist
-- Scrobbling, and radio stations loading from the network
+- Completing a share or a tile pin, and the save picker when exporting a playlist
+- Scrobbling, playing a radio station, and the "Mail to support" link
 - A full scan including OneDrive folders
-- Running a Release build, or running on x86 or ARM64
+- Running on x86 or ARM64
