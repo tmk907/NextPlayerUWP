@@ -15,7 +15,8 @@ could not work on WinUI 3: `BootStrapper.Current` was null and `WindowWrapper` h
 | `ModalDialog`, `Busy`, `Splash` | Removed, nothing used them |
 | `StringFormatConverter` | Moved to the app |
 
-`Template10WinUI` is removed from the solution and no project references it. The folder is still on disk.
+The `Template10WinUI` project is deleted. Its folder still holds ignored build output and a `.user` file, which are
+safe to delete by hand. The UWP `Template10` project stays, because `NextPlayerUWP` still uses it.
 
 ## Startup
 
