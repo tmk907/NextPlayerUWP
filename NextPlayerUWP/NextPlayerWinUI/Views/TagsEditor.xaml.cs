@@ -44,6 +44,7 @@ namespace NextPlayerWinUI.Views
         private async void AddFromSong_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.SetListView(songslist);
+            ContentDialogAddFromSong.XamlRoot = XamlRoot;
             var result = await ContentDialogAddFromSong.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {

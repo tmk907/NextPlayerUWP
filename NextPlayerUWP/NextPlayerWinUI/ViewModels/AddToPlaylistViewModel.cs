@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Template10.Services.NavigationService;
+using NextPlayerWinUI.Navigation;
 using NextPlayerWinUI.Common;
 using NextPlayerWinUIDataLayer.Helpers;
 using NextPlayerWinUIDataLayer.CloudStorage;
@@ -14,7 +14,7 @@ using NextPlayerWinUIDataLayer.Playlists;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class AddToPlaylistViewModel : Template10.Mvvm.ViewModelBase
+    public class AddToPlaylistViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         private ObservableCollection<PlaylistItem> playlists;
         public ObservableCollection<PlaylistItem> Playlists

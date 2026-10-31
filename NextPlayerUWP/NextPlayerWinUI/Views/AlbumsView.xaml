@@ -5,7 +5,7 @@
     xmlns:local="using:NextPlayerWinUI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:data="using:NextPlayerWinUIDataLayer.Model"
     xmlns:mycontrols="using:NextPlayerWinUI.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
@@ -278,11 +278,7 @@
             x:Name="PageHeader"
             x:Uid="PageHeaderAlbums"
             Grid.Row="0"
-            BackButtonVisibility="Collapsed"
-            Content="Albums"
-            Frame="{x:Bind Frame, Mode=OneWay}"
-            VisualStateNarrowMinWidth="0"
-            VisualStateNormalMinWidth="720">
+            Content="Albums">
             <AppBarButton
                 x:Uid="AppBarButtonSelect"
                 Click="EnableMultipleSelection"

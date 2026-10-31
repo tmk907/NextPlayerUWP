@@ -82,14 +82,14 @@ namespace NextPlayerWinUI.Controls
 
         public static bool IsInVisualTree(this DependencyObject dob)
         {
-            return Window.Current.Content != null && dob.GetAncestors().Contains(Window.Current.Content);
+            return App.Window.Content != null && dob.GetAncestors().Contains(App.Window.Content);
         }
 
         public static Rect GetBoundingRect(this FrameworkElement dob, FrameworkElement relativeTo = null)
         {
             if (relativeTo == null)
             {
-                relativeTo = Window.Current.Content as FrameworkElement;
+                relativeTo = App.Window.Content as FrameworkElement;
             }
 
             if (relativeTo == null)

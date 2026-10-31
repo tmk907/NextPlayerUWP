@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class TagsEditorViewModel : Template10.Mvvm.ViewModelBase
+    public class TagsEditorViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         int songId;
         SongData songData;
@@ -298,7 +298,7 @@ namespace NextPlayerWinUI.ViewModels
         private async Task AddAlbumArtFromFile()
         {
             ShowProgressBar = true;
-            var picker = new FileOpenPicker();
+            var picker = WindowHelper.InitializeWithWindow(new FileOpenPicker());
             picker.ViewMode = PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             picker.FileTypeFilter.Add(".jpg");
@@ -370,7 +370,7 @@ namespace NextPlayerWinUI.ViewModels
                 return;
             }
 
-            var savePicker = new FileSavePicker();
+            var savePicker = WindowHelper.InitializeWithWindow(new FileSavePicker());
             savePicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
             savePicker.FileTypeChoices.Add("jpg", new List<string>() { ".jpg" });
             savePicker.SuggestedFileName = songData.Filename.Substring(0, songData.Filename.LastIndexOf('.'));

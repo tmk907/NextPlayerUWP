@@ -99,7 +99,6 @@ namespace NextPlayerWinUI.ViewModels.Settings
             }
 
             PreventScreenLock = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.DisableLockscreen);
-            HideStatusBar = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.HideStatusBar);
             LiveTileWithAlbumArt = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.EnableLiveTileWithImage);
             IncludeSubFolders = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.IncludeSubFolders);
 
@@ -272,30 +271,6 @@ namespace NextPlayerWinUI.ViewModels.Settings
                     displayRequestHelper.ReleaseDisplay();
                     TelemetryAdapter.TrackEvent("Prevent screen dimming off");
                 }
-            }
-        }
-
-        private bool hideStatusBar = false;
-        public bool HideStatusBar
-        {
-            get { return hideStatusBar; }
-            set
-            {
-                if (value != hideStatusBar)
-                {
-                    ChangeStatusBarVisibility(value);
-                }
-                SetProperty(ref hideStatusBar, value);
-            }
-        }
-
-        private async Task ChangeStatusBarVisibility(bool hide)
-        {
-            ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.HideStatusBar, hide);
-            await App.ChangeStatusBarVisibility(hide);
-            if (isLoaded)
-            {
-                TelemetryAdapter.TrackEvent("Hide status bar " + ((hide) ? "on" : "off"));
             }
         }
 

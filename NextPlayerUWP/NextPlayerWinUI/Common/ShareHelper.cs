@@ -21,9 +21,7 @@ namespace NextPlayerWinUI.Common
                 var file = await StorageFile.GetFileFromPathAsync(song.Path);
                 filesToShare.Add(file);
                 title = song.Title;
-                DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-                dataTransferManager.DataRequested += DataTransferManager_DataRequested;
-                DataTransferManager.ShowShareUI();
+                ShowShareUI();
             }
         }
 
@@ -69,9 +67,15 @@ namespace NextPlayerWinUI.Common
                 }
                 title = $"{songTitle} and {songs.Count() - 1} more";
             }
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
-            DataTransferManager.ShowShareUI();
+            ShowShareUI();
+        }
+
+        private void ShowShareUI()
+        {
+            var manager = DataTransferManagerInterop.GetForWindow(WindowHelper.Handle);
+            manager.DataRequested -= DataTransferManager_DataRequested;
+            manager.DataRequested += DataTransferManager_DataRequested;
+            DataTransferManagerInterop.ShowShareUIForWindow(WindowHelper.Handle);
         }
 
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)

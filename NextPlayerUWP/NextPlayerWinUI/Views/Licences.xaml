@@ -5,7 +5,7 @@
     xmlns:local="using:NextPlayerWinUI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:models="using:NextPlayerWinUI.Models"
     xmlns:triggers="using:WindowsStateTriggers"
     mc:Ignorable="d">
@@ -29,11 +29,7 @@
             x:Uid="PageHeaderLicenses"
             Grid.Row="0"
             Grid.ColumnSpan="2"
-            BackButtonVisibility="Collapsed"
-            Content="Licenses"
-            Frame="{x:Bind Frame, Mode=OneWay}"
-            VisualStateNarrowMinWidth="0"
-            VisualStateNormalMinWidth="720" />
+            Content="Licenses" />
         <Grid
             Grid.Row="1"
             Grid.Column="0"
@@ -53,10 +49,12 @@
                 SelectionMode="None">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:LicenseModel">
-                        <!--<uwptoolkit:Expander
-                            Header="{x:Bind Name}"
+                        <Expander
                             MinWidth="192"
-                            IsExpanded="False">-->
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            Header="{x:Bind Name}"
+                            IsExpanded="False">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -82,7 +80,7 @@
                                 Text="{x:Bind License.Content}"
                                 TextWrapping="WrapWholeWords" />
                         </Grid>
-                        <!--</uwptoolkit:Expander>-->
+                        </Expander>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

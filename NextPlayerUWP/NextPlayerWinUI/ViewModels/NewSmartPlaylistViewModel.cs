@@ -9,14 +9,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
-using Template10.Services.NavigationService;
+using Microsoft.Windows.ApplicationModel.Resources;
+using NextPlayerWinUI.Navigation;
 using Microsoft.UI.Xaml.Navigation;
 using NextPlayerWinUIDataLayer.Model;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class NewSmartPlaylistViewModel : Template10.Mvvm.ViewModelBase
+    public class NewSmartPlaylistViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         ResourceLoader resLoader;
         int id = -1;

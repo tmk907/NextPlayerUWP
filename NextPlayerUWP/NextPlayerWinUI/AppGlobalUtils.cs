@@ -25,8 +25,6 @@ namespace NextPlayerWinUI
             MenuItemVisibilityChange?.Invoke();
         }
 
-        public static Action OnNewTilePinned { get; set; }
-
         public static bool IsLightThemeOn = false;
 
         private static FileFormatsHelper fileFormatsHelper;
@@ -75,28 +73,6 @@ namespace NextPlayerWinUI
             vml.BottomPlayerVM.BottomPlayerVisibility = bottomPlayerVisible;
             vml.BottomPlayerVM.IsNowPlayingDesktopViewActive = isNowPlayingDesktopActive;
             mobileNowPlaying = !isNowPlayingDesktopActive && !bottomPlayerVisible;
-        }
-
-        public static async Task ChangeStatusBarVisibility()
-        {
-            bool hide = (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.HideStatusBar);
-            await ChangeStatusBarVisibility(hide);
-        }
-
-        public static async Task ChangeStatusBarVisibility(bool hide)
-        {
-            //TODO
-            //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            //{
-            //    if (hide)
-            //    {
-            //        await Windows.UI.ViewManagement.StatusBar.GetForCurrentView().HideAsync();
-            //    }
-            //    else
-            //    {
-            //        await Windows.UI.ViewManagement.StatusBar.GetForCurrentView().ShowAsync();
-            //    }
-            //}
         }
 
         private static IEnumerable<MusicItem> cacheList = new List<MusicItem>();

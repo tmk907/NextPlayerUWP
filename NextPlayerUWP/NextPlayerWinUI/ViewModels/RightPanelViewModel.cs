@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class RightPanelViewModel : Template10.Mvvm.ViewModelBase
+    public class RightPanelViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         ListViewScrollerHelper scrollerHelper;
         CancellationTokenSource cts;
@@ -268,7 +268,7 @@ namespace NextPlayerWinUI.ViewModels
 
         public async void Pin(object sender, RoutedEventArgs e)
         {
-            //await TileManager.CreateTile((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
+            await TileManager.CreateTile((MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter);
         }
 
         public void EditTags(object sender, RoutedEventArgs e)
@@ -350,9 +350,11 @@ namespace NextPlayerWinUI.ViewModels
         {
             if (((Pivot)sender).SelectedIndex == 1)
             {
-                if (!lyricsLoaded && QueueVM.Songs.Count > 0)
+                // The track may never have changed in this session when the queue was restored at startup.
+                int index = PlaybackService.Instance.CurrentSongIndex;
+                if (!lyricsLoaded && index >= 0 && index < QueueVM.Songs.Count)
                 {
-                    var song = QueueVM.Songs[cachedIndex];
+                    var song = QueueVM.Songs[index];
                     await lyricsPanelVM.ChangeLyrics(song);
                     lyricsLoaded = true;
                 }

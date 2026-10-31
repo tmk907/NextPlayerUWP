@@ -237,23 +237,6 @@
                         <ToggleSwitch IsOn="{x:Bind ViewModel.PreventScreenLock, Mode=TwoWay}"/>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel 
-                    Orientation="Vertical" Margin="4" 
-                    x:DeferLoadStrategy="Lazy"
-                    Visibility="Collapsed"
-                    x:Name="StatusBarVisibilityStackPanel">
-                    <TextBlock 
-                        x:Uid="TBHideStatusBar"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        FontSize="17"
-                        Margin="4,4,4,4"
-                        Text="Hide status bar"/>
-                    <StackPanel 
-                        Orientation="Horizontal"
-                        Margin="8,0,0,0">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.HideStatusBar, Mode=TwoWay}"/>
-                    </StackPanel>
-                </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="4">
                     <TextBlock 
                         x:Uid="TBLiveTileWithImage"

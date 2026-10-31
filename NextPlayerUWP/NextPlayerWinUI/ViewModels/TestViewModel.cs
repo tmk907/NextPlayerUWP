@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class TestViewModel : Template10.Mvvm.ViewModelBase
+    public class TestViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         public TestViewModel()
         {

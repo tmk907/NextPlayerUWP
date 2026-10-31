@@ -1,4 +1,5 @@
-﻿using NextPlayerWinUIDataLayer.Helpers;
+﻿using NextPlayerWinUIDataLayer.Diagnostics;
+using NextPlayerWinUIDataLayer.Helpers;
 using NextPlayerWinUIDataLayer.Images.PaletteUWP;
 using NextPlayerWinUIDataLayer.Model;
 using System;
@@ -7,10 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TagLib;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -19,75 +22,81 @@ namespace NextPlayerWinUIDataLayer.Services
 {
     public class AlbumArtsManager
     {
-        private const string albumArtsFolderName = "AlbumArts";       
+        private const string albumArtsFolderName = "AlbumArts";
+        private const int MaxConcurrentFiles = 4;
+        private static readonly TimeSpan ArtTimeout = TimeSpan.FromSeconds(20);
+        private static readonly SemaphoreSlim artLimiter = new SemaphoreSlim(MaxConcurrentFiles, MaxConcurrentFiles);
 
-        public async Task SaveAlbumArtAndColor(SongData songData, bool searchInThumbnail = false)
+        public Task SaveAlbumArtAndColor(SongData songData, bool searchInThumbnail = false)
         {
-            try
+            return RunGuardedAsync(songData, async () =>
             {
                 StorageFile songFile;
                 try
                 {
                     songFile = await StorageFile.GetFileFromPathAsync(songData.Path);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     songFile = await FutureAccessHelper.GetFileFromPathAsync(songData.Path);
                 }
-                bool set = false;
-                if (searchInThumbnail)
-                {
-                    set = await SaveBigFromThumbnail(songFile, songData);
-                }
-                if (!set)
-                {
-                    try
-                    {
-                        set = await SaveFromTags(songFile, songData);
-                    }
-                    catch (Exception ex) { }
-                    if (!set)
-                    {
-                        StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(songData.Path));
-                        set = await SaveFromFolder(folder, songData);
-                    }
-                }
-                if (!set && searchInThumbnail)
-                {
-                    set = await SaveAnyFromThumbnail(songFile, songData);
-                }
-            }
-            catch (Exception ex) { }
+                await FindAndSaveAsync(songFile, songData, searchInThumbnail);
+            });
         }
 
-        public async Task SaveAlbumArtAndColor(StorageFile songFile, SongData songData, bool searchInThumbnail = false)
+        public Task SaveAlbumArtAndColor(StorageFile songFile, SongData songData, bool searchInThumbnail = false)
         {
+            return RunGuardedAsync(songData, () => FindAndSaveAsync(songFile, songData, searchInThumbnail));
+        }
+
+        /// <summary>
+        /// A library scan handles many files in parallel, and in a desktop process decoding a shell thumbnail
+        /// can leave its async operation unfinished forever. One such file must not stall the whole scan,
+        /// so limit concurrency and stop waiting for a file after a while: it just ends up without a cover.
+        /// </summary>
+        private static async Task RunGuardedAsync(SongData songData, Func<Task> save)
+        {
+            await artLimiter.WaitAsync();
             try
             {
-                bool set = false;
-                if (searchInThumbnail)
+                var saving = save();
+                if (await Task.WhenAny(saving, Task.Delay(ArtTimeout)) == saving)
                 {
-                    set = await SaveBigFromThumbnail(songFile, songData);
+                    await saving;
                 }
-                if (!set)
+                else
                 {
-                    try
-                    {
-                        set = await SaveFromTags(songFile, songData);
-                    }
-                    catch (Exception ex) { }
-                    if (!set)
-                    {
-                        StorageFolder folder = await songFile.GetParentAsync();
-                        set = await SaveFromFolder(folder, songData);
-                    }
-                }
-                if (!set && searchInThumbnail)
-                {
-                    set = await SaveAnyFromThumbnail(songFile, songData);
+                    Logger2.Current.WriteMessage("Album art timeout " + songData.Path, Logger2.Level.WarningError);
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+                Logger2.Current.WriteMessage("Album art error " + songData.Path + " " + ex.Message, Logger2.Level.WarningError);
+            }
+            finally
+            {
+                artLimiter.Release();
+            }
+        }
+
+        private async Task FindAndSaveAsync(StorageFile songFile, SongData songData, bool searchInThumbnail)
+        {
+            bool set = false;
+            try
+            {
+                set = await SaveFromTags(songFile, songData);
+            }
+            catch (Exception) { }
+
+            if (!set)
+            {
+                StorageFolder folder = await songFile.GetParentAsync();
+                set = await SaveFromFolder(folder, songData);
+            }
+            if (!set && searchInThumbnail)
+            {
+                await SaveFromThumbnail(songFile, songData);
+            }
         }
 
         public async Task<bool> SaveFromTags(StorageFile file, SongData songData)
@@ -140,39 +149,21 @@ namespace NextPlayerWinUIDataLayer.Services
             return saved;
         }
 
-        private async Task<bool> SaveBigFromThumbnail(StorageFile file, SongData songData)
+        private async Task<bool> SaveFromThumbnail(StorageFile file, SongData songData)
         {
-            bool saved = false;
-            var thumb = await file.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView);
-            if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image)
+            using (var thumb = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 256))
             {
-                if (thumb.OriginalWidth > 192 || thumb.OriginalHeight > 192)
+                if (thumb == null || thumb.Type != ThumbnailType.Image || (thumb.OriginalHeight <= 48 && thumb.OriginalWidth <= 48))
                 {
-                    using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
-                    {
-                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
-                        await SaveAlbumArtAndColor(decoder, songData);
-                        saved = true;
-                    }
+                    return false;
                 }
-            }
-            return saved;
-        }
-
-        private async Task<bool> SaveAnyFromThumbnail(StorageFile file, SongData songData)
-        {
-            bool saved = false;
-            var thumb = await file.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView, 256);
-            if (thumb != null && thumb.Type == Windows.Storage.FileProperties.ThumbnailType.Image && (thumb.OriginalHeight > 48 || thumb.OriginalWidth > 48))
-            {
                 using (var istream = thumb.AsStreamForRead().AsRandomAccessStream())
                 {
                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(istream);
                     await SaveAlbumArtAndColor(decoder, songData);
-                    saved = true;
+                    return true;
                 }
             }
-            return saved;
         }
 
         private async Task SaveAlbumArtAndColor(BitmapDecoder decoder, SongData songData)
@@ -189,7 +180,6 @@ namespace NextPlayerWinUIDataLayer.Services
             }
             catch (Exception ex)
             {
-
             }
         }
 

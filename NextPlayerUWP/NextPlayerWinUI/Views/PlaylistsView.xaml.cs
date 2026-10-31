@@ -6,7 +6,6 @@ using NextPlayerWinUI.Messages.Hub;
 using NextPlayerWinUI.ViewModels;
 using NextPlayerWinUIDataLayer.Model;
 using System;
-using Windows.UI.Popups;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -68,6 +67,7 @@ namespace NextPlayerWinUI.Views
 
         private async void newPlainPlaylist_Click(object sender, RoutedEventArgs e)
         {
+            ContentDialogNewPlaylist.XamlRoot = XamlRoot;
             await ContentDialogNewPlaylist.ShowAsync();
         }
 
@@ -75,24 +75,25 @@ namespace NextPlayerWinUI.Views
         {
             TranslationHelper helper = new  TranslationHelper();
             string content = helper.GetTranslation("DeletePlaylistConfirmation");
-            MessageDialog dialog = new MessageDialog(content);
-            dialog.Commands.Add(new UICommand(helper.GetTranslation(TranslationHelper.Delete), (command) =>
+            var dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Content = content,
+                PrimaryButtonText = helper.GetTranslation(TranslationHelper.Delete),
+                CloseButtonText = helper.GetTranslation(TranslationHelper.Cancel),
+                DefaultButton = ContentDialogButton.Primary,
+            };
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
             {
                 ViewModel.ConfirmDelete(((MenuFlyoutItem)sender).CommandParameter);
-            }));
-            dialog.Commands.Add(new UICommand(helper.GetTranslation(TranslationHelper.Cancel), (command) => 
-            {
-
-            }));
-            dialog.DefaultCommandIndex = 0;
-            dialog.CancelCommandIndex = 1;
-            await dialog.ShowAsync();
+            }
         }
 
         private async void MenuFlyoutItemShowDetails_Click(object sender, RoutedEventArgs e)
         {
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
             ViewModel.EditPlaylist = selected;
+            ContentDialogShowDetails.XamlRoot = XamlRoot;
             await ContentDialogShowDetails.ShowAsync();
         }
 
@@ -101,6 +102,7 @@ namespace NextPlayerWinUI.Views
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
             ViewModel.EditPlaylist = new PlaylistItem(selected.Id, false, selected.Name);
             ViewModel.NewPlaylistName = selected.Name;
+            ContentDialogEditName.XamlRoot = XamlRoot;
             await ContentDialogEditName.ShowAsync();
         }
 
@@ -108,6 +110,7 @@ namespace NextPlayerWinUI.Views
         {
             PlaylistItem selected = (PlaylistItem)((MenuFlyoutItem)sender).CommandParameter;
             ViewModel.EditPlaylist = selected;
+            ContentDialogChoosePathKind.XamlRoot = XamlRoot;
             await ContentDialogChoosePathKind.ShowAsync();
         }
 

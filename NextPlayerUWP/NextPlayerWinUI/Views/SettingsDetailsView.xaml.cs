@@ -1,6 +1,5 @@
 ﻿using NextPlayerWinUI.ViewModels;
 using NextPlayerWinUI.ViewModels.Settings;
-using Template10.Services.SerializationService;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -32,7 +31,7 @@ namespace NextPlayerWinUI.Views
             // Parameter is item ID
             ViewModelLocator vml = new ViewModelLocator();
             var service = vml.SettingsVMService;
-            string name = SerializationService.Json.Deserialize(e.Parameter?.ToString()) as string;
+            string name = e.Parameter as string;
             ViewModel = service.GetViewModelByName(name);
             DetailContentPresenter.Content = ViewModel;
         }

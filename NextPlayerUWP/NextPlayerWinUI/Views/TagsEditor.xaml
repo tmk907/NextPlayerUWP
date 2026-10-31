@@ -5,7 +5,7 @@
     xmlns:local="using:NextPlayerWinUI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
     xmlns:data="using:NextPlayerWinUIDataLayer.Model"
     DataContext="{Binding Source={StaticResource Locator}, Path=TagsEditorVM}"
@@ -84,12 +84,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <controls:PageHeader Grid.Row="0"
-			BackButtonVisibility="Collapsed" 
-			Frame="{x:Bind Frame, Mode=OneWay}"
 			Content="Tags editor"
-			x:Uid="PageHeaderTagsEditor"
-			VisualStateNarrowMinWidth="0"
-			VisualStateNormalMinWidth="720"/>
+			x:Uid="PageHeaderTagsEditor"/>
         <Grid Grid.Row="1" Margin="0,0,0,0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

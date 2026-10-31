@@ -2,7 +2,6 @@
 using NextPlayerWinUI.ViewModels;
 using System;
 using System.Linq;
-using Template10.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -92,14 +91,14 @@ namespace NextPlayerWinUI.Views
             if (IsDesktop())
             {
 #if DEBUG
-                var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+                var nav = App.NavigationService;
                 nav.Navigate(AppPages.Pages.NowPlayingPlaylist);
                 //nav.Navigate(AppPages.Pages.NowPlaying);
 #endif
             }
             else
             {
-                var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();//.NavigationService;
+                var nav = App.NavigationService;//.NavigationService;
                 if (nav == null)
                 {
 

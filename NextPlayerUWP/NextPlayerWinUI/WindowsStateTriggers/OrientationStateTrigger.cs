@@ -2,59 +2,42 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.UI.Xaml;
+using NextPlayerWinUI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation.Metadata;
-using Windows.Graphics.Display;
 
 namespace WindowsStateTriggers
 {
     /// <summary>
-    /// Trigger for switching when the screen orientation changes
+    /// Trigger for switching on orientation. A desktop app has no per-view DisplayInformation,
+    /// so orientation follows the shape of the app window.
     /// </summary>
-	public class OrientationStateTrigger : StateTriggerBase, ITriggerValue
+    public class OrientationStateTrigger : StateTriggerBase, ITriggerValue
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrientationStateTrigger"/> class.
-        /// </summary>
         public OrientationStateTrigger()
         {
-            if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            var window = App.Window;
+            if (window != null)
             {
-                var weakEvent =
-                    new WeakEventListener<OrientationStateTrigger, DisplayInformation, object>(this)
-                    {
-                        OnEventAction = (instance, source, eventArgs) => OrientationStateTrigger_OrientationChanged(source, eventArgs),
-                        OnDetachAction = (instance, weakEventListener) => DisplayInformation.GetForCurrentView().OrientationChanged -= weakEventListener.OnEvent
-                    };
-                DisplayInformation.GetForCurrentView().OrientationChanged += weakEvent.OnEvent;
+                var weakEvent = new WeakEventListener<OrientationStateTrigger, object, WindowSizeChangedEventArgs>(this)
+                {
+                    OnEventAction = (instance, source, eventArgs) => instance.UpdateTrigger(),
+                    OnDetachAction = (instance, listener) => window.SizeChanged -= listener.OnEvent,
+                };
+                window.SizeChanged += weakEvent.OnEvent;
             }
         }
 
-        private void OrientationStateTrigger_OrientationChanged(DisplayInformation sender, object args)
+        private void UpdateTrigger()
         {
-            UpdateTrigger(sender.CurrentOrientation);
-        }
-
-        private void UpdateTrigger(Windows.Graphics.Display.DisplayOrientations orientation)
-        {
-            if (orientation == Windows.Graphics.Display.DisplayOrientations.None)
+            var window = App.Window;
+            if (window == null || Orientation == Orientations.None)
             {
                 IsActive = false;
+                return;
             }
-            else if (orientation == Windows.Graphics.Display.DisplayOrientations.Landscape ||
-               orientation == Windows.Graphics.Display.DisplayOrientations.LandscapeFlipped)
-            {
-                IsActive = Orientation == Orientations.Landscape;
-            }
-            else if (orientation == Windows.Graphics.Display.DisplayOrientations.Portrait ||
-                    orientation == Windows.Graphics.Display.DisplayOrientations.PortraitFlipped)
-            {
-                IsActive = Orientation == Orientations.Portrait;
-            }
+
+            bool isPortrait = window.Bounds.Height > window.Bounds.Width;
+            IsActive = Orientation == (isPortrait ? Orientations.Portrait : Orientations.Landscape);
         }
 
         /// <summary>
@@ -71,17 +54,7 @@ namespace WindowsStateTriggers
         /// </summary>
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register("Orientation", typeof(Orientations), typeof(OrientationStateTrigger),
-            new PropertyMetadata(Orientations.None, OnOrientationPropertyChanged));
-
-        private static void OnOrientationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var obj = (OrientationStateTrigger)d;
-            if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                var orientation = DisplayInformation.GetForCurrentView().CurrentOrientation;
-                obj.UpdateTrigger(orientation);
-            }
-        }
+            new PropertyMetadata(Orientations.None, (d, e) => ((OrientationStateTrigger)d).UpdateTrigger()));
 
         #region ITriggerValue
 
@@ -99,9 +72,8 @@ namespace WindowsStateTriggers
                 if (m_IsActive != value)
                 {
                     m_IsActive = value;
-                    base.SetActive(value);
-                    if (IsActiveChanged != null)
-                        IsActiveChanged(this, EventArgs.Empty);
+                    SetActive(value);
+                    IsActiveChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }

@@ -4,7 +4,7 @@ using NextPlayerWinUIDataLayer.Helpers;
 using NextPlayerWinUIDataLayer.Model;
 using System.Collections.Generic;
 using System.Linq;
-using Template10.Controls;
+using NextPlayerWinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;

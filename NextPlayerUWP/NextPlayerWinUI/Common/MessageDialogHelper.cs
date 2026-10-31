@@ -1,67 +1,67 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Popups;
 
 namespace NextPlayerWinUI.Common
 {
     public class MessageDialogHelper
     {
-        TranslationHelper translator;
-        public MessageDialogHelper()
-        {
-            translator = new TranslationHelper();
-        }
+        // A window can show only one ContentDialog at a time.
+        private static readonly SemaphoreSlim dialogLock = new SemaphoreSlim(1, 1);
+
+        private readonly TranslationHelper translator = new TranslationHelper();
 
         public async Task ShowAlbumArtSaveError()
         {
-            string content = translator.GetTranslation(TranslationHelper.AlbumArtSaveError);
-            await ShowDialog(content);
+            await ShowDialog(translator.GetTranslation(TranslationHelper.AlbumArtSaveError));
         }
 
-        public async Task ShowDialog(string content)
-        {
-            MessageDialog dialog = new MessageDialog(content);
-            await dialog.ShowAsync();
-        }
+        public Task ShowDialog(string content) => ShowDialog(content, null);
 
         public async Task ShowDialog(string content, string title)
         {
-            MessageDialog dialog = new MessageDialog(content, title);
-            await dialog.ShowAsync();
+            await ShowAsync(new ContentDialog
+            {
+                Title = title,
+                Content = content,
+                CloseButtonText = translator.GetTranslation(TranslationHelper.OK),
+            });
         }
 
-        public async Task<bool> ShowDeleteSongConfirmationDialog()
+        public Task<bool> ShowDeleteSongConfirmationDialog()
+            => AskAsync(translator.GetTranslation(TranslationHelper.DoYouWantDeleteThisSong));
+
+        public Task<bool> ShowIncludeAllSubFoldersQuestion()
+            => AskAsync(translator.GetTranslation(TranslationHelper.DoYouWantToIncludeSubFolders));
+
+        public Task<bool> ShowExcludeFolderConfirmation()
+            => AskAsync(translator.GetTranslation(TranslationHelper.DoYouWantExcludeFolderFromLibrary));
+
+        private async Task<bool> AskAsync(string content)
         {
-            string content = translator.GetTranslation(TranslationHelper.DoYouWantDeleteThisSong);
-            var dialog = PrepareMessageDialog(content);
-            var command = await dialog.ShowAsync();
-            return (int)command.Id == 0;
+            var result = await ShowAsync(new ContentDialog
+            {
+                Content = content,
+                PrimaryButtonText = translator.GetTranslation(TranslationHelper.Yes),
+                CloseButtonText = translator.GetTranslation(TranslationHelper.No),
+                DefaultButton = ContentDialogButton.Primary,
+            });
+            return result == ContentDialogResult.Primary;
         }
 
-        public async Task<bool> ShowIncludeAllSubFoldersQuestion()
+        private static async Task<ContentDialogResult> ShowAsync(ContentDialog dialog)
         {
-            string content = translator.GetTranslation(TranslationHelper.DoYouWantToIncludeSubFolders);
-            var dialog = PrepareMessageDialog(content);
-            var command = await dialog.ShowAsync();
-            return (int)command.Id == 0;
-        }
-
-        public async Task<bool> ShowExcludeFolderConfirmation()// error UnauthorizedAccessException
-        {
-            string content = translator.GetTranslation(TranslationHelper.DoYouWantExcludeFolderFromLibrary);
-            var dialog = PrepareMessageDialog(content);
-            var command = await dialog.ShowAsync();
-            return (int)command.Id == 0;
-        }
-
-        private MessageDialog PrepareMessageDialog(string content)
-        {
-            MessageDialog dialog = new MessageDialog(content);
-            dialog.Commands.Add(new UICommand(translator.GetTranslation(TranslationHelper.Yes)) { Id = 0 });
-            dialog.Commands.Add(new UICommand(translator.GetTranslation(TranslationHelper.No)) { Id = 1 });
-            dialog.DefaultCommandIndex = 0;
-            dialog.CancelCommandIndex = 1;
-            return dialog;
+            await dialogLock.WaitAsync();
+            try
+            {
+                dialog.XamlRoot = WindowHelper.XamlRoot;
+                return await dialog.ShowAsync();
+            }
+            finally
+            {
+                dialogLock.Release();
+            }
         }
     }
 }

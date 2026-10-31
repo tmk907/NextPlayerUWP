@@ -58,6 +58,7 @@ namespace NextPlayerWinUI.ViewModels
                     if (value == 0) isMuted = true;
                     else isMuted = false;
                     PlaybackService.Instance.Volume = value;
+                    ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.Volume, value);
                 }
                 SetProperty(ref volume, value);
             }

@@ -82,8 +82,7 @@ namespace NextPlayerWinUI.Views
         private void AlbumCoverImage_ImageOpened(object sender, RoutedEventArgs e)
         {
             var image = (Image)sender;
-            image.Opacity = 1;
-            //image.Fade(1, 500, 0).Start();
+            image.FadeIn(500);
         }
 
         private void AlbumCoverImage_Tapped(object sender, TappedRoutedEventArgs e)

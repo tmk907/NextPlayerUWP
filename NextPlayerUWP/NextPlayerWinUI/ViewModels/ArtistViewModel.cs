@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Template10.Services.NavigationService;
+using NextPlayerWinUI.Navigation;
 using Microsoft.UI.Xaml;
 using NextPlayerWinUI.Models;
 

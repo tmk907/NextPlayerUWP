@@ -81,7 +81,7 @@ namespace NextPlayerWinUI.Views
             bool show = ApplicationSettingsHelper.ReadSettingsValue<bool>(SettingsKeys.AlbumArtInBackground);
             if (show)
             {
-                //FindName(nameof(BackDropControl));
+                FindName(nameof(BackDropControl));
                 await Task.Delay(300);
                 FindName(nameof(BackgroundImage));
                 ShowBGImage.Begin();
@@ -131,16 +131,19 @@ namespace NextPlayerWinUI.Views
 
         private async void ButtonShowAudioSettings_Click(object sender, RoutedEventArgs e)
         {
+            ContentDialogAudioSettings.XamlRoot = XamlRoot;
             await ContentDialogAudioSettings.ShowAsync();
         }
 
         private async void SearchButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            ContentDialogSearchLyrics.XamlRoot = XamlRoot;
             await ContentDialogSearchLyrics.ShowAsync();
         }
 
         private async void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
+            ContentDialogAudioSettings.XamlRoot = XamlRoot;
             await ContentDialogAudioSettings.ShowAsync();
         }
 

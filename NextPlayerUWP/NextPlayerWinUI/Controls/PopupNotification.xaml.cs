@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Controls;
 using System.Threading;
 //using CommunityToolkit.WinUI.Animations;
@@ -118,20 +119,18 @@ namespace NextPlayerWinUI.Controls
 
         private async Task Show()
         {
-            NotificationPanel.Opacity = 1;
+            NotificationPanel.Opacity = 0;
+            NotificationPanel.RenderTransform = new TranslateTransform { X = SlideDistance };
             NotificationPanel.Visibility = Visibility.Visible;
-            //var anim = NotificationPanel.Fade(1).OffSetProperty(-100);
-            //anim.SetDurationForAll(ShowAnimationDuration);
-            //await anim.StartAsync();
+            await NotificationPanel.AnimateAsync(ShowAnimationDuration, opacity: 1, offsetX: 0);
         }
 
         private async Task Hide()
         {
-            NotificationPanel.Opacity = 0;
+            await NotificationPanel.AnimateAsync(HideAnimationDuration, opacity: 0, offsetX: SlideDistance);
             NotificationPanel.Visibility = Visibility.Collapsed;
-            //var animOut = NotificationPanel.Fade(0).OffSetProperty(100);
-            //animOut.SetDurationForAll(HideAnimationDuration);
-            //await animOut.StartAsync();
         }
+
+        private const double SlideDistance = 100;
     }
 }

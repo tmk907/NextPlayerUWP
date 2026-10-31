@@ -2,7 +2,7 @@
 using NextPlayerWinUI.Models;
 using System;
 using System.Collections.Generic;
-using Windows.Storage;
+using System.IO;
 using Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -27,17 +27,12 @@ namespace NextPlayerWinUI.Views
 
         private async void OpenFile()
         {
-            StorageFolder appInstalledFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            StorageFolder assets = await appInstalledFolder.GetFolderAsync("Assets");
-            var fileLicenses = await assets.GetFileAsync("Licenses.json");
-            var fileMIT = await assets.GetFileAsync("MITLicense.txt");
-            var fileApache = await assets.GetFileAsync("ApacheLicense.txt");
-            var fileTagLib = await assets.GetFileAsync("TagLibLicenseAddon.txt");
+            string assets = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Assets");
 
-            string text = await FileIO.ReadTextAsync(fileLicenses);
-            MITLicense = await FileIO.ReadTextAsync(fileMIT);
-            ApacheLicense = await FileIO.ReadTextAsync(fileApache);
-            TagLibLicenseAddon = await FileIO.ReadTextAsync(fileTagLib);
+            string text = await File.ReadAllTextAsync(Path.Combine(assets, "Licenses.json"));
+            MITLicense = await File.ReadAllTextAsync(Path.Combine(assets, "MITLicense.txt"));
+            ApacheLicense = await File.ReadAllTextAsync(Path.Combine(assets, "ApacheLicense.txt"));
+            TagLibLicenseAddon = await File.ReadAllTextAsync(Path.Combine(assets, "TagLibLicenseAddon.txt"));
 
             var allLicenses = JsonConvert.DeserializeObject<LicensesModel>(text);
             Licenses = allLicenses.Licenses;

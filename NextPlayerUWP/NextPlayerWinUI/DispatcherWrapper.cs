@@ -29,14 +29,8 @@ namespace NextPlayerWinUI
         {
             if (dispatcher.HasThreadAccess)
             {
-                try
-                {
-                    function();
-                }
-                catch (Exception e)
-                {
-                    
-                }
+                function();
+                return;
             }
 
             dispatcher.TryEnqueue(priority, () => function());

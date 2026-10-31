@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class BottomPlayerViewModel : Template10.Mvvm.ViewModelBase
+    public class BottomPlayerViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         public BottomPlayerViewModel()
         {
@@ -27,16 +27,10 @@ namespace NextPlayerWinUI.ViewModels
             PlaybackService.MediaPlayerMediaOpened += PlaybackService_MediaPlayerMediaOpened;
             songDurationType = ApplicationSettingsHelper.ReadSettingsValue<string>(SettingsKeys.SongDurationType);
 
-            //todo
-            //var window = CoreApplication.GetCurrentView()?.CoreWindow;
-            //if (window != null)
-            //{
-            //    window.SizeChanged += OnCoreWindowOnSizeChanged;
-            //}
-            //if (window.Bounds.Width >= normal)
-            //{
-                
-            //}
+            if (App.Window != null)
+            {
+                App.Window.SizeChanged += OnWindowSizeChanged;
+            }
         }
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -211,23 +205,13 @@ namespace NextPlayerWinUI.ViewModels
         int wide = 1008;
 
 
-        //private void OnCoreWindowOnSizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
-        //{
-        //    if (args.Size.Width >= wide)
-        //    {
-        //        IsSliderVisible = false;
-        //    }
-        //    else if (args.Size.Width >= normal)
-        //    {
-        //        IsSliderVisible = false;
-        //    }
-        //    else if (args.Size.Width >= narrow)
-        //    {
-        //    }
-        //    else if (args.Size.Width >= compact)
-        //    {
-        //    }
-        //}
+        private void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs args)
+        {
+            if (args.Size.Width >= normal)
+            {
+                IsSliderVisible = false;
+            }
+        }
 
         #region Slider Timer
 

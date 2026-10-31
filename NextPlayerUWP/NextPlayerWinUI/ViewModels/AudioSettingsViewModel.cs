@@ -1,6 +1,6 @@
 ﻿namespace NextPlayerWinUI.ViewModels
 {
-    public class AudioSettingsViewModel : Template10.Mvvm.ViewModelBase
+    public class AudioSettingsViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         public AudioSettingsViewModel()
         {

@@ -5,7 +5,7 @@
     xmlns:local="using:NextPlayerWinUI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=LyricsVM}"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -21,12 +21,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <controls:PageHeader Grid.Row="0"
-            BackButtonVisibility="Collapsed" 
-            Frame="{x:Bind Frame, Mode=OneWay}"
             x:Uid="PageHeaderLyrics"
-            Content="Lyrics" 
-            VisualStateNarrowMinWidth="0" 
-            VisualStateNormalMinWidth="720">
+            Content="Lyrics">
             <controls:PageHeader.PrimaryCommands>
                 <AppBarButton
                     x:Uid="ButtonSearch"

@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class FileInfoViewModel : Template10.Mvvm.ViewModelBase
+    public class FileInfoViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         private SongData fileInfo = new SongData();
         public SongData FileInfo

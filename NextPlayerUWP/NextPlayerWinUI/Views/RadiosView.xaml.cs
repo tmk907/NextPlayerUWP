@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Template10.Common;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
@@ -65,12 +64,13 @@ namespace NextPlayerWinUI.Views
             RadioItem selected = (RadioItem)((MenuFlyoutItem)sender).CommandParameter;
             ViewModel.EditedId = selected.BroadcastId;
             ViewModel.NewName = selected.Name;
+            ContentDialogEditName.XamlRoot = XamlRoot;
             await ContentDialogEditName.ShowAsync();
         }
 
         private void GoToCuteRadioView(object sender, RoutedEventArgs e)
         {
-            var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+            var nav = App.NavigationService;
             nav.Navigate(typeof(CuteRadioView));
         }
     }

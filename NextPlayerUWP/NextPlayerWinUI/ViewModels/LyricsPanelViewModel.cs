@@ -4,7 +4,7 @@ using NextPlayerWinUIDataLayer.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Template10.Mvvm;
+using NextPlayerWinUI.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {

@@ -3,8 +3,6 @@ using NextPlayerWinUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Template10.Common;
-using Template10.Services.SerializationService;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -42,26 +40,12 @@ namespace NextPlayerWinUI.Views
                 MasterListView.ItemsSource = items;
             }
 
-            if (e.Parameter != null)
-            {
-                // Parameter is item ID
-                string name = (string)e.Parameter;
-                try
-                {
-                    name = SerializationService.Json.Deserialize(e.Parameter?.ToString()) as string;
-                }
-                catch (Exception ex)
-                {
-                    var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
-                    nav.Navigate(typeof(SettingsDetailsView), name);
-                }
-            }
-        }
+                    }
 
         private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var clickedItem = (SettingsMenuItem)e.ClickedItem;
-            var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+            var nav = App.NavigationService;
             nav.Navigate(typeof(SettingsDetailsView), clickedItem.TypeName);
         }
     }    

@@ -1,7 +1,6 @@
 ﻿using NextPlayerWinUIDataLayer.Helpers;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.Resources;
-using Microsoft.VisualBasic;
 using System.Reflection;
 
 namespace NextPlayerWinUI.Common
@@ -32,12 +31,12 @@ namespace NextPlayerWinUI.Common
 
         public TranslationHelper()
         {
-            //loader = new ResourceLoader();
+            loader = new ResourceLoader();
         }
 
         public string GetTranslation(string toTranslate)
         {
-            return "";// loader.GetString(toTranslate);
+            return loader.GetString(toTranslate);
         }
 
         public void ChangeSlideableItemDescription()

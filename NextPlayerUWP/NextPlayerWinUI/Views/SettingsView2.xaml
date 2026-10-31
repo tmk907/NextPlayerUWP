@@ -9,7 +9,7 @@
     xmlns:mycontrols="using:NextPlayerWinUI.Controls"
     xmlns:settingsviews="using:NextPlayerWinUI.Views.Settings"
     xmlns:settingsvm="using:NextPlayerWinUI.ViewModels.Settings"
-    xmlns:t10controls="using:Template10.Controls"
+    xmlns:t10controls="using:NextPlayerWinUI.Controls"
     xmlns:winstatetriggers="using:WindowsStateTriggers"
     mc:Ignorable="d">
     <Page.Transitions>
@@ -104,12 +104,8 @@
         </Grid.RowDefinitions>
         <t10controls:PageHeader 
             Grid.Row="0"
-			BackButtonVisibility="Collapsed" 
-			Frame="{x:Bind Frame, Mode=OneWay}"
 			Content="Settings"
-			x:Uid="PageHeaderSettings"
-			VisualStateNarrowMinWidth="0"
-			VisualStateNormalMinWidth="720">
+			x:Uid="PageHeaderSettings">
         </t10controls:PageHeader>
         <ListView
                 x:Name="MasterListView"

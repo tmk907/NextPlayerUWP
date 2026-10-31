@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerWinUIDataLayer.Model"
     xmlns:cuteradiomodel="using:NextPlayerWinUIDataLayer.Radio.CuteRadio.Model"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:mycontrols="using:NextPlayerWinUI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=CuteRadioVM}"
     mc:Ignorable="d">
@@ -311,11 +311,7 @@
             Grid.Row="0"
             Grid.ColumnSpan="2"
             x:Name="PageHeader"
-            BackButtonVisibility="Collapsed" 
-            Frame="{x:Bind Frame, Mode=OneWay}"
-            Content="Radio" 
-            VisualStateNarrowMinWidth="0"
-            VisualStateNormalMinWidth="720"/>
+            Content="Radio"/>
             <Pivot Grid.Row="1"
                 Style="{StaticResource RightPanelPivotStyle}"
                 SelectionChanged="{x:Bind ViewModel.PivotSelectionChanged}"

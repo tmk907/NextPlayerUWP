@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class RadiosViewModel : Template10.Mvvm.ViewModelBase
+    public class RadiosViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         private ObservableCollection<RadioItem> favouriteRadios = new ObservableCollection<RadioItem>();
         public ObservableCollection<RadioItem> FavouriteRadios

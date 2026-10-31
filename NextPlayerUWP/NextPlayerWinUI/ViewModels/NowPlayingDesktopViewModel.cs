@@ -10,14 +10,14 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class NowPlayingDesktopViewModel : Template10.Mvvm.ViewModelBase
+    public class NowPlayingDesktopViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         public NowPlayingDesktopViewModel()
         {
             ViewModelLocator vml = new ViewModelLocator();
             QueueVM = vml.QueueVM;
             token = MessageHub.Instance.Subscribe<RightPanelVisibilityChange>(OnRightPanelVisibilityChange);
-            ShowButtons = Window.Current.Bounds.Width <= 720;
+            ShowButtons = App.Window.Bounds.Width <= 720;
         }
 
         public QueueViewModelBase QueueVM { get; set; }
@@ -39,7 +39,7 @@ namespace NextPlayerWinUI.ViewModels
             {
                 TelemetryAdapter.TrackPageView(this.GetType().ToString());
             }
-            ShowButtons = Window.Current.Bounds.Width < 720;
+            ShowButtons = App.Window.Bounds.Width < 720;
             await Task.CompletedTask;
         }
         

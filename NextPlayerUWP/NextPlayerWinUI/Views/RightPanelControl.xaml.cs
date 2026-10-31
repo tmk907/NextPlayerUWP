@@ -32,6 +32,7 @@ namespace NextPlayerWinUI.Views
 
         private async void SearchButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            ContentDialogSearchLyrics.XamlRoot = XamlRoot;
             await ContentDialogSearchLyrics.ShowAsync();
         }
 

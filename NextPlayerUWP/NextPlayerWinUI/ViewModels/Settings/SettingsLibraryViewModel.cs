@@ -173,9 +173,9 @@ namespace NextPlayerWinUI.ViewModels.Settings
 
         public async void AddSdCardFolder()//error element not found
         {
-            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            var folderPicker = WindowHelper.InitializeWithWindow(new Windows.Storage.Pickers.FolderPicker());
             folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
-            //folderPicker.FileTypeFilter.Add("*"); //really needed?
+            folderPicker.FileTypeFilter.Add("*");
             try
             {
                 Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();

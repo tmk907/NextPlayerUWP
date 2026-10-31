@@ -6,11 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:NextPlayerWinUI.Views"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:mycontrols="using:NextPlayerWinUI.Controls"
-    xmlns:uwptoolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
-    <Grid x:Uid="ShellGrid">
+    <Grid x:Uid="ShellGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -19,24 +18,23 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="{x:Bind ShellVM.RightPanelWidth, Converter={StaticResource DoubleToGridLengthConverter}, Mode=TwoWay}" MinWidth="{x:Bind ShellVM.RightPanelMinWidth, Mode=OneWay}"/>
         </Grid.ColumnDefinitions>
-        <controls:HamburgerMenu 
-            x:Name="Menu" 
-            Grid.Row="0" 
+        <NavigationView
+            x:Name="Menu"
+            Grid.Row="0"
             Grid.Column="0"
-            OpenCloseMode="Swipe"
-            Style="{StaticResource HamburgerMenuStyle}"
-            PrimaryButtons="{x:Bind ShellVM.PrimaryButtons, Mode=OneWay}"
-            VisualStateNarrowMinWidth="0"
-            VisualStateNormalMinWidth="720">
-            <controls:HamburgerMenu.SecondaryButtons>
-                <controls:HamburgerButtonInfo PageType="views:SettingsView2" >
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <SymbolIcon Symbol="Setting" Width="48" Height="48" />
-                        <TextBlock x:Uid="TBSettings" Text="Settings" Margin="12, 0, 0, 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </controls:HamburgerButtonInfo>
-            </controls:HamburgerMenu.SecondaryButtons>
-        </controls:HamburgerMenu>
+            AutomationProperties.AutomationId="MainNavigation"
+            IsSettingsVisible="False"
+            IsTitleBarAutoPaddingEnabled="False"
+            KeyboardAcceleratorPlacementMode="Hidden"
+            CompactModeThresholdWidth="720"
+            ExpandedModeThresholdWidth="1008"
+            MenuItemsSource="{x:Bind ShellVM.PrimaryButtons, Mode=OneWay}"
+            ItemInvoked="Menu_ItemInvoked"
+            BackRequested="Menu_BackRequested">
+            <NavigationView.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Left" Modifiers="Menu" Invoked="BackAccelerator_Invoked" />
+            </NavigationView.KeyboardAccelerators>
+        </NavigationView>
         <mycontrols:PopupNotification 
             Grid.Column="0" Grid.Row="0" 
             x:Name="PopupNotification"
@@ -58,14 +56,13 @@
         <Grid 
             x:Name="RightPanelWrapper" 
             x:DeferLoadStrategy="Lazy"
-            Background="Green"
-            Grid.Row="0" 
+                        Grid.Row="0" 
             Grid.Column="1">
             <local:RightPanelControl 
                 x:Name="RightPanel" 
                 Visibility="{x:Bind ShellVM.IsRightPanelVisible, Mode=OneWay}" />
         </Grid>
-        <Grid
+        <mycontrols:PaneResizer
             Grid.Column="1"
             Background="Transparent"
             Width="8"
@@ -74,8 +71,7 @@
             ManipulationStarted="{x:Bind ShellVM.GridSplitterManipulationStarted}"
             ManipulationDelta="{x:Bind ShellVM.GridSplitterManipulationDelta}"
             ManipulationCompleted="{x:Bind ShellVM.GridSplitterManipulationCompleted}"
-            PointerEntered="{x:Bind ShellVM.GridSplitterPointerEntered}"
-            PointerExited="{x:Bind ShellVM.GridSplitterPointerExited}"
+            AutomationProperties.AutomationId="RightPanelResizer"
             />
         <Grid 
             Grid.Row="0" Grid.Column="0"

@@ -8,12 +8,15 @@ using NextPlayerWinUIDataLayer.Helpers;
 using NextPlayerWinUIDataLayer.Services;
 using System;
 using System.Threading.Tasks;
-using Template10.Controls;
-using Template10.Services.NavigationService;
-using Windows.ApplicationModel.Resources;
-using Windows.UI.Popups;
+using NextPlayerWinUI.Controls;
+using NextPlayerWinUI.Navigation;
+using Microsoft.Windows.ApplicationModel.Resources;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
+using System.ComponentModel;
+using System.Linq;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,7 +28,8 @@ namespace NextPlayerWinUI.Views
     public sealed partial class Shell : Page
     {
         public static Shell Instance { get; set; }
-        public static HamburgerMenu HamburgerMenu => Instance.Menu;
+        /// <summary>Raised before going back so a page can handle the request itself.</summary>
+        public static event EventHandler<HandledEventArgs> BackRequested;
 
         ShellViewModel ShellVM = new ShellViewModel();
 
@@ -34,6 +38,7 @@ namespace NextPlayerWinUI.Views
         private Guid tokenNotification;
         private Guid tokenPageNavigated;
 
+        private INavigationService navigation;
         private PlaybackTimer AdTimer;
         private TimeSpan AdVisibleDuration = TimeSpan.FromSeconds(70);
 
@@ -104,18 +109,53 @@ namespace NextPlayerWinUI.Views
 
         public void SetNavigationService(INavigationService navigationService)
         {
-            Menu.NavigationService = navigationService;
-            if (App.Current.RequestedTheme == ApplicationTheme.Light)
+            navigation = navigationService;
+            Menu.Content = navigation.Frame;
+            Menu.FooterMenuItems.Add(new HamburgerMenuBuilder().MakeSettingsButton());
+            navigation.Frame.Navigated += Frame_Navigated;
+        }
+
+        private void Menu_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.InvokedItemContainer?.Tag is MenuDestination destination)
             {
-                HamburgerMenu.RequestedTheme = ElementTheme.Light;
+                NavigateTo(destination);
             }
-            else
+        }
+
+        private void NavigateTo(MenuDestination destination)
+        {
+            navigation.Navigate(destination.PageType);
+            if (destination.ClearHistory)
             {
-                HamburgerMenu.RequestedTheme = ElementTheme.Dark;
+                navigation.ClearHistory();
+                Menu.IsBackEnabled = false;
             }
-            HamburgerMenu.RefreshStyles(App.Current.RequestedTheme);
-            HamburgerMenu.IsFullScreen = false;
-            HamburgerMenu.HamburgerButtonVisibility = Visibility.Visible;
+        }
+
+        private void Menu_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => GoBack();
+
+        private void BackAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            GoBack();
+            args.Handled = true;
+        }
+
+        private void GoBack()
+        {
+            var request = new HandledEventArgs();
+            BackRequested?.Invoke(this, request);
+            if (!request.Handled)
+            {
+                navigation.GoBack();
+            }
+        }
+
+        private void Frame_Navigated(object sender, NavigationEventArgs e)
+        {
+            Menu.IsBackEnabled = navigation.CanGoBack;
+            Menu.SelectedItem = ShellVM.PrimaryButtons.Concat(Menu.FooterMenuItems.OfType<NavigationViewItem>())
+                .FirstOrDefault(item => item.Tag is MenuDestination destination && destination.PageType == e.SourcePageType);
         }
 
         private void OnMenuButtonMessage(MenuButtonSelected msg)
@@ -135,35 +175,18 @@ namespace NextPlayerWinUI.Views
 
         private void PressMenuButton(int nr)
         {
-            System.Diagnostics.Debug.WriteLine("PressMenuButton {0}", nr);
-            if (nr == 0)
+            var item = nr == 0
+                ? Menu.FooterMenuItems.OfType<NavigationViewItem>().FirstOrDefault()
+                : ShellVM.PrimaryButtons.ElementAtOrDefault(nr - 1);
+            if (item?.Tag is MenuDestination destination)
             {
-                HamburgerMenu.Selected = HamburgerMenu.SecondaryButtons[0];
-            }
-            else
-            {
-                nr--;
-                if (nr >= 0 && nr < HamburgerMenu.PrimaryButtons.Count)
-                {
-                    HamburgerMenu.Selected = HamburgerMenu.PrimaryButtons[nr];
-                }
+                NavigateTo(destination);
             }
         }
 
         private void ApplyTheme(bool isLight)
         {
-            if (isLight)
-            {
-                this.RequestedTheme = ElementTheme.Light;
-                HamburgerMenu.RequestedTheme = ElementTheme.Light;
-                HamburgerMenu.RefreshStyles(ApplicationTheme.Light);
-            }
-            else
-            {
-                this.RequestedTheme = ElementTheme.Dark;
-                HamburgerMenu.RequestedTheme = ElementTheme.Dark;
-                HamburgerMenu.RefreshStyles(ApplicationTheme.Dark);
-            }
+            RequestedTheme = isLight ? ElementTheme.Light : ElementTheme.Dark;
         }
 
         #region Ads
@@ -247,7 +270,7 @@ namespace NextPlayerWinUI.Views
         //private bool hideAd = false;
         //        private void UnloadAd(bool fromTimer)
         //        {
-        //            Template10.Common.WindowWrapper.Current().Dispatcher.Dispatch(() =>
+        //            App.Dispatcher.Dispatch(() =>
         //            {
         //                AdTimer.TimerCancel();
         //                if (AdWrapperMobile != null && AdWrapperMobile.Children.Count > 0)
@@ -409,17 +432,18 @@ namespace NextPlayerWinUI.Views
                 if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(7) <= elapsed)//!!!!!!!!! <=
                 {
                     settings.Values[SettingsKeys.LastReviewRemind] = DateTime.Today.Ticks;
-                    settings.Values[SettingsKeys.IsReviewed] = isReviewed++;
+                    settings.Values[SettingsKeys.IsReviewed] = isReviewed + 1;
                     ResourceLoader loader = new ResourceLoader();
 
-                    MessageDialog dialog = new MessageDialog(loader.GetString("RateAppMsg"));
-                    dialog.Title = loader.GetString("RateAppTitle");
-                    dialog.Commands.Add(new UICommand(loader.GetString("Yes")) { Id = 0 });
-                    dialog.Commands.Add(new UICommand(loader.GetString("Later")) { Id = 1 });
-                    dialog.DefaultCommandIndex = 0;
-                    dialog.CancelCommandIndex = 1;
-
-                    await dialog.ShowAsync();
+                    await new ContentDialog
+                    {
+                        XamlRoot = XamlRoot,
+                        Title = loader.GetString("RateAppTitle"),
+                        Content = loader.GetString("RateAppMsg"),
+                        PrimaryButtonText = loader.GetString("Yes"),
+                        CloseButtonText = loader.GetString("Later"),
+                        DefaultButton = ContentDialogButton.Primary,
+                    }.ShowAsync();
                 }
             }
         }

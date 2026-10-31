@@ -25,7 +25,6 @@ namespace NextPlayerWinUI.Views
         public NowPlayingDesktopView()
         {
             this.InitializeComponent();
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(340, 500));
             ViewModel = (NowPlayingDesktopViewModel)DataContext;
             this.Loaded += NowPlayingDesktopView_Loaded;
             this.Unloaded += NowPlayingDesktopView_Unloaded;
@@ -64,7 +63,7 @@ namespace NextPlayerWinUI.Views
 
         private async Task ShowAlbumArtInBackground()
         {
-            //FindName(nameof(BackDropControl));
+            FindName(nameof(BackDropControl));
             await Task.Delay(300);
             FindName(nameof(BackgroundImage));
             ShowBGImage.Begin();

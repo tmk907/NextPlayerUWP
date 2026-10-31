@@ -62,6 +62,7 @@ namespace NextPlayerWinUI.Common
             Player.AutoPlay = false;
             Player.MediaEnded += Player_MediaEnded;
             Player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+            Player.PlaybackSession.NaturalDurationChanged += PlaybackSession_NaturalDurationChanged;
             Player.CommandManager.NextReceived += CommandManager_NextReceived;
             Player.CommandManager.PreviousReceived += CommandManager_PreviousReceived;
             Player.CommandManager.NextBehavior.EnablingRule = MediaCommandEnablingRule.Always;
@@ -174,6 +175,18 @@ namespace NextPlayerWinUI.Common
             ManageQueue();
         }
         
+        /// <summary>
+        /// The duration is not known yet when playback of an item starts, and how long opening takes varies,
+        /// so listeners are told again once the real value is available.
+        /// </summary>
+        private void PlaybackSession_NaturalDurationChanged(MediaPlaybackSession sender, object args)
+        {
+            if (sender.NaturalDuration > TimeSpan.Zero)
+            {
+                OnMediaPlayerMediaOpened();
+            }
+        }
+
         private void Player_MediaEnded(MediaPlayer sender, object args)
         {
             System.Diagnostics.Debug.WriteLine("Player_MediaEnded {0}", sender.PlaybackSession.PlaybackState);

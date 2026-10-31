@@ -38,8 +38,8 @@ namespace NextPlayerWinUI.Common
             System.Diagnostics.Debug.WriteLine("NowPlayingPlaylistManager.Init()");
             songs = await DatabaseManager.Current.GetSongItemsFromNowPlayingAsync();
             songs.CollectionChanged += Songs_CollectionChanged;
-            OnNPChanged();
             currentIndex = ApplicationSettingsHelper.ReadSongIndex();
+            OnNPChanged();
         }
 
         public async Task Init(MusicItem item)
@@ -47,8 +47,8 @@ namespace NextPlayerWinUI.Common
             System.Diagnostics.Debug.WriteLine("NowPlayingPlaylistManager.Init(MusicItem )");
             await NewPlaylist(item);
             songs.CollectionChanged += Songs_CollectionChanged;
-            OnNPChanged();
             currentIndex = 0;
+            OnNPChanged();
         }
 
         public SortingHelperForSongItemsInPlaylist SortingHelper;

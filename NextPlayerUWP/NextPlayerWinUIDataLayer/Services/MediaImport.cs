@@ -232,7 +232,7 @@ namespace NextPlayerWinUIDataLayer.Services
 
         private async Task AddFilesFromFolderAsync(StorageFolder folder, bool includeSubFolders = true)
         {
-            progress.Report(folder.Path + "|" + songsAdded);
+progress.Report(folder.Path + "|" + songsAdded);
             //IReadOnlyList<StorageFile> files;
             //if (UseWindowsIndexer)
             //{
@@ -311,7 +311,7 @@ namespace NextPlayerWinUIDataLayer.Services
                 }
             }
 
-            var newSongs = await ProcessNewFiles(newFiles);
+var newSongs = await ProcessNewFiles(newFiles);
 
             var toNotAvailable = oldSongs.Where(s => s.IsAvailable == 1 && !availableChange.Contains(s.SongId) && !availableNotChange.Contains(s.SongId)).ToList();
             foreach (var s in toNotAvailable)
@@ -361,7 +361,7 @@ namespace NextPlayerWinUIDataLayer.Services
             }
             #endregion
 
-            await DatabaseManager.Current.UpdateFolderAsync(folder.Path, oldSongs, newSongs, toNotAvailable, toUpdate);
+await DatabaseManager.Current.UpdateFolderAsync(folder.Path, oldSongs, newSongs, toNotAvailable, toUpdate);
 
             songsAdded += newSongs.Count;// + oldSongs.Where(s => s.IsAvailable == 1).Count();
             progress.Report(folder.Path + "|" + songsAdded);

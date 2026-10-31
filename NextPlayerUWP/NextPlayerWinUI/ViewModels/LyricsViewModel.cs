@@ -2,8 +2,8 @@
 using NextPlayerWinUIDataLayer.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Template10.Mvvm;
-using Template10.Services.NavigationService;
+using NextPlayerWinUI.Navigation;
+using NextPlayerWinUI.Navigation;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels

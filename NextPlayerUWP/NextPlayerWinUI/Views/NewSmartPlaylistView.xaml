@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerWinUI.Helpers"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:mycontrols="using:NextPlayerWinUI.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=NewSmartPlaylistVM}"
@@ -97,12 +97,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <controls:PageHeader Grid.Row="0"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderNewSmartPlaylist"
-                Content="New smart playlist" 
-                VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720">
+                Content="New smart playlist">
             <AppBarButton 
                 x:Uid="AppBarButtonSave"
                 Label="Save"

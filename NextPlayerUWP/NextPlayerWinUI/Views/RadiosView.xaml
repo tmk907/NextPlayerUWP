@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:NextPlayerWinUIDataLayer.Model"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:mycontrols="using:NextPlayerWinUI.Controls"
     xmlns:triggers="using:WindowsStateTriggers"
     DataContext="{Binding Source={StaticResource Locator}, Path=RadiosVM}"
@@ -410,12 +410,8 @@
         <controls:PageHeader 
             Grid.Row="0" 
             Grid.ColumnSpan="2"
-			BackButtonVisibility="Collapsed" 
-			Frame="{x:Bind Frame, Mode=OneWay}"
 			Content="Streaming"
-			x:Uid="PageHeaderStreaming"
-			VisualStateNarrowMinWidth="0"
-			VisualStateNormalMinWidth="720">
+			x:Uid="PageHeaderStreaming">
         </controls:PageHeader>
         <Grid Grid.Column="0" Grid.Row="1">
             <ContentDialog x:Name="ContentDialogEditName"

@@ -95,14 +95,14 @@ namespace NextPlayerWinUI.Views
         private async void EditAlbum_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.EditAlbum();
+            ContentDialogEditAlbum.XamlRoot = XamlRoot;
             await ContentDialogEditAlbum.ShowAsync();
         }
 
         private void AlbumCoverImageBG_ImageOpened(object sender, RoutedEventArgs e)
         {
             var image = (Image)sender;
-            image.Opacity = 1;
-            //image.Fade(1, 700, 0).Start();
+            image.FadeIn(700);
         }
 
         //private void AlbumCoverImage_ImageOpened(object sender, RoutedEventArgs e)

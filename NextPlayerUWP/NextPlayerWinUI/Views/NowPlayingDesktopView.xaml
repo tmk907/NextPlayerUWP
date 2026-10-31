@@ -5,7 +5,7 @@
     xmlns:local="using:NextPlayerWinUI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:mycontrols="using:NextPlayerWinUI.Controls"
     DataContext="{Binding Source={StaticResource Locator}, Path=NowPlayingDesktopVM}"
     mc:Ignorable="d">
@@ -128,11 +128,7 @@
         <controls:PageHeader
             x:Uid="PageHeaderNowPlaying"
             Grid.Row="0"
-            BackButtonVisibility="Collapsed"
-            Content="Now playing"
-            Frame="{x:Bind Frame, Mode=OneWay}"
-            VisualStateNarrowMinWidth="0"
-            VisualStateNormalMinWidth="720">
+            Content="Now playing">
             <controls:PageHeader.PrimaryCommands>
                 <AppBarButton
                     x:Uid="AppBarButtonQueue"
@@ -166,6 +162,18 @@
                     <BitmapImage UriSource="{x:Bind ViewModel.QueueVM.CoverUri, Mode=OneWay}" />
                 </Image.Source>
             </Image>
+            <Rectangle
+                x:Name="BackDropControl"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                x:DeferLoadStrategy="Lazy">
+                <Rectangle.Fill>
+                    <AcrylicBrush
+                        FallbackColor="{x:Bind ViewModel.QueueVM.AlbumArtColor, Mode=OneWay}"
+                        TintColor="{x:Bind ViewModel.QueueVM.AlbumArtColor, Mode=OneWay}"
+                        TintOpacity="0.7" />
+                </Rectangle.Fill>
+            </Rectangle>
             <!--<imagecontrol:CrossfadingImage x:Name="BackgroundImage"
                                            x:DeferLoadStrategy="Lazy"
                                            Grid.Row="0"

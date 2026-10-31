@@ -5,7 +5,7 @@ using NextPlayerWinUIDataLayer.Model;
 using NextPlayerWinUIDataLayer.Services;
 using NextPlayerWinUIDataLayer.Helpers;
 using Windows.ApplicationModel.DataTransfer;
-using Template10.Services.NavigationService;
+using NextPlayerWinUI.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +18,7 @@ using Microsoft.UI.Xaml;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public abstract class MusicViewModelBase : Template10.Mvvm.ViewModelBase
+    public abstract class MusicViewModelBase : NextPlayerWinUI.Navigation.ViewModelBase
     {
         //public MusicViewModelBase()
         //{
@@ -127,7 +127,7 @@ namespace NextPlayerWinUI.ViewModels
         public async void Pin(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            //await TileManager.CreateTile(item);//todo
+            await TileManager.CreateTile(item);
         }
 
         public void EditTags(object sender, RoutedEventArgs e)

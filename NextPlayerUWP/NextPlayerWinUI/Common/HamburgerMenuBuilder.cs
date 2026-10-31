@@ -1,12 +1,12 @@
-﻿using NextPlayerWinUI.Views;
+﻿using Microsoft.UI.Xaml.Automation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using NextPlayerWinUI.Views;
 using NextPlayerWinUIDataLayer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Template10.Controls;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace NextPlayerWinUI.Common
 {
@@ -24,317 +24,95 @@ namespace NextPlayerWinUI.Common
         Online = 10,
     }
 
+    /// <summary>What selecting a menu entry does. Stored in <see cref="NavigationViewItem"/>'s Tag.</summary>
+    public sealed record MenuDestination(Type PageType, bool ClearHistory);
+
     public class HamburgerMenuBuilder
     {
-        public HamburgerMenuBuilder()
+        private static readonly Dictionary<MenuItemType, string> TextKeys = new()
         {
-            helper = new TranslationHelper();
-            names = new Dictionary<MenuItemType, string>();
-        }
+            { MenuItemType.Albums, "TBAlbums/Text" },
+            { MenuItemType.AlbumArtists, "TBAlbumArtists/Text" },
+            { MenuItemType.Artists, "TBArtists/Text" },
+            { MenuItemType.Folders, "TBFolders/Text" },
+            { MenuItemType.Genres, "TBGenres/Text" },
+            { MenuItemType.NowPlayingSong, "TBNowPlaying/Text" },
+            { MenuItemType.NowPlayingPlaylist, "TBNowPlaying/Text" },
+            { MenuItemType.Playlists, "TBPlaylists/Text" },
+            { MenuItemType.Songs, "TBSongs/Text" },
+            { MenuItemType.Online, "TBOnline/Text" },
+        };
 
-        private TranslationHelper helper;
+        private static readonly Dictionary<MenuItemType, Type> PageTypes = new()
+        {
+            { MenuItemType.Albums, typeof(AlbumsView) },
+            { MenuItemType.AlbumArtists, typeof(AlbumArtistsView) },
+            { MenuItemType.Artists, typeof(ArtistsView) },
+            { MenuItemType.Folders, typeof(FoldersRootView) },
+            { MenuItemType.Genres, typeof(GenresView) },
+            { MenuItemType.NowPlayingSong, typeof(NowPlayingDesktopView) },
+            { MenuItemType.NowPlayingPlaylist, typeof(NowPlayingView) },
+            { MenuItemType.Playlists, typeof(PlaylistsView) },
+            { MenuItemType.Online, typeof(RadiosView) },
+            { MenuItemType.Songs, typeof(SongsView) },
+        };
 
-        private Dictionary<MenuItemType, string> names;
-        private Dictionary<MenuItemType, string> Names
-        {
-            get
-            {
-                if (names.Count == 0)
-                {
-                    names = TranslateButtonNames();
-                }
-                return names;
-            }
-        }
-        private Dictionary<MenuItemType, string> TranslateButtonNames()
-        {
-            var list = ApplicationSettingsHelper.ReadData<List<MenuButtonItem>>(SettingsKeys.MenuEntries);
-            Dictionary<MenuItemType, string> translations = new Dictionary<MenuItemType, string>();
-            foreach (var item in list)
-            {
-                string name = "";
-                switch (item.PageType)
-                {
-                    case MenuItemType.Albums:
-                        name = helper.GetTranslation("TBAlbums/Text");
-                        break;
-                    case MenuItemType.AlbumArtists:
-                        name = helper.GetTranslation("TBAlbumArtists/Text");
-                        break;
-                    case MenuItemType.Artists:
-                        name = helper.GetTranslation("TBArtists/Text");
-                        break;
-                    case MenuItemType.Folders:
-                        name = helper.GetTranslation("TBFolders/Text");
-                        break;
-                    case MenuItemType.Genres:
-                        name = helper.GetTranslation("TBGenres/Text");
-                        break;
-                    case MenuItemType.NowPlayingSong:
-                        name = helper.GetTranslation("TBNowPlaying/Text");
-                        break;
-                    case MenuItemType.NowPlayingPlaylist:
-                        name = helper.GetTranslation("TBNowPlaying/Text");
-                        break;
-                    case MenuItemType.Playlists:
-                        name = helper.GetTranslation("TBPlaylists/Text");
-                        break;
-                    case MenuItemType.Songs:
-                        name = helper.GetTranslation("TBSongs/Text");
-                        break;
-                    case MenuItemType.Online:
-                        name = helper.GetTranslation("TBOnline/Text");
-                        break;
-                    default:
-                        break;
-                }
-                translations.Add(item.PageType, name);
-            }
-            return translations;
-        }
+        private readonly TranslationHelper helper = new TranslationHelper();
 
         public string GetMenuItemText(MenuItemType type)
-        {
-            string name;
-            Names.TryGetValue(type, out name);
-            return name ?? "";
-        }
+            => TextKeys.TryGetValue(type, out var key) ? helper.GetTranslation(key) : "";
 
-        public ObservableCollection<HamburgerButtonInfo> GetButtons()
+        public ObservableCollection<NavigationViewItem> GetButtons()
         {
-            ObservableCollection<HamburgerButtonInfo> buttons = new ObservableCollection<HamburgerButtonInfo>();
-
             var list = ApplicationSettingsHelper.ReadData<List<MenuButtonItem>>(SettingsKeys.MenuEntries);
 
-            if (DeviceFamilyHelper.IsDesktop())
+            // Desktop has a single "Now playing" entry, which older settings may have stored as the mobile one.
+            var mobileNowPlaying = list.First(b => b.PageType == MenuItemType.NowPlayingPlaylist);
+            if (mobileNowPlaying.ShowButton)
             {
-                var a = list.First(b => b.PageType == MenuItemType.NowPlayingPlaylist);
-                if (a.ShowButton)
-                {
-                    a.ShowButton = false;
-                    list.First(b => b.PageType == MenuItemType.NowPlayingSong).ShowButton = true;
-                }
-            }
-            else
-            {
-                var a = list.First(b => b.PageType == MenuItemType.NowPlayingSong);
-                if (a.ShowButton)
-                {
-                    a.ShowButton = false;
-                    list.First(b => b.PageType == MenuItemType.NowPlayingPlaylist).ShowButton = true;
-                }
+                mobileNowPlaying.ShowButton = false;
+                list.First(b => b.PageType == MenuItemType.NowPlayingSong).ShowButton = true;
             }
 
-            foreach(var item in list.Where(b => b.ShowButton))
-            {
-                var button = MakeButton(item.PageType);
-                buttons.Add(button);
-            }
-
-            return buttons;
+            return new ObservableCollection<NavigationViewItem>(list.Where(b => b.ShowButton).Select(b => MakeButton(b.PageType)));
         }
 
-        public HamburgerButtonInfo MakeButton(MenuItemType page)
+        public NavigationViewItem MakeSettingsButton()
         {
-            bool clearHistory = true;
-            if (page == MenuItemType.Online || page == MenuItemType.NowPlayingSong || page == MenuItemType.NowPlayingPlaylist)
+            var item = new NavigationViewItem
             {
-                clearHistory = false;
-            }
-
-            var content = ButtonContent(page);
-            Type pageType = PageTypes[page];
-            HamburgerButtonInfo button = new HamburgerButtonInfo()
-            {
-                ButtonType = HamburgerButtonInfo.ButtonTypes.Toggle,
-                ClearHistory = clearHistory,
-                Content = content,
-                PageType = pageType,
+                Content = helper.GetTranslation("TBSettings/Text"),
+                Icon = new SymbolIcon(Symbol.Setting),
+                Tag = new MenuDestination(typeof(SettingsView2), ClearHistory: false),
             };
-            return button;
+            AutomationProperties.SetAutomationId(item, "MenuSettings");
+            return item;
         }
-        
-        private UIElement ButtonContent(MenuItemType page)
+
+        private NavigationViewItem MakeButton(MenuItemType page)
         {
-            StackPanel stackPanel = new StackPanel()
+            bool clearHistory = page != MenuItemType.Online && page != MenuItemType.NowPlayingSong && page != MenuItemType.NowPlayingPlaylist;
+            var item = new NavigationViewItem
             {
-                Orientation = Orientation.Horizontal,
-                VerticalAlignment = VerticalAlignment.Center,
+                Content = GetMenuItemText(page),
+                Icon = MakeIcon(page),
+                Tag = new MenuDestination(PageTypes[page], clearHistory),
             };
-            
-            switch (page)
-            {
-                case MenuItemType.Albums:
-                    var viewBox = new Viewbox()
-                    {
-                        Height = 20,
-                        Child = new TextBlock()
-                        {
-                            Text = "\xE958",
-                            FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe MDL2 Assets"),
-                        }
-                    };
-                    var grid = new Grid()
-                    {
-                        Height = 48,
-                        Width = 48,
-                    };
-                    grid.Children.Add(viewBox);
-                    stackPanel.Children.Add(grid);
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.Albums),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.AlbumArtists:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.Contact2,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.AlbumArtists),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.Artists:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.People,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.Artists),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.Folders:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.Copy,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.Folders),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.Genres:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.World,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.Genres),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.NowPlayingSong:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.Play,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.NowPlayingSong),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.NowPlayingPlaylist:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.Play,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.NowPlayingPlaylist),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.Playlists:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.MusicInfo,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.Playlists),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.Songs:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.Audio,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.Songs),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                case MenuItemType.Online:
-                    stackPanel.Children.Add(new SymbolIcon()
-                    {
-                        Height = 48,
-                        Symbol = Symbol.View,
-                        Width = 48,
-                    });
-                    stackPanel.Children.Add(new TextBlock()
-                    {
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Text = GetMenuItemText(MenuItemType.Online),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    });
-                    break;
-                default:
-                    break;
-            }
-
-            return stackPanel;
+            AutomationProperties.SetAutomationId(item, "Menu" + page);
+            return item;
         }
 
-        private readonly Dictionary<MenuItemType, Type> PageTypes = new Dictionary<MenuItemType, Type>()
+        private static IconElement MakeIcon(MenuItemType page) => page switch
         {
-            { MenuItemType.Albums, typeof(AlbumsView)},
-            { MenuItemType.AlbumArtists, typeof(AlbumArtistsView)},
-            { MenuItemType.Artists, typeof(ArtistsView)},
-            { MenuItemType.Folders, typeof(FoldersRootView)},
-            { MenuItemType.Genres, typeof(GenresView)},
-            //{ MenuItemType.NowPlaying, typeof(NowPlayingView)},
-            { MenuItemType.NowPlayingSong, typeof(NowPlayingDesktopView)},
-            { MenuItemType.NowPlayingPlaylist, typeof(NowPlayingView)},
-            { MenuItemType.Playlists, typeof(PlaylistsView)},
-            { MenuItemType.Online, typeof(RadiosView)},
-            //{ MenuItemType.Settings, typeof(SettingsView)},
-            { MenuItemType.Songs, typeof(SongsView)},
+            MenuItemType.Albums => new FontIcon { Glyph = "\xE958", FontFamily = new FontFamily("Segoe MDL2 Assets") },
+            MenuItemType.AlbumArtists => new SymbolIcon(Symbol.Contact2),
+            MenuItemType.Artists => new SymbolIcon(Symbol.People),
+            MenuItemType.Folders => new SymbolIcon(Symbol.Copy),
+            MenuItemType.Genres => new SymbolIcon(Symbol.World),
+            MenuItemType.Playlists => new SymbolIcon(Symbol.MusicInfo),
+            MenuItemType.Songs => new SymbolIcon(Symbol.Audio),
+            MenuItemType.Online => new SymbolIcon(Symbol.View),
+            _ => new SymbolIcon(Symbol.Play),
         };
     }
 }

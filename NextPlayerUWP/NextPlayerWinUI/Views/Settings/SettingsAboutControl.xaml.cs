@@ -22,6 +22,7 @@ namespace NextPlayerWinUI.Views.Settings
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            ContentDialogTranslations.XamlRoot = XamlRoot;
             await ContentDialogTranslations.ShowAsync();
         }
     }

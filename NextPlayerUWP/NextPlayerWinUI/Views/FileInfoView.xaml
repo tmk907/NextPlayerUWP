@@ -5,7 +5,7 @@
     xmlns:local="using:NextPlayerWinUI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:data="using:NextPlayerWinUIDataLayer.Model"
     DataContext="{Binding Source={StaticResource Locator}, Path=FileInfoVM}"
     mc:Ignorable="d">
@@ -41,12 +41,8 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:PageHeader Grid.Row="0" Grid.ColumnSpan="2"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
                 x:Uid="PageHeaderFileInfo"
-                Content="File Info" 
-                VisualStateNarrowMinWidth="0"
-                VisualStateNormalMinWidth="720"/>
+                Content="File Info"/>
         <ScrollViewer Grid.Row="1" Grid.Column="0">
             <Grid Margin="16,12,12,4">
                 <Grid.RowDefinitions>

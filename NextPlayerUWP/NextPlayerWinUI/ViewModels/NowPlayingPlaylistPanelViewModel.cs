@@ -4,7 +4,7 @@ using NextPlayerWinUIDataLayer.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Template10.Mvvm;
+using NextPlayerWinUI.Navigation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 

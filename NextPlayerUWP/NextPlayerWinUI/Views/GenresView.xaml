@@ -5,7 +5,7 @@
     xmlns:local="using:NextPlayerWinUI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Template10.Controls"
+    xmlns:controls="using:NextPlayerWinUI.Controls"
     xmlns:data="using:NextPlayerWinUIDataLayer.Model"
     xmlns:helpers="using:NextPlayerWinUI.Helpers"
     xmlns:mycontrols="using:NextPlayerWinUI.Controls"
@@ -133,11 +133,7 @@
                 Grid.Row="0"
                 x:Name="PageHeader"
                 x:Uid="PageHeaderGenres"
-                BackButtonVisibility="Collapsed" 
-                Frame="{x:Bind Frame, Mode=OneWay}"
-                Content="Genres" 
-                VisualStateNarrowMinWidth="0" 
-                VisualStateNormalMinWidth="720">
+                Content="Genres">
             <AppBarButton
                 x:Uid="AppBarButtonSelect"
                 Visibility="{x:Bind ViewModel.IsMultiSelection, Converter={StaticResource BoolToInvertedVisibilityConverter}, Mode=OneWay}"

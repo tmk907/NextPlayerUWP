@@ -162,8 +162,15 @@ namespace NextPlayerWinUI.ViewModels
 
         private void UpdatePlaylist()
         {
+            // This view model is created by the first page navigation, usually before the saved queue is loaded.
+            bool queueJustLoaded = SongsCount == 0 && NowPlayingPlaylistManager.Current.songs.Count > 0;
             Songs = NowPlayingPlaylistManager.Current.songs;
             SongsCount = NowPlayingPlaylistManager.Current.songs.Count;
+            int index = PlaybackService.Instance.CurrentSongIndex;
+            if (queueJustLoaded && index >= 0 && index < SongsCount)
+            {
+                ChangeSong(index);
+            }
         }
 
         private async void PlaybackService_MediaPlayerMediaOpened()

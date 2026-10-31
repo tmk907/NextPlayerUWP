@@ -1,11 +1,9 @@
 ﻿using NextPlayerWinUI.Common;
 using NextPlayerWinUIDataLayer.Helpers;
 using System.Collections.ObjectModel;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Template10.Controls;
 
 namespace NextPlayerWinUI.ViewModels
 {
@@ -100,8 +98,8 @@ namespace NextPlayerWinUI.ViewModels
             set { SetProperty(ref isNowPlayingDesktopViewActive, value); }
         }
        
-        private ObservableCollection<HamburgerButtonInfo> primaryButtons = new ObservableCollection<HamburgerButtonInfo>();
-        public ObservableCollection<HamburgerButtonInfo> PrimaryButtons
+        private ObservableCollection<NavigationViewItem> primaryButtons = new ObservableCollection<NavigationViewItem>();
+        public ObservableCollection<NavigationViewItem> PrimaryButtons
         {
             get { return primaryButtons; }
             set { SetProperty(ref primaryButtons, value); }
@@ -153,14 +151,8 @@ namespace NextPlayerWinUI.ViewModels
 
         private double prevWindowState = compact;
 
-        private readonly CoreCursor normalCursor = new CoreCursor(CoreCursorType.Arrow, 1);
-        private readonly CoreCursor hoverCursor = new CoreCursor(CoreCursorType.SizeWestEast, 1);
-        private bool resizing = false;
-
         public void GridSplitterManipulationStarted(object sender, Microsoft.UI.Xaml.Input.ManipulationStartedRoutedEventArgs e)
         {
-            resizing = true;
-            Window.Current.CoreWindow.PointerCursor = hoverCursor;
         }
 
         public void GridSplitterManipulationDelta(object sender, Microsoft.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
@@ -190,31 +182,13 @@ namespace NextPlayerWinUI.ViewModels
             }
             else if (prevWindowState == narrow)
             {
-                rightPanelWide = rightPanelWidth;
+                rightPanelNarrow = rightPanelWidth;
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthNarrow, rightPanelWidth);
             }
             else if (prevWindowState == compact)
             {
                 rightPanelCompact = rightPanelWidth;
                 ApplicationSettingsHelper.SaveSettingsValue(SettingsKeys.RightPanelWidthCompact, rightPanelWidth);
-            }
-            resizing = false;
-            Window.Current.CoreWindow.PointerCursor = normalCursor;
-        }
-
-        public void GridSplitterPointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if (!resizing)
-            {
-                Window.Current.CoreWindow.PointerCursor = hoverCursor;
-            }
-        }
-
-        public void GridSplitterPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if (!resizing)
-            {
-                Window.Current.CoreWindow.PointerCursor = normalCursor;
             }
         }
     }

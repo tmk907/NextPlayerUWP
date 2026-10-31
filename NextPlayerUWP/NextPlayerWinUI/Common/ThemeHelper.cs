@@ -1,119 +1,42 @@
-﻿using NextPlayerWinUIDataLayer.Helpers;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation.Metadata;
-using Microsoft.UI;
-using Windows.UI.ViewManagement;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
+using NextPlayerWinUIDataLayer.Helpers;
+using System;
+using System.Runtime.InteropServices;
 
 namespace NextPlayerWinUI.Common
 {
     public class ThemeHelper
     {
-        public static bool IsLightTheme
-        {
-            get
-            {
-                return (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
-            }
-        }
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
+
+        public static bool IsLightTheme => (bool)ApplicationSettingsHelper.ReadSettingsValue(SettingsKeys.AppTheme);
 
         public static void ApplyAppTheme(bool isLightTheme)
         {
-            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyAppTheme");
-            if (isLightTheme)
+            var theme = isLightTheme ? ElementTheme.Light : ElementTheme.Dark;
+            if (App.NavigationService != null)
             {
-                if (App.NavigationService != null)
-                {
-                    App.NavigationService.Frame.RequestedTheme = ElementTheme.Light;
-                }
-                ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Light);
-                ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Light);
+                App.NavigationService.Frame.RequestedTheme = theme;
             }
-            else
-            {
-                if (App.NavigationService != null)
-                {
-                    App.NavigationService.Frame.RequestedTheme = ElementTheme.Dark;
-                }
-                ThemeHelper.ApplyThemeToTitleBar(ElementTheme.Dark);
-                ThemeHelper.ApplyThemeToStatusBar(ElementTheme.Dark);
-            }
-        }
-
-        public static void ApplyThemeToStatusBar(bool isLightTheme)
-        {
-            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToStatusBar");
-            if (isLightTheme) ApplyThemeToStatusBar(ElementTheme.Light);
-            else ApplyThemeToStatusBar(ElementTheme.Dark);
-        }
-
-        public static void ApplyThemeToStatusBar(ElementTheme theme)
-        {
-            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToStatusBar");
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            {
-                //var statusBar = StatusBar.GetForCurrentView();
-                //switch (theme)
-                //{
-                //    case ElementTheme.Dark:
-                //        statusBar.BackgroundColor = Colors.Black;
-                //        statusBar.BackgroundOpacity = 1;
-                //        statusBar.ForegroundColor = Colors.White;
-                //        break;
-                //    case ElementTheme.Light:
-                //        statusBar.BackgroundColor = Colors.White;
-                //        statusBar.BackgroundOpacity = 1;
-                //        statusBar.ForegroundColor = Colors.Black;
-                //        break;
-                //    default:
-                //        statusBar.BackgroundColor = Colors.Black;
-                //        statusBar.BackgroundOpacity = 1;
-                //        statusBar.ForegroundColor = Colors.White;
-                //        break;
-                //}
-            }
+            ApplyThemeToTitleBar(theme);
         }
 
         public static void ApplyThemeToTitleBar(bool isLightTheme)
-        {
-            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToTitleBar");
-            if (isLightTheme) ApplyThemeToTitleBar(ElementTheme.Light);
-            else ApplyThemeToTitleBar(ElementTheme.Dark);
-        }
+            => ApplyThemeToTitleBar(isLightTheme ? ElementTheme.Light : ElementTheme.Dark);
 
+        /// <summary>The system title bar follows this attribute on both Windows 10 and Windows 11.</summary>
         public static void ApplyThemeToTitleBar(ElementTheme theme)
         {
-            System.Diagnostics.Debug.WriteLine("ThemeHelper ApplyThemeToTitleBar");
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            if (App.Window == null)
             {
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = false;
-                if (titleBar != null)
-                {
-                    switch (theme)
-                    {
-                        case ElementTheme.Dark:
-                            titleBar.BackgroundColor = Colors.Black;
-                            titleBar.ButtonBackgroundColor = Colors.Black;
-                            titleBar.ButtonForegroundColor = Colors.White;
-                            titleBar.ForegroundColor = Colors.White;
-                            break;
-                        case ElementTheme.Light:
-                            titleBar.BackgroundColor = Colors.White;
-                            titleBar.ButtonBackgroundColor = Colors.White;
-                            titleBar.ButtonForegroundColor = Colors.Black;
-                            titleBar.ForegroundColor = Colors.Black;
-                            break;
-                        default:
-                            titleBar.BackgroundColor = Colors.Black;
-                            titleBar.ButtonBackgroundColor = Colors.Black;
-                            titleBar.ButtonForegroundColor = Colors.White;
-                            titleBar.ForegroundColor = Colors.White;
-                            break;
-                    }
-                }
+                return;
             }
+
+            int useDarkMode = theme == ElementTheme.Dark ? 1 : 0;
+            DwmSetWindowAttribute(WindowHelper.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref useDarkMode, sizeof(int));
         }
     }
 }

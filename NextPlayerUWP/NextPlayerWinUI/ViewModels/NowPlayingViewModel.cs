@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace NextPlayerWinUI.ViewModels
 {
-    public class NowPlayingViewModel : Template10.Mvvm.ViewModelBase
+    public class NowPlayingViewModel : NextPlayerWinUI.Navigation.ViewModelBase
     {
         public NowPlayingViewModel()
         {

@@ -1,10 +1,10 @@
 ﻿using NextPlayerWinUI.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Template10.Common;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -37,17 +37,17 @@ namespace NextPlayerWinUI.Views
         {
             base.OnNavigatedTo(e);
 
-            BootStrapper.BackRequested += BootStrapper_BackRequested;
+            Shell.BackRequested += Shell_BackRequested;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
 
-            BootStrapper.BackRequested -= BootStrapper_BackRequested;
+            Shell.BackRequested -= Shell_BackRequested;
         }
 
-        private void BootStrapper_BackRequested(object sender, HandledEventArgs e)
+        private void Shell_BackRequested(object sender, HandledEventArgs e)
         {
             e.Handled = true;
             if (ViewModel.AreStationsVisible)
@@ -56,7 +56,7 @@ namespace NextPlayerWinUI.Views
             }
             else
             {
-                var nav = WindowWrapper.Current().NavigationServices.FirstOrDefault();
+                var nav = App.NavigationService;
                 nav.GoBack();
             }
         }

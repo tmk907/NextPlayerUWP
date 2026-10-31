@@ -196,7 +196,7 @@ namespace NextPlayerWinUI.ViewModels
 
         public async void ExportPlaylist()
         {
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+            var savePicker = WindowHelper.InitializeWithWindow(new Windows.Storage.Pickers.FileSavePicker());
             savePicker.SuggestedStartLocation =  Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
             // Dropdown of file types the user can save the file as
             savePicker.FileTypeChoices.Add("m3u playlist", new List<string>() { ".m3u" });

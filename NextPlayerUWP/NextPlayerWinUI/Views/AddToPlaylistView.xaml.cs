@@ -32,6 +32,7 @@ namespace NextPlayerWinUI.Views
 
         private async void newPlainPlaylist_Click(object sender, RoutedEventArgs e)
         {
+            ContentDialogNewPlaylist.XamlRoot = XamlRoot;
             await ContentDialogNewPlaylist.ShowAsync();
         }
 

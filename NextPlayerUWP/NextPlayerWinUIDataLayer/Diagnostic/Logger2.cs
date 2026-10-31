@@ -58,23 +58,37 @@ namespace NextPlayerWinUIDataLayer.Diagnostics
 
         public void LogAppUnhadledException(Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            WriteMessage(string.Format("UnhandledException - Exit - {0}", e.Exception.ToString()));
-            Task t = WriteToFile();
-            t.Wait(3000);
-            // Give the application 3 seconds to write to the log file. Should be enough time. 
-            SaveAppdata();
-            e.Handled = false;
-            //}
+            string details;
+            try
+            {
+                details = e.Exception?.ToString() ?? e.Message;
+            }
+            catch (Exception ex)
+            {
+                details = "details unavailable: " + ex.Message;
+            }
+            WriteMessage(string.Format("UnhandledException - Exit - {0}", details));
+            WriteToFileBeforeExit();
         }
 
-        private void SaveAppdata()
+        public void LogFatalException(Exception exception)
         {
-            //StorageFolder folder = ApplicationData.Current.LocalFolder;
-            //Task<StorageFile> tFile = folder.CreateFileAsync("AppData.txt").AsTask<StorageFile>();
-            //tFile.Wait();
-            //StorageFile file = tFile.Result;
-            //Task t = FileIO.WriteTextAsync(file, "This Is Application data").AsTask();
-            //t.Wait();
+            WriteMessage(string.Format("UnhandledException - Exit - {0}", exception));
+            WriteToFileBeforeExit();
+        }
+
+        /// <summary>The process is about to die, so nothing asynchronous can be relied on to finish.</summary>
+        private void WriteToFileBeforeExit()
+        {
+            if (ErrorFile == null || cache.Length == 0) return;
+            try
+            {
+                System.IO.File.AppendAllText(ErrorFile.Path, cache.ToString());
+                cache.Clear();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private StorageFile _errorFile;

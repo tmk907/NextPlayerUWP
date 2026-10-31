@@ -2,7 +2,7 @@
 using NextPlayerWinUIDataLayer.Tables;
 using System;
 using System.ComponentModel;
-using Windows.ApplicationModel.Resources;
+using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace NextPlayerWinUIDataLayer.Model
 {
