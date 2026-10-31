@@ -114,12 +114,6 @@ namespace NextPlayerWinUI.ViewModels
             await sh.Share(item);
         }       
 
-        public void EditTags(object sender, RoutedEventArgs e)
-        {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            App.NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
-        }
-
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;

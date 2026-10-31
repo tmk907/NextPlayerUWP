@@ -27,8 +27,7 @@
         PlaylistEditable,
         Radios,
         Settings,
-        Songs,
-        TagsEditor
+        Songs
     }
 
     public class PageNavigated

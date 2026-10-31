@@ -170,9 +170,6 @@
     <Page Update="Views\SongsView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\TagsEditor.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Views\TestPage.xaml">
       <SubType>Designer</SubType>
     </Page>

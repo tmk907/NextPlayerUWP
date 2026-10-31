@@ -38,7 +38,6 @@ namespace NextPlayerWinUI.ViewModels
             services.AddSingleton<RadiosViewModel>();
             services.AddSingleton<RightPanelViewModel>();
             services.AddSingleton<SongsViewModel>();
-            services.AddSingleton<TagsEditorViewModel>();
             services.AddSingleton<TestViewModel>();
             services.AddSingleton<PlayerViewModelBase>();
             services.AddSingleton<QueueViewModelBase>();
@@ -78,7 +77,6 @@ namespace NextPlayerWinUI.ViewModels
         public RadiosViewModel RadiosVM => Ioc.Default.GetRequiredService<RadiosViewModel>();
         public RightPanelViewModel RightPanelVM => Ioc.Default.GetRequiredService<RightPanelViewModel>();
         public SongsViewModel SongsVM => Ioc.Default.GetRequiredService<SongsViewModel>();
-        public TagsEditorViewModel TagsEditorVM => Ioc.Default.GetRequiredService<TagsEditorViewModel>();
         public TestViewModel TestVM => Ioc.Default.GetRequiredService<TestViewModel>();
         public PlayerViewModelBase PlayerVM => Ioc.Default.GetRequiredService<PlayerViewModelBase>();
         public QueueViewModelBase QueueVM => Ioc.Default.GetRequiredService<QueueViewModelBase>();

@@ -32,7 +32,7 @@ namespace NextPlayerWinUI.Converters
                         return Visibility.Visible;
                     }
                 }
-                else if (command == "gotoartist" || command == "gotoalbum" || command == "showdetails" || command == "edittags")
+                else if (command == "gotoartist" || command == "gotoalbum" || command == "showdetails")
                 {
                     if (MusicSource.OnlineFile == type)
                     {

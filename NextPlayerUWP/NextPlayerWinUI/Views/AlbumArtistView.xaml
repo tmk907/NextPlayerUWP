@@ -57,11 +57,6 @@
                 CommandParameter="{Binding}"
                 Text="Show details" />
             <MenuFlyoutItem
-                x:Uid="MFIEditTags"
-                Click="{x:Bind ViewModel.EditTags}"
-                CommandParameter="{Binding}"
-                Text="Edit" />
-            <MenuFlyoutItem
                 x:Uid="MFIShare"
                 Click="{x:Bind ViewModel.Share}"
                 CommandParameter="{Binding}"

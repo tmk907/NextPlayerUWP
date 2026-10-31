@@ -354,8 +354,7 @@ namespace NextPlayerWinUI.Views
             if (message.NavigatedTo)
             {
                 if (message.PageType == PageNavigatedType.NowPlayingDesktop ||
-                    message.PageType == PageNavigatedType.NowPlaying ||
-                    message.PageType == PageNavigatedType.TagsEditor)
+                    message.PageType == PageNavigatedType.NowPlaying)
                 {
                     //hideAd = true;
                     //UnloadAd(false);
@@ -364,8 +363,7 @@ namespace NextPlayerWinUI.Views
             else
             {
                 if (message.PageType == PageNavigatedType.NowPlayingDesktop ||
-                    message.PageType == PageNavigatedType.NowPlaying ||
-                    message.PageType == PageNavigatedType.TagsEditor)
+                    message.PageType == PageNavigatedType.NowPlaying)
                 {
                     //if (!AdWasDisplayed)
                     //{

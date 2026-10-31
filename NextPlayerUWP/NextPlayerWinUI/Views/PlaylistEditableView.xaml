@@ -42,9 +42,6 @@
             <MenuFlyoutItem x:Uid="MFIShowDetails" Text="Show details"
                             Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=showdetails}"
                             Click="{x:Bind ViewModel.ShowDetails}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem x:Uid="MFIEditTags" Text="Edit"
-                            Visibility="{Binding SourceType, Converter={StaticResource ItemTypeToMenuVisibilityConverter}, ConverterParameter=edittags}"
-                            Click="{x:Bind ViewModel.EditTags}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                             Click="{x:Bind ViewModel.Share}" CommandParameter="{Binding}"/>
         </MenuFlyout>

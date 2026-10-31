@@ -65,6 +65,12 @@ safe to delete by hand. The UWP `Template10` project stays, because `NextPlayerU
 - `Nullable` changed from `enable` to `annotations`.
 - Removed the mobile-only status bar setting.
 
+## Removed features
+
+- **Tag editing is not migrated, by decision.** The `TagsEditor` screen, its view model, `TagsManager` and the "Edit"
+  item in all song menus are gone from the WinUI app. The "edit album" dialog stays, because it only changes album data
+  in the app's database and does not write tags to files.
+
 ## Known issues
 
 - **Cloud sign-in does not work (Dropbox, pCloud, OneDrive):** `WebAuthenticationBroker` is UWP-only. A replacement
@@ -89,7 +95,7 @@ Tested by driving the running x64 Debug build:
 Not tested yet:
 
 - File activation and single-instance hand-off
-- Share, tile pinning, file pickers, tag editor
+- Share, tile pinning, file pickers
 - Scrobbling, and radio stations loading from the network
 - A full scan including OneDrive folders
 - Release, x86 runtime and ARM64 builds (x86 Debug was only compiled)

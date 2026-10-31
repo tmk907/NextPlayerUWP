@@ -130,12 +130,6 @@ namespace NextPlayerWinUI.ViewModels
             await TileManager.CreateTile(item);
         }
 
-        public void EditTags(object sender, RoutedEventArgs e)
-        {
-            var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;
-            NavigationService.Navigate(AppPages.Pages.TagsEditor, item.GetParameter());
-        }
-
         public void ShowDetails(object sender, RoutedEventArgs e)
         {
             var item = (MusicItem)((MenuFlyoutItem)e.OriginalSource).CommandParameter;

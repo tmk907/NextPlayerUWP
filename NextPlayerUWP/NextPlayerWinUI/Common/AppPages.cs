@@ -33,8 +33,7 @@ namespace NextPlayerWinUI.Common
             PlaylistEditable,
             Radios,
             Settings,
-            Songs,
-            TagsEditor
+            Songs
         }
 
         public readonly Dictionary<Pages, string> PagesToKeys = new Dictionary<Pages, string>()
@@ -65,7 +64,6 @@ namespace NextPlayerWinUI.Common
             { Pages.Radios, "Radios" },
             { Pages.Settings, "Settings" },
             { Pages.Songs, "Songs" },
-            { Pages.TagsEditor, "TagsEditor" },
         };
 
         public readonly Dictionary<Pages, Type> PagesToTypes = new Dictionary<Pages, Type>()
@@ -96,7 +94,6 @@ namespace NextPlayerWinUI.Common
             { Pages.Radios, typeof(RadiosView) },
             { Pages.Settings, typeof(SettingsView2) },
             { Pages.Songs, typeof(SongsView) },
-            { Pages.TagsEditor, typeof(TagsEditor) },
         };
     }
 }
